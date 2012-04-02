@@ -1,0 +1,109 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>all-exchange</artifactId>
+  <groupId>org.hbird.exchange</groupId>
+  <name>Exchange - All Services</name>
+  <version>0.0.1-SNAPSHOT</version>
+
+  <parent>
+    <artifactId>hummingbird-exchange</artifactId>
+    <groupId>org.hbird</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+
+  <dependencies>  
+  
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>businesscard</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>commandcontainer</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>commandqueuemanagement</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>commandreleaser</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>configurator</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>heartbeat</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>movementcontrol</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+ 
+     <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>orbitprediction</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+ 
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>parameters</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+ 
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>parametervalidation</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>scripting</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>statusreport</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>tasking</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>parameteraccess</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>systemmonitoring</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+  	
+  </dependencies>
+	
+</project>

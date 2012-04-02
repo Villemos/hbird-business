@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <parent>
+    <artifactId>hummingbird</artifactId>
+    <groupId>org.hbird</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+	
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.hbird</groupId>
+  <artifactId>hummingbird-business</artifactId>
+  <packaging>pom</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Hummingbird Business Tier</name>
+  <description>This module contains all business tier modules</description>
+
+  <url>https://github.com/JohannesKlug/hummingbird/wiki</url>
+
+  <modules>
+    <module>core</module>
+
+    <module>analysis</module>
+    <module>commanding</module>
+    <module>metadatapublisher</module>
+    <module>navigation-orekit</module>
+    <module>parameter-storage</module>
+    <module>scripting</module>
+    <module>simple-parameter-simulator</module>
+<!--     <module>simulator</module> -->
+    <module>system-monitoring</module>
+    <module>taskexecutor</module>
+    <module>time-correlation</module>
+    <module>validation</module>
+    <module>heartbeat</module>
+    <module>configurator</module>
+        
+    <module>all-business</module>
+  </modules>
+
+</project>

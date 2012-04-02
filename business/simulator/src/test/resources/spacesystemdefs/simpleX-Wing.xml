@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpaceSystem xmlns="http://www.omg.org/space/xtce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/space/xtce SpaceSystemV1.0.xsd" name="TrivSat">
+
+	<TelemetryMetaData>
+		<ParameterTypeSet>
+			<IntegerParameterType name="11bitInteger" sizeInBits="11" signed="false">
+				<UnitSet />
+			</IntegerParameterType>
+
+			<IntegerParameterType name="16bitInteger" sizeInBits="16" signed="false">
+				<UnitSet />
+			</IntegerParameterType>
+
+			<IntegerParameterType name="32bitInteger" sizeInBits="32" signed="false">
+				<UnitSet />
+			</IntegerParameterType>
+
+			<FloatParameterType name="32bitFloat" sizeInBits="32">
+				<UnitSet />
+			</FloatParameterType>
+
+			<FloatParameterType name="64bitFloat" sizeInBits="64">
+				<UnitSet />
+			</FloatParameterType>
+		</ParameterTypeSet>
+
+
+		<ParameterSet>
+			<Parameter parameterTypeRef="11bitInteger" name="apid" />
+			<Parameter parameterTypeRef="16bitInteger" name="packet_Length" />
+			<Parameter parameterTypeRef="32bitFloat" name="flight_hours" />
+			<Parameter parameterTypeRef="64bitFloat" name="laser_temp" />
+		</ParameterSet>
+
+
+		<ContainerSet>
+			<SequenceContainer name="TM_PACKET" shortDescription="CCSDS TM Packet">
+				<EntryList>
+					<ContainerRefEntry containerRef="TM_PACKET_HEADER" />
+				</EntryList>
+			</SequenceContainer>
+
+			<SequenceContainer name="TM_PACKET_HEADER" shortDescription="CCSDS TM Packet Header" abstract="true">
+				<EntryList>
+					<ParameterRefEntry parameterRef="apid" />
+					<ParameterRefEntry parameterRef="packet_length" />
+				</EntryList>
+			</SequenceContainer>
+
+			<SequenceContainer name="TM_FLIGHT_HOURS"
+				shortDescription="contains all telemetred data parameters for for X=Wing flight hours">
+				<EntryList>
+					<ParameterRefEntry parameterRef="flight_hours" />
+				</EntryList>
+				<BaseContainer containerRef="TM_PACKET_HEADER">
+					<RestrictionCriteria>
+						<ComparisonList>
+							<Comparison parameterRef="apid" value="555" />
+						</ComparisonList>
+					</RestrictionCriteria>
+				</BaseContainer>
+			</SequenceContainer>
+
+			<SequenceContainer name="TM_LASER_TEMP"
+				shortDescription="contains all telemetred data parameters for X-Wing laser temp">
+				<EntryList>
+					<ParameterRefEntry parameterRef="laser_temp" />
+				</EntryList>
+				<BaseContainer containerRef="TM_PACKET_HEADER">
+					<RestrictionCriteria>
+						<ComparisonList>
+							<Comparison parameterRef="apid" value="888" />
+						</ComparisonList>
+					</RestrictionCriteria>
+				</BaseContainer>
+			</SequenceContainer>
+
+			<SequenceContainer name="TM_ALL_SYSTEMS"
+				shortDescription="contains all telemetred data parameters for X-Wing laser temp and flight hours">
+				<EntryList>
+					<ParameterRefEntry parameterRef="laser_temp" />
+					<ParameterRefEntry parameterRef="flight_hours" />
+				</EntryList>
+				<BaseContainer containerRef="TM_PACKET_HEADER">
+					<RestrictionCriteria>
+						<ComparisonList>
+							<Comparison parameterRef="apid" value="1" />
+						</ComparisonList>
+					</RestrictionCriteria>
+				</BaseContainer>
+			</SequenceContainer>
+
+		</ContainerSet>
+
+	</TelemetryMetaData>
+
+</SpaceSystem>
+
+

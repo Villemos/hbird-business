@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpaceSystem xmlns="http://www.omg.org/space/xtce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/space/xtce SpaceSystemV1.0.xsd" name="TrivSat">
+	<TelemetryMetaData>
+		<ParameterTypeSet>
+		
+		
+			<IntegerParameterType name="4ByteInteger" sizeInBits="32" signed="false">
+				<UnitSet/>
+			</IntegerParameterType>
+			<IntegerParameterType name="8ByteInteger" sizeInBits="64" signed="true">
+				<UnitSet/>
+			</IntegerParameterType>
+			<IntegerParameterType name="2ByteInteger" sizeInBits="16" signed="false">
+				<UnitSet/>
+			</IntegerParameterType>
+			<IntegerParameterType name="1ByteInteger" sizeInBits="8" signed="false">
+				<UnitSet/>
+			</IntegerParameterType>
+			<IntegerParameterType name="14BitInteger" sizeInBits="14" signed="false">
+				<UnitSet/>
+			</IntegerParameterType>
+			<IntegerParameterType name="11BitInteger" sizeInBits="11" signed="false">
+				<UnitSet/>
+			</IntegerParameterType>
+			<IntegerParameterType name="10BitInteger" sizeInBits="10" signed="false">
+				<UnitSet/>
+			</IntegerParameterType>
+			<IntegerParameterType name="6BitInteger" sizeInBits="6" signed="false">
+				<UnitSet/>
+			</IntegerParameterType>
+			<IntegerParameterType name="4BitInteger" sizeInBits="4" signed="false">
+				<UnitSet/>
+			</IntegerParameterType>
+			<IntegerParameterType name="3BitInteger" sizeInBits="3" signed="false">
+				<UnitSet/>
+			</IntegerParameterType>
+			<IntegerParameterType name="2BitInteger" sizeInBits="2" signed="false">
+				<UnitSet/>
+			</IntegerParameterType>
+			<IntegerParameterType name="1BitInteger" sizeInBits="1" signed="false">
+				<UnitSet/>
+			</IntegerParameterType>
+			
+			<!-- "data" parameter types references by telecommands-->
+			<IntegerParameterType name="AST10061" signed="false" sizeInBits="1">
+				<UnitSet/>
+				<ToString>
+				<RangeEnumeration label="ENABLED" maxInclusive="1" minInclusive="1"/>
+				<RangeEnumeration label="DISABLED" maxInclusive="0" minInclusive="0"/>
+				</ToString>
+			</IntegerParameterType>
+		
+		</ParameterTypeSet>
+
+
+		<ParameterSet>
+		
+			<Parameter parameterTypeRef="4ByteInteger" name="CCSDS_TF_OC"/>
+			<Parameter parameterTypeRef="2ByteInteger" name="CCSDS_TF_EC"/>
+			<Parameter parameterTypeRef="2BitInteger" name="CCSDS_FVERSION"/>
+			<Parameter parameterTypeRef="10BitInteger" name="CCSDS_SC_ID"/>
+			<Parameter parameterTypeRef="3BitInteger" name="CCSDS_TF_VC"/>
+			<Parameter parameterTypeRef="1BitInteger" name="CCSDS_OP_CTRL"/>
+			<Parameter parameterTypeRef="1ByteInteger" name="CCSDS_MS_CNT"/>
+			<Parameter parameterTypeRef="1ByteInteger" name="CCSDS_VC_CNT"/>
+			<Parameter parameterTypeRef="1BitInteger" name="CCSDS_TF_SECH"/>
+			<Parameter parameterTypeRef="1BitInteger" name="CCSDS_TF_SYNC"/>
+			<Parameter parameterTypeRef="1BitInteger" name="CCSDS_TF_ORDER"/>
+			<Parameter parameterTypeRef="2BitInteger" name="CCSDS_TF_SEGM"/>
+			<Parameter parameterTypeRef="1BitInteger" name="CCSDS_TF_FH"/>
+			<Parameter parameterTypeRef="2BitInteger" name="CCSDS_TF_HV"/>
+			<Parameter parameterTypeRef="6BitInteger" name="CCSDS_TF_HL"/>
+			<Parameter parameterTypeRef="3BitInteger" name="CCSDS_VERSION"/>
+			<Parameter parameterTypeRef="1BitInteger" name="CCSDS_TYPE"/>
+			<Parameter parameterTypeRef="1BitInteger" name="CCSDS_SEC_HD"/>
+			<Parameter parameterTypeRef="11BitInteger" name="CCSDS_APID"/>
+			<Parameter parameterTypeRef="2BitInteger" name="CCSDS_GP_FLAGS"/>
+			<Parameter parameterTypeRef="14BitInteger" name="CCSDS_SSC"/>
+			<Parameter parameterTypeRef="2ByteInteger" name="CCSDS_PLENGTH"/>
+			<Parameter parameterTypeRef="1BitInteger" name="CCSDS_BYPASS"/>
+			<Parameter parameterTypeRef="1BitInteger" name="CCSDS_CCF"/>
+			<Parameter parameterTypeRef="2BitInteger" name="CCSDS_SPARE"/>
+			<Parameter parameterTypeRef="10BitInteger" name="CCSDS_SCT_ID"/>
+			<Parameter parameterTypeRef="6BitInteger" name="CCSDS_VC_ID"/>
+			<Parameter parameterTypeRef="10BitInteger" name="CCSDS_LENGTH"/>
+			<Parameter parameterTypeRef="1ByteInteger" name="CCSDS_FSN"/>
+			<Parameter parameterTypeRef="2ByteInteger" name="CCSDS_F_ERROR_CTRL"/>
+			<Parameter parameterTypeRef="2BitInteger" name="CCSDS_SEQ_FLAG"/>
+			<Parameter parameterTypeRef="6BitInteger" name="CCSDS_MAP_ID"/>
+
+			<!-- "data" parameters -->
+			<Parameter name="AST10061" parameterTypeRef="AST10061" shortDescription="GND_UPDATE_ENA">
+				<ParameterProperties dataSource="derived">
+					<SystemName>112</SystemName>
+				</ParameterProperties>
+			</Parameter>
+			<Parameter parameterTypeRef="4ByteInteger" name="TEST_COUNTER"/>
+			<Parameter parameterTypeRef="8ByteInteger" name="BIG_TEST_COUNTER"/>
+	
+		</ParameterSet>
+		
+		
+		<ContainerSet>
+			<SequenceContainer name="TMPacket" shortDescription="CCSDS TM Packet">
+				<EntryList>
+					<ContainerRefEntry containerRef="TMPacketHeader"/>
+				</EntryList>
+			</SequenceContainer>
+			
+			<SequenceContainer name="TMPacketHeader" shortDescription="CCSDS TM Packet Header" abstract="true">
+				<EntryList>
+					<ParameterRefEntry parameterRef="CCSDS_VERSION"/>
+					<ParameterRefEntry parameterRef="CCSDS_TYPE"/>
+					<ParameterRefEntry parameterRef="CCSDS_SEC_HD"/>
+					<ParameterRefEntry parameterRef="CCSDS_APID"/>
+					<ParameterRefEntry parameterRef="CCSDS_GP_FLAGS"/>
+					<ParameterRefEntry parameterRef="CCSDS_SSC"/>
+					<ParameterRefEntry parameterRef="CCSDS_PLENGTH"/>
+				</EntryList>
+			</SequenceContainer>
+			
+			<SequenceContainer name="TestPacketA" shortDescription="contains all telemetred data parameter for example purposes">
+				<EntryList>
+					<ParameterRefEntry parameterRef="TEST_COUNTER"/>
+					<ParameterRefEntry parameterRef="AST10061"/>
+				</EntryList>
+				<BaseContainer containerRef="TMPacketHeader">
+					<RestrictionCriteria>
+						<ComparisonList>
+							<Comparison parameterRef="CCSDS_APID" value="123"/>
+						</ComparisonList>
+					</RestrictionCriteria>
+				</BaseContainer>
+			</SequenceContainer>
+			
+			<SequenceContainer name="TestPacketB" shortDescription="contains all telemetred data parameter for example purposes">
+				<EntryList>
+					<ParameterRefEntry parameterRef="BIG_TEST_COUNTER"/>
+					<ParameterRefEntry parameterRef="AST10061"/>
+				</EntryList>
+				<BaseContainer containerRef="TMPacketHeader">
+					<RestrictionCriteria>
+						<ComparisonList>
+							<Comparison parameterRef="CCSDS_APID" value="321"/>
+						</ComparisonList>
+					</RestrictionCriteria>
+				</BaseContainer>
+			</SequenceContainer>
+		
+		</ContainerSet>
+		
+		<!-- TODO  -->		
+	</TelemetryMetaData>
+	
+	
+	<CommandMetaData>
+		<ArgumentTypeSet>
+			<BinaryArgumentType name="opCodeType">
+				<UnitSet/>
+			</BinaryArgumentType>
+			<EnumeratedArgumentType name="onOffType">
+				<UnitSet/>
+				<EnumerationList>
+					<Enumeration value="1" label="on"/>
+					<Enumeration value="0" label="off"/>
+				</EnumerationList>
+			</EnumeratedArgumentType>
+		</ArgumentTypeSet>
+		<MetaCommandSet>
+			<MetaCommand name="TrivialSatCmdType" abstract="true">
+				<ArgumentList>
+					<Argument name="opCode" value="0" argumentTypeRef="opCodeType"/>
+				</ArgumentList>
+				<CommandContainer name="TrivialSatCommandContainerType">
+					<EntryList>
+						<ArgumentRefEntry argumentRef="opCode"/>
+					</EntryList>
+				</CommandContainer>
+			</MetaCommand>
+			<MetaCommand name="BeaconPwr">
+				<LongDescription>Turn Beacon Power on or off</LongDescription>
+				<BaseMetaCommand metaCommandRef="TrivialSatCmdType">
+					<ArgumentAssignmentList>
+						<ArgumentAssignment argumentName="opCode" argumentValue="170"/>
+					</ArgumentAssignmentList>
+				</BaseMetaCommand>
+				<ArgumentList>
+					<Argument name="powerValue" value="0" argumentTypeRef="onOffType"/>
+				</ArgumentList>
+				<CommandContainer name="BeaconPwr">
+					<EntryList>
+						<ArgumentRefEntry argumentRef="powerValue"/>
+					</EntryList>
+					<BaseContainer containerRef="TrivialSatCmdContianerType">
+					</BaseContainer>
+				</CommandContainer>
+			</MetaCommand>
+			<MetaCommand name="BeaconPwrOn">
+				<LongDescription/>
+				<BaseMetaCommand metaCommandRef="BeaconPwr">
+					<ArgumentAssignmentList>
+						<ArgumentAssignment argumentName="powerValue" argumentValue="on"/>
+					</ArgumentAssignmentList>
+				</BaseMetaCommand>
+			</MetaCommand>
+		</MetaCommandSet>
+	</CommandMetaData>
+</SpaceSystem>
+
+

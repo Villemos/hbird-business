@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+
+
+<!-- This assembly defines three Lower limits for a parameter and no lower limit. The limits cannot
+     be enabled / disabled, nor can they be changed dynamically. -->
+
+
+	<context:annotation-config />
+
+
+	<bean id="LowerLimitWarning" class="org.hbird.business.validation.parameter.LowerLimit">
+		<constructor-arg index="0" value="LowerLimitWarningState"/>
+		<constructor-arg index="1" value="Lower limit for parameter that is intended as a WARNING"/>
+		<constructor-arg index="2" value="3"/>
+	</bean> 
+
+	<bean id="LowerLimitError" class="org.hbird.business.validation.parameter.LowerLimit">
+		<constructor-arg index="0" value="LowerLimitErrorState"/>
+		<constructor-arg index="1" value="Lower limit for parameter that is intended as an ERROR."/>
+		<constructor-arg index="2" value="5"/>
+	</bean> 
+
+	<bean id="LowerLimitFatal" class="org.hbird.business.validation.parameter.LowerLimit">
+		<constructor-arg index="0" value="LowerLimitFatalState"/>
+		<constructor-arg index="1" value="Lower limit for parameter that is intended as a FATAL."/>
+		<constructor-arg index="2" value="10"/>
+	</bean> 
+
+	<routeContext id="parameter4Routes" xmlns="http://camel.apache.org/schema/spring">
+
+		<!-- Route to calculate the WARNING Lower limit of parameter 3 -->
+		<route>
+			<from uri="direct:startParameter4LowerLimitWarning"/>
+			<to uri="bean:LowerLimitWarning?method=processParameter"/>
+			<to uri="mock:result"/>
+		</route>
+
+		<!-- Route to calculate the ERROR Lower limit of parameter 3 -->
+		<route>
+			<from uri="direct:startParameter4LowerLimitError"/>
+			<to uri="bean:LowerLimitError?method=processParameter"/>
+			<to uri="mock:result"/>
+		</route>
+
+		<!-- Route to calculate the FATAL Lower limit of parameter 3 -->
+		<route>
+			<from uri="direct:startParameter4LowerLimitFatal"/>
+			<to uri="bean:LowerLimitFatal?method=processParameter"/>
+			<to uri="mock:result"/>
+		</route>
+
+	</routeContext>
+</beans>

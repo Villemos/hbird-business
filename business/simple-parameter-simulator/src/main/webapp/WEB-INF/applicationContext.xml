@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+
+	<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616" />
+	</bean>
+
+	<bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory">
+		<property name="maxConnections" value="8" />
+		<property name="maximumActive" value="500" />
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+	</bean>
+
+
+	<bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+		<property name="connectionFactory" ref="pooledConnectionFactory" />
+		<property name="transacted" value="false" />
+		<property name="concurrentConsumers" value="10" />
+	</bean>
+
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="configuration" ref="jmsConfig" />
+	</bean>
+
+
+
+	<!-- double timeCounter, double angularFrequency, double amplitude, double phase, String name -->
+
+	<bean id="longitude" class="org.hbird.simpleparametersimulator.SinusCurveParameter">
+		<constructor-arg index="0" value="0.000010472"/>
+		<constructor-arg index="1" value="180"/>
+		<constructor-arg index="2" value="4.71238898"/>
+		<constructor-arg index="3" value="0"/>
+		<constructor-arg index="4" value="300000"/>
+		<constructor-arg index="5" value="longitude"/>
+	</bean>
+
+	<bean id="latitude" class="org.hbird.simpleparametersimulator.SinusCurveParameter">
+		<constructor-arg index="0" value="0.000020944"/>
+		<constructor-arg index="1" value="30"/>
+		<constructor-arg index="2" value="0"/>
+		<constructor-arg index="3" value="0"/>
+		<constructor-arg index="4" value="300000"/>
+		<constructor-arg index="5" value="latitude"/>
+	</bean>
+
+	<bean id="elevation" class="org.hbird.simpleparametersimulator.SinusCurveParameter">
+		<constructor-arg index="0" value="0.000020944"/>
+		<constructor-arg index="1" value="30000"/>
+		<constructor-arg index="2" value="0"/>
+		<constructor-arg index="3" value="300000"/>
+		<constructor-arg index="4" value="300000"/>
+		<constructor-arg index="5" value="elevation"/>
+	</bean>
+
+	<bean id="battery" class="org.hbird.simpleparametersimulator.SinusCurveParameter">
+		<constructor-arg index="0" value="0.000020944"/>
+		<constructor-arg index="1" value="40"/>
+		<constructor-arg index="2" value="0"/>
+		<constructor-arg index="3" value="50"/>
+		<constructor-arg index="4" value="300000"/>
+		<constructor-arg index="5" value="battery"/>
+	</bean>
+
+	<bean id="switch" class="org.hbird.simpleparametersimulator.BooleanParameter">
+		<constructor-arg index="0" value="true"/>
+		<constructor-arg index="1" value="switch"/>
+	</bean>
+
+	<bean id="linear" class="org.hbird.simpleparametersimulator.LinearParameter">
+		<constructor-arg index="0" value="0"/>
+		<constructor-arg index="1" value="0.001"/>
+		<constructor-arg index="2" value="60000"/>
+		<constructor-arg index="3" value="linear"/>
+	</bean>
+
+	<bean id="constant" class="org.hbird.simpleparametersimulator.ConstantParameter">
+		<constructor-arg index="0" value="50"/>
+		<constructor-arg index="1" value="constant"/>
+	</bean>
+
+	<camelContext id="simulatorContext" xmlns="http://camel.apache.org/schema/spring">
+
+		<route>
+			<from uri="timer://latitude?fixedRate=true&amp;period=1000" />
+			<to uri="bean:latitude?method=process" />
+			<to uri="activemq:topic:Parameter" />
+		</route>
+
+		<route>
+			<from uri="timer://longitude?fixedRate=true&amp;period=1000" />
+			<to uri="bean:longitude?method=process" />
+			<to uri="activemq:topic:Parameter" />
+		</route>
+
+		<route>
+			<from uri="timer://elevation?fixedRate=true&amp;period=1000" />
+			<to uri="bean:elevation?method=process" />
+			<to uri="activemq:topic:Parameter" />
+		</route>
+
+		<route>
+			<from uri="timer://battery?fixedRate=true&amp;period=1000" />
+			<to uri="bean:battery?method=process" />
+			<to uri="activemq:topic:Parameter" />
+		</route>
+		
+		<route>
+			<from uri="timer://switch?fixedRate=true&amp;period=5000" />
+			<to uri="bean:switch?method=process" />
+			<to uri="activemq:topic:Parameter" />
+		</route>
+		
+		<route>
+			<from uri="timer://linear?fixedRate=true&amp;period=100" />
+			<to uri="bean:linear?method=process" />
+			<to uri="activemq:topic:Parameter" />
+		</route>
+
+		<route>
+			<from uri="timer://constant?fixedRate=true&amp;period=3000" />
+			<to uri="bean:constant?method=process" />
+			<to uri="activemq:topic:Parameter" />
+		</route>
+		
+	</camelContext>
+</beans>

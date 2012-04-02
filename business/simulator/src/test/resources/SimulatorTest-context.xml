@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<bean id="waveForm" class="org.hbird.business.simulator.waveforms.LinearWaveform">
+		<constructor-arg index="0" value="101"/>
+		<constructor-arg index="1" value="0d"/>
+		<constructor-arg index="2" value="1d"/>
+	</bean>
+
+	<bean id="simulator" class="org.hbird.business.simulator.Simulator">
+		<property name="messageInterval" value="1000"/>
+		<property name="waveforms" ref="waveForm"/>
+	</bean>
+
+	<camelContext id="context" xmlns="http://camel.apache.org/schema/spring">
+
+		<route>
+			<from uri="direct:simMessages" />
+			<to uri="mock:result" />
+		</route>
+	
+	</camelContext>
+</beans>

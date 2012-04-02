@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
+  <parent>
+    <artifactId>hummingbird-business</artifactId>
+    <groupId>org.hbird</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.hbird.business</groupId>	
+  <version>0.0.1-SNAPSHOT</version>
+  <artifactId>commanding</artifactId>
+  <packaging>jar</packaging>
+  <name>Business - Command Chain</name>  	
+  <description>The full commanding chain of the Hummingbird mission control system.</description>
+
+  <url>https://github.com/JohannesKlug/hummingbird/wiki</url>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>commandrelease</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>core</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-test</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.business</groupId>
+      <artifactId>parameter-storage</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-jms</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-http</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+<!--      <version>2.5</version>-->
+    </dependency>
+        
+    <dependency>
+    	<groupId>org.hbird.exchange</groupId>
+    	<artifactId>parameters</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+    	<groupId>org.hbird.exchange</groupId>
+    	<artifactId>core</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    
+  </dependencies>
+</project>

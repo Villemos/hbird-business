@@ -1,0 +1,31 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<bean id="waveform" class="org.hbird.business.simulator.waveforms.LinearWaveform">
+		<constructor-arg index="0" value="10" />
+		<constructor-arg index="1" value="0" />
+		<constructor-arg index="2" value="1.5" />
+	</bean>
+
+	<bean id="simulator" class="org.hbird.business.simulator.BusinessSimulator">
+		<property name="messageInterval" value="5000" />
+		<property name="waveforms" ref="waveform" />
+	</bean>
+
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="brokerURL" value="tcp://127.0.0.1:61616"/>
+	</bean>
+
+
+
+	<camelContext id="simulatorContext" xmlns="http://camel.apache.org/schema/spring">
+		<route>
+			<from uri="bean:simulator" />
+			<to uri="activemq:parameters?jmsMessageType=Text" pattern="InOnly"/>
+		</route>
+	</camelContext>
+
+</beans>

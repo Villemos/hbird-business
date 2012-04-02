@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+
+	<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616" />
+	</bean>
+
+	<bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory">
+		<property name="maxConnections" value="8" />
+		<property name="maximumActive" value="500" />
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+	</bean>
+
+	<bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+		<property name="connectionFactory" ref="pooledConnectionFactory" />
+		<property name="transacted" value="false" />
+		<property name="concurrentConsumers" value="10" />
+	</bean>
+
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="configuration" ref="jmsConfig" />
+	</bean>
+
+	<bean id="batteryWarning" class="org.hbird.validation.parameter.LowerLimit">
+		<constructor-arg index="0" value="battery"/>
+		<constructor-arg index="1" value="batteryWithinWarningLimit"/>
+		<constructor-arg index="2" value="20"/>
+	</bean>
+
+	<bean id="batteryError" class="org.hbird.validation.parameter.LowerLimit">
+		<constructor-arg index="0" value="battery"/>
+		<constructor-arg index="1" value="batteryWithinErrorLimit"/>
+		<constructor-arg index="2" value="10"/>
+	</bean>
+
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+	
+		<!-- Parameter injection.  -->
+		<route>
+			<from uri="activemq:topic:Parameter?selector='name=battery'" />
+            	<multicast>
+            		<to uri="direct:batteryWarning"/>
+            		<to uri="direct:batteryError"/>
+            	</multicast>
+		</route>		
+		
+		<route>
+			<from uri="direct:batteryWarning"/>
+			<to uri="bean:batteryWarning?method=process"/>
+			<to uri="activemq:topic:Parameter"/>			
+		</route>
+
+		<route>
+			<from uri="direct:batteryError"/>
+			<to uri="bean:batteryError?method=process"/>
+			<to uri="activemq:topic:Parameter"/>			
+		</route>
+				
+		<!-- Limit changes -->
+		<route>
+			<from uri="activemq:topic:Parameter?selector='name=batteryWarningLimit'" />
+			<to uri="bean:batteryWarning?method=processLimit"/>
+			<to uri="activemq:topic:Parameter"/>
+		</route>		
+
+		<route>
+			<from uri="activemq:topic:Parameter?selector='name=batteryErrorLimit'" />
+			<to uri="bean:batteryError?method=processLimit"/>
+			<to uri="activemq:topic:Parameter"/>
+		</route>		
+
+		<!-- Enable / disable both ALL as well as individual limits. -->
+		<route>
+			<from uri="activemq:topic:Parameter?selector='name=disableAllLimits'" />
+            	<multicast>
+            		<to uri="direct:batteryWarningSwitch"/>
+            		<to uri="direct:batteryErrorSwitch"/>
+            	</multicast>
+		</route>		
+		
+		<route>
+			<from uri="activemq:topic:Parameter?selector='name=disableBatteryWarningLimit'" />
+            <to uri="direct:batteryWarningSwitch"/>
+		</route>
+		
+		<route>
+			<from uri="activemq:topic:Parameter?selector='name=disableBatteryWarningLimit'" />
+       		<to uri="direct:batteryErrorSwitch"/>
+		</route>
+	
+		<route>
+			<from uri="direct:batteryWarningSwitch" />
+       		<to uri="bean:batteryWarning?method=processEnabled"/>
+       		<to uri="activemq:topic:Parameter"/>
+		</route>
+
+		<route>
+			<from uri="direct:batteryErrorSwitch" />
+       		<to uri="bean:batteryError?method=processEnabled"/>
+       		<to uri="activemq:topic:Parameter"/>
+		</route>
+				
+	</camelContext>
+</beans>

@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY hummingbird "https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#" >
+]>
+
+
+<rdf:RDF xmlns="https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#"
+     xml:base="https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:hummingbird="https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about=""/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#isStateOff -->
+
+    <owl:ObjectProperty rdf:about="#isStateOff">
+        <rdfs:comment
+            >The association defines that a state parameter is the state of another Object.</rdfs:comment>
+        <rdfs:range rdf:resource="#Argument"/>
+        <rdfs:range rdf:resource="#Command"/>
+        <rdfs:range rdf:resource="#D3Vector"/>
+        <rdfs:range rdf:resource="#Location"/>
+        <rdfs:range rdf:resource="#LocationEvent"/>
+        <rdfs:range rdf:resource="#OrbitalState"/>
+        <rdfs:range rdf:resource="#Parameter"/>
+        <rdfs:domain rdf:resource="#ParameterState"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#clazz -->
+
+    <owl:DatatypeProperty rdf:about="#clazz">
+        <rdfs:range rdf:resource="&xsd;string"/>
+        <rdfs:domain rdf:resource="#Named"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#description -->
+
+    <owl:DatatypeProperty rdf:about="#description">
+        <rdfs:range rdf:resource="&xsd;string"/>
+        <rdfs:domain rdf:resource="#Named"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#name -->
+
+    <owl:DatatypeProperty rdf:about="#name">
+        <rdfs:range rdf:resource="&xsd;string"/>
+        <rdfs:domain rdf:resource="#Named"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#unit -->
+
+    <owl:DatatypeProperty rdf:about="#unit">
+        <rdfs:range rdf:resource="&xsd;string"/>
+        <rdfs:domain rdf:resource="#Named"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#Argument -->
+
+    <owl:Class rdf:about="#Argument">
+        <rdfs:subClassOf rdf:resource="#Named"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#Command -->
+
+    <owl:Class rdf:about="#Command">
+        <rdfs:subClassOf rdf:resource="#Named"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#D3Vector -->
+
+    <owl:Class rdf:about="#D3Vector">
+        <rdfs:subClassOf rdf:resource="#Named"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#Location -->
+
+    <owl:Class rdf:about="#Location">
+        <rdfs:subClassOf rdf:resource="#Named"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#LocationEvent -->
+
+    <owl:Class rdf:about="#LocationEvent">
+        <rdfs:subClassOf rdf:resource="#Named"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#Named -->
+
+    <owl:Class rdf:about="#Named"/>
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#OrbitalState -->
+
+    <owl:Class rdf:about="#OrbitalState">
+        <rdfs:subClassOf rdf:resource="#Named"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#Parameter -->
+
+    <owl:Class rdf:about="#Parameter">
+        <rdfs:subClassOf rdf:resource="#Named"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#ParameterState -->
+
+    <owl:Class rdf:about="#ParameterState">
+        <rdfs:subClassOf rdf:resource="#Parameter"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/JohannesKlug/hummingbird/tree/master/src/exchange/data/src/resources/hummingbird#ReflectiveParameter -->
+
+    <owl:Class rdf:about="#ReflectiveParameter">
+        <rdfs:subClassOf rdf:resource="#Parameter"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 2.2.1.1138) http://owlapi.sourceforge.net -->
+
