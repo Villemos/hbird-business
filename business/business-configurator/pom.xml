@@ -22,7 +22,7 @@
 		</dependency>
 
 		<dependency>
-			<artifactId>all</artifactId>
+			<artifactId>all-exchange</artifactId>
 			<groupId>org.hbird.exchange</groupId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>

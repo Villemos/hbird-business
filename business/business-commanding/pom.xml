@@ -37,7 +37,7 @@
 
     <dependency>
       <groupId>org.hbird.business</groupId>
-      <artifactId>parameter-storage</artifactId>
+      <artifactId>business-parameter-storage</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
@@ -63,12 +63,6 @@
 <!--      <version>2.5</version>-->
     </dependency>
         
-    <dependency>
-    	<groupId>org.hbird.exchange</groupId>
-    	<artifactId>parameters</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    </dependency>
-
     <dependency>
     	<groupId>org.hbird.exchange</groupId>
     	<artifactId>core</artifactId>

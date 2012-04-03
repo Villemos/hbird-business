@@ -21,7 +21,6 @@
     <module>business-core</module>
 
     <module>business-analysis</module>
-    <module>business-commanding</module>
     <module>business-metadatapublisher</module>
     <module>business-navigation</module>
     <module>business-parameter-storage</module>
@@ -33,6 +32,7 @@
     <module>business-time-correlation</module>
     <module>business-validation</module>
     <module>business-heartbeat</module>
+    <module>business-commanding</module>
     <module>business-configurator</module>
         
     <module>all-business</module>
