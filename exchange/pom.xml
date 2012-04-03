@@ -24,6 +24,31 @@
 
   <url>https://github.com/JohannesKlug/hummingbird/wiki</url>
 
+
+        <repositories>
+
+          <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>villemos</id>
+            <name>villemos</name>
+            <url>http://www.villemos.com:8080/artifactory/repo/</url>
+          </repository>
+
+          <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>mvnrepository</id>
+            <name>mvnrepository</name>
+            <url>http://mvnrepository.com/</url>
+          </repository>
+
+        </repositories>
+
+
+
   <modules>
     <module>core</module>
 

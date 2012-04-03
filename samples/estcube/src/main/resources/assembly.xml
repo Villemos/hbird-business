@@ -10,7 +10,7 @@
 	<bean id="generator" class="com.villemos.estcube.generator.TemperatureGenerator"/>
 
 
-	<camelContext id="simulatorContext" xmlns="http://camel.apache.org/schema/spring">
+	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
 
 		<!-- Basic assembly -->
 		<route id="metadata">
@@ -40,8 +40,8 @@
 
 		<!-- Route to publish the parameters through cometd. Notice that this is a basic configuration; no selector is defined, all parameters are published. -->
 		<route id="publishing">
-			<from uri="activemq:topic:parameters"/>
-			<to uri="cometd://localhost:4242/temperature"/>
+			<from uri="activemq:topic:parameters"/>                                     <!-- Read from the activemq parameters topic. -->
+			<to uri="cometd://localhost:4242/temperature"/>                             <!-- Publish through cometd. -->
 		</route>
 
 	</camelContext>

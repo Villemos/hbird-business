@@ -22,19 +22,13 @@
 
     <dependency>
       <groupId>org.hbird.exchange</groupId>
-      <artifactId>commandcontainer</artifactId>
+      <artifactId>commandrelease</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.exchange</groupId>
-      <artifactId>commandqueuemanagement</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hbird.exchange</groupId>
-      <artifactId>commandreleaser</artifactId>
+      <artifactId>queuemanagement</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
@@ -64,7 +58,7 @@
  
     <dependency>
       <groupId>org.hbird.exchange</groupId>
-      <artifactId>parameters</artifactId>
+      <artifactId>commandrelease</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
  
@@ -77,12 +71,6 @@
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>scripting</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hbird.exchange</groupId>
-      <artifactId>statusreport</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
