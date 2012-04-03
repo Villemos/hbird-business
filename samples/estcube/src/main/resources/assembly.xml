@@ -1,0 +1,41 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<!-- The configurator component. -->
+	<bean id="configurator" class="org.hbird.business.configurator.Configurator"/>
+	<bean id="generator" class="com.villemos.estcube.generator.TemperatureGenerator"/>
+
+	<camelContext id="simulatorContext" xmlns="http://camel.apache.org/schema/spring">
+
+		<route>
+			<from uri="direct:in"/>
+			<to uri="activemq:queue:metadata"/>			
+		</route>
+
+		<route>
+			<from uri="activemq:queue:metadata"/>
+			<to uri="bean:configurator"/>			
+		</route>
+
+		<!-- Route to create the limit checking of the temperature. Is called once on startup. -->
+		<route>
+			<from uri="timer:temperatureLimitConfigurer?period=0"/>                     <!-- Timer -->
+			<to uri="bean:generator?method=configure"/>                                 <!-- Creates a limit check request. -->
+			<to uri="activemq:queue:metadata"/>                                         <!-- Send the request to the metadata queue. -->
+		</route>
+
+		<!-- Route to generate the temperature parameter. Is called every 10 seconds. -->
+		<route>
+			<from uri="timer:temperatureRetriever?fixedRate=true&amp;period=10000"/>    <!-- Timer -->
+			<to uri="http://www.weathercity.com/ee/tallinn/"/>                          <!-- Retrieves the HTTP page -->
+			<to uri="bean:generator?method=generate"/>                                  <!-- Extracts the temperature. -->
+			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>   <!-- Sets the header field 'name'. Used for routing. -->
+			<to uri="activemq:topic:parameters"/>                                       <!-- Injects the parameter for distrinution. -->
+		</route>
+
+	</camelContext>
+
+</beans>

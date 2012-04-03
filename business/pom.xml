@@ -18,22 +18,22 @@
   <url>https://github.com/JohannesKlug/hummingbird/wiki</url>
 
   <modules>
-    <module>core</module>
+    <module>business-core</module>
 
-    <module>analysis</module>
-    <module>commanding</module>
-    <module>metadatapublisher</module>
-    <module>navigation-orekit</module>
-    <module>parameter-storage</module>
-    <module>scripting</module>
+    <module>business-analysis</module>
+    <module>business-commanding</module>
+    <module>business-metadatapublisher</module>
+    <module>business-navigation</module>
+    <module>business-parameter-storage</module>
+    <module>business-scripting</module>
     <module>simple-parameter-simulator</module>
 <!--     <module>simulator</module> -->
-    <module>system-monitoring</module>
-    <module>taskexecutor</module>
-    <module>time-correlation</module>
-    <module>validation</module>
-    <module>heartbeat</module>
-    <module>configurator</module>
+    <module>business-systemmonitoring</module>
+    <module>business-taskexecutor</module>
+    <module>business-time-correlation</module>
+    <module>business-validation</module>
+    <module>business-heartbeat</module>
+    <module>business-configurator</module>
         
     <module>all-business</module>
   </modules>

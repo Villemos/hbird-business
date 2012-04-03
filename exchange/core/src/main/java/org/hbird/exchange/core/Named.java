@@ -118,6 +118,9 @@ public abstract class Named implements Serializable, Comparable<Named> {
 	 * @return Value defining whether this object is less (-1), equal (0) or more (1) than the parsed object.
 	 */
 	public int compareTo(Named rhs) {
+		if (rhs == null) {
+			return 1;
+		}
 		if (this.name.equals(rhs.getName())) {
 			if (this.timestamp == rhs.timestamp) {
 				return 0;
