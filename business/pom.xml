@@ -36,6 +36,8 @@
     <module>business-configurator</module>
         
     <module>all-business</module>
+    <module>business-celestrack</module>
+    <module>business-cfdp</module>
   </modules>
 
 </project>
