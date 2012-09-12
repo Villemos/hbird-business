@@ -1,7 +1,6 @@
 package org.hbird.exchange.commandrelease;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.hbird.exchange.core.Command;
@@ -25,19 +24,6 @@ public class CommandRequest extends Named {
 	/** List of tasks to be performed after the release of the command. */
 	protected List<Task> tasks = new ArrayList<Task>();
 	
-	/** The time at which this command should be released for transfer to the satellite. A value of
-	 *  0 indicates immediate. */
-	protected long releaseTime = 0;
-	
-	/** The time at which the command should be executed onboard the satellite. A value of 0 indicates
-	 * immediate. */
-	protected long executionTime = 0;
-	
-	{
-		this.name = "CommandRequest";
-		this.description = "A command request holds...";
-	}	
-	
 	public CommandRequest() {};
 	
 	public CommandRequest(String issuedBy, String name, String description) {
@@ -54,13 +40,11 @@ public class CommandRequest extends Named {
 	 * @param releaseTime The time at which the command should be released by the MCS for transfer to the satellite.
 	 * @param executionTime The time at which the command should be executed onboard.
 	 */
-	public CommandRequest(String issuedBy, String name, String description, long releaseTime, long executionTime, List<String> lockStates, List<Task> tasks, Command command) {
+	public CommandRequest(String issuedBy, String name, String description, List<String> lockStates, List<Task> tasks, Command command) {
 		super(issuedBy, "CommandContainer" + name, "Command container holding lock states and tasks for the command '" + name + "'.");
 		this.command = command;
 		this.lockStates = lockStates;
 		this.tasks = tasks;
-		this.releaseTime = releaseTime;
-		this.executionTime = executionTime;
 	}
 	
 	/**
@@ -82,29 +66,6 @@ public class CommandRequest extends Named {
 		return tasks;
 	}
 	
-	/**
-	 * Getter of the command release time.
-	 * 
-	 * @return The time (ms from 1970) at which the command should be released for transfer.
-	 */
-	public long getReleaseTime() {
-		return releaseTime;
-	}
-
-	/**
-	 * Getter of the command execution time.
-	 * 
-	 * @return The time (ms from 1970) at which the command should execute.
-	 */
-	public long getExecutionTime() {
-		return executionTime;
-	}
-	
-	public long getReleaseDelay() {
-		Date now = new Date();
-		return now.getTime() > releaseTime ? 0 : releaseTime - now.getTime();
-	}
-
 	public Command getCommand() {
 		return command;
 	}

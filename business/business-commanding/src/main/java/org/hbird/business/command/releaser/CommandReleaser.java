@@ -1,15 +1,11 @@
 package org.hbird.business.command.releaser;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.camel.Body;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.ExchangePattern;
 import org.apache.camel.Handler;
 import org.apache.camel.Headers;
-import org.apache.camel.impl.DefaultExchange;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.StateParameter;
@@ -54,9 +50,7 @@ public class CommandReleaser {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(CommandReleaser.class);
 
-	/** Name of the Camel entry point that will lead to a parameter provider. The
-	 * assembly using the CommandReleaser must contain such a route. */
-	protected String requestQueue = "direct:parameterRequest";
+	protected Map<String, StateParameter> stateParameters = new HashMap<String, StateParameter>();
 
 	/**
 	 * Processor for the scheduling of validation task for a command as well as the
@@ -64,7 +58,7 @@ public class CommandReleaser {
 	 * 
 	 */
 	@Handler
-	public void process(@Body CommandRequest command, @Headers Map<String, Object> headers, CamelContext context) {
+	public void process(@Body CommandRequest command, @Headers Map<String, Object> headers) {
 
 		LOG.info("Received command '" + command.getName() + "' for release.");
 
@@ -77,29 +71,28 @@ public class CommandReleaser {
 		/** Default we assume the command is valid. */
 		headers.put("Valid", true);
 
-		/** Build the queue. */
-		String queue = "isStateOf='" + command.getName() + "'";
-		String separator = "";
-		for (String parameterName : command.getLockStates()) {
-			queue += separator+ "name='" + parameterName + "'";
-			separator = " OR ";
-		}			
-
-		/** Send the request. Respond is expected to be a list of StateParameter. */
-		Exchange exchange = new DefaultExchange(context, ExchangePattern.InOut);
-		exchange.getIn().setBody(queue);
-		context.createProducerTemplate().send(requestQueue, exchange);
-
-		/** Check respond. */
-		if (exchange.getOut().getBody() != null) {
-			for (StateParameter state : (List<StateParameter>) exchange.getOut().getBody()) { 
-				if (state.getStateValue() == false) {
+		/** Check states. */
+		synchronized (stateParameters) {
+			for (String state : command.getLockStates()) {
+				if (stateParameters.containsKey(state) == false || stateParameters.get(state).getStateValue() == false) {
 					LOG.error("Command '" + command.getCommand().getName() + "' marked as invalid.");
-					headers.put("Valid", false);
-				}
+					headers.put("Valid", false);	
+				}				
 			}
 		}
 
 		LOG.info("Forwarding command with validity='" + headers.get("Valid") + "'.");
+	}
+
+
+	/**
+	 * Method to receive a state parameter.
+	 * 
+	 * @param state
+	 */
+	public void state(@Body StateParameter state) {
+		synchronized (stateParameters) {
+			stateParameters.put(state.getName(), state);
+		}
 	}
 }

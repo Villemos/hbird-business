@@ -31,18 +31,9 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-            <id>villemos</id>
+            <id>hbird.repository</id>
             <name>villemos</name>
             <url>http://www.villemos.com:8080/artifactory/repo/</url>
-          </repository>
-
-          <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>mvnrepository</id>
-            <name>mvnrepository</name>
-            <url>http://mvnrepository.com/</url>
           </repository>
 
         </repositories>
@@ -67,6 +58,7 @@
             
     <module>all</module>
 
+    <module>validation</module>
   </modules>
 	
 </project>

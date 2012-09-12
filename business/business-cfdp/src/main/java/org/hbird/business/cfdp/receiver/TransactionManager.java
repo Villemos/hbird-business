@@ -18,8 +18,11 @@
  */
 package org.hbird.business.cfdp.receiver;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Date;
 
 import org.apache.camel.Handler;
 import org.hbird.exchange.cfdp.pdus.EofPdu;
@@ -32,6 +35,8 @@ public class TransactionManager {
 
 	protected String root = "inbox";
 
+	protected long latency = 60000;
+	
 	protected XStream xstream = new XStream();
 
 	/** Find all folders with a EOF file. */
@@ -42,50 +47,60 @@ public class TransactionManager {
 			return;
 		}
 
-		for (File transaction : rootFolder.listFiles()) {
-			File eof = new File(transaction.getAbsolutePath() + File.separator + transaction.getName() + "-EOF.pdu");
-			if (eof.exists()) {
+		try {
+			for (File transaction : rootFolder.listFiles(new EofFileFilter())) {
 
-				MetadataPdu metadata = null;
-				int pduLengthSum = 0;
-				EofPdu eofPdu = null;
-				
-				try {
-					eofPdu = (EofPdu) xstream.fromXML(new FileInputStream(eof));
+				/** Get the EOF PDU. */
+				EofPdu eofPdu = (EofPdu) xstream.fromXML(new FileInputStream(transaction.getName() + "-EOF.pdu"));
+
+				/** Check if we have all segments. */
+				if (eofPdu.segments == transaction.listFiles().length - 2) {
+
+					/** Get the metadata PDU. */
+					MetadataPdu metadata = (MetadataPdu) xstream.fromXML(new FileInputStream(transaction.getName() + "-metadata.pdu"));
+
+					/** Assign the necesarry byte array to hold all segments. */
+					int pduLengthSum = 0;			
 					byte[] bytes = new byte[(int) eofPdu.length];
 
-					/** Go through all PDUs and try to assemble the file. */
+					/** Go through all PDUs and assemble the file. */
 					for (File pdu : transaction.listFiles()) {
-
-						if (pdu.getName().endsWith("-EOF.pdu")) {
-							continue;
-						}
-						else if (pdu.getName().endsWith("-metadata.pdu")) {
-							metadata = (MetadataPdu) xstream.fromXML(new FileInputStream(pdu));
-						}
-						else {
+						if (pdu.getName().endsWith("-EOF.pdu") == false && pdu.getName().endsWith("-metadata.pdu") == false) {
 							FilePdu element = (FilePdu) xstream.fromXML(new FileInputStream(pdu));
 							System.arraycopy(element.data, 0, bytes, element.offset, element.length);
-
 							pduLengthSum += element.length;
 						}
 					}
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
 
-				if (pduLengthSum == eofPdu.length) {
-					File finalFile = new File(metadata.destinationFileName);
+					if (pduLengthSum == eofPdu.length) {
+						File finalFile = new File(metadata.destinationFileName);
 
-					/** Write file. */
+						/** Write file. */
+						FileOutputStream fos = new FileOutputStream(finalFile);
+						BufferedOutputStream bos = new BufferedOutputStream(fos);
+						bos.write(bytes);
+					}
 				}
 				else {
-					/** See if error file already exist. */
-
+					/** Check if we have an error log. */
+					File errorLog = new File(root + File.separator + "errors" + File.separator + transaction.getName() + ".log");
+					Date now = new Date();
+					if (errorLog.exists()) {
+						TransferLog log = (TransferLog) xstream.fromXML(new FileInputStream(errorLog));
+						if (log.timestamp + latency > now.getTime()) {
+							/** Transfer failed. */
+						}
+					}
+					else {
+						/** Create log. */
+						xstream.toXML(new TransferLog(now.getTime()), new FileOutputStream(errorLog));
+					}
 				}
-			}
-		}		
+			}		
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String getRoot() {

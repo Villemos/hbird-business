@@ -6,7 +6,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
-  <artifactId>business-cfdp</artifactId>
   
   <dependencies>
   
@@ -47,4 +46,8 @@
     
   </dependencies>
 
+  <groupId>org.hbird</groupId>
+  <artifactId>cfdp</artifactId>
+  <name>Business - CFDP</name>
+  <version>0.0.1-SNAPSHOT</version>
 </project>

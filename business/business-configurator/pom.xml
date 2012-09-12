@@ -22,6 +22,18 @@
 		</dependency>
 
 		<dependency>
+			<artifactId>business-scripting</artifactId>
+			<groupId>org.hbird.business</groupId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<artifactId>scripting</artifactId>
+			<groupId>org.hbird.exchange</groupId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
 			<artifactId>all-exchange</artifactId>
 			<groupId>org.hbird.exchange</groupId>
 			<version>0.0.1-SNAPSHOT</version>
@@ -97,6 +109,12 @@
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>
 			<version>${camel.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.villemos.ispace</groupId>
+			<artifactId>solr</artifactId>
+			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		
 	</dependencies>

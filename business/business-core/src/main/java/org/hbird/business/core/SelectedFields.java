@@ -17,7 +17,9 @@
 package org.hbird.business.core;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.Body;
@@ -30,10 +32,10 @@ import org.apache.camel.Headers;
  *  body, will thereafter also list the selected POJO fields in its header. This is 
  *  useful for filtering in for example routes using ActiveMQ, where only
  *  the header fields can be used for filtering / routing.*/
-public class SelectedFields extends AllFields {
+public class SelectedFields extends FieldBasedAccessor {
 
 	/** List of the field names to be mapped. The fields may be private, protected or public. */
-	protected String[] fields = {};
+	protected List<String> fields = new ArrayList<String>();
 
 	/**
 	 * The method will access the IN message of the exchange, and read the
@@ -54,22 +56,41 @@ public class SelectedFields extends AllFields {
 		Map<String, Field> allFields = new HashMap<String, Field>();
 		recursiveGet(body.getClass(), allFields);
 
+		List<String> fields2map = fields;
+		if (fields2map == null || fields2map.isEmpty()) {
+			fields2map = new ArrayList<String>(allFields.keySet());
+		}
+		
 		/** Map the selected fields/ */
-		for (String fieldName : fields) {
-			/** The field may be protected or private. Make it accessible prior to reading the values. */
-			allFields.get(fieldName).setAccessible(true);
+		for (String fieldName : fields2map) {
 
-			/** Set the header field name to the name of the field and the 
-			 * value to the value of the field. */
-			headers.put(fieldName, allFields.get(fieldName).get(body));
+			if (allFields.containsKey(fieldName)) {
+
+				/** The field may be protected or private. Make it accessible prior to reading the values. */
+				allFields.get(fieldName).setAccessible(true);
+
+				/** Set the header field name to the name of the field and the 
+				 * value to the value of the field. */
+				headers.put(fieldName, allFields.get(fieldName).get(body));
+			}
 		}
 	}
 
-	public String[] getFields() {
+	
+	public List<String> getFields() {
 		return fields;
 	}
 
-	public void setFields(String[] fields) {
+
+
+	public void setFields(List<String> fields) {
 		this.fields = fields;
 	}
+
+
+
+	public void setFields(String field) {
+		this.fields.add(field);
+	}
+
 }

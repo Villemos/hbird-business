@@ -31,7 +31,7 @@ public class BusinessCard extends Named {
 
 	{
 		this.name = "BusinessCard";
-		this.description = "A business card describing this command.";
+		this.description = "A business card describing this component.";
 	}
 	
 	public String host;

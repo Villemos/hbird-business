@@ -1,5 +1,9 @@
 package org.hbird.exchange.configurator;
 
+import org.hbird.exchange.validation.Limit;
+import org.hbird.exchange.validation.Limit.eLimitType;
+import org.hbird.exchange.validation.Limit.eValueType;
+
 public class LimitComponentRequest extends ComponentConfigurationRequest {
 
 	/**
@@ -7,21 +11,10 @@ public class LimitComponentRequest extends ComponentConfigurationRequest {
 	 */
 	private static final long serialVersionUID = -8047192684233318282L;
 
-	
-	
-	public LimitComponentRequest(String parameter, String name, String description, String expression) {
-		super();
-		this.parameter = parameter;
-		this.name = name;
-		this.description = description;
-		this.expression = expression;
+	public LimitComponentRequest(eLimitType type, String ofParameter, String limit, eValueType limittype, String stateName, String description) {
+		this.limit = new Limit(type, ofParameter, limit, limittype, stateName, description);
 	}
 
-	public String parameter;
-	public String name;
-	public String description;
 	
-	/** The expresssion in the format '<>[value]' */
-	public String expression;
-
+	public Limit limit;
 }

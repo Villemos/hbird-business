@@ -3,8 +3,8 @@ package org.hbird.business.configurator;
 import org.hbird.business.command.releaser.CommandReleaser;
 import org.hbird.business.core.FieldBasedScheduler;
 import org.hbird.business.core.FieldBasedSplitter;
-import org.hbird.business.heartbeat.Heart;
 import org.hbird.exchange.commandrelease.CommandReleaseServiceSpecification;
+import org.hbird.exchange.configurator.CommandComponentRequest;
 import org.hbird.exchange.parameters.ParameterAccessServiceSpecification;
 import org.hbird.exchange.tasking.TaskingServiceSpecification;
 
@@ -29,15 +29,17 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 
 	public void doConfigure() {
 
-		card.provides.add(new CommandReleaseServiceSpecification());
-		card.requires.add(new TaskingServiceSpecification());
-		card.requires.add(new ParameterAccessServiceSpecification());
+		CommandComponentRequest commandRequest = (CommandComponentRequest) request;
+		
+		card.requires.add(new CommandReleaseServiceSpecification());
+		card.provides.add(new TaskingServiceSpecification());
+		card.provides.add(new ParameterAccessServiceSpecification());
 		
 		CommandReleaser releaser = new CommandReleaser();
 
 		/** Configure a scheduler. */
 		FieldBasedScheduler scheduler = new FieldBasedScheduler();
-		scheduler.setFieldName("releaseTime");
+		scheduler.setFieldName("executionTime");
 		
 		FieldBasedSplitter splitter = new FieldBasedSplitter();
 		
@@ -48,10 +50,11 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 		 * into the commandQueue. The command queue will only release the command when the
 		 * header time has expired, thus efficiently queuing the command.
 		 * */
-		from("activemq:queue:injectedCommands")
+		from("activemq:queue:requests?selector=type='command'")
 		     .bean(scheduler)
 		     .to("activemq:queue:queuedCommands");
 
+		
 		/** Add the route for validation. 
 		 * 
 		 * This route will take commands that have been queued and check whether it is working.
@@ -59,11 +62,17 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 		from("activemq:queue:queuedCommands")
 		     .bean(releaser)
 		     .choice()
-		     .when(header("Valid").isEqualTo(true)).to("activemq:queue:releasedCommands")
+		     .when(header("Valid").isEqualTo(true)).to("activemq:topic:releasedCommands")
 		     .otherwise().to("activemq:topic:failedCommands");		
 
+		
+		/** Add route for receiving state parameters. */
+		from("activemq:topic:parameters?selector=isStateParameter='true'")
+	     .bean(releaser, "state");
+
+		
 		/** Extract the tasks from the command cartridge and schedule them, and release the command. */
-		from("activemq:queue:releasedCommands")
+		from("activemq:topic:releasedCommands")
 		     .wireTap("seda:taskExtractor")
 		     .to("activemq:topic:ejectedCommands");
 
@@ -74,12 +83,5 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 		
 		/** Route to move the tasks that has been scheduled. */
 		from("activemq:queue:queuedTasks").to("activemq:queue:tasks");
-		
-		if (request.heartbeatPeriod != 0) {
-			/** Create a heartbeat of this component. */
-			Heart heart = new Heart(request.id, request.heartbeatPeriod);
-			from("timer://heartbeat" + request.id + "?fixedRate=true&period=" + request.heartbeatPeriod).bean(heart).to("activemq:topic:systemMonitoring");
-		}
-		
 	}	
 }

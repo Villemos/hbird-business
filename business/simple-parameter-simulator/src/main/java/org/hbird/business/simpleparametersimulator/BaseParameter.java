@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.camel.Exchange;
 import org.hbird.exchange.core.Parameter;
 
 /**
@@ -30,12 +29,13 @@ import org.hbird.exchange.core.Parameter;
  * callback method. 
  *
  */
-public abstract class BaseParameter extends Parameter {
+public abstract class BaseParameter {
 
-	/***/
-	private static final long serialVersionUID = 2253062760976782486L;
-
-
+	protected String name;
+	protected String description;
+	protected Object value;
+	protected String unit;
+	
 	protected String startTimeFormat = "yyyy-MM-dd HH:mm:ss";
 	protected String startTime = null;
 	protected long lStartTime = 0l;
@@ -48,7 +48,8 @@ public abstract class BaseParameter extends Parameter {
 	 * @param description
 	 */
 	public BaseParameter(String name, String description) {
-		super("", name, description, null, "");
+		this.name = name;
+		this.description = description;
 	}
 
 	
@@ -59,7 +60,10 @@ public abstract class BaseParameter extends Parameter {
 	 * @param unit
 	 */
 	public BaseParameter(String name, String description, Object value, String unit) {
-		super("", name, description, value, unit);
+		this.name = name;
+		this.description = description;
+		this.value = value;
+		this.unit = unit;
 	}
 
 	/**
@@ -69,7 +73,7 @@ public abstract class BaseParameter extends Parameter {
 	 * @param arg0 The exchange into which the parameter should be inserted. To insert a 
 	 * parameter into the exchange, use the ExchangeFormatter class.
 	 */
-	protected abstract void process(Exchange arg0);	
+	protected abstract Parameter process();	
 	
 	
 	protected long getTime(long tick) {

@@ -18,8 +18,9 @@ package org.hbird.business.simpleparametersimulator;
 
 import java.util.Date;
 
-import org.apache.camel.Exchange;
+import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
+import org.hbird.exchange.core.Parameter;
 
 /**
  * Class for generating a parameter developing like a sinus curve. The value
@@ -42,9 +43,6 @@ import org.apache.log4j.Logger;
  * curve will start at +Amplitude, decrease accros 0 to -Amplitude, the increase back to +Amplitude.  
  */
 public class SinusCurveParameter extends BaseParameter {
-
-	/***/
-	private static final long serialVersionUID = 8881379617713090933L;
 
 	/** The class logger. */
 	protected static Logger logger = Logger.getLogger(SinusCurveParameter.class);
@@ -93,17 +91,18 @@ public class SinusCurveParameter extends BaseParameter {
 	/* (non-Javadoc)
 	 * @see org.hbird.simpleparametersimulator.BaseParameter#process(org.apache.camel.Exchange)
 	 */
-	public void process(Exchange exchange) {
+	@Handler
+	public Parameter process() {
 		try {
 			logger.debug("Sending new sinus value with name '" + name + "'.");
-			newInstance();
 			this.value = new Double(amplitude * Math.sin(angularFrequency * ((((new Date()).getTime() - startTime.getTime()))%modolus) + phase) + intercept);
-			exchange.getIn().setBody(this);
 		} 
 		catch (Exception e) {
 			logger.error("Courght exception " + e);
 			e.printStackTrace();
 		}
+		
+		return new Parameter("simulator", name, description, value, unit);
 	}
 
 	public double getAngularFrequency() {

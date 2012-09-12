@@ -31,5 +31,6 @@ public class EofPdu extends Pdu {
 	}
 
 	public long length;
-
+	
+	public long segments;
 }

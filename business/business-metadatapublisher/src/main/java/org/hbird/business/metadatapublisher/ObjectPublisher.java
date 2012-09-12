@@ -40,8 +40,13 @@ public class ObjectPublisher {
 	protected static Logger logger = Logger.getLogger(ObjectPublisher.class);
 	
 	/** The name of the file to be loaded. The file may be changed on disk. */
-	protected String filename = "objects.xml";
+	protected String filename = "components.xml";
 	
+	protected String listname = "components";
+
+	public ObjectPublisher() {
+	}
+
 	/**
 	 * Constructor.
 	 * 
@@ -64,8 +69,24 @@ public class ObjectPublisher {
 		
 		/** Load the definitions from the spring bean file. */
 		BeanFactory factory = new FileSystemXmlApplicationContext (filename);
-		List<Object> objects = (List<Object>) factory.getBean("objects");
+		List<Object> objects = (List<Object>) factory.getBean(listname);
 		
 		return objects;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public String getListname() {
+		return listname;
+	}
+
+	public void setListname(String listname) {
+		this.listname = listname;
 	}
 }

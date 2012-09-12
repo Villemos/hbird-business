@@ -18,8 +18,9 @@ package org.hbird.business.simpleparametersimulator;
 
 import java.util.Date;
 
-import org.apache.camel.Exchange;
+import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
+import org.hbird.exchange.core.Parameter;
 
 /**
  * A linearly changing parameter. The value is calculated as
@@ -29,9 +30,6 @@ import org.apache.log4j.Logger;
  *   f(time) == f(time + N*modolus), where N = {0, 1, 2, ...} 
  */
 public class LinearParameter extends BaseParameter {
-
-	/***/
-	private static final long serialVersionUID = -8104788051138461757L;
 
 	/** The class logger. */
 	protected static Logger logger = Logger.getLogger(LinearParameter.class);
@@ -61,7 +59,7 @@ public class LinearParameter extends BaseParameter {
 		this.intercept = intercept;
 		this.deltaFrequency = deltaFrequency;	
 		this.modolus = modolus;
-		
+
 		this.startTime = new Date();
 		this.value = new Double(intercept + deltaFrequency * (((new Date()).getTime() - startTime.getTime()) % modolus));
 		this.unit  = unit;
@@ -70,11 +68,12 @@ public class LinearParameter extends BaseParameter {
 	/* (non-Javadoc)
 	 * @see org.hbird.simpleparametersimulator.BaseParameter#process(org.apache.camel.Exchange)
 	 */
-	public void process(Exchange exchange) {
-			logger.debug("Sending new linear value with name '" + name + "'.");
-			newInstance();
-			this.value = new Double(intercept + deltaFrequency * (((new Date()).getTime() - startTime.getTime()) % modolus));
-			exchange.getIn().setBody(this);
+	@Handler
+	public Parameter process() {
+		logger.debug("Sending new linear value with name '" + name + "'.");
+		this.value = new Double(intercept + deltaFrequency * (((new Date()).getTime() - startTime.getTime()) % modolus));
+
+		return new Parameter("simulator", name, description, value, unit);
 	}
 
 	public double getIntercept() {

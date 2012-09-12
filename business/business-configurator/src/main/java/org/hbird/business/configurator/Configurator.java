@@ -19,9 +19,10 @@ public class Configurator {
 		classes.put("org.hbird.exchange.configurator.NavigationComponentRequest", NavigationComponentBuilder.class.getName());
 		classes.put("org.hbird.exchange.configurator.SystemMonitoringComponentRequest", SystemMonitorComponentBuilder.class.getName());
 		classes.put("org.hbird.exchange.configurator.TaskExecutorComponentRequest", TaskExecutorComponentBuilder.class.getName());
-		classes.put("org.hbird.exchange.configurator.ParameterArchiveComponentRequest", ParameterArchiveComponentBuilder.class.getName());		
+		classes.put("org.hbird.exchange.configurator.ParameterArchiveComponentRequest", ParameterArchiveComponentBuilder.class.getName());	
+		classes.put("org.hbird.exchange.configurator.ScriptComponentRequest", ScriptComponentBuilder.class.getName());
+		classes.put("org.hbird.exchange.configurator.CommandArchiveComponentRequest", CommandArchiveComponentBuilder.class.getName());
 	}
-	
 	
 	public void process(@Body ComponentConfigurationRequest request, CamelContext context) {
 

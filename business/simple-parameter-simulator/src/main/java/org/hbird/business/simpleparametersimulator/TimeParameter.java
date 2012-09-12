@@ -18,20 +18,19 @@ package org.hbird.business.simpleparametersimulator;
 
 import java.util.Date;
 
-import org.apache.camel.Exchange;
+import org.apache.camel.Handler;
+import org.hbird.exchange.core.Parameter;
 
 public class TimeParameter extends BaseParameter {
-
-	/***/
-	private static final long serialVersionUID = 3583468275604010575L;
 
 	public TimeParameter(String name, String description, String unit) {
 		super(name, description, 0d, unit);
 	}
 
 	@Override
-	protected void process(Exchange exchange) {
-		newInstance();
-		exchange.getIn().setBody((new Date()).getTime());		
+	@Handler
+	protected Parameter process() {
+		value = (new Date()).getTime();		
+		return new Parameter("simulator", name, description, value, unit);
 	}
 }

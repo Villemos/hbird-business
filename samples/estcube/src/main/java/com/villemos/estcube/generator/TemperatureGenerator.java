@@ -1,8 +1,13 @@
 package com.villemos.estcube.generator;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.camel.Headers;
+import org.hbird.exchange.configurator.ComponentConfigurationRequest;
 import org.hbird.exchange.configurator.LimitComponentRequest;
 import org.hbird.exchange.core.Parameter;
 
@@ -26,8 +31,10 @@ public class TemperatureGenerator {
 
 	protected String lowerLimit = "below 5";	
 	
-	public LimitComponentRequest configure() {
-		return new LimitComponentRequest(name, name + ".limit", "Limit of temperature.", lowerLimit);
+	public List<ComponentConfigurationRequest> configure() {
+		List<ComponentConfigurationRequest> requests = new ArrayList<ComponentConfigurationRequest>();
+		requests.add(new LimitComponentRequest(name, name + ".limit", "Limit of temperature.", lowerLimit));
+		return requests;
 	}
 
 	public String getSource() {

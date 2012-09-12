@@ -20,13 +20,10 @@
   <modules>
     <module>business-core</module>
 
-    <module>business-analysis</module>
     <module>business-metadatapublisher</module>
     <module>business-navigation</module>
     <module>business-parameter-storage</module>
     <module>business-scripting</module>
-    <module>simple-parameter-simulator</module>
-<!--     <module>simulator</module> -->
     <module>business-systemmonitoring</module>
     <module>business-taskexecutor</module>
     <module>business-time-correlation</module>
@@ -34,10 +31,13 @@
     <module>business-heartbeat</module>
     <module>business-commanding</module>
     <module>business-configurator</module>
-        
-    <module>all-business</module>
     <module>business-celestrack</module>
     <module>business-cfdp</module>
+                
+    <module>business-testtool</module>
+    <module>simple-parameter-simulator</module>    
+    
+    <module>all-business</module>
   </modules>
 
 </project>

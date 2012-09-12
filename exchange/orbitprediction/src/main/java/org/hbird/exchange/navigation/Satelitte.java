@@ -27,16 +27,12 @@ public class Satelitte extends Named {
 	/** The unique UUID. */
 	private static final long serialVersionUID = 6169559659135516782L;
 
-	protected String satelittename;
-
-	protected String satelittedescription;
+	protected String designator;
+	
+	protected String satelliteNumber;
 	
 	public Satelitte() {};
 	
-	{
-		this.name = "";
-		this.description = "";
-	}
 	/**
 	 * Constructor.
 	 * 
@@ -46,4 +42,22 @@ public class Satelitte extends Named {
 	public Satelitte(String issuedBy, String name, String description) {
 		super(issuedBy, name, description);
 	}
+
+	public String getDesignator() {
+		return designator;
+	}
+	
+	public void setDesignator(String designator) {
+		this.designator = designator;
+	}
+
+	public String getSatelliteNumber() {
+		return satelliteNumber;
+	}
+
+	public void setSatelliteNumber(String satelliteNumber) {
+		this.satelliteNumber = satelliteNumber;
+	}
+	
+	
 }

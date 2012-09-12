@@ -1,71 +1,58 @@
 package org.hbird.business.configurator;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.hbird.business.validation.parameter.BaseLimit;
-import org.hbird.business.validation.parameter.LowerLimit;
-import org.hbird.business.validation.parameter.UpperLimit;
+import org.hbird.business.validation.limits.BaseLimitChecker;
+import org.hbird.business.validation.limits.LowerLimitChecker;
+import org.hbird.business.validation.limits.StaticLimitChecker;
+import org.hbird.business.validation.limits.UpperLimitChecker;
 import org.hbird.exchange.configurator.LimitComponentRequest;
+import org.hbird.exchange.validation.Limit.eLimitType;
 
 public class LimitCheckComponentBuilder extends ComponentBuilder {
 
-	/** The definition of the routes that the */
 	protected String inCheckRoute = "activemq:topic:parameters?selector=name='PARAMETERNAME'";
 	protected String inEnableRoute = "activemq:topic:parameters?selector=name='LIMITNAME_SWITCH'";
 	protected String inUpdateRoute = "activemq:topic:parameters?selector=name='LIMITNAME_UPDATE'";
 	protected String outParameters = "activemq:topic:parameters";
-
-	protected Pattern upperLimitExpression = Pattern.compile("above\\s*(.+)");
-	protected Pattern lowerLimitExpression = Pattern.compile("below\\s*(.+)");
 
 	@Override
 	public void doConfigure() {
 
 		LimitComponentRequest request = (LimitComponentRequest) this.request;
 
-		/** TODO Update to let the same limit be able to check multiple parameters. 
-		 *       1. Lookup the limit in the local registry.
-		 *       2. If present, then use the existing bean, else create new. */
-		BaseLimit limit = null;
-
-		Matcher upperLimitMatcher = upperLimitExpression.matcher(request.expression);
-		if (upperLimitMatcher.find()) {
-			limit = new UpperLimit(request.name, request.description, Double.parseDouble(upperLimitMatcher.group(1)));
+		if (request.limit.type == eLimitType.Lower) {
+			createRoute(request.limit.parameter, new LowerLimitChecker("LowerLimitChecker_" + request.limit.parameter, "Lower limit checker for " + request.limit.parameter, request.limit));			
 		}
-
-		Matcher lowerLimitMatcher = lowerLimitExpression.matcher(request.expression);
-		if (lowerLimitMatcher.find()) {
-			limit = new LowerLimit(request.name, request.description, Double.parseDouble(lowerLimitMatcher.group(1)));
+		else if (request.limit.type == eLimitType.Upper) {
+			createRoute(request.limit.parameter, new UpperLimitChecker("UpperLimitChecker_" + request.limit.parameter, "Upper limit checker for " + request.limit.parameter, request.limit));			
 		}
-
-		if (limit == null) {
-			/** Error. */
-			return;
+		else if (request.limit.type == eLimitType.Static) {
+			createRoute(request.limit.parameter, new StaticLimitChecker("StaticLimitChecker_" + request.limit.parameter, "Static limit checker for " + request.limit.parameter, request.limit));			
 		}
-
-		from("direct:parameters_" + request.name)
+	}
+	
+	protected void createRoute(String parameter, BaseLimitChecker limit) {
+		
+		/** Create the route for limit checking. */
+		from(inCheckRoute.replaceAll("PARAMETERNAME", parameter))
+		.bean(limit, "processParameter")
+		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
+		.setHeader("isStateParameter", simple("true"))
 		.setHeader("name", simple("${in.body.name}"))
 		.to(outParameters);
 
-		from("direct:stateParameters_" + request.name)
-		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
-		.to("direct:parameters_" + request.name);
-
-		/** Create the route for limit checking. */
-		from(inCheckRoute.replaceAll("PARAMETERNAME", request.parameter))
-		.bean(limit, "processParameter")
-		.to(getContext().getEndpoint("direct:stateParameters_" + request.name));
-
 		/** Create the route for enabling/disabling limit checking. */
-		from(inEnableRoute.replaceAll("LIMITNAME", request.name))
+		from(inEnableRoute.replaceAll("LIMITNAME", limit.getName()))
 		.bean(limit, "processEnabled")
-		.to(getContext().getEndpoint("direct:stateParameters_" + request.name));
+		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
+		.setHeader("name", simple("${in.body.name}"))
+		.to(outParameters);
 
 		/** Create the route for changing the limit value. */
-		from(inUpdateRoute.replaceAll("LIMITNAME", request.name))
+		from(inUpdateRoute.replaceAll("LIMITNAME", limit.getName()))
 		.bean(limit, "processLimit")
-		.to(getContext().getEndpoint("direct:stateParameters_" + request.name));
+		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
+		.setHeader("name", simple("${in.body.name}"))
+		.to(outParameters);
 	}
 
 	public String getInCheckRoute() {
@@ -99,22 +86,4 @@ public class LimitCheckComponentBuilder extends ComponentBuilder {
 	public void setOutParameters(String outParameters) {
 		this.outParameters = outParameters;
 	}
-
-	public Pattern getUpperLimitExpression() {
-		return upperLimitExpression;
-	}
-
-	public void setUpperLimitExpression(Pattern upperLimitExpression) {
-		this.upperLimitExpression = upperLimitExpression;
-	}
-
-	public Pattern getLowerLimitExpression() {
-		return lowerLimitExpression;
-	}
-
-	public void setLowerLimitExpression(Pattern lowerLimitExpression) {
-		this.lowerLimitExpression = lowerLimitExpression;
-	}
-
-
 }

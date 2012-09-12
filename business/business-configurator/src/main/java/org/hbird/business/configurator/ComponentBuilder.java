@@ -25,17 +25,17 @@ public abstract class ComponentBuilder extends RouteBuilder {
 	public void configure() throws Exception {
 	
 		/** Setup the businesscard service. */
-		card.component = request.id;
-		card.host = InetAddress.getLocalHost().getHostName();
-		card.provides.add(new BusinessCardServiceSpecification());
+//		card.component = request.getName();
+//		card.host = InetAddress.getLocalHost().getHostName();
+//		card.provides.add(new BusinessCardServiceSpecification());
 		
 		/** Setup the component specific services. */
 		doConfigure();
 		
 		/** Create the heartbeat / service publishing channel. */
-		from("timer:heartbeat_" + request.id + "?fixedRate=true&period=3000")
-	     .setBody(bean(card))
-	     .to("activemq:topic:system");				
+//		from("timer:heartbeat_" + request.getName() + "?fixedRate=true&period=10000")
+//	     .setBody(bean(card))
+//	     .to("activemq:topic:system");				
 	}
 	
 	/** The component specific configuration. */
