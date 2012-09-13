@@ -56,9 +56,9 @@ public class TaskExecutor {
 	 * @throws InterruptedException 
 	 */
 	@Handler
-	public void receive(@Body Object body) throws InterruptedException {
+	public Object receive(@Body Task body) throws InterruptedException {
 
 		/** Execute the task. The task may return a new object which is the body of the exchange. */
-		body = ((Task) body).execute();
+		return body.execute();
 	}
 }

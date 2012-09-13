@@ -11,4 +11,7 @@
   <modules>
   	<module>estcube</module>
   </modules>
+  <groupId>org.hbird</groupId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Hummingbird Systems</name>
 </project>

@@ -18,7 +18,6 @@ package org.hbird.business.metadatapublisher;
 
 import java.util.List;
 
-import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
@@ -60,10 +59,9 @@ public class ObjectPublisher {
 	 * Method to split the message. The returned message list is actually loaded
 	 * from a Spring file, i.e. the original Exchange is ignored.
 	 * 
-	 * @param exchange Exchange triggering the loading. The message itself is ignored.
 	 * @return A list of messages, carrying as the body a command definition.
 	 */
-	public List<Object> process(Exchange exchange) {
+	public List<Object> process() {
 
 		logger.info("Loading 'Named' objects from file.");
 		

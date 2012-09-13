@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+	
+<!-- 	String issuedBy, String name, String description, Object value, String unit -->
+	<bean id="parameter1" class="org.hbird.exchange.core.Parameter">
+		<constructor-arg index="0" value="test"/>
+		<constructor-arg index="1" value="test name"/>
+		<constructor-arg index="2" value="test description"/>
+		<constructor-arg index="3" value="2d"/>
+		<constructor-arg index="4" value="test unit"/>
+	</bean>
+
+	<bean id="parameter2" class="org.hbird.exchange.core.Parameter">
+		<constructor-arg index="0" value="test"/>
+		<constructor-arg index="1" value="test name"/>
+		<constructor-arg index="2" value="test description"/>
+		<constructor-arg index="3" value="2d"/>
+		<constructor-arg index="4" value="test unit"/>
+	</bean>
+		
+	<bean id="parameter3" class="org.hbird.exchange.core.Parameter">
+		<constructor-arg index="0" value="test"/>
+		<constructor-arg index="1" value="test name"/>
+		<constructor-arg index="2" value="test description"/>
+		<constructor-arg index="3" value="2d"/>
+		<constructor-arg index="4" value="test unit"/>
+	</bean>
+		
+	<bean id="components" class="java.util.ArrayList">
+		<constructor-arg>
+        	<list>
+            	<ref bean="parameter1" />
+ 	          	<ref bean="parameter2" />
+ 	          	<ref bean="parameter3" />
+         	</list>
+	    </constructor-arg>
+	</bean>
+
+	<bean id="components2" class="java.util.ArrayList">
+		<constructor-arg>
+        	<list>
+            	<ref bean="parameter1" />
+ 	          	<ref bean="parameter2" />
+         	</list>
+	    </constructor-arg>
+	</bean>
+
+	
+</beans>

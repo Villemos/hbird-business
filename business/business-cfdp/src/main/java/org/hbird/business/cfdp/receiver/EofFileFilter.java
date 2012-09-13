@@ -3,6 +3,7 @@ package org.hbird.business.cfdp.receiver;
 import java.io.File;
 import java.io.FileFilter;
 
+
 public class EofFileFilter implements FileFilter {
 
 	public boolean accept(File file) {

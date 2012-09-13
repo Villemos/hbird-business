@@ -42,4 +42,7 @@
 
 
 	</dependencies>
+	<groupId>org.hbird</groupId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>System - Estcube</name>
 </project>

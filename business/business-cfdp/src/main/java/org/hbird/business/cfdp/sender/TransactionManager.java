@@ -33,6 +33,7 @@ import org.hbird.exchange.cfdp.requests.Report;
 import org.hbird.exchange.cfdp.requests.Resume;
 import org.hbird.exchange.cfdp.requests.Suspend;
 
+
 public class TransactionManager {
 
 	protected Map<String, TransferTransaction> transactions = new HashMap<String, TransferTransaction>();

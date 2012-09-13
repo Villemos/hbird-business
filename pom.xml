@@ -31,7 +31,31 @@
 		<url>http://www.villemos.com</url>
 	</organization>
 
-    <distributionManagement>
+	<repositories>
+
+		<!-- Repository for the dependencies on other iSpace components. -->
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>villemos</id>
+			<name>villemos</name>
+			<url>http://www.villemos.com:8080/artifactory/repo/</url>
+		</repository>
+
+		<!-- Repository dependency for Jxl. -->
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>mvnrepository</id>
+			<name>mvnrepository</name>
+			<url>http://mvnrepository.com/</url>
+		</repository>
+
+	</repositories>
+
+	<distributionManagement>
 		<repository>
 			<id>hbird.repository</id>
 			<name>Hummingbird Exchange and Business Tier releases</name>
