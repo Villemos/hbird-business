@@ -9,4 +9,5 @@
   <artifactId>cfdp</artifactId>
   <groupId>org.hbird.exchange</groupId>
   <version>0.0.1-SNAPSHOT</version>
+  <name>Exchange - CFDP</name>
 </project>

@@ -49,8 +49,8 @@ public class SetParameter extends Task {
 	 * @param executionTime The time at which the task should be executed.
 	 * @param parameter The parameter to be set.
 	 */
-	public SetParameter(String name, String description, long executionTime, Parameter parameter) {
-		super("", name, description, executionTime);
+	public SetParameter(String issuedBy, String name, String description, long executionTime, Parameter parameter) {
+		super(issuedBy, name, description, executionTime);
 		this.parameter = parameter;
 	}
 

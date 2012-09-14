@@ -38,6 +38,7 @@
     <module>simple-parameter-simulator</module>    
     
     <module>all-business</module>
+    <module>business-importer</module>
   </modules>
 
 </project>

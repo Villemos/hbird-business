@@ -27,8 +27,8 @@ public class ReflectiveSetParameter extends SetParameter {
 	 * @param parameter The parameter to be set by this task
 	 * @param argument The argument that the parameter set by this task should reflect. 
 	 */
-	public ReflectiveSetParameter(String name, String description, long executionTime, Parameter parameter, Parameter argument) {
-		super(name, description, executionTime, parameter);
+	public ReflectiveSetParameter(String issuedBy, String name, String description, long executionTime, Parameter parameter, Parameter argument) {
+		super(issuedBy, name, description, executionTime, parameter);
 		this.argument = argument;
 	}
 	

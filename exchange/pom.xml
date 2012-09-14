@@ -43,6 +43,7 @@
   <modules>
     <module>core</module>
 
+    <module>cfdp</module>
     <module>businesscard</module>
     <module>commandqueuemanagement</module>
     <module>commandcontainer</module>
