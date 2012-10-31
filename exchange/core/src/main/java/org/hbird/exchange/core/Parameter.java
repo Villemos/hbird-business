@@ -50,6 +50,10 @@ public class Parameter extends Named {
 		this.value = value;
 	}
 
+	public Parameter(Parameter base) {
+		this(base.issuedBy, base.name, base.description, base.value, base.unit);
+	}
+	
 	/**
 	 * Creates a Parameter with a timestamp set to 'now'.
 	 * 

@@ -32,13 +32,12 @@ public class Task extends Named {
 	/** The unique UID */
 	private static final long serialVersionUID = 6287812296391672915L;
 	
-	/** The execution time of the task. */
+	/** The ABSOLUTE execution time of the task. */
 	protected long executionTime = 0;
 	
-	{
-		this.name = "";
-		this.description = "";
-	}
+	/** The RELATIVE execution time of the task. Can be used to calculate the ABSOLUTE execution time based
+	 *  on a start time as; START_TIME + executionDelay = executionTime. */
+	protected long executionDelay = 0;	
 	
 	public Task() {};
 	
@@ -49,19 +48,34 @@ public class Task extends Named {
 	 * @param description A description of the task
 	 * @param executionTime The java time (ms) when the task should be executed. 0 is immediately.
 	 */
-	public Task(String issuedBy, String name, String description, long executionTime) {
+	public Task(String issuedBy, String name, String description, long executionDelay) {
 		super(issuedBy, name, description);
-		this.executionTime = executionTime;
+		this.executionDelay = executionDelay;
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.hbird.exchange.commanding.Task#getExecutionDelay()
 	 */
 	public long getExecutionDelay() {
-		Date now = new Date();
-		return now.getTime() > executionTime ? 0 : executionTime - now.getTime();
+		return executionDelay; 
 	}
 	
+	public void setExecutionDelay(long executionDelay) {
+		this.executionDelay = executionDelay;
+	}
+	
+	public long getExecutionTime() {
+		return executionTime == 0 ? (new Date()).getTime() + executionDelay : executionTime;
+	}
+
+	public long getExecutionTime(long startTime) {
+		return startTime + executionDelay;
+	}
+
+	public void setExecutionTime(long executionTime) {
+		this.executionTime = executionTime;
+	}
+
 	public Object execute() {
 		return null;
 	};

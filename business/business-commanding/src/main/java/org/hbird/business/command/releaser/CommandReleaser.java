@@ -73,6 +73,8 @@ public class CommandReleaser {
 
 		/** Check states. */
 		synchronized (stateParameters) {
+			/** TODO The state parameters that point to the command should also be checked. */
+			
 			for (String state : command.getLockStates()) {
 				if (stateParameters.containsKey(state) == false || stateParameters.get(state).getStateValue() == false) {
 					LOG.error("Command '" + command.getCommand().getName() + "' marked as invalid.");

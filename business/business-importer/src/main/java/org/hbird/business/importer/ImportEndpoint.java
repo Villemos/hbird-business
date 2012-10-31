@@ -34,11 +34,6 @@ public class ImportEndpoint extends ScheduledPollEndpoint {
 
 	private static final transient Logger LOG = LoggerFactory.getLogger(ImportEndpoint.class);
 
-	/** The name of the input file. May be dynamically changed by inserting the following
-	 * keywords;
-	 *   '${TIMESTAMP}'. Will be replaced with a timestamp in the format defined by filenameDateFormat.
-	 *   '${ID}'. Will be replaced with the value of the '${ID}' attribute. 
-	 * */
 	protected String filename = null;
 
 	public ImportEndpoint() {
@@ -53,7 +48,7 @@ public class ImportEndpoint extends ScheduledPollEndpoint {
 	}
 
 	public Producer createProducer() throws Exception {
-		throw new Exception();
+		return new ImportProducer(this);
 	}
 
 	public Consumer createConsumer(Processor processor) throws Exception {

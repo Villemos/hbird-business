@@ -24,7 +24,11 @@ import org.hbird.exchange.core.Parameter;
  *  </camelContext>
  * 
  */
-public class ThreadCountMonitor {
+public class ThreadCountMonitor extends Monitor {
+	
+	public ThreadCountMonitor(String componentId) {
+		super(componentId);
+	}
 
 	/**
 	 * Method to create a new instance of the threads parameter. The body of the 
@@ -33,6 +37,6 @@ public class ThreadCountMonitor {
 	 * @param exchange The exchange to hold the new value.
 	 */
 	public Parameter check() {
-		return new Parameter("", "Thread Count", "The number of threads used", ManagementFactory.getThreadMXBean().getThreadCount(), "Count");
+		return new Parameter(componentId, "Thread Count", "The number of threads used", ManagementFactory.getThreadMXBean().getThreadCount(), "Count");
 	}	
 }

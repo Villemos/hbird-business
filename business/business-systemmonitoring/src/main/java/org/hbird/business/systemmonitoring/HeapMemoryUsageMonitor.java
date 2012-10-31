@@ -1,6 +1,8 @@
 package org.hbird.business.systemmonitoring;
 
 import java.lang.management.ManagementFactory;
+import java.net.UnknownHostException;
+
 import org.hbird.exchange.core.Parameter;
 
 /**
@@ -23,15 +25,20 @@ import org.hbird.exchange.core.Parameter;
  *  </camelContext>
  * 
  */
-public class HeapMemoryUsageMonitor {
+public class HeapMemoryUsageMonitor extends Monitor {
+	
+	public HeapMemoryUsageMonitor(String componentId) {
+		super(componentId);
+	}
 
 	/**
 	 * Method to create a new instance of the memory parameter. The body of the 
 	 * exchange will be updated.
 	 * 
 	 * @param exchange The exchange to hold the new value.
+	 * @throws UnknownHostException 
 	 */
-	public Parameter check() {
-		return new Parameter("", "Heap Memory Usage", "The heap memory usage", ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed(), "Byte");
+	public Parameter check() throws UnknownHostException {
+		return new Parameter(componentId, "Heap Memory Usage", "The heap memory usage", ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed(), "Byte");
 	}	
 }

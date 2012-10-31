@@ -23,31 +23,25 @@
  */
 package org.hbird.business.importer;
 
-import org.apache.camel.Processor;
-import org.apache.camel.impl.ScheduledPollConsumer;
+import org.apache.camel.Exchange;
+import org.apache.camel.Handler;
+import org.apache.camel.impl.DefaultProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * The HelloWorld consumer.
- */
-public class ImportConsumer extends ScheduledPollConsumer {
+public class ImportProducer extends DefaultProducer {
 
-	private static final transient Logger LOG = LoggerFactory.getLogger(ImportConsumer.class);
+	private static final transient Logger LOG = LoggerFactory.getLogger(ImportProducer.class);
 
-	private final ImportEndpoint endpoint;
-
-	public ImportConsumer(ImportEndpoint endpoint, Processor processor) {
-		super(endpoint, processor);
-		this.endpoint = endpoint;
+	protected ImportAccessor accessor;
+	
+	public ImportProducer(ImportEndpoint endpoint) {
+		super(endpoint);
+		accessor = new ImportAccessor(endpoint);
 	}
 
-	@Override
-	protected int poll() throws Exception {
-
-
-		return 1;
+	@Handler
+	public void process(Exchange exchange) throws Exception {
+		exchange.getIn().setBody(accessor.getObjects());		
 	}
-
-
 }

@@ -58,11 +58,6 @@ public class Command extends Named {
 	 * immediate. */
 	protected long executionTime = 0;
 	
-	{
-		this.name = "Command";
-		this.description = "";
-	}
-	
 	public Command() {};
 	
 	public Command(String issuedBy, String name, String description) {

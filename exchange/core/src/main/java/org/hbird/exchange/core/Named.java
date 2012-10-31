@@ -57,7 +57,7 @@ public abstract class Named implements Serializable, Comparable<Named> {
 	 *  the time at which the series was generated. Its the responsibility of the creator
 	 *  of the objects to ensure that the identifier is unique and consistent. A 
 	 *  value of 0 means no data series. */
-	protected long datasetidentifier = 0;
+	protected String datasetidentifier = null;
 
 	public Named() {};
 	
@@ -94,7 +94,7 @@ public abstract class Named implements Serializable, Comparable<Named> {
 	 * @param description The description of the object.
 	 * @param timestamp The timestamp of the object.
 	 */
-	public Named(String issuedBy, String name, String description, long timestamp, long datasetidentifier) {
+	public Named(String issuedBy, String name, String description, long timestamp, String datasetidentifier) {
 		this.issuedBy = issuedBy;
 		this.name = name;
 		this.description = description;
@@ -167,7 +167,7 @@ public abstract class Named implements Serializable, Comparable<Named> {
 	 * 
 	 * @return The data set identifier, identifying the data set this object is part of.
 	 * */
-	public long getDatasetidentifier() {
+	public String getDatasetidentifier() {
 		return datasetidentifier;
 	}
 
@@ -203,9 +203,7 @@ public abstract class Named implements Serializable, Comparable<Named> {
 		this.description = description;
 	}
 
-	public void setDatasetidentifier(long datasetidentifier) {
+	public void setDatasetidentifier(String datasetidentifier) {
 		this.datasetidentifier = datasetidentifier;
 	}
-	
-	
 }

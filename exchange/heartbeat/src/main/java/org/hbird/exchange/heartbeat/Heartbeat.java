@@ -16,6 +16,9 @@
  */
 package org.hbird.exchange.heartbeat;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import org.hbird.exchange.core.Named;
 
 public class Heartbeat extends Named {
@@ -28,10 +31,24 @@ public class Heartbeat extends Named {
 	{
 		this.name = "Heartbeat";
 		this.description = "A heartbeat signal. The component was alive as this signal was issued.";
+		
+		try {
+			this.hostname = InetAddress.getLocalHost().getHostName();
+			this.hostip = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 	}
 
+	/** The time to the next beat. */
 	protected long nextBeat = 10000;
 	
+	/** The name of the host upon which the component is running. */
+	protected String hostname = "unknown";
+	
+	/** The IP of the host upon which the component is running. */
+	protected String hostip = "unknown";	
+		
 	public Heartbeat() {};
 	
 	public Heartbeat(String issuedBy, long timestamp, long nextBeat) {

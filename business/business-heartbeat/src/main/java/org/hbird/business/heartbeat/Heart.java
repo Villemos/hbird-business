@@ -21,8 +21,10 @@ import org.hbird.exchange.heartbeat.Heartbeat;
 
 public class Heart {
 
+	/** The name / ID of the component. */
 	protected String componentId = "unknown";
 	
+	/** The period between heartbeats. The time to-wait for the next expected beat,*/
 	protected long period = 10000;
 	
 	public Heart(String componentId, long period) {

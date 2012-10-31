@@ -53,6 +53,10 @@ public class SetParameter extends Task {
 		super(issuedBy, name, description, executionTime);
 		this.parameter = parameter;
 	}
+	
+	public SetParameter(SetParameter base) {
+		this(base.issuedBy, base.name, base.description, base.executionTime, base.parameter);
+	}
 
 	/**
 	 * Method that will send the message to the parameter query. 
@@ -65,4 +69,14 @@ public class SetParameter extends Task {
 		/** Send the preconfigured parameter. */
 		return parameter;
 	}
+
+	public Parameter getParameter() {
+		return parameter;
+	}
+
+	public void setParameter(Parameter parameter) {
+		this.parameter = parameter;
+	}
+	
+	
 }

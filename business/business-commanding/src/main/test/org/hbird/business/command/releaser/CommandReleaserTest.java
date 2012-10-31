@@ -28,7 +28,7 @@ public class CommandReleaserTest {
 		lockstates.add("TestParameter4LowerLimit");
 		
 		List<Task> tasks = new ArrayList<Task>();
-		tasks.add(new SetParameter("TestTask", "Task for testing", 0, new Parameter("", "Parameter90", "Parameter set by task", 9d, "Volt")));
+		tasks.add(new SetParameter("", "TestTask", "Task for testing", 0, new Parameter("", "Parameter90", "Parameter set by task", 9d, "Volt")));
 			
 		Map<String, Object> headers = new HashMap<String, Object>();
 		
