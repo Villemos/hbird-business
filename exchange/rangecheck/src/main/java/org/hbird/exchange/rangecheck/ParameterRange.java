@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.core.StateParameter;
+import org.hbird.exchange.core.State;
 
 
 /**
@@ -28,7 +28,7 @@ public class ParameterRange implements Serializable {
 	protected Parameter upperValue = null;
 
 	/** The state parameter to be created if range fails. */
-	protected StateParameter state = null;
+	protected State state = null;
 	
 	public ParameterRange(Parameter lowerValue, Parameter upperValue) {
 		this.lowerValue = lowerValue;

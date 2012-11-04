@@ -16,15 +16,15 @@
  */
 package org.hbird.business.scripting;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
 
 import javax.script.*;
 
-import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.core.StateParameter;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.scripting.ScriptExecutionRequest;
 
 /** 
@@ -34,58 +34,47 @@ import org.hbird.exchange.scripting.ScriptExecutionRequest;
  */
 public class ScriptExecutor {
 
+	private static org.apache.log4j.Logger LOG = Logger.getLogger(ScriptExecutor.class);
+
 	/** The configuration request defining the script to be executed. */
 	protected ScriptExecutionRequest request = null;
 
 	/** The script engine that will execute the script.*/
 	protected ScriptEngine engine = null;
 
-	/** Map of the parameter that the script needs as input and the current value*/
-	public Map<String, Object> input = new HashMap<String, Object>();
-
-	/** The names of the parameters that the scripts requires as input. */
-	protected Pattern inputPattern = Pattern.compile("input=\"(.*?)\"");
-
-	/** The values of the parameter created using the script. */
-	public String parameterName = null;
-	public String parameterDescription = null;
-	public String parameterUnit = null;
-	public String parameterIsStateOf = null;
-
 	public ScriptExecutor(ScriptExecutionRequest request) {
 		this.request = request;
+
 		ScriptEngineManager factory = new ScriptEngineManager();
 		engine = factory.getEngineByName(request.format); 	
 
-		/** Analyse script. 
-		 *  1. Identify name, description, isStateOf (optional), type and unit of the Parameter to be created. 
-		 *  2. Identify the names of the parameters needed. */
+		engine.put("output", request.output);
 
-		parameterName = find(Pattern.compile("name=\"(.*?)\""), request.script);
-		parameterDescription = find(Pattern.compile("description=\"(.*?)\""), request.script);
-		parameterUnit = find(Pattern.compile("unit=\"(.*?)\""), request.script);
-		parameterIsStateOf = find(Pattern.compile("isStateOf=\"(.*?)\""), request.script);
+		/** */
+		if (request.name != null && request.name.equals("") == false) {
 
-		Matcher matcher = inputPattern.matcher(request.script);
-		while (matcher.find()) {
-			input.put(matcher.group(1), null);
-		}		
-	}
+			/** Default root is the the resource folder of the current project. */
+			String root = "src/main/resources/library/";
+			if (System.getProperty("hbird.scriptlibrary.root") != null) {
+				root = System.getProperty("hbird.scriptlibrary.root");
+				if (root.endsWith("/") == false) {
+					root += "/";
+				}
+			}			
 
-	/**
-	 * Method to find a pattern in a script.
-	 * 
-	 * @param pattern The pattern to be found.
-	 * @param script The text which might contain the pattern.
-	 * @return The found value of the pattern (group 1)
-	 */
-	protected String find(Pattern pattern, String script) {
-		Matcher matcher = pattern.matcher(script);
-		if (matcher.find()) {
-			return matcher.group(1);
+			File file = new File(root + request.name + ".js");
+			if (file.exists() == false) {
+				LOG.error("Failed to find script file '" + file.getAbsolutePath() + "'.");
+				LOG.error("Use the runtime system property '-Dhbird.scriptlibrary.root=[path]' to point to the script library. Script will not be evaluated.");
+			}
+			else {
+				try {
+					request.script = FileUtils.readFileToString(file);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-
-		return null;
 	}
 
 	/**
@@ -95,46 +84,55 @@ public class ScriptExecutor {
 	 * @param in A parameter required to evaluate the script.
 	 * @return A parameter holding the return value of the script. May be null if the script could not evaluate.
 	 */
-	public Parameter calculate(Parameter in) {
+	public Named calculate(Named in) {
 
-		Parameter out = null;
-		
+		LOG.debug("Script '" + request.name + "': received dependent object '" + in.getName() + "' with timestamp '" + in.getTimestamp() + "'.");
+
+		Named returnValue = null;
+
 		try {
 			/** Bind the parameter to the script. */
-			engine.put(in.getName(), in.getValue());
-			
-			/** Check if a binding has been created for all needed parameters. */
-			if (ready()) {
-				engine.eval(request.script);
+			if (request.inputBinding.get(in.getName()) == null) {
+				LOG.error("Script '" + request.name + "': Error in binding of parameters. The runtime parameter '" + in.getName() + "' was received, but has not been bound to any script parameter.");
+			}
+			else {
+				engine.put(request.inputBinding.get(in.getName()), in);
 
-				/** Create a Parameter or a StateParameter based on the script definition. */
-				if (parameterIsStateOf == null) {
-					out = new Parameter("script:" + request.getName(), parameterName, parameterDescription, engine.get(parameterName), parameterUnit);
-				}
-				else {
-					out = new StateParameter("script:" + request.getName(), parameterName, parameterDescription, parameterIsStateOf, (Boolean) engine.get(parameterName));
+				/** Check if a binding has been created for all needed parameters. */
+				if (ready()) {
+					LOG.debug("Script '" + request.name + "': All dependent values set. Evaluating script.");
+					engine.eval(request.script);
+
+					/** The request output object has been bound to the engine. The script can
+					 * thus update it directly. Only the timestamp and uuid should also be set. */
+					returnValue = request.output.instance();
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return out;
+		return returnValue;
 	}
 
-	
+
 	/**
 	 * Method to evaluate whether all required input parameters have been set.
 	 * 
 	 * @return True if all input parameters have been bound to the engine. Else false.
 	 */
 	protected boolean ready() {
-		for (String parameter : input.keySet()) {
+		for (String parameter : request.inputBinding.values()) {
 			if (engine.getBindings(ScriptContext.ENGINE_SCOPE).containsKey(parameter) == false) {
+				LOG.debug("Script '" + request.name + "' Still missing dependency '" + parameter + "'.");
 				return false;
 			}
 		}
-		
+
 		return true;
+	}
+
+	public Set<String> getDependencies() {
+		return request.inputBinding.keySet();
 	}
 }

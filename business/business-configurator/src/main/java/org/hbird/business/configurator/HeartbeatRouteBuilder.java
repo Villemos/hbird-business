@@ -19,6 +19,11 @@ public class HeartbeatRouteBuilder extends RouteBuilder {
 		
 		from("timer:heartbeat_" + name + "?fixedRate=true&period=" + period)
 	     .setBody(bean(heart))
-	     .to("activemq:topic:system");						
+		 .setHeader("name", simple("${in.body.name}"))
+   		 .setHeader("type", simple("${in.body.type}"))	     
+   		 .setHeader("issuedBy", simple("${in.body.issuedBy}"))	
+   		 .setHeader("hostname", simple("${in.body.hostname}"))
+   		 .setHeader("hostip", simple("${in.body.hostip}"))	
+   		 .to("activemq:topic:monitoringdata");						
 	}
 }

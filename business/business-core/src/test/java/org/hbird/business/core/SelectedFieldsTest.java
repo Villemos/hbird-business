@@ -5,14 +5,14 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hbird.exchange.core.StateParameter;
+import org.hbird.exchange.core.State;
 import org.junit.Test;
 
 public class SelectedFieldsTest {
 
 	@Test
 	public void testProcess() {
-		StateParameter parameter = new StateParameter("issuesBy", "name", "description", "isStateOf", false);
+		State parameter = new State("issuesBy", "name", "description", "isStateOf", false);
 		
 		Map<String, Object> headers = new HashMap<String, Object>();
 		
@@ -23,12 +23,9 @@ public class SelectedFieldsTest {
 			
 			assertTrue(parameter.getName().equals(headers.get("name")));
 			assertTrue(parameter.getDescription().equals(headers.get("description")));
-			assertTrue(parameter.getDatasetidentifier() == (Long) headers.get("datasetidentifier"));
 			assertTrue(parameter.getIsStateOf().equals(headers.get("isStateOf")));
 			assertTrue(parameter.getIssuedBy().equals(headers.get("issuedBy")));
-			assertTrue(parameter.getStateValue() == (Boolean) headers.get("value"));
 			assertTrue(parameter.getTimestamp() == (Long) headers.get("timestamp"));
-			assertTrue(parameter.getUnit().equals(headers.get("unit")));
 			
 			headers.clear();
 			processor.fields.add("name");

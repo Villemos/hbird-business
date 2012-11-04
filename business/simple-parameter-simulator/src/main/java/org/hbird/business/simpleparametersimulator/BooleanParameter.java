@@ -18,17 +18,23 @@ package org.hbird.business.simpleparametersimulator;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.core.State;
 
 /**
  * Class simulating a boolean parameter. The parameter flips each time the process
  * method is called, i.e. value = !value.
  */
-public class BooleanParameter extends BaseParameter {
+public class BooleanParameter {
 
 	/** The class logger. */
-	protected static Logger logger = Logger.getLogger(BooleanParameter.class);
+	protected static Logger LOG = Logger.getLogger(BooleanParameter.class);
 
+	protected String issuedBy;
+	protected String name;
+	protected String description;
+	protected Boolean value;
+	protected String isStateOf;
+	
 	/**
 	 * Basic constructor, setting the initial value and the name of the boolean
 	 * parameter.  
@@ -36,24 +42,28 @@ public class BooleanParameter extends BaseParameter {
 	 * @param value The initial value of the parameter.
 	 * @param name The name of the parameter to be generated.
 	 */
-	public BooleanParameter(String name, String description, Boolean value, String unit) {
-		super(name, description, value, unit);
+	public BooleanParameter(String issuedBy, String name, String description, Boolean value, String isStateOf) {
+		this.issuedBy = issuedBy;
+		this.name = name;
+		this.description = description;
+		this.value = value;
+		this.isStateOf = isStateOf;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.simpleparametersimulator.BaseParameter#process(org.apache.camel.Exchange)
 	 */
 	@Handler
-	public Parameter process() {
+	public State process() {
 		try {
-			logger.debug("Sending new boolean value with name '" + name + "'.");
+			LOG.debug("Sending new boolean value with name '" + name + "'.");
 			this.value = new Boolean(!(Boolean)value);
 		} 
 		catch (Exception e) {
-			logger.error("Courght exception " + e);
+			LOG.error("Courght exception " + e);
 			e.printStackTrace();
 		}
 		
-		return new Parameter("simulator", name, description, value, unit);
+		return new State(issuedBy, name, description, isStateOf, value);
 	}
 }

@@ -10,28 +10,36 @@
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 	
 <!-- 	String issuedBy, String name, String description, Object value, String unit -->
+	<bean id="value" class="java.lang.Double">
+		<constructor-arg index="0" value="2d"/>
+	</bean>
+
+
 	<bean id="parameter1" class="org.hbird.exchange.core.Parameter">
 		<constructor-arg index="0" value="test"/>
 		<constructor-arg index="1" value="test name"/>
-		<constructor-arg index="2" value="test description"/>
-		<constructor-arg index="3" value="2d"/>
-		<constructor-arg index="4" value="test unit"/>
+		<constructor-arg index="2" value="Parameter"/>
+		<constructor-arg index="3" value="test description"/>
+		<constructor-arg index="4" ref="value"/>
+		<constructor-arg index="5" value="test unit"/>
 	</bean>
 
 	<bean id="parameter2" class="org.hbird.exchange.core.Parameter">
 		<constructor-arg index="0" value="test"/>
 		<constructor-arg index="1" value="test name"/>
-		<constructor-arg index="2" value="test description"/>
-		<constructor-arg index="3" value="2d"/>
-		<constructor-arg index="4" value="test unit"/>
+		<constructor-arg index="2" value="Parameter"/>
+		<constructor-arg index="3" value="test description"/>
+		<constructor-arg index="4" ref="value"/>
+		<constructor-arg index="5" value="test unit"/>
 	</bean>
 		
 	<bean id="parameter3" class="org.hbird.exchange.core.Parameter">
 		<constructor-arg index="0" value="test"/>
 		<constructor-arg index="1" value="test name"/>
-		<constructor-arg index="2" value="test description"/>
-		<constructor-arg index="3" value="2d"/>
-		<constructor-arg index="4" value="test unit"/>
+		<constructor-arg index="2" value="Parameter"/>
+		<constructor-arg index="3" value="test description"/>
+		<constructor-arg index="4" ref="value"/>		
+		<constructor-arg index="5" value="test unit"/>
 	</bean>
 		
 	<bean id="components" class="java.util.ArrayList">

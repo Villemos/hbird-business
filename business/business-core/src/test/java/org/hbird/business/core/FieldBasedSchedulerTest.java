@@ -6,14 +6,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hbird.exchange.core.StateParameter;
+import org.hbird.exchange.core.State;
 import org.junit.Test;
 
 public class FieldBasedSchedulerTest {
 
 	@Test
 	public void testSchedule() {
-		StateParameter parameter = new StateParameter("issuesBy", "name", "description", "isStateOf", false);
+		State parameter = new State("issuesBy", "name", "description", "isStateOf", false);
 		
 		Map<String, Object> headers = new HashMap<String, Object>();
 		

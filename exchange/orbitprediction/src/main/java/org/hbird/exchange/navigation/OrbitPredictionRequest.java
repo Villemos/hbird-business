@@ -39,11 +39,6 @@ public class OrbitPredictionRequest extends Named {
 	/** The unique UID */
 	private static final long serialVersionUID = -3613096294375848828L;
 
-	{
-		this.name = "";
-		this.description = "";
-	}
-	
 	public OrbitPredictionRequest() {};
 	
 	/**
@@ -55,8 +50,8 @@ public class OrbitPredictionRequest extends Named {
 	 * @param starttime The start time at which the prediction should start. This must correspond to the time of the position and velocity.
 	 * @param locations A list of locations, to which orbital events (establishment / loss of contact, etc) should be calculated and issued.
 	 */
-	public OrbitPredictionRequest(String name, Satelitte satellite, D3Vector position, D3Vector velocity, Long starttime, List<Location> locations) {
-		this.name = name;
+	public OrbitPredictionRequest(String issuedBy, String name, String description, Satellite satellite, D3Vector position, D3Vector velocity, Long starttime, List<Location> locations) {
+		super(issuedBy, name, "OrbitPredictionRequest", description);
 		this.satellite = satellite;
 		this.position = position;
 		this.velocity = velocity;
@@ -72,8 +67,8 @@ public class OrbitPredictionRequest extends Named {
 	 * @param state The initial orbital state.
 	 * @param locations List of locations for which contact events shall be generated.
 	 */
-	public OrbitPredictionRequest(String name, Satelitte satellite, OrbitalState state, List<Location> locations) {
-		this.name = name;
+	public OrbitPredictionRequest(String issuedBy, String name, String description, Satellite satellite, OrbitalState state, List<Location> locations) {
+		super(issuedBy, name, "OrbitPredictionRequest", description);
 		this.satellite = satellite;
 		this.position = state.position;
 		this.velocity = state.velocity;
@@ -84,7 +79,7 @@ public class OrbitPredictionRequest extends Named {
 	/**
 	 * The satellite for which the provider should provide predictions.  
 	 * */
-	public Satelitte satellite = null;
+	public Satellite satellite = null;
 	
 	/** The current position of the satellite, from which the orbit prediction shall be made. The
 	 *  location may be null, in which case the provider shall take the current position of the
@@ -100,12 +95,14 @@ public class OrbitPredictionRequest extends Named {
 	 *  provider shall take the current time. */
 	public Long starttime = null;
 	
-	/** The time interval (s) from the start time that the orbit shall be propagated. Default is 2 hours. */
-	public double deltaPropagation = 2 * 60 * 60 * 1000;
+	/** The time interval (s) from the start time that the orbit shall be propagated. Default is 2 hours. 
+	 *  Time is measured in seconds. */
+	public double deltaPropagation = 2 * 60 * 60;
 	
 	/** The time (s) between each orbital state. The number of orbital state objects created will
-	 * thus be N=deltaPropagation / stepSize.  */
-	public double stepSize = 60.;
+	 * thus be N=deltaPropagation / stepSize.  
+	 * Time is measured in seconds. */
+	public double stepSize = 60;
 	
 	/** A specific set of locations for which orbital events shall be calculated. Can be used to
 	 * extend the existing set of locations, for example to validate configuration of ground stations. 

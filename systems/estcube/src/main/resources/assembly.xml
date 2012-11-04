@@ -9,7 +9,9 @@
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<bean id="configurator" class="org.hbird.business.configurator.Configurator" />
+	<bean id="configurator" class="org.hbird.business.configurator.Configurator">
+		<constructor-arg index="0" value="Main"/>
+	</bean>
 
 	<bean id="loader" class="org.hbird.business.metadatapublisher.ObjectPublisher">
 		<property name="filename" value="src\main\resources\components.xml" />
@@ -25,7 +27,7 @@
 		<route id="configurationStatusReporting">
 			<from uri="timer:configuratorStatusReport?period=10000" />
 			<to uri="bean:configurator?method=reportStatus" />
-			<to uri="activemq:topic:system" />
+			<to uri="activemq:topic:monitoringdata" />
 		</route>
 
 		<route id="initiator">

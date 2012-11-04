@@ -12,7 +12,7 @@ import jxl.read.biff.BiffException;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.core.StateParameter;
+import org.hbird.exchange.core.State;
 import org.hbird.exchange.tasking.SetParameter;
 import org.hbird.exchange.tasking.Task;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class ImportProducerTest {
 			
 			/** Check the parameters. */
 			Parameter para = null;
-			StateParameter statePara = null;
+			State statePara = null;
 			
 			assertTrue(readObjects.get("Parameter200") != null);
 			para = (Parameter) readObjects.get("Parameter200");
@@ -59,11 +59,10 @@ public class ImportProducerTest {
 			assertTrue(para.getUnit().equals("Meter"));
 			
 			assertTrue(readObjects.get("Parameter202") != null);
-			statePara = (StateParameter) readObjects.get("Parameter202");
+			statePara = (State) readObjects.get("Parameter202");
 			assertTrue(statePara.getDescription().equals("A test para"));
 			assertTrue(statePara.getValue() instanceof Boolean);
 			assertTrue( ((Boolean)statePara.getValue()) == false);
-			assertTrue(statePara.getUnit().equals(""));
 			assertTrue(statePara.getIsStateOf().equals("Parameter1"));
 
 			assertTrue(readObjects.get("Parameter203") != null);

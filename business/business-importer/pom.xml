@@ -78,4 +78,5 @@
   
   
 	<groupId>org.hbird.business</groupId>
+	<name>Business - Metadata Importer</name>
 </project>

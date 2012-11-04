@@ -16,33 +16,21 @@
  */
 package org.hbird.business.validation.limits;
 
-import org.hbird.exchange.core.Comperator;
 import org.hbird.exchange.validation.Limit;
-
 
 /**
  * Limit class for checking whether a lower end limit has been violated.
  */
 public class LowerLimitChecker extends BaseLimitChecker {
 	
-	/***/
-	private static final long serialVersionUID = 2052127682824233374L;
-
-	/**
-	 * Constructor with no initial limit value. The limit will NOT start processing
-	 * before a limit value has been received through the processLimit() method.
-	 * 
-	 * @param stateName Name of the state parameter that will be issued.
-	 */
-	public LowerLimitChecker(String name, String description, Limit limit) {
-		super(name, description);
-		this.limit = limit;
+	public LowerLimitChecker(Limit limit) {
+		super(limit);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.validation.parameter.BaseLimit#checkLimit()
 	 */
 	protected boolean checkLimit() {
-		return Comperator.compare(lastValue.getValue(), limit.limit) >= 0;
+		return lastValue.compareTo(limit) >= 0;
 	}	
 }

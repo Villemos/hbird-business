@@ -2,6 +2,7 @@ package org.hbird.business.navigation;
 
 import org.hbird.exchange.navigation.D3Vector;
 import org.hbird.exchange.navigation.OrbitalState;
+import org.hbird.exchange.navigation.Satellite;
 import org.orekit.errors.OrekitException;
 import org.orekit.errors.PropagationException;
 import org.orekit.propagation.SpacecraftState;
@@ -24,18 +25,24 @@ public class OrbitalStateInjector implements OrekitFixedStepHandler {
 	/** Unique identifier assigned to all orbital data events that generated
 	 *  as part of this run. Will be used to identify a complete orbit, and replace
 	 *  it with new series when available. */
-	protected long datasetidentifier = 0;
+	protected String datasetidentifier;
 
-	/** The name to be used for each orbital state. Should be used to destinquish between for example 
-	 * predicted and actual orbital states. */
-	protected String name = "Measured";
-	
+	protected String orbitalStateName = "";
+	protected String orbitalStateDescription = "";
+
 	protected OrbitPredictor predictor = null;
+
+	protected Satellite satellite = null;
 	
-	public OrbitalStateInjector(long datasetidentifier, OrbitPredictor predictor) {
+	public OrbitalStateInjector(String datasetidentifier, OrbitPredictor predictor, String name, String description, Satellite satellite) {
 		this.datasetidentifier = datasetidentifier;
 		this.predictor = predictor;
+		this.orbitalStateName = name;
+		this.orbitalStateDescription = description;
+		this.satellite = satellite;
 	}
+	
+	protected int step = 0;
 	
 	/* (non-Javadoc)
 	 * @see org.orekit.propagation.sampling.OrekitFixedStepHandler#handleStep(org.orekit.propagation.SpacecraftState, boolean)
@@ -43,19 +50,19 @@ public class OrbitalStateInjector implements OrekitFixedStepHandler {
 	public void handleStep(SpacecraftState currentState, boolean isLast) throws PropagationException {
 
 		/** Create position vector. */
-		D3Vector position = new D3Vector("", "Position", "The orbital position of the satellite at the given time.", currentState.getOrbit().getPVCoordinates().getPosition().getX(),
+		D3Vector position = new D3Vector("", "Position", "Position", "The orbital position of the satellite at the given time.", currentState.getOrbit().getPVCoordinates().getPosition().getX(),
 				currentState.getOrbit().getPVCoordinates().getPosition().getY(),
 				currentState.getOrbit().getPVCoordinates().getPosition().getZ());
 
 		/** Create velocity vector. */
-		D3Vector velocity = new D3Vector("", "Velocity", "The orbital velocity of the satellite at the given time", currentState.getOrbit().getPVCoordinates().getVelocity().getX(),
+		D3Vector velocity = new D3Vector("", "Velocity", "Velocity", "The orbital velocity of the satellite at the given time", currentState.getOrbit().getPVCoordinates().getVelocity().getX(),
 				currentState.getOrbit().getPVCoordinates().getVelocity().getY(),
 				currentState.getOrbit().getPVCoordinates().getVelocity().getZ());
 
 		try {
 			/** Create orbital state. */
-			OrbitalState state = new OrbitalState("", name, "",  currentState.getDate().toDate(TimeScalesFactory.getUTC()).getTime(), datasetidentifier, position, velocity);
-
+			OrbitalState state = new OrbitalState("Simulator", orbitalStateName, orbitalStateDescription, currentState.getDate().toDate(TimeScalesFactory.getUTC()).getTime(), datasetidentifier, satellite, position, velocity);
+					
 			/** Send the orbital state on the response stream. */
 			predictor.addResult(state);
 		} catch (OrekitException e) {

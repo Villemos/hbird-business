@@ -47,7 +47,7 @@ public class SetHeaderBasedOnBodyTest extends AbstractJUnit38SpringContextTests 
 		
 		Exchange exchange = new DefaultExchange(context);
 		exchange = new DefaultExchange(context);
-		Parameter parameter = new Parameter("", "parameter1", "test description", new Double(2), "TestUnit");
+		Parameter parameter = new Parameter("", "parameter1", "test type", "test description", new Double(2), "TestUnit");
 		exchange.getIn().setBody(parameter);
 		
 		template.send(exchange);

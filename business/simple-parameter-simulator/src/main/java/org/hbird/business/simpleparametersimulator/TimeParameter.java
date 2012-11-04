@@ -23,14 +23,14 @@ import org.hbird.exchange.core.Parameter;
 
 public class TimeParameter extends BaseParameter {
 
-	public TimeParameter(String name, String description, String unit) {
-		super(name, description, 0d, unit);
+	public TimeParameter(String issuedBy, String name, String type, String description, String unit) {
+		super(issuedBy, name, type, description, 0d, unit);
 	}
 
 	@Override
 	@Handler
 	protected Parameter process() {
 		value = (new Date()).getTime();		
-		return new Parameter("simulator", name, description, value, unit);
+		return new Parameter(issuedBy, name, type, description, value, unit);
 	}
 }

@@ -60,8 +60,8 @@ public class OrbitPredictor {
 	@Handler
 	public List<Object> predictOrbit(@Body OrbitPredictionRequest request) throws OrekitException {
 		// Inertial frame			
-		Vector3D position = new Vector3D((Double) request.position.p1.getValue(), (Double) request.position.p2.getValue(), (Double) request.position.p3.getValue());
-		Vector3D velocity = new Vector3D((Double) request.velocity.p1.getValue(), (Double) request.velocity.p2.getValue(), (Double) request.velocity.p3.getValue());
+		Vector3D position = new Vector3D((Double) request.position.p1, (Double) request.position.p2, (Double) request.position.p3);
+		Vector3D velocity = new Vector3D((Double) request.velocity.p1, (Double) request.velocity.p2, (Double) request.velocity.p3);
 		PVCoordinates pvCoordinates = new PVCoordinates(position, velocity);
 
 		AbsoluteDate initialDate = new AbsoluteDate(new Date(request.starttime), TimeScalesFactory.getUTC());
@@ -75,11 +75,11 @@ public class OrbitPredictor {
 		Propagator propagator = new KeplerianPropagator(initialOrbit);
 
 		/** Create dataset identifier based on the time. */
-		long datasetidentifier = (new Date()).getTime();
+		String datasetidentifier = (new Date()).toString();
 
 		/** Register the visibility events for the requested locations. */
 		for (Location location : request.locations) {
-			GeodeticPoint point = new GeodeticPoint((Double) location.getPosition().p1.getValue(), (Double) location.getPosition().p2.getValue(), (Double) location.getPosition().p3.getValue());				
+			GeodeticPoint point = new GeodeticPoint((Double) location.p1, (Double) location.p2, (Double) location.p3);				
 			BodyShape earth = new OneAxisEllipsoid(ae, f, FramesFactory.getITRF2005());
 			TopocentricFrame sta1Frame = new TopocentricFrame(earth, point, location.getName());
 
@@ -88,7 +88,7 @@ public class OrbitPredictor {
 			propagator.addEventDetector(sta1Visi);				
 		}
 
-		OrbitalStateInjector injector = new OrbitalStateInjector(datasetidentifier, this);
+		OrbitalStateInjector injector = new OrbitalStateInjector(datasetidentifier, this, request.getName(), request.getDescription(), request.satellite);
 				
 		propagator.setMasterMode(request.stepSize, injector);			
 		propagator.propagate(new AbsoluteDate(initialDate, request.deltaPropagation));

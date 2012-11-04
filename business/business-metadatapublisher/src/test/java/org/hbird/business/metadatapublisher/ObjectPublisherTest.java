@@ -10,7 +10,6 @@ public class ObjectPublisherTest {
 
 	@Test
 	public void testProcess() {
-		
 		ObjectPublisher publisher = new ObjectPublisher();
 		publisher.setFilename("src/test/resources/components.xml");
 		List<Object> list = publisher.process();

@@ -22,7 +22,7 @@ import java.util.Map;
 import org.apache.camel.Body;
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.core.StateParameter;
+import org.hbird.exchange.core.State;
 
 /** 
  * This class implements a filter, ensuring that only changes to a state will be issued.
@@ -41,7 +41,7 @@ public class OnlyChangeFilter {
 	 * the route is stopped.
 	 * 
 	 * @param exchange The exchange containing the new state. */
-	 public void process(Exchange exchange, @Body StateParameter state) throws Exception {
+	 public void process(Exchange exchange, @Body State state) throws Exception {
 				 
 		/** If we know this state already... */
 		if (currentState.containsKey(state.getName()) == true) {

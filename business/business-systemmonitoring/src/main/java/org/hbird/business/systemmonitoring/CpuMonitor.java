@@ -19,6 +19,6 @@ public class CpuMonitor extends Monitor {
 	 * @throws UnknownHostException 
 	 */
 	public Parameter check() {		
-		return new Parameter(componentId, "Average CPU Usage", "The average CPU usage the last minute.", ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage(), "Percentage/CPU");
+		return new Parameter(componentId, "Average CPU Usage", "MonitoredResource", "The average CPU usage the last minute.", ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage(), "Percentage/CPU");
 	}	
 }

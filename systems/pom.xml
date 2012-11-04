@@ -6,12 +6,15 @@
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
-  <artifactId>systems</artifactId>
+  <artifactId>system-test</artifactId>
   <packaging>pom</packaging>
+  
   <modules>
   	<module>estcube</module>
   </modules>
+  
   <groupId>org.hbird</groupId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Hummingbird Systems</name>
+  <name>System - Hummingbird System Test</name>
+  <description>System test of example Hummingbird based system. Can only be run with ActiveMQ and SOLR running in the background.</description>
 </project>

@@ -36,7 +36,7 @@ public class LocationContactEvent extends Named {
 	public Location location = null;
 	
 	/** The satellite that contact has been established /lost with. */
-	public Satelitte satellite = null;
+	public Satellite satellite = null;
 	 
 	/** Flag indicating whether the visibility (contact) is now established or lost. */
 	public boolean isVisible = true;
@@ -51,8 +51,8 @@ public class LocationContactEvent extends Named {
 	 * @param location The location to which contact has been established / lost.
 	 * @param satellite The satellite to which contact has been established / lost. 
 	 */
-	public LocationContactEvent(String issuedBy, String name, String description, long timestamp, long datasetidentifier, Location location, Satelitte satellite, boolean isVisible) {
-		super(issuedBy, name, description, timestamp, datasetidentifier);
+	public LocationContactEvent(String issuedBy, String name, String description, long timestamp, String datasetidentifier, Location location, Satellite satellite, boolean isVisible) {
+		super(issuedBy, name, "LocationContactEvent", description, timestamp, datasetidentifier);
 		this.location = location;
 		this.satellite = satellite;
 		this.isVisible = isVisible;

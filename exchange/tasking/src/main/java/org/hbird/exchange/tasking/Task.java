@@ -49,7 +49,7 @@ public class Task extends Named {
 	 * @param executionTime The java time (ms) when the task should be executed. 0 is immediately.
 	 */
 	public Task(String issuedBy, String name, String description, long executionDelay) {
-		super(issuedBy, name, description);
+		super(issuedBy, name, "Task", description);
 		this.executionDelay = executionDelay;
 	}
 	

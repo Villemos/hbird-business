@@ -17,11 +17,9 @@
 package org.hbird.business.validation.limits;
 
 import org.apache.camel.Body;
-import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.core.StateParameter;
+import org.hbird.exchange.core.State;
 import org.hbird.exchange.validation.Limit;
 
 /** 
@@ -46,10 +44,7 @@ import org.hbird.exchange.validation.Limit;
  * - processEnabled. Process a camel Exchange enabling / disabling this limit.
  *
  */
-public abstract class BaseLimitChecker extends Named {
-
-	/***/
-	private static final long serialVersionUID = -4213060932052205606L;
+public abstract class BaseLimitChecker {
 
 	/** The class logger. */
 	private static org.apache.log4j.Logger logger = Logger.getLogger(BaseLimitChecker.class);
@@ -60,17 +55,11 @@ public abstract class BaseLimitChecker extends Named {
 	/** The last received parameter to be checked. Stored in case the limit is changed or the
 	 * limit is enabled. Then the last received value is used to re-check the limit. */
 	protected Parameter lastValue = null;
-	
-	/**
-	 * Constructor.
-	 * 
-	 * @param stateName The name of the state parameter to be created.
-	 */
-	public BaseLimitChecker(String name, String description) {
-		super("", name, description);
+
+	public BaseLimitChecker(Limit limit) {
+		this.limit = limit;
 	}
-
-
+	
 	/**
 	 * Method to process a parameter update. The method is expected called as part of a camel
 	 * route. The method will set the local parameter value, then process the limit check and
@@ -79,8 +68,8 @@ public abstract class BaseLimitChecker extends Named {
 	 * @param arg0 A camel exchange carrying a parameter instance.
 	 * @throws Exception
 	 */
-	public Parameter processParameter(@Body Parameter newParameter) {
-		logger.debug("Limit state '" + name + "' received parameter value for validation.");
+	public State processParameter(@Body Parameter newParameter) {
+		logger.debug("Limit state '" + limit.getName() + "' received parameter value for validation.");
 		lastValue = newParameter;
 		return doProcess(newParameter);
 	}
@@ -93,9 +82,9 @@ public abstract class BaseLimitChecker extends Named {
 	 * @param arg0 A camel exchange carrying a Double instance expressing the size of the limit.
 	 * @throws Exception
 	 */
-	public Parameter processLimit(@Body Parameter newLimit) {
-		limit.limit = (Double) newLimit.getValue();
-		logger.info("Limit '" + name + "' set to '" + limit.limit + "'.");
+	public State processLimit(@Body Parameter newLimit) {
+		limit.setValue(newLimit.getValue());
+		logger.info("Limit '" + limit.getName() + "' set to '" + limit.getValue() + "'.");
 		return doProcess(lastValue);
 	}
 
@@ -107,9 +96,9 @@ public abstract class BaseLimitChecker extends Named {
 	 * @param arg0 A camel exchange carrying a Boolean instance switching the limit on or off.
 	 * @throws Exception
 	 */
-	public Parameter processEnabled(Exchange arg0, @Body Parameter newEnabled) throws Exception {
+	public State processEnabled(@Body State newEnabled) throws Exception {
 		limit.enabled = (Boolean) newEnabled.getValue();
-		logger.info("Limit '" + name + "' switches to ENABLED state '" + limit.enabled + "'.");
+		logger.info("Limit '" + limit.getName() + "' switches to ENABLED state '" + limit.enabled + "'.");
 		return doProcess(lastValue);
 	}
 
@@ -125,11 +114,11 @@ public abstract class BaseLimitChecker extends Named {
 	 * @param exchange A camel exchange carrying a Boolean instance switching the limit on or off.
 	 * @throws NotComparableTypeException
 	 */
-	protected Parameter doProcess(Parameter parameter) {
-		StateParameter state = null;
+	protected State doProcess(Parameter parameter) {
+		State state = null;
 
 		if (isEnabled() == true && isReady()) {
-			state = new StateParameter(getName(), limit.getName(), limit.getDescription(), parameter.getName(), checkLimit());
+			state = new State("LimitChecker", limit.getName(), limit.getDescription(), parameter.getName(), checkLimit());
 		}
 		
 		return state;
@@ -156,6 +145,16 @@ public abstract class BaseLimitChecker extends Named {
 	 */
 	protected boolean isReady() {
 		return limit != null;
+	}
+
+	
+	
+	public Limit getLimit() {
+		return limit;
+	}
+
+	public void setLimit(Limit limit) {
+		this.limit = limit;
 	}
 
 	/**

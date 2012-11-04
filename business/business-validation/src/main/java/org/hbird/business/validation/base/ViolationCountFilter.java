@@ -19,7 +19,7 @@ package org.hbird.business.validation.base;
 import org.apache.camel.Body;
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.core.StateParameter;
+import org.hbird.exchange.core.State;
 
 /**
  * Handler which only triggers the next downstream handler if a specific number
@@ -65,7 +65,7 @@ public class ViolationCountFilter {
 	 * 
 	 * @param exchange The exchange carrying the state.
 	 */
-	public void process(Exchange exchange, @Body StateParameter state) {
+	public void process(Exchange exchange, @Body State state) {
 		if ((Boolean) state.getValue() == false) {
 			violations++;
 

@@ -65,4 +65,22 @@ public class Heartbeat extends Named {
 	public void setNextBeat(long nextBeat) {
 		this.nextBeat = nextBeat;
 	}
+
+	public String getHostname() {
+		return hostname;
+	}
+
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
+	}
+
+	public String getHostip() {
+		return hostip;
+	}
+
+	public void setHostip(String hostip) {
+		this.hostip = hostip;
+	}
+	
+	
 }

@@ -37,6 +37,6 @@ public class ThreadCountMonitor extends Monitor {
 	 * @param exchange The exchange to hold the new value.
 	 */
 	public Parameter check() {
-		return new Parameter(componentId, "Thread Count", "The number of threads used", ManagementFactory.getThreadMXBean().getThreadCount(), "Count");
+		return new Parameter(componentId, "Thread Count", "MonitoredResource", "The number of threads used", ManagementFactory.getThreadMXBean().getThreadCount(), "Count");
 	}	
 }

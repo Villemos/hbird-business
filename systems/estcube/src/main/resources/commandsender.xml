@@ -9,7 +9,7 @@
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<bean id="sender" class="org.hbird.business.command.releaser.TestCommandSender"/>
+	<bean id="sender" class="org.hbird.business.simpleparametersimulator.TestCommandSender"/>
 
 	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
 

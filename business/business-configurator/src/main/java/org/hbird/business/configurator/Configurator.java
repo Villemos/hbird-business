@@ -10,14 +10,8 @@ import org.apache.camel.CamelContext;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.configurator.ComponentConfigurationRequest;
 import org.hbird.exchange.configurator.ConfiguratorStatus;
-import org.hbird.exchange.core.Named;
 
-public class Configurator extends Named {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8488524488604882828L;
+public class Configurator {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(Configurator.class);
 	
@@ -34,13 +28,11 @@ public class Configurator extends Named {
 		classes.put("org.hbird.exchange.configurator.ScriptComponentRequest", ScriptComponentBuilder.class.getName());
 		classes.put("org.hbird.exchange.configurator.CommandArchiveComponentRequest", CommandArchiveComponentBuilder.class.getName());
 	}
-	
-	public Configurator(String name, String description) {
-		super("", name, description);
-	}
 
-	public Configurator(String name, String description, long heartbeatPeriod) {
-		super("", name, description);
+	protected String name;
+	
+	public Configurator(String name) {
+		this.name = name;
 	}
 
 	public void process(@Body ComponentConfigurationRequest request, CamelContext context) {
@@ -61,6 +53,6 @@ public class Configurator extends Named {
 	}
 	
 	public ConfiguratorStatus reportStatus() {
-		return new ConfiguratorStatus(this.getName(), components);
+		return new ConfiguratorStatus(this.name, components);
 	}
 }

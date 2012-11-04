@@ -14,7 +14,7 @@ public class TurnLeft extends Command {
 	
 	public TurnLeft(String issuedBy) {
 		super(issuedBy, "TurnLeft", "Turns the bot left. The Angle (in degrees) is set by the argument 'Angle'.");
-		this.arguments.add(new Parameter(issuedBy, "Angle", "Angle to turn", 45,  "Degree"));	
+		this.arguments.add(new Parameter(issuedBy, "Angle", "Argument", "Angle to turn", 45,  "Degree"));	
 	}
 
 	public TurnLeft(String issuedBy, long executionTime) {

@@ -10,7 +10,7 @@ import java.util.Map;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.core.StateParameter;
+import org.hbird.exchange.core.State;
 import org.hbird.exchange.tasking.SetParameter;
 import org.hbird.exchange.tasking.Task;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class ImportAccessor {
 
 	protected ImportEndpoint endpoint = null;
 	
-	protected Map<String, Parameter> parameters = new HashMap<String, Parameter>();
+	protected Map<String, Object> parameters = new HashMap<String, Object>();
 
 	protected Map<String, Task> tasks = new HashMap<String, Task>();
 
@@ -98,7 +98,7 @@ public class ImportAccessor {
 			int tempRow = row;
 			while (tempRow < bodySheet.getRows() && (bodySheet.getCell(1, tempRow).getContents().equals("") || tempRow == row) && bodySheet.getCell(5, tempRow).getContents().equals("") == false) {
 				String argumentName = bodySheet.getCell(5, tempRow).getContents();
-				Parameter para = new Parameter(parameters.get(argumentName));
+				Parameter para = new Parameter((Parameter) parameters.get(argumentName));
 				para.setValue(getValue(para.getValue().getClass().toString(), bodySheet.getCell(6, tempRow).getContents()));
 				arguments.add(para);
 				tempRow++;
@@ -129,7 +129,7 @@ public class ImportAccessor {
 				tempRow++;
 			}
 			
-			commands.put(commandName, new CommandRequest(issuedBy, commandName, commandDescription, lockstates, commandTasks, new Command("", commandName, commandDescription, Long.parseLong(releaseTime), Long.parseLong(executionTime), arguments)));
+			commands.put(commandName, new CommandRequest(issuedBy, commandName, commandDescription, lockstates, commandTasks, new Command("", "", commandName, commandDescription, Long.parseLong(releaseTime), Long.parseLong(executionTime), arguments)));
 		}
 	}
 
@@ -154,7 +154,7 @@ public class ImportAccessor {
 			String parameterValue = bodySheet.getCell(5, row).getContents();
 			
 			if (type.equals("set")) {
-				Parameter para = new Parameter(parameters.get(parameter));
+				Parameter para = new Parameter((Parameter) parameters.get(parameter));
 				para.setValue(getValue(para.getValue().getClass().toString(), parameterValue));
 				tasks.put(name, new SetParameter("", name, description, Long.parseLong(executionTime), para));
 			}
@@ -183,16 +183,16 @@ public class ImportAccessor {
 			String unit = bodySheet.getCell(5, row).getContents();
 
 			if (isstateof.equals("")) {
-				parameters.put(name, new Parameter("", name, description, getValue(type, value), unit));
+				parameters.put(name, new Parameter("", name, "", description, getValue(type, value), unit));
 			}
 			else {
-				parameters.put(name, new StateParameter("", name, description, isstateof, Boolean.parseBoolean(value)));
+				parameters.put(name, new State("", name, description, isstateof, Boolean.parseBoolean(value)));
 			}
 		}
 	}
 	
-	protected Object getValue(String type, String value) {
-		Object obj = null;
+	protected Number getValue(String type, String value) {
+		Number obj = null;
 		
 		if (type.equals("int") || type.contains("Integer")) {
 			obj = Integer.parseInt(value);

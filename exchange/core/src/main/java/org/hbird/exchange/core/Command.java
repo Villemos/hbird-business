@@ -47,6 +47,9 @@ public class Command extends Named {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	/** The name of the component to which this command is destined. */
+	protected String destination;
+	
 	/** List of arguments. The value is embedded in the header of the exchange. */
 	protected List<Parameter> arguments = new ArrayList<Parameter>();
 	
@@ -60,8 +63,9 @@ public class Command extends Named {
 	
 	public Command() {};
 	
-	public Command(String issuedBy, String name, String description) {
-		super(issuedBy, name, description);
+	public Command(String issuedBy, String destination, String name, String description) {
+		super(issuedBy, name, "Command", description);
+		this.destination = destination;
 	}
 
 	/**
@@ -74,8 +78,9 @@ public class Command extends Named {
 	 * @param releaseTime The time at which the command should be released by the MCS for transfer to the satellite.
 	 * @param executionTime The time at which the command should be executed onboard.
 	 */
-	public Command(String issuedBy, String name, String description, long releaseTime, long executionTime, List<Parameter> arguments) {
-		super(issuedBy, name, description);
+	public Command(String issuedBy, String destination, String name, String description, long releaseTime, long executionTime, List<Parameter> arguments) {
+		super(issuedBy, name, "Command", description);
+		this.destination = destination;
 		this.arguments = arguments;
 		this.releaseTime = releaseTime;
 		this.executionTime = executionTime;
@@ -124,6 +129,18 @@ public class Command extends Named {
 
 	public void setExecutionTime(long executionTime) {
 		this.executionTime = executionTime;
+	}
+	
+	public String prettyPrint() {
+		return "Command {name=" + name + ", timestamp=" + timestamp + "}";
+	}
+
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
 	}
 	
 	

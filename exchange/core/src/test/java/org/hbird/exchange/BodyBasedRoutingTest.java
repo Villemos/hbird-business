@@ -26,7 +26,7 @@ public class BodyBasedRoutingTest extends AbstractJUnit38SpringContextTests  {
 		parameterQueue.reset();
 		otherQueue.reset();
 		
-		template.sendBody(new Parameter("", "parameter1", "test description", "parameter2", "unit"));
+		template.sendBody(new Parameter("", "parameter1", "test type", "test description", 2, "unit"));
 		
 		parameterQueue.setExpectedMessageCount(1);
 		parameterQueue.assertIsSatisfied();
@@ -54,7 +54,7 @@ public class BodyBasedRoutingTest extends AbstractJUnit38SpringContextTests  {
 		parameterQueue.reset();
 		otherQueue.reset();
 		
-		template.sendBody(new Parameter("", "parameter1", "test description", "parameter2", "unit"));
+		template.sendBody(new Parameter("", "parameter1", "test type", "test description", 2, "unit"));
 		template.sendBody(new byte[1000]);
 		
 		parameterQueue.setExpectedMessageCount(1);

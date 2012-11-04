@@ -18,6 +18,7 @@ package org.hbird.exchange.core;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 /** The super class of all types being exchanged. Contains the information needed to uniquely identify
  *  an object as well as describe it.
@@ -33,11 +34,13 @@ import java.util.Date;
  *  the generation time of the data set, and can thus also be used to identify which data
  *  set is the most recent.
  * */
-public abstract class Named implements Serializable, Comparable<Named> {
+public abstract class Named implements Serializable {
 
 	/** The unique UID. */
 	private static final long serialVersionUID = -5803219773253020746L;
 
+	protected String uuid = UUID.randomUUID().toString();
+	
 	/** The ID of the component that has issued this object. */
 	protected String issuedBy = "";
 	
@@ -50,6 +53,10 @@ public abstract class Named implements Serializable, Comparable<Named> {
 
 	/** A description of the object. */
 	protected String description;
+
+	/** A definition of what this parameter represents. Should not be 'double' or 'integer', but the
+	 *  meaning of the type such as 'Temperature' or 'Charge'. */
+	protected String type;
 	
 	/** A unique identifier of a set of data. All elements of the data set should be
 	 *  assigned the same datasetidentifier, marking the data as being one logical
@@ -67,9 +74,10 @@ public abstract class Named implements Serializable, Comparable<Named> {
 	 * @param name The name of the object.
 	 * @param description The description of the object.
 	 */
-	public Named(String issuedBy, String name, String description) {
+	public Named(String issuedBy, String name, String type, String description) {
 		this.issuedBy = issuedBy;
 		this.name = name;
+		this.type = type;
 		this.description = description;
 	}
 
@@ -80,9 +88,10 @@ public abstract class Named implements Serializable, Comparable<Named> {
 	 * @param description The description of the object.
 	 * @param timestamp The timestamp of the object.
 	 */
-	public Named(String issuedBy, String name, String description, long timestamp) {
+	public Named(String issuedBy, String name, String type, String description, long timestamp) {
 		this.issuedBy = issuedBy;
 		this.name = name;
+		this.type = type;
 		this.description = description;
 		this.timestamp = timestamp;
 	}
@@ -94,9 +103,10 @@ public abstract class Named implements Serializable, Comparable<Named> {
 	 * @param description The description of the object.
 	 * @param timestamp The timestamp of the object.
 	 */
-	public Named(String issuedBy, String name, String description, long timestamp, String datasetidentifier) {
+	public Named(String issuedBy, String name, String type, String description, long timestamp, String datasetidentifier) {
 		this.issuedBy = issuedBy;
 		this.name = name;
+		this.type = type;
 		this.description = description;
 		this.timestamp = timestamp;
 		this.datasetidentifier = datasetidentifier;
@@ -104,34 +114,6 @@ public abstract class Named implements Serializable, Comparable<Named> {
 
 	public Named(String issuedBy) {
 		this.issuedBy = issuedBy;
-	}
-
-	/**
-	 * Default comparator of all Named objects. Should be overridden by specific subclasses
-	 * to implement specific ways of comparing objects. The comparison is based on the criterions;
-	 * - If the names are the same and the timestamps are the same, then rhs == lhs (0).
-	 * - If the names are the same, but the timestamp aint, then the timestamp is used to evaluate.
-	 * - If the names are not the same, then the timestamp is used for evaluation. 0 will not be returned, i.e. the 
-	 *   objects will always be considered different.
-	 * 
-	 * @param rhs The object that this object should be compared against. 
-	 * @return Value defining whether this object is less (-1), equal (0) or more (1) than the parsed object.
-	 */
-	public int compareTo(Named rhs) {
-		if (rhs == null) {
-			return 1;
-		}
-		if (this.name.equals(rhs.getName())) {
-			if (this.timestamp == rhs.timestamp) {
-				return 0;
-			}
-			else {
-				return this.timestamp < rhs.timestamp? -1: 1;
-			}
-		}
-		else {
-			return this.timestamp < rhs.timestamp? -1: 1;
-		}
 	}
 
 	/**
@@ -205,5 +187,33 @@ public abstract class Named implements Serializable, Comparable<Named> {
 
 	public void setDatasetidentifier(String datasetidentifier) {
 		this.datasetidentifier = datasetidentifier;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}	
+
+	
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public Named instance() {
+		uuid = UUID.randomUUID().toString();
+		timestamp = (new Date()).getTime();
+		
+		return this;
+	}
+	
+	public String prettyPrint() {
+		return "(Unknown) {name=" + name + ", timestamp=" + timestamp + "}";
 	}
 }

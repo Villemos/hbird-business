@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.hbird.exchange.navigation.Satelitte;
+import org.hbird.exchange.navigation.Satellite;
 
 import com.villemos.ispace.httpcrawler.HttpAccessor;
 import com.villemos.ispace.httpcrawler.HttpClientConfigurer;
@@ -121,7 +121,7 @@ public class CelestrackAccessor extends HttpAccessor {
 			
 			int index = 0;
 			while (index < elements.length) {
-				Satelitte satellite = new Satelitte();
+				Satellite satellite = new Satellite();
 				
 				String name = elements[index];				
 				satellite.setName(name);

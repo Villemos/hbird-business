@@ -36,9 +36,9 @@
                 
     <module>business-testtool</module>
     <module>simple-parameter-simulator</module>    
+    <module>business-importer</module>
     
     <module>all-business</module>
-    <module>business-importer</module>
   </modules>
 
 </project>

@@ -1,5 +1,9 @@
 package org.hbird.exchange.scripting;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Scheduled;
 
@@ -14,10 +18,20 @@ import org.hbird.exchange.core.Scheduled;
  * used to create the script execution engine and run the script.
  *
  */
-public class ScriptExecutionRequest extends Named implements Scheduled {
+public class ScriptExecutionRequest implements Scheduled, Serializable {
 
 	/** The unique UID */
 	private static final long serialVersionUID = 1638200113394259171L;
+
+	/** Definition of the return type. The binding to the type is based on convention. */
+	public Named output = null;
+	
+	/** List of the parameter that the script needs as input. */
+	public Map<String, String> inputBinding = new HashMap<String, String>();
+
+	/** Can be used to reference a named script. The script executor will lookup the
+	 * script. The field 'script' is in this case not used. */
+	public String name = null;
 	
 	/** The actual script to be used. */
 	public String script;
@@ -33,23 +47,13 @@ public class ScriptExecutionRequest extends Named implements Scheduled {
 	 * @param script The actual script.
 	 * @param format The name of the script format, such as 'JavaScript'
 	 */
-	public ScriptExecutionRequest(String issuedBy, String name, String description, String script, String format) {
-		super(issuedBy, name, description, 0);
+	public ScriptExecutionRequest(String name, String script, String format, Named output, Map<String, String> inputBinding) {
+		this.name = name;
 		this.script = script;
 		this.format = format;
+		this.output = output;
+		this.inputBinding = inputBinding;
 	}	
 
-	/**
-	 * Constructor, for a JavaScript (default format).
-	 * 
-	 * @param name The name of the script.
-	 * @param description A description of the script.
-	 * @param script The 'JavaScript' script.
-	 */
-	public ScriptExecutionRequest(String issuedBy, String name, String description, String script) {
-		super(issuedBy, name, description, 0);
-		this.script = script;
-	}
-
-	public ScriptExecutionRequest() {};	
+	public ScriptExecutionRequest() {}
 }

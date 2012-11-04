@@ -29,7 +29,7 @@ public class ConfiguratorStatus extends Named {
 	 */
 
 	public ConfiguratorStatus(String configuratorName, List<String> components) {
-		super(configuratorName, configuratorName, "A status of the configurator, the host it runs on and the components it contains.");
+		super(configuratorName, configuratorName, "ConfiguratorStatus", "A status of the configurator, the host it runs on and the components it contains.");
 		this.components = components;
 	}
 

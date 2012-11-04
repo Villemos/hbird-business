@@ -2,7 +2,7 @@ package org.hbird.business.navigation;
 
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.LocationContactEvent;
-import org.hbird.exchange.navigation.Satelitte;
+import org.hbird.exchange.navigation.Satellite;
 import org.orekit.errors.OrekitException;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.propagation.SpacecraftState;
@@ -23,12 +23,12 @@ public class LocationContactEventInjector extends ElevationDetector {
 	protected Location location = null;
 	
 	/** The satellite. */
-	protected Satelitte satellite = null;
+	protected Satellite satellite = null;
 	
 	/** Unique identifier assigned to all orbital data events that generated
 	 *  as part of this run. Will be used to identify a complete orbit, and replace
 	 *  it with new series when available. */
-	protected long datasetidentifier = 0;
+	protected String datasetidentifier;
 
 	protected OrbitPredictor predictor = null;
 	
@@ -41,7 +41,7 @@ public class LocationContactEventInjector extends ElevationDetector {
 	 * @param satellite The satellite whose orbit we are predicting.
 	 * @param location The location to which contact has been established / lost if this event occurs.
 	 */
-	public LocationContactEventInjector(double maxCheck, double elevation, TopocentricFrame topo, Satelitte satellite, Location location, long datasetidentifier, OrbitPredictor predictor) {
+	public LocationContactEventInjector(double maxCheck, double elevation, TopocentricFrame topo, Satellite satellite, Location location, String datasetidentifier, OrbitPredictor predictor) {
 		super(maxCheck, elevation, topo);
 		this.satellite = satellite;
 		this.location = location;

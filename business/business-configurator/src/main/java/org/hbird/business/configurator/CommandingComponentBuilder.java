@@ -3,18 +3,19 @@ package org.hbird.business.configurator;
 import org.hbird.business.command.releaser.CommandReleaser;
 import org.hbird.business.core.FieldBasedScheduler;
 import org.hbird.business.core.FieldBasedSplitter;
-import org.hbird.exchange.commandrelease.CommandReleaseServiceSpecification;
-import org.hbird.exchange.configurator.CommandComponentRequest;
-import org.hbird.exchange.parameters.ParameterAccessServiceSpecification;
-import org.hbird.exchange.tasking.TaskingServiceSpecification;
 
 
 /** Route builder to create a commanding chain. 
  * 
+ * The builder has the following routes;
+ * 
+ * activemq:queue:requests?selector=type='CommandRequest'--> 
+ * 
+ * 
  * Depends on the following routes
  * 
  * - activemq:queue:injectedCommands. The route through which commands should be injected. 
- * - activemq:topic:parameters. The route distributing parameter updates.
+ * - activemq:topic:monitoringdata. The route distributing parameter updates.
  * 
  * The builder will create a number of additional routes
  * 
@@ -29,20 +30,14 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 
 	public void doConfigure() {
 
-		CommandComponentRequest commandRequest = (CommandComponentRequest) request;
-		
-		card.requires.add(new CommandReleaseServiceSpecification());
-		card.provides.add(new TaskingServiceSpecification());
-		card.provides.add(new ParameterAccessServiceSpecification());
-		
 		CommandReleaser releaser = new CommandReleaser();
 
 		/** Configure a scheduler. */
 		FieldBasedScheduler scheduler = new FieldBasedScheduler();
 		scheduler.setFieldName("executionTime");
-		
+
 		FieldBasedSplitter splitter = new FieldBasedSplitter();
-		
+
 		/** Add the route for scheduling. 
 		 * 
 		 * This route will look for a 'RELEASE_TIME' flag in the header. If it has been set,
@@ -50,38 +45,55 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 		 * into the commandQueue. The command queue will only release the command when the
 		 * header time has expired, thus efficiently queuing the command.
 		 * */
-		from("activemq:queue:requests?selector=type='command'")
-		     .bean(scheduler)
-		     .to("activemq:queue:queuedCommands");
+		from("activemq:queue:requests?selector=type='CommandRequest'")
+		.bean(scheduler)
+		.to("activemq:queue:scheduledCommandRequests");
 
-		
-		/** Add the route for validation. 
-		 * 
-		 * This route will take commands that have been queued and check whether it is working.
+
+		/** Read from the scheduled queue and release the command. The release consists of the validation
+		 * that all lock states are valid and the ejection of the command itself.
 		 * */
-		from("activemq:queue:queuedCommands")
-		     .bean(releaser)
-		     .choice()
-		     .when(header("Valid").isEqualTo(true)).to("activemq:topic:releasedCommands")
-		     .otherwise().to("activemq:topic:failedCommands");		
+		from("activemq:queue:scheduledCommandRequests")
+		.bean(releaser)
+		.wireTap("seda:reportCommandRequestState")
+		.choice()
+		.when(header("Valid").isEqualTo(true)).to("seda:validCommandRequests")
+		.otherwise().to("activemq:topic:failedCommandRequests");		
 
-		
+
 		/** Add route for receiving state parameters. */
-		from("activemq:topic:parameters?selector=isStateParameter='true'")
-	     .bean(releaser, "state");
+		from("activemq:topic:monitoringdata?selector=type='State'")
+		.bean(releaser, "state");
 
-		
-		/** Extract the tasks from the command cartridge and schedule them, and release the command. */
-		from("activemq:topic:releasedCommands")
-		     .wireTap("seda:taskExtractor")
-		     .to("activemq:topic:ejectedCommands");
+
+		/** Extract the tasks from the command request and schedule them. Extract the command and release it. */
+		from("seda:validCommandRequests")
+		.wireTap("seda:taskExtractor")
+		.setBody(simple("${in.body.command}"))
+		.setHeader("name", simple("${in.body.name}"))
+		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
+		.setHeader("type", simple("${in.body.type}"))
+		.setHeader("destination", simple("${in.body.destination}"))
+		.to("activemq:topic:releasedCommands");
 
 		from("seda:taskExtractor")
-		     .split().method(splitter)
-		     .bean(scheduler)
-		     .to("activemq:queue:queuedTasks");
-		
+		.split().method(splitter)
+		.bean(scheduler)
+		.setHeader("name", simple("${in.body.name}"))
+		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
+		.setHeader("type", simple("${in.body.type}"))
+		.to("activemq:queue:scheduledTasks");
+
 		/** Route to move the tasks that has been scheduled. */
-		from("activemq:queue:queuedTasks").to("activemq:queue:tasks");
+		from("activemq:queue:scheduledTasks").to("activemq:queue:tasks");
+
+
+		from("seda:reportCommandRequestState")
+		.bean(scheduler, "reportState")
+		.setHeader("name", simple("${in.body.name}"))
+		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
+		.setHeader("type", simple("${in.body.type}"))
+		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
+		.to("activemq:topic:Parameter");
 	}	
 }

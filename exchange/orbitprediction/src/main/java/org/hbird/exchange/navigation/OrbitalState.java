@@ -35,14 +35,9 @@ public class OrbitalState extends Named {
 	/** Velocity measured in meters / second. */
 	public D3Vector velocity;
 
-	public Satelitte satelitte = null;
+	public Satellite satelitte = null;
 	
 	public OrbitalState() {};
-	
-	{
-		this.name = "";
-		this.description = "";
-	}
 	
 	/**
 	 * Constructor of an orbital state.
@@ -51,16 +46,18 @@ public class OrbitalState extends Named {
 	 * @param description A description of the state.
 	 * @param timestamp The timestamp at which the orbital state is relevant.
 	 * @param datasetidentifier
+	 * @param satellite 
 	 * @param position The position of the orbit. 
 	 * @param velocity The velocity of the orbit.
 	 */
-	public OrbitalState(String issuedBy, String name, String description, long timestamp, long datasetidentifier, D3Vector position, D3Vector velocity) {
-		super(issuedBy, name, description, timestamp, datasetidentifier);
+	public OrbitalState(String issuedBy, String name, String description, long timestamp, String datasetidentifier, Satellite satellite, D3Vector position, D3Vector velocity) {
+		super(issuedBy, name, "OrbitalState", description, timestamp, datasetidentifier);
 		this.position = position;
 		this.velocity = velocity;
+		this.satelitte = satellite;
 	}
 
-	public Satelitte getSatelitte() {
+	public Satellite getSatelitte() {
 		return satelitte;
 	}
 }

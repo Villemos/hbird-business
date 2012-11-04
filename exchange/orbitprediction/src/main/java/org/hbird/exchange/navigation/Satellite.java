@@ -22,7 +22,7 @@ import org.hbird.exchange.core.Named;
  * Class representing a satellite. 
  *
  */
-public class Satelitte extends Named {
+public class Satellite extends Named {
 
 	/** The unique UUID. */
 	private static final long serialVersionUID = 6169559659135516782L;
@@ -31,7 +31,7 @@ public class Satelitte extends Named {
 	
 	protected String satelliteNumber;
 	
-	public Satelitte() {};
+	public Satellite() {};
 	
 	/**
 	 * Constructor.
@@ -39,8 +39,8 @@ public class Satelitte extends Named {
 	 * @param name The name of the satellite.
 	 * @param description The description of the satellite.
 	 */
-	public Satelitte(String issuedBy, String name, String description) {
-		super(issuedBy, name, description);
+	public Satellite(String issuedBy, String name, String description) {
+		super(issuedBy, name, "Satellite", description);
 	}
 
 	public String getDesignator() {

@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
 
 import org.apache.camel.Body;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.core.StateParameter;
+import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.State;
 
 
 /**
@@ -27,10 +27,10 @@ public class InMemoryParameterBuffer {
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(InMemoryParameterBuffer.class);
 	
 	/* Map holding the buffered values. */
-	protected Map<String, Parameter> latestParameterValue = new HashMap<String, Parameter>();
+	protected Map<String, Named> latestParameterValue = new HashMap<String, Named>();
 
 	/** Semantic parameter. */
-	protected Map<String, List<Parameter>> latestParameterValueSemantic = new HashMap<String, List<Parameter>>();
+	protected Map<String, List<Named>> latestParameterValueSemantic = new HashMap<String, List<Named>>();
 	
 	protected Pattern parameterName = Pattern.compile("name=(.+)");
 	protected Pattern isStateOf = Pattern.compile("isStateOf=(.+)");
@@ -63,15 +63,15 @@ public class InMemoryParameterBuffer {
 	 * 
 	 * @param parameter The parameter to be stored.
 	 */
-	public void storeParameter(@Body Parameter parameter) {
+	public void storeParameter(@Body Named parameter) {
 		latestParameterValue.put(parameter.getName(), parameter);
 		
-		if (parameter instanceof StateParameter) {
-			StateParameter state = (StateParameter) parameter;
+		if (parameter instanceof State) {
+			State state = (State) parameter;
 			if (state.getIsStateOf() != null) {
 				
 				if (latestParameterValueSemantic.get(state.getIsStateOf()) == null) {
-					latestParameterValueSemantic.put((String) state.getIsStateOf(), new ArrayList<Parameter>());
+					latestParameterValueSemantic.put((String) state.getIsStateOf(), new ArrayList<Named>());
 				}
 				
 				latestParameterValueSemantic.get(state.getIsStateOf()).add(state);
@@ -85,7 +85,7 @@ public class InMemoryParameterBuffer {
 	 * 
 	 * @return The Map acting as a buffer.
 	 */
-	public Map<String, Parameter> getLatestParameterValue() {
+	public Map<String, Named> getLatestParameterValue() {
 		return latestParameterValue;
 	}
 }

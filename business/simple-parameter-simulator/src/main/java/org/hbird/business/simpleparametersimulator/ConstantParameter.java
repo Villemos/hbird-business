@@ -17,6 +17,7 @@
 package org.hbird.business.simpleparametersimulator;
 
 import org.apache.camel.Handler;
+import org.apache.log4j.Logger;
 import org.hbird.exchange.core.Parameter;
 
 /**
@@ -25,8 +26,11 @@ import org.hbird.exchange.core.Parameter;
  */
 public class ConstantParameter extends BaseParameter {
 
-	public ConstantParameter(String name, String description, String unit, Double value) {
-		super(name, description, value, unit);
+	/** The class logger. */
+	protected static Logger LOG = Logger.getLogger(ConstantParameter.class);
+
+	public ConstantParameter(String issuedBy, String name, String description, String type, String unit, Double value) {
+		super(issuedBy, name, description, type, value, unit);
 	}
 
 	/* (non-Javadoc)
@@ -34,7 +38,8 @@ public class ConstantParameter extends BaseParameter {
 	 */
 	@Handler
 	public Parameter process() {
-		return new Parameter("simulator", name, description, value, unit);
+		LOG.debug("Sending new constant value with name '" + name + "' and value .");
+		return new Parameter(issuedBy, name, type, description, value, unit);
 	}
 
 	public Double getConstantValue() {

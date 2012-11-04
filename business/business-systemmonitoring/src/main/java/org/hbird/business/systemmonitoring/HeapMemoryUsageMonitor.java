@@ -39,6 +39,6 @@ public class HeapMemoryUsageMonitor extends Monitor {
 	 * @throws UnknownHostException 
 	 */
 	public Parameter check() throws UnknownHostException {
-		return new Parameter(componentId, "Heap Memory Usage", "The heap memory usage", ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed(), "Byte");
+		return new Parameter(componentId, "Heap Memory Usage", "MonitoredResource", "The heap memory usage", ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed(), "Byte");
 	}	
 }

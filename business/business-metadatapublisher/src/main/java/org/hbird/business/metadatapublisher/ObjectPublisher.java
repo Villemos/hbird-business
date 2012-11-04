@@ -18,6 +18,7 @@ package org.hbird.business.metadatapublisher;
 
 import java.util.List;
 
+import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
@@ -61,6 +62,7 @@ public class ObjectPublisher {
 	 * 
 	 * @return A list of messages, carrying as the body a command definition.
 	 */
+	@Handler
 	public List<Object> process() {
 
 		logger.info("Loading 'Named' objects from file.");

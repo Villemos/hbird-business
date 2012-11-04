@@ -7,10 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hbird.business.command.releaser.CommandReleaser;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.core.StateParameter;
+import org.hbird.exchange.core.State;
 import org.hbird.exchange.tasking.SetParameter;
 import org.hbird.exchange.tasking.Task;
 import org.junit.Test;
@@ -28,7 +29,7 @@ public class CommandReleaserTest {
 		lockstates.add("TestParameter4LowerLimit");
 		
 		List<Task> tasks = new ArrayList<Task>();
-		tasks.add(new SetParameter("", "TestTask", "Task for testing", 0, new Parameter("", "Parameter90", "Parameter set by task", 9d, "Volt")));
+		tasks.add(new SetParameter("", "TestTask", "Task for testing", 0, new Parameter("", "Parameter90", "", "Parameter set by task", 9d, "Volt")));
 			
 		Map<String, Object> headers = new HashMap<String, Object>();
 		
@@ -44,9 +45,9 @@ public class CommandReleaserTest {
 		assertTrue((Boolean) headers.get("Valid") == false);
 		
 		/** Add a few stages. */
-		releaser.state(new StateParameter("", "TestState1", "A test state", "Something", false));
-		releaser.state(new StateParameter("", "TestState2", "A test state", "Something", true));
-		releaser.state(new StateParameter("", "TestState3", "A test state", "Something", false));
+		releaser.state(new State("", "TestState1", "A test state", "Something", false));
+		releaser.state(new State("", "TestState2", "A test state", "Something", true));
+		releaser.state(new State("", "TestState3", "A test state", "Something", false));
 
 		/** We will still fail, as the proper state has not been set. */
 		headers.clear();
@@ -54,7 +55,7 @@ public class CommandReleaserTest {
 		assertTrue((Boolean) headers.get("Valid") == false);
 
 		/** Add one of the states. */
-		releaser.state(new StateParameter("", "TestParameter3LowerLimit", "A test state", "Something", false));
+		releaser.state(new State("", "TestParameter3LowerLimit", "A test state", "Something", false));
 
 		/** We will still fail, as the proper state has been set wrong. */
 		headers.clear();
@@ -62,7 +63,7 @@ public class CommandReleaserTest {
 		assertTrue((Boolean) headers.get("Valid") == false);
 
 		/** Add one of the states. */
-		releaser.state(new StateParameter("", "TestParameter4LowerLimit", "A test state", "Something", false));
+		releaser.state(new State("", "TestParameter4LowerLimit", "A test state", "Something", false));
 
 		/** We will still fail, as the proper state has been set wrong. */
 		headers.clear();
@@ -70,7 +71,7 @@ public class CommandReleaserTest {
 		assertTrue((Boolean) headers.get("Valid") == false);
 
 		/** Add one of the states. */
-		releaser.state(new StateParameter("", "TestParameter3LowerLimit", "A test state", "Something", true));
+		releaser.state(new State("", "TestParameter3LowerLimit", "A test state", "Something", true));
 
 		/** We will still fail, as the proper state has been set wrong. */
 		headers.clear();
@@ -78,7 +79,7 @@ public class CommandReleaserTest {
 		assertTrue((Boolean) headers.get("Valid") == false);
 
 		/** Add one of the states. */
-		releaser.state(new StateParameter("", "TestParameter4LowerLimit", "A test state", "Something", true));
+		releaser.state(new State("", "TestParameter4LowerLimit", "A test state", "Something", true));
 
 		/** We will still fail, as the proper state has been set wrong. */
 		headers.clear();

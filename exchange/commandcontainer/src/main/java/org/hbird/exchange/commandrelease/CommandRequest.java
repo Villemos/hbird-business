@@ -27,7 +27,7 @@ public class CommandRequest extends Named {
 	public CommandRequest() {};
 	
 	public CommandRequest(String issuedBy, String name, String description) {
-		super(issuedBy, name, description);
+		super(issuedBy, name, "ComponentRequest", description);
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public class CommandRequest extends Named {
 	 * @param executionTime The time at which the command should be executed onboard.
 	 */
 	public CommandRequest(String issuedBy, String name, String description, List<String> lockStates, List<Task> tasks, Command command) {
-		super(issuedBy, "CommandContainer" + name, "Command container holding lock states and tasks for the command '" + name + "'.");
+		super(issuedBy, "CommandContainer" + name, "CommandContainer", "Command container holding lock states and tasks for the command '" + name + "'.");
 		this.command = command;
 		this.lockStates = lockStates;
 		this.tasks = tasks;

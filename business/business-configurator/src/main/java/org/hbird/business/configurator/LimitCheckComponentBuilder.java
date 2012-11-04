@@ -9,10 +9,10 @@ import org.hbird.exchange.validation.Limit.eLimitType;
 
 public class LimitCheckComponentBuilder extends ComponentBuilder {
 
-	protected String inCheckRoute = "activemq:topic:parameters?selector=name='PARAMETERNAME'";
-	protected String inEnableRoute = "activemq:topic:parameters?selector=name='LIMITNAME_SWITCH'";
-	protected String inUpdateRoute = "activemq:topic:parameters?selector=name='LIMITNAME_UPDATE'";
-	protected String outParameters = "activemq:topic:parameters";
+	protected String inCheckRoute = "activemq:topic:monitoringdata?selector=name='PARAMETERNAME'";
+	protected String inEnableRoute = "activemq:topic:monitoringdata?selector=name='LIMITNAME_SWITCH'";
+	protected String inUpdateRoute = "activemq:topic:monitoringdata?selector=name='LIMITNAME_UPDATE'";
+	protected String outParameters = "activemq:topic:monitoringdata";
 
 	@Override
 	public void doConfigure() {
@@ -20,13 +20,13 @@ public class LimitCheckComponentBuilder extends ComponentBuilder {
 		LimitComponentRequest request = (LimitComponentRequest) this.request;
 
 		if (request.limit.type == eLimitType.Lower) {
-			createRoute(request.limit.parameter, new LowerLimitChecker("LowerLimitChecker_" + request.limit.parameter, "Lower limit checker for " + request.limit.parameter, request.limit));			
+			createRoute(request.limit.limitOfParameter, new LowerLimitChecker(request.limit));			
 		}
 		else if (request.limit.type == eLimitType.Upper) {
-			createRoute(request.limit.parameter, new UpperLimitChecker("UpperLimitChecker_" + request.limit.parameter, "Upper limit checker for " + request.limit.parameter, request.limit));			
+			createRoute(request.limit.limitOfParameter, new UpperLimitChecker(request.limit));			
 		}
 		else if (request.limit.type == eLimitType.Static) {
-			createRoute(request.limit.parameter, new StaticLimitChecker("StaticLimitChecker_" + request.limit.parameter, "Static limit checker for " + request.limit.parameter, request.limit));			
+			createRoute(request.limit.limitOfParameter, new StaticLimitChecker(request.limit));			
 		}
 	}
 	
@@ -35,23 +35,28 @@ public class LimitCheckComponentBuilder extends ComponentBuilder {
 		/** Create the route for limit checking. */
 		from(inCheckRoute.replaceAll("PARAMETERNAME", parameter))
 		.bean(limit, "processParameter")
-		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
-		.setHeader("isStateParameter", simple("true"))
+		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
 		.setHeader("name", simple("${in.body.name}"))
+		.setHeader("type", simple("${in.body.type}"))
+		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
 		.to(outParameters);
 
 		/** Create the route for enabling/disabling limit checking. */
-		from(inEnableRoute.replaceAll("LIMITNAME", limit.getName()))
+		from(inEnableRoute.replaceAll("LIMITNAME", limit.getLimit().getName()))
 		.bean(limit, "processEnabled")
-		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
+		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
 		.setHeader("name", simple("${in.body.name}"))
+		.setHeader("type", simple("${in.body.type}"))
+		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
 		.to(outParameters);
 
 		/** Create the route for changing the limit value. */
-		from(inUpdateRoute.replaceAll("LIMITNAME", limit.getName()))
+		from(inUpdateRoute.replaceAll("LIMITNAME", limit.getLimit().getName()))
 		.bean(limit, "processLimit")
-		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
+		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
 		.setHeader("name", simple("${in.body.name}"))
+		.setHeader("type", simple("${in.body.type}"))
+		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
 		.to(outParameters);
 	}
 

@@ -30,6 +30,6 @@ public class HarddiskMonitor extends Monitor {
 	 * @throws UnknownHostException 
 	 */
 	public Parameter check() throws UnknownHostException {
-		return new Parameter(componentId, "Free Harddisk", "The free harddisk space.", rootFile.getFreeSpace(), "Byte");
+		return new Parameter(componentId, "Free Harddisk", "MonitoredResource", "The free harddisk space.", rootFile.getFreeSpace(), "Byte");
 	}
 }

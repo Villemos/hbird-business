@@ -2,7 +2,7 @@ package org.hbird.business.configurator;
 
 import org.hbird.business.scripting.ScriptExecutor;
 import org.hbird.exchange.configurator.ScriptComponentRequest;
-import org.hbird.exchange.core.StateParameter;
+import org.hbird.exchange.core.State;
 
 public class ScriptComponentBuilder extends ComponentBuilder {
 
@@ -11,27 +11,22 @@ public class ScriptComponentBuilder extends ComponentBuilder {
 		
 		ScriptExecutor executor = new ScriptExecutor(((ScriptComponentRequest) request).request);			
 		
-		for (String parameter : executor.input.keySet()) {
-			/** Create the route for enabling/disabling limit checking. */
-			from("activemq:topic:parameters?selector=name%3D'" + parameter + "'")
-			.bean(executor, "calculate")
-			.choice()
-			.when(body().isInstanceOf(StateParameter.class)).setHeader("isStateOf", simple("${in.body.isStateOf}")).to("activemq:topic:parameters")
-			.otherwise().setHeader("name", simple("${in.body.name}")).to("activemq:topic:parameters");
-		}
+		/** Iterate over each dependency needed by this script. */
+		for (String dependency : executor.getDependencies()) {
 		
-//		String selector = "selector=";
-//		String separator = "";
-//		for (String parameter : executor.input.keySet()) {
-//			selector += separator + "name='" + parameter + "'";
-//			separator = " AND ";
-//		}
-//		
-//		/** Create the route for enabling/disabling limit checking. */
-//		from("activemq:topic:parameters?" + selector)
-//		.bean(executor, "calculate")
-//		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
-//		.setHeader("name", simple("${in.body.name}"))
-//		.to("activemq:topic:parameters");
+			/** Create the routes for receiving the data needed by the script. */
+			from("activemq:topic:monitoringdata?selector=name%3D'" + dependency + "'")
+			.bean(executor, "calculate")
+			.setHeader("name", simple("${in.body.name}"))
+			.setHeader("issuedBy", simple("${in.body.issuedBy}"))
+			.setHeader("type", simple("${in.body.type}")) 
+			
+			.choice()
+			.when(body().isInstanceOf(State.class))
+			     .setHeader("isStateOf", simple("${in.body.isStateOf}"))
+			     .to("activemq:topic:monitoringdata")
+			.otherwise()
+			     .to("activemq:topic:monitoringdata");
+		}		
 	}
 }

@@ -23,7 +23,7 @@ package org.hbird.exchange.core;
  *  A state parameter is a parameter with the following constrains;
  *  - Type must be 'Boolean'.
  *  - The field 'isStateOff' must provide the name of the object its a state of. */
-public class StateParameter extends Parameter {
+public class State extends Named {
 	
 	/** The unique UID. */
 	private static final long serialVersionUID = 6234660528925795242L;
@@ -31,6 +31,8 @@ public class StateParameter extends Parameter {
 	/** The ID of the object that this state parameter is a state of. */
 	protected String isStateOf;
 		
+	protected Boolean state = true;
+	
 	/**
 	 * Constructor of the state parameter. The timestamp will be set to the current time.
 	 * 
@@ -39,9 +41,10 @@ public class StateParameter extends Parameter {
 	 * @param isStateOff The object that this state is a state off.
 	 * @param state The current state.
 	 */
-	public StateParameter(String issuedBy, String stateName, String description, String isStateOff, boolean state) {
-		super(issuedBy, stateName, description, state, "");
+	public State(String issuedBy, String stateName, String description, String isStateOff, boolean state) {
+		super(issuedBy, stateName, "State", description);
 		this.isStateOf = isStateOff;
+		this.state = state;
 	}
 
 	/**
@@ -54,9 +57,10 @@ public class StateParameter extends Parameter {
 	 * @param isStateOff The object that this state is a state off.
 	 * @param state The current state.
 	 */
-	public StateParameter(String issuedBy, String stateName, String description, String isStateOff, boolean state, long timestamp) {
-		super(issuedBy, stateName, description, timestamp, state, "");
+	public State(String issuedBy, String stateName, String description, String isStateOff, boolean state, long timestamp) {
+		super(issuedBy, stateName, "State", description, timestamp);
 		this.isStateOf = isStateOff;
+		this.state = state;
 	}
 
 	public String getIsStateOf() {
@@ -73,10 +77,18 @@ public class StateParameter extends Parameter {
 	 * 
 	 * @return The Parameter value cast to a Boolean.
 	 */
-	public Boolean getStateValue() {
-		return (Boolean) getValue();
+	public Boolean getValue() {
+		return state;
 	}
 	
+	public void setValid() {
+		state = true;
+	}
+
+	public void setInvalid() {
+		state = false;
+	}
+
 	/**
 	 * Type safe setter for the StateParameter type. Checks that the value being set is
 	 * indeed an instance of Boolean prior to setting it. If this is not the case, then
@@ -84,17 +96,11 @@ public class StateParameter extends Parameter {
 	 * 
 	 * @param Object The value to be set. Must be a Boolean.
 	 */
-	public void setValue(Object value) {
-		if (value instanceof Boolean == false) {
-			/** Notice that this object is intended to be transfered as part of Camel
-			 * exchanges. It therefore CANNOT contain a Logger instance depending on the local
-			 * execution context. The System.out is the only way to get a message to the world 
-			 * that something is being done wrong. Please do not attempt to update this to use
-			 * a Logger.*/
-			System.out.println("Trying to assign type '" + value.getClass().getName() + "' to state parameter. Only allowed type is 'Boolean'. Ignoring setting.");
-		}
-		else {
-			this.value = value;
-		}
+	public void setValue(Boolean value) {
+		this.state = value;
+	}
+	
+	public String prettyPrint() {
+		return "State {name=" + name + ", state=" + state + ", timestamp=" + timestamp + "}";
 	}
 }

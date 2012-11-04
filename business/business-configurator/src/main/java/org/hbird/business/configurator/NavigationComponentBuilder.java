@@ -2,14 +2,11 @@ package org.hbird.business.configurator;
 
 import org.hbird.business.navigation.OrbitPredictor;
 import org.hbird.business.navigation.OrbitPropagator;
-import org.hbird.exchange.navigation.NavigationServiceSpecification;
 
 public class NavigationComponentBuilder extends ComponentBuilder {
 
 	@Override
 	public void doConfigure() {
-		card.provides.add(new NavigationServiceSpecification());
-		
 		OrbitPropagator propagator = new OrbitPropagator();
 		OrbitPredictor predictor = new OrbitPredictor();
 				
@@ -17,6 +14,12 @@ public class NavigationComponentBuilder extends ComponentBuilder {
 		from("activemq:topic:configuration").bean(propagator, "addLocation");
 		from("activemq:topic:configuration").bean(propagator, "removeLocation");
 
-		from("activemq:queue:requests").bean(predictor).split(body()).to("activemq:topic:orbitals");
+		from("activemq:queue:requests")
+		.bean(predictor)
+		.split(body())
+		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
+		.setHeader("name", simple("${in.body.name}"))
+		.setHeader("type", simple("${in.body.type}"))
+		.to("activemq:topic:monitoringdata");
 	}
 }

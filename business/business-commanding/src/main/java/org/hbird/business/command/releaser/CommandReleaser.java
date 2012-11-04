@@ -8,7 +8,8 @@ import org.apache.camel.Handler;
 import org.apache.camel.Headers;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.commandrelease.CommandRequest;
-import org.hbird.exchange.core.StateParameter;
+import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.core.State;
 
 /**
  * The command releaser will validate whether a 'Command' can be send.
@@ -50,8 +51,10 @@ public class CommandReleaser {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(CommandReleaser.class);
 
-	protected Map<String, StateParameter> stateParameters = new HashMap<String, StateParameter>();
+	protected Map<String, State> stateParameters = new HashMap<String, State>();
 
+	protected String validityHeaderField = "Valid";
+	
 	/**
 	 * Processor for the scheduling of validation task for a command as well as the
 	 * release of the command.
@@ -63,7 +66,7 @@ public class CommandReleaser {
 		LOG.info("Received command '" + command.getName() + "' for release.");
 
 		if (command.getCommand() == null) {
-			headers.put("Valid", false);
+			headers.put(validityHeaderField, false);
 			LOG.error("Command container '" + command.getName() + "' marked as invalid; it contains no command.");
 			return;
 		}
@@ -76,14 +79,14 @@ public class CommandReleaser {
 			/** TODO The state parameters that point to the command should also be checked. */
 			
 			for (String state : command.getLockStates()) {
-				if (stateParameters.containsKey(state) == false || stateParameters.get(state).getStateValue() == false) {
+				if (stateParameters.containsKey(state) == false || stateParameters.get(state).getValue() == false) {
 					LOG.error("Command '" + command.getCommand().getName() + "' marked as invalid.");
-					headers.put("Valid", false);	
+					headers.put(validityHeaderField, false);	
 				}				
 			}
 		}
 
-		LOG.info("Forwarding command with validity='" + headers.get("Valid") + "'.");
+		LOG.info("Forwarding command with validity='" + headers.get(validityHeaderField) + "'.");
 	}
 
 
@@ -92,9 +95,13 @@ public class CommandReleaser {
 	 * 
 	 * @param state
 	 */
-	public void state(@Body StateParameter state) {
+	public void state(@Body State state) {
 		synchronized (stateParameters) {
 			stateParameters.put(state.getName(), state);
 		}
+	}
+	
+	public State reportState(@Body CommandRequest request, @Headers Map<String, String> header) {
+		return new State("CommandReleaser", "Command Release Verification", "The state of the command release.", request.getCommand().getName(), Boolean.parseBoolean(header.get(validityHeaderField)));
 	}
 }

@@ -1,7 +1,5 @@
 package org.hbird.business.configurator;
 
-import org.hbird.exchange.parameters.ParameterAccessServiceSpecification;
-
 public class CommandArchiveComponentBuilder extends ComponentBuilder {
 
 	@Override

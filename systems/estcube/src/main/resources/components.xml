@@ -9,40 +9,49 @@
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<bean id="limit1" class="org.hbird.exchange.configurator.LimitComponentRequest">
-		<constructor-arg index="0" value="Lower"/>
-		<constructor-arg index="1" value="Parameter3"/>
-		<constructor-arg index="2" value="9.6"/>
-		<constructor-arg index="3" value="Double"/>
-		<constructor-arg index="4" value="TestParameter3LowerLimit"/>
-		<constructor-arg index="5" value="The lower limit of the Test Parameter3"/>
-	</bean>
+	<bean id="systemMonitoring" class="org.hbird.exchange.configurator.SystemMonitoringComponentRequest"/>
 
-	<bean id="monitoring" class="org.hbird.exchange.configurator.SystemMonitoringComponentRequest"/>
-
-	<bean id="parameterstore" class="org.hbird.exchange.configurator.ParameterArchiveComponentRequest"/>
-	<bean id="commandstore" class="org.hbird.exchange.configurator.CommandArchiveComponentRequest"/>
-	<bean id="taskexecutor" class="org.hbird.exchange.configurator.TaskExecutorComponentRequest"/>
+	<bean id="parameterStore" class="org.hbird.exchange.configurator.ParameterArchiveComponentRequest"/>
+	<bean id="commandStore" class="org.hbird.exchange.configurator.CommandArchiveComponentRequest"/>
+	<bean id="taskExecutor" class="org.hbird.exchange.configurator.TaskExecutorComponentRequest"/>
 			
-	<bean id="parameter10" class="org.hbird.exchange.configurator.ScriptComponentRequest">
-		<constructor-arg index="0" value=""/>
-		<constructor-arg index="1" value="Parameter 10 Evaluator"/>
-		<constructor-arg index="2" value="This script component calculates parameter 10"/>
-		<constructor-arg index="3" value="// name=&quot;Parameter10&quot; description=&quot;A test script parameter&quot; unit=&quot;Volt&quot; input=&quot;Parameter1&quot; input=&quot;Parameter2&quot; &#13; var Parameter10=Parameter1*10 + Parameter2;"/>
+	<bean id="commandChain" class="org.hbird.exchange.configurator.CommandComponentRequest"/>
+
+	<!-- eLimitType type, String ofParameter, Number limit, String stateName, String description -->
+	<bean id="limit.LowerRechargeRate" class="org.hbird.exchange.configurator.LimitComponentRequest">
+		<constructor-arg index="0" value="Lower"/>
+		<constructor-arg index="1" value="Battery Charge Rate Current"/>
+		<constructor-arg index="2" value="9.6d"/>
+		<constructor-arg index="3" value="To Low Recharge Rate"/>
+		<constructor-arg index="4" value="The lower limit of the Battery Charge Rate Current"/>
 	</bean>
+
 	
-	<bean id="commands" class="org.hbird.exchange.configurator.CommandComponentRequest"/>
+	<!-- String name, String script, String format, String paraName, String paraType, String paraDescription, String paraUnit, String inputBindings -->
+	<bean id="syntheticParameter.batteryRechargeTime" class="org.hbird.exchange.configurator.ScriptComponentRequest">
+		<constructor-arg index="0" value="BatteryRechargeTime"/>
+		<constructor-arg index="1" value=""/>
+		<constructor-arg index="2" value="javascript"/>
+		<constructor-arg index="3" value="Battery Recharge Time"/>
+		<constructor-arg index="4" value="Recharge"/>
+		<constructor-arg index="5" value="The time until the battery is fully recharged."/>
+		<constructor-arg index="6" value="Seconds"/>
+		<constructor-arg index="7" value="Battery Capacity=capacity:Charging Efficiency=lostCharge:Battery Charge Rate Current=chargerOutput"/>	
+	</bean>
+
 	
 	<bean id="components" class="java.util.ArrayList">
 		<constructor-arg>
         	<list>
-            	<ref bean="limit1" />
- 	          	<ref bean="monitoring" />
- 	          	<ref bean="parameterstore" />
- 	          	<ref bean="commandstore" />
- 	          	<ref bean="parameter10" />
- 	          	<ref bean="commands" />
-  	          	<ref bean="taskexecutor" />
+ 	          	<ref bean="systemMonitoring" />
+ 	          	<ref bean="parameterStore" />
+ 	          	<ref bean="commandStore" />
+ 	          	<ref bean="commandChain" />
+  	          	<ref bean="taskExecutor" />
+
+            	<ref bean="limit.LowerRechargeRate" />
+            	
+            	<ref bean="syntheticParameter.batteryRechargeTime"/>
          	</list>
 	    </constructor-arg>
 	</bean>
