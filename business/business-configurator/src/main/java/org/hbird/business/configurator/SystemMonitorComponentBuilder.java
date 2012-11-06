@@ -7,6 +7,7 @@ import org.hbird.business.systemmonitoring.ThreadCountMonitor;
 
 public class SystemMonitorComponentBuilder extends ComponentBuilder {
 
+
 	@Override
 	public void doConfigure() {
 		from("timer://systemmonitor?fixedRate=true&period=10000").multicast().to("seda:heap", "seda:thread", "seda:cpu", "seda:harddisk");
@@ -20,7 +21,9 @@ public class SystemMonitorComponentBuilder extends ComponentBuilder {
 		.setHeader("name", simple("${in.body.name}"))
 		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
 		.setHeader("type", simple("${in.body.type}")) 
-		.to("activemq:topic:monitoringdata");
+		.to(StandardEndpoints.monitoring);	
 		
+		/** Route for commands to this component, i.e. configuration commands. */
+		from("seda:processCommandFor" + getComponentName()).bean(defaultCommandHandler, "receiveCommand");
 	}
 }

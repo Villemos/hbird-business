@@ -2,7 +2,9 @@ package org.hbird.exchange.core;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @TITLE Command Definition
@@ -51,7 +53,7 @@ public class Command extends Named {
 	protected String destination;
 	
 	/** List of arguments. The value is embedded in the header of the exchange. */
-	protected List<Parameter> arguments = new ArrayList<Parameter>();
+	protected Map<String, Object> arguments = new HashMap<String, Object>();
 	
 	/** The time at which this command should be released for transfer to the satellite. A value of
 	 *  0 indicates immediate. */
@@ -60,8 +62,6 @@ public class Command extends Named {
 	/** The time at which the command should be executed onboard the satellite. A value of 0 indicates
 	 * immediate. */
 	protected long executionTime = 0;
-	
-	public Command() {};
 	
 	public Command(String issuedBy, String destination, String name, String description) {
 		super(issuedBy, name, "Command", description);
@@ -78,28 +78,22 @@ public class Command extends Named {
 	 * @param releaseTime The time at which the command should be released by the MCS for transfer to the satellite.
 	 * @param executionTime The time at which the command should be executed onboard.
 	 */
-	public Command(String issuedBy, String destination, String name, String description, long releaseTime, long executionTime, List<Parameter> arguments) {
+	public Command(String issuedBy, String destination, String name, String description, long releaseTime, long executionTime, Map<String, Object> arguments) {
 		super(issuedBy, name, "Command", description);
 		this.destination = destination;
 		this.arguments = arguments;
 		this.releaseTime = releaseTime;
 		this.executionTime = executionTime;
 	}
-
-	/**
-	 * Method to get the list of arguments of the command.
-	 * 
-	 * @return Map keyed on the argument name and with the value of the argument.
-	 */
-	public List<Parameter> getArguments() {
+	
+	public Map<String, Object> getArguments() {
 		return arguments;
 	}
 
-	
-	
-	public void setArguments(List<Parameter> arguments) {
+	public void setArguments(Map<String, Object> arguments) {
 		this.arguments = arguments;
 	}
+
 	/**
 	 * Getter of the command release time.
 	 * 
@@ -143,5 +137,7 @@ public class Command extends Named {
 		this.destination = destination;
 	}
 	
-	
+	public void addArgument(String key, Object value) {
+		this.arguments.put(key, value);
+	}
 }

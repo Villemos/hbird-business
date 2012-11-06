@@ -94,13 +94,13 @@ public class ImportAccessor {
 			String releaseTime = bodySheet.getCell(3, row).getContents();
 			String executionTime = bodySheet.getCell(4, row).getContents();
 
-			List<Parameter> arguments = new ArrayList<Parameter>();
+			Map<String, Object> arguments = new HashMap<String, Object>();
 			int tempRow = row;
 			while (tempRow < bodySheet.getRows() && (bodySheet.getCell(1, tempRow).getContents().equals("") || tempRow == row) && bodySheet.getCell(5, tempRow).getContents().equals("") == false) {
 				String argumentName = bodySheet.getCell(5, tempRow).getContents();
 				Parameter para = new Parameter((Parameter) parameters.get(argumentName));
 				para.setValue(getValue(para.getValue().getClass().toString(), bodySheet.getCell(6, tempRow).getContents()));
-				arguments.add(para);
+				arguments.put(argumentName, para);
 				tempRow++;
 			}
 

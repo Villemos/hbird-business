@@ -5,6 +5,7 @@ import org.hbird.business.core.FieldBasedScheduler;
 import org.hbird.business.core.FieldBasedSplitter;
 
 
+
 /** Route builder to create a commanding chain. 
  * 
  * The builder has the following routes;
@@ -45,7 +46,7 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 		 * into the commandQueue. The command queue will only release the command when the
 		 * header time has expired, thus efficiently queuing the command.
 		 * */
-		from("activemq:queue:requests?selector=type='CommandRequest'")
+		from(StandardEndpoints.requests + "?" + addTypeSelector("CommandRequest"))
 		.bean(scheduler)
 		.to("activemq:queue:scheduledCommandRequests");
 
@@ -62,7 +63,7 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 
 
 		/** Add route for receiving state parameters. */
-		from("activemq:topic:monitoringdata?selector=type='State'")
+		from(StandardEndpoints.monitoring + "?" + addTypeSelector("State"))
 		.bean(releaser, "state");
 
 
@@ -74,7 +75,7 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
 		.setHeader("type", simple("${in.body.type}"))
 		.setHeader("destination", simple("${in.body.destination}"))
-		.to("activemq:topic:releasedCommands");
+		.to(StandardEndpoints.commands);
 
 		from("seda:taskExtractor")
 		.split().method(splitter)
@@ -85,15 +86,17 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 		.to("activemq:queue:scheduledTasks");
 
 		/** Route to move the tasks that has been scheduled. */
-		from("activemq:queue:scheduledTasks").to("activemq:queue:tasks");
-
+		from("activemq:queue:scheduledTasks").to(StandardEndpoints.tasks);
 
 		from("seda:reportCommandRequestState")
-		.bean(scheduler, "reportState")
+		.bean(releaser, "reportState")
 		.setHeader("name", simple("${in.body.name}"))
 		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
 		.setHeader("type", simple("${in.body.type}"))
 		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
-		.to("activemq:topic:Parameter");
+		.to(StandardEndpoints.monitoring);
+		
+		/** Route for commands to this component, i.e. configuration commands. */
+		from("seda:processCommandFor" + getComponentName()).bean(defaultCommandHandler, "receiveCommand");
 	}	
 }

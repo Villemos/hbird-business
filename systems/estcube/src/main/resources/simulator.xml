@@ -98,56 +98,64 @@
 			<from uri="timer://BatteryTemperature?fixedRate=true&amp;period=1000" />
 			<to uri="bean:BatteryTemperature"/>
 			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
-			<to uri="activemq:topic:monitoringdata"/>
+			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>
+			<to uri="activemq:topic:monitoring"/>
 		</route>
 
 		<route>
 			<from uri="timer://BatteryChargeRateCurrent?fixedRate=true&amp;period=1000" />
 			<to uri="bean:BatteryChargeRateCurrent"/>
 			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
-			<to uri="activemq:topic:monitoringdata"/>
+			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>
+			<to uri="activemq:topic:monitoring"/>
 		</route>
 
 		<route>
 			<from uri="timer://BatteryCapacity?fixedRate=true&amp;period=1000" />
 			<to uri="bean:BatteryCapacity"/>
 			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
-			<to uri="activemq:topic:monitoringdata"/>
+			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>
+			<to uri="activemq:topic:monitoring"/>
 		</route>
 
 		<route>
 			<from uri="timer://ChargingEfficiency?fixedRate=true&amp;period=1000" />
 			<to uri="bean:ChargingEfficiency"/>
 			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
-			<to uri="activemq:topic:monitoringdata"/>
+			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>
+			<to uri="activemq:topic:monitoring"/>
 		</route>
 
 		<route>
 			<from uri="timer://Orbit?fixedRate=true&amp;period=60000" />
 			<to uri="bean:orbitSimulator"/>
 			<setHeader headerName="name"><simple>ESTcube</simple></setHeader>
-			<to uri="activemq:topic:monitoringdata"/>
+			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>
+			<to uri="activemq:topic:monitoring"/>
 		</route>
 
 		<route>
 			<from uri="timer://RotatorAzimut?fixedRate=true&amp;period=1000" />
 			<to uri="bean:RotatorAzimut"/>
 			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
-			<to uri="activemq:topic:monitoringdata"/>
+			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>
+			<to uri="activemq:topic:monitoring"/>
 		</route>
 
 		<route>
 			<from uri="timer://RotatorElevation?fixedRate=true&amp;period=1000" />
 			<to uri="bean:RotatorElevation"/>
 			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
-			<to uri="activemq:topic:monitoringdata"/>
+			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>
+			<to uri="activemq:topic:monitoring"/>
 		</route>
 
 		<route>
 			<from uri="timer://RotatorStatus?fixedRate=true&amp;period=1000" />
 			<to uri="bean:RotatorStatus"/>
 			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
-			<to uri="activemq:topic:monitoringdata"/>
+			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>
+			<to uri="activemq:topic:monitoring"/>
 		</route>
 
 	</camelContext>

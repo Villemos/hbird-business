@@ -13,17 +13,79 @@
 	<name>Exchange - System Configuration Service</name>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>validation</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>scripting</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>businesscard</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>commandrelease</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>queuemanagement</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>heartbeat</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>movementcontrol</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+ 
+     <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>orbitprediction</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+ 
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>commandrelease</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+ 
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>validation</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>scripting</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>tasking</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>parameteraccess</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>systemmonitoring</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
 
 	</dependencies>
 </project>

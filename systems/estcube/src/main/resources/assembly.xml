@@ -27,7 +27,7 @@
 		<route id="configurationStatusReporting">
 			<from uri="timer:configuratorStatusReport?period=10000" />
 			<to uri="bean:configurator?method=reportStatus" />
-			<to uri="activemq:topic:monitoringdata" />
+			<to uri="activemq:topic:monitoring" />
 		</route>
 
 		<route id="initiator">

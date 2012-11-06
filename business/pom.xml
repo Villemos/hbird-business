@@ -34,7 +34,6 @@
     <module>business-celestrack</module>
     <module>business-cfdp</module>
                 
-    <module>business-testtool</module>
     <module>simple-parameter-simulator</module>    
     <module>business-importer</module>
     

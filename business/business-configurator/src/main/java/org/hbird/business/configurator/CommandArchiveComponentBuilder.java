@@ -6,6 +6,9 @@ public class CommandArchiveComponentBuilder extends ComponentBuilder {
 	protected void doConfigure() {
 		
 		/** Setup the route to inject data into SOLR. */
-		from("activemq:topic:releasedCommands").to("solr:commandstore");
+		from(StandardEndpoints.commands).to("solr:commandstore");
+		
+		/** Route for commands to this component, i.e. configuration commands. */
+		from("seda:processCommandFor" + getComponentName()).bean(defaultCommandHandler, "receiveCommand");
 	};
 }

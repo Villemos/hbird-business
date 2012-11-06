@@ -8,7 +8,7 @@ import java.util.Map;
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.configurator.ComponentConfigurationRequest;
+import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.ConfiguratorStatus;
 
 public class Configurator {
@@ -19,26 +19,27 @@ public class Configurator {
 	
 	protected Map<String, String> classes = new HashMap<String, String>();
 	{
-		classes.put("org.hbird.exchange.configurator.CommandComponentRequest", CommandingComponentBuilder.class.getName());
-		classes.put("org.hbird.exchange.configurator.LimitComponentRequest", LimitCheckComponentBuilder.class.getName());
-		classes.put("org.hbird.exchange.configurator.NavigationComponentRequest", NavigationComponentBuilder.class.getName());
-		classes.put("org.hbird.exchange.configurator.SystemMonitoringComponentRequest", SystemMonitorComponentBuilder.class.getName());
-		classes.put("org.hbird.exchange.configurator.TaskExecutorComponentRequest", TaskExecutorComponentBuilder.class.getName());
-		classes.put("org.hbird.exchange.configurator.ParameterArchiveComponentRequest", ParameterArchiveComponentBuilder.class.getName());	
-		classes.put("org.hbird.exchange.configurator.ScriptComponentRequest", ScriptComponentBuilder.class.getName());
-		classes.put("org.hbird.exchange.configurator.CommandArchiveComponentRequest", CommandArchiveComponentBuilder.class.getName());
+		classes.put("org.hbird.exchange.configurator.StartCommandComponent", CommandingComponentBuilder.class.getName());
+		classes.put("org.hbird.exchange.configurator.StartLimitComponent", LimitCheckComponentBuilder.class.getName());
+		classes.put("org.hbird.exchange.configurator.StartNavigationComponent", NavigationComponentBuilder.class.getName());
+		classes.put("org.hbird.exchange.configurator.StartSystemMonitoringComponent", SystemMonitorComponentBuilder.class.getName());
+		classes.put("org.hbird.exchange.configurator.StartTaskExecutorComponent", TaskExecutorComponentBuilder.class.getName());
+		classes.put("org.hbird.exchange.configurator.StartParameterArchiveComponent", ParameterArchiveComponentBuilder.class.getName());	
+		classes.put("org.hbird.exchange.configurator.StartScriptComponent", ScriptComponentBuilder.class.getName());
+		classes.put("org.hbird.exchange.configurator.StartCommandArchiveComponent", CommandArchiveComponentBuilder.class.getName());
 	}
 
+	/** The name of the Configurator. */
 	protected String name;
 	
 	public Configurator(String name) {
 		this.name = name;
 	}
 
-	public void process(@Body ComponentConfigurationRequest request, CamelContext context) {
+	public void process(@Body StartComponent request, CamelContext context) {
 
 		try {			
-			LOG.info("Creating component of type '" + classes.get(request.getClass().getName()) + "'.");
+			LOG.info("Creating component '" + request.getArguments().get("componentname") + "' using builder '" + classes.get(request.getClass().getName()) + "'.");
 			
 			/** Find the component builder and get it to setup and start the component. */
 			ComponentBuilder builder = (ComponentBuilder) Class.forName(classes.get(request.getClass().getName())).newInstance();

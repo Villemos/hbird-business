@@ -3,6 +3,7 @@ package org.hbird.business.configurator;
 import org.apache.camel.builder.RouteBuilder;
 import org.hbird.business.heartbeat.Heart;
 
+
 public class HeartbeatRouteBuilder extends RouteBuilder {
 
 	protected String name;
@@ -24,6 +25,9 @@ public class HeartbeatRouteBuilder extends RouteBuilder {
    		 .setHeader("issuedBy", simple("${in.body.issuedBy}"))	
    		 .setHeader("hostname", simple("${in.body.hostname}"))
    		 .setHeader("hostip", simple("${in.body.hostip}"))	
-   		 .to("activemq:topic:monitoringdata");						
+   		 .to(StandardEndpoints.monitoring);						
+
+		/** Route for commands to this component, i.e. configuration commands. */
+		from("seda:processCommandFor" + name).bean(new DefaultCommandHandler(), "receiveCommand");
 	}
 }

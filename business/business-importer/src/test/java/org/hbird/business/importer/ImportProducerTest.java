@@ -94,10 +94,10 @@ public class ImportProducerTest {
 			request = (CommandRequest) readObjects.get("CommandContainerCommand1");
 			
 			assertTrue(request.getArguments().size() == 2);
-			assertTrue(request.getArguments().get(0).getName().equals("Parameter200"));
-			assertTrue( ((Integer) request.getArguments().get(0).getValue()) == 7);
-			assertTrue(request.getArguments().get(1).getName().equals("Parameter201"));
-			assertTrue( ((Double) request.getArguments().get(1).getValue()) == 8);
+			assertTrue(((Parameter) request.getArguments().get(0)).getName().equals("Parameter200"));
+			assertTrue(((Parameter) request.getArguments().get(0)).asInt() == 7);
+			assertTrue(((Parameter) request.getArguments().get(1)).getName().equals("Parameter201"));
+			assertTrue(((Parameter) request.getArguments().get(1)).asDouble() == 8);
 			
 			assertTrue(request.getLockStates().size() == 1);
 			assertTrue(request.getLockStates().get(0).equals("Parameter202"));

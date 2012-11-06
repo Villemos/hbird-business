@@ -1,6 +1,5 @@
 package org.hbird.exchange.businesscard;
 
-import org.hbird.exchange.core.ServiceSpecification;
 
 public class BusinessCardServiceSpecification extends ServiceSpecification {
 

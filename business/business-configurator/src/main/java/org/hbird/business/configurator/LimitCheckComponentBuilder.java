@@ -4,29 +4,31 @@ import org.hbird.business.validation.limits.BaseLimitChecker;
 import org.hbird.business.validation.limits.LowerLimitChecker;
 import org.hbird.business.validation.limits.StaticLimitChecker;
 import org.hbird.business.validation.limits.UpperLimitChecker;
-import org.hbird.exchange.configurator.LimitComponentRequest;
+import org.hbird.exchange.configurator.StartLimitComponent;
+import org.hbird.exchange.validation.Limit;
 import org.hbird.exchange.validation.Limit.eLimitType;
 
 public class LimitCheckComponentBuilder extends ComponentBuilder {
 
-	protected String inCheckRoute = "activemq:topic:monitoringdata?selector=name='PARAMETERNAME'";
-	protected String inEnableRoute = "activemq:topic:monitoringdata?selector=name='LIMITNAME_SWITCH'";
-	protected String inUpdateRoute = "activemq:topic:monitoringdata?selector=name='LIMITNAME_UPDATE'";
-	protected String outParameters = "activemq:topic:monitoringdata";
+	protected String inCheckRoute  = StandardEndpoints.monitoring + "?selector=name='PARAMETERNAME'";
+	protected String inEnableRoute = StandardEndpoints.monitoring + "?selector=name='LIMITNAME_SWITCH'";
+	protected String inUpdateRoute = StandardEndpoints.monitoring + "?selector=name='LIMITNAME_UPDATE'";
+	protected String outParameters = StandardEndpoints.monitoring;
 
 	@Override
 	public void doConfigure() {
 
-		LimitComponentRequest request = (LimitComponentRequest) this.request;
+		StartLimitComponent request = (StartLimitComponent) this.request;
 
-		if (request.limit.type == eLimitType.Lower) {
-			createRoute(request.limit.limitOfParameter, new LowerLimitChecker(request.limit));			
+		Limit limit = (Limit) request.getArguments().get("limit");
+		if (limit.type == eLimitType.Lower) {
+			createRoute(limit.limitOfParameter, new LowerLimitChecker(limit));			
 		}
-		else if (request.limit.type == eLimitType.Upper) {
-			createRoute(request.limit.limitOfParameter, new UpperLimitChecker(request.limit));			
+		else if (limit.type == eLimitType.Upper) {
+			createRoute(limit.limitOfParameter, new UpperLimitChecker(limit));			
 		}
-		else if (request.limit.type == eLimitType.Static) {
-			createRoute(request.limit.limitOfParameter, new StaticLimitChecker(request.limit));			
+		else if (limit.type == eLimitType.Static) {
+			createRoute(limit.limitOfParameter, new StaticLimitChecker(limit));			
 		}
 	}
 	
@@ -58,6 +60,9 @@ public class LimitCheckComponentBuilder extends ComponentBuilder {
 		.setHeader("type", simple("${in.body.type}"))
 		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
 		.to(outParameters);
+
+		/** Route for commands to this component, i.e. configuration commands. */
+		from("seda:processCommandFor" + getComponentName()).bean(defaultCommandHandler, "receiveCommand");
 	}
 
 	public String getInCheckRoute() {

@@ -106,6 +106,7 @@ public class ScriptExecutor {
 					/** The request output object has been bound to the engine. The script can
 					 * thus update it directly. Only the timestamp and uuid should also be set. */
 					returnValue = request.output.instance();
+					returnValue.setTimestamp(in.getTimestamp());
 				}
 			}
 		} catch (Exception e) {

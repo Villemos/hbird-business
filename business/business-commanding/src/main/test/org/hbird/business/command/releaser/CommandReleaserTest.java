@@ -20,9 +20,9 @@ public class CommandReleaserTest {
 
 	@Test
 	public void testProcess() {
-		List<Parameter> arguments = new ArrayList<Parameter>();		
+		Map<String, Object> arguments = new HashMap<String, Object>();		
 		
-		Command command = new Command("Simulator", "TestCommand", "A command used for testing", 0, 0, arguments);
+		Command command = new Command("Simulator", "", "TestCommand", "A command used for testing", 0, 0, arguments);
 		
 		List<String> lockstates = new ArrayList<String>();
 		lockstates.add("TestParameter3LowerLimit");

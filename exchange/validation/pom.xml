@@ -10,7 +10,6 @@
 	<artifactId>validation</artifactId>
 	<groupId>org.hbird.exchange</groupId>
 	<name>Exchange - Validation</name>
-	<version>0.0.1-SNAPSHOT</version>
 	
 	
 	<dependencies>

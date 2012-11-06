@@ -1,7 +1,9 @@
 package org.hbird.business.simpleparametersimulator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
@@ -12,7 +14,7 @@ import org.hbird.exchange.tasking.Task;
 public class TestCommandSender {
 
 	public CommandRequest send() {
-		List<Parameter> arguments = new ArrayList<Parameter>();		
+		Map<String, Object> arguments = new HashMap<String, Object>();		
 		
 		Command command = new Command("Simulator", "ESTcube/platform/battery1", "Turn Off", "Command to turn of the battery. NOTE: SIMULATED", 0, 0, arguments);
 		

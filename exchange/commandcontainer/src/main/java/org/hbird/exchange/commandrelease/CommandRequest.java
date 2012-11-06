@@ -2,6 +2,7 @@ package org.hbird.exchange.commandrelease;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Named;
@@ -23,8 +24,6 @@ public class CommandRequest extends Named {
 
 	/** List of tasks to be performed after the release of the command. */
 	protected List<Task> tasks = new ArrayList<Task>();
-	
-	public CommandRequest() {};
 	
 	public CommandRequest(String issuedBy, String name, String description) {
 		super(issuedBy, name, "ComponentRequest", description);
@@ -53,7 +52,7 @@ public class CommandRequest extends Named {
 	 * 
 	 * @return Map keyed on the argument name and with the value of the argument.
 	 */
-	public List<Parameter> getArguments() {
+	public Map<String, Object> getArguments() {
 		return command.getArguments();
 	}
 
@@ -73,5 +72,5 @@ public class CommandRequest extends Named {
 
 	public List<String> getLockStates() {
 		return lockStates;
-	}
+	}	
 }
