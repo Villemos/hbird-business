@@ -27,8 +27,8 @@ public class OrbitalStateInjector implements OrekitFixedStepHandler {
 	 *  it with new series when available. */
 	protected String datasetidentifier;
 
-	protected String orbitalStateName = "";
-	protected String orbitalStateDescription = "";
+	protected String orbitalStateName = "Predicted Orbital State";
+	protected String orbitalStateDescription = "A predicted orbital state";
 
 	protected OrbitPredictor predictor = null;
 
@@ -61,7 +61,7 @@ public class OrbitalStateInjector implements OrekitFixedStepHandler {
 
 		try {
 			/** Create orbital state. */
-			OrbitalState state = new OrbitalState("Simulator", orbitalStateName, orbitalStateDescription, currentState.getDate().toDate(TimeScalesFactory.getUTC()).getTime(), datasetidentifier, satellite, position, velocity);
+			OrbitalState state = new OrbitalState(predictor.name, orbitalStateName, orbitalStateDescription, currentState.getDate().toDate(TimeScalesFactory.getUTC()).getTime(), datasetidentifier, satellite, position, velocity);
 					
 			/** Send the orbital state on the response stream. */
 			predictor.addResult(state);

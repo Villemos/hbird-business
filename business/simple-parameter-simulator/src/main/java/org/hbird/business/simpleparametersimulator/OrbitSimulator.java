@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hbird.business.navigation.OrbitPredictor;
 import org.hbird.exchange.navigation.D3Vector;
 import org.hbird.exchange.navigation.Location;
@@ -14,12 +15,17 @@ import org.orekit.errors.OrekitException;
 
 public class OrbitSimulator {
 
+	/** The class logger. */
+	protected static Logger LOG = Logger.getLogger(OrbitSimulator.class);
+	
 	protected List<OrbitalState> orbitalstates = null;
 
 	protected int index = 0;
 
 	protected Satellite satellite = null;
 
+	protected String type = "Measured Orbital State";
+	
 	protected List<Location> locations = null;
 
 	protected OrbitalState initialState = null;
@@ -35,16 +41,17 @@ public class OrbitSimulator {
 		satellite = new Satellite("", "ESTcube", "The ESTcube cube satellite.");
 		
 		locations = new ArrayList<Location>();
-		locations.add(new Location("", "ES5EC", "Location", "ESTcube ground station", 26.7147224, 58.3708465, 0d));
+		locations.add(new Location("", "ES5EC", "ESTcube ground station", 26.7147224, 58.3708465, 0d));
 
 		D3Vector position = new D3Vector("", "Initial Position", "Position", "Initial position of ESTcube", -6142438.668, 3492467.560, -25767.25680);
 		D3Vector velocity = new D3Vector("", "Initial Velocity", "Velocity", "Initial velocity of ESTcube", 505.8479685, 942.7809215, 7435.922231);
 
-		initialState = new OrbitalState("Simulator", "Initial state", "", (new Date()).getTime(), "Test Data", satellite, position, velocity);
+		initialState = new OrbitalState("Measured Orbital State", "Initial state", "", (new Date()).getTime(), "Test Data", satellite, position, velocity);
 	}
 
-	public OrbitSimulator(String issuedBy, Satellite satellite, List<Location> locations, OrbitalState initialState) {
+	public OrbitSimulator(String issuedBy, String type, Satellite satellite, List<Location> locations, OrbitalState initialState) {
 		this.issuedBy = issuedBy;
+		this.type = type;
 		this.satellite = satellite;
 		this.locations = locations;
 		this.initialState = initialState;
@@ -65,11 +72,14 @@ public class OrbitSimulator {
 		}
 
 		/** TODO add error, to simulate that the orbit is not as predicted. */
+
+		LOG.debug("Sending Orbital Message.");
+
 		return orbitalstates.get(index++);
 	}
 
 	protected void initialize() {
-		OrbitPredictionRequest request = new OrbitPredictionRequest(issuedBy, "Simulated Orbit", "A simulated orbit.", satellite, initialState, locations);
+		OrbitPredictionRequest request = new OrbitPredictionRequest(issuedBy, "", "Measured Orbital State", "A simulated orbit.", satellite, initialState, locations);
 
 		OrbitPredictor orbitPredictor = new OrbitPredictor();
 		try {

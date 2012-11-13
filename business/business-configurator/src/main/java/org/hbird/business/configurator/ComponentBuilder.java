@@ -1,9 +1,14 @@
 package org.hbird.business.configurator;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.core.Scheduler;
 import org.hbird.business.heartbeat.Heart;
+import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.State;
+import org.hbird.exchange.tasking.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +18,7 @@ public abstract class ComponentBuilder extends RouteBuilder {
 	protected StartComponent request = null;
 
 	protected static DefaultCommandHandler defaultCommandHandler = new DefaultCommandHandler();
-	
+
 	public StartComponent getRequest() {
 		return request;
 	}
@@ -22,7 +27,7 @@ public abstract class ComponentBuilder extends RouteBuilder {
 		this.request = request;
 	};
 
-	
+
 	@Override
 	public void configure() throws Exception {
 
@@ -32,12 +37,12 @@ public abstract class ComponentBuilder extends RouteBuilder {
 		/** Create the heartbeat route for this component. */
 		if (request.getArguments().get("heartbeat") != null) {
 			long heartbeat = (Long) request.getArguments().get("heartbeat");
-		
+
 			from("timer:heartbeat_" + request.getName() + "?fixedRate=true&period=" + heartbeat)
 			.setBody(bean(new Heart(request.getName(), heartbeat)))
 			.to(StandardEndpoints.monitoring);	
 		}
-		
+
 		/** Create route to receive commands to this component. */
 		from(StandardEndpoints.commands + "?" + addDestinationSelector(getComponentName())).to("seda:processCommandFor" + getComponentName());
 	}
@@ -59,5 +64,27 @@ public abstract class ComponentBuilder extends RouteBuilder {
 
 	public String getComponentName() {
 		return (String) request.getArguments().get("componentname");
+	}
+
+	protected void addInjectionRoute(ProcessorDefinition route) {
+		Scheduler scheduler = new Scheduler();
+
+		route
+
+		.setHeader("name", simple("${in.body.name}"))
+		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
+		.setHeader("type", simple("${in.body.type}"))
+
+		.bean(scheduler)
+
+		.choice()
+		.when(body().isInstanceOf(State.class))
+		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
+		
+		.choice()
+		.when((body().isInstanceOf(Task.class))).to(StandardEndpoints.tasks)
+		.when((body().isInstanceOf(CommandRequest.class))).to(StandardEndpoints.requests)
+		.when((body().isInstanceOf(Command.class))).to(StandardEndpoints.commands)
+		.otherwise().to(StandardEndpoints.monitoring);
 	}
 }

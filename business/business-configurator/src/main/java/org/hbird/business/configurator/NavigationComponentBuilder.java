@@ -13,7 +13,8 @@ public class NavigationComponentBuilder extends ComponentBuilder {
 	public void doConfigure() {
 		OrbitPropagator propagator = new OrbitPropagator();
 		OrbitPredictor predictor = new OrbitPredictor();
-			
+		predictor.setName(getComponentName());
+		
 		if (request.getArguments().containsKey("locations")) {
 			for (Location location : (List<Location>) request.getArguments().get("locations")) {
 				propagator.addLocation(location);
@@ -28,5 +29,9 @@ public class NavigationComponentBuilder extends ComponentBuilder {
 		.setHeader("name", simple("${in.body.name}"))
 		.setHeader("type", simple("${in.body.type}"))
 		.to(StandardEndpoints.monitoring);
+		
+		/** Route to receive the last known orbital state. */
+		from("activemq:topic:monitoring?selector=name='Measured Orbital State'")
+		.bean(predictor, "recordOrbitalState");
 	}
 }

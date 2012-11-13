@@ -127,14 +127,6 @@
 		</route>
 
 		<route>
-			<from uri="timer://Orbit?fixedRate=true&amp;period=60000" />
-			<to uri="bean:orbitSimulator"/>
-			<setHeader headerName="name"><simple>ESTcube</simple></setHeader>
-			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>
-			<to uri="activemq:topic:monitoring"/>
-		</route>
-
-		<route>
 			<from uri="timer://RotatorAzimut?fixedRate=true&amp;period=1000" />
 			<to uri="bean:RotatorAzimut"/>
 			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
@@ -153,6 +145,14 @@
 		<route>
 			<from uri="timer://RotatorStatus?fixedRate=true&amp;period=1000" />
 			<to uri="bean:RotatorStatus"/>
+			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
+			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>
+			<to uri="activemq:topic:monitoring"/>
+		</route>
+
+		<route>
+			<from uri="timer://Orbit?fixedRate=true&amp;period=60000" />
+			<to uri="bean:orbitSimulator"/>
 			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
 			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>
 			<to uri="activemq:topic:monitoring"/>

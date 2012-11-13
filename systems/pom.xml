@@ -1,20 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>hummingbird</artifactId>
-    <groupId>org.hbird</groupId>
-    <version>0.0.1-SNAPSHOT</version>
-    <relativePath>..</relativePath>
-  </parent>
-  <artifactId>system-test</artifactId>
-  <packaging>pom</packaging>
-  
-  <modules>
-  	<module>estcube</module>
-  </modules>
-  
-  <groupId>org.hbird</groupId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>System - Hummingbird System Test</name>
-  <description>System test of example Hummingbird based system. Can only be run with ActiveMQ and SOLR running in the background.</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>hummingbird</artifactId>
+		<groupId>org.hbird</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<artifactId>systems</artifactId>
+	<packaging>pom</packaging>
+	<name>Hummingbird System Tier</name>
+
+
+	<modules>
+		<module>estcube</module>
+	</modules>
+
+	<url>http://hbird.de</url>
+	<description>Group of all public systems based on Hummingbird. Notice that additional systems may be available in separate repositories.</description>
+
 </project>

@@ -40,8 +40,8 @@ public class Location extends D3Vector {
 	 * @param p2 The second element (Longitude). The parameter instance can describe the element in detail.
 	 * @param p3 The third element (Elevation). The parameter instance can describe the element in detail.
 	 */
-	public Location(String issuedBy, String name, String type, String description, Double p1, Double p2, Double p3) {
-		super(issuedBy, name, type, description, p1, p2, p3);
+	public Location(String issuedBy, String name, String description, Double p1, Double p2, Double p3) {
+		super(issuedBy, name, "Location", description, p1, p2, p3);
 	}
 	
 	/** The elevation above the horizon that a satellite must have for this location

@@ -9,6 +9,8 @@
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
+	<import resource="classpath:metadata.xml"/>
+
 	<bean id="systemMonitoring" class="org.hbird.exchange.configurator.StartSystemMonitoringComponent">
 		<constructor-arg index="0" value="Autostart"/>	
 		<constructor-arg index="1" value="Monitoring"/>	
@@ -32,6 +34,13 @@
 	<bean id="commandChain" class="org.hbird.exchange.configurator.StartCommandComponent">
 		<constructor-arg index="0" value="Autostart"/>	
 		<constructor-arg index="1" value="CommandChain"/>	
+	</bean>
+
+	<bean id="orbitPrediction" class="org.hbird.exchange.configurator.StartNavigationComponent">
+		<constructor-arg index="0" value="Autostart"/>	
+		<constructor-arg index="1" value="orbitPrediction"/>
+		<property name="satellite" ref="estcube" />
+		<property name="location" ref="ES5EC" />			
 	</bean>
 
 	<!-- eLimitType type, String ofParameter, Number limit, String stateName, String description -->
@@ -59,15 +68,15 @@
 	<bean id="components" class="java.util.ArrayList">
 		<constructor-arg>
         	<list>
- 	          	<ref bean="systemMonitoring" />
- 	          	<ref bean="parameterStore" />
- 	          	<ref bean="commandStore" />
- 	          	<ref bean="commandChain" />
+<!--  	          	<ref bean="systemMonitoring" /> -->
+<!--  	          	<ref bean="parameterStore" /> -->
+<!--  	          	<ref bean="commandStore" /> -->
+<!--  	          	<ref bean="commandChain" /> -->
   	          	<ref bean="taskExecutor" />
-
-            	<ref bean="limit.LowerRechargeRate" />
+				<ref bean="orbitPrediction" />
+<!--             	<ref bean="limit.LowerRechargeRate" /> -->
             	
-            	<ref bean="syntheticParameter.batteryRechargeTime"/>
+<!--             	<ref bean="syntheticParameter.batteryRechargeTime"/> -->
          	</list>
 	    </constructor-arg>
 	</bean>

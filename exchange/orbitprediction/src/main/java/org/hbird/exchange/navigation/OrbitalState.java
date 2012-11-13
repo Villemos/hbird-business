@@ -51,7 +51,7 @@ public class OrbitalState extends Named {
 	 * @param velocity The velocity of the orbit.
 	 */
 	public OrbitalState(String issuedBy, String name, String description, long timestamp, String datasetidentifier, Satellite satellite, D3Vector position, D3Vector velocity) {
-		super(issuedBy, name, "OrbitalState", description, timestamp, datasetidentifier);
+		super(issuedBy, name, "Orbital State", description, timestamp, datasetidentifier);
 		this.position = position;
 		this.velocity = velocity;
 		this.satelitte = satellite;

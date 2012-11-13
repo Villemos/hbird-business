@@ -55,8 +55,8 @@ public class ScriptExecutor {
 
 			/** Default root is the the resource folder of the current project. */
 			String root = "src/main/resources/library/";
-			if (System.getProperty("hbird.scriptlibrary.root") != null) {
-				root = System.getProperty("hbird.scriptlibrary.root");
+			if (System.getProperty("hbird.scriptlibrary") != null) {
+				root = System.getProperty("hbird.scriptlibrary");
 				if (root.endsWith("/") == false) {
 					root += "/";
 				}
@@ -65,7 +65,7 @@ public class ScriptExecutor {
 			File file = new File(root + request.name + ".js");
 			if (file.exists() == false) {
 				LOG.error("Failed to find script file '" + file.getAbsolutePath() + "'.");
-				LOG.error("Use the runtime system property '-Dhbird.scriptlibrary.root=[path]' to point to the script library. Script will not be evaluated.");
+				LOG.error("Use the runtime system property '-Dhbird.scriptlibrary=[path]' to point to the script library. Script will not be evaluated.");
 			}
 			else {
 				try {

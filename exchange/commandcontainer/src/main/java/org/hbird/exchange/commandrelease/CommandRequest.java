@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Named;
-import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.tasking.Task;
 
 public class CommandRequest extends Named {

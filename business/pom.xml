@@ -8,14 +8,12 @@
   </parent>
 	
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.hbird</groupId>
   <artifactId>hummingbird-business</artifactId>
   <packaging>pom</packaging>
-  <version>0.0.1-SNAPSHOT</version>
   <name>Hummingbird Business Tier</name>
   <description>This module contains all business tier modules</description>
 
-  <url>https://github.com/JohannesKlug/hummingbird/wiki</url>
+  <url>http://hbird.de</url>
 
   <modules>
     <module>business-core</module>
@@ -36,6 +34,8 @@
                 
     <module>simple-parameter-simulator</module>    
     <module>business-importer</module>
+
+<!--     <module>business-mustadapter</module> -->
     
     <module>all-business</module>
   </modules>

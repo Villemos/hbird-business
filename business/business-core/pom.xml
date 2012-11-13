@@ -1,45 +1,51 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <artifactId>hummingbird-business</artifactId>
-    <groupId>org.hbird</groupId>
-    <version>0.0.1-SNAPSHOT</version>
-    <relativePath>..</relativePath>
-  </parent>
+	<parent>
+		<artifactId>hummingbird-business</artifactId>
+		<groupId>org.hbird</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
 
-  <artifactId>business-core</artifactId>
-  <groupId>org.hbird.business</groupId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>Business - Core Library</name>  
-    
-  <dependencies>
-  
-  		<dependency>
+	<artifactId>business-core</artifactId>
+	<groupId>org.hbird.business</groupId>
+	<name>Business - Core Library</name>
+
+	<dependencies>
+
+
+		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>
-			<version>${camel.version}</version>
+<!-- 			<version>${camel.version}</version> -->
 		</dependency>
 
-  		<dependency>
+		<dependency>
 			<groupId>org.hbird.exchange</groupId>
 			<artifactId>core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-  
-  			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
 
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context-support</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-  
-  
-  </dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+<!-- 			<version>${spring.version}</version> -->
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+<!-- 			<version>${spring.version}</version> -->
+		</dependency>
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.tigris.pomstrap</groupId> -->
+<!-- 			<artifactId>org.tigris.pomstrap</artifactId> -->
+<!-- 			<version>2.X.217</version> -->
+<!-- 		</dependency> -->
+
+	</dependencies>
 
 </project>

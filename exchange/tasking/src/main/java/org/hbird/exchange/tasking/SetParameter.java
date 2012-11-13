@@ -16,8 +16,12 @@
  */
 package org.hbird.exchange.tasking;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 
 /**
@@ -39,7 +43,7 @@ public class SetParameter extends Task {
 	private static final long serialVersionUID = -4583816287276036640L;
 
 	/** The class logger. */
-	protected static Logger logger = Logger.getLogger(SetParameter.class);
+	protected static Logger LOG = Logger.getLogger(SetParameter.class);
 
 	/** The parameter to be set. */
 	protected Parameter parameter = null;
@@ -63,11 +67,11 @@ public class SetParameter extends Task {
 	 * 
 	 * @param arg0 The exchange to be send.
 	 */
-	public Object execute() {
-		logger.info("Setting parameter '" + parameter.getName() + "' to value '" + parameter.getValue().toString() + "'.");
+	public List<Named> execute() {
+		LOG.info("Setting parameter '" + parameter.getName() + "' to value '" + parameter.getValue().toString() + "'.");
 		
 		/** Send the preconfigured parameter. */
-		return parameter;
+		return Arrays.asList((Named) parameter);
 	}
 
 	public Parameter getParameter() {

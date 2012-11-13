@@ -16,10 +16,13 @@
  */
 package org.hbird.business.taskexecutor;
 
+import java.util.List;
+
 import org.apache.camel.Body;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.tasking.Task;
 
 
@@ -56,9 +59,15 @@ public class TaskExecutor {
 	 * @throws InterruptedException 
 	 */
 	@Handler
-	public Object receive(@Body Task body) throws InterruptedException {
+	public List<Named> receive(@Body Task body) throws InterruptedException {
 
+		List<Named> objects = body.execute();
+		
+		if (body.isRepeat()) {
+			objects.add(body.reschedule());
+		}
+		
 		/** Execute the task. The task may return a new object which is the body of the exchange. */
-		return body.execute();
+		return objects;
 	}
 }

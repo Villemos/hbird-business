@@ -9,14 +9,18 @@
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
+	<bean id="loader" class="org.hbird.business.metadatapublisher.ObjectPublisher">
+		<property name="filename" value="classpath:tasks.xml" />
+	</bean>
+
 	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
 
-		<route id="metadata">
-			<from uri="timer:gsMetadata?delay=0" />
-			<to uri="importer:gsMetadata?filename=/src/main/resources/GroundStationMetadata.xls" />
+		<route id="scheduler">
+			<from uri="timer:initator?period=0" />
 			<split>
-				<simple>${body}</simple>
-				<to uri="activemq:topic:metadata"/>
+				<method bean="loader" />
+				<setHeader headerName="type"><simple>configuration</simple></setHeader>
+				<to uri="activemq:queue:tasks" />
 			</split>
 		</route>
 

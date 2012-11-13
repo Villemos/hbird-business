@@ -1,5 +1,9 @@
 package org.hbird.exchange.tasking;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 
 /**
@@ -37,12 +41,12 @@ public class ReflectiveSetParameter extends SetParameter {
 	 * 
 	 * @param arg0 The exchange to be send.
 	 */
-	public Object execute() {
-		logger.info("Setting reflective parameter '" + parameter.getName() + "' to value '" + parameter.getValue().toString() + "'.");
+	public List<Named> execute() {
+		LOG.info("Setting reflective parameter '" + parameter.getName() + "' to value '" + parameter.getValue().toString() + "'.");
 		
 		/** Send the parameter. */
 		parameter.setValue(argument.getValue());
-		return parameter;
+		/** Send the preconfigured parameter. */
+		return Arrays.asList((Named) parameter);
 	}
-
 }

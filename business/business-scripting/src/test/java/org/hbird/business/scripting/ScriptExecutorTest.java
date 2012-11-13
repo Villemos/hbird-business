@@ -127,8 +127,8 @@ public class ScriptExecutorTest {
 
 		ScriptExecutor executor = new ScriptExecutor(request);
 				
-		Parameter out = (Parameter) executor.calculate(new Location("test", "Copenhagen", "Location", "Location A", 49.982314d, 8.811035d, 0d));
-		out = (Parameter) executor.calculate(new Location("test", "Frankfurt", "Location", "Location B", 55.61683d, 12.601318d, 0d));
+		Parameter out = (Parameter) executor.calculate(new Location("test", "Copenhagen", "Location A", 49.982314d, 8.811035d, 0d));
+		out = (Parameter) executor.calculate(new Location("test", "Frankfurt", "Location B", 55.61683d, 12.601318d, 0d));
 		
 		assertTrue(out != null);
 		assertTrue(out instanceof Parameter);

@@ -14,7 +14,7 @@
 	</bean>
 
 	<bean id="loader" class="org.hbird.business.metadatapublisher.ObjectPublisher">
-		<property name="filename" value="src\main\resources\components.xml" />
+		<property name="filename" value="classpath:components.xml" />
 	</bean>
 
 	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">

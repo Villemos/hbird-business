@@ -17,8 +17,10 @@
 package org.hbird.exchange.tasking;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Scheduled;
 
 
 
@@ -27,7 +29,7 @@ import org.hbird.exchange.core.Named;
 /**
  * An abstract implementation of a task. Contains only the execution time.
  */
-public class Task extends Named {
+public abstract class Task extends Named implements Scheduled {
 
 	/** The unique UID */
 	private static final long serialVersionUID = 6287812296391672915L;
@@ -39,7 +41,13 @@ public class Task extends Named {
 	 *  on a start time as; START_TIME + executionDelay = executionTime. */
 	protected long executionDelay = 0;	
 	
-	public Task() {};
+	/** 
+	 * 0 = Continuously
+	 * X = (X > 0) X time
+	 * 
+	 * */
+	protected long repeat = 1;
+	protected long count = 0;
 	
 	/**
 	 * Constructor
@@ -52,6 +60,8 @@ public class Task extends Named {
 		super(issuedBy, name, "Task", description);
 		this.executionDelay = executionDelay;
 	}
+	
+	public abstract List<Named> execute();
 	
 	/* (non-Javadoc)
 	 * @see org.hbird.exchange.commanding.Task#getExecutionDelay()
@@ -76,7 +86,32 @@ public class Task extends Named {
 		this.executionTime = executionTime;
 	}
 
-	public Object execute() {
-		return null;
+	public long getRepeat() {
+		return repeat;
+	}
+
+	public void setRepeat(long repeat) {
+		this.repeat = repeat;
 	};
+
+	public boolean isRepeat() {
+		return repeat == 0 || count +1 < repeat;
+	}
+	
+	public Task reschedule() {
+		count++;
+		
+		if (executionTime == 0) {
+			executionTime = ((new Date()).getTime());
+		}
+		
+		executionTime = executionTime + executionDelay;
+		return this;
+	}
+	
+	public long getDelay() {
+		Date now = new Date();
+		long delay = executionTime - now.getTime();
+		return delay <= 0 ? 0 : delay;
+	}
 }

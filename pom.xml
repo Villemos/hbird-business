@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.hbird</groupId>
@@ -7,9 +8,9 @@
 	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>Hummingbird Root Project</name>
+	<name>Hummingbird Root</name>
 	<description>The Hummingbird root project is a container for all Hummingbird components, each created in a separate maven module. By building this project, the complete system can be built.</description>
-	<url>http://hbird.org/</url>
+	<url>http://hbird.de</url>
 
 	<modules>
 		<module>exchange</module>
@@ -53,6 +54,17 @@
 			<url>http://mvnrepository.com/</url>
 		</repository>
 
+		<!-- Repository dependency for pomstrap. -->
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>fluidrepository</id>
+			<name>fluidrepository</name>
+			<url>http://download.gna.org/fluid/repository/release/</url>
+		</repository>
+
+
 	</repositories>
 
 	<distributionManagement>
@@ -78,7 +90,8 @@
 		<activemq.version>5.5.1</activemq.version>
 		<mysqlconnector.version>5.1.10</mysqlconnector.version>
 		<jencks.version>2.2</jencks.version>
-		<slf4j.version>1.5.11</slf4j.version> <!-- ActiveMQ 5.5.0 depends on SLF4J 1.5.11 - update our version number only when ActiveMQ update theirs! -->
+		<slf4j.version>1.5.11</slf4j.version> <!-- ActiveMQ 5.5.0 depends on SLF4J 1.5.11 - update our version number only 
+			when ActiveMQ update theirs! -->
 		<docgenerator.version>0.0.7</docgenerator.version>
 		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -146,14 +159,15 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<!-- For creating OSGi bundles -->
-		<!-- COMMENT: The bundle version is very old. Camel uses 4.1.0 and I some problems due to this.  -->
-<!--		<dependency>-->
-<!--			<groupId>org.apache.felix</groupId>-->
-<!--			<artifactId>org.osgi.core</artifactId>-->
-<!--			<version>1.0.0</version>-->
-<!--		</dependency>-->
+		<!-- COMMENT: The bundle version is very old. Camel uses 4.1.0 and I some 
+			problems due to this. -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.felix</groupId> -->
+		<!-- <artifactId>org.osgi.core</artifactId> -->
+		<!-- <version>1.0.0</version> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -161,8 +175,8 @@
 			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
-		
-	
+
+
 	</dependencies>
 
 	<dependencyManagement>
@@ -251,12 +265,12 @@
 				<artifactId>camel-spring</artifactId>
 				<version>${camel.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.apache.camel</groupId>
 				<artifactId>camel-jms</artifactId>
 				<version>${camel.version}</version>
-			</dependency>			
+			</dependency>
 
 			<dependency>
 				<groupId>org.apache.camel</groupId>
@@ -310,4 +324,40 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<aggregate>true</aggregate>
+				</configuration>
+
+			</plugin>
+
+		</plugins>
+
+	</build>
 </project>

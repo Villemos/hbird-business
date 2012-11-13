@@ -16,10 +16,11 @@
  */
 package org.hbird.exchange.navigation;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Command;
 
 /** 
  * Request for orbit predictions. The prediction will result in a stream of 'OrbitalState'
@@ -34,13 +35,11 @@ import org.hbird.exchange.core.Named;
  * - delta propagation. The delta time that the prediction should propagate from the start time. 
  * - Locations. Locations whose coverage should also be covered as part of the prediction. 
  */
-public class OrbitPredictionRequest extends Named {
+public class OrbitPredictionRequest extends Command {
 
 	/** The unique UID */
 	private static final long serialVersionUID = -3613096294375848828L;
 
-	public OrbitPredictionRequest() {};
-	
 	/**
 	 * Constructor of a orbital prediction request.
 	 * 
@@ -50,13 +49,17 @@ public class OrbitPredictionRequest extends Named {
 	 * @param starttime The start time at which the prediction should start. This must correspond to the time of the position and velocity.
 	 * @param locations A list of locations, to which orbital events (establishment / loss of contact, etc) should be calculated and issued.
 	 */
-	public OrbitPredictionRequest(String issuedBy, String name, String description, Satellite satellite, D3Vector position, D3Vector velocity, Long starttime, List<Location> locations) {
-		super(issuedBy, name, "OrbitPredictionRequest", description);
-		this.satellite = satellite;
-		this.position = position;
-		this.velocity = velocity;
-		this.starttime = starttime;
-		this.locations = locations;
+	public OrbitPredictionRequest(String issuedBy, String destination, String name, String description, Satellite satellite, D3Vector position, D3Vector velocity, Long starttime, List<Location> locations) {
+		super(issuedBy, destination, name, description);
+		
+		addArgument("satellite", satellite);
+		addArgument("position", position);
+		addArgument("velocity", velocity);
+		addArgument("starttime", starttime);
+		addArgument("locations", locations);
+
+		addArgument("deltaPropagation", 2 * 60 * 60d);
+		addArgument("stepSize", 60d);
 	}
 
 	/**
@@ -67,46 +70,100 @@ public class OrbitPredictionRequest extends Named {
 	 * @param state The initial orbital state.
 	 * @param locations List of locations for which contact events shall be generated.
 	 */
-	public OrbitPredictionRequest(String issuedBy, String name, String description, Satellite satellite, OrbitalState state, List<Location> locations) {
-		super(issuedBy, name, "OrbitPredictionRequest", description);
-		this.satellite = satellite;
-		this.position = state.position;
-		this.velocity = state.velocity;
-		this.starttime = (new Date()).getTime();
-		this.locations = locations;
+	public OrbitPredictionRequest(String issuedBy, String destination, String name, String description, Satellite satellite, OrbitalState state, List<Location> locations) {
+		super(issuedBy, destination, name, description);
+
+		addArgument("satellite", satellite);
+		addArgument("position", state.position);
+		addArgument("velocity", state.velocity);
+		addArgument("starttime", state.getTimestamp());
+		addArgument("locations", locations);
+		
+		addArgument("deltaPropagation", 2 * 60 * 60d);
+		addArgument("stepSize", 60d);
+	}
+
+	/**
+	 * Constructor based on a current Orbital State.
+	 * 
+	 * @param name The name of the request.
+	 * @param satellite The satellite for which the prediction is done.
+	 * @param state The initial orbital state.
+	 * @param locations List of locations for which contact events shall be generated.
+	 */
+	public OrbitPredictionRequest(String issuedBy, String destination, Satellite satellite, Location location) {
+		super(issuedBy, destination, "Orbital Request", "An orbital request.");
+
+		addArgument("satellite", satellite);
+		addArgument("locations", Arrays.asList(location));
+		
+		addArgument("deltaPropagation", 2 * 60 * 60d);
+		addArgument("stepSize", 60d);
+	}
+
+	public Satellite getSatellite() {
+		return (Satellite) getArguments().get("satellite");
+	}
+
+	public void setSatellite(Satellite satellite) {
+		addArgument("satellite", satellite);
+	}
+
+	public D3Vector getPosition() {
+		return (D3Vector) getArguments().get("position");
+	}
+
+	public void setPosition(D3Vector position) {
+		addArgument("position", position);
+	}
+
+	public D3Vector getVelocity() {
+		return (D3Vector) getArguments().get("velocity");
+	}
+
+	public void setVelocity(D3Vector velocity) {
+		addArgument("velocity", velocity);
+	}
+
+	public Long getStarttime() {
+		if (getArguments().containsKey("starttime")) {	
+			return (Long) getArguments().get("starttime");
+	
+		}
+		
+		return (new Date()).getTime();
 	}
 	
-	/**
-	 * The satellite for which the provider should provide predictions.  
-	 * */
-	public Satellite satellite = null;
-	
-	/** The current position of the satellite, from which the orbit prediction shall be made. The
-	 *  location may be null, in which case the provider shall take the current position of the
-	 *  satellite from another source. */
-	public D3Vector position = null;
+	public void setStarttime(Long starttime) {
+		addArgument("starttime", starttime);
+	}
 
-	/** The current velocity of the satellite, from which the orbit prediction shall be made. The
-	 *  velocity may be null, in which case the provider shall take the current velocity of the
-	 *  satellite from another source. */
-	public D3Vector velocity = null;
-	
-	/** The time at which the prediction shall begin. The timestamp may be null, in which case the
-	 *  provider shall take the current time. */
-	public Long starttime = null;
-	
-	/** The time interval (s) from the start time that the orbit shall be propagated. Default is 2 hours. 
-	 *  Time is measured in seconds. */
-	public double deltaPropagation = 2 * 60 * 60;
-	
 	/** The time (s) between each orbital state. The number of orbital state objects created will
 	 * thus be N=deltaPropagation / stepSize.  
 	 * Time is measured in seconds. */
-	public double stepSize = 60;
-	
-	/** A specific set of locations for which orbital events shall be calculated. Can be used to
-	 * extend the existing set of locations, for example to validate configuration of ground stations. 
-	 * The locations may be null, in which case the provider shall use the configured locations of
-	 * the system. */
-	public List<Location> locations = null;	
+	public double getDeltaPropagation() {
+		return (Double) getArguments().get("deltaPropagation");
+	}
+
+	public void setDeltaPropagation(double deltaPropagation) {
+		addArgument("deltaPropagation", deltaPropagation);
+	}
+
+	public double getStepSize() {
+		return (Double) getArguments().get("stepSize");
+	}
+
+	/** The time interval (s) from the start time that the orbit shall be propagated. Default is 2 hours. 
+	 *  Time is measured in seconds. */
+	public void setStepSize(double stepSize) {
+		addArgument("stepSize", stepSize);
+	}
+
+	public List<Location> getLocations() {
+		return (List<Location>) getArguments().get("locations");
+	}
+
+	public void setLocations(List<Location> locations) {		
+		addArgument("locations", locations);
+	}	
 }

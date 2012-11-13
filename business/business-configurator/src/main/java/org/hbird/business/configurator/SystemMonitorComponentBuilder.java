@@ -1,5 +1,6 @@
 package org.hbird.business.configurator;
 
+import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.systemmonitoring.CpuMonitor;
 import org.hbird.business.systemmonitoring.HarddiskMonitor;
 import org.hbird.business.systemmonitoring.HeapMemoryUsageMonitor;
@@ -17,11 +18,13 @@ public class SystemMonitorComponentBuilder extends ComponentBuilder {
 		from("seda:cpu").bean(new CpuMonitor(request.getName())).to("seda:out");
 		from("seda:harddisk").bean(new HarddiskMonitor(request.getName())).to("seda:out");
 
-		from("seda:out")
-		.setHeader("name", simple("${in.body.name}"))
-		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
-		.setHeader("type", simple("${in.body.type}")) 
-		.to(StandardEndpoints.monitoring);	
+		ProcessorDefinition route = from("seda:out");
+		addInjectionRoute(route);
+		
+//		.setHeader("name", simple("${in.body.name}"))
+//		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
+//		.setHeader("type", simple("${in.body.type}")) 
+//		.to(StandardEndpoints.monitoring);	
 		
 		/** Route for commands to this component, i.e. configuration commands. */
 		from("seda:processCommandFor" + getComponentName()).bean(defaultCommandHandler, "receiveCommand");

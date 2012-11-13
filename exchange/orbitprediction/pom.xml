@@ -17,6 +17,13 @@
   		<artifactId>core</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
+
+	<dependency>
+		<groupId>org.hbird.exchange</groupId>
+  		<artifactId>commandrelease</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+
   </dependencies>
   
 </project>

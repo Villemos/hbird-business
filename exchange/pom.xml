@@ -8,21 +8,17 @@
   </parent>
 	
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.hbird</groupId>
   <artifactId>hummingbird-exchange</artifactId>
   <packaging>pom</packaging>
-  <version>0.0.1-SNAPSHOT</version>
   <name>Hummingbird Exchange Tier</name>
-  <description>
-            This module contains the data types and helper classes used to communicate within Hummingbird, in 
-            effect it defines the Hummingbird specific protocol stack.
-            The protocol tier will convert the protocol messages (such as CCSDS packets) into types as defined 
-            in the exchange layer and parse them to the business tier. The business tier will internally 
-            communicate using only the exchange layer types (custom components may of cause use any type they like).
-            The transfer between the presentation tier and the business tier likewise use the exchange layer.
+  <description>This module contains the data types and helper classes used to communicate within Hummingbird, in effect it defines the Hummingbird specific protocol stack.
+
+The protocol tier will convert the protocol messages (such as CCSDS packets) into types as defined in the exchange layer and parse them to the business tier. The business tier will internally communicate using only the exchange layer types (custom components may of cause use any type they like).
+
+The transfer between the presentation tier and the business tier likewise use the exchange layer.
   </description>
 
-  <url>https://github.com/JohannesKlug/hummingbird/wiki</url>
+  <url>http://hbird.de</url>
 
 
         <repositories>

@@ -38,7 +38,7 @@ public class Starter {
 		main.enableHangupSupport();
 		
 		/** Read the configuration file as the first argument. If not set, then we try the default name. */
-		String assemblyFile = System.getProperty("assembly") == null ? "classpath:assembly.xml" : System.getProperty("assembly");
+		String assemblyFile = System.getProperty("hbird.assembly") == null ? "classpath:main.xml" : System.getProperty("hbird.assembly");
 
 		LOG.info("Reading assembly file '" + assemblyFile + "'");
 		new FileSystemXmlApplicationContext(assemblyFile);

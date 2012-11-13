@@ -10,5 +10,5 @@
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.hbird.business.core.Starter"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="estcube"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dassembly=C:\hbird-business\systems\estcube\src\main\resources\simulator.xml"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dhbird.assembly=C:\hbird-business\systems\estcube\src\main\assembly\simulator.xml&#13;&#10;-Dorekit.data.path=C:\hbird-business\business\simple-parameter-simulator\src\test\resources"/>
 </launchConfiguration>

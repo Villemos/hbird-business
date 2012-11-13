@@ -18,7 +18,7 @@ public class StartNavigationComponent extends StartComponent {
 	public StartNavigationComponent(String issuedBy, String destination, List<String> lockStates, List<Task> tasks, Command command) {
 		super(issuedBy, "StartNavigationComponent", "Command to a configurator to start a command component.", lockStates, tasks, command);
 	}	
-	
+
 	public StartNavigationComponent(String issuedBy, String componentName, String destination) {
 		super(issuedBy, "StartNavigationComponent", "Command to a configurator to start a navigation component.", null, null, new Command(issuedBy, destination, "StartNavigationComponent", "Command to a configurator to start a command component."));
 		addComponentName(componentName);
@@ -32,16 +32,20 @@ public class StartNavigationComponent extends StartComponent {
 	public void setSatellite(Satellite satellite) {
 		this.command.addArgument("satellite", satellite);
 	}
-	
+
 	public Satellite getSatellite() {
 		return (Satellite) this.command.getArguments().get("satellite");
 	}
-	
+
+	public void setLocation(Location location) {
+		addLocation(location);
+	}
+
 	public void addLocation(Location location) {
 		List<Location> locations = new ArrayList<Location>();
 		this.command.addArgument("locations", locations);
 	}
-	
+
 	public Location getLocation() {
 		return ((List<Location>) this.command.getArguments().get("locations")).get(0);
 	}
@@ -49,7 +53,7 @@ public class StartNavigationComponent extends StartComponent {
 	public void addLocations(List<Location> locations) {
 		this.command.addArgument("locations", locations);
 	}
-	
+
 	public List<Location> getLocations() {
 		return (List<Location>) this.command.getArguments().get("locations");
 	}
