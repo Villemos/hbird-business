@@ -69,4 +69,14 @@ public class OrbitalStateInjector implements OrekitFixedStepHandler {
 			e.printStackTrace();
 		}
 	}
+
+	public String getDatasetidentifier() {
+		return datasetidentifier;
+	}
+
+	public void setDatasetidentifier(String datasetidentifier) {
+		this.datasetidentifier = datasetidentifier;
+	}
+	
+	
 }

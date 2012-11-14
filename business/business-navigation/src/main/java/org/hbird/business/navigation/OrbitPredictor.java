@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.OrbitPredictionRequest;
 import org.hbird.exchange.navigation.OrbitalState;
+import org.hbird.exchange.navigation.Satellite;
 import org.orekit.bodies.BodyShape;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.bodies.OneAxisEllipsoid;
@@ -46,7 +47,7 @@ public class OrbitPredictor {
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(OrbitPredictor.class);
 
 	protected String name = "OrbitPredictor";
-	
+
 	/** FIXME I don't know what this does but OREKIT needs it...*/
 	protected double maxcheck = 1.;
 
@@ -117,11 +118,12 @@ public class OrbitPredictor {
 			}
 
 			OrbitalStateInjector injector = new OrbitalStateInjector(datasetidentifier, this, request.getName(), request.getDescription(), request.getSatellite());
+			injector.setDatasetidentifier(request.getSatellite().getName() + "/" + (new Date()).toGMTString());			
 
 			propagator.setMasterMode(request.getStepSize(), injector);			
 			propagator.propagate(new AbsoluteDate(initialDate, request.getDeltaPropagation()));
 		}		
-		
+
 		return results;
 	}
 
@@ -135,7 +137,7 @@ public class OrbitPredictor {
 	 * orbit request submission; if no orbital state is provided by the client, then the 
 	 * module automatically try to progress the orbit based on the last known orbit.
 	 * 
-	 * @param orbitalState
+	 * @param orbitalState The latest orbital state.
 	 */
 	public void recordOrbitalState(@Body OrbitalState orbitalState) {
 		lastKnownOrbitalState.put(orbitalState.satelitte.getName(), orbitalState);
@@ -148,6 +150,6 @@ public class OrbitPredictor {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
+
 }

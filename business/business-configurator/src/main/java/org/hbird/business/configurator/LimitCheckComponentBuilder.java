@@ -1,5 +1,6 @@
 package org.hbird.business.configurator;
 
+import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.validation.limits.BaseLimitChecker;
 import org.hbird.business.validation.limits.LowerLimitChecker;
 import org.hbird.business.validation.limits.StaticLimitChecker;
@@ -35,34 +36,22 @@ public class LimitCheckComponentBuilder extends ComponentBuilder {
 	protected void createRoute(String parameter, BaseLimitChecker limit) {
 		
 		/** Create the route for limit checking. */
-		from(inCheckRoute.replaceAll("PARAMETERNAME", parameter))
-		.bean(limit, "processParameter")
-		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
-		.setHeader("name", simple("${in.body.name}"))
-		.setHeader("type", simple("${in.body.type}"))
-		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
-		.to(outParameters);
+		ProcessorDefinition route = from(inCheckRoute.replaceAll("PARAMETERNAME", parameter))
+		.bean(limit, "processParameter");
+		addInjectionRoute(route);
 
 		/** Create the route for enabling/disabling limit checking. */
-		from(inEnableRoute.replaceAll("LIMITNAME", limit.getLimit().getName()))
-		.bean(limit, "processEnabled")
-		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
-		.setHeader("name", simple("${in.body.name}"))
-		.setHeader("type", simple("${in.body.type}"))
-		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
-		.to(outParameters);
-
+		route = from(inEnableRoute.replaceAll("LIMITNAME", limit.getLimit().getName()))
+		.bean(limit, "processEnabled");
+		addInjectionRoute(route);
+		
 		/** Create the route for changing the limit value. */
-		from(inUpdateRoute.replaceAll("LIMITNAME", limit.getLimit().getName()))
-		.bean(limit, "processLimit")
-		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
-		.setHeader("name", simple("${in.body.name}"))
-		.setHeader("type", simple("${in.body.type}"))
-		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
-		.to(outParameters);
-
+		route = from(inUpdateRoute.replaceAll("LIMITNAME", limit.getLimit().getName()))
+		.bean(limit, "processLimit");
+		addInjectionRoute(route);
+		
 		/** Route for commands to this component, i.e. configuration commands. */
-		from("seda:processCommandFor" + getComponentName()).bean(defaultCommandHandler, "receiveCommand");
+		from(StandardEndpoints.commands + "?" + addDestinationSelector(getComponentName())).bean(defaultCommandHandler, "receiveCommand");
 	}
 
 	public String getInCheckRoute() {

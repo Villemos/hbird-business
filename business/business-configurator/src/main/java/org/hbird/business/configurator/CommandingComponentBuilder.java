@@ -1,5 +1,6 @@
 package org.hbird.business.configurator;
 
+import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.command.releaser.CommandReleaser;
 import org.hbird.business.core.FieldBasedScheduler;
 import org.hbird.business.core.FieldBasedSplitter;
@@ -33,23 +34,7 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 
 		CommandReleaser releaser = new CommandReleaser();
 
-		/** Configure a scheduler. */
-		FieldBasedScheduler scheduler = new FieldBasedScheduler();
-		scheduler.setFieldName("executionTime");
-
 		FieldBasedSplitter splitter = new FieldBasedSplitter();
-
-		/** Add the route for scheduling. 
-		 * 
-		 * This route will look for a 'RELEASE_TIME' flag in the header. If it has been set,
-		 * then the flag is used to set the JMS delay header and the message is injected
-		 * into the commandQueue. The command queue will only release the command when the
-		 * header time has expired, thus efficiently queuing the command.
-		 * */
-		from(StandardEndpoints.requests + "?" + addTypeSelector("CommandRequest"))
-		.bean(scheduler)
-		.to("activemq:queue:scheduledCommandRequests");
-
 
 		/** Read from the scheduled queue and release the command. The release consists of the validation
 		 * that all lock states are valid and the ejection of the command itself.
@@ -68,33 +53,22 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 
 
 		/** Extract the tasks from the command request and schedule them. Extract the command and release it. */
-		from("seda:validCommandRequests")
+		ProcessorDefinition route = from("seda:validCommandRequests")
 		.wireTap("seda:taskExtractor")
 		.setBody(simple("${in.body.command}"))
-		.setHeader("name", simple("${in.body.name}"))
-		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
-		.setHeader("type", simple("${in.body.type}"))
-		.setHeader("destination", simple("${in.body.destination}"))
-		.to(StandardEndpoints.commands);
+		.setHeader("destination", simple("${in.body.destination}"));
+		addInjectionRoute(route);
 
-		from("seda:taskExtractor")
-		.split().method(splitter)
-		.bean(scheduler)
-		.setHeader("name", simple("${in.body.name}"))
-		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
-		.setHeader("type", simple("${in.body.type}"))
-		.to("activemq:queue:scheduledTasks");
-
+		route = from("seda:taskExtractor")
+		.split().method(splitter);	
+		addInjectionRoute(route);
+		
 		/** Route to move the tasks that has been scheduled. */
-		from("activemq:queue:scheduledTasks").to(StandardEndpoints.tasks);
+		addInjectionRoute(from("activemq:queue:scheduledTasks"));
 
-		from("seda:reportCommandRequestState")
-		.bean(releaser, "reportState")
-		.setHeader("name", simple("${in.body.name}"))
-		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
-		.setHeader("type", simple("${in.body.type}"))
-		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
-		.to(StandardEndpoints.monitoring);
+		route = from("seda:reportCommandRequestState")
+		.bean(releaser, "reportState");
+		addInjectionRoute(route);
 		
 		/** Route for commands to this component, i.e. configuration commands. */
 		from("seda:processCommandFor" + getComponentName()).bean(defaultCommandHandler, "receiveCommand");

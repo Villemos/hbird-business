@@ -21,11 +21,6 @@ public class SystemMonitorComponentBuilder extends ComponentBuilder {
 		ProcessorDefinition route = from("seda:out");
 		addInjectionRoute(route);
 		
-//		.setHeader("name", simple("${in.body.name}"))
-//		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
-//		.setHeader("type", simple("${in.body.type}")) 
-//		.to(StandardEndpoints.monitoring);	
-		
 		/** Route for commands to this component, i.e. configuration commands. */
 		from("seda:processCommandFor" + getComponentName()).bean(defaultCommandHandler, "receiveCommand");
 	}

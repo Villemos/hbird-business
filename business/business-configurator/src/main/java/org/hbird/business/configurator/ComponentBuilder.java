@@ -9,8 +9,6 @@ import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.tasking.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public abstract class ComponentBuilder extends RouteBuilder {
@@ -42,9 +40,6 @@ public abstract class ComponentBuilder extends RouteBuilder {
 			.setBody(bean(new Heart(request.getName(), heartbeat)))
 			.to(StandardEndpoints.monitoring);	
 		}
-
-		/** Create route to receive commands to this component. */
-		from(StandardEndpoints.commands + "?" + addDestinationSelector(getComponentName())).to("seda:processCommandFor" + getComponentName());
 	}
 
 	/** The component specific configuration. */
@@ -74,12 +69,16 @@ public abstract class ComponentBuilder extends RouteBuilder {
 		.setHeader("name", simple("${in.body.name}"))
 		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
 		.setHeader("type", simple("${in.body.type}"))
-
+		.setHeader("datasetidentifier", simple("${in.body.datasetidentifier}"))
+		
 		.bean(scheduler)
 
 		.choice()
 		.when(body().isInstanceOf(State.class))
 		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
+		.when(body().isInstanceOf(Command.class))
+		.setHeader("destination", simple("${in.body.destination}"))
+		.end()
 		
 		.choice()
 		.when((body().isInstanceOf(Task.class))).to(StandardEndpoints.tasks)

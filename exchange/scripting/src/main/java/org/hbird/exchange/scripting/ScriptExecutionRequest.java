@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hbird.exchange.core.Named;
-import org.hbird.exchange.core.Scheduled;
 
 
 /**
@@ -18,7 +17,7 @@ import org.hbird.exchange.core.Scheduled;
  * used to create the script execution engine and run the script.
  *
  */
-public class ScriptExecutionRequest implements Scheduled, Serializable {
+public class ScriptExecutionRequest implements Serializable {
 
 	/** The unique UID */
 	private static final long serialVersionUID = 1638200113394259171L;

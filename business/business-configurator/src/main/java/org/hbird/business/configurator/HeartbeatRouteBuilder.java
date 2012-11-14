@@ -26,8 +26,5 @@ public class HeartbeatRouteBuilder extends RouteBuilder {
    		 .setHeader("hostname", simple("${in.body.hostname}"))
    		 .setHeader("hostip", simple("${in.body.hostip}"))	
    		 .to(StandardEndpoints.monitoring);						
-
-		/** Route for commands to this component, i.e. configuration commands. */
-		from("seda:processCommandFor" + name).bean(new DefaultCommandHandler(), "receiveCommand");
 	}
 }

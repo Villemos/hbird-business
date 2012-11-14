@@ -10,8 +10,6 @@
 	</parent>
 
 	<artifactId>estcube</artifactId>
-	<groupId>org.hbird</groupId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>System - Estcube</name>
 
 	<dependencies>
@@ -90,7 +88,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.5.1</version>
 				<executions>
 					<execution>
 						<phase>package</phase>

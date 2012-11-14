@@ -14,7 +14,7 @@
 	<!-- String issuedBy, String destination, Satellite satellite, Location location -->
 	<bean id="command" class="org.hbird.exchange.navigation.OrbitPredictionRequest" >
 		<constructor-arg index="0" value="Scheduler"/>	
-		<constructor-arg index="1" value="Orbit Prediction"/>	
+		<constructor-arg index="1" value="OrbitPrediction"/>	
 		<constructor-arg index="2" ref="estcube"/>	
 		<constructor-arg index="3" ref="ES5EC"/>			
 	</bean>
@@ -22,7 +22,7 @@
 	<!-- String issuedBy, String name, String description, long executionDelay, long repeat, Command command -->
 	<bean id="navigation" class="org.hbird.exchange.tasking.SendCommand">
 		<constructor-arg index="0" value="Scheduler"/>	
-		<constructor-arg index="1" value="Orbit Prediction"/>	
+		<constructor-arg index="1" value="OrbitPrediction"/>	
 		<constructor-arg index="2" value="Task for repeatable sending orbit prediction requests."/>	
 		<constructor-arg index="3" value="60000"/>	
 		<constructor-arg index="4" value="0"/>	

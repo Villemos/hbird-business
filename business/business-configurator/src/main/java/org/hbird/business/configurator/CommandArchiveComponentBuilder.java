@@ -8,7 +8,8 @@ public class CommandArchiveComponentBuilder extends ComponentBuilder {
 		/** Setup the route to inject data into SOLR. */
 		from(StandardEndpoints.commands).to("solr:commandstore");
 		
-		/** Route for commands to this component, i.e. configuration commands. */
-		from("seda:processCommandFor" + getComponentName()).bean(defaultCommandHandler, "receiveCommand");
+
+		/** Create route to receive commands to this component. */
+		from(StandardEndpoints.commands + "?" + addDestinationSelector(getComponentName())).bean(defaultCommandHandler, "receiveCommand");
 	};
 }
