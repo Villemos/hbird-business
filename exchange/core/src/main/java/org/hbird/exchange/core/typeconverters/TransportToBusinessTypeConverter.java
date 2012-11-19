@@ -65,7 +65,7 @@ public class TransportToBusinessTypeConverter {
 		newBusinessParameter.setDescription(p.getShortDescription());
 		newBusinessParameter.setName(p.getQualifiedName());
 		newBusinessParameter.setTimestamp(p.getReceivedTime());
-		newBusinessParameter.setType("BigDecimal");
+		newBusinessParameter.setType("Number");
 		newBusinessParameter.setValue(v);
 		return newBusinessParameter;
 	}
