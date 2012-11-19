@@ -4,10 +4,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.camel.Converter;
 import org.apache.log4j.Logger;
 import org.hbird.core.commons.tmtc.ParameterGroup;
 import org.hbird.exchange.core.Parameter;
 
+@Converter
 public class TransportToBusinessTypeConverter {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(TransportToBusinessTypeConverter.class);
