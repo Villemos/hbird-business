@@ -1,7 +1,7 @@
 package org.hbird.business.navigation;
 
 import org.hbird.exchange.navigation.D3Vector;
-import org.hbird.exchange.navigation.OrbitalState;
+import org.hbird.exchange.navigation.KeplianOrbitalState;
 import org.hbird.exchange.navigation.Satellite;
 import org.orekit.errors.OrekitException;
 import org.orekit.errors.PropagationException;
@@ -61,7 +61,7 @@ public class OrbitalStateInjector implements OrekitFixedStepHandler {
 
 		try {
 			/** Create orbital state. */
-			OrbitalState state = new OrbitalState(predictor.name, orbitalStateName, orbitalStateDescription, currentState.getDate().toDate(TimeScalesFactory.getUTC()).getTime(), datasetidentifier, satellite, position, velocity);
+			KeplianOrbitalState state = new KeplianOrbitalState(predictor.name, orbitalStateName, orbitalStateDescription, currentState.getDate().toDate(TimeScalesFactory.getUTC()).getTime(), datasetidentifier, satellite, position, velocity);
 					
 			/** Send the orbital state on the response stream. */
 			predictor.addResult(state);
