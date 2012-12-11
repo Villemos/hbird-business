@@ -3,12 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>hummingbird-business</artifactId>
-		<groupId>org.hbird</groupId>
+		<groupId>org.hbird.business</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>org.hbird.business</groupId>
 	<artifactId>business-time-correlation</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>Business - Time correlation</name>
 	<description>Time correlation component which uses external python scripts to adjust between ground and space time.</description>
 

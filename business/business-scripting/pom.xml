@@ -2,14 +2,12 @@
 
   <parent>
     <artifactId>hummingbird-business</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.business</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 	  
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.hbird.business</groupId>
   <artifactId>business-scripting</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <name>Business - Scripting Module</name>
   <description>Component for calculating derived parameters, based on scripts.</description>
 

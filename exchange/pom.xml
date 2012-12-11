@@ -58,4 +58,5 @@ The transfer between the presentation tier and the business tier likewise use th
     <module>validation</module>
   </modules>
 	
+  <groupId>org.hbird.exchange</groupId>
 </project>

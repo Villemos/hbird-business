@@ -3,31 +3,17 @@
   
   <parent>
     <artifactId>hummingbird-business</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.business</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
-  <groupId>org.hbird.business</groupId>
   <artifactId>all-business</artifactId>
-  <version>0.1</version>
 
   <dependencies>  
   
     <dependency>
       <groupId>org.hbird.business</groupId>
-      <artifactId>business-analysis</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hbird.business</groupId>
       <artifactId>business-commanding</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hbird.business</groupId>
-      <artifactId>business-configurator</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
@@ -76,6 +62,12 @@
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-validation</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.business</groupId>
+      <artifactId>business-solr</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 

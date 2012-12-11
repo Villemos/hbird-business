@@ -2,14 +2,12 @@
 
   <parent>
     <artifactId>hummingbird-business</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.business</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.hbird.business</groupId>	
+  <modelVersion>4.0.0</modelVersion>	
   <artifactId>business-validation</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Business - Validation Module</name>  	
   <description>Library containing the logic for validation parameters.</description>

@@ -2,13 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>hummingbird-business</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.business</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>business-taskexecutor</artifactId>
-  <groupId>org.hbird.business</groupId>
-  <version>0.0.1-SNAPSHOT</version>
   <name>Business - Task Executor</name>
 
 	<dependencies>

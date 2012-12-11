@@ -4,7 +4,7 @@
   
   <parent>
     <artifactId>hummingbird-exchange</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.exchange</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
@@ -17,7 +17,5 @@
  	 </dependency>
   </dependencies>
 
-    <groupId>org.hbird.exchange</groupId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>Exchange - Movement Control Service</name>
 </project>

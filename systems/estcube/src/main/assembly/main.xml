@@ -20,7 +20,7 @@
 	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
 
 		<route id="configuration">
-			<from uri="activemq:queue:requests?selector=type='configuration'" />
+			<from uri="activemq:topic:commands?selector=destination='Configurator'" />
 			<to uri="bean:configurator?method=process" />
 		</route>
 
@@ -31,11 +31,11 @@
 		</route>
 
 		<route id="initiator">
-			<from uri="timer:initator?period=0" />
+			<from uri="timer:initator?repeatCount=1" />
 			<split>
 				<method bean="loader" />
-				<setHeader headerName="type"><simple>configuration</simple></setHeader>
-				<to uri="activemq:queue:requests" />
+				<setHeader headerName="destination"><simple>Configurator</simple></setHeader>
+				<to uri="activemq:topic:commands" />
 			</split>
 		</route>
 

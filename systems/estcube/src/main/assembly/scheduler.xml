@@ -16,7 +16,7 @@
 	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
 
 		<route id="scheduler">
-			<from uri="timer:initator?period=0" />
+			<from uri="timer:initator?repeatCount=1" />
 			<split>
 				<method bean="loader" />
 				<setHeader headerName="type"><simple>configuration</simple></setHeader>

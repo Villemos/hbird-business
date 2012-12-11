@@ -2,11 +2,10 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>hummingbird-business</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.business</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
-  <groupId>org.hbird.business</groupId>
   <artifactId>business-heartbeat</artifactId>
   
   
@@ -27,5 +26,4 @@
   </dependencies>
   
   <name>Business - Heartbeat</name>
-  <version>0.0.1-SNAPSHOT</version>
 </project>

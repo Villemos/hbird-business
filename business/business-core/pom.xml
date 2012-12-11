@@ -4,13 +4,12 @@
 
 	<parent>
 		<artifactId>hummingbird-business</artifactId>
-		<groupId>org.hbird</groupId>
+		<groupId>org.hbird.business</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
 	<artifactId>business-core</artifactId>
-	<groupId>org.hbird.business</groupId>
 	<name>Business - Core Library</name>
 
 	<dependencies>

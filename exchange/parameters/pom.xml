@@ -2,14 +2,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>hummingbird-exchange</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.exchange</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
-  <artifactId>parameteraccess</artifactId>
-  <groupId>org.hbird.exchange</groupId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>Exchange - Parameter Access Service</name>
+  <artifactId>dataaccess</artifactId>
+  <name>Exchange - Data Access Service</name>
 
   <dependencies>
 	<dependency>
@@ -17,6 +15,13 @@
   		<artifactId>core</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>  
+  	
+  	<dependency>
+		<groupId>org.hbird.exchange</groupId>
+  		<artifactId>orbitprediction</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>  
+  	
   </dependencies>
 
 </project>

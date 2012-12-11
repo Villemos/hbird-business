@@ -3,13 +3,11 @@
 
   <parent>
     <artifactId>hummingbird-business</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.business</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.hbird.business</groupId>
   <artifactId>business-systemmonitoring</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <name>Business - System Monitoring</name>
   <description>Module containing beans for generating system monitoring parameters such as memory usage and thread usage.</description>
     

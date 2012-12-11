@@ -1,13 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-	<groupId>org.hbird.business</groupId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>Business - Route Builder</name>
 
 
   <parent>
     <artifactId>hummingbird-business</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.business</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
@@ -16,20 +14,8 @@
 	<dependencies>
 
 		<dependency>
-			<artifactId>business-systemmonitoring</artifactId>
+			<artifactId>all-business</artifactId>
 			<groupId>org.hbird.business</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<artifactId>business-scripting</artifactId>
-			<groupId>org.hbird.business</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<artifactId>scripting</artifactId>
-			<groupId>org.hbird.exchange</groupId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
@@ -40,82 +26,11 @@
 		</dependency>
 
 		<dependency>
-			<artifactId>parameteraccess</artifactId>
-			<groupId>org.hbird.exchange</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<artifactId>business-parameter-storage</artifactId>
-			<groupId>org.hbird.business</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<artifactId>business-navigation</artifactId>
-			<groupId>org.hbird.business</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-	
-		<dependency>
-			<artifactId>configurator</artifactId>
-			<groupId>org.hbird.exchange</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<artifactId>tasking</artifactId>
-			<groupId>org.hbird.exchange</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<artifactId>systemmonitoring</artifactId>
-			<groupId>org.hbird.exchange</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<artifactId>business-validation</artifactId>
-			<groupId>org.hbird.business</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<artifactId>business-commanding</artifactId>
-			<groupId>org.hbird.business</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<artifactId>business-taskexecutor</artifactId>
-			<groupId>org.hbird.business</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<artifactId>business-heartbeat</artifactId>
-			<groupId>org.hbird.business</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<artifactId>business-core</artifactId>
-			<groupId>org.hbird.business</groupId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		
-		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>com.villemos.ispace</groupId>
-			<artifactId>solr</artifactId>
-			<version>0.1-SNAPSHOT</version>
-		</dependency>
-		
 	</dependencies>
 
+	<version>0.0.2-SNAPSHOT</version>
 </project>

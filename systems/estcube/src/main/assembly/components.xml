@@ -12,50 +12,47 @@
 	<import resource="classpath:metadata.xml"/>
 
 	<bean id="systemMonitoring" class="org.hbird.exchange.configurator.StartSystemMonitoringComponent">
-		<constructor-arg index="0" value="Autostart"/>	
-		<constructor-arg index="1" value="Monitoring"/>	
+		<constructor-arg index="0" value="Monitoring"/>	
 	</bean>
 	
-	<bean id="parameterStore" class="org.hbird.exchange.configurator.StartParameterArchiveComponent">
-		<constructor-arg index="0" value="Autostart"/>	
-		<constructor-arg index="1" value="ParameterArchive"/>	
+	<bean id="parameterStore" class="org.hbird.exchange.configurator.StartMonitoringDataArchiveComponent">
+		<constructor-arg index="0" value="ParameterArchive"/>	
 	</bean>
 	
 	<bean id="commandStore" class="org.hbird.exchange.configurator.StartCommandArchiveComponent">
-		<constructor-arg index="0" value="Autostart"/>	
-		<constructor-arg index="1" value="CommandArchive"/>	
+		<constructor-arg index="0" value="CommandArchive"/>	
 	</bean>
 	
 	<bean id="taskExecutor" class="org.hbird.exchange.configurator.StartTaskExecutorComponent">
-		<constructor-arg index="0" value="Autostart"/>
-		<constructor-arg index="1" value="TaskExecutor"/>		
+		<constructor-arg index="0" value="TaskExecutor"/>		
 	</bean>
 	
 	<bean id="commandChain" class="org.hbird.exchange.configurator.StartCommandComponent">
-		<constructor-arg index="0" value="Autostart"/>	
-		<constructor-arg index="1" value="CommandChain"/>	
+		<constructor-arg index="0" value="CommandChain"/>	
 	</bean>
 
 	<bean id="orbitPrediction" class="org.hbird.exchange.configurator.StartNavigationComponent">
-		<constructor-arg index="0" value="Autostart"/>	
-		<constructor-arg index="1" value="OrbitPrediction"/>
+		<constructor-arg index="0" value="OrbitPrediction"/>
 		<property name="satellite" ref="estcube" />
 		<property name="location" ref="ES5EC" />			
 	</bean>
 
-	<!-- eLimitType type, String ofParameter, Number limit, String stateName, String description -->
+	<!-- String limitName, eLimitType type, String ofParameter, String limit, String stateName, String stateDescription -->
+	<!--                   eLimitType type, String ofParameter, Number limit, String stateName, String description -->
 	<bean id="limit.LowerRechargeRate" class="org.hbird.exchange.configurator.StartLimitComponent">
-		<constructor-arg index="0" value="Lower"/>
-		<constructor-arg index="1" value="Battery Charge Rate Current"/>
-		<constructor-arg index="2" value="9.6d"/>
-		<constructor-arg index="3" value="To Low Recharge Rate"/>
-		<constructor-arg index="4" value="The lower limit of the Battery Charge Rate Current"/>
+		<constructor-arg index="0" value="LIM_LOWER_BATTERY_CURRENT"/>
+		<constructor-arg index="1" value="Lower"/>
+		<constructor-arg index="2" value="Battery Charge Rate Current"/>
+		<constructor-arg index="3" value="9.6d"/>
+		<constructor-arg index="4" value="To Low Recharge Rate"/>
+		<constructor-arg index="5" value="The lower limit of the Battery Charge Rate Current"/>
 	</bean>
 
 	
+	<!-- String componentname, String scriptname, String paraName, String paraType, String paraDescription, String paraUnit, String bindings -->
 	<!-- String name, String script, String format, String paraName, String paraType, String paraDescription, String paraUnit, String inputBindings -->
 	<bean id="syntheticParameter.batteryRechargeTime" class="org.hbird.exchange.configurator.StartScriptComponent">
-		<constructor-arg index="0" value="Initiator"/>
+		<constructor-arg index="0" value="SCRIPT_BATTERY_RECHARGE_TIME"/>
 		<constructor-arg index="1" value="BatteryRechargeTime"/>
 		<constructor-arg index="2" value="Battery Recharge Time"/>
 		<constructor-arg index="3" value="Recharge"/>
@@ -68,15 +65,15 @@
 	<bean id="components" class="java.util.ArrayList">
 		<constructor-arg>
         	<list>
-<!--  	          	<ref bean="systemMonitoring" /> -->
-<!--  	          	<ref bean="parameterStore" /> -->
-<!--  	          	<ref bean="commandStore" /> -->
-<!--  	          	<ref bean="commandChain" /> -->
+ 	          	<ref bean="systemMonitoring" />
+ 	          	<ref bean="parameterStore" />
+ 	          	<ref bean="commandStore" />
+ 	          	<ref bean="commandChain" />
   	          	<ref bean="taskExecutor" />
 				<ref bean="orbitPrediction" />
-<!--             	<ref bean="limit.LowerRechargeRate" /> -->
-            	
-<!--             	<ref bean="syntheticParameter.batteryRechargeTime"/> -->
+				
+            	<ref bean="limit.LowerRechargeRate" />
+            	<ref bean="syntheticParameter.batteryRechargeTime"/>
          	</list>
 	    </constructor-arg>
 	</bean>

@@ -2,13 +2,11 @@
   
   <parent>
     <artifactId>hummingbird-business</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.business</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.hbird.business</groupId>	
-  <version>0.0.1-SNAPSHOT</version>
+  <modelVersion>4.0.0</modelVersion>	
   <artifactId>business-commanding</artifactId>
   <packaging>jar</packaging>
   <name>Business - Command Chain</name>  	
@@ -21,6 +19,12 @@
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>commandrelease</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hbird.exchange</groupId>
+      <artifactId>dataaccess</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 

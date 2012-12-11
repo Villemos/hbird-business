@@ -1,15 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.hbird.business</groupId>
   <artifactId>business-navigation</artifactId>
   <name>Business - Navigation Orekit</name>
-  <version>0.0.1-SNAPSHOT</version>
   
   <description>This module is an implementation of a Hummingbird navigation module based on the OREKIT open source library.</description>
   
   	<parent>
 		<artifactId>hummingbird-business</artifactId>
-		<groupId>org.hbird</groupId>
+		<groupId>org.hbird.business</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
   

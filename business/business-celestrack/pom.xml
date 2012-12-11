@@ -2,11 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>hummingbird-business</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.business</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
-  <artifactId>celestrack</artifactId>
+  <artifactId>business-celestrack</artifactId>
   
   
   <dependencies>
@@ -22,7 +22,5 @@
 		<version>0.0.1-SNAPSHOT</version>	  		
   	</dependency>
   </dependencies>
-  <groupId>org.hbird</groupId>
-  <version>0.0.1-SNAPSHOT</version>
   <name>Business - Celestrack Integration</name>
 </project>

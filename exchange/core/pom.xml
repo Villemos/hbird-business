@@ -2,15 +2,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.hbird.exchange</groupId>
   <artifactId>core</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <name>Exchange - Core Module</name>  
   <description>The exchange tier core module contains the basic types of the system, such as Parameter, StateParameter, Task and Command.</description>
 
   <parent>
     <artifactId>hummingbird-exchange</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.exchange</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 

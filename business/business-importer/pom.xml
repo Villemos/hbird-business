@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>hummingbird-business</artifactId>
-    <groupId>org.hbird</groupId>
+    <groupId>org.hbird.business</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
@@ -77,6 +77,5 @@
 	</dependencies>
   
   
-	<groupId>org.hbird.business</groupId>
 	<name>Business - Metadata Importer</name>
 </project>
