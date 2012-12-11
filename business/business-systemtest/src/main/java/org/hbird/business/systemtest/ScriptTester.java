@@ -8,7 +8,6 @@ import org.hbird.exchange.configurator.StartScriptComponent;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.scripting.ScriptExecutionRequest;
 
 public class ScriptTester extends Tester {
 

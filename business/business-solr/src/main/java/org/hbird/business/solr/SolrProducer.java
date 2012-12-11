@@ -203,7 +203,7 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 
 		String queryString = "isStateOf:" + (String) request.getArguments().get("isStateOf");
 
-		if (request.getArguments().containsKey("names") && request.getArguments().get("names") != null) {
+		if (request.getArguments().containsKey("names") == true && request.getArguments().get("names") != null) {
 			queryString += " OR name:(";
 			String separator = "";
 			for (String name : (List<String>) request.getArguments().get("names")) {
@@ -211,9 +211,6 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 				separator = " OR ";
 			}
 			queryString += ")";
-		}
-		else {
-			return new ArrayList<State>();
 		}
 
 		SolrQuery query = new SolrQuery(queryString);
@@ -235,7 +232,7 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 		query.setQueryType("basic");
 
 		List<State> results = new ArrayList<State>();
-		
+
 		QueryResponse response;
 		try {
 			response = endpoint.getServer().query(query);
@@ -251,10 +248,10 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 					if (facetfield.getValues() != null) {
 						for (Count count : facetfield.getValues()) {
 							SolrQuery sampleQuery = new SolrQuery("name:" + count.getName());
-							sampleQuery.setRows(100);
+							sampleQuery.setRows(1);
 							sampleQuery.setSortField("timestamp", ORDER.desc);
 							sampleQuery.setQueryType("basic");
-							
+
 							for (Named newObj : retrieve(sampleQuery)) {
 								results.add((State) newObj);
 								LOG.info("Added State object '" + newObj.getName() + "' with timestamp '" + newObj.getTimestamp()+ "'");
@@ -266,7 +263,7 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return results;
 	}
 

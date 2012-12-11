@@ -30,6 +30,8 @@ public class TaskingTester extends Tester {
 		azzert(out1.getIssuedBy().equals("TaskExecutor1") || out1.getIssuedBy().equals("TaskExecutor2"), "It was issued by one of the two task executors.");	
 		
 		
+		monitoringListener.elements.clear();
+		
 		/** Create a repeatable Set. */
 		Task task = new SetParameter("SystemTest", "TASK_SET_PARA9", "A test parameter set by a task", 0, "PARA9", "", "A test parameter more", 9d, "Bananas");
 		task.setRepeat(5);
@@ -38,7 +40,7 @@ public class TaskingTester extends Tester {
 
 		Thread.sleep(10000);
 		
-		azzert(monitoringListener.elements.size() == 6, "Received 6 repetitions.");	
+		azzert(monitoringListener.elements.size() == 5, "Received 6 repetitions.");	
 
 		
 		

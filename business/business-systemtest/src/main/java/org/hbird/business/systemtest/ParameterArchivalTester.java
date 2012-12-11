@@ -7,10 +7,8 @@ import java.util.List;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.configurator.StartMonitoringDataArchiveComponent;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.dataaccess.CommitRequest;
-import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
 
 public class ParameterArchivalTester extends Tester {
@@ -20,18 +18,8 @@ public class ParameterArchivalTester extends Tester {
 	@Handler
 	public void process(CamelContext context) throws InterruptedException {
 
-		/** Start the Parameter Archive. */
-		LOG.info("Issuing command for start of a parameter archive.");
-		StartMonitoringDataArchiveComponent request = new StartMonitoringDataArchiveComponent("ParameterArchive");
-		injection.sendBody(request);
-		Thread.sleep(2000);
-
-		/** Check that the command was distributed. */
-		azzert(commandingListener.elements.size() == 1, "Command was distributed.");
-
-		/** TODO Send command to the archive to delete all data. */
-		injection.sendBody(new DeletionRequest("SystemTest", "ParameterArchive", "*:*"));	
-
+		startMonitoringArchive();
+		
 		/** Publish parameters. */
 		LOG.info("Publishing parameters.");
 		injection.sendBody(new Parameter("SystemTestSuite", "PARA1", "", "A test description,", 2d, "Volt"));

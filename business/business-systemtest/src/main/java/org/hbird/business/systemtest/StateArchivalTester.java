@@ -11,8 +11,10 @@ import org.hbird.exchange.dataaccess.StateRequest;
 
 public class StateArchivalTester extends Tester {
 
-    public void process(CamelContext context) {
+    public void process(CamelContext context) throws InterruptedException {
     	        
+    	startMonitoringArchive();
+    	
     	/** Store states. */
         injection.sendBody(new State("SystemTestSuite", "STATE1", "A test description,", "COMMAND1", true));
         injection.sendBody(new State("SystemTestSuite", "STATE2", "A test description,", "COMMAND1", true));

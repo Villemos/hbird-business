@@ -1,17 +1,15 @@
 package org.hbird.business.systemtest;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.commandrelease.CommandRequest;
-import org.hbird.exchange.configurator.StartCommandComponent;
-import org.hbird.exchange.configurator.StartMonitoringDataArchiveComponent;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
-import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.tasking.SetParameter;
 import org.hbird.exchange.tasking.Task;
 
@@ -22,41 +20,27 @@ public class CommandingTester extends Tester {
 	@Handler
 	public void process() throws InterruptedException {
 
-		LOG.info("Issuing command for start of a parameter archive.");
-		StartMonitoringDataArchiveComponent request = new StartMonitoringDataArchiveComponent("ParameterArchive");
-		injection.sendBody(request);
-		Thread.sleep(2000);
-		
-		/** TODO Send command to the archive to delete all data. */
-		injection.sendBody(new DeletionRequest("SystemTest", "ParameterArchive", "*:*"));	
-
-        /** Send command to commit all changes. */
-		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
-
-		
-		/** Create command component. */
-		injection.sendBody(new StartCommandComponent("CommandingChain1"));
-		
-		Thread.sleep(2000);
+		startMonitoringArchive();
+		startCommandingChain();
 
 		/** The command object. Destination is an unknown object. */
 		Command command = new Command("SystemTest", "GroundStation1", "COM2", "A test command"); 
 		
 		/** Send a simple command request. */
-		// injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", null, null, command));
+		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", null, null, command));
 		
-		//Thread.sleep(2000);
+		Thread.sleep(2000);
 		
-		//azzert(commandingListener.lastReceived.getName().equals("COM2"), "Command request was executed, command 'COM2' was issued.");
+		azzert(commandingListener.lastReceived.getName().equals("COM2"), "Command request was executed, command 'COM2' was issued.");
 		
 		
 		/** Create a command with a release time. */
-		//Date now = new Date();
-		//command.setReleaseTime(now.getTime() + 2000);
+		Date now = new Date();
+		command.setReleaseTime(now.getTime() + 2000);
 		
-		//injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", null, null, command));
+		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", null, null, command));
 		
-		//Thread.sleep(2000);
+		Thread.sleep(2000);
 
 		
 		/** Add tasks to be done and lock states. */
@@ -71,10 +55,10 @@ public class CommandingTester extends Tester {
 		states.add("STATE_COM4");
 		
 		/** Set the values of the states. */
-        injection.sendBody(new State("SystemTestSuite", "STATE_COM1", "A test description,", "COM1", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE_COM2", "A test description,", "COM1", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE_COM3", "A test description,", "COM1", false));
-        injection.sendBody(new State("SystemTestSuite", "STATE_COM4", "A test description,", "COM1", true));
+        injection.sendBody(new State("SystemTestSuite", "STATE_COM1", "A test description,", "COM2", true));
+        injection.sendBody(new State("SystemTestSuite", "STATE_COM2", "A test description,", "COM2", true));
+        injection.sendBody(new State("SystemTestSuite", "STATE_COM3", "A test description,", "COM2", false));
+        injection.sendBody(new State("SystemTestSuite", "STATE_COM4", "A test description,", "COM2", true));
 
         /** Send command to commit all changes. */
 		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
@@ -84,7 +68,7 @@ public class CommandingTester extends Tester {
         /** The command should fail, as one of the states is 'false'. */
 		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", states, tasks, command));
 		
-		Thread.sleep(6000);
+		Thread.sleep(2000);
 		
 		azzert(failedCommandRequestListener.lastReceived.getName().equals("CommandContainerCOMREQ1"));
 		failedCommandRequestListener.lastReceived = null;
@@ -93,7 +77,7 @@ public class CommandingTester extends Tester {
 		
 		
 		/** Update state to make the command succeed. */
-        injection.sendBody(new State("SystemTestSuite", "STATE_COM3", "A test description,", "COM1", true));
+        injection.sendBody(new State("SystemTestSuite", "STATE_COM3", "A test description,", "COM2", true));
 
         /** Send command to commit all changes. */
 		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
@@ -105,17 +89,22 @@ public class CommandingTester extends Tester {
 		
 		Thread.sleep(2000);
 		
-		azzert(commandingListener.lastReceived.getName().equals("COMREQ1"));
+		azzert(commandingListener.lastReceived.getName().equals("COM2"));
 		
 
 		
 		/** Add a state that is not inserted in the command, but which is a state of the command. See if the command fails.*/
         injection.sendBody(new State("SystemTestSuite", "STATE_OTHER", "A test description,", "COM2", false));
+
+		/** Send command to commit all changes. */
+		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
+		
+		Thread.sleep(2000);
 		
         /** The command should fail, as one of the states is 'false'. */
 		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", states, tasks, command));
-		
-		Thread.sleep(2000);
+
+		Thread.sleep(2000000000);
 		
 		azzert(failedCommandRequestListener.lastReceived.getName().equals("CommandContainerCOMREQ1"));
 	}
