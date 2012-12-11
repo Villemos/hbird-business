@@ -49,7 +49,13 @@ import org.hbird.exchange.tasking.Task;
 public class TaskExecutor {
 
 	/** The class logger. */
-	protected static Logger logger = Logger.getLogger(TaskExecutor.class);
+	protected static Logger LOG = Logger.getLogger(TaskExecutor.class);
+	
+	protected String name = "";
+	
+	public TaskExecutor(String name) {
+		this.name = name;
+	}
 	
 	/** 
 	 * Method for actually executing the task. The task will be extracted from the
@@ -61,10 +67,19 @@ public class TaskExecutor {
 	@Handler
 	public List<Named> receive(@Body Task body) throws InterruptedException {
 
+		LOG.debug("Received task '" + body.getName() + "'");
+		
 		List<Named> objects = body.execute();
 		
 		if (body.isRepeat()) {
-			objects.add(body.reschedule());
+			body.reschedule();
+			objects.add(body);
+			LOG.debug("Is repeatable. Rescheduling the " + (body.getCount() + 1) + " of " + body.getRepeat() + " times. Execution set to '" + body.getExecutionTime() + "'");
+		}
+		
+		/** Mark each object as having been issued by this component. */
+		for (Named obj : objects) {
+			obj.setIssuedBy(this.name);
 		}
 		
 		/** Execute the task. The task may return a new object which is the body of the exchange. */

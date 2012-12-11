@@ -1,7 +1,6 @@
 package org.hbird.exchange.tasking;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class SendCommand extends Task {
 		
 		/** Send the preconfigured parameter. */
 		List<Named> returnValue = new ArrayList<Named>();
-		returnValue.add((Named) command);
+		returnValue.add(command);
 		return returnValue;
 	}
 }

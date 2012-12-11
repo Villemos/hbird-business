@@ -66,20 +66,31 @@ public abstract class ComponentBuilder extends RouteBuilder {
 
 		route
 
+		/** Dont route messages with a NULL body. */
+		.choice()
+		.when(simple("${in.body} == null"))
+		.stop()
+		.end()
+		
+		/** Set standard headers. */
 		.setHeader("name", simple("${in.body.name}"))
 		.setHeader("issuedBy", simple("${in.body.issuedBy}"))
 		.setHeader("type", simple("${in.body.type}"))
 		.setHeader("datasetidentifier", simple("${in.body.datasetidentifier}"))
-		
-		.bean(scheduler)
 
+		
+		/** Set object specific headers. */
 		.choice()
 		.when(body().isInstanceOf(State.class))
 		.setHeader("isStateOf", simple("${in.body.isStateOf}"))
 		.when(body().isInstanceOf(Command.class))
 		.setHeader("destination", simple("${in.body.destination}"))
 		.end()
-		
+
+		/** Schedule the release, if this object implements IScheduled. */
+		.bean(scheduler)
+
+		/** Route to the appropiate topic / query. */
 		.choice()
 		.when((body().isInstanceOf(Task.class))).to(StandardEndpoints.tasks)
 		.when((body().isInstanceOf(CommandRequest.class))).to(StandardEndpoints.requests)

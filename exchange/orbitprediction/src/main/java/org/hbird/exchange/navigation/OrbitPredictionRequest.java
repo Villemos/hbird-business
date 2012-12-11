@@ -53,11 +53,54 @@ public class OrbitPredictionRequest extends Command {
 		super(issuedBy, destination, name, description);
 		
 		addArgument("satellite", satellite);
-		addArgument("position", position);
-		addArgument("velocity", velocity);
-		addArgument("starttime", starttime);
+		
 		addArgument("locations", locations);
 
+		addArgument("deltaPropagation", 2 * 60 * 60d);
+		addArgument("stepSize", 60d);
+		
+		addArgument("initialstate", new KeplianOrbitalState(issuedBy, name, description, starttime, satellite, position, velocity));
+	}
+
+	/**
+	 * Constructor of a orbital prediction request.
+	 * 
+	 * @param satellite The satellite that should be predicted.
+	 * @param position The current position of the satellite.
+	 * @param velocity The current velocity of the satellite.
+	 * @param starttime The start time at which the prediction should start. This must correspond to the time of the position and velocity.
+	 * @param locations A list of locations, to which orbital events (establishment / loss of contact, etc) should be calculated and issued.
+	 */
+	public OrbitPredictionRequest(String issuedBy, String destination, String name, String description, Satellite satellite, String tleLine1, String tleLine2, Long starttime, List<Location> locations) {
+		super(issuedBy, destination, name, description);
+		
+		addArgument("satellite", satellite);
+		
+		addArgument("locations", locations);
+
+		addArgument("deltaPropagation", 2 * 60 * 60d);
+		addArgument("stepSize", 60d);
+		
+		addArgument("initialstate", new TleOrbitalState(issuedBy, name, description, starttime, satellite, tleLine1, tleLine2));
+	}
+
+	/**
+	 * Constructor based on a current Orbital State.
+	 * 
+	 * @param name The name of the request.
+	 * @param satellite The satellite for which the prediction is done.
+	 * @param state The initial orbital state.
+	 * @param locations List of locations for which contact events shall be generated.
+	 */
+	public OrbitPredictionRequest(String issuedBy, String destination, String name, String description, Satellite satellite, KeplianOrbitalState state, List<Location> locations) {
+		super(issuedBy, destination, name, description);
+
+		addArgument("satellite", satellite);
+
+		addArgument("initialstate", state);
+		
+		addArgument("locations", locations);
+		
 		addArgument("deltaPropagation", 2 * 60 * 60d);
 		addArgument("stepSize", 60d);
 	}
@@ -70,13 +113,13 @@ public class OrbitPredictionRequest extends Command {
 	 * @param state The initial orbital state.
 	 * @param locations List of locations for which contact events shall be generated.
 	 */
-	public OrbitPredictionRequest(String issuedBy, String destination, String name, String description, Satellite satellite, OrbitalState state, List<Location> locations) {
+	public OrbitPredictionRequest(String issuedBy, String destination, String name, String description, Satellite satellite, TleOrbitalState state, List<Location> locations) {
 		super(issuedBy, destination, name, description);
 
 		addArgument("satellite", satellite);
-		addArgument("position", state.position);
-		addArgument("velocity", state.velocity);
-		addArgument("starttime", state.getTimestamp());
+
+		addArgument("initialstate", state);
+		
 		addArgument("locations", locations);
 		
 		addArgument("deltaPropagation", 2 * 60 * 60d);
@@ -107,22 +150,6 @@ public class OrbitPredictionRequest extends Command {
 
 	public void setSatellite(Satellite satellite) {
 		addArgument("satellite", satellite);
-	}
-
-	public D3Vector getPosition() {
-		return (D3Vector) getArguments().get("position");
-	}
-
-	public void setPosition(D3Vector position) {
-		addArgument("position", position);
-	}
-
-	public D3Vector getVelocity() {
-		return (D3Vector) getArguments().get("velocity");
-	}
-
-	public void setVelocity(D3Vector velocity) {
-		addArgument("velocity", velocity);
 	}
 
 	public Long getStarttime() {

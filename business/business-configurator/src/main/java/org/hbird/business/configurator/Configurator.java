@@ -24,7 +24,7 @@ public class Configurator {
 		classes.put("org.hbird.exchange.configurator.StartNavigationComponent", NavigationComponentBuilder.class.getName());
 		classes.put("org.hbird.exchange.configurator.StartSystemMonitoringComponent", SystemMonitorComponentBuilder.class.getName());
 		classes.put("org.hbird.exchange.configurator.StartTaskExecutorComponent", TaskExecutorComponentBuilder.class.getName());
-		classes.put("org.hbird.exchange.configurator.StartParameterArchiveComponent", ParameterArchiveComponentBuilder.class.getName());	
+		classes.put("org.hbird.exchange.configurator.StartMonitoringDataArchiveComponent", MonitoringDataArchiveComponentBuilder.class.getName());	
 		classes.put("org.hbird.exchange.configurator.StartScriptComponent", ScriptComponentBuilder.class.getName());
 		classes.put("org.hbird.exchange.configurator.StartCommandArchiveComponent", CommandArchiveComponentBuilder.class.getName());
 	}

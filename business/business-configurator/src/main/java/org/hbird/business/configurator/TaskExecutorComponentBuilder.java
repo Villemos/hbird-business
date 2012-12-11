@@ -8,10 +8,11 @@ public class TaskExecutorComponentBuilder extends ComponentBuilder {
 	@Override
 	public void doConfigure() {
 
-		ProcessorDefinition route = from(StandardEndpoints.tasks).split().method(new TaskExecutor(), "receive");
+		String componentname = (String) request.getArguments().get("componentname");
+		ProcessorDefinition route = from(StandardEndpoints.tasks).split().method(new TaskExecutor(componentname), "receive");
 		addInjectionRoute(route);
-				
+					
 		/** Route for commands to this component, i.e. configuration commands. */
-		from("seda:processCommandFor" + getComponentName()).bean(defaultCommandHandler, "receiveCommand");
+		from(StandardEndpoints.commands + "?" + addDestinationSelector(getComponentName())).bean(defaultCommandHandler, "receiveCommand");
 	}
 }

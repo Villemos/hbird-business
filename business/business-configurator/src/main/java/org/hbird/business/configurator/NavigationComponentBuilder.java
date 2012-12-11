@@ -3,8 +3,10 @@ package org.hbird.business.configurator;
 import java.util.List;
 
 import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.navigation.KeplianOrbitPredictor;
 import org.hbird.business.navigation.OrbitPredictor;
 import org.hbird.business.navigation.OrbitPropagator;
+import org.hbird.business.navigation.TleOrbitalPredictor;
 import org.hbird.exchange.navigation.Location;
 
 
@@ -13,7 +15,17 @@ public class NavigationComponentBuilder extends ComponentBuilder {
 	@Override
 	public void doConfigure() {
 		OrbitPropagator propagator = new OrbitPropagator();
-		OrbitPredictor predictor = new OrbitPredictor();
+		
+		String predictortype = (String) request.getArguments().get("predictortype");
+		
+		OrbitPredictor predictor = null;
+		if (predictortype.equals("keplian")) {
+			predictor = new KeplianOrbitPredictor();
+		}
+		else if (predictortype.equals("tle")) {
+			predictor = new TleOrbitalPredictor();
+		}
+
 		predictor.setName(getComponentName());
 
 		if (request.getArguments().containsKey("locations")) {
@@ -27,10 +39,6 @@ public class NavigationComponentBuilder extends ComponentBuilder {
 				.bean(predictor)
 				.split(body());
 		addInjectionRoute(route);
-
-		/** Route to receive the last known orbital state. */
-		from("activemq:topic:monitoring?selector=name='Measured Orbital State'")
-		.bean(predictor, "recordOrbitalState");
 		
 		from(StandardEndpoints.commands + "?" + addDestinationSelector(getComponentName())).bean(predictor, "predictOrbit");
 	}

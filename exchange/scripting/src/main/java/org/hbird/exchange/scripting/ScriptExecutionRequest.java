@@ -32,7 +32,7 @@ public class ScriptExecutionRequest implements Serializable {
 	 * script. The field 'script' is in this case not used. */
 	public String name = null;
 	
-	/** The actual script to be used. */
+	/** The actual script to be used. If set, then the script name is not used to find a library script. */
 	public String script;
 	
 	/** The format of the script. Default value is 'JavaScript'. */

@@ -11,78 +11,49 @@ import org.hbird.exchange.validation.Limit.eLimitType;
 
 public class LimitCheckComponentBuilder extends ComponentBuilder {
 
-	protected String inCheckRoute  = StandardEndpoints.monitoring + "?selector=name='PARAMETERNAME'";
-	protected String inEnableRoute = StandardEndpoints.monitoring + "?selector=name='LIMITNAME_SWITCH'";
-	protected String inUpdateRoute = StandardEndpoints.monitoring + "?selector=name='LIMITNAME_UPDATE'";
-	protected String outParameters = StandardEndpoints.monitoring;
-
 	@Override
 	public void doConfigure() {
 
 		StartLimitComponent request = (StartLimitComponent) this.request;
-
+		
 		Limit limit = (Limit) request.getArguments().get("limit");
+
+		String componentname = (String) request.getArguments().get("componentname");
+
+		String limitValueParameterName = componentname + "_VALUE";
+		if (request.getArguments().containsKey("limitvalue")) {
+			limitValueParameterName = (String) request.getArguments().get("valueparameter");
+		}
+		
 		if (limit.type == eLimitType.Lower) {
-			createRoute(limit.limitOfParameter, new LowerLimitChecker(limit));			
+			createRoute(limit.limitOfParameter, new LowerLimitChecker(limit), componentname, limitValueParameterName);			
 		}
 		else if (limit.type == eLimitType.Upper) {
-			createRoute(limit.limitOfParameter, new UpperLimitChecker(limit));			
+			createRoute(limit.limitOfParameter, new UpperLimitChecker(limit), componentname, limitValueParameterName);			
 		}
 		else if (limit.type == eLimitType.Static) {
-			createRoute(limit.limitOfParameter, new StaticLimitChecker(limit));			
+			createRoute(limit.limitOfParameter, new StaticLimitChecker(limit), componentname, limitValueParameterName);			
 		}
 	}
-	
-	protected void createRoute(String parameter, BaseLimitChecker limit) {
-		
+
+	protected void createRoute(String parameter, BaseLimitChecker limit, String componentname, String limitValueName) {
+
 		/** Create the route for limit checking. */
-		ProcessorDefinition route = from(inCheckRoute.replaceAll("PARAMETERNAME", parameter))
-		.bean(limit, "processParameter");
+		ProcessorDefinition route = from(StandardEndpoints.monitoring + "?selector=name='" + parameter + "'")
+				.bean(limit, "processParameter");
 		addInjectionRoute(route);
 
 		/** Create the route for enabling/disabling limit checking. */
-		route = from(inEnableRoute.replaceAll("LIMITNAME", limit.getLimit().getName()))
-		.bean(limit, "processEnabled");
+		route = from(StandardEndpoints.monitoring + "?selector=isStateOf='" + componentname + "'")
+				.bean(limit, "processEnabled");
 		addInjectionRoute(route);
-		
+
 		/** Create the route for changing the limit value. */
-		route = from(inUpdateRoute.replaceAll("LIMITNAME", limit.getLimit().getName()))
-		.bean(limit, "processLimit");
+		route = from(StandardEndpoints.monitoring + "?selector=name='" + limitValueName + "'")
+				.bean(limit, "processLimit");
 		addInjectionRoute(route);
-		
+
 		/** Route for commands to this component, i.e. configuration commands. */
 		from(StandardEndpoints.commands + "?" + addDestinationSelector(getComponentName())).bean(defaultCommandHandler, "receiveCommand");
-	}
-
-	public String getInCheckRoute() {
-		return inCheckRoute;
-	}
-
-	public void setInCheckRoute(String inCheckRoute) {
-		this.inCheckRoute = inCheckRoute;
-	}
-
-	public String getInEnableRoute() {
-		return inEnableRoute;
-	}
-
-	public void setInEnableRoute(String inEnableRoute) {
-		this.inEnableRoute = inEnableRoute;
-	}
-
-	public String getInUpdateRoute() {
-		return inUpdateRoute;
-	}
-
-	public void setInUpdateRoute(String inUpdateRoute) {
-		this.inUpdateRoute = inUpdateRoute;
-	}
-
-	public String getOutParameters() {
-		return outParameters;
-	}
-
-	public void setOutParameters(String outParameters) {
-		this.outParameters = outParameters;
 	}
 }

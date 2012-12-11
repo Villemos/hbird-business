@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.hbird.exchange.navigation.D3Vector;
 import org.hbird.exchange.navigation.Location;
-import org.hbird.exchange.navigation.OrbitalState;
+import org.hbird.exchange.navigation.KeplianOrbitalState;
 import org.hbird.exchange.navigation.Satellite;
 import org.junit.Test;
 
@@ -21,17 +21,17 @@ public class OrbitPredictionRequestTest {
 		
 		List<Location> locations = new ArrayList<Location>();
 		locations.add(new Location("", "ES5EC", "ESTcube ground station", 26.7147224, 58.3708465, 0d));
+				
+		D3Vector position = new D3Vector("", "Initial Position", "Position", "Initial position of ESTcube", -6142438.668, 3492467.560, -25767.25680);
+		D3Vector velocity = new D3Vector("", "Initial Velocity", "Velocity", "Initial velocity of ESTcube", 505.8479685, 942.7809215, 7435.922231);
 		
-		OrbitalState state = new OrbitalState();
-		
-		state.position = new D3Vector("", "Initial Position", "Position", "Initial position of ESTcube", -6142438.668, 3492467.560, -25767.25680);
-		state.velocity = new D3Vector("", "Initial Velocity", "Velocity", "Initial velocity of ESTcube", 505.8479685, 942.7809215, 7435.922231);
+		KeplianOrbitalState state = new KeplianOrbitalState("UnitTest", "name", "A test state", 0, satellite, position, velocity);
 		
 		OrbitSimulator sim = new OrbitSimulator("JUnitTest", "Measured Orbital State", satellite, locations, state);
 		
 		boolean first =  false;
 		for (int index = 1; index < 150; index++) {
-			OrbitalState newState = sim.process();
+			KeplianOrbitalState newState = sim.process();
 
 			if (first == false) {
 				System.out.println("Printing Orbital States.");

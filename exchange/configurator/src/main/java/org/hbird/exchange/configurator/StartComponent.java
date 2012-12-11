@@ -1,28 +1,30 @@
 package org.hbird.exchange.configurator;
 
-import java.util.List;
-
-import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.tasking.Task;
 
-public abstract class StartComponent extends CommandRequest {
+public abstract class StartComponent extends Command {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5607028481851891556L;
 
-	public StartComponent(String issuedBy, String name, String description, List<String> lockStates, List<Task> tasks, Command command) {
-		super(issuedBy, name, description, lockStates, tasks, command);
+	public StartComponent(String issuedBy, String destination, String componentname, String requestname, String description) {
+		super(issuedBy, destination, requestname, description);
+		addComponentName(componentname);
 	}
-	
+
+	public StartComponent(String componentname, String requestname, String description) {
+		super("Assembly", "Configurator", requestname, description);
+		addComponentName(componentname);
+	}
+
 	protected void addComponentName(String componentname) {
-		this.command.addArgument("componentname", componentname);
+		addArgument("componentname", componentname);
 	}
 
 	protected void addHeartbeat(long period) {
-		this.command.addArgument("heartbeat", period);
+		addArgument("heartbeat", period);
 	}
 
 	public void setHeartbeat(long period) {
@@ -30,6 +32,6 @@ public abstract class StartComponent extends CommandRequest {
 	}
 	
 	public long getHeartbeat() {
-		return (Long) this.command.getArguments().get("heartbeat");
+		return (Long) getArguments().get("heartbeat");
 	}
 }

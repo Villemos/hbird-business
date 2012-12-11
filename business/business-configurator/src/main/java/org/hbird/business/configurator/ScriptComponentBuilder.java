@@ -16,10 +16,10 @@ public class ScriptComponentBuilder extends ComponentBuilder {
 		
 			/** Create the routes for receiving the data needed by the script. */
 			ProcessorDefinition route = from(StandardEndpoints.monitoring + "?" + addNameSelector(dependency)).bean(executor, "calculate");
-			addInjectionRoute(route);
-			
-			/** Route for commands to this component, i.e. configuration commands. */
-			from("seda:processCommandFor" + getComponentName()).bean(defaultCommandHandler, "receiveCommand");
+			addInjectionRoute(route);			
 		}		
+				
+		/** Route for commands to this component, i.e. configuration commands. */
+		from(StandardEndpoints.commands + "?" + addDestinationSelector(getComponentName())).bean(defaultCommandHandler, "receiveCommand");
 	}
 }

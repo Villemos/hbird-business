@@ -51,7 +51,7 @@ public class ScriptExecutor {
 		engine.put("output", request.output);
 
 		/** */
-		if (request.name != null && request.name.equals("") == false) {
+		if (request.script == null || request.script.equals("") == true) {
 
 			/** Default root is the the resource folder of the current project. */
 			String root = "src/main/resources/library/";
@@ -100,7 +100,7 @@ public class ScriptExecutor {
 
 				/** Check if a binding has been created for all needed parameters. */
 				if (ready()) {
-					LOG.debug("Script '" + request.name + "': All dependent values set. Evaluating script.");
+					LOG.info("Script '" + request.name + "': All dependent values set. Evaluating script that will create object '" + request.output.getName() + "'");
 					engine.eval(request.script);
 
 					/** The request output object has been bound to the engine. The script can

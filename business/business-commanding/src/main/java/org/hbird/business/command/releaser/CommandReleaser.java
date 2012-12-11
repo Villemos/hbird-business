@@ -1,15 +1,21 @@
 package org.hbird.business.command.releaser;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.Body;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 import org.apache.camel.Headers;
+import org.apache.camel.Produce;
+import org.apache.camel.ProducerTemplate;
+import org.apache.camel.impl.DefaultExchange;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.commandrelease.CommandRequest;
-import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
+import org.hbird.exchange.dataaccess.IDataAccess;
+import org.hbird.exchange.dataaccess.StateRequest;
 
 /**
  * The command releaser will validate whether a 'Command' can be send.
@@ -51,19 +57,19 @@ public class CommandReleaser {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(CommandReleaser.class);
 
-	protected Map<String, State> stateParameters = new HashMap<String, State>();
-
 	protected String validityHeaderField = "Valid";
-	
+
+	protected IDataAccess store = null;
+
 	/**
 	 * Processor for the scheduling of validation task for a command as well as the
 	 * release of the command.
 	 * 
 	 */
 	@Handler
-	public void process(@Body CommandRequest command, @Headers Map<String, Object> headers) {
+	public void process(@Body CommandRequest command, @Headers Map<String, Object> headers, CamelContext context) {
 
-		LOG.info("Received command '" + command.getName() + "' for release.");
+		LOG.info("Received command '" + command.getCommand().getName() + "' for release.");
 
 		if (command.getCommand() == null) {
 			headers.put(validityHeaderField, false);
@@ -74,34 +80,36 @@ public class CommandReleaser {
 		/** Default we assume the command is valid. */
 		headers.put("Valid", true);
 
-		/** Check states. */
-		synchronized (stateParameters) {
-			/** TODO The state parameters that point to the command should also be checked. */
-			
-			for (String state : command.getLockStates()) {
-				if (stateParameters.containsKey(state) == false || stateParameters.get(state).getValue() == false) {
-					LOG.error("Command '" + command.getCommand().getName() + "' marked as invalid.");
-					headers.put(validityHeaderField, false);	
-				}				
+		StateRequest request = new StateRequest("CommandReleaser", command.getCommand().getName(), command.getLockStates());
+
+		Exchange arg1 = new DefaultExchange(context);
+		arg1.getIn().setBody(request);
+		context.createProducerTemplate().send("direct:statestore", arg1);
+		List<State> states = (List<State>) arg1.getOut().getBody();
+
+		// for (State state : (List<State>) store.retrieveState(request)) {
+		for (State state : states) {
+			if (state.getValue() == false) {
+				LOG.error("Validation state '" + state.getName() + "' is FALSE. Command '" + command.getCommand().getName() + "' release state marked as invalid.");
+				headers.put(validityHeaderField, false);	
+			}				
+			else {
+				LOG.debug("State '" + state.getName() + "' is TRUE.");
 			}
 		}
 
 		LOG.info("Forwarding command with validity='" + headers.get(validityHeaderField) + "'.");
 	}
 
-
-	/**
-	 * Method to receive a state parameter.
-	 * 
-	 * @param state
-	 */
-	public void state(@Body State state) {
-		synchronized (stateParameters) {
-			stateParameters.put(state.getName(), state);
-		}
+	public State reportState(@Body CommandRequest request, @Headers Map<String, Object> header) {
+		return new State("CommandReleaser", "Command Release Verification", "The state of the command release.", request.getCommand().getName(), (Boolean) header.get(validityHeaderField));
 	}
-	
-	public State reportState(@Body CommandRequest request, @Headers Map<String, String> header) {
-		return new State("CommandReleaser", "Command Release Verification", "The state of the command release.", request.getCommand().getName(), Boolean.parseBoolean(header.get(validityHeaderField)));
+
+	public IDataAccess getStore() {
+		return store;
+	}
+
+	public void setStore(IDataAccess store) {
+		this.store = store;
 	}
 }

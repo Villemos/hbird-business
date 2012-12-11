@@ -16,7 +16,7 @@
  */
 package org.hbird.exchange.tasking;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -62,6 +62,11 @@ public class SetParameter extends Task {
 		this(base.issuedBy, base.name, base.description, base.executionTime, base.parameter);
 	}
 
+	public SetParameter(String issuedBy, String name, String description, int executionTime, String paraName, String paraType, String paraDescription, Number value, String unit) {
+		super(issuedBy, name, description, executionTime);
+		this.parameter = new Parameter(name, paraName, paraType, paraDescription, value, unit);
+	}
+
 	/**
 	 * Method that will send the message to the parameter query. 
 	 * 
@@ -71,7 +76,10 @@ public class SetParameter extends Task {
 		LOG.info("Setting parameter '" + parameter.getName() + "' to value '" + parameter.getValue().toString() + "'.");
 		
 		/** Send the preconfigured parameter. */
-		return Arrays.asList((Named) parameter);
+		List<Named> results = new ArrayList<Named>();
+		results.add(parameter);
+		
+		return results;
 	}
 
 	public Parameter getParameter() {

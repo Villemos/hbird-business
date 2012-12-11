@@ -114,4 +114,10 @@ public abstract class Task extends Named implements Scheduled {
 		long delay = executionTime - now.getTime();
 		return delay <= 0 ? 0 : delay;
 	}
+
+	public long getCount() {
+		return count;
+	}
+	
+	
 }
