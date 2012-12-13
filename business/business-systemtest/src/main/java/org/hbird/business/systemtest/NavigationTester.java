@@ -60,17 +60,17 @@ public class NavigationTester extends Tester {
 
 		int totalSleep = 0;
 
-//		injection.sendBody(request);
-//
+		injection.sendBody(request);
 
-//		while (totalSleep < 120000 && monitoringListener.elements.size() != 604) {
-//			Thread.sleep(2000);
-//			totalSleep += 2000;
-//		}
-//		azzert(monitoringListener.elements.size() == 1086, "Received orbital states, events and contact data. Expected 1086. Received " + monitoringListener.elements.size());
-//		
-//		print(monitoringListener.elements);
-//		monitoringListener.elements.clear();		
+
+		while (totalSleep < 120000 && monitoringListener.elements.size() != 604) {
+			Thread.sleep(2000);
+			totalSleep += 2000;
+		}
+		azzert(monitoringListener.elements.size() == 1086, "Received orbital states, events and contact data. Expected 1086. Received " + monitoringListener.elements.size());
+	
+		print(monitoringListener.elements);
+		monitoringListener.elements.clear();		
 		
 		/** Send a request without the TLE and without locations. The latest TLE and all locations should be taken. */
 		request = new TlePropagationRequest("SystemTest", "ESTcube");

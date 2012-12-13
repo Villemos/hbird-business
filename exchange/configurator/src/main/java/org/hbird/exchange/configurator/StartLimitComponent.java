@@ -1,5 +1,6 @@
 package org.hbird.exchange.configurator;
 
+import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.validation.Limit;
 import org.hbird.exchange.validation.Limit.eLimitType;
 
@@ -11,6 +12,10 @@ public class StartLimitComponent extends StartComponent {
 	 */
 	private static final long serialVersionUID = -8047192684233318282L;
 
+	{
+		arguments.put("limit", new CommandArgument("limit", "The limit definition.", "Limit", "", null, true));
+	}
+	
 	public StartLimitComponent(String limitName, eLimitType type, String ofParameter, String limit, String stateName, String stateDescription) {
 		super(limitName, "StartLimitComponent", "Command to a configurator to start a limit component.");
 		addLimit(type, ofParameter, limit, stateName, stateDescription);

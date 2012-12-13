@@ -2,6 +2,8 @@ package org.hbird.exchange.dataaccess;
 
 import java.util.List;
 
+import org.hbird.exchange.core.Parameter;
+
 public class ParameterRequest extends DataRequest {
 
 	/**
@@ -12,7 +14,7 @@ public class ParameterRequest extends DataRequest {
 	public ParameterRequest(String parameter, int rows) {
 		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
 
-		setClass("parameter");
+		setClass(Parameter.class.getSimpleName());
 		addName(parameter);
 
 		addArgument("sort", "timestamp");
@@ -23,7 +25,8 @@ public class ParameterRequest extends DataRequest {
 	public ParameterRequest(String parameter, Long from, Long to) {
 		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
 
-		setClass("parameter");
+		setClass(Parameter.class.getSimpleName());
+
 		addName(parameter);
 
 		if (from != null) {
@@ -40,7 +43,7 @@ public class ParameterRequest extends DataRequest {
 	public ParameterRequest(List<String> parameters, Long from, Long to) {
 		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
 
-		setClass("parameter");
+		setClass(Parameter.class.getSimpleName());
 		for (String parameter : parameters) {
 			addName(parameter);
 		}

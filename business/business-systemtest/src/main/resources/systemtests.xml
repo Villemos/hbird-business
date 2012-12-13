@@ -39,12 +39,12 @@
 
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
-<!-- 				<to uri="bean:test1" /> -->
-<!-- 				<to uri="bean:test2" /> -->
-<!-- 				<to uri="bean:test3" /> -->
-<!-- 				<to uri="bean:test4" /> -->
-<!-- 		 		<to uri="bean:test5" /> -->
-<!-- 	 			<to uri="bean:test6" /> -->
+				<to uri="bean:test1" />
+				<to uri="bean:test2" />
+				<to uri="bean:test3" />
+				<to uri="bean:test4" />
+		 		<to uri="bean:test5" />
+	 			<to uri="bean:test6" />
 	 			<to uri="bean:test7" />
 	 			<to uri="bean:finisher" />
 		</route>

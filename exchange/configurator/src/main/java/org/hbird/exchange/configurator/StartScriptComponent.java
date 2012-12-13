@@ -3,6 +3,7 @@ package org.hbird.exchange.configurator;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.scripting.ScriptExecutionRequest;
@@ -13,6 +14,10 @@ public class StartScriptComponent extends StartComponent {
 	 * 
 	 */
 	private static final long serialVersionUID = -1184823993029236522L;
+	
+	{
+		arguments.put("scriptdefinition", new CommandArgument("scriptdefinition", "The definition of the script.", "ScriptExecutionRequest", "", null, true));
+	}
 	
 	public StartScriptComponent(String componentname, String scriptname, Map<String, String> bindings, Named output) {
 		super(componentname, "StartScriptComponent", "Command to a configurator to start a scripting component.");

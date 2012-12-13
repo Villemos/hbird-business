@@ -18,6 +18,7 @@ import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.IGenerationTimestamped;
 import org.hbird.exchange.core.ILocationSpecific;
 import org.hbird.exchange.core.ISatelliteSpecific;
@@ -199,7 +200,7 @@ public class SolrProducer extends DefaultProducer {
 	}
 
 
-	
+
 	private List<State> doStateRequest(DataRequest request) {
 
 		String queryString = "isStateOf:" + (String) request.getArgument("isStateOf");
@@ -217,7 +218,7 @@ public class SolrProducer extends DefaultProducer {
 		if (request.getArgument("attime") != null) {
 			queryString += " AND " + createTimestampElement(null, (Long) request.getArgument("attime"));
 		}
-		
+
 		SolrQuery query = new SolrQuery(queryString);
 
 		query.setRows(1);
@@ -348,7 +349,7 @@ public class SolrProducer extends DefaultProducer {
 		SolrInputDocument document = new SolrInputDocument();
 
 		Named namedIo = (Named) io;
-		
+
 		document.setField("hasUri", io.getType() + ":" + io.getName() + ":" + io.getTimestamp());
 		document.addField("issuedBy", namedIo.getIssuedBy());
 		document.addField("name", namedIo.getName());
@@ -356,9 +357,9 @@ public class SolrProducer extends DefaultProducer {
 		document.addField("description", namedIo.getDescription());
 		document.addField("timestamp", namedIo.getTimestamp());
 		document.addField("datasetidentifier", namedIo.getDatasetidentifier());
-				
+
 		document.addField("class", namedIo.getClass().getSimpleName());
-		
+
 		if (io instanceof Parameter) {
 			Parameter parameter = (Parameter) io;
 			document.addField("unit", parameter.getUnit());
@@ -386,12 +387,6 @@ public class SolrProducer extends DefaultProducer {
 		else if (io instanceof Command) {
 			Command command = (Command) io;
 			document.addField("destination", command.getDestination());
-			for (Object argument : command.getArguments().values()) {
-				if (argument instanceof Named) {
-					insert((Named) argument);
-					document.addField("withArgument", ((Named) argument).getUuid());
-				}
-			}
 		}
 		else if (io instanceof Satellite) {
 			Satellite satellite = (Satellite) io;
@@ -414,7 +409,7 @@ public class SolrProducer extends DefaultProducer {
 		if (io instanceof ILocationSpecific) {
 			document.addField("ofLocation", ((ILocationSpecific) io).getLocation());
 		}
-		
+
 		/** Insert the serialization. */
 		document.setField("serialization", "<![CDATA[" + xstream.toXML(io) + "]]");
 
