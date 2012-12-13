@@ -16,6 +16,9 @@
  */
 package org.hbird.exchange.navigation;
 
+import org.hbird.exchange.core.IGenerationTimestamped;
+import org.hbird.exchange.core.ILocationSpecific;
+import org.hbird.exchange.core.ISatelliteSpecific;
 import org.hbird.exchange.core.Named;
 
 
@@ -28,15 +31,17 @@ import org.hbird.exchange.core.Named;
  * by a station or satellite.
  * 
  */
-public class LocationContactEvent extends Named {
+public class LocationContactEvent extends Named implements IGenerationTimestamped, ILocationSpecific, ISatelliteSpecific {
 
 	private static final long serialVersionUID = 6129893135305263533L; 
 
+	protected long generationTime = 0;
+
 	/** The location that contact has been established /lost with. */
-	public Location location = null;
+	public String location = null;
 	
 	/** The satellite that contact has been established /lost with. */
-	public Satellite satellite = null;
+	public String satellite = null;
 	 
 	/** Flag indicating whether the visibility (contact) is now established or lost. */
 	public boolean isVisible = true;
@@ -51,10 +56,44 @@ public class LocationContactEvent extends Named {
 	 * @param location The location to which contact has been established / lost.
 	 * @param satellite The satellite to which contact has been established / lost. 
 	 */
-	public LocationContactEvent(String issuedBy, String name, String description, long timestamp, String datasetidentifier, Location location, Satellite satellite, boolean isVisible) {
+	public LocationContactEvent(String issuedBy, String name, String description, long timestamp, long generationTime, String datasetidentifier, String location, String satellite, boolean isVisible) {
 		super(issuedBy, name, "LocationContactEvent", description, timestamp, datasetidentifier);
 		this.location = location;
 		this.satellite = satellite;
+		this.isVisible = isVisible;
+		
+		this.generationTime = generationTime;
+	}
+
+	public long getGenerationTime() {
+		return generationTime;
+	}
+
+	public void setGenerationTime(long generationTime) {
+		this.generationTime = generationTime;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getSatellite() {
+		return satellite;
+	}
+
+	public void setSatellite(String satellite) {
+		this.satellite = satellite;
+	}
+
+	public boolean isVisible() {
+		return isVisible;
+	}
+
+	public void setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
 	}
 }

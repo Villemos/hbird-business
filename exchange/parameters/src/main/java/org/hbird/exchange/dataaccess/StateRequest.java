@@ -12,19 +12,19 @@ public class StateRequest extends DataRequest {
 	public StateRequest(String issuedBy, String isStateOf) {
 		super(issuedBy, "any", "StateRequest", "A request for the state(s) of a Named object");
 
-		arguments.put("isStateOf", isStateOf);
+		addArgument("isStateOf", isStateOf);
 	}	
 
 	public StateRequest(String issuedBy, String isStateOf, List<String> names) {
 		super(issuedBy, "any", "StateRequest", "A request for the state(s) of a Named object");
 
-		arguments.put("isStateOf", isStateOf);
-		arguments.put("names", names);
+		addArgument("isStateOf", isStateOf);
+		addArgument("names", names);
 	}	
 
 	public StateRequest(String issuedBy, String destination, String isStateOf) {
 		super(issuedBy, destination, "StateRequest", "A request for the state(s) of a Named object");
 
-		arguments.put("isStateOf", isStateOf);
+		addArgument("isStateOf", isStateOf);
 	}	
 }

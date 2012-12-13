@@ -16,7 +16,32 @@
  */
 package org.hbird.exchange.core;
 
-public interface Scheduled {
 
-	public long getDelay();
+/**
+ * Class holding binary data.
+ * 
+ * @author Admin
+ *
+ */
+public class Binary extends Named {
+
+	private static final long serialVersionUID = -5513523616365151215L;
+
+	/** The raw binary data */
+	protected byte[] rawdata = null;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param issuedBy The name of the system element that issued this binary data
+	 * @param name Name of this binary data
+	 * @param type The type of the data
+	 * @param description A description of the data
+	 * @param rawdata The raw data
+	 */
+	public Binary(String issuedBy, String name, String type, String description, byte[] rawdata) {
+		super(issuedBy, name, type, description);
+		
+		this.rawdata = rawdata;
+	}
 }

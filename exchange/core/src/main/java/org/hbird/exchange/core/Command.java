@@ -1,10 +1,29 @@
+/**
+ * Licensed to the Hummingbird Foundation (HF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The HF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.hbird.exchange.core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @TITLE Command Definition
@@ -43,18 +62,12 @@ import java.util.Map;
  * @END
  */
 public class Command extends Named {
-	
-	/**
-	 * 
-	 */
+		
 	private static final long serialVersionUID = 1L;
 	
 	/** The name of the component to which this command is destined. */
 	protected String destination;
-	
-	/** List of arguments. The value is embedded in the header of the exchange. */
-	protected Map<String, Object> arguments = new HashMap<String, Object>();
-	
+		
 	/** The time at which this command should be released for transfer to the satellite. A value of
 	 *  0 indicates immediate. */
 	protected long releaseTime = 0;
@@ -63,6 +76,9 @@ public class Command extends Named {
 	 * immediate. */
 	protected long executionTime = 0;
 	
+	/** List of arguments. The value is embedded in the header of the exchange. */
+	protected Map<String, CommandArgument> arguments = new HashMap<String, CommandArgument>();
+
 	public Command(String issuedBy, String destination, String name, String description) {
 		super(issuedBy, name, "Command", description);
 		this.destination = destination;
@@ -78,7 +94,7 @@ public class Command extends Named {
 	 * @param releaseTime The time at which the command should be released by the MCS for transfer to the satellite.
 	 * @param executionTime The time at which the command should be executed onboard.
 	 */
-	public Command(String issuedBy, String destination, String name, String description, long releaseTime, long executionTime, Map<String, Object> arguments) {
+	public Command(String issuedBy, String destination, String name, String description, long releaseTime, long executionTime, Map<String, CommandArgument> arguments) {
 		super(issuedBy, name, "Command", description);
 		this.destination = destination;
 		this.arguments = arguments;
@@ -86,11 +102,11 @@ public class Command extends Named {
 		this.executionTime = executionTime;
 	}
 	
-	public Map<String, Object> getArguments() {
+	public Map<String, CommandArgument> getArguments() {
 		return arguments;
 	}
 
-	public void setArguments(Map<String, Object> arguments) {
+	public void setArguments(Map<String, CommandArgument> arguments) {
 		this.arguments = arguments;
 	}
 
@@ -138,6 +154,39 @@ public class Command extends Named {
 	}
 	
 	public void addArgument(String key, Object value) {
-		this.arguments.put(key, value);
+		if (arguments.containsKey(key) == false) {
+			System.out.println("ERROR: Attempt to set non-standard command argument '" + key + "'.");
+		}
+		else {
+			arguments.get(key).value = value;
+		}
+	}
+
+	public Object getArgument(String key) {
+		Object value = null;
+		if (arguments.containsKey(key)) {
+			value = arguments.get(key).value;
+		}
+		
+		return value;
+	}
+
+	/**
+	 * Validates whether the command has values for all the required arguments.
+	 * 
+	 * @return A list of the names of the missing arguments
+	 */
+	public List<String> checkArguments() {
+		List<String> missingArguments = new ArrayList<String>();
+		
+		Iterator<Entry<String, CommandArgument>> it = arguments.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<String, CommandArgument> entry = it.next();
+			if (entry.getValue().mandatory && entry.getValue().value == null) {
+				missingArguments.add(entry.getKey());
+			}
+		}
+		
+		return missingArguments;
 	}
 }

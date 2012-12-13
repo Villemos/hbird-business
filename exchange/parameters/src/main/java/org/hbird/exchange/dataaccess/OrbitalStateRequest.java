@@ -1,6 +1,7 @@
 package org.hbird.exchange.dataaccess;
 
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.CommandArgument;
 
 public class OrbitalStateRequest extends Command {
 
@@ -8,14 +9,23 @@ public class OrbitalStateRequest extends Command {
 	 * 
 	 */
 	private static final long serialVersionUID = -3599199372427419649L;
-
+ 
+	{
+		arguments.put("satellite", new CommandArgument("satellite", "The name of the satellite for which to retrieve the states.", "String", "", null, true));
+		arguments.put("sortorder", new CommandArgument("sortorder", "The order in which the returned data should be returned.", "String", "", "ASC", false));
+		arguments.put("sort", new CommandArgument("sort", "The sort field. Default is timestamp.", "String", "", "timestamp", false));
+		arguments.put("rows", new CommandArgument("rows", "The maximum number of rows to be retrieved.", "Long", "", null, false));
+		arguments.put("from", new CommandArgument("from", "The start of a range search on timestamp. Default to '*'.", "Long", "Seconds", null, false));
+		arguments.put("to", new CommandArgument("to", "The end of a range search on timestamp. Default to '*'.", "Long", "Seconds", null, false));
+	}
+	
 	public OrbitalStateRequest(String satellite) {
-		super("", "", "OrbitalStateRequest", "A request for the latest orbital state of a satellite");
+		super("", "Archive", "OrbitalStateRequest", "A request for the latest orbital state of a satellite");
 		
 		setSatellite(satellite);
-		arguments.put("sort", "timestamp");
-		arguments.put("sortorder", "DESC");
-		arguments.put("rows", 1);
+		addArgument("sort", "timestamp");
+		addArgument("sortorder", "DESC");
+		addArgument("rows", 1);
 	}
 	
 	public OrbitalStateRequest(String satellite, Long from, Long to) {
@@ -27,14 +37,14 @@ public class OrbitalStateRequest extends Command {
 	}
 
 	public void setSatellite(String satellite) {
-		arguments.put("satellite", satellite);
+		addArgument("satellite", satellite);
 	}
 	
 	public void setFromTime(Long from) {
-		arguments.put("from", from);
+		addArgument("from", from);
 	}
 	
 	public void setToTime(Long to) {
-		arguments.put("to", to);
+		addArgument("to", to);
 	}
 }

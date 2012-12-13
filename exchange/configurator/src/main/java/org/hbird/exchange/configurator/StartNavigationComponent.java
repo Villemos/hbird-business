@@ -15,20 +15,14 @@ public class StartNavigationComponent extends StartComponent {
 
 	public StartNavigationComponent() {
 		super("Navigation", "StartNavigationComponent", "Command to a configurator to start a command component.");
-		
-		setPredictorMethod("keplian");
 	}	
 
 	public StartNavigationComponent(String componentname) {
 		super(componentname, "StartNavigationComponent", "Command to a configurator to start a command component.");
-
-		setPredictorMethod("keplian");
 	}	
 
 	public StartNavigationComponent(String issuedBy, String destination, String componentname) {
 		super(issuedBy, destination, componentname, "StartNavigationComponent", "Command to a configurator to start a command component.");
-
-		setPredictorMethod("keplian");
 	}	
 
 	public void setSatellite(Satellite satellite) {
@@ -36,7 +30,7 @@ public class StartNavigationComponent extends StartComponent {
 	}
 
 	public Satellite getSatellite() {
-		return (Satellite) getArguments().get("satellite");
+		return (Satellite) getArgument("satellite");
 	}
 
 	public void setLocation(Location location) {
@@ -58,9 +52,5 @@ public class StartNavigationComponent extends StartComponent {
 
 	public List<Location> getLocations() {
 		return (List<Location>) getArguments().get("locations");
-	}
-	
-	public void setPredictorMethod(String method) {
-		addArgument("predictortype", method);
 	}
 }

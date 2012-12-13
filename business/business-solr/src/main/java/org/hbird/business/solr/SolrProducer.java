@@ -18,31 +18,32 @@ import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.IGenerationTimestamped;
+import org.hbird.exchange.core.ILocationSpecific;
+import org.hbird.exchange.core.ISatelliteSpecific;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
-import org.hbird.exchange.dataaccess.IDataAccess;
 import org.hbird.exchange.dataaccess.OrbitalStateRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
+import org.hbird.exchange.dataaccess.TleRequest;
 import org.hbird.exchange.heartbeat.Heartbeat;
-import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.Satellite;
+import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.tasking.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.hbird.business.solr.EndpointConfigurer;
 
 import com.thoughtworks.xstream.XStream;
 
 /**
  * The Solr producer.
  */
-public class SolrProducer extends DefaultProducer implements IDataAccess {
+public class SolrProducer extends DefaultProducer {
 
 	private static final transient Logger LOG = LoggerFactory.getLogger(SolrProducer.class);
 
@@ -61,21 +62,8 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 		this.endpoint = endpoint;
 	}
 
-
-
-
 	public void process(Exchange exchange) throws Exception {
-
 		try {
-			EndpointConfigurer.configure(exchange.getIn().getHeaders(), endpoint, "solr.option.");
-
-			/** 
-			 * The rules for recognizing what to do are
-			 * 
-			 * 1. If the header holds a 'delete' flag, then delete.
-			 * 2. If the body holds a IO then insert. 
-			 * 3. If the header holds a query then retrieve.
-			 *  */
 			Object body = exchange.getIn().getBody();
 			if (body instanceof DeletionRequest) {
 				delete((DeletionRequest) body);
@@ -85,22 +73,26 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 				commit();
 			}		
 			else if (body instanceof OrbitalStateRequest) {
-				String request = createOrbitalStateRequest((OrbitalStateRequest) exchange.getIn().getBody());
-				SolrQuery query = createQuery((DataRequest) exchange.getIn().getBody(), request);
+				String request = createOrbitalStateRequest((OrbitalStateRequest) body);
+				SolrQuery query = createQuery((OrbitalStateRequest) body, request);
+				exchange.getOut().setBody(retrieve(query));
+			}
+			else if (body instanceof TleRequest) {
+				String request = createTleRequest((TleRequest) body);
+				SolrQuery query = createQuery((TleRequest) body, request);
 				exchange.getOut().setBody(retrieve(query));
 			}
 			else if (body instanceof StateRequest) {
-				List<State> results = doStateRequest((StateRequest) exchange.getIn().getBody());
+				List<State> results = doStateRequest((StateRequest) body);
 				exchange.getOut().setBody(results);
-
 			}
 			else if (body instanceof DataRequest) {
-				String request = createRequest((DataRequest) exchange.getIn().getBody());
-				SolrQuery query = createQuery((DataRequest) exchange.getIn().getBody(), request);
+				String request = createRequest((DataRequest) body);
+				SolrQuery query = createQuery((DataRequest) body, request);
 				exchange.getOut().setBody(retrieve(query));
 			}
 			else if (body instanceof Named) {
-				insert((Named) exchange.getIn().getBody());
+				insert((Named) body);
 			}
 		}
 		catch (Exception e) {
@@ -109,10 +101,19 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 	}
 
 	protected String createOrbitalStateRequest(OrbitalStateRequest body) {
-		String request = "ofSatellite:" + (String) body.getArguments().get("satellite");
-		request += " AND class:orbitalstate";
+		String request = "ofSatellite:" + (String) body.getArgument("satellite");
+		request += " AND class:" + OrbitalState.class.getSimpleName();
 
-		request += createTimestampElement((Long) body.getArguments().get("from"), (Long) body.getArguments().get("to"));
+		request += createTimestampElement((Long) body.getArgument("from"), (Long) body.getArgument("to"));
+
+		return request;
+	}
+
+	protected String createTleRequest(TleRequest body) {
+		String request = "ofSatellite:" + (String) body.getArgument("satellite");
+		request += " AND class:" + TleOrbitalParameters.class.getSimpleName();
+
+		request += createTimestampElement((Long) body.getArgument("from"), (Long) body.getArgument("to"));
 
 		return request;
 	}
@@ -126,28 +127,28 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 		String isStateOfPart = null;
 
 		/** Set the class of data we are retrieving. */
-		if (body.getArguments().containsKey("class")) {
-			classPart = "class:" + body.getArguments().get("class");
+		if (body.getArgument("class") != null) {
+			classPart = "class:" + body.getArgument("class");
 		}
 
 		/** Set the type of data we are retrieving. */
-		if (body.getArguments().containsKey("type")) {
-			typePart = "type:" + body.getArguments().get("type");
+		if (body.getArgument("type") != null) {
+			typePart = "type:" + body.getArgument("type");
 		}
 
 		/** Set the Names, if there. */
-		if (body.getArguments().containsKey("names")) {
+		if (body.getArgument("names") != null) {
 			String separator = "";
 			namePart = "";
-			for (String name : (List<String>) body.getArguments().get("names")) {
+			for (String name : (List<String>) body.getArgument("names")) {
 				namePart += separator + "name:" + name;
 				separator = " OR ";
 			} 
 		}
 
 		/** Set the isStateOf, if there. */
-		if (body.getArguments().containsKey("isStateOf")) {
-			isStateOfPart = "isStateOf:" + (String) body.getArguments().get("isStateOf");
+		if (body.getArgument("isStateOf") != null) {
+			isStateOfPart = "isStateOf:" + (String) body.getArgument("isStateOf");
 		}		
 
 
@@ -177,7 +178,7 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 		}
 
 		/** Set the time range. */
-		request += createTimestampElement((Long) body.getArguments().get("from"), (Long) body.getArguments().get("to"));
+		request += createTimestampElement((Long) body.getArgument("from"), (Long) body.getArgument("to"));
 
 		return request;
 	}
@@ -198,21 +199,25 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 	}
 
 
-
+	
 	private List<State> doStateRequest(DataRequest request) {
 
-		String queryString = "isStateOf:" + (String) request.getArguments().get("isStateOf");
+		String queryString = "isStateOf:" + (String) request.getArgument("isStateOf");
 
-		if (request.getArguments().containsKey("names") == true && request.getArguments().get("names") != null) {
+		if (request.getArgument("names") != null) {
 			queryString += " OR name:(";
 			String separator = "";
-			for (String name : (List<String>) request.getArguments().get("names")) {
+			for (String name : (List<String>) request.getArgument("names")) {
 				queryString += separator + name;
 				separator = " OR ";
 			}
 			queryString += ")";
 		}
 
+		if (request.getArgument("attime") != null) {
+			queryString += " AND " + createTimestampElement(null, (Long) request.getArgument("attime"));
+		}
+		
 		SolrQuery query = new SolrQuery(queryString);
 
 		query.setRows(1);
@@ -267,29 +272,29 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 		return results;
 	}
 
-	protected SolrQuery createQuery(DataRequest body, String request) {
+	protected SolrQuery createQuery(Command body, String request) {
 
 		SolrQuery query = new SolrQuery(request);
 
 		query.setQueryType("basic");
 
-		if (body.getArguments().containsKey("rows")) {
-			query.setRows((Integer) body.getArguments().get("rows"));
+		if (body.getArgument("rows") != null) {
+			query.setRows((Integer) body.getArgument("rows"));
 		}
 		else {
 			query.setRows(endpoint.getRows());
 		}
 
-		if (body.getArguments().containsKey("sort")) {
+		if (body.getArgument("sort") != null) {
 
 			ORDER sortOrder = ORDER.desc;
-			if (body.getArguments().containsKey("sortorder")) {
-				if (body.getArguments().get("sortorder").equals("ASC")) {
+			if (body.getArgument("sortorder") != null) {
+				if (body.getArgument("sortorder").equals("ASC")) {
 					sortOrder = ORDER.asc;
 				}
 			}
 
-			query.setSortField((String) body.getArguments().get("sort"), sortOrder);
+			query.setSortField((String) body.getArgument("sort"), sortOrder);
 		}
 
 
@@ -305,7 +310,7 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 
 	private void delete(DeletionRequest body)  {
 
-		String query = (String) body.getArguments().get("deletionquery");
+		String query = (String) body.getArgument("deletionquery");
 		LOG.info("Deleting based on query '" + query + "'.");
 
 		try {
@@ -343,29 +348,29 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 		SolrInputDocument document = new SolrInputDocument();
 
 		Named namedIo = (Named) io;
-		document.setField("hasUri", namedIo.getUuid());
+		
+		document.setField("hasUri", io.getType() + ":" + io.getName() + ":" + io.getTimestamp());
 		document.addField("issuedBy", namedIo.getIssuedBy());
 		document.addField("name", namedIo.getName());
 		document.addField("type", namedIo.getType());
 		document.addField("description", namedIo.getDescription());
 		document.addField("timestamp", namedIo.getTimestamp());
 		document.addField("datasetidentifier", namedIo.getDatasetidentifier());
-
+				
+		document.addField("class", namedIo.getClass().getSimpleName());
+		
 		if (io instanceof Parameter) {
 			Parameter parameter = (Parameter) io;
-			document.addField("class", "parameter");
 			document.addField("unit", parameter.getUnit());
 			encodeValue("value", parameter.getValue(), document);
 		}
 		else if (io instanceof State) {
 			State parameter = (State) io;
-			document.addField("class", "state");
 			document.addField("isStateOf", parameter.getIsStateOf());
 			encodeValue("state", parameter.getValue(), document);
 		}
 		else if (io instanceof CommandRequest) {
 			CommandRequest commandrequest = (CommandRequest) io;
-			document.addField("class", "commandrequest");
 			insert(commandrequest.getCommand());
 			document.addField("carryingCommand", commandrequest.getUuid());
 
@@ -380,7 +385,6 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 		}
 		else if (io instanceof Command) {
 			Command command = (Command) io;
-			document.addField("class", "command");
 			document.addField("destination", command.getDestination());
 			for (Object argument : command.getArguments().values()) {
 				if (argument instanceof Named) {
@@ -389,33 +393,28 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 				}
 			}
 		}
-		else if (io instanceof Location) {
-			Location location = (Location) io;
-			document.addField("class", "location");
-			document.addField("location", location.p1 + "," + location.p2);
-		}
-		else if (io instanceof OrbitalState) {
-			OrbitalState orbitalState = (OrbitalState) io;
-			document.addField("class", "orbitalstate");
-			document.addField("ofSatellite", orbitalState.satelitte.getName());
-
-			// TODO Only insert if not existing
-			insert(orbitalState.satelitte);
-		}
 		else if (io instanceof Satellite) {
-			document.addField("class", "satellite");
 			Satellite satellite = (Satellite) io;
 			document.addField("withID", satellite.getSatelliteNumber());
 			document.addField("designator", satellite.getDesignator());
 		}
 		else if (io instanceof Heartbeat) {
-			document.addField("class", "heartbeat");
 			Heartbeat beat = (Heartbeat) io;
 			document.addField("nextBeat", beat.getNextBeat());
 			document.addField("hostIP", beat.getHostip());
 			document.addField("hostName", beat.getHostname());
 		}
 
+		if (io instanceof IGenerationTimestamped) {
+			document.addField("generationTimestamp", ((IGenerationTimestamped) io).getGenerationTime());
+		}
+		if (io instanceof ISatelliteSpecific) {
+			document.addField("ofSatellite", ((ISatelliteSpecific) io).getSatellite());
+		}
+		if (io instanceof ILocationSpecific) {
+			document.addField("ofLocation", ((ILocationSpecific) io).getLocation());
+		}
+		
 		/** Insert the serialization. */
 		document.setField("serialization", "<![CDATA[" + xstream.toXML(io) + "]]");
 
@@ -495,30 +494,5 @@ public class SolrProducer extends DefaultProducer implements IDataAccess {
 
 		ResultSet results = Utilities.getResultSet(response, query.getRows());
 		return results.getResults();
-	}
-
-
-
-
-	public List<Named> retrieveData(DataRequest request) {
-		String requestStr = createRequest(request);
-		SolrQuery query = createQuery(request, requestStr);
-
-		return retrieve(query);
-	}
-
-
-
-
-	public List<State> retrieveState(StateRequest request) {
-		return doStateRequest(request);
-	}
-
-
-
-
-	public OrbitalState getOrbitalState(OrbitalStateRequest request) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

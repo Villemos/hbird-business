@@ -14,7 +14,9 @@ public class StateArchivalTester extends Tester {
     public void process(CamelContext context) throws InterruptedException {
     	        
     	startMonitoringArchive();
-    	
+		
+		Thread.sleep(2000);
+
     	/** Store states. */
         injection.sendBody(new State("SystemTestSuite", "STATE1", "A test description,", "COMMAND1", true));
         injection.sendBody(new State("SystemTestSuite", "STATE2", "A test description,", "COMMAND1", true));

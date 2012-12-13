@@ -16,13 +16,13 @@ public class LimitCheckComponentBuilder extends ComponentBuilder {
 
 		StartLimitComponent request = (StartLimitComponent) this.request;
 		
-		Limit limit = (Limit) request.getArguments().get("limit");
+		Limit limit = (Limit) request.getArgument("limit");
 
-		String componentname = (String) request.getArguments().get("componentname");
+		String componentname = (String) request.getArgument("componentname");
 
 		String limitValueParameterName = componentname + "_VALUE";
 		if (request.getArguments().containsKey("limitvalue")) {
-			limitValueParameterName = (String) request.getArguments().get("valueparameter");
+			limitValueParameterName = (String) request.getArgument("valueparameter");
 		}
 		
 		if (limit.type == eLimitType.Lower) {

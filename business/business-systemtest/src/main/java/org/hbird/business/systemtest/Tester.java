@@ -4,7 +4,8 @@ import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.configurator.StartCommandComponent;
-import org.hbird.exchange.configurator.StartMonitoringDataArchiveComponent;
+import org.hbird.exchange.configurator.StartArchiveComponent;
+import org.hbird.exchange.configurator.StartNavigationComponent;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
 
@@ -30,7 +31,7 @@ public abstract class Tester {
 	protected void azzert(boolean assertion, String message) {
 		if (assertion == false) {
 			LOG.error("SYSTEM TEST: " + message + " (FAILED)");
-			System.exit(1);
+			// System.exit(1);
 		}
 		else {
 			LOG.info("SYSTEM TEST: " + message + " (OK)");
@@ -63,13 +64,13 @@ public abstract class Tester {
 	}
 
 
-	protected boolean monitoringArchiveStarted = false;
+	protected static boolean monitoringArchiveStarted = false;
 	public void startMonitoringArchive() throws InterruptedException {
 
 		if (monitoringArchiveStarted == false) {
 			LOG.info("Issuing command for start of a parameter archive.");
 
-			StartMonitoringDataArchiveComponent request = new StartMonitoringDataArchiveComponent("ParameterArchive");
+			StartArchiveComponent request = new StartArchiveComponent("ParameterArchive");
 			injection.sendBody(request);
 
 			/** Give the component time to startup. */
@@ -85,7 +86,7 @@ public abstract class Tester {
 		}		
 	}
 	
-	protected boolean commandingChainStarted = false;
+	protected static boolean commandingChainStarted = false;
 	public void startCommandingChain() throws InterruptedException {
 
 		if (commandingChainStarted == false) {
@@ -93,9 +94,20 @@ public abstract class Tester {
 
 			/** Create command component. */
 			injection.sendBody(new StartCommandComponent("CommandingChain1"));
-			
-			Thread.sleep(2000);
 			commandingChainStarted = true;
 		}
 	}
+	
+	protected static boolean orbitPredictorStarted = false;
+	public void startOrbitPredictor() throws InterruptedException {
+
+		if (orbitPredictorStarted == false) {
+			LOG.info("Issuing command for start of a orbital predictor.");
+
+			/** Create command component. */
+			injection.sendBody(new StartNavigationComponent("OrbitPredictor"));
+			orbitPredictorStarted = true;
+		}
+	}
+
 }

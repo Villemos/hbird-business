@@ -15,9 +15,9 @@ public class ParameterRequest extends DataRequest {
 		setClass("parameter");
 		addName(parameter);
 
-		arguments.put("sort", "timestamp");
-		arguments.put("sortorder", "DESC");
-		arguments.put("rows", rows);
+		addArgument("sort", "timestamp");
+		addArgument("sortorder", "DESC");
+		addArgument("rows", rows);
 	}
 
 	public ParameterRequest(String parameter, Long from, Long to) {
@@ -33,8 +33,8 @@ public class ParameterRequest extends DataRequest {
 			setTo(to);
 		}
 
-		arguments.put("sort", "timestamp");
-		arguments.put("sortorder", "ASC");
+		addArgument("sort", "timestamp");
+		addArgument("sortorder", "ASC");
 	}
 
 	public ParameterRequest(List<String> parameters, Long from, Long to) {
@@ -52,7 +52,7 @@ public class ParameterRequest extends DataRequest {
 			setTo(to);
 		}
 
-		arguments.put("sort", "timestamp");
-		arguments.put("sortorder", "ASC");
+		addArgument("sort", "timestamp");
+		addArgument("sortorder", "ASC");
 	}
 }

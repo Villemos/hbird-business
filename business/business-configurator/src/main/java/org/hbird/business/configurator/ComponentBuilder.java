@@ -33,11 +33,9 @@ public abstract class ComponentBuilder extends RouteBuilder {
 		doConfigure();
 
 		/** Create the heartbeat route for this component. */
-		if (request.getArguments().get("heartbeat") != null) {
-			long heartbeat = (Long) request.getArguments().get("heartbeat");
-
-			from("timer:heartbeat_" + request.getName() + "?fixedRate=true&period=" + heartbeat)
-			.setBody(bean(new Heart(request.getName(), heartbeat)))
+		if (request.getHeartbeat() > 0) {
+			from("timer:heartbeat_" + request.getName() + "?fixedRate=true&period=" + request.getHeartbeat() )
+			.setBody(bean(new Heart(request.getName(), request.getHeartbeat() )))
 			.to(StandardEndpoints.monitoring);	
 		}
 	}
@@ -58,7 +56,7 @@ public abstract class ComponentBuilder extends RouteBuilder {
 	}
 
 	public String getComponentName() {
-		return (String) request.getArguments().get("componentname");
+		return (String) request.getArgument("componentname");
 	}
 
 	protected void addInjectionRoute(ProcessorDefinition route) {

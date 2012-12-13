@@ -9,7 +9,7 @@ public class ScriptComponentBuilder extends ComponentBuilder {
 	@Override
 	protected void doConfigure() {
 		
-		ScriptExecutor executor = new ScriptExecutor((ScriptExecutionRequest) request.getArguments().get("scriptdefinition"));			
+		ScriptExecutor executor = new ScriptExecutor((ScriptExecutionRequest) request.getArgument("scriptdefinition"));			
 		
 		/** Iterate over each dependency needed by this script. */
 		for (String dependency : executor.getDependencies()) {

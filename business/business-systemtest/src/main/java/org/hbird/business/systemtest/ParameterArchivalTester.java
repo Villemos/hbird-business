@@ -20,6 +20,8 @@ public class ParameterArchivalTester extends Tester {
 
 		startMonitoringArchive();
 		
+		Thread.sleep(2000);
+
 		/** Publish parameters. */
 		LOG.info("Publishing parameters.");
 		injection.sendBody(new Parameter("SystemTestSuite", "PARA1", "", "A test description,", 2d, "Volt"));

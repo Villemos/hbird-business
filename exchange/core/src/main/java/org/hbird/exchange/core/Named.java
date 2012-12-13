@@ -36,19 +36,20 @@ import java.util.UUID;
  * */
 public abstract class Named implements Serializable {
 
-	/** The unique UID. */
+	/** The unique UID of this class. */
 	private static final long serialVersionUID = -5803219773253020746L;
 
+	/** The unique UID of this object. */
 	protected String uuid = UUID.randomUUID().toString();
 	
-	/** The ID of the component that has issued this object. */
+	/** The ID / Name of the component that has issued this object. */
 	protected String issuedBy = "";
 	
 	/** The time at which this object represented a valid state of the system. Default value is the
 	 *  time of creation. */
 	protected long timestamp = (new Date()).getTime();
 	
-	/** The name of the object.*/
+	/** The name of the object. */
 	protected String name;
 
 	/** A description of the object. */

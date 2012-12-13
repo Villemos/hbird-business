@@ -1,22 +1,33 @@
+/**
+ * Licensed to the Hummingbird Foundation (HF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The HF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.hbird.business.navigation;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.camel.Body;
 import org.apache.camel.Handler;
-import org.apache.commons.math.geometry.Vector3D;
-import org.apache.log4j.Logger;
-import org.hbird.exchange.navigation.KeplianOrbitalState;
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.OrbitPredictionRequest;
 import org.hbird.exchange.navigation.OrbitalState;
-import org.orekit.bodies.BodyShape;
 import org.orekit.bodies.GeodeticPoint;
-import org.orekit.bodies.OneAxisEllipsoid;
 import org.orekit.errors.OrekitException;
-import org.orekit.frames.Frame;
-import org.orekit.frames.FramesFactory;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.orbits.KeplerianOrbit;
 import org.orekit.orbits.Orbit;
@@ -39,64 +50,84 @@ import org.orekit.utils.PVCoordinates;
  * 
  * 
  */
-public class KeplianOrbitPredictor extends OrbitPredictor {
+public class KeplianOrbitPredictor {
 
-	private static org.apache.log4j.Logger LOG = Logger.getLogger(KeplianOrbitPredictor.class);
+	public String name = "OrbitPredictor";
 
+	protected List<Named> results = new ArrayList<Named>();
 	
 	/** The exchange must contain a OrbitalState object as the in-body. 
 	 * @throws OrekitException */
+	
 	@Handler
-	public List<Object> predictOrbit(@Body OrbitPredictionRequest request) throws OrekitException {
+	public List<Named> predictOrbit(@Body OrbitPredictionRequest request) throws OrekitException {
 
-		results.clear();
+		OrbitalState initialState = null;
 
-		KeplianOrbitalState initialState = null;
-
-		/** Check if the request contains the initial state. Else use the last known state of the satellite. */
 		if (request.getArguments().containsKey("initialstate") == false) {
-			// TODO
+			initialState = retrieveLatestOrbitalState(request.getArguments().get("satellite"));
 		}
 		else {
-			initialState = (KeplianOrbitalState) request.getArguments().get("initialstate");
+			initialState = (OrbitalState) request.getArgument("initialstate");
 		}
 
-		Vector3D position = new Vector3D(initialState.getPosition().p1, initialState.getPosition().p2,initialState.getPosition().p3);
-		Vector3D velocity = new Vector3D(initialState.getVelocity().p1, initialState.getVelocity().p2, initialState.getVelocity().p3);
-		PVCoordinates pvCoordinates = new PVCoordinates(position, velocity);
+		List<Location> locations = getLocations((List<String>) request.getArguments().get("locations"));
 
-		AbsoluteDate initialDate = new AbsoluteDate(new Date(request.getStarttime()), TimeScalesFactory.getUTC());
+		long contactDataStepSize = (Long) request.getArgument("contactDataStepSize");
 
-		Frame inertialFrame = FramesFactory.getEME2000();
+		return predictOrbit(locations, null, request.getStarttime(), request.getSatellite(), request.getStepSize(), request.getDeltaPropagation(), contactDataStepSize);
+	}
+	
+	public List<Named> predictOrbit(List<Location> locations, PVCoordinates pvCoordinates, long startTime, String satellite, double stepSize, double deltaPropagation, long contactDataStepSize) throws OrekitException {
+
+		results.clear();
+		
+		AbsoluteDate initialDate = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());
 
 		// Initial date
-		Orbit initialOrbit = new KeplerianOrbit(pvCoordinates, inertialFrame, initialDate, mu);
+		Orbit initialOrbit = new KeplerianOrbit(pvCoordinates, Constants.frame, initialDate, Constants.MU);
 
 		Propagator propagator = new KeplerianPropagator(initialOrbit);
 
+		OrbitalStateInjector injector = new OrbitalStateInjector(this, "OrbitalState", "The orbital state of a satellite at a point in time.", satellite, locations, stepSize, contactDataStepSize);
+		injector.setDatasetidentifier(satellite + "/" + (new Date()).toGMTString());			
+
 		/** Register the visibility events for the requested locations. */
-		for (Location location : request.getLocations()) {
+		for (Location location : locations) {
 			GeodeticPoint point = new GeodeticPoint((Double) location.p1, (Double) location.p2, (Double) location.p3);				
-			BodyShape earth = new OneAxisEllipsoid(ae, f, FramesFactory.getITRF2005());
-			TopocentricFrame sta1Frame = new TopocentricFrame(earth, point, location.getName());
+			TopocentricFrame sta1Frame = new TopocentricFrame(Constants.earth, point, location.getName());
 
 			/** Register the injector that will send the detected events, for this location, to the propagator. */
-			EventDetector sta1Visi = new LocationContactEventInjector(maxcheck, location.getThresholdElevation(), sta1Frame, request.getSatellite(), location, request.getDatasetidentifier(), this);
+			EventDetector sta1Visi = new LocationContactEventInjector(location.getThresholdElevation(), sta1Frame, satellite, location.getName(), this, injector);
 			propagator.addEventDetector(sta1Visi);				
 		}
 
-		OrbitalStateInjector injector = new OrbitalStateInjector(request.getDatasetidentifier(), this, request.getName(), request.getDescription(), request.getSatellite());
-		injector.setDatasetidentifier(request.getSatellite().getName() + "/" + (new Date()).toGMTString());			
-
-		propagator.setMasterMode(request.getStepSize(), injector);			
-		propagator.propagate(new AbsoluteDate(initialDate, request.getDeltaPropagation()));
-
-		/** Create dataset identifier based on the time. */
-		String datasetidentifier = request.getDatasetidentifier();
-		if (datasetidentifier != null) {
-			(new Date()).toString();
-		}
+		propagator.setMasterMode(stepSize, injector);			
+		propagator.propagate(new AbsoluteDate(initialDate, deltaPropagation));
 
 		return results;
 	}
+
+	private OrbitalState retrieveLatestOrbitalState(Object object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	private List<Location> getLocations(List<String> list) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void addResult(Named result) {
+		results.add(result);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}	
 }

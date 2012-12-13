@@ -40,8 +40,9 @@ public class Location extends D3Vector {
 	 * @param p2 The second element (Longitude). The parameter instance can describe the element in detail.
 	 * @param p3 The third element (Elevation). The parameter instance can describe the element in detail.
 	 */
-	public Location(String issuedBy, String name, String description, Double p1, Double p2, Double p3) {
+	public Location(String issuedBy, String name, String description, Double p1, Double p2, Double p3, Double frequency) {
 		super(issuedBy, name, "Location", description, p1, p2, p3);
+		this.frequency = frequency;
 	}
 	
 	/** The elevation above the horizon that a satellite must have for this location
@@ -49,6 +50,8 @@ public class Location extends D3Vector {
 	 *  into contact and leave contact. */
 	protected double thresholdElevation = Math.toRadians(5.);
 	
+	
+	protected double frequency = 146.92 * 1000000; // 146.92 MHz
 	
 	/**
 	 * Getter of the threshold elevation. The elevation defines how high a satellite must
@@ -74,4 +77,18 @@ public class Location extends D3Vector {
 		double meters = 2 * Math.PI * 6371000 * angle / 2 * Math.PI;
 		return meters;
 	}
+
+	public double getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(double frequency) {
+		this.frequency = frequency;
+	}
+
+	public void setThresholdElevation(double thresholdElevation) {
+		this.thresholdElevation = thresholdElevation;
+	}
+	
+	
 }

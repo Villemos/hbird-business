@@ -13,7 +13,7 @@ public class MoveBackward extends Command {
 
 	public MoveBackward(String issuedBy) {
 		super(issuedBy, "", "MoveBackward", "Move the bot backwards. The distance (in meter) is set by the argument 'Distance'.");
-		arguments.put("Distance", new Parameter(issuedBy, "Distance", "Argument", "The distance in meter.", null, "Meter"));
+		addArgument("Distance", new Parameter(issuedBy, "Distance", "Argument", "The distance in meter.", null, "Meter"));
 	}
 
 	public MoveBackward(String issuedBy, long executionTime) {

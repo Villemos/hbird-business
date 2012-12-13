@@ -22,6 +22,8 @@ public class CommandingTester extends Tester {
 
 		startMonitoringArchive();
 		startCommandingChain();
+		
+		Thread.sleep(2000);
 
 		/** The command object. Destination is an unknown object. */
 		Command command = new Command("SystemTest", "GroundStation1", "COM2", "A test command"); 
@@ -104,7 +106,7 @@ public class CommandingTester extends Tester {
         /** The command should fail, as one of the states is 'false'. */
 		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", states, tasks, command));
 
-		Thread.sleep(2000000000);
+		Thread.sleep(2000);
 		
 		azzert(failedCommandRequestListener.lastReceived.getName().equals("CommandContainerCOMREQ1"));
 	}

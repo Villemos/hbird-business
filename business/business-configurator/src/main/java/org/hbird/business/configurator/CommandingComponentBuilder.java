@@ -37,7 +37,7 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 		FieldBasedSplitter splitter = new FieldBasedSplitter();
 
 		/** Create the route and the interface for getting the command states. */
-		from("direct:statestore").to("solr:statestore?solrhome=c:/solr");
+		from("direct:statestore").to("solr:statestore");
 
 		CommandReleaser releaser = new CommandReleaser();
 

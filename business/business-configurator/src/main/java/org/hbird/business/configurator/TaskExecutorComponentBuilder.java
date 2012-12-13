@@ -8,7 +8,7 @@ public class TaskExecutorComponentBuilder extends ComponentBuilder {
 	@Override
 	public void doConfigure() {
 
-		String componentname = (String) request.getArguments().get("componentname");
+		String componentname = (String) request.getArgument("componentname");
 		ProcessorDefinition route = from(StandardEndpoints.tasks).split().method(new TaskExecutor(componentname), "receive");
 		addInjectionRoute(route);
 					

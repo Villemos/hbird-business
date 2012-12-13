@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.tasking.SetParameter;
@@ -94,13 +95,13 @@ public class ImportAccessor {
 			String releaseTime = bodySheet.getCell(3, row).getContents();
 			String executionTime = bodySheet.getCell(4, row).getContents();
 
-			Map<String, Object> arguments = new HashMap<String, Object>();
+			Map<String, CommandArgument> arguments = new HashMap<String, CommandArgument>();
 			int tempRow = row;
 			while (tempRow < bodySheet.getRows() && (bodySheet.getCell(1, tempRow).getContents().equals("") || tempRow == row) && bodySheet.getCell(5, tempRow).getContents().equals("") == false) {
 				String argumentName = bodySheet.getCell(5, tempRow).getContents();
-				Parameter para = new Parameter((Parameter) parameters.get(argumentName));
-				para.setValue(getValue(para.getValue().getClass().toString(), bodySheet.getCell(6, tempRow).getContents()));
-				arguments.put(argumentName, para);
+			
+				CommandArgument arg = null;
+				arguments.put(argumentName, arg);
 				tempRow++;
 			}
 

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.tasking.SetParameter;
 import org.hbird.exchange.tasking.Task;
@@ -14,7 +15,7 @@ import org.hbird.exchange.tasking.Task;
 public class TestCommandSender {
 
 	public CommandRequest send() {
-		Map<String, Object> arguments = new HashMap<String, Object>();		
+		Map<String, CommandArgument> arguments = new HashMap<String, CommandArgument>();		
 		
 		Command command = new Command("Simulator", "ESTcube/platform/battery1", "Turn Off", "Command to turn of the battery. NOTE: SIMULATED", 0, 0, arguments);
 		

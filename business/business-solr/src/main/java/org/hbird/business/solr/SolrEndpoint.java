@@ -42,6 +42,12 @@ public class SolrEndpoint extends ScheduledPollEndpoint {
 	/** Da' logger! */
 	private static final transient Logger LOG = LoggerFactory.getLogger(SolrEndpoint.class);
 
+	{
+		if (System.getProperty("solr.url") != null) {
+			solrServerUrl = System.getProperty("solr.url");
+		}		
+	}
+	
 	/** The url of the SOLR server. The URL must have the format:
 	 *    [protocol]://[host IP or DNS name]:[port]/[path to solr] 
 	 *  Default is http://localhost:8080/apache-solr-1.4.1 */

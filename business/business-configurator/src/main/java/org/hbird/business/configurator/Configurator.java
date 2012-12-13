@@ -24,9 +24,8 @@ public class Configurator {
 		classes.put("org.hbird.exchange.configurator.StartNavigationComponent", NavigationComponentBuilder.class.getName());
 		classes.put("org.hbird.exchange.configurator.StartSystemMonitoringComponent", SystemMonitorComponentBuilder.class.getName());
 		classes.put("org.hbird.exchange.configurator.StartTaskExecutorComponent", TaskExecutorComponentBuilder.class.getName());
-		classes.put("org.hbird.exchange.configurator.StartMonitoringDataArchiveComponent", MonitoringDataArchiveComponentBuilder.class.getName());	
+		classes.put("org.hbird.exchange.configurator.StartArchiveComponent", ArchiveComponentBuilder.class.getName());	
 		classes.put("org.hbird.exchange.configurator.StartScriptComponent", ScriptComponentBuilder.class.getName());
-		classes.put("org.hbird.exchange.configurator.StartCommandArchiveComponent", CommandArchiveComponentBuilder.class.getName());
 	}
 
 	/** The name of the Configurator. */
@@ -39,7 +38,7 @@ public class Configurator {
 	public void process(@Body StartComponent request, CamelContext context) {
 
 		try {			
-			LOG.info("Creating component '" + request.getArguments().get("componentname") + "' using builder '" + classes.get(request.getClass().getName()) + "'.");
+			LOG.info("Creating component '" + request.getArgument("componentname") + "' using builder '" + classes.get(request.getClass().getName()) + "'.");
 			
 			/** Find the component builder and get it to setup and start the component. */
 			ComponentBuilder builder = (ComponentBuilder) Class.forName(classes.get(request.getClass().getName())).newInstance();

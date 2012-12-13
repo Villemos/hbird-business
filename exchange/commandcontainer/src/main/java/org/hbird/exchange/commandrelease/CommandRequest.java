@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.tasking.Task;
 
@@ -51,7 +52,7 @@ public class CommandRequest extends Named {
 	 * 
 	 * @return Map keyed on the argument name and with the value of the argument.
 	 */
-	public Map<String, Object> getArguments() {
+	public Map<String, CommandArgument> getArguments() {
 		return command.getArguments();
 	}
 
