@@ -52,6 +52,12 @@
 			<outputDirectory>/</outputDirectory>
 			<destName>hbird-0.0.1.jar</destName>
 		</file>
+		<file>
+			<source>${basedir}/../../business/business-systemtest/src/main/resources/systemtests.xml</source>
+			<outputDirectory>/assemblies</outputDirectory>
+			<destName>systemtest.xml</destName>
+		</file>
+		
 	</files>
 
 </assembly>

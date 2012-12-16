@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<bean id="test" class="org.hbird.estcube.test.PrintBean"/>
+
+	<camelContext id="publishRoutes" xmlns="http://camel.apache.org/schema/spring">
+
+		<dataFormats>
+            <json id="json" library="Jackson"/>
+            <json id="json.parameter" library="Jackson" unmarshalTypeName="org.hbird.exchange.core.Parameter"/>
+            <json id="json.state" library="Jackson" unmarshalTypeName="org.hbird.exchange.core.State"/>
+            <json id="json.tle" library="Jackson" unmarshalTypeName="org.hbird.exchange.navigation.TleOrbitalParameters"/>
+            <json id="json.location" library="Jackson" unmarshalTypeName="org.hbird.exchange.navigation.Location"/>
+            <json id="json.satellite" library="Jackson" unmarshalTypeName="org.hbird.exchange.navigation.Satellite"/>            
+            <json id="json.command" library="Jackson" unmarshalTypeName="org.hbird.exchange.core.Command"/>
+        </dataFormats>
+
+
+        
+		<route id="out.businesscards">
+			<from uri="activemq:topic:monitoring?selector=type='BusinessCard'"/>
+			<marshal ref="json" />
+<!-- 			<to uri="bean:test"/> -->
+			<to uri="websocket://0.0.0.0:8443/hbird/out/businesscards?sendToAll=true"/>
+		</route>
+
+		<route id="out.commandrequests">
+			<from uri="activemq:topic:monitoring?selector=type='CommandRequestTemplate'"/>
+			<marshal ref="json" />
+<!-- 			<to uri="bean:test"/> -->
+			<to uri="websocket://0.0.0.0:8443/hbird/out/commandrequests?sendToAll=true"/>
+		</route>
+
+		<route id="out.parameters">
+			<from uri="activemq:topic:monitoring?selector=type='Parameter' OR type='State' OR type='Label'"/>
+			<marshal ref="json" />
+<!-- 			<to uri="bean:test"/> -->
+			<to uri="websocket://0.0.0.0:8443/hbird/out/parameters?sendToAll=true"/>
+		</route>
+
+		<route id="out.orbital">
+			<from uri="activemq:topic:monitoring?selector=type='ContactData' OR type='OrbitalState' OR type='LocationContactEvent'" />
+			<marshal ref="json" />
+<!-- 			<to uri="bean:test"/> -->
+			<to uri="websocket://0.0.0.0:8443/hbird/out/orbitaldata?sendToAll=true" />
+		</route>
+		
+		<route id="out.all">
+			<from uri="activemq:topic:monitoring" />
+			<marshal ref="json" />
+<!-- 			<to uri="bean:test"/> -->
+			<to uri="websocket://0.0.0.0:8443/hbird/out/all?sendToAll=true" />
+		</route>
+
+
+
+		<!-- Route to inject TLEs -->
+		<route id="in.tle">
+			<from uri="websocket://0.0.0.0:8443/hbird/in/tle" />
+			<unmarshal ref="json.tle" />
+			<to uri="direct:injection" />
+		</route>
+
+		<!-- Route to inject Parameters -->
+		<route id="in.parameter">
+			<from uri="websocket://0.0.0.0:8443/hbird/in/parameter" />
+			<unmarshal ref="json.parameter" />
+			<to uri="direct:injection" />
+		</route>
+
+		<!-- Route to inject States -->
+		<route id="in.state">
+			<from uri="websocket://0.0.0.0:8443/hbird/in/state" />
+			<unmarshal ref="json.state" />
+			<to uri="direct:injection" />
+		</route>
+
+		<!-- Route to inject Commands -->
+		<route id="in.command">
+			<from uri="websocket://0.0.0.0:8443/hbird/in/command" />
+			<unmarshal ref="json.command" />
+			<to uri="direct:injection" />
+		</route>
+
+		<!-- Route to inject Locations -->
+		<route id="in.location">
+			<from uri="websocket://0.0.0.0:8443/hbird/in/location" />
+			<unmarshal ref="json.location" />
+			<to uri="direct:injection" />
+		</route>
+
+		<!-- Route to inject Satellite -->
+		<route id="in.satellite">
+			<from uri="websocket://0.0.0.0:8443/hbird/in/satellite" />
+			<unmarshal ref="json.satellite" />
+			<to uri="direct:injection" />
+		</route>
+				
+	</camelContext>
+</beans>

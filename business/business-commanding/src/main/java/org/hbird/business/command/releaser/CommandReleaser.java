@@ -1,3 +1,19 @@
+/**
+ * Licensed to the Hummingbird Foundation (HF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The HF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.hbird.business.command.releaser;
 
 import java.util.List;
@@ -12,18 +28,15 @@ import org.apache.camel.impl.DefaultExchange;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.dataaccess.IDataAccess;
 import org.hbird.exchange.dataaccess.StateRequest;
 
 /**
- * The command releaser will validate whether a 'Command' can be send.
+ * The command releaser validates whether a 'Command' within a 'CommandRequest' can be released.
  * 
- * The command releaser do not use the 'releaseTime' scheduling for command release. This
- * is expected done prior to reception by this bean. A command received by this class will
- * thus be processed immediately.
- * 
- * A Command can contains any number of 'lock states', being state parameters
- * (true / false). In case any of these are false at the time of execution, the command wont
+ * The release of the command can be constrained by a set of 'lock states', being state parameters
+ * (true / false). The set of applicable lock states are defined both as 'lockstates' in the 
+ * command request, as well as 'State' parameters with the 'stateOf' attribute set of the name
+ * of the command. In case any of these are false at the time of execution, the command wont
  * be released, i.e. the route will be stopped. 
  * 
  * A command will affect the satellite in some way. Thats means that the ground system(s) most likely
@@ -34,30 +47,13 @@ import org.hbird.exchange.dataaccess.StateRequest;
  * 
  * The command releaser thereafter parses the command on in the route.
  * 
- * Example of Usage:
- * 
- * <bean id="commandReleaser" class="org.hbird.business.command.releaser.CommandReleaser"/>
- * 
- * <route>
- *   <from uri="activemq:queue:Commands"/>
- *   <to uri="bean:commandReleaser"/>
- *   <IF Header(Command.Release) == FALSE>
- *     <to uri="activemq:queue:FailedCommands"/>
- *   <ELSE>
- *     <to SCHEDULE ALL TASKS in Header(Tasks)>
- *     <to SCHEDULE COMMAND>
- *     <to uri="activemq:queue:ReleasedCommands>
- *   <DONE>
- * </route>
- * 
  */
 public class CommandReleaser {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(CommandReleaser.class);
 
+	/** The header flag that indicates whether the command can be released. */
 	protected String validityHeaderField = "Valid";
-
-	protected IDataAccess store = null;
 
 	/**
 	 * Processor for the scheduling of validation task for a command as well as the
@@ -78,15 +74,13 @@ public class CommandReleaser {
 		/** Default we assume the command is valid. */
 		headers.put("Valid", true);
 
-		StateRequest request = new StateRequest("CommandReleaser", command.getCommand().getName(), command.getLockStates());
+		/** Request all states that are lock states of this command. */
+		Exchange exchange = new DefaultExchange(context);
+		exchange.getIn().setBody(new StateRequest("CommandReleaser", command.getCommand().getName(), command.getLockStates()));
+		context.createProducerTemplate().send("direct:statestore", exchange);
 
-		Exchange arg1 = new DefaultExchange(context);
-		arg1.getIn().setBody(request);
-		context.createProducerTemplate().send("direct:statestore", arg1);
-		List<State> states = (List<State>) arg1.getOut().getBody();
-
-		// for (State state : (List<State>) store.retrieveState(request)) {
-		for (State state : states) {
+		/** See if any of the states have the value FALSE*/
+		for (State state :  (List<State>) exchange.getOut().getBody()) {
 			if (state.getValue() == false) {
 				LOG.error("Validation state '" + state.getName() + "' is FALSE. Command '" + command.getCommand().getName() + "' release state marked as invalid.");
 				headers.put(validityHeaderField, false);	
@@ -97,17 +91,5 @@ public class CommandReleaser {
 		}
 
 		LOG.info("Forwarding command with validity='" + headers.get(validityHeaderField) + "'.");
-	}
-
-	public State reportState(@Body CommandRequest request, @Headers Map<String, Object> header) {
-		return new State("CommandReleaser", "Command Release Verification", "The state of the command release.", request.getCommand().getName(), (Boolean) header.get(validityHeaderField));
-	}
-
-	public IDataAccess getStore() {
-		return store;
-	}
-
-	public void setStore(IDataAccess store) {
-		this.store = store;
 	}
 }

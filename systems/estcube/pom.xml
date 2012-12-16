@@ -16,7 +16,13 @@
 
 		<dependency>
 			<groupId>org.hbird.business</groupId>
-			<artifactId>business-core</artifactId>
+			<artifactId>all-business</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hbird.exchange</groupId>
+			<artifactId>all-exchange</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
@@ -27,32 +33,18 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-metadatapublisher</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>simple-parameter-simulator</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-importer</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>simple-parameter-simulator</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-camel</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-websocket</artifactId>
+		</dependency>
+		
+		<dependency>
+		  <groupId>org.apache.camel</groupId>
+		  <artifactId>camel-jackson</artifactId>
 		</dependency>
 
 		<!-- <dependency> -->

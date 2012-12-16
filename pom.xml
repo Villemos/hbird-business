@@ -305,6 +305,18 @@
 			</dependency>
 
 			<dependency>
+				<groupId>org.apache.camel</groupId>
+				<artifactId>camel-websocket</artifactId>
+				<version>${camel.version}</version>
+			</dependency>
+
+			<dependency>
+	  		    <groupId>org.apache.camel</groupId>
+			    <artifactId>camel-jackson</artifactId>
+				<version>${camel.version}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>org.jencks</groupId>
 				<artifactId>jencks-amqpool</artifactId>
 				<version>${jencks.version}</version>

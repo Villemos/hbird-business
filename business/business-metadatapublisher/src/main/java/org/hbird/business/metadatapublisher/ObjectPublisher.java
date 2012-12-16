@@ -35,14 +35,16 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  * the camel timer.
  */
 public class ObjectPublisher {
-	
+
 	/** The class logger. */
 	protected static Logger logger = Logger.getLogger(ObjectPublisher.class);
-	
+
 	/** The name of the file to be loaded. The file may be changed on disk. */
-	protected String filename = "components.xml";
-	
+	protected String filename = null;
+
 	protected String listname = "components";
+
+	protected List<Object> objects = null;
 
 	public ObjectPublisher() {
 	}
@@ -55,7 +57,7 @@ public class ObjectPublisher {
 	public ObjectPublisher(String filename) {
 		this.filename = filename;
 	}
-	
+
 	/**
 	 * Method to split the message. The returned message list is actually loaded
 	 * from a Spring file, i.e. the original Exchange is ignored.
@@ -65,12 +67,14 @@ public class ObjectPublisher {
 	@Handler
 	public List<Object> process() {
 
-		logger.info("Loading 'Named' objects from file.");
-		
-		/** Load the definitions from the spring bean file. */
-		BeanFactory factory = new FileSystemXmlApplicationContext (filename);
-		List<Object> objects = (List<Object>) factory.getBean(listname);
-		
+		if (filename != null) {
+			logger.info("Loading 'Named' objects from file.");
+
+			/** Load the definitions from the spring bean file. */
+			BeanFactory factory = new FileSystemXmlApplicationContext (filename);
+			objects = (List<Object>) factory.getBean(listname);
+		}
+
 		return objects;
 	}
 
@@ -88,5 +92,13 @@ public class ObjectPublisher {
 
 	public void setListname(String listname) {
 		this.listname = listname;
+	}
+
+	public List<Object> getObjects() {
+		return objects;
+	}
+
+	public void setObjects(List<Object> objects) {
+		this.objects = objects;
 	}
 }

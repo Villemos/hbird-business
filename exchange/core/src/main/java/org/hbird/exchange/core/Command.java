@@ -16,7 +16,6 @@
  */
 package org.hbird.exchange.core;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;

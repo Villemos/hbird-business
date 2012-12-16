@@ -44,14 +44,12 @@ The transfer between the presentation tier and the business tier likewise use th
     <module>commandqueuemanagement</module>
     <module>commandcontainer</module>
     <module>configurator</module>
-    <module>heartbeat</module>
     <module>movementcontrol</module>
     <module>orbitprediction</module>
     <module>parameters</module>
     <module>rangecheck</module>
     <module>scripting</module>
     <module>tasking</module>
-    <module>systemmonitoring</module>
             
     <module>all</module>
 

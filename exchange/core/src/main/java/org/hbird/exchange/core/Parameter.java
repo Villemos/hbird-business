@@ -48,7 +48,7 @@ public class Parameter extends Named implements Comparable<Parameter> {
 	 * @param unit The unit of the value.
 	 */
 	public Parameter(String issuedBy, String name, String type, String description, Number value, String unit) {
-		super(issuedBy, name, type, description);
+		super(issuedBy, name, "Parameter", description);
 		this.unit = unit;
 		this.value = value;
 	}
@@ -66,7 +66,7 @@ public class Parameter extends Named implements Comparable<Parameter> {
 	 * @param unit The unit of the value.
 	 */
 	public Parameter(String issuedBy, String name, String type, String description, Number value, String unit, long timestamp) {
-		super(issuedBy, name, type, description, timestamp);
+		super(issuedBy, name, "Parameter", description, timestamp);
 		this.unit = unit;
 		this.value = value;
 	}
@@ -81,7 +81,7 @@ public class Parameter extends Named implements Comparable<Parameter> {
 	 * @param unit The unit of the value.
 	 */
 	public Parameter(String issuedBy, String name, String type, String description, long timestamp, Number value, String unit) {
-		super(issuedBy, name, type, description, timestamp);
+		super(issuedBy, name, "Parameter", description, timestamp);
 		this.unit = unit;
 		this.value = value;
 	}

@@ -17,7 +17,6 @@
 package org.hbird.business.validation.limits;
 
 import org.apache.camel.Body;
-import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;

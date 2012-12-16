@@ -48,36 +48,6 @@ public class SolrProducerTest {
 	}
 	
 	@Test
-	public void testOrbitalStateRequest() {
-		SolrProducer producer = new SolrProducer(new SolrEndpoint(""));
-		
-		OrbitalStateRequest request = new OrbitalStateRequest("testSatellite");
-		
-		String str = producer.createOrbitalStateRequest(request);
-		assertTrue(str.equals("ofSatellite:testSatellite AND class:OrbitalState"));
-		
-		request.setFromTime(1l);
-		str = producer.createOrbitalStateRequest(request);
-		assertTrue(str.equals("ofSatellite:testSatellite AND class:OrbitalState AND timestamp:[1 TO *]"));
-
-		request.setToTime(5l);
-		str = producer.createOrbitalStateRequest(request);
-		assertTrue(str.equals("ofSatellite:testSatellite AND class:OrbitalState AND timestamp:[1 TO 5]"));
-		
-		request = new OrbitalStateRequest("testSatellite", 2l, 6l);
-		str = producer.createOrbitalStateRequest(request);
-		assertTrue(str.equals("ofSatellite:testSatellite AND class:OrbitalState AND timestamp:[2 TO 6]"));
-
-		request = new OrbitalStateRequest("testSatellite", 2l, null);
-		str = producer.createOrbitalStateRequest(request);
-		assertTrue(str.equals("ofSatellite:testSatellite AND class:OrbitalState AND timestamp:[2 TO *]"));
-
-		request = new OrbitalStateRequest("testSatellite", null, 6l);
-		str = producer.createOrbitalStateRequest(request);
-		assertTrue(str.equals("ofSatellite:testSatellite AND class:OrbitalState AND timestamp:[* TO 6]"));
-	}
-	
-	@Test
 	public void testParameterRequest() {
 		SolrProducer producer = new SolrProducer(new SolrEndpoint(""));
 		

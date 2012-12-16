@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<bean id="scheduler" class="org.hbird.business.core.Scheduler"/>
+
+	<routeContext id="injectionRoutes" xmlns="http://camel.apache.org/schema/spring">
+
+		<route id="injection">
+			<from uri="direct:injection" />
+			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
+			<setHeader headerName="issuedBy"><simple>${in.body.issuedBy}</simple></setHeader>
+			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>			
+			<setHeader headerName="datasetidentifier"><simple>${in.body.datasetidentifier}</simple></setHeader>
+			<setHeader headerName="timestamp"><simple>${in.body.timestamp}</simple></setHeader>				
+			
+			<to uri="bean:scheduler"/>
+			
+			<choice>
+	            <when>
+	                <simple>${in.body} is 'org.hbird.exchange.core.State'</simple>
+	      			<setHeader headerName="isStateOf"><simple>${in.body.isStateOf}</simple></setHeader>
+	            </when>
+	            <when>
+	                <simple>${in.body} is 'org.hbird.exchange.core.Command'</simple>
+	      			<setHeader headerName="destination"><simple>${in.body.destination}</simple></setHeader>
+	            </when>	            
+	        </choice>
+	        
+			<choice>
+	            <when>
+	                <simple>${in.body} is 'org.hbird.exchange.tasking.Task'</simple>
+	      			<to uri="activemq:queue:tasks"/>
+	            </when>
+	            <when>
+	                <simple>${in.body} is 'org.hbird.exchange.core.Command'</simple>
+	      			<to uri="activemq:topic:commands"/>
+	            </when>	            
+	            <when>
+	                <simple>${in.body} is 'org.hbird.exchange.commandrelease.CommandRequest'</simple>
+	      			<to uri="activemq:queue:scheduledCommandRequests"/>
+	            </when>
+	            <otherwise>
+	            	<to uri="activemq:topic:monitoring"/>
+	            </otherwise>
+	        </choice>
+		</route>
+
+	</routeContext>
+</beans>

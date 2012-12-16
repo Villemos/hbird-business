@@ -1,8 +1,27 @@
+/**
+ * Licensed to the Hummingbird Foundation (HF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The HF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.hbird.business.systemtest;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.apache.camel.Handler;
 import org.hbird.exchange.core.IGenerationTimestamped;
@@ -51,7 +70,7 @@ public class NavigationTester extends Tester {
 
 		Thread.sleep(2000);
 
-		monitoringListener.elements.clear();
+		orbitalListener.elements.clear();
 
 		/** Send a TLE request for a satellite and a subset of locations */
 		TlePropagationRequest request = new TlePropagationRequest("SystemTest", "ESTcube", tleLine1, tleLine2, 1355385448149l, locations);
@@ -63,14 +82,14 @@ public class NavigationTester extends Tester {
 		injection.sendBody(request);
 
 
-		while (totalSleep < 120000 && monitoringListener.elements.size() != 604) {
+		while (totalSleep < 120000 && orbitalListener.elements.size() != 1086) {
 			Thread.sleep(2000);
 			totalSleep += 2000;
 		}
-		azzert(monitoringListener.elements.size() == 1086, "Received orbital states, events and contact data. Expected 1086. Received " + monitoringListener.elements.size());
+		azzert(orbitalListener.elements.size() == 1086, "Received orbital states, events and contact data. Expected 1086. Received " + orbitalListener.elements.size());
 	
-		print(monitoringListener.elements);
-		monitoringListener.elements.clear();		
+		print(orbitalListener.elements);
+		orbitalListener.elements.clear();		
 		
 		/** Send a request without the TLE and without locations. The latest TLE and all locations should be taken. */
 		request = new TlePropagationRequest("SystemTest", "ESTcube");
@@ -80,19 +99,27 @@ public class NavigationTester extends Tester {
 		injection.sendBody(request);
 
 		totalSleep = 0;
-		while (totalSleep < 120000 && monitoringListener.elements.size() != 604) {
+		while (totalSleep < 120000 && orbitalListener.elements.size() != 1689) {
 			Thread.sleep(2000);
 			totalSleep += 2000;
 		}
-		azzert(monitoringListener.elements.size() == 1086, "Received orbital states, events and contact data. Expected 1086. Received " + monitoringListener.elements.size());
+		azzert(orbitalListener.elements.size() == 1689, "Received orbital states, events and contact data. Expected 1689. Received " + orbitalListener.elements.size());
 		
-		print(monitoringListener.elements);		
+		print(orbitalListener.elements);		
 	}
 	
 	protected void print(List<Named> elements) {
 		
+		TreeMap<Long, Named> sorted = new TreeMap<Long, Named>();
+		
 		for (Named element : elements) {
-
+			sorted.put(element.getTimestamp(), element);
+		}
+		
+		Iterator<Entry<Long, Named>> it = sorted.entrySet().iterator();
+		while (it.hasNext()) {
+			Named element = it.next().getValue();
+			
 			if (element instanceof TleOrbitalParameters) {
 				continue;
 			}
@@ -112,7 +139,7 @@ public class NavigationTester extends Tester {
 			}
 			else if (element instanceof ContactData) {
 				ContactData event = (ContactData) element;
-				System.out.println(new Date(element.getTimestamp()) +"     Contact Data: azm=" + event.getAzimuth() + ", ele=" + event.getElevation() + ", dop=" + event.getDoppler() + ", dopshift=" + event.getDopplerShift());
+				System.out.println(new Date(element.getTimestamp()) +"     Contact Data: sat=" + event.getSatellite() + ", loc=" + event.getLocation() + ", azm=" + event.getAzimuth() + ", ele=" + event.getElevation() + ", dop=" + event.getDoppler() + ", dopshift=" + event.getDopplerShift());
 			}
 		}
 	}

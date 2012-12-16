@@ -71,9 +71,6 @@ public class TleOrbitalPredictor {
 
 			/** Get the definition of the Locations. */
 			List<Location> locations = getLocations(request.getLocations(), context);
-			if (locations.size() != request.getLocations().size()) {
-				LOG.error("Failed to find Locations in Archive.");
-			}
 
 			/** Get the initial orbital state at the requested start time.*/
 			AbsoluteDate startDate = new AbsoluteDate(new Date(request.getStartTime()), TimeScalesFactory.getUTC());

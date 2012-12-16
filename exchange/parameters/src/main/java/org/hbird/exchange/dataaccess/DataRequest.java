@@ -1,3 +1,19 @@
+/**
+ * Licensed to the Hummingbird Foundation (HF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The HF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.hbird.exchange.dataaccess;
 
 import java.util.ArrayList;
@@ -20,8 +36,13 @@ public class DataRequest extends Command {
 		arguments.put("sortorder", new CommandArgument("sortorder", "The order in which the returned data should be returned.", "String", "", "ASC", true));
 		arguments.put("sort", new CommandArgument("sort", "The sort field. Default is timestamp.", "String", "", "timestamp", true));
 		arguments.put("rows", new CommandArgument("rows", "The maximum number of rows to be retrieved.", "Long", "", 1000, true));
+		arguments.put("initialization", new CommandArgument("initialization", "If set to true, then the value below the 'to' time of each named object matching the search criterions will be retrieved.", "Boolean", "", false, true));
 	}
 	
+	public DataRequest(String issuedBy, String destination) {
+		super(issuedBy, destination, "DataRequest", "A generic request to the archive for data.");
+	}
+
 	public DataRequest(String issuedBy, String destination, String name, String description) {
 		super(issuedBy, destination, name, description);
 	}
@@ -48,6 +69,10 @@ public class DataRequest extends Command {
 
 	public void setIsStateOf(String isStateOf) {
 		addArgument("isStateOf", isStateOf);
+	}
+
+	public void setIsInitialization(Boolean isInitialization) {
+		addArgument("initialization", isInitialization);
 	}
 
 	public void addName(String name) {

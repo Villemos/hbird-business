@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<import resource="injection.xml"/>
+
+	<bean id="configurator" class="org.hbird.business.configurator.Configurator"/>
+
+	<bean id="systemMonitoring" class="org.hbird.exchange.configurator.StartSystemMonitoringComponent">
+		<constructor-arg index="0" value="Monitoring"/>	
+	</bean>
+	
+	<bean id="archive" class="org.hbird.exchange.configurator.StartArchiveComponent">
+		<constructor-arg index="0" value="Archive"/>	
+	</bean>
+	
+	<bean id="taskExecutor" class="org.hbird.exchange.configurator.StartTaskExecutorComponent">
+		<constructor-arg index="0" value="Task Executor"/>		
+	</bean>
+	
+	<bean id="commandChain" class="org.hbird.exchange.configurator.StartCommandComponent">
+		<constructor-arg index="0" value="Command Chain"/>	
+	</bean>
+
+	<bean id="orbitPrediction" class="org.hbird.exchange.configurator.StartNavigationComponent">
+		<constructor-arg index="0" value="OrbitPredictor"/>
+	</bean>
+
+	<bean id="components" class="java.util.ArrayList">
+		<constructor-arg>
+        	<list>
+ 	          	<ref bean="systemMonitoring" />
+ 	          	<ref bean="archive" />
+ 	          	<ref bean="commandChain" />
+  	          	<ref bean="taskExecutor" />
+				<ref bean="orbitPrediction" />
+         	</list>
+	    </constructor-arg>
+	</bean>
+
+	<bean id="loader" class="org.hbird.business.metadatapublisher.ObjectPublisher">
+		<property name="objects" ref="components" />
+	</bean>
+
+	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
+
+		<routeContextRef ref="injectionRoutes"/>
+
+		<route id="initiator">
+			<from uri="timer:initator?repeatCount=1" />
+			<split>
+				<method bean="loader" />
+				<to uri="direct:injection" />
+			</split>
+		</route>
+
+	</camelContext>
+</beans>

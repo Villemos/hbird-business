@@ -60,7 +60,7 @@ public class OrbitalState extends Named implements IGenerationTimestamped, ISate
 	 * @param velocity The velocity of the orbit.
 	 */
 	public OrbitalState(String issuedBy, String name, String description, long timestamp, long generationTime, String datasetidentifier, String satellite, D3Vector position, D3Vector velocity, D3Vector momentum) {
-		super(issuedBy, name, "Orbital State", description, timestamp, datasetidentifier);
+		super(issuedBy, name, "OrbitalState", description, timestamp, datasetidentifier);
 		this.satellite = satellite;
 		this.position = position;
 		this.velocity = velocity;
@@ -69,7 +69,7 @@ public class OrbitalState extends Named implements IGenerationTimestamped, ISate
 	}
 	
 	public OrbitalState(String issuedBy, String name, String description, long timestamp, long generationTime, String satellite, D3Vector position, D3Vector velocity, D3Vector momentum) {
-		super(issuedBy, name, "Orbital State", description, timestamp);
+		super(issuedBy, name, "OrbitalState", description, timestamp);
 		this.satellite = satellite;
 		this.position = position;
 		this.velocity = velocity;

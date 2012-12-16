@@ -20,21 +20,42 @@ import org.apache.camel.Main;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+/**
+ * Provides a standard main method.
+ * 
+ * The Starter can be used to start hbird assemblies. The asssembly is defined in an
+ * XML file following the Camel format. The file to be used is either defined using the
+ * 'hbird.assembly' system property or by putting a 'main.xml' in the classpath.
+ * 
+ * @author Gert Villemos
+ *
+ */
 public class Starter {
 
+	/** Class logger */
 	private static org.apache.log4j.Logger LOG = Logger.getLogger("main");
 
-	protected Main main = null;	
-
+	
+	/**
+	 * The main method
+	 * 
+	 * @param args Arguments are NOT used
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception {
 		Starter starter = new Starter();
 		starter.boot();
 	}
 	
+	/**
+	 * Method to read the XML assembly file and run the main
+	 * 
+	 * @throws Exception
+	 */
 	protected void boot() throws Exception {
 		LOG.info("Starting Hummingbird based system.");
 				
-		main = new Main();
+		Main main = new Main();
 		main.enableHangupSupport();
 		
 		/** Read the configuration file as the first argument. If not set, then we try the default name. */

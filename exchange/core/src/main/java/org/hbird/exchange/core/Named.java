@@ -215,6 +215,6 @@ public abstract class Named implements Serializable {
 	}
 	
 	public String prettyPrint() {
-		return "(Unknown) {name=" + name + ", timestamp=" + timestamp + "}";
+		return "class=" + this.getClass().getSimpleName() + ", name=" + name + ", timestamp=" + timestamp;
 	}
 }

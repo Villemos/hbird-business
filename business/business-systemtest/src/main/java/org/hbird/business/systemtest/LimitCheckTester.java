@@ -1,3 +1,19 @@
+/**
+ * Licensed to the Hummingbird Foundation (HF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The HF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
@@ -63,12 +79,12 @@ public class LimitCheckTester extends Tester {
 		Thread.sleep(2000);		
 		
 		/** Would normally violate SOFT limit, but the limit should be disabled. */
-		azzert(monitoringListener.lastReceived.getName().equals("PARA1_UpperSoftLimit_SWITCH") == true, "Disabling state distributed.");
+		azzert(stateListener.lastReceived.getName().equals("PARA1_UpperSoftLimit_SWITCH") == true, "Disabling state distributed.");
 		send(11d, "PARA1_UPPER_SOFTLIMIT", true, "PARA1_UPPER_HARDLIMIT", true);
 		
 		Thread.sleep(2000);
 		
-		azzert(monitoringListener.lastReceived.getName().equals("PARA1_UpperSoftLimit") == false, "Disabled state was not distributed.");
+		azzert(stateListener.lastReceived.getName().equals("PARA1_UpperSoftLimit") == false, "Disabled state was not distributed.");
 	}	
 	
 	protected void send(Double value, String soft, boolean expectedSoft, String hard, boolean expectedHard) throws InterruptedException {
@@ -79,7 +95,7 @@ public class LimitCheckTester extends Tester {
 		Thread.sleep(2000);
 		
 		/** Check that the states were calculated and distributed. */
-		azzert(monitoringListener.states.get(soft).getValue() == expectedSoft);
-		azzert(monitoringListener.states.get(hard).getValue() == expectedHard);		
+		azzert(stateListener.states.get(soft).getValue() == expectedSoft);
+		azzert(stateListener.states.get(hard).getValue() == expectedHard);		
 	}
 }
