@@ -35,7 +35,7 @@ import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.navigation.TlePropagationRequest;
 
-public class NavigationTester extends Tester {
+public class NavigationTester extends SystemTest {
 
 	@Handler
 	public void process() throws InterruptedException {

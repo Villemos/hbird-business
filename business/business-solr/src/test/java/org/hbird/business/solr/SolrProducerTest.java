@@ -43,7 +43,7 @@ public class SolrProducerTest {
 
 		request.setIsStateOf("TestCommand1");
 		str = producer.createRequest(request);
-		assertTrue(str.equals("class:testclazz AND (name:Name1 OR name:Name2 OR name:Name3) AND isStateOf:TestCommand1 AND timestamp:[1 TO 5]"));
+		assertTrue(str.equals("class:testclazz AND (name:Name1 OR name:Name2 OR name:Name3 OR isStateOf:TestCommand1) AND timestamp:[1 TO 5]"));
 
 	}
 	

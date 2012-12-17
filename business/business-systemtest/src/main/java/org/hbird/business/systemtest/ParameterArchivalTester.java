@@ -27,7 +27,7 @@ import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
 
-public class ParameterArchivalTester extends Tester {
+public class ParameterArchivalTester extends SystemTest {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(ParameterArchivalTester.class);
 

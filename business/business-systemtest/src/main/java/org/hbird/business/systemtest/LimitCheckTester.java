@@ -23,7 +23,7 @@ import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.validation.Limit.eLimitType;
 
-public class LimitCheckTester extends Tester {
+public class LimitCheckTester extends SystemTest {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(LimitCheckTester.class);
 

@@ -39,10 +39,17 @@
 			<outputDirectory>/</outputDirectory>
 			<fileMode>744</fileMode>
 		</fileSet>
-
 		<fileSet>
 			<directory>${basedir}/target/lib</directory>
 			<outputDirectory>/lib</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${basedir}/../../business/business-solr/src/main/resources/conf</directory>
+			<outputDirectory>/solr/conf</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${basedir}/target/apidocs</directory>
+			<outputDirectory>/apidocs</outputDirectory>
 		</fileSet>
 	</fileSets>
 
@@ -57,7 +64,11 @@
 			<outputDirectory>/assemblies</outputDirectory>
 			<destName>systemtest.xml</destName>
 		</file>
-		
+		<file>
+			<source>${basedir}/../../business/business-solr/src/main/resources/webapp/apache-solr-3.5.0.war</source>
+			<outputDirectory>/solr/webapp</outputDirectory>
+			<destName>apache-solr-3.5.0.war</destName>
+		</file>		
 	</files>
 
 </assembly>

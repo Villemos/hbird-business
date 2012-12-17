@@ -25,7 +25,7 @@ import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
 
-public class StateArchivalTester extends Tester {
+public class StateArchivalTester extends SystemTest {
 
     public void process(CamelContext context) throws InterruptedException {
     	        

@@ -29,7 +29,7 @@ import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.tasking.SetParameter;
 import org.hbird.exchange.tasking.Task;
 
-public class CommandingTester extends Tester {
+public class CommandingTester extends SystemTest {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(CommandingTester.class);
 

@@ -25,7 +25,7 @@ import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 
-public class ScriptTester extends Tester {
+public class ScriptTester extends SystemTest {
 
 	@Handler
 	public void process() throws InterruptedException {

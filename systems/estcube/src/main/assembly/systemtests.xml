@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<bean id="configurator" class="org.hbird.business.configurator.Configurator"/>
+
+	<bean id="monitoring.listener" class="org.hbird.business.systemtest.Listener" />
+	<bean id="commanding.listener" class="org.hbird.business.systemtest.Listener" />
+	<bean id="failed.commanding.listener" class="org.hbird.business.systemtest.Listener" />
+	<bean id="businesscard.listener" class="org.hbird.business.systemtest.Listener" />
+	<bean id="parameter.listener" class="org.hbird.business.systemtest.Listener" />
+	<bean id="state.listener" class="org.hbird.business.systemtest.Listener" />
+	<bean id="label.listener" class="org.hbird.business.systemtest.Listener" />
+	<bean id="orbital.listener" class="org.hbird.business.systemtest.Listener" />
+								
+	<bean id="testerTemplate" abstract="true" class="org.hbird.business.systemtest.Tester">
+		<property name="monitoringListener" ref="monitoring.listener" />
+		<property name="commandingListener" ref="commanding.listener" />
+		<property name="failedCommandRequestListener" ref="failed.commanding.listener"/>
+		<property name="businessCardListener" ref="businesscard.listener"/>
+		<property name="parameterListener" ref="parameter.listener"/>
+		<property name="stateListener" ref="state.listener"/>
+		<property name="labelListener" ref="label.listener"/>
+		<property name="orbitalListener" ref="orbital.listener"/>
+		<property name="context" ref="basic"/>
+	</bean>
+
+	<bean id="test0" class="org.hbird.business.systemtest.BusinessCardTester" parent="testerTemplate"/>
+	<bean id="test1" class="org.hbird.business.systemtest.ParameterArchivalTester" parent="testerTemplate"/>
+	<bean id="test2" class="org.hbird.business.systemtest.StateArchivalTester" parent="testerTemplate"/>
+	<bean id="test3" class="org.hbird.business.systemtest.LimitCheckTester" parent="testerTemplate"/>
+	<bean id="test4" class="org.hbird.business.systemtest.ScriptTester" parent="testerTemplate"/>
+	<bean id="test5" class="org.hbird.business.systemtest.TaskingTester" parent="testerTemplate"/>
+	<bean id="test6" class="org.hbird.business.systemtest.CommandingTester" parent="testerTemplate"/>
+	<bean id="test7" class="org.hbird.business.systemtest.NavigationTester" parent="testerTemplate"/>
+	<bean id="finisher" class="org.hbird.business.systemtest.Finisher" parent="testerTemplate"/>
+						
+	<bean id="scheduler" class="org.hbird.business.core.Scheduler"/>
+
+	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
+
+		<route id="testing">
+			<from uri="timer:initator?repeatCount=1" />
+				<to uri="bean:test0" />
+				<to uri="bean:test1" />
+				<to uri="bean:test2" />
+				<to uri="bean:test3" />
+				<to uri="bean:test4" />
+		 		<to uri="bean:test5" />
+	 			<to uri="bean:test6" />
+	 			<to uri="bean:test7" />
+	 			<to uri="bean:finisher" />
+		</route>
+
+		<route id="injection">
+			<from uri="direct:injection" />
+			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
+			<setHeader headerName="issuedBy"><simple>${in.body.issuedBy}</simple></setHeader>
+			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>			
+			<setHeader headerName="datasetidentifier"><simple>${in.body.datasetidentifier}</simple></setHeader>
+			<setHeader headerName="timestamp"><simple>${in.body.timestamp}</simple></setHeader>				
+			
+			<to uri="bean:scheduler"/>
+			
+			<choice>
+	            <when>
+	                <simple>${in.body} is 'org.hbird.exchange.core.State'</simple>
+	      			<setHeader headerName="isStateOf"><simple>${in.body.isStateOf}</simple></setHeader>
+	            </when>
+	            <when>
+	                <simple>${in.body} is 'org.hbird.exchange.core.Command'</simple>
+	      			<setHeader headerName="destination"><simple>${in.body.destination}</simple></setHeader>
+	            </when>	            
+	        </choice>
+	        
+			<choice>
+	            <when>
+	                <simple>${in.body} is 'org.hbird.exchange.tasking.Task'</simple>
+	      			<to uri="activemq:queue:hbird.tasks"/>
+	            </when>
+	            <when>
+	                <simple>${in.body} is 'org.hbird.exchange.core.Command'</simple>
+	      			<to uri="activemq:topic:hbird.commands"/>
+	            </when>	            
+	            <when>
+	                <simple>${in.body} is 'org.hbird.exchange.commandrelease.CommandRequest'</simple>
+	      			<to uri="activemq:queue:hbird.requests"/>
+	            </when>
+	            <otherwise>
+	            	<to uri="activemq:topic:hbird.monitoring"/>
+	            </otherwise>
+	        </choice>
+		</route>
+
+		<route id="listen.monitoring">
+			<from uri="activemq:topic:hbird.monitoring" />
+			<to uri="bean:monitoring.listener" />
+		</route>
+
+		<route id="listen.commanding">
+			<from uri="activemq:topic:hbird.commands" />
+			<to uri="bean:commanding.listener" />
+		</route>
+
+		<route id="listen.failed.commanding">
+			<from uri="activemq:topic:hbird.failedRequests" />
+			<to uri="bean:failed.commanding.listener" />
+		</route>
+
+		<route id="businesscard">
+			<from uri="activemq:topic:hbird.monitoring?selector=type='BusinessCard'" />
+			<to uri="bean:businesscard.listener" />
+		</route>
+
+		<route id="parameter">
+			<from uri="activemq:topic:hbird.monitoring?selector=type='Parameter'" />
+			<to uri="bean:parameter.listener" />
+		</route>
+
+		<route id="state">
+			<from uri="activemq:topic:hbird.monitoring?selector=type='State'" />
+			<to uri="bean:state.listener" />
+		</route>
+
+		<route id="label">
+			<from uri="activemq:topic:hbird.monitoring?selector=type='Label'" />
+			<to uri="bean:label.listener" />
+		</route>
+
+		<route id="orbital">
+			<from uri="activemq:topic:hbird.monitoring?selector=type='ContactData' OR type='OrbitalState' OR type='LocationContactEvent'" />
+			<to uri="bean:orbital.listener" />
+		</route>
+
+	</camelContext>
+</beans>

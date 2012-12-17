@@ -22,7 +22,7 @@ import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.Named;
 
-public class BusinessCardTester extends Tester {
+public class BusinessCardTester extends SystemTest {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(BusinessCardTester.class);
 	

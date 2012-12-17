@@ -24,7 +24,7 @@ import org.hbird.exchange.tasking.SendCommand;
 import org.hbird.exchange.tasking.SetParameter;
 import org.hbird.exchange.tasking.Task;
 
-public class TaskingTester extends Tester {
+public class TaskingTester extends SystemTest {
 
 	@Handler
 	public void process() throws InterruptedException {
