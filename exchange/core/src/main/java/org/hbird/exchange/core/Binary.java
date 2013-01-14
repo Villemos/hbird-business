@@ -44,4 +44,14 @@ public class Binary extends Named {
 		
 		this.rawdata = rawdata;
 	}
+
+	public byte[] getRawdata() {
+		return rawdata;
+	}
+
+	public void setRawdata(byte[] rawdata) {
+		this.rawdata = rawdata;
+	}
+	
+	
 }
