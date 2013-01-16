@@ -44,7 +44,6 @@ import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
-import org.hbird.exchange.heartbeat.Heartbeat;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.tasking.Task;
@@ -417,12 +416,6 @@ public class SolrProducer extends DefaultProducer {
 			Satellite satellite = (Satellite) io;
 			document.addField("withID", satellite.getSatelliteNumber());
 			document.addField("designator", satellite.getDesignator());
-		}
-		else if (io instanceof Heartbeat) {
-			Heartbeat beat = (Heartbeat) io;
-			document.addField("nextBeat", beat.getNextBeat());
-			document.addField("hostIP", beat.getHostip());
-			document.addField("hostName", beat.getHostname());
 		}
 
 		if (io instanceof IGenerationTimestamped) {
