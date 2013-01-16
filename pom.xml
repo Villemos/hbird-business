@@ -34,16 +34,6 @@
 
 	<repositories>
 
-		<!-- Repository for the dependencies on other iSpace components. -->
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>villemos</id>
-			<name>villemos</name>
-			<url>http://www.villemos.com:8080/artifactory/repo/</url>
-		</repository>
-
 		<!-- Repository dependency for Jxl. -->
 		<repository>
 			<snapshots>
@@ -99,7 +89,6 @@
 		<surefire-plugin.version>2.7.1</surefire-plugin.version>
 		<commons-io.version>2.0.1</commons-io.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
-<!-- 		<solrj.version>1.4.0</solrj.version> -->
 		<solrj.version>3.5.0</solrj.version>
 	</properties>
 
@@ -162,7 +151,7 @@
 		</dependency>
 
 		<!-- For creating OSGi bundles -->
-		<!-- COMMENT: The bundle version is very old. Camel uses 4.1.0 and I some 
+		<!-- COMMENT: The bundle version is very old. Camel uses 4.1.0 and I some
 			problems due to this. -->
 		<!-- <dependency> -->
 		<!-- <groupId>org.apache.felix</groupId> -->
