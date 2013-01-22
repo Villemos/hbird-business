@@ -1,50 +1,65 @@
+<!-- Example settings file for the Maven.                    -->
+<!-- Copy this file to Maven repo in local machine (usually  -->
+<!-- located in ~/.m2/) and rename the file to settings.xml. -->
+<!-- All your Maven builds will use settings from this file. -->
+<!-- More information: http://maven.apache.org/settings.html -->
 <settings>
-  <servers>
-    <server>
-      <id>hbird.repository</id>
-      <username>SET THE DEPLOYMENT USERNAME HERE</username>
-      <password>SET THE DEPLOYMENT PASSWORD HERE</password>
-    </server>
-  </servers>
-  <mirrors>
-    <mirror>
-      <!-- mirror everithing in your own repository manager. Eg. in nexus installation -->
-      <id>nexus</id>
-      <mirrorOf>*</mirrorOf>
-      <url>http://YOUR-HOST:YOUR-PORT/nexus/content/groups/public</url>
-    </mirror>
-  </mirrors>
-  <profiles>
-    <profile>
-      <id>nexus</id>
+    <servers>
+        <server>
+            <id>hbird.repository</id>
+            <username>SET THE DEPLOYMENT USERNAME HERE</username>
+            <password>SET THE DEPLOYMENT PASSWORD HERE</password>
+        </server>
+    </servers>
+    <mirrors>
+        <mirror>
+            <!-- Proxy everything in your own repository manager. Eg. in nexus installation. -->
+            <id>nexus</id>
+            <mirrorOf>*</mirrorOf>
+            <url>http://YOUR-HOST:YOUR-PORT/nexus/content/groups/public</url>
+        </mirror>
+    </mirrors>
+    <profiles>
+        <profile>
+            <id>nexus</id>
 
-      <properties>
-        <!-- URLs used for deployment -->
-        <distribution.url.snapshots>http://YOUR-HOST:YOUR-PORT/nexus/content/repositories/snapshots</distribution.url.snapshots>
-        <distribution.url.releases>http://YOUR-HOST:YOUR-PORT/nexus/content/repositories/releases</distribution.url.releases>
-      </properties>
+            <properties>
+                <!-- URLs used for deployment. -->
+                <distribution.url.snapshots>http://YOUR-HOST:YOUR-PORT/nexus/content/repositories/snapshots
+                </distribution.url.snapshots>
+                <distribution.url.releases>http://YOUR-HOST:YOUR-PORT/nexus/content/repositories/releases
+                </distribution.url.releases>
+            </properties>
 
-      <!--Enable snapshots for the built in central repo to direct all requests to nexus via the mirror -->
-      <repositories>
-        <repository>
-          <id>central</id>
-          <url>http://central</url>
-          <releases><enabled>true</enabled></releases>
-          <snapshots><enabled>true</enabled></snapshots>
-        </repository>
-      </repositories>
-     <pluginRepositories>
-        <pluginRepository>
-          <id>central</id>
-          <url>http://central</url>
-          <releases><enabled>true</enabled></releases>
-          <snapshots><enabled>true</enabled></snapshots>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>
-  </profiles>
-  <activeProfiles>
-    <!-- Make the profile active all the time -->
-    <activeProfile>nexus</activeProfile>
-  </activeProfiles>
+            <!-- Use nexus proxy for all the central repo requests. -->
+            <repositories>
+                <repository>
+                    <id>central</id>
+                    <url>http://central</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>central</id>
+                    <url>http://central</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+    <activeProfiles>
+        <!-- Activate the nexus profile. -->
+        <activeProfile>nexus</activeProfile>
+    </activeProfiles>
 </settings>
