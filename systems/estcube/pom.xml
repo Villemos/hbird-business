@@ -68,6 +68,7 @@
 							<addClasspath>true</addClasspath>
 							<mainClass>org.hbird.business.core.Starter</mainClass>
 							<classpathPrefix>lib/</classpathPrefix>
+                            <useUniqueVersions>false</useUniqueVersions>
 						</manifest>
 						<manifestEntries>
             				<Class-Path>resources/</Class-Path>

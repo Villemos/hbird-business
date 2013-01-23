@@ -60,7 +60,7 @@ public class SolrProducer extends DefaultProducer {
 	private static final transient Logger LOG = LoggerFactory.getLogger(SolrProducer.class);
 
 	/** The Solr endpoint. All configuration options are set on the endpoint. */
-	private SolrEndpoint endpoint;
+	private final SolrEndpoint endpoint;
 
 	protected XStream xstream = new XStream();
 
@@ -80,33 +80,33 @@ public class SolrProducer extends DefaultProducer {
 			if (body instanceof DeletionRequest) {
 				delete((DeletionRequest) body);
 				commit();
-			}		
+			}
 			else if (body instanceof CommitRequest) {
 				commit();
-			}		
+			}
 			else if (body instanceof DataRequest) {
 				DataRequest dataRequest = (DataRequest) body;
 
 				if (dataRequest.getArguments().containsKey("initialization") && (Boolean) dataRequest.getArguments().get("initialization").value == true) {
-					LOG.info("Received Data Request ('" + body.getClass().getSimpleName() + "'). Initializing.");
+					LOG.info("Received Data Request ('{}'). Initializing.", body.getClass().getSimpleName());
 
 					String request = createRequest((DataRequest) body);
 					LOG.info("Search string = " + request);
 					List<Named> results = doInitializationRequest((DataRequest) body, request);
 
-					LOG.info("Returning " + results.size() + " entries.");
+					LOG.info("Returning {} entries.", results.size());
 					exchange.getOut().setBody(results);
 				}
 				else {
-					LOG.info("Received Data Request ('" + body.getClass().getSimpleName() + "'). Retrieving.");
+					LOG.info("Received Data Request ('{}'). Retrieving.", body.getClass().getSimpleName());
 
 					String request = createRequest((DataRequest) body);
-					LOG.info("Search string = " + request);
-					
+					LOG.info("Search string = {}.", request);
+
 					SolrQuery query = createQuery((DataRequest) body, request);
 					List<Named> results = retrieve(query);
 
-					LOG.info("Returning " + results.size() + " entries.");
+					LOG.info("Returning {} entries.", results.size());
 					exchange.getOut().setBody(results);
 				}
 			}
@@ -115,7 +115,7 @@ public class SolrProducer extends DefaultProducer {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Failed to process Exchange {}", exchange.getExchangeId(), e);
 		}
 	}
 
@@ -154,13 +154,13 @@ public class SolrProducer extends DefaultProducer {
 			for (String name : (List<String>) body.getArgument("names")) {
 				namePart += separator + "name:" + name;
 				separator = " OR ";
-			} 
+			}
 		}
 
 		/** Set the isStateOf, if there. */
 		if (body.getArgument("isStateOf") != null) {
 			isStateOfPart = "isStateOf:" + (String) body.getArgument("isStateOf");
-		}		
+		}
 
 		if (body.getArgument("satellite") != null) {
 			ofSatellitePart = "ofSatellite:" + (String) body.getArgument("satellite");
@@ -209,7 +209,7 @@ public class SolrProducer extends DefaultProducer {
 
 	protected String createTimestampElement(Long from, Long to) {
 		String timePart = null;
-		if (from != null && to != null) {			 
+		if (from != null && to != null) {
 			timePart = "timestamp:[" + from + " TO " + to + "]";
 		}
 		else if (from == null && to != null) {
@@ -230,7 +230,7 @@ public class SolrProducer extends DefaultProducer {
 		//		if (request.getArgument("isStateOf") != null) {
 		//			queryString += "isStateOf:" + (String) request.getArgument("isStateOf");
 		//		}
-		//		
+		//
 		//		if (request.getArgument("names") != null) {
 		//			queryString += " OR name:(";
 		//			String separator = "";
@@ -269,7 +269,7 @@ public class SolrProducer extends DefaultProducer {
 		try {
 			response = endpoint.getServer().query(query);
 			if (response.getStatus() != 0) {
-				LOG.error("Failed to execute retrieval request. Failed with status '" + response.getStatus() + "'.");
+				LOG.error("Failed to execute retrieval request. Failed with status '{}'.", response.getStatus());
 			}
 
 			if (response.getFacetFields() != null) {
@@ -286,14 +286,14 @@ public class SolrProducer extends DefaultProducer {
 
 							for (Named newObj : retrieve(sampleQuery)) {
 								results.add(newObj);
-								LOG.info("Added State object '" + newObj.getName() + "' with timestamp '" + newObj.getTimestamp()+ "'");
+								LOG.info("Added State object '{}' with timestamp '{}'.", newObj.getName(), newObj.getTimestamp());
 							}
 						}
 					}
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Failed to handle initialization request; query: '{}'.", request, e);
 		}
 
 		return results;
@@ -336,15 +336,15 @@ public class SolrProducer extends DefaultProducer {
 	private void delete(DeletionRequest body)  {
 
 		String query = (String) body.getArgument("deletionquery");
-		LOG.info("Deleting based on query '" + query + "'.");
+		LOG.info("Deleting based on query '{}'.", query);
 
 		try {
 			UpdateResponse response = endpoint.getServer().deleteByQuery(query);
 			if (response.getStatus() == 500) {
-				LOG.error("Failed to delete.");				
+				LOG.error("Failed to delete; query '{}'.", query);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Failed to handle deletion request; query '{}'.", query, e);
 		}
 	}
 
@@ -352,14 +352,14 @@ public class SolrProducer extends DefaultProducer {
 	 * Method to process an exchange interpreted as a insert request.
 	 * 
 	 * The body of the exchange IN message is expected to hold the main part
-	 * of the text to be indexed. In addition other fields may be used to 
-	 * categorizing the data according to different categories, such as 
-	 * 'person' or 'organisation'.  
+	 * of the text to be indexed. In addition other fields may be used to
+	 * categorizing the data according to different categories, such as
+	 * 'person' or 'organisation'.
 	 * 
 	 * CONVENTIONS
 	 * 
 	 * - A reference to a specific object is through a field with name '[]Instance'.
-	 * - A reference to a 
+	 * - A reference to a
 	 * 
 	 * 
 	 * @param exchange
@@ -367,12 +367,12 @@ public class SolrProducer extends DefaultProducer {
 	 */
 	protected void insert(Named io) throws Exception {
 
-		LOG.info("Storing object: " + io.prettyPrint());
+		LOG.info("Storing object: {}", io.prettyPrint());
 
 		/** The document we will be storing. */
 		SolrInputDocument document = new SolrInputDocument();
 
-		Named namedIo = (Named) io;
+		Named namedIo = io;
 
 		document.setField("hasUri", io.getType() + ":" + io.getName() + ":" + io.getTimestamp());
 		document.addField("issuedBy", namedIo.getIssuedBy());
@@ -434,11 +434,15 @@ public class SolrProducer extends DefaultProducer {
 		/** Send the document to the SOLR server. */
 		UpdateResponse response = endpoint.getServer().add(document);
 		if (response.getStatus() == 500) {
-			LOG.error("Failed to submit the document to the SOLR server. Server returned status code '" + response.getStatus() + "'.");
+			LOG.error("Failed to submit the document to the SOLR server. Server returned status code '{}'.", response.getStatus());
 		}
 	}
 
 	protected void encodeValue(String key, Object value, SolrInputDocument document) {
+		if (value == null) {
+			// nothing to encode; return
+			return;
+		}
 		if (value instanceof Integer || value.getClass() == int.class) {
 			document.addField(key + "_i", value);
 		}
@@ -466,31 +470,31 @@ public class SolrProducer extends DefaultProducer {
 		LOG.info("Forcing commit of changes.");
 		UpdateResponse commitResponse = endpoint.getServer().commit();
 		if (commitResponse.getStatus() == 500) {
-			LOG.error("Failed to commit the document to the SOLR server. Server returned status code '" + commitResponse.getStatus() + "'.");
+			LOG.error("Failed to commit the document to the SOLR server. Server returned status code '{}'.", commitResponse.getStatus());
 		}
 	}
 
 	/**
 	 * Retrieves a number of entries from the repository, based on the configured
-	 * query. 
+	 * query.
 	 * 
 	 * @param exchange
-	 * @throws SolrServerException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
-	 * @throws IllegalArgumentException 
-	 * @throws RemoteException 
+	 * @throws SolrServerException
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws RemoteException
 	 */
 	protected List<Named> retrieve(SolrQuery query) {
 
-		LOG.debug("Issuing request '" + query.toString() + "'.");
+		LOG.debug("Issuing request '{}'.", query.toString());
 
-		/** Configure the request. 
+		/** Configure the request.
 		 * 
-		 * One keywords are supported 
-		 *   FROMLAST. Will be replaced with the timestamp of the last retrieval (initial is 0). 
-		 */	
-		/** Search and set result set. Notice that this will return the results upto the 
+		 * One keywords are supported
+		 *   FROMLAST. Will be replaced with the timestamp of the last retrieval (initial is 0).
+		 */
+		/** Search and set result set. Notice that this will return the results upto the
 		 * configured number of rows. More results may thus be in the repository. */
 
 		QueryResponse response = null;
@@ -498,11 +502,11 @@ public class SolrProducer extends DefaultProducer {
 		try {
 			response = endpoint.getServer().query(query);
 			if (response.getStatus() != 0) {
-				LOG.error("Failed to execute retrieval request. Failed with status '" + response.getStatus() + "'.");
+				LOG.error("Failed to execute retrieval request. Failed with status '{}'.", response.getStatus());
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Failed to handle query; query: '{}'.", query.toString(), e);
 		}
 
 		ResultSet results = Utilities.getResultSet(response, query.getRows());
