@@ -367,7 +367,7 @@ public class SolrProducer extends DefaultProducer {
 	 */
 	protected void insert(Named io) throws Exception {
 
-		LOG.info("Storing object: {}", io.prettyPrint());
+		LOG.info("Storing object: {}[name={}, timestamp={}, uuid={}]", new Object[] { io.getClass().getSimpleName(), io.getName(), io.getTimestamp(), io.getUuid() });
 
 		/** The document we will be storing. */
 		SolrInputDocument document = new SolrInputDocument();
