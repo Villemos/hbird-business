@@ -36,7 +36,6 @@ public class NativeCommand extends Command {
     public NativeCommand(String issuedBy, String destination, String command) {
         super(issuedBy, destination, "Native Command", "Native Command to execute in the destination");
         setCommandToExecute(command);
-
     }
 
     /**
