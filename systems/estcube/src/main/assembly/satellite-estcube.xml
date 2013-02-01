@@ -13,7 +13,7 @@
 
 	<bean id="estcube" class="org.hbird.exchange.navigation.Satellite">
 		<constructor-arg index="0" value="metadata" />
-		<constructor-arg index="1" value="ESTcube" />
+		<constructor-arg index="1" value="ESTCube-1" />
 		<constructor-arg index="2" value="The mission objectives of the ESTCube-1 mission are: 1. To test the deployment of a 10 meter Hoytether as a part of the development work of the Electric solar wind sail. http://www.electric-sailing.com/, 2. To measure the electric sail force, interacting with the tether, 3. To take a picture of the deployed tether, 4. To take a picture of the Earth as a secondary mission objective." />
 	</bean>
 

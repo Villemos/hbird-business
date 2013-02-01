@@ -10,8 +10,8 @@
     <relativePath>..</relativePath>
   </parent>
 
-  <dependencies>  
-  
+  <dependencies>
+
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>businesscard</artifactId>
@@ -41,19 +41,19 @@
       <artifactId>movementcontrol</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
- 
+
      <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>orbitprediction</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
- 
+
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>commandrelease</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
- 
+
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>parametervalidation</artifactId>
@@ -79,12 +79,6 @@
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.hbird.exchange</groupId>
-      <artifactId>systemmonitoring</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-  	
   </dependencies>
-	
+
 </project>

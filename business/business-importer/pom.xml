@@ -7,30 +7,6 @@
     <relativePath>..</relativePath>
   </parent>
   <artifactId>business-importer</artifactId>
-  
-	<repositories>
-
-		<!-- Repository for the dependencies on other iSpace components. -->
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>villemos</id>
-			<name>villemos</name>
-			<url>http://www.villemos.com:8080/artifactory/repo/</url>
-		</repository>
-
-		<!-- Repository dependency for Jxl. -->
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>mvnrepository</id>
-			<name>mvnrepository</name>
-			<url>http://mvnrepository.com/</url>
-		</repository>
-
-	</repositories>
 
 	<dependencies>
 
@@ -75,7 +51,7 @@
         </dependency>
 
 	</dependencies>
-  
-  
+
+
 	<name>Business - Metadata Importer</name>
 </project>
