@@ -28,7 +28,7 @@ The transfer between the presentation tier and the business tier likewise use th
     <module>configurator</module>
     <module>movementcontrol</module>
     <module>orbitprediction</module>
-    <module>parameters</module>
+    <module>dataaccess</module>
     <module>rangecheck</module>
     <module>scripting</module>
     <module>tasking</module>
