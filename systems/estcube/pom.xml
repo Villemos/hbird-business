@@ -22,12 +22,6 @@
 
 		<dependency>
 			<groupId>org.hbird.business</groupId>
-			<artifactId>business-systemtest</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hbird.business</groupId>
 			<artifactId>simple-parameter-simulator</artifactId>
 			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
@@ -53,17 +47,11 @@
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-websocket</artifactId>
 		</dependency>
-		
+
 		<dependency>
 		  <groupId>org.apache.camel</groupId>
 		  <artifactId>camel-jackson</artifactId>
 		</dependency>
-
-		<!-- <dependency> -->
-		<!-- <groupId>org.hbird.business</groupId> -->
-		<!-- <artifactId>must</artifactId> -->
-		<!-- <version>0.0.1-SNAPSHOT</version> -->
-		<!-- </dependency> -->
 
 	</dependencies>
 
@@ -79,7 +67,8 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<mainClass>org.hbird.business.core.Starter</mainClass>
-							<classpathPrefix>lib/</classpathPrefix>	
+							<classpathPrefix>lib/</classpathPrefix>
+                            <useUniqueVersions>false</useUniqueVersions>
 						</manifest>
 						<manifestEntries>
             				<Class-Path>resources/</Class-Path>
@@ -117,6 +106,39 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+		    <plugins>
+		        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+		        <plugin>
+		            <groupId>org.eclipse.m2e</groupId>
+		            <artifactId>lifecycle-mapping</artifactId>
+		            <version>1.0.0</version>
+		            <configuration>
+		                <lifecycleMappingMetadata>
+		                    <pluginExecutions>
+		                        <pluginExecution>
+		                            <pluginExecutionFilter>
+		                                <groupId>
+		                                    org.apache.maven.plugins
+		                                </groupId>
+		                                <artifactId>
+		                                    maven-dependency-plugin
+		                                </artifactId>
+		                                <versionRange>[2.1,)</versionRange>
+		                                <goals>
+		                                    <goal>copy-dependencies</goal>
+		                                </goals>
+		                            </pluginExecutionFilter>
+		                            <action>
+		                                <ignore/>
+		                            </action>
+		                        </pluginExecution>
+		                    </pluginExecutions>
+		                </lifecycleMappingMetadata>
+		            </configuration>
+		        </plugin>
+		    </plugins>
+		</pluginManagement>
 	</build>
 
 </project>

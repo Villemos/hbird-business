@@ -6,7 +6,7 @@
     <groupId>org.hbird</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-	
+
   <modelVersion>4.0.0</modelVersion>
   <artifactId>hummingbird-exchange</artifactId>
   <packaging>pom</packaging>
@@ -17,25 +17,7 @@ The protocol tier will convert the protocol messages (such as CCSDS packets) int
 
 The transfer between the presentation tier and the business tier likewise use the exchange layer.
   </description>
-
   <url>http://hbird.de</url>
-
-
-        <repositories>
-
-          <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>hbird.repository</id>
-            <name>villemos</name>
-            <url>http://www.villemos.com:8080/artifactory/repo/</url>
-          </repository>
-
-        </repositories>
-
-
-
   <modules>
     <module>core</module>
 
@@ -46,15 +28,15 @@ The transfer between the presentation tier and the business tier likewise use th
     <module>configurator</module>
     <module>movementcontrol</module>
     <module>orbitprediction</module>
-    <module>parameters</module>
+    <module>dataaccess</module>
     <module>rangecheck</module>
     <module>scripting</module>
     <module>tasking</module>
-            
+
     <module>all</module>
 
     <module>validation</module>
   </modules>
-	
+
   <groupId>org.hbird.exchange</groupId>
 </project>
