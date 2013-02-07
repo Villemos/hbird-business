@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.apache.camel.Handler;
-import org.hbird.exchange.core.IGenerationTimestamped;
+import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.navigation.ContactData;
@@ -45,6 +45,8 @@ public class NavigationTester extends SystemTest {
 
 		Thread.sleep(2000);
 
+		orbitalListener.elements.clear();
+		
 		/** Store a set of locations */
 		injection.sendBody(new Location("SystemTest", "TARTU", "Test location 1", Math.toRadians(58.3000D), Math.toRadians(26.7330D), 59.0D, 146.92 * 1000000));
 		injection.sendBody(new Location("SystemTest", "Aalborg", "Test location 2", Math.toRadians(55.659306D), Math.toRadians(12.587585D), 59.0D, 136.92 * 1000000));
@@ -63,12 +65,13 @@ public class NavigationTester extends SystemTest {
 		String tleLine1 = "1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478";
 		String tleLine2 = "2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935";
 		TleOrbitalParameters tleParameter = new TleOrbitalParameters("SystemTest", "ESTcube", tleLine1, tleLine2);
+		tleParameter.setDatasetidentifier("TLE/test");
 		injection.sendBody(tleParameter);
 
 		/** Send command to commit all changes. */
 		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
 
-		Thread.sleep(2000);
+		Thread.sleep(5000);
 
 		orbitalListener.elements.clear();
 
@@ -81,25 +84,53 @@ public class NavigationTester extends SystemTest {
 
 		injection.sendBody(request);
 
-
-		while (totalSleep < 120000 && orbitalListener.elements.size() != 1086) {
+		while (totalSleep < 120000 && orbitalListener.elements.size() != 3) {
 			Thread.sleep(2000);
 			totalSleep += 2000;
 		}
-		azzert(orbitalListener.elements.size() == 1086, "Received orbital states, events and contact data. Expected 1086. Received " + orbitalListener.elements.size());
-	
-		print(orbitalListener.elements);
+
+		/** Find the set of orbital states and check them. */
+		DataSet orbitalStates = null;
+		for (Named obj : orbitalListener.elements) {
+			orbitalStates = (DataSet) obj;
+			if (orbitalStates.getType().equals("OrbitalStates")) {
+				break;
+			}
+		} 
+		azzert(orbitalStates.getDataset().size() == 121, "Received orbital states. Received " + orbitalStates.getDataset().size());
+		print(orbitalStates.getDataset());
+		
+		/** Find the set of TARTU contacts and check them. */
+		orbitalStates = null;
+		for (Named obj : orbitalListener.elements) {
+			orbitalStates = (DataSet) obj;
+			if (orbitalStates.getType().equals("ContactData") && orbitalStates.getLocation().equals("TARTU")) {
+				break;
+			}
+		} 
+		azzert(orbitalStates.getDataset().size() == 433, "Received contact events for TARTU. Expected 433, received " + orbitalStates.getDataset().size());
+		print(orbitalStates.getDataset());
+		
+		/** Find the set of Aalbrog contacts and check them. */
+		orbitalStates = null;
+		for (Named obj : orbitalListener.elements) {
+			orbitalStates = (DataSet) obj;
+			if (orbitalStates.getType().equals("ContactData") && orbitalStates.getLocation().equals("Aalborg")) {
+				break;
+			}
+		} 
+		azzert(orbitalStates.getDataset().size() == 960, "Received contact events for Aalborg. Received " + orbitalStates.getDataset().size());
+		print(orbitalStates.getDataset());
+
 		orbitalListener.elements.clear();		
 		
 		/** Send a request without the TLE and without locations. The latest TLE and all locations should be taken. */
 		request = new TlePropagationRequest("SystemTest", "ESTcube");
 		request.addArgument("starttime", 1355385448149l);
-		request.addArgument("stream", true);
-		request.setDatasetidentifier("TEST_SET_2");
 		injection.sendBody(request);
 
 		totalSleep = 0;
-		while (totalSleep < 120000 && orbitalListener.elements.size() != 1689) {
+		while (totalSleep < 120000 && orbitalListener.elements.size() != 3) {
 			Thread.sleep(2000);
 			totalSleep += 2000;
 		}

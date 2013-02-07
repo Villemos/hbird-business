@@ -40,6 +40,8 @@ public class ScriptComponentBuilder extends ComponentBuilder {
 			/** Create the routes for receiving the data needed by the script. */
 			ProcessorDefinition<?> route = from(StandardEndpoints.monitoring + "?" + addNameSelector(dependency)).bean(executor, "calculate");
 			addInjectionRoute(route);			
+			
+			addCommandHandler();
 		}		
 	}
 }

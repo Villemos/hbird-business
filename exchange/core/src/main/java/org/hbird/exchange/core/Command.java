@@ -60,18 +60,18 @@ import java.util.Map.Entry;
  * @CATEGORY Information Type
  * @END
  */
-public class Command extends Named {
+public class Command extends Named implements IScheduled {
 		
 	private static final long serialVersionUID = 1L;
 	
 	/** The name of the component to which this command is destined. */
 	protected String destination;
 		
-	/** The time at which this command should be released for transfer to the satellite. A value of
+	/** The time at which this command should be transfered to its destination. A value of
 	 *  0 indicates immediate. */
-	protected long releaseTime = 0;
+	protected long transferTime = 0;
 	
-	/** The time at which the command should be executed onboard the satellite. A value of 0 indicates
+	/** The time at which the command should be executed at the destination. A value of 0 indicates
 	 * immediate. */
 	protected long executionTime = 0;
 	
@@ -97,7 +97,7 @@ public class Command extends Named {
 		super(issuedBy, name, "Command", description);
 		this.destination = destination;
 		this.arguments = arguments;
-		this.releaseTime = releaseTime;
+		this.transferTime = releaseTime;
 		this.executionTime = executionTime;
 	}
 	
@@ -115,7 +115,7 @@ public class Command extends Named {
 	 * @return The time (ms from 1970) at which the command should be released for transfer.
 	 */
 	public long getReleaseTime() {
-		return releaseTime;
+		return transferTime;
 	}
 
 	/**
@@ -129,11 +129,11 @@ public class Command extends Named {
 	
 	public long getReleaseDelay() {
 		Date now = new Date();
-		return now.getTime() > releaseTime ? 0 : releaseTime - now.getTime();
+		return now.getTime() > transferTime ? 0 : transferTime - now.getTime();
 	}
 
 	public void setReleaseTime(long releaseTime) {
-		this.releaseTime = releaseTime;
+		this.transferTime = releaseTime;
 	}
 
 	public void setExecutionTime(long executionTime) {
@@ -187,5 +187,14 @@ public class Command extends Named {
 		}
 		
 		return missingArguments;
+	}
+
+	public long getDelay() {
+		Date now = new Date();
+		return now.getTime() < transferTime ? now.getTime() - transferTime : 0;
+	}
+
+	public long getDeliveryTime() {
+		return transferTime;
 	}
 }

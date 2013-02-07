@@ -37,7 +37,7 @@ public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 	protected String tleLine2;
 	
 	public TleOrbitalParameters(String issuedBy, String name, String description, long timestamp, String datasetidentifier, String satellite, String tleLine1, String tleLine2) {
-		super(issuedBy, name, "TLE Orbital Parameters", description, timestamp, datasetidentifier);
+		super(issuedBy, name, "TleOrbitalParameters", description, timestamp, datasetidentifier);
 		
 		this.satellite = satellite;
 		this.tleLine1 = tleLine1;
@@ -45,7 +45,7 @@ public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 	}
 	
 	public TleOrbitalParameters(String issuedBy, String name, String description, String satellite, String tleLine1, String tleLine2) {
-		super(issuedBy, name, "TLE Orbital Parameters", description);
+		super(issuedBy, name, "TleOrbitalParameters", description);
 		
 		this.satellite = satellite;
 		this.tleLine1 = tleLine1;
@@ -53,11 +53,12 @@ public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 	}
 
 	public TleOrbitalParameters(String issuedBy, String satellite, String tleLine1, String tleLine2) {
-		super(issuedBy, "TLE for " + satellite, "TLE Orbital Parameters", "The TLE state of the satellite.");
+		super(issuedBy, "TLE/" + satellite, "TleOrbitalParameters", "The TLE state of the satellite.");
 		
 		this.satellite = satellite;
 		this.tleLine1 = tleLine1;
 		this.tleLine2 = tleLine2;		
+		this.datasetidentifier = "TLE/" + timestamp;
 	}
 
 	public String getSatellite() {

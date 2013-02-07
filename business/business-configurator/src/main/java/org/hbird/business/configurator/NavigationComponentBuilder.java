@@ -36,6 +36,8 @@ public class NavigationComponentBuilder extends ComponentBuilder {
 		commands.add(new OrbitPredictionRequest("", "", "", ""));
 	}
 	
+	
+	
 	@Override
 	public void doConfigure() {
 

@@ -34,6 +34,7 @@ import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.core.IGenerationTimestamped;
 import org.hbird.exchange.core.ILocationSpecific;
 import org.hbird.exchange.core.ISatelliteSpecific;
@@ -43,10 +44,8 @@ import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
-import org.hbird.exchange.dataaccess.TleRequest;
 import org.hbird.exchange.heartbeat.Heartbeat;
 import org.hbird.exchange.navigation.Satellite;
-import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.tasking.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +102,7 @@ public class SolrProducer extends DefaultProducer {
 
 					String request = createRequest((DataRequest) body);
 					LOG.info("Search string = " + request);
-					
+
 					SolrQuery query = createQuery((DataRequest) body, request);
 					List<Named> results = retrieve(query);
 
@@ -111,6 +110,12 @@ public class SolrProducer extends DefaultProducer {
 					exchange.getOut().setBody(results);
 				}
 			}
+			else if (body instanceof DataSet) {
+				/** Insert each element. */
+				for (Named entry : ((DataSet) body).getDataset()) {
+					insert((Named) entry);
+				}
+			}			
 			else if (body instanceof Named) {
 				insert((Named) body);
 			}
@@ -118,15 +123,6 @@ public class SolrProducer extends DefaultProducer {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	protected String createTleRequest(TleRequest body) {
-		String request = "ofSatellite:" + (String) body.getArgument("satellite");
-		request += " AND class:" + TleOrbitalParameters.class.getSimpleName();
-
-		request += createTimestampElement((Long) body.getArgument("from"), (Long) body.getArgument("to"));
-
-		return request;
 	}
 
 	protected String createRequest(DataRequest body) {
@@ -139,9 +135,9 @@ public class SolrProducer extends DefaultProducer {
 		String ofSatellitePart = null;
 
 		/** Set the class of data we are retrieving. */
-		if (body.getArgument("class") != null) {
-			classPart = "class:" + body.getArgument("class");
-		}
+//		if (body.getArgument("class") != null) {
+//			classPart = "class:" + body.getArgument("class");
+//		}
 
 		/** Set the type of data we are retrieving. */
 		if (body.getArgument("type") != null) {
@@ -155,9 +151,15 @@ public class SolrProducer extends DefaultProducer {
 			for (String name : (List<String>) body.getArgument("names")) {
 				namePart += separator + "name:" + name;
 				separator = " OR ";
+				
+				/** Include states if required to */
+				if (body.shallIncludeStates() == true) {
+					namePart += separator + "isStateOf:" + name;
+				}
 			} 
 		}
 
+		
 		/** Set the isStateOf, if there. */
 		if (body.getArgument("isStateOf") != null) {
 			isStateOfPart = "isStateOf:" + (String) body.getArgument("isStateOf");
@@ -183,7 +185,7 @@ public class SolrProducer extends DefaultProducer {
 		}
 		else {
 			if (request == null && namePart != null) {
-				request = namePart;
+				request = "(" + namePart + ")";
 			}
 			else if (namePart != null) {
 				request += " AND (" + namePart + ")";
@@ -275,19 +277,19 @@ public class SolrProducer extends DefaultProducer {
 
 			if (response.getFacetFields() != null) {
 
-				/** For each facet, retrieve again one sample. */
+				/** For each facet, retrieve 'rows' samples. */
 				for (FacetField facetfield :  response.getFacetFields()) {
 
 					if (facetfield.getValues() != null) {
 						for (Count count : facetfield.getValues()) {
-							SolrQuery sampleQuery = new SolrQuery("name:" + count.getName());
-							sampleQuery.setRows(1);
+							SolrQuery sampleQuery = new SolrQuery("name:" + count.getName() + createTimestampElement(body.getFrom(), body.getTo()));
+							sampleQuery.setRows(body.getRows());
 							sampleQuery.setSortField("timestamp", ORDER.desc);
 							sampleQuery.setQueryType("basic");
 
 							for (Named newObj : retrieve(sampleQuery)) {
 								results.add(newObj);
-								LOG.info("Added State object '" + newObj.getName() + "' with timestamp '" + newObj.getTimestamp()+ "'");
+								LOG.info("Added object '" + newObj.getName() + "' with timestamp '" + newObj.getTimestamp()+ "'");
 							}
 						}
 					}

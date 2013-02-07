@@ -16,6 +16,8 @@
  */
 package org.hbird.exchange.navigation;
 
+import org.hbird.exchange.core.ILocationSpecific;
+
 
 /** As the name indicates, a 'Location' is a fixed place on (or near) earths surface.
  *  The location is defined through its;
@@ -26,7 +28,7 @@ package org.hbird.exchange.navigation;
  *  * thresholdElevation. The elevation that a satellite must be above the horizon to see this location.
  *  
  */
-public class Location extends D3Vector {
+public class Location extends D3Vector implements ILocationSpecific {
 
 	/** Unique UID.	 */
 	private static final long serialVersionUID = -2884807949988009796L;
@@ -89,6 +91,12 @@ public class Location extends D3Vector {
 	public void setThresholdElevation(double thresholdElevation) {
 		this.thresholdElevation = thresholdElevation;
 	}
-	
-	
+
+	public String getLocation() {
+		return name;
+	}
+
+	public void setLocation(String location) {
+		this.name = location;
+	}
 }

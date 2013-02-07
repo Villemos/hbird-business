@@ -57,6 +57,8 @@ public class LimitCheckComponentBuilder extends ComponentBuilder {
 		else if (limit.type == eLimitType.Static) {
 			createRoute(limit.limitOfParameter, new StaticLimitChecker(limit), componentname, limitValueParameterName);			
 		}
+		
+		addCommandHandler();
 	}
 
 	/**

@@ -16,21 +16,28 @@
  */
 package org.hbird.queuemanagement;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.CommandArgument;
 
-public class RemoveQueueElement extends Named {
+public class ViewQueue extends Command {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4855448569441799079L;
-
-	/** The element to be removed. */
-	protected Object element;
+	private static final long serialVersionUID = 3485417554095535572L;
 	
 	{
-		this.name = "RemoveQueueElement";
-		this.description = "A request to remove a specific element in an queue.";
+		arguments.put("queuename", new CommandArgument("queuename", "The name of the queue to be displayed.", "String (ID)", "", "hbird.requests", true));
+	}
+
+	public ViewQueue(String issuedBy, String destination, String queuename) {
+		super(issuedBy, destination, "ViewQueue", "Command to get a dump of all messages in the queue.");
+		
+		setQueueName(queuename);
+	}	
+	
+	public String getQueueName() {
+		return (String) arguments.get("queuename").value;
 	}
 	
+	public void setQueueName(String queuename) {
+		arguments.get("queuename").value = queuename;
+	}
 }

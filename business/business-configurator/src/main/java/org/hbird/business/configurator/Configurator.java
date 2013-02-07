@@ -35,6 +35,7 @@ import org.hbird.exchange.configurator.StartCommandComponent;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StartLimitComponent;
 import org.hbird.exchange.configurator.StartNavigationComponent;
+import org.hbird.exchange.configurator.StartQueueManagerComponent;
 import org.hbird.exchange.configurator.StartScriptComponent;
 import org.hbird.exchange.configurator.StartSystemMonitoringComponent;
 import org.hbird.exchange.configurator.StartTaskExecutorComponent;
@@ -61,6 +62,7 @@ public class Configurator extends ComponentBuilder {
 		classes.put("org.hbird.exchange.configurator.StartTaskExecutorComponent", TaskExecutorComponentBuilder.class.getName());
 		classes.put("org.hbird.exchange.configurator.StartArchiveComponent", ArchiveComponentBuilder.class.getName());	
 		classes.put("org.hbird.exchange.configurator.StartScriptComponent", ScriptComponentBuilder.class.getName());
+		classes.put("org.hbird.exchange.configurator.StartQueueManagerComponent", QueueManagerBuilder.class.getName());
 	}
 
 	{	
@@ -71,6 +73,7 @@ public class Configurator extends ComponentBuilder {
 		commands.add(new StartScriptComponent("", "", null, null));
 		commands.add(new StartSystemMonitoringComponent(""));
 		commands.add(new StartTaskExecutorComponent(""));
+		commands.add(new StartQueueManagerComponent(""));
 		commands.add(new StopComponent("", "", ""));
 	}
 
@@ -149,9 +152,9 @@ public class Configurator extends ComponentBuilder {
 		.end();
 
 		/** Setup the BusinessCard */
-		BusinessCard card = new BusinessCard(name, 5000l, commands);
-		ProcessorDefinition<?> route = from("timer:businessCard_" + name + "?period=5000").bean(card);
-		addInjectionRoute(route);
+		//BusinessCard card = new BusinessCard(name, 5000l, commands);
+		//ProcessorDefinition<?> route = from("timer:businessCard_" + name + "?period=5000").bean(card);
+		//addInjectionRoute(route);
 	}
 
 	@Override

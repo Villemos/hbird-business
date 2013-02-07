@@ -16,21 +16,42 @@
  */
 package org.hbird.business.systemtest;
 
+import java.util.List;
+
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
+import org.hbird.exchange.configurator.StartQueueManagerComponent;
 import org.hbird.exchange.dataaccess.DeletionRequest;
+import org.hbird.queuemanagement.ClearQueue;
+import org.hbird.queuemanagement.ListQueues;
+import org.hbird.queuemanagement.QueueHelper;
 
 public class Finisher extends SystemTest {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(Finisher.class);
 
 	public void process(Exchange exchange) throws InterruptedException {
+		
+		startQueueManager();
+		
 		LOG.info("System Test done.");
 		
 		LOG.info("Cleaning archive.");
 		
 		injection.sendBody(new DeletionRequest("SystemTest", "Archive", "*:*"));	
 
+		LOG.info("Purging queues.");
+		
+		/** List all queues. */
+		List<String> queues = (List<String>) injection.requestBody(new ListQueues("SystemTest", "CommandingQueueManager"));
+				
+		/** Purge all. */
+		for (String canonicalName : queues) {
+			injection.requestBody(new ClearQueue("SystemTest", "CommandingQueueManager", QueueHelper.getQueueName(canonicalName)));
+		}
+		
+		LOG.info("Ciao.");
+		
 		Thread.sleep(2000);
 		System.exit(1);
 	}	

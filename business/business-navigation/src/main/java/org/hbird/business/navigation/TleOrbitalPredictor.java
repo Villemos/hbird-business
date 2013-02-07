@@ -16,6 +16,7 @@
  */
 package org.hbird.business.navigation;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -26,8 +27,9 @@ import org.apache.camel.Handler;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.core.IGenerationTimestamped;
+import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.NamedTimestampComperator;
 import org.hbird.exchange.dataaccess.LocationRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
 import org.hbird.exchange.navigation.Location;import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -51,7 +53,7 @@ public class TleOrbitalPredictor {
 	/** The exchange must contain a OrbitalState object as the in-body. 
 	 * @throws OrekitException */
 	@Handler
-	public List<Named> predictOrbit(@Body TlePropagationRequest request, CamelContext context) throws OrekitException {
+	public List<DataSet> predictOrbit(@Body TlePropagationRequest request, CamelContext context) throws OrekitException {
 
 		/** Create the TLE element 
 		 * */
@@ -60,8 +62,14 @@ public class TleOrbitalPredictor {
 			parameters = getTleParameters(request.getSatellite(), context);
 		}
 
-		List<Named> results = null;
-		
+		List<DataSet> results = null;
+
+		/** Set the unique generationtime and the datasetidentifier for all generated objects from this 'session'. 
+		 * The dataset identifier is the same as the TLE. This allos the values generated as a result of the TLE
+		 * to be traced. */
+		long generationtime = parameters.getTimestamp();
+		String datasetidentifier = parameters.getDatasetidentifier();
+
 		/** If no TLE found, then we cant propagate.*/
 		if (parameters == null) {
 			LOG.error("Request holds no TLE object and Failed to find TLE in archive for satellite '" + request.getSatellite() + "'");
@@ -77,24 +85,16 @@ public class TleOrbitalPredictor {
 			PVCoordinates initialOrbitalState = TLEPropagator.selectExtrapolator(tle).getPVCoordinates(startDate);
 
 			/** Calculate the orbital states and the contact events from the initial time forwards */
-			results = keplianOrbitPredictor.predictOrbit(locations, initialOrbitalState, request.getStartTime(), request.getSatellite(), request.getStepSize(), request.getDeltaPropagation(), request.getContactDataStepSize());
+			results = keplianOrbitPredictor.predictOrbit(locations, initialOrbitalState, request.getStartTime(), request.getSatellite(), request.getStepSize(), request.getDeltaPropagation(), request.getContactDataStepSize(), generationtime, datasetidentifier);
 
-			/** Set the unique generationtime and datasetidentifier for all generated objects from this 'session'. */
-			long generationtime = (new Date()).getTime();
-			String datasetidentifier = request.getDatasetidentifier();
-			for (Named entry : results) {
-				entry.setDatasetidentifier(datasetidentifier);
-				((IGenerationTimestamped) entry).setGenerationTime(generationtime);
-			}			
-
-			/** Check how to deliver the data */
-			if (request.getArguments().containsKey("stream")) {
-				ProducerTemplate producer = context.createProducerTemplate();
-				for (Named entry : results) {
-					producer.sendBody("direct:navigationinjection", entry);
-				}			
+			/** Deliver the data as a DataSet. */
+			ProducerTemplate producer = context.createProducerTemplate();
+			for (DataSet set : results) {
+				producer.sendBody("direct:navigationinjection", set);
 			}
 		}
+
+		/** Return the data. */
 		return results;
 	}
 
@@ -124,10 +124,6 @@ public class TleOrbitalPredictor {
 		List<Location> locations = (List<Location>) arg1.getOut().getBody();
 
 		return locations;
-	}
-
-	public KeplianOrbitPredictor getKeplianOrbitPredictor() {
-		return keplianOrbitPredictor;
 	}
 
 	public void setKeplianOrbitPredictor(KeplianOrbitPredictor keplianOrbitPredictor) {

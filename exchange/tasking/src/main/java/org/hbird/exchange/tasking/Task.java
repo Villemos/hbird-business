@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hbird.exchange.core.Named;
-import org.hbird.exchange.core.Scheduled;
+import org.hbird.exchange.core.IScheduled;
 
 
 
@@ -29,7 +29,7 @@ import org.hbird.exchange.core.Scheduled;
 /**
  * An abstract implementation of a task. Contains only the execution time.
  */
-public abstract class Task extends Named implements Scheduled {
+public abstract class Task extends Named implements IScheduled {
 
 	/** The unique UID */
 	private static final long serialVersionUID = 6287812296391672915L;
@@ -114,6 +114,11 @@ public abstract class Task extends Named implements Scheduled {
 		long delay = executionTime - now.getTime();
 		return delay <= 0 ? 0 : delay;
 	}
+	
+	public long getDeliveryTime() {
+		return executionTime;
+	}
+	
 
 	public long getCount() {
 		return count;

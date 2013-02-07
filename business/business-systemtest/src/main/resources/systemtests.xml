@@ -40,6 +40,8 @@
 	<bean id="test5" class="org.hbird.business.systemtest.TaskingTester" parent="testerTemplate"/>
 	<bean id="test6" class="org.hbird.business.systemtest.CommandingTester" parent="testerTemplate"/>
 	<bean id="test7" class="org.hbird.business.systemtest.NavigationTester" parent="testerTemplate"/>
+	<bean id="test8" class="org.hbird.business.systemtest.QueueManagerTester" parent="testerTemplate"/>
+	<bean id="dataaccessapi" class="org.hbird.business.systemtest.DataAccessApiTester" parent="testerTemplate"/>
 	<bean id="finisher" class="org.hbird.business.systemtest.Finisher" parent="testerTemplate"/>
 						
 	<bean id="scheduler" class="org.hbird.business.core.Scheduler"/>
@@ -48,14 +50,16 @@
 
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
-				<to uri="bean:test0" />
-				<to uri="bean:test1" />
-				<to uri="bean:test2" />
-				<to uri="bean:test3" />
-				<to uri="bean:test4" />
-		 		<to uri="bean:test5" />
-	 			<to uri="bean:test6" />
-	 			<to uri="bean:test7" />
+<!-- 				<to uri="bean:test0" /> -->
+<!-- 				<to uri="bean:test1" /> -->
+<!-- 				<to uri="bean:test2" /> -->
+<!-- 				<to uri="bean:test3" /> -->
+<!-- 				<to uri="bean:test4" /> -->
+<!-- 		 		<to uri="bean:test5" /> -->
+<!-- 	 			<to uri="bean:test6" /> -->
+<!-- 	 			<to uri="bean:test7" /> -->
+<!-- 	 			<to uri="bean:test8" /> -->
+	 			<to uri="bean:dataaccessapi" />
 	 			<to uri="bean:finisher" />
 		</route>
 
@@ -79,6 +83,20 @@
 	      			<setHeader headerName="destination"><simple>${in.body.destination}</simple></setHeader>
 	            </when>	            
 	        </choice>
+
+			<choice>
+				<when>
+		            <simple>${in.body} is 'org.hbird.exchange.core.ILocationSpecific'</simple>
+		            <setHeader headerName="location"><simple>${in.body.location}</simple></setHeader>
+				</when>
+			</choice>
+
+			<choice>
+				<when>
+		            <simple>${in.body} is 'org.hbird.exchange.core.ISatelliteSpecific'</simple>
+		            <setHeader headerName="satellite"><simple>${in.body.satellite}</simple></setHeader>
+				</when>
+			</choice>
 	        
 			<choice>
 	            <when>
@@ -135,7 +153,7 @@
 		</route>
 
 		<route id="orbital">
-			<from uri="activemq:topic:hbird.monitoring?selector=type='ContactData' OR type='OrbitalState' OR type='LocationContactEvent'" />
+			<from uri="activemq:topic:hbird.monitoring?selector=type='ContactData' OR type='OrbitalStates'" />
 			<to uri="bean:orbital.listener" />
 		</route>
 

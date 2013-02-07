@@ -41,5 +41,7 @@ public class SystemMonitorComponentBuilder extends ComponentBuilder {
 
 		ProcessorDefinition<?> route = from("seda:out");
 		addInjectionRoute(route);
+		
+		addCommandHandler();
 	}
 }

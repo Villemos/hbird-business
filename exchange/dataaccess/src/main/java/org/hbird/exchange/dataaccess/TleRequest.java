@@ -17,7 +17,6 @@
 package org.hbird.exchange.dataaccess;
 
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 public class TleRequest extends DataRequest {
 
@@ -25,12 +24,6 @@ public class TleRequest extends DataRequest {
 
 	{
 		arguments.put("satellite", new CommandArgument("satellite", "The name of the satellite for which to retrieve the states.", "String", "", null, true));
-		arguments.put("from", new CommandArgument("from", "The start of a range search on timestamp. Default to '*'.", "Long", "Seconds", null, false));
-		arguments.put("to", new CommandArgument("to", "The end of a range search on timestamp. Default to '*'.", "Long", "Seconds", null, false));
-		arguments.put("sortorder", new CommandArgument("sortorder", "The order in which the returned data should be returned.", "String", "", "ASC", false));
-		arguments.put("sort", new CommandArgument("sort", "The sort field. Default is timestamp.", "String", "", "timestamp", false));
-		arguments.put("rows", new CommandArgument("rows", "The number of entries to retrieve. If set to 1 at from and to is empty, then the last available entry is retrieved.", "Long", "", 1l, false));
-		arguments.put("type", new CommandArgument("type", "", "String", "", TleOrbitalParameters.class.getSimpleName(), true));
 	}
 
 	public TleRequest(String issuedBy, String satellite) {

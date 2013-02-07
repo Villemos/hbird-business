@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.hbird.exchange.configurator.StartCommandComponent;
 import org.hbird.exchange.configurator.StartArchiveComponent;
 import org.hbird.exchange.configurator.StartNavigationComponent;
+import org.hbird.exchange.configurator.StartQueueManagerComponent;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
 
@@ -30,6 +31,8 @@ public abstract class SystemTest {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(SystemTest.class);
 
+	protected boolean exitOnFailure = true;
+	
 	@Produce(uri = "direct:injection")
 	protected ProducerTemplate injection;
 
@@ -54,12 +57,18 @@ public abstract class SystemTest {
 	protected void azzert(boolean assertion) {
 		if (assertion == false) {
 			LOG.error("FAILED.");
+			if (exitOnFailure) {
+				System.exit(1);
+			}
 		}
 	}
 
 	protected void azzert(boolean assertion, String message) {
 		if (assertion == false) {
 			LOG.error("SYSTEM TEST: " + message + " (FAILED)");
+			if (exitOnFailure) {
+				System.exit(1);
+			}
 		}
 		else {
 			LOG.info("SYSTEM TEST: " + message + " (OK)");
@@ -138,6 +147,18 @@ public abstract class SystemTest {
 		}
 	}
 
+	protected static boolean queueManagerStarted = false;
+	public void startQueueManager() throws InterruptedException {
+
+		if (queueManagerStarted == false) {
+			LOG.info("Issuing command for start of a queue manager.");
+
+			/** Create command component. */
+			injection.sendBody(new StartQueueManagerComponent("CommandingQueueManager"));
+			queueManagerStarted = true;
+		}
+	}
+	
 	public Listener getBusinessCardListener() {
 		return businessCardListener;
 	}

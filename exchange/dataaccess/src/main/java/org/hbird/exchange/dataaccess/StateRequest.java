@@ -35,6 +35,16 @@ public class StateRequest extends DataRequest {
 		setIsInitialization(true);
 	}	
 
+	public StateRequest(String issuedBy, String isStateOf, long from, long to) {
+		super(issuedBy, "any", "StateRequest", "A request for the state(s) of a Named object");
+
+		setClass(State.class.getSimpleName());
+		addArgument("isStateOf", isStateOf);
+		setFrom(from);
+		setTo(to);
+		setIsInitialization(true);
+	}	
+
 	public StateRequest(String issuedBy, String isStateOf, List<String> names) {
 		super(issuedBy, "any", "StateRequest", "A request for the state(s) of a Named object");
 

@@ -16,13 +16,14 @@
  */
 package org.hbird.exchange.navigation;
 
+import org.hbird.exchange.core.ISatelliteSpecific;
 import org.hbird.exchange.core.Named;
 
 /**
  * Class representing a satellite. 
  *
  */
-public class Satellite extends Named {
+public class Satellite extends Named implements ISatelliteSpecific {
 
 	/** The unique UUID. */
 	private static final long serialVersionUID = 6169559659135516782L;
@@ -58,6 +59,12 @@ public class Satellite extends Named {
 	public void setSatelliteNumber(String satelliteNumber) {
 		this.satelliteNumber = satelliteNumber;
 	}
-	
-	
+
+	public String getSatellite() {
+		return name;
+	}
+
+	public void setSatellite(String satellite) {
+		this.name = satellite;
+	}
 }

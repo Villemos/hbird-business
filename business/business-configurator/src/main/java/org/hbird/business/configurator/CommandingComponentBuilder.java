@@ -57,5 +57,7 @@ public class CommandingComponentBuilder extends ComponentBuilder {
 		route = from("seda:taskExtractor")
 				.split().method(splitter);	
 		addInjectionRoute(route);
+		
+		addCommandHandler();
 	}
 }

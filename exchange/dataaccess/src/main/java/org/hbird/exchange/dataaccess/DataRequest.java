@@ -33,9 +33,10 @@ public class DataRequest extends Command {
 		arguments.put("to", new CommandArgument("to", "The end of a range search on timestamp. Default to '*'.", "Long", "Seconds", null, false));
 		arguments.put("isStateOf", new CommandArgument("isStateOf", "Name of the object which this is the state of.", "String", "", null, false));
 		arguments.put("names", new CommandArgument("names", "List of names of named objects to be retrieved.", "String", "", null, false));
+		arguments.put("includeStates", new CommandArgument("getStates", "Flag defining that all states applicable to the named objects should also be retrieved", "Boolean", "", false, true));		
 		arguments.put("sortorder", new CommandArgument("sortorder", "The order in which the returned data should be returned.", "String", "", "ASC", true));
 		arguments.put("sort", new CommandArgument("sort", "The sort field. Default is timestamp.", "String", "", "timestamp", true));
-		arguments.put("rows", new CommandArgument("rows", "The maximum number of rows to be retrieved.", "Long", "", 1000, true));
+		arguments.put("rows", new CommandArgument("rows", "The maximum number of rows to be retrieved.", "Integer", "", 1000, true));
 		arguments.put("initialization", new CommandArgument("initialization", "If set to true, then the value below the 'to' time of each named object matching the search criterions will be retrieved.", "Boolean", "", false, true));
 	}
 	
@@ -47,7 +48,7 @@ public class DataRequest extends Command {
 		super(issuedBy, destination, name, description);
 	}
 
-	public void setRows(long rows) {
+	public void setRows(int rows) {
 		addArgument("rows", rows);
 	}
 
@@ -59,12 +60,16 @@ public class DataRequest extends Command {
 		addArgument("class", clazz);
 	}
 
-	public void setFrom(long from) {
-		addArgument("from", from);
+	public void setFrom(Long from) {
+		if (from != null) {
+			addArgument("from", from);
+		}
 	}
 
-	public void setTo(long to) {
-		addArgument("to", to);
+	public void setTo(Long to) {
+		if (to != null) {
+			addArgument("to", to);
+		}
 	}
 
 	public void setIsStateOf(String isStateOf) {
@@ -75,11 +80,18 @@ public class DataRequest extends Command {
 		addArgument("initialization", isInitialization);
 	}
 
+	public void addName(List<String> names) {
+		for (String name : names) {
+			addName(name);
+		}
+	}
+
 	public void addName(String name) {
 		if (name != null) {
 			if (arguments.get("names").value == null) {
 				arguments.get("names").value = new ArrayList<String>();
 			}
+			
 			((List<String>)arguments.get("names").value).add(name);
 		}
 	}
@@ -104,4 +116,24 @@ public class DataRequest extends Command {
 		addName(state);
 		setIsStateOf(isStateOf);
 	}	
+	
+	public void setIncludeStates(boolean includeStates) {
+		addArgument("includeStates", includeStates);
+	}
+
+	public boolean shallIncludeStates() {
+		return (Boolean) getArgument("includeStates");
+	}
+
+	public Integer getRows() {
+		return (Integer) getArgument("rows");
+	}
+
+	public Long getFrom() {
+		return (Long) getArgument("from");
+	}
+
+	public Long getTo() {
+		return (Long) getArgument("to");
+	}
 }

@@ -35,9 +35,13 @@
     <module>business-solr</module>
     
     <module>business-configurator</module>
-    <module>business-systemtest</module>
+<!--     <module>business-systemtest</module> -->
 
+    <module>business-queuemanagement</module>
+    <module>business-antennacontrol</module>
+    
     <module>all-business</module>
+    <module>business-api</module>
   </modules>
 
   <groupId>org.hbird.business</groupId>

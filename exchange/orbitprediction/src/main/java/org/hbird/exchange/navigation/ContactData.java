@@ -46,8 +46,8 @@ public class ContactData extends Named implements IGenerationTimestamped, ISatel
 	/** The other object. */
 	protected String location;
 	
-	public ContactData(String issuedBy, String name, String type, String description, long timestamp, long generationTime, Double azimuth, Double elevation, Double doppler, Double dopplerShift, String satellite, String location) {
-		super(issuedBy, name, "ContactData", description, timestamp);
+	public ContactData(String issuedBy, String name, String type, String description, long timestamp, long generationTime, String datasetIdentifier, Double azimuth, Double elevation, Double doppler, Double dopplerShift, String satellite, String location) {
+		super(issuedBy, name, "ContactData", description, timestamp, datasetIdentifier);
 
 		this.azimuth = azimuth;
 		this.elevation = elevation;

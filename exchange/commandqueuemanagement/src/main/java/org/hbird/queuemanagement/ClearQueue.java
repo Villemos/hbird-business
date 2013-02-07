@@ -16,17 +16,28 @@
  */
 package org.hbird.queuemanagement;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.CommandArgument;
 
-public class ClearQueue extends Named {
+public class ClearQueue extends Command {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3732291717349663737L;
 
 	{
-		this.name = "ClearQueue";
-		this.description = "Request to clear the queue.";
+		arguments.put("queuename", new CommandArgument("queuename", "The name of the queue to be displayed.", "String (ID)", "", "hbird.requests", true));
+	}
+
+	public ClearQueue(String issuedBy, String destination, String queuename) {
+		super(issuedBy, destination, "ClearQueue", "Command to clear the queue.");
+		
+		setQueueName(queuename);
+	}	
+	
+	public String getQueueName() {
+		return (String) arguments.get("queuename").value;
+	}
+	
+	public void setQueueName(String queuename) {
+		arguments.get("queuename").value = queuename;
 	}
 }

@@ -16,7 +16,9 @@
  */
 package org.hbird.exchange.core;
 
-public interface Scheduled {
+public interface IScheduled {
 
 	public long getDelay();
+
+	public long getDeliveryTime();
 }

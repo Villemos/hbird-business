@@ -62,12 +62,11 @@ public abstract class ComponentBuilder extends RouteBuilder {
 
 		/** Setup the component specific services. */
 		doConfigure();
-		addCommandHandler();
 		
 		/** Setup the BusinessCard*/
-		BusinessCard card = new BusinessCard(getComponentName(), command.getHeartbeat(), commands);
-		ProcessorDefinition<?> route = from("timer:businessCard_" + getComponentName() + "?period=" + command.getHeartbeat()).bean(card);
-		addInjectionRoute(route);
+		//BusinessCard card = new BusinessCard(getComponentName(), command.getHeartbeat(), commands);
+		//ProcessorDefinition<?> route = from("timer:businessCard_" + getComponentName() + "?period=" + command.getHeartbeat()).bean(card);
+		//addInjectionRoute(route);
 	}
 
 	protected void addCommandHandler() {

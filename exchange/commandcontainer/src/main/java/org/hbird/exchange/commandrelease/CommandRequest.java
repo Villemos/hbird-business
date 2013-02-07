@@ -17,20 +17,23 @@
 package org.hbird.exchange.commandrelease;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.core.IScheduled;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.tasking.Task;
 
-public class CommandRequest extends Named {
+public class CommandRequest extends Named implements IScheduled {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5923007317348738778L;
+
+	/** The time at which the command should be released. Releasing the command means first verifying the lock 
+	 * states, then scheduling the tasks and finally releasing the command itself. A value of 0 indicates immediate. */
+	protected long releaseTime = 0;	
 
 	/** The raw command. */
 	protected Command command = null;
@@ -52,7 +55,7 @@ public class CommandRequest extends Named {
 	 * @param arguments The arguments of the command.
 	 * @param lockStates The states of the command which must be true upon release.
 	 * @param tasks The tasks to be performed as part of the command validation.
-	 * @param releaseTime The time at which the command should be released by the MCS for transfer to the satellite.
+	 * @param transferTime The time at which the command should be released by the MCS for transfer to the satellite.
 	 * @param executionTime The time at which the command should be executed onboard.
 	 */
 	public CommandRequest(String issuedBy, String name, String description, List<String> lockStates, List<Task> tasks, Command command) {
@@ -62,7 +65,15 @@ public class CommandRequest extends Named {
 		this.tasks = tasks;
 	}
 	
-	
+
+	public CommandRequest(String issuedBy, String name, String description, List<String> lockStates, List<Task> tasks, Command command, long releaseTime) {
+		super(issuedBy, "CommandContainer" + name, "CommandContainer", "Command container holding lock states and tasks for the command '" + name + "'.");
+		this.command = command;
+		this.lockStates = lockStates;
+		this.tasks = tasks;
+		this.releaseTime = releaseTime;
+	}
+
 	/**
 	 * Method to get the list of arguments of the command.
 	 * 
@@ -88,5 +99,14 @@ public class CommandRequest extends Named {
 
 	public List<String> getLockStates() {
 		return lockStates;
+	}
+
+	public long getDelay() {
+		Date now = new Date();
+		return now.getTime() < releaseTime ? now.getTime() - releaseTime : 0;
+	}
+
+	public long getDeliveryTime() {
+		return releaseTime;
 	}	
 }

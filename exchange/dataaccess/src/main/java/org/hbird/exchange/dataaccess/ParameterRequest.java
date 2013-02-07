@@ -32,7 +32,6 @@ public class ParameterRequest extends DataRequest {
 
 		setClass(Parameter.class.getSimpleName());
 		addName(parameter);
-
 		addArgument("sort", "timestamp");
 		addArgument("sortorder", "DESC");
 		addArgument("rows", rows);
@@ -42,36 +41,45 @@ public class ParameterRequest extends DataRequest {
 		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
 
 		setClass(Parameter.class.getSimpleName());
-
 		addName(parameter);
+		setFrom(from);
+		setTo(to);
+	}
 
-		if (from != null) {
-			setFrom(from);
-		}
-		if (to != null) { 
-			setTo(to);
-		}
+	public ParameterRequest(String parameter, Long from, Long to, int rows) {
+		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
 
-		addArgument("sort", "timestamp");
-		addArgument("sortorder", "ASC");
+		setClass(Parameter.class.getSimpleName());
+		addName(parameter);
+		setFrom(from);
+		setTo(to);
+		addArgument("rows", rows);
+	}
+
+	public ParameterRequest(List<String> parameters, int rows) {
+		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
+
+		setClass(Parameter.class.getSimpleName());
+		addName(parameters);
+		addArgument("rows", rows);
 	}
 
 	public ParameterRequest(List<String> parameters, Long from, Long to) {
 		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
 
 		setClass(Parameter.class.getSimpleName());
-		for (String parameter : parameters) {
-			addName(parameter);
-		}
-		
-		if (from != null) {
-			setFrom(from);
-		}
-		if (to != null) { 
-			setTo(to);
-		}
+		addName(parameters);
+		setFrom(from);
+		setTo(to);
+	}
 
-		addArgument("sort", "timestamp");
-		addArgument("sortorder", "ASC");
+	public ParameterRequest(List<String> parameters, Long from, Long to, int rows) {
+		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
+
+		setClass(Parameter.class.getSimpleName());
+		addName(parameters);
+		setFrom(from);
+		setTo(to);
+		addArgument("rows", rows);
 	}
 }

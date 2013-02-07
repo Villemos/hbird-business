@@ -20,12 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.camel.Body;
-import org.apache.camel.Handler;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.navigation.Location;
-import org.hbird.exchange.navigation.OrbitPredictionRequest;
-import org.hbird.exchange.navigation.OrbitalState;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
 import org.orekit.frames.TopocentricFrame;
@@ -52,35 +48,9 @@ import org.orekit.utils.PVCoordinates;
  */
 public class KeplianOrbitPredictor {
 
-	public String name = "OrbitPredictor";
+	public List<DataSet> predictOrbit(List<Location> locations, PVCoordinates pvCoordinates, long startTime, String satellite, double stepSize, double deltaPropagation, long contactDataStepSize, long generationTime, String datasetIdentifier) throws OrekitException {
 
-	protected List<Named> results = new ArrayList<Named>();
-	
-	/** The exchange must contain a OrbitalState object as the in-body. 
-	 * @throws OrekitException */
-	
-	@Handler
-	public List<Named> predictOrbit(@Body OrbitPredictionRequest request) throws OrekitException {
-
-		OrbitalState initialState = null;
-
-		if (request.getArguments().containsKey("initialstate") == false) {
-			initialState = retrieveLatestOrbitalState(request.getArguments().get("satellite"));
-		}
-		else {
-			initialState = (OrbitalState) request.getArgument("initialstate");
-		}
-
-		List<Location> locations = getLocations((List<String>) request.getArguments().get("locations"));
-
-		long contactDataStepSize = (Long) request.getArgument("contactDataStepSize");
-
-		return predictOrbit(locations, null, request.getStarttime(), request.getSatellite(), request.getStepSize(), request.getDeltaPropagation(), contactDataStepSize);
-	}
-	
-	public List<Named> predictOrbit(List<Location> locations, PVCoordinates pvCoordinates, long startTime, String satellite, double stepSize, double deltaPropagation, long contactDataStepSize) throws OrekitException {
-
-		results.clear();
+		List<DataSet> results = new ArrayList<DataSet>();
 		
 		AbsoluteDate initialDate = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());
 
@@ -89,8 +59,7 @@ public class KeplianOrbitPredictor {
 
 		Propagator propagator = new KeplerianPropagator(initialOrbit);
 
-		OrbitalStateInjector injector = new OrbitalStateInjector(this, "OrbitalState", "The orbital state of a satellite at a point in time.", satellite, locations, stepSize, contactDataStepSize);
-		injector.setDatasetidentifier(satellite + "/" + (new Date()).toGMTString());			
+		OrbitalStateCollector injector = new OrbitalStateCollector(satellite, generationTime, datasetIdentifier);
 
 		/** Register the visibility events for the requested locations. */
 		for (Location location : locations) {
@@ -98,36 +67,21 @@ public class KeplianOrbitPredictor {
 			TopocentricFrame sta1Frame = new TopocentricFrame(Constants.earth, point, location.getName());
 
 			/** Register the injector that will send the detected events, for this location, to the propagator. */
-			EventDetector sta1Visi = new LocationContactEventInjector(location.getThresholdElevation(), sta1Frame, satellite, location.getName(), this, injector);
+			EventDetector sta1Visi = new LocationContactEventCollector(location.getThresholdElevation(), sta1Frame, satellite, location, contactDataStepSize, generationTime, datasetIdentifier);
 			propagator.addEventDetector(sta1Visi);				
 		}
 
 		propagator.setMasterMode(stepSize, injector);			
 		propagator.propagate(new AbsoluteDate(initialDate, deltaPropagation));
 
+		/** Add the data set with the orbital data. */
+		results.add(injector.getDataSet());
+		
+		/** Add all the data sets with contact data. */
+		for (EventDetector detector : propagator.getEventsDetectors()) {
+			results.addAll( ((LocationContactEventCollector) detector).getDatasets() );
+		}
+		
 		return results;
 	}
-
-	private OrbitalState retrieveLatestOrbitalState(Object object) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	private List<Location> getLocations(List<String> list) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void addResult(Named result) {
-		results.add(result);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}	
 }

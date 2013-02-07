@@ -34,5 +34,7 @@ public class TaskExecutorComponentBuilder extends ComponentBuilder {
 		String componentname = (String) command.getArgument("componentname");
 		ProcessorDefinition<?> route = from(StandardEndpoints.tasks).split().method(new TaskExecutor(componentname), "receive");
 		addInjectionRoute(route);
+		
+		addCommandHandler();
 	}
 }
