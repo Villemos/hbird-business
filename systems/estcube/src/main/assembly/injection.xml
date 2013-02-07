@@ -37,18 +37,18 @@
 			<choice>
 	            <when>
 	                <simple>${in.body} is 'org.hbird.exchange.tasking.Task'</simple>
-	      			<to uri="activemq:queue:tasks"/>
+	      			<to uri="activemq:queue:hbird.tasks"/>
 	            </when>
 	            <when>
 	                <simple>${in.body} is 'org.hbird.exchange.core.Command'</simple>
-	      			<to uri="activemq:topic:commands"/>
+	      			<to uri="activemq:topic:hbird.commands"/>
 	            </when>	            
 	            <when>
 	                <simple>${in.body} is 'org.hbird.exchange.commandrelease.CommandRequest'</simple>
-	      			<to uri="activemq:queue:scheduledCommandRequests"/>
+	      			<to uri="activemq:queue:hbird.scheduledCommandRequests"/>
 	            </when>
 	            <otherwise>
-	            	<to uri="activemq:topic:monitoring"/>
+	            	<to uri="activemq:topic:hbird.monitoring"/>
 	            </otherwise>
 	        </choice>
 		</route>

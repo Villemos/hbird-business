@@ -34,16 +34,6 @@
 
 	<repositories>
 
-		<!-- Repository for the dependencies on other iSpace components. -->
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>villemos</id>
-			<name>villemos</name>
-			<url>http://www.villemos.com:8080/artifactory/repo/</url>
-		</repository>
-
 		<!-- Repository dependency for Jxl. -->
 		<repository>
 			<snapshots>
@@ -67,20 +57,11 @@
 
 	</repositories>
 
-	<distributionManagement>
-		<repository>
-			<id>hbird.repository</id>
-			<name>Hummingbird Exchange and Business Tier releases</name>
-			<url>http://www.villemos.com:8080/artifactory/libs-release-local</url>
-		</repository>
-		<snapshotRepository>
-			<id>hbird.repository</id>
-			<name>Hummingbird Exchange and Business Tier  snapshots</name>
-			<url>http://www.villemos.com:8080/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
-	</distributionManagement>
-
+    <!--  Properties can be overridden in ~/.m2/settings.xml to configure environment specific values. -->
 	<properties>
+        <distribution.url.snapshots>http://www.villemos.com:8080/artifactory/libs-snapshot-local</distribution.url.snapshots>
+        <distribution.url.releases>http://www.villemos.com:8080/artifactory/libs-release-local</distribution.url.releases>
+        <version.java>1.6</version.java> <!-- Not using java.version here; it will override system property java.version referencing running JVM version. -->
 		<rxtx.version>2.1.7</rxtx.version>
 		<log4j.version>1.2.17</log4j.version>
 		<spring.version>3.0.7.RELEASE</spring.version>
@@ -99,9 +80,21 @@
 		<surefire-plugin.version>2.7.1</surefire-plugin.version>
 		<commons-io.version>2.0.1</commons-io.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
-<!-- 		<solrj.version>1.4.0</solrj.version> -->
 		<solrj.version>3.5.0</solrj.version>
 	</properties>
+
+    <distributionManagement>
+        <repository>
+            <id>hbird.repository</id>
+            <name>Hummingbird Exchange and Business Tier releases</name>
+            <url>${distribution.url.releases}</url>
+        </repository>
+        <snapshotRepository>
+            <id>hbird.repository</id>
+            <name>Hummingbird Exchange and Business Tier snapshots</name>
+            <url>${distribution.url.snapshots}</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 	<scm>
 		<connection>scm:git:git@github.com:Villemos/hbird-business.git</connection>
@@ -162,7 +155,7 @@
 		</dependency>
 
 		<!-- For creating OSGi bundles -->
-		<!-- COMMENT: The bundle version is very old. Camel uses 4.1.0 and I some 
+		<!-- COMMENT: The bundle version is very old. Camel uses 4.1.0 and I some
 			problems due to this. -->
 		<!-- <dependency> -->
 		<!-- <groupId>org.apache.felix</groupId> -->
@@ -363,7 +356,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
 				<configuration>
-					<target>1.6</target>
+					<target>${version.java}</target>
 				</configuration>
 			</plugin>
 

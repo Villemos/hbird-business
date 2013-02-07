@@ -97,18 +97,18 @@ public class OrbitSimulator {
 		OrbitPredictionRequest request = new OrbitPredictionRequest(issuedBy, "", "Measured Orbital State", "A simulated orbit.", satellite, initialState, locations);
 
 		KeplianOrbitPredictor orbitPredictor = new KeplianOrbitPredictor();
-		try {
-			/** The results will contain Orbital States as well as orbital events. Only take the states. 
-			 * 
-			 * TODO Update to also allow the simulator to issue the other events. */
-			orbitalstates = new ArrayList<OrbitalState>();
-			for (Object obj : orbitPredictor.predictOrbit(request)) {
-				if (obj instanceof OrbitalState) {
-					orbitalstates.add((OrbitalState) obj);
-				}
-			}
-		} catch (OrekitException e) {
-			e.printStackTrace();
-		}	
+//		try {
+//			/** The results will contain Orbital States as well as orbital events. Only take the states. 
+//			 * 
+//			 * TODO Update to also allow the simulator to issue the other events. */
+////			orbitalstates = new ArrayList<OrbitalState>();
+////			for (Object obj : orbitPredictor.predictOrbit(request)) {
+////				if (obj instanceof OrbitalState) {
+////					orbitalstates.add((OrbitalState) obj);
+////				}
+////			}
+//		} catch (OrekitException e) {
+//			e.printStackTrace();
+//		}	
 	}
 }
