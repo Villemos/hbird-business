@@ -16,6 +16,7 @@
  */
 package org.hbird.business.validation.limits;
 
+import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.validation.Limit;
 
 /**
@@ -30,7 +31,7 @@ public class LowerLimitChecker extends BaseLimitChecker {
 	/* (non-Javadoc)
 	 * @see org.hbird.validation.parameter.BaseLimit#checkLimit()
 	 */
-	protected boolean checkLimit() {
-		return lastValue.compareTo(limit) >= 0;
+	protected boolean checkLimit(Parameter parameter) {
+		return parameter.compareTo(limit) >= 0;
 	}	
 }

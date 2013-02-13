@@ -16,20 +16,39 @@
  */
 package org.hbird.business.validation.limits;
 
+import org.hbird.business.api.DataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.validation.Limit;
 
-/** A check that validates the parameter against a static, preconfigured, value. */
-public class StaticLimitChecker extends BaseLimitChecker {
+/**
+ * A differential limit is a limit that checks whether a change to a parameter, whether
+ * positive or negative, is not larger than a given delta. Each change can only be
+ * of a given size. 
+ * 
+ * Notice that over multiple updates, the parameter may change its value beyond the
+ * differential limit. In the sum the changes are larger, but each step is lower.
+ * 
+ * @author Gert Villemos
+ */
+public class DifferentialLimitChecker extends BaseLimitChecker {
 
-	public StaticLimitChecker(Limit limit) {
+	/**
+	 * Constructor
+	 * 
+	 * @param limit The definition of the limit.
+	 */
+	public DifferentialLimitChecker(Limit limit) {
 		super(limit);
+		
+		/** Get the current value. */
+		IDataAccess api = new DataAccess("");
+		lastValue = api.getParameter(limit.limitOfParameter);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.hbird.validation.parameter.BaseLimit#checkLimit()
-	 */
+	@Override
 	protected boolean checkLimit(Parameter parameter) {
-		return parameter.compareTo(limit) == 0;
-	}	
+		/** Calculate difference between lastValue and parameter. */
+		return Math.abs(lastValue.getValue().doubleValue() - parameter.getValue().doubleValue()) < limit.getValue().doubleValue();
+	}
 }

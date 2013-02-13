@@ -70,8 +70,9 @@ public abstract class BaseLimitChecker {
 	 */
 	public State processParameter(@Body Parameter newParameter) {
 		logger.debug("Limit state '" + limit.getName() + "' received parameter value for validation.");
+		State state = doProcess(newParameter);
 		lastValue = newParameter;
-		return doProcess(newParameter);
+		return state;
 	}
 
 	/**
@@ -118,7 +119,7 @@ public abstract class BaseLimitChecker {
 		State state = null;
 
 		if (isEnabled() == true && isReady()) {
-			state = new State("LimitChecker", limit.getName(), limit.getDescription(), parameter.getName(), checkLimit());
+			state = new State("LimitChecker", limit.getName(), limit.getDescription(), parameter.getName(), checkLimit(parameter));
 		}
 		
 		return state;
@@ -166,5 +167,5 @@ public abstract class BaseLimitChecker {
 	 * @return boolean which is true if the parameter is within the limit, else false.
 	 * @throws NotComparableTypeException
 	 */
-	protected abstract boolean checkLimit();
+	protected abstract boolean checkLimit(Parameter parameter);
 }
