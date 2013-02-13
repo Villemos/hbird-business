@@ -61,7 +61,7 @@ public class OrbitSimulator {
 		D3Vector velocity = new D3Vector("", "Initial Velocity", "Velocity", "Initial velocity of ESTcube", 505.8479685, 942.7809215, 7435.922231);
 		D3Vector momentum = new D3Vector("", "Initial Velocity", "Velocity", "Initial velocity of ESTcube", 100., 100., 100.);
 		
-		initialState = new OrbitalState("Simulator", "Measured Orbital State", "Initial state", (new Date()).getTime(), (new Date()).getTime(), "Test Data", satellite, position, velocity, momentum);
+		initialState = new OrbitalState("Simulator", "Measured Orbital State", "Initial state", (new Date()).getTime(), (new Date()).getTime(), "Test Data", satellite, position, velocity, momentum, "", 0, "");
 	}
 
 	public OrbitSimulator(String issuedBy, String type, String satellite, List<String> locations, OrbitalState initialState) {

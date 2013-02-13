@@ -18,6 +18,7 @@ package org.hbird.business.configurator;
 
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.validation.limits.BaseLimitChecker;
+import org.hbird.business.validation.limits.DifferentialLimitChecker;
 import org.hbird.business.validation.limits.LowerLimitChecker;
 import org.hbird.business.validation.limits.StaticLimitChecker;
 import org.hbird.business.validation.limits.UpperLimitChecker;
@@ -56,6 +57,9 @@ public class LimitCheckComponentBuilder extends ComponentBuilder {
 		}
 		else if (limit.type == eLimitType.Static) {
 			createRoute(limit.limitOfParameter, new StaticLimitChecker(limit), componentname, limitValueParameterName);			
+		}
+		else if (limit.type == eLimitType.Differential) {
+			createRoute(limit.limitOfParameter, new DifferentialLimitChecker(limit), componentname, limitValueParameterName);			
 		}
 		
 		addCommandHandler();

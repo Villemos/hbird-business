@@ -58,8 +58,8 @@ public class Publish extends HbirdApi implements IPublish {
 		template.sendBody(inject, new Satellite(issuedBy, name, description));
 	}
 
-	public void publishMeasuredOrbitalState(String name, String description, long timestamp, long generationTime, String satellite, double px, double py, double pz, double vx, double vy, double vz, double mx, double my, double mz) {
-		template.sendBody(inject, new OrbitalState(issuedBy, name, description, timestamp, generationTime, satellite, new D3Vector(issuedBy, "position", "", "", px, py, pz), new D3Vector(issuedBy, "velocity", "", "", vx, vy, vz), new D3Vector(issuedBy, "momentum", "", "", mx, my, mz)));
+	public void publishMeasuredOrbitalState(String name, String description, long timestamp, long generationTime, String satellite, double px, double py, double pz, double vx, double vy, double vz, double mx, double my, double mz, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+		template.sendBody(inject, new OrbitalState(issuedBy, name, description, timestamp, generationTime, satellite, new D3Vector(issuedBy, "position", "", "", px, py, pz), new D3Vector(issuedBy, "velocity", "", "", vx, vy, vz), new D3Vector(issuedBy, "momentum", "", "", mx, my, mz), derivedFromName, derivedFromTimestamp, derivedFromType));
 	}
 		
 	public void publishLabel(String name, String type, String description, String value) {

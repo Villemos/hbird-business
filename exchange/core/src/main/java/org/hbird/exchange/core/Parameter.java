@@ -174,7 +174,7 @@ public class Parameter extends Named implements Comparable<Parameter> {
             throw new RuntimeException("Ooopps!");
         }
 	}
-	
+
 	public String prettyPrint() {
 		return "Parameter {name=" + name + ", value=" + value.toString() + ", timestamp=" + timestamp + "}";
 	}

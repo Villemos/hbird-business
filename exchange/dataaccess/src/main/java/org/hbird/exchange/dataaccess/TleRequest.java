@@ -33,6 +33,17 @@ public class TleRequest extends DataRequest {
 		addArgument("sort", "timestamp");
 		addArgument("sortorder", "DESC");
 		addArgument("rows", 1);
+		addArgument("type", "TleOrbitalParameters");
+		setIsInitialization(true);
+	}
+
+	public TleRequest(String issuedBy, String satellite, long from, long to) {
+		super(issuedBy, "Archive", "TleRequest", "A request for the TLE parameters of a satellite.");
+
+		setSatellite(satellite);
+		addArgument("from", from);
+		addArgument("to", to);
+		addArgument("type", "TleOrbitalParameters");
 		setIsInitialization(true);
 	}
 

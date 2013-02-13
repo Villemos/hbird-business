@@ -16,9 +16,12 @@
  */
 package org.hbird.business.navigation;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.ProducerTemplate;
 import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.navigation.D3Vector;
 import org.hbird.exchange.navigation.OrbitalState;
+import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.errors.OrekitException;
 import org.orekit.errors.PropagationException;
 import org.orekit.propagation.SpacecraftState;
@@ -43,9 +46,22 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
 	protected UTCScale scale = null;
 	
-	public OrbitalStateCollector(String satellite, long generationTime, String datasetIdentifier) {
+	protected TleOrbitalParameters parameters;
+	
+	protected ProducerTemplate producer = null;
+	
+	protected boolean publish = false;
+	
+	public OrbitalStateCollector(String satellite, long generationTime, String datasetIdentifier, TleOrbitalParameters parameters, CamelContext context, boolean publish) {
 		dataSet = new DataSet("OrbitPredictor", "OrbitalStates", "OrbitalStates", "The orbital states of a satellite.", generationTime, datasetIdentifier);
 		dataSet.setSatellite(satellite);
+
+		this.publish = publish;
+		if (publish) {
+			producer = context.createProducerTemplate();
+		}
+		
+		this.parameters = parameters;
 		
 		try {
 			scale = TimeScalesFactory.getUTC();
@@ -77,7 +93,13 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 				currentState.getOrbit().getPVCoordinates().getMomentum().getY(),
 				currentState.getOrbit().getPVCoordinates().getMomentum().getZ());
 
-		dataSet.addData(new OrbitalState("OrbitPredictor", "OrbitalState", "Orbital state of satellite", currentState.getDate().toDate(scale).getTime(), dataSet.getGenerationTime(), dataSet.getSatellite(), position, velocity, momentum));
+		OrbitalState state = new OrbitalState("OrbitPredictor", "OrbitalState", "Orbital state of satellite", currentState.getDate().toDate(scale).getTime(), dataSet.getGenerationTime(), dataSet.getSatellite(), position, velocity, momentum, parameters.getName(), parameters.getTimestamp(), parameters.getType());
+		dataSet.addData(state);
+
+		/** If stream mode, then deliver the data as a stream. */
+		if (publish) {
+			producer.sendBody("direct:navigationinjection", state);
+		}
 	}
 
 	public DataSet getDataSet() {

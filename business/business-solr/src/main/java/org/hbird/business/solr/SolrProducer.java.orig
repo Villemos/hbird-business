@@ -35,18 +35,20 @@ import org.apache.solr.common.SolrInputDocument;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.DataSet;
-import org.hbird.exchange.core.DerivedNamed;
-import org.hbird.exchange.core.IDerived;
 import org.hbird.exchange.core.IGenerationTimestamped;
 import org.hbird.exchange.core.ILocationSpecific;
 import org.hbird.exchange.core.ISatelliteSpecific;
 import org.hbird.exchange.core.Named;
-import org.hbird.exchange.core.NamedInstanceIdentifier;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
+<<<<<<< HEAD
+import org.hbird.exchange.heartbeat.Heartbeat;
+=======
+import org.hbird.exchange.dataaccess.TleRequest;
+>>>>>>> e83c5164357db85baec36460ecd4ab4381820bcf
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.tasking.Task;
 import org.slf4j.Logger;
@@ -103,7 +105,11 @@ public class SolrProducer extends DefaultProducer {
 					LOG.info("Received Data Request ('{}'). Retrieving.", body.getClass().getSimpleName());
 
 					String request = createRequest((DataRequest) body);
+<<<<<<< HEAD
+					LOG.info("Search string = " + request);
+=======
 					LOG.info("Search string = {}.", request);
+>>>>>>> e83c5164357db85baec36460ecd4ab4381820bcf
 
 					SolrQuery query = createQuery((DataRequest) body, request);
 					List<Named> results = retrieve(query);
@@ -135,8 +141,7 @@ public class SolrProducer extends DefaultProducer {
 		String namePart = null;
 		String isStateOfPart = null;
 		String ofSatellitePart = null;
-		String derivedFromPart = null;
-		
+
 		/** Set the class of data we are retrieving. */
 //		if (body.getArgument("class") != null) {
 //			classPart = "class:" + body.getArgument("class");
@@ -154,12 +159,16 @@ public class SolrProducer extends DefaultProducer {
 			for (String name : (List<String>) body.getArgument("names")) {
 				namePart += separator + "name:" + name;
 				separator = " OR ";
+<<<<<<< HEAD
 				
 				/** Include states if required to */
 				if (body.shallIncludeStates() == true) {
 					namePart += separator + "isStateOf:" + name;
 				}
 			} 
+=======
+			}
+>>>>>>> e83c5164357db85baec36460ecd4ab4381820bcf
 		}
 
 		
@@ -167,28 +176,20 @@ public class SolrProducer extends DefaultProducer {
 		if (body.getArgument("isStateOf") != null) {
 			isStateOfPart = "isStateOf:" + (String) body.getArgument("isStateOf");
 		}
-		if (body.getArgument("derivedfrom") != null) {
-			NamedInstanceIdentifier id = (NamedInstanceIdentifier) body.getArgument("derivedfrom");
-			derivedFromPart = "derivedFromName:" + id.name + " AND derivedFromTimestamp:" + id.timestamp + " AND derivedFromType:" + id.type;
-		}
 
 		if (body.getArgument("satellite") != null) {
 			ofSatellitePart = "ofSatellite:" + (String) body.getArgument("satellite");
 		}
 
-		
-		
-		
 		if (request == null && typePart != null) {
 			request = typePart;
 		}
 
-		if (classPart != null) {
-			request += " AND " + classPart;
+		if (request == null && classPart != null) {
+			request = classPart;
 		}
-
-		if (derivedFromPart != null) {
-			request += " AND (" + derivedFromPart + ")";
+		else if (classPart != null) {
+			request += " AND " + classPart;
 		}
 
 		if (namePart != null && isStateOfPart != null) {
@@ -300,7 +301,11 @@ public class SolrProducer extends DefaultProducer {
 
 							for (Named newObj : retrieve(sampleQuery)) {
 								results.add(newObj);
+<<<<<<< HEAD
 								LOG.info("Added object '" + newObj.getName() + "' with timestamp '" + newObj.getTimestamp()+ "'");
+=======
+								LOG.info("Added State object '{}' with timestamp '{}'.", newObj.getName(), newObj.getTimestamp());
+>>>>>>> e83c5164357db85baec36460ecd4ab4381820bcf
 							}
 						}
 					}
@@ -440,11 +445,6 @@ public class SolrProducer extends DefaultProducer {
 		}
 		if (io instanceof ILocationSpecific) {
 			document.addField("ofLocation", ((ILocationSpecific) io).getLocation());
-		}
-		if (io instanceof IDerived) {
-			document.addField("derivedFromName", ((IDerived) io).from().name);
-			document.addField("derivedFromTimestamp", ((IDerived) io).from().timestamp);
-			document.addField("derivedFromType", ((IDerived) io).from().type);
 		}
 
 		/** Insert the serialization. */

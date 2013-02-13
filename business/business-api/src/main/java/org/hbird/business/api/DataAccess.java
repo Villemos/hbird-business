@@ -32,6 +32,7 @@ import org.hbird.exchange.dataaccess.OrbitalStateRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
 import org.hbird.exchange.dataaccess.SatelliteRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
+import org.hbird.exchange.dataaccess.TleRequest;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.Satellite;
@@ -60,12 +61,12 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 	/** INITIALIZATION */
 	public Parameter getParameter(String name) {
 		List<Parameter> parameter = getParameter(name, 1);
-		return parameter.size() > 0 ? parameter.get(0) : null;
+		return parameter.isEmpty() ? null : parameter.get(0);
 	}
 
 	public Parameter getParameterAt(String name, long at) {
 		List<Parameter> parameter = getParameterAt(name, at, 1);
-		return parameter.size() > 0 ? parameter.get(0) : null;
+		return parameter.isEmpty() ? null : parameter.get(0);
 	}
 
 	public List<Parameter> getParameter(String name, int rows) {
@@ -213,27 +214,51 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 		return orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));
 	}
 
-	public List<TleOrbitalParameters> retrieveTleFor(String satellite, long from, long to) {
+	public List<OrbitalState> retrieveOrbitalStatesFor(String satellite, long from, long to, String derivedFromName, long derivedFromTimestamp) {
 		OrbitalStateRequest request = new OrbitalStateRequest(satellite, from, to);
-		return tleOrbitalParameterFilter.getObjects(template.requestBody(inject, request, List.class));
+		request.setDerivedFrom(derivedFromName, derivedFromTimestamp, "TleOrbitalParameters");
+		return orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));
+	}	
+
+	public OrbitalState retrieveOrbitalStateFor(String satellite, String derivedFromName, long derivedFromTimestamp) {
+		OrbitalStateRequest request = new OrbitalStateRequest(satellite);
+		request.setIsInitialization(true);
+		request.setDerivedFrom(derivedFromName, derivedFromTimestamp, "TleOrbitalParameters");
+		List<OrbitalState> states = orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));
+		return states.isEmpty() == true ? null : states.get(0);
+	}
+
+
+	public OrbitalState retrieveOrbitalStateFor(String satellite) {
+		TleOrbitalParameters parameter = retrieveTleFor(satellite);
+		
+		return parameter == null ? null : retrieveOrbitalStateFor(satellite, parameter.getName(), parameter.getTimestamp());
 	}
 
 	
+	
+	public List<TleOrbitalParameters> retrieveTleFor(String satellite, long from, long to) {
+		TleRequest request = new TleRequest(issuedBy, satellite, from, to);
+		return tleOrbitalParameterFilter.getObjects(template.requestBody(inject, request, List.class));
+	}
+
+	public TleOrbitalParameters retrieveTleFor(String satellite) {
+		TleRequest request = new TleRequest(issuedBy, satellite);
+		request.setIsInitialization(true);
+		List<TleOrbitalParameters> parameters = tleOrbitalParameterFilter.getObjects(template.requestBody(inject, request, List.class));
+		
+		return parameters.isEmpty() ? null : parameters.get(0);
+	}
+	
+
 	
 	
 	public Location retrieveLocation(String location) {
 		LocationRequest request = new LocationRequest(issuedBy, location);
 		List respond = template.requestBody(inject, request, List.class);
-		if (respond.isEmpty()) {
-			return null;
-		}		
-		
-		return (Location) respond.get(0);
+		return respond.isEmpty() ? null : (Location) respond.get(0);		
 	}
 	
-	
-	
-
 	
 	
 	
@@ -292,6 +317,4 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 		List<Named> respond = template.requestBody(inject, request, List.class);
 		return parameterFilter.getObjects(respond);
 	}
-		
-
 }

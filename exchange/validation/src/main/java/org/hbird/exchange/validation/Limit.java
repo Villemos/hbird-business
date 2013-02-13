@@ -37,7 +37,7 @@ public class Limit extends Parameter {
 	 * - Upper. The limit is violated if the parameter value goes ABOVE the limit.
 	 * - Static. The limit is violated if it has any other value than the defined. 
 	 */
-	public enum eLimitType {Lower, Upper, Static};
+	public enum eLimitType {Lower, Upper, Static, Differential};
 	public eLimitType type = eLimitType.Lower;
 	
 	public Boolean enabled = true;

@@ -16,6 +16,7 @@
  */
 package org.hbird.exchange.navigation;
 
+import org.hbird.exchange.core.DerivedNamed;
 import org.hbird.exchange.core.IGenerationTimestamped;
 import org.hbird.exchange.core.ILocationSpecific;
 import org.hbird.exchange.core.ISatelliteSpecific;
@@ -31,7 +32,7 @@ import org.hbird.exchange.core.Named;
  * by a station or satellite.
  * 
  */
-public class LocationContactEvent extends Named implements IGenerationTimestamped, ILocationSpecific, ISatelliteSpecific {
+public class LocationContactEvent extends DerivedNamed implements IGenerationTimestamped, ILocationSpecific, ISatelliteSpecific {
 
 	private static final long serialVersionUID = 6129893135305263533L; 
 
@@ -56,8 +57,8 @@ public class LocationContactEvent extends Named implements IGenerationTimestampe
 	 * @param location The location to which contact has been established / lost.
 	 * @param satellite The satellite to which contact has been established / lost. 
 	 */
-	public LocationContactEvent(String issuedBy, String name, String description, long timestamp, long generationTime, String datasetidentifier, String location, String satellite, boolean isVisible) {
-		super(issuedBy, name, "LocationContactEvent", description, timestamp, datasetidentifier);
+	public LocationContactEvent(String issuedBy, String name, String description, long timestamp, long generationTime, String datasetidentifier, String location, String satellite, boolean isVisible, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+		super(issuedBy, name, "LocationContactEvent", description, timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
 		this.location = location;
 		this.satellite = satellite;
 		this.isVisible = isVisible;

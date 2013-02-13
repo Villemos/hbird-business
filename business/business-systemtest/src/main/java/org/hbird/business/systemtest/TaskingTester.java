@@ -17,7 +17,6 @@
 package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
-import org.hbird.exchange.configurator.StartTaskExecutorComponent;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.tasking.SendCommand;
@@ -30,8 +29,8 @@ public class TaskingTester extends SystemTest {
 	public void process() throws InterruptedException {
 	
 		/** Start two task executors. */
-		injection.sendBody(new StartTaskExecutorComponent("TaskExecutor1"));
-		injection.sendBody(new StartTaskExecutorComponent("TaskExecutor2"));
+		startTaskComponent("TaskExecutor1");
+		startTaskComponent("TaskExecutor2");
 		
 		Thread.sleep(2000);
 		

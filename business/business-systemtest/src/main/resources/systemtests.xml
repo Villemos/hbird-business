@@ -39,9 +39,10 @@
 	<bean id="test4" class="org.hbird.business.systemtest.ScriptTester" parent="testerTemplate"/>
 	<bean id="test5" class="org.hbird.business.systemtest.TaskingTester" parent="testerTemplate"/>
 	<bean id="test6" class="org.hbird.business.systemtest.CommandingTester" parent="testerTemplate"/>
-	<bean id="test7" class="org.hbird.business.systemtest.NavigationTester" parent="testerTemplate"/>
+	<bean id="navigation" class="org.hbird.business.systemtest.NavigationTester" parent="testerTemplate"/>
 	<bean id="test8" class="org.hbird.business.systemtest.QueueManagerTester" parent="testerTemplate"/>
 	<bean id="dataaccessapi" class="org.hbird.business.systemtest.DataAccessApiTester" parent="testerTemplate"/>
+	<bean id="navigationcontroller" class="org.hbird.business.systemtest.NavigationControllerTester" parent="testerTemplate"/>
 	<bean id="finisher" class="org.hbird.business.systemtest.Finisher" parent="testerTemplate"/>
 						
 	<bean id="scheduler" class="org.hbird.business.core.Scheduler"/>
@@ -57,9 +58,10 @@
 <!-- 				<to uri="bean:test4" /> -->
 <!-- 		 		<to uri="bean:test5" /> -->
 <!-- 	 			<to uri="bean:test6" /> -->
-<!-- 	 			<to uri="bean:test7" /> -->
+<!-- 	 			<to uri="bean:navigation" /> -->
 <!-- 	 			<to uri="bean:test8" /> -->
-	 			<to uri="bean:dataaccessapi" />
+<!-- 	 			<to uri="bean:dataaccessapi" /> -->
+	 			<to uri="bean:navigationcontroller" />
 	 			<to uri="bean:finisher" />
 		</route>
 

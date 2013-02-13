@@ -54,7 +54,7 @@ public class Starter {
 	 */
 	protected void boot() throws Exception {
 		LOG.info("Starting Hummingbird based system.");
-				
+	
 		Main main = new Main();
 		main.enableHangupSupport();
 		
@@ -64,6 +64,12 @@ public class Starter {
 		LOG.info("Reading assembly file '" + assemblyFile + "'");
 		new FileSystemXmlApplicationContext(assemblyFile);
 
+		/** Configure log4j to allow dynamic changes to the log4j file. */
+		String log4jFile = System.getProperty("log4j.configuration");
+		if (log4jFile != null) {
+			org.apache.log4j.PropertyConfigurator.configureAndWatch(log4jFile, 5000);
+		}
+		
 		main.run();
 	}	
 }

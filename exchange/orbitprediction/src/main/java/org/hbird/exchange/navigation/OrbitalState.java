@@ -16,9 +16,9 @@
  */
 package org.hbird.exchange.navigation;
 
+import org.hbird.exchange.core.DerivedNamed;
 import org.hbird.exchange.core.IGenerationTimestamped;
 import org.hbird.exchange.core.ISatelliteSpecific;
-import org.hbird.exchange.core.Named;
 
 
 /** Class describing a specific orbital state at a give point in time. 
@@ -27,7 +27,7 @@ import org.hbird.exchange.core.Named;
  *    velocity. A vector defining the velocity of the body. 
  *    momentum. A vector defining the momentum of the body.
  *    timestamp. The time the body have this state. May be in the future. */
-public class OrbitalState extends Named implements IGenerationTimestamped, ISatelliteSpecific {
+public class OrbitalState extends DerivedNamed implements IGenerationTimestamped, ISatelliteSpecific {
 
 	/** The unique UID. */
 	private static final long serialVersionUID = -8112421610188582037L;
@@ -59,8 +59,8 @@ public class OrbitalState extends Named implements IGenerationTimestamped, ISate
 	 * @param position The position of the orbit. 
 	 * @param velocity The velocity of the orbit.
 	 */
-	public OrbitalState(String issuedBy, String name, String description, long timestamp, long generationTime, String datasetidentifier, String satellite, D3Vector position, D3Vector velocity, D3Vector momentum) {
-		super(issuedBy, name, "OrbitalState", description, timestamp, datasetidentifier);
+	public OrbitalState(String issuedBy, String name, String description, long timestamp, long generationTime, String datasetidentifier, String satellite, D3Vector position, D3Vector velocity, D3Vector momentum, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+		super(issuedBy, name, "OrbitalState", description, timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
 		this.satellite = satellite;
 		this.position = position;
 		this.velocity = velocity;
@@ -68,8 +68,8 @@ public class OrbitalState extends Named implements IGenerationTimestamped, ISate
 		this.generationTime = generationTime;
 	}
 	
-	public OrbitalState(String issuedBy, String name, String description, long timestamp, long generationTime, String satellite, D3Vector position, D3Vector velocity, D3Vector momentum) {
-		super(issuedBy, name, "OrbitalState", description, timestamp);
+	public OrbitalState(String issuedBy, String name, String description, long timestamp, long generationTime, String satellite, D3Vector position, D3Vector velocity, D3Vector momentum, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+		super(issuedBy, name, "OrbitalState", description, timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
 		this.satellite = satellite;
 		this.position = position;
 		this.velocity = velocity;

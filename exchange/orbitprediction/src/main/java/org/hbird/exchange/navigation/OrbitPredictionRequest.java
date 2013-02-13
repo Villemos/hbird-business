@@ -42,6 +42,8 @@ public class OrbitPredictionRequest extends Command {
 		arguments.put("stepSize", new CommandArgument("stepSize", "The propagation step size.", "Long", "Seconds", 60d, true));
 		arguments.put("contactDataStepSize", new CommandArgument("contactDataStepSize", "The propagation step size when calculating Contact Data between a location and a satellite between which visibility exist.", "Long", "Milliseconds", 500l, true));
 		arguments.put("initialstate", new CommandArgument("initialstate", "The initial orbital state (time, position, velocity) from which shall be propagated. Default is last known state of the satellite.", "OrbitalState", "", null, false));
+
+		arguments.put("publish", new CommandArgument("publish", "Flag indicating that the resulting predictions should be published to the system instead of returned as a response.", "Boolean", "", false, false));
 	}
 
 	/**
@@ -60,7 +62,7 @@ public class OrbitPredictionRequest extends Command {
 		addArgument("starttime", starttime);
 		addArgument("locations", locations);
 		
-		addArgument("initialstate", new OrbitalState(issuedBy, name, description, starttime, starttime, satellite, position, velocity, momentum));
+		addArgument("initialstate", new OrbitalState(issuedBy, name, description, starttime, starttime, satellite, position, velocity, momentum, "", 0, ""));
 	}
 
 	/**
@@ -95,6 +97,47 @@ public class OrbitPredictionRequest extends Command {
 		addArgument("satellite", satellite);
 		addArgument("starttime", ((new Date()).getTime()));
 		addArgument("locations", Arrays.asList(location));
+	}
+
+	/**
+	 * Constructor based on a current Orbital State.
+	 * 
+	 * @param issuedBy The name of the request.
+	 * @param satellite The satellite for which the prediction is done.
+	 */
+	public OrbitPredictionRequest(String issuedBy, String satellite) {
+		super(issuedBy, "OrbitPredictor", "Orbital Request", "An orbital request.");
+
+		addArgument("satellite", satellite);
+		addArgument("starttime", ((new Date()).getTime()));
+	}
+
+	public OrbitPredictionRequest(String issuedBy, String satellite, long from, long to) {
+		super(issuedBy, "OrbitPredictor", "Orbital Request", "An orbital request.");
+
+		addArgument("satellite", satellite);
+		addArgument("starttime", from);
+		addArgument("deltaPropagation", (to - from) / 1000);
+	}
+
+	public OrbitPredictionRequest(String issuedBy, String satellite, String location, long from, long to) {
+		super(issuedBy, "OrbitPredictor", "Orbital Request", "An orbital request.");
+
+		addArgument("satellite", satellite);
+		addArgument("starttime", ((new Date()).getTime()));
+		addArgument("deltaPropagation", (to - from) / 1000);
+		
+		addArgument("locations", Arrays.asList(location));		
+	}
+
+	public OrbitPredictionRequest(String issuedBy, String satellite, List<String> locations, long from, long to) {
+		super(issuedBy, "OrbitPredictor", "Orbital Request", "An orbital request.");
+
+		addArgument("satellite", satellite);
+		addArgument("starttime", ((new Date()).getTime()));
+		addArgument("deltaPropagation", (to - from) / 1000);
+		
+		addArgument("locations", locations);		
 	}
 
 	public String getSatellite() {

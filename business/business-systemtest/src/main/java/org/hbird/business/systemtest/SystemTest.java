@@ -16,6 +16,9 @@
  */
 package org.hbird.business.systemtest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
@@ -24,6 +27,7 @@ import org.hbird.exchange.configurator.StartCommandComponent;
 import org.hbird.exchange.configurator.StartArchiveComponent;
 import org.hbird.exchange.configurator.StartNavigationComponent;
 import org.hbird.exchange.configurator.StartQueueManagerComponent;
+import org.hbird.exchange.configurator.StartTaskExecutorComponent;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
 
@@ -122,7 +126,22 @@ public abstract class SystemTest {
 			monitoringArchiveStarted = true;
 		}		
 	}
-	
+
+	protected static List<String> startedTaskComponents = new ArrayList<String>();
+	public void startTaskComponent(String name) throws InterruptedException {
+
+		if (startedTaskComponents.contains(name) == false) {
+			LOG.info("Issuing command for start of a task executor component '" + name + "'.");
+
+			injection.sendBody(new StartTaskExecutorComponent(name));
+			
+			/** Give the component time to startup. */
+			Thread.sleep(1000);
+			
+			startedTaskComponents.add(name);
+		}		
+	}
+
 	protected static boolean commandingChainStarted = false;
 	public void startCommandingChain() throws InterruptedException {
 

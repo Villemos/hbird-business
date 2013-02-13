@@ -17,6 +17,7 @@
 package org.hbird.exchange.navigation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +36,8 @@ public class TlePropagationRequest extends Command {
 		arguments.put("stepSize", new CommandArgument("stepSize", "The propagation step size.", "Long", "Seconds", 60d, true));
 		arguments.put("contactDataStepSize", new CommandArgument("contactDataStepSize", "The propagation step size when calculating Contact Data between a location and a satellite between which visibility exist.", "Long", "Milliseconds", 500l, true));
 		arguments.put("tleparameters", new CommandArgument("tleparameters", "The two line elements of a specific satellite. If left empty the latest TLE for the satellite will be taken.", "TleOrbitalParameters", "", null, false));
-		arguments.put("stream", new CommandArgument("stream", "Flag indicating whether the propagation data should be returned as a stream to the monitoring topic (=true) or as a list (=false).", "Boolean", "", true, false));
+
+		arguments.put("publish", new CommandArgument("publish", "Flag indicating whether the propagation data should be returned as a stream to the monitoring topic (=true) or as a list (=false).", "Boolean", "", true, false));
 	}
 
 	
@@ -72,7 +74,7 @@ public class TlePropagationRequest extends Command {
 	 * @param state The initial orbital state.
 	 * @param locations List of locations for which contact events shall be generated.
 	 */
-	public TlePropagationRequest(String issuedBy, Satellite satellite, TleOrbitalParameters state, List<String> locations) {
+	public TlePropagationRequest(String issuedBy, String satellite, TleOrbitalParameters state, List<String> locations) {
 		super(issuedBy, "OrbitPredictor", "TlePropagationRequest", "A request for orbit prediction.");
 
 		addArgument("satellite", satellite);
@@ -81,6 +83,34 @@ public class TlePropagationRequest extends Command {
 		addArgument("tleparameters", state);
 	}
 	
+	public TlePropagationRequest(String issuedBy, String satellite, long from, long to) {
+		super(issuedBy, "OrbitPredictor", "TlePropagationRequest", "A request for orbit prediction.");
+
+		addArgument("satellite", satellite);
+		addArgument("starttime", from);
+		addArgument("deltaPropagation", (to - from) / 1000);
+	}
+
+	public TlePropagationRequest(String issuedBy, String satellite, String location, long from, long to) {
+		super(issuedBy, "OrbitPredictor", "TlePropagationRequest", "A request for orbit prediction.");
+
+		addArgument("satellite", satellite);
+		addArgument("starttime", from);
+		addArgument("deltaPropagation", (to - from) / 1000);
+		
+		addArgument("locations", Arrays.asList(location));		
+	}
+
+	public TlePropagationRequest(String issuedBy, String satellite, List<String> locations, long from, long to) {
+		super(issuedBy, "OrbitPredictor", "TlePropagationRequest", "A request for orbit prediction.");
+
+		addArgument("satellite", satellite);
+		addArgument("starttime", from);
+		addArgument("deltaPropagation", (to - from) / 1000);
+		
+		addArgument("locations", locations);		
+	}
+
 	public String getSatellite() {
 		return (String) getArgument("satellite");
 	}
@@ -93,8 +123,8 @@ public class TlePropagationRequest extends Command {
 		return (Long) getArgument("starttime");
 	}
 	
-	public Double getDeltaPropagation() {
-		return (Double) getArgument("deltaPropagation");
+	public Long getDeltaPropagation() {
+		return (Long) getArgument("deltaPropagation");
 	}
 		
 	public Double getStepSize() {
@@ -107,5 +137,9 @@ public class TlePropagationRequest extends Command {
 
 	public TleOrbitalParameters getTleParameters() {
 		return (TleOrbitalParameters) getArgument("tleparameters");
+	}
+
+	public boolean getPublish() {
+		return (Boolean) getArgument("publish");
 	}
 }

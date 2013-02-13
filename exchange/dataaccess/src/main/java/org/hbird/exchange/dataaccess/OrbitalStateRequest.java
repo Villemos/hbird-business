@@ -36,12 +36,14 @@ public class OrbitalStateRequest extends DataRequest {
 		addArgument("sort", "timestamp");
 		addArgument("sortorder", "DESC");
 		addArgument("rows", 1);
+		addArgument("type", "OrbitalState");
 		setIsInitialization(true);
 	}
 	
 	public OrbitalStateRequest(String satellite, Long from, Long to) {
 		super("", "", "OrbitalStateRequest", "A request for the latest orbital state of a satellite");
 		
+		addArgument("type", "OrbitalState");
 		setSatellite(satellite);
 		setFromTime(from);
 		setToTime(to);

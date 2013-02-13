@@ -16,7 +16,6 @@
  */
 package org.hbird.business.navigation;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import org.apache.camel.impl.DefaultExchange;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.core.Named;
-import org.hbird.exchange.core.NamedTimestampComperator;
 import org.hbird.exchange.dataaccess.LocationRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
 import org.hbird.exchange.navigation.Location;import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -50,13 +48,30 @@ public class TleOrbitalPredictor {
 
 	public String name = "OrbitPredictor";
 
-	/** The exchange must contain a OrbitalState object as the in-body. 
+	
+	
+	/**
+	 * Method used to receive a TLE and generate a propagation request based on the TLE.
+	 * 
+	 * @param tleParameters
+	 * @param context
+	 * @return
+	 * @throws OrekitException
+	 */
+//	public List<DataSet> receiveTleParameters(@Body TleOrbitalParameters tleParameters, CamelContext context) throws OrekitException {
+//		TlePropagationRequest request = new TlePropagationRequest("", tleParameters.getSatellite(), tleParameters, null);
+//		return predictOrbit(request, context);
+//	} 
+	
+	
+	/** 
+	 * Method to predict the orbit. 
+	 * 
 	 * @throws OrekitException */
 	@Handler
 	public List<DataSet> predictOrbit(@Body TlePropagationRequest request, CamelContext context) throws OrekitException {
 
-		/** Create the TLE element 
-		 * */
+		/** Create the TLE element */
 		TleOrbitalParameters parameters = request.getTleParameters();
 		if (parameters == null) {
 			parameters = getTleParameters(request.getSatellite(), context);
@@ -85,13 +100,7 @@ public class TleOrbitalPredictor {
 			PVCoordinates initialOrbitalState = TLEPropagator.selectExtrapolator(tle).getPVCoordinates(startDate);
 
 			/** Calculate the orbital states and the contact events from the initial time forwards */
-			results = keplianOrbitPredictor.predictOrbit(locations, initialOrbitalState, request.getStartTime(), request.getSatellite(), request.getStepSize(), request.getDeltaPropagation(), request.getContactDataStepSize(), generationtime, datasetidentifier);
-
-			/** Deliver the data as a DataSet. */
-			ProducerTemplate producer = context.createProducerTemplate();
-			for (DataSet set : results) {
-				producer.sendBody("direct:navigationinjection", set);
-			}
+			results = keplianOrbitPredictor.predictOrbit(locations, initialOrbitalState, request.getStartTime(), request.getSatellite(), request.getStepSize(), request.getDeltaPropagation(), request.getContactDataStepSize(), generationtime, datasetidentifier, parameters, context, request.getPublish());
 		}
 
 		/** Return the data. */

@@ -20,11 +20,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.ProducerTemplate;
 import org.apache.commons.math.geometry.Vector3D;
 import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.navigation.ContactData;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.LocationContactEvent;
+import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
 import org.orekit.frames.LocalOrbitalFrame;
@@ -69,6 +72,12 @@ public class LocationContactEventCollector extends ElevationDetector {
 	protected long generationTime = 0;
 	
 	protected String datasetIdentifier = "";
+
+	protected TleOrbitalParameters parameters;
+
+	protected ProducerTemplate producer = null;
+	
+	protected boolean publish = false;
 	
 	/**
 	 * COnstructor of an injector of location contact events.
@@ -79,13 +88,20 @@ public class LocationContactEventCollector extends ElevationDetector {
 	 * @param location The location to which contact has been established / lost if this event occurs.
 	 * @param contactDataStepSize
 	 */
-	public LocationContactEventCollector(double elevation, TopocentricFrame topo, String satellite, Location location, long contactDataStepSize, long generationTime, String datasetIdentifier) {
+	public LocationContactEventCollector(double elevation, TopocentricFrame topo, String satellite, Location location, long contactDataStepSize, long generationTime, String datasetIdentifier, TleOrbitalParameters parameters, CamelContext context, boolean publish) {
 		super(maxcheck, elevation, topo);
+		
+		this.publish = publish;
+		if (publish) {
+			producer = context.createProducerTemplate();
+		}
+		
 		this.satellite = satellite;
 		this.location = location;
 		this.contactDataStepSize = contactDataStepSize;
 		this.generationTime = generationTime;
 		this.datasetIdentifier = datasetIdentifier;
+		this.parameters = parameters;
 	}
 
 	/* (non-Javadoc)
@@ -108,7 +124,13 @@ public class LocationContactEventCollector extends ElevationDetector {
 			dataset.setSatellite(satellite);
 			
 			/** Register start event. */
-			dataset.getDataset().add(new LocationContactEvent("OrbitPredictor", "Visibility", "", startTime, generationTime, datasetIdentifier, location.getName(), satellite, true));
+			LocationContactEvent event = new LocationContactEvent("OrbitPredictor", "Visibility", "", startTime, generationTime, datasetIdentifier, location.getName(), satellite, true, parameters.getName(), parameters.getTimestamp(), parameters.getType());
+			dataset.getDataset().add(event);
+
+			/** If stream mode, then deliver the data as a stream. */
+			if (publish) {
+				producer.sendBody("direct:navigationinjection", event);
+			}
 
 			GeodeticPoint point = new GeodeticPoint(location.p1, location.p2, location.p3);
 			TopocentricFrame locationOnEarth = new TopocentricFrame(Constants.earth, point, "");
@@ -122,12 +144,23 @@ public class LocationContactEventCollector extends ElevationDetector {
 				double doppler = calculateDoppler(currentState.getPVCoordinates(), locationOnEarth, date);
 				double dopplerShift = calculateDopplerShift(doppler, location.getFrequency());
 
-				dataset.addData(new ContactData("OrbitPredictor", "ContactData", "Contact Data", "The contact data between a satellite and a location", startTime + contactDataStepSize*i, generationTime, datasetIdentifier, azimuth, elevation, doppler, dopplerShift, satellite, location.getName()));
+				ContactData data = new ContactData("OrbitPredictor", "ContactData", "Contact Data", "The contact data between a satellite and a location", startTime + contactDataStepSize*i, generationTime, datasetIdentifier, azimuth, elevation, doppler, dopplerShift, satellite, location.getName(), parameters.getName(), parameters.getTimestamp(), parameters.getType());
+				dataset.addData(data);
 
+				/** If stream mode, then deliver the data as a stream. */
+				if (publish) {
+					producer.sendBody("direct:navigationinjection", data);
+				}
 			}
 			
 			/** Register end event. */
-			dataset.getDataset().add(new LocationContactEvent("OrbitPredictor", "Visibility", "", endTime, generationTime, datasetIdentifier, location.getName(), satellite, false));			
+			event = new LocationContactEvent("OrbitPredictor", "Visibility", "", endTime, generationTime, datasetIdentifier, location.getName(), satellite, false, parameters.getName(), parameters.getTimestamp(), parameters.getType());
+			dataset.getDataset().add(event);			
+
+			/** If stream mode, then deliver the data as a stream. */
+			if (publish) {
+				producer.sendBody("direct:navigationinjection", event);
+			}
 
 			datasets.add(dataset);
 			

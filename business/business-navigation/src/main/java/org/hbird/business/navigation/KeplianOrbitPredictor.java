@@ -20,8 +20,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.camel.CamelContext;
 import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.navigation.Location;
+import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
 import org.orekit.frames.TopocentricFrame;
@@ -48,7 +50,7 @@ import org.orekit.utils.PVCoordinates;
  */
 public class KeplianOrbitPredictor {
 
-	public List<DataSet> predictOrbit(List<Location> locations, PVCoordinates pvCoordinates, long startTime, String satellite, double stepSize, double deltaPropagation, long contactDataStepSize, long generationTime, String datasetIdentifier) throws OrekitException {
+	public List<DataSet> predictOrbit(List<Location> locations, PVCoordinates pvCoordinates, long startTime, String satellite, double stepSize, double deltaPropagation, long contactDataStepSize, long generationTime, String datasetIdentifier, TleOrbitalParameters parameters, CamelContext context, boolean publish) throws OrekitException {
 
 		List<DataSet> results = new ArrayList<DataSet>();
 		
@@ -59,7 +61,7 @@ public class KeplianOrbitPredictor {
 
 		Propagator propagator = new KeplerianPropagator(initialOrbit);
 
-		OrbitalStateCollector injector = new OrbitalStateCollector(satellite, generationTime, datasetIdentifier);
+		OrbitalStateCollector injector = new OrbitalStateCollector(satellite, generationTime, datasetIdentifier, parameters, context, publish);
 
 		/** Register the visibility events for the requested locations. */
 		for (Location location : locations) {
@@ -67,7 +69,7 @@ public class KeplianOrbitPredictor {
 			TopocentricFrame sta1Frame = new TopocentricFrame(Constants.earth, point, location.getName());
 
 			/** Register the injector that will send the detected events, for this location, to the propagator. */
-			EventDetector sta1Visi = new LocationContactEventCollector(location.getThresholdElevation(), sta1Frame, satellite, location, contactDataStepSize, generationTime, datasetIdentifier);
+			EventDetector sta1Visi = new LocationContactEventCollector(location.getThresholdElevation(), sta1Frame, satellite, location, contactDataStepSize, generationTime, datasetIdentifier, parameters, context, publish);
 			propagator.addEventDetector(sta1Visi);				
 		}
 

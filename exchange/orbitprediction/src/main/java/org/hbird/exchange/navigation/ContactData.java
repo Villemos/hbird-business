@@ -17,6 +17,7 @@
 * under the License. */
 package org.hbird.exchange.navigation;
 
+import org.hbird.exchange.core.DerivedNamed;
 import org.hbird.exchange.core.IGenerationTimestamped;
 import org.hbird.exchange.core.ILocationSpecific;
 import org.hbird.exchange.core.ISatelliteSpecific;
@@ -29,7 +30,7 @@ import org.hbird.exchange.core.Named;
  * @author Admin
  *
  */
-public class ContactData extends Named implements IGenerationTimestamped, ISatelliteSpecific, ILocationSpecific {
+public class ContactData extends DerivedNamed implements IGenerationTimestamped, ISatelliteSpecific, ILocationSpecific {
 
 	private static final long serialVersionUID = -6892848291146482728L;
 
@@ -46,8 +47,8 @@ public class ContactData extends Named implements IGenerationTimestamped, ISatel
 	/** The other object. */
 	protected String location;
 	
-	public ContactData(String issuedBy, String name, String type, String description, long timestamp, long generationTime, String datasetIdentifier, Double azimuth, Double elevation, Double doppler, Double dopplerShift, String satellite, String location) {
-		super(issuedBy, name, "ContactData", description, timestamp, datasetIdentifier);
+	public ContactData(String issuedBy, String name, String type, String description, long timestamp, long generationTime, String datasetIdentifier, Double azimuth, Double elevation, Double doppler, Double dopplerShift, String satellite, String location, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+		super(issuedBy, name, "ContactData", description, timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
 
 		this.azimuth = azimuth;
 		this.elevation = elevation;

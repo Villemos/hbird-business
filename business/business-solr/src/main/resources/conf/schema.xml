@@ -204,6 +204,12 @@
    <field name="generationTimestamp" type="slong" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>   
    <field name="ofLocation" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>   
 
+   <!-- Additional 'IDerived' class fields. -->
+   <field name="derivedFromName" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>      
+   <field name="derivedFromTimestamp" type="slong" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>   
+   <field name="derivedFromType" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>  
+	
+
 
    <!-- Standard fields. -->   
    <field name="serialization" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>

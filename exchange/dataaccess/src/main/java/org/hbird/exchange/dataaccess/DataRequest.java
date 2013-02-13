@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.core.NamedInstanceIdentifier;
 
 public class DataRequest extends Command {
 
@@ -38,6 +39,7 @@ public class DataRequest extends Command {
 		arguments.put("sort", new CommandArgument("sort", "The sort field. Default is timestamp.", "String", "", "timestamp", true));
 		arguments.put("rows", new CommandArgument("rows", "The maximum number of rows to be retrieved.", "Integer", "", 1000, true));
 		arguments.put("initialization", new CommandArgument("initialization", "If set to true, then the value below the 'to' time of each named object matching the search criterions will be retrieved.", "Boolean", "", false, true));
+		arguments.put("derivedfrom", new CommandArgument("derivedfrom", "Identifier of the named object of which an object must be derived from.", "NamedInstanceIdentifier", "", null, false));
 	}
 	
 	public DataRequest(String issuedBy, String destination) {
@@ -135,5 +137,17 @@ public class DataRequest extends Command {
 
 	public Long getTo() {
 		return (Long) getArgument("to");
+	}
+	
+	public void setDerivedFrom(String name, long timestamp, String type) {
+		addArgument("derivedfrom", new NamedInstanceIdentifier(name, timestamp, type));
+	}
+	
+	public void setDerivedFrom(NamedInstanceIdentifier identifier) {
+		addArgument("derivedfrom", identifier);
+	}
+	
+	public NamedInstanceIdentifier getDerivedFrom() {
+		return (NamedInstanceIdentifier) getArgument("derivedfrom");
 	}
 }
