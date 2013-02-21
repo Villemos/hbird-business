@@ -25,6 +25,10 @@ public class CommitRequest extends Command {
 	 */
 	private static final long serialVersionUID = -2865838932564359124L;
 
+	public CommitRequest(String issuedBy) {
+		super(issuedBy, "Archive", "CommitRequest", "Request to force the commitment of all stored data, i.e. flush cashes and buffers.");
+	}
+	
 	public CommitRequest(String issuedBy, String destination) {
 		super(issuedBy, destination, "CommitRequest", "Request to force the commitment of all stored data, i.e. flush cashes and buffers.");
 	}
