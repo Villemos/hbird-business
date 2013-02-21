@@ -30,4 +30,9 @@ public interface IQueueManagement {
 	public Map<String, String> viewQueue(String queueName) throws InvalidSelectorException, OpenDataException, MalformedObjectNameException, MalformedURLException, NullPointerException, IOException;
 	public Map<String, String> removeQueueElements(String queueName, String elementIdPattern) throws Exception;
 	public Boolean clearQueue(String queueName) throws Exception;
+	
+	public List<String> listTopics() throws MalformedObjectNameException, MalformedURLException, NullPointerException, IOException;
+	public Boolean clearTopic(String topicName) throws Exception;
+	
+	public boolean clearAll();
 }

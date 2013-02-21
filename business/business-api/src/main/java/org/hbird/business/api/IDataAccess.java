@@ -119,6 +119,11 @@ public interface IDataAccess {
 
 	
 	/**
+	 * Method to force a commit of all data. Any process should flush buffers and cashes.
+	 */
+	public void forceCommit();
+	
+	/**
 	 * Method to retrieve the last sample of a single parameter. The method will return 
 	 * <li>One parameter sample</li>
 	 * <li>With the highest possible timestamp</li>

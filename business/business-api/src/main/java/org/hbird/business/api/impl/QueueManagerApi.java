@@ -35,6 +35,7 @@ import javax.management.remote.JMXServiceURL;
 import org.apache.activemq.broker.jmx.BrokerViewMBean;
 import org.apache.activemq.broker.jmx.CompositeDataConstants;
 import org.apache.activemq.broker.jmx.QueueViewMBean;
+import org.apache.activemq.broker.jmx.TopicViewMBean;
 import org.hbird.business.api.IQueueManagement;
 
 import javax.management.openmbean.CompositeData;
@@ -91,7 +92,27 @@ public class QueueManagerApi extends HbirdApi implements IQueueManagement {
 		for (ObjectName name : mbean.getQueues()) {
 			QueueViewMBean qbean = (QueueViewMBean) MBeanServerInvocationHandler.newProxyInstance(conn, name, QueueViewMBean.class, true);
 
-			if (qbean.getName().equals(qname)) {
+			if (qbean.getName().matches(qname)) {
+				return qbean;
+			}
+		} 
+
+		return null;
+	}
+
+	/**
+	 * Helper method to get the XBean of the queue.
+	 * 
+	 * @param mbean The XBean of the broker.
+	 * @param qname The name of the queue
+	 * @return The XBean of the queue
+	 */
+	protected TopicViewMBean getTopicViewBean(BrokerViewMBean mbean, String qname) {
+		/** Find the queue we are monitoring and controlling. */		
+		for (ObjectName name : mbean.getTopics()) {
+			TopicViewMBean qbean = (TopicViewMBean) MBeanServerInvocationHandler.newProxyInstance(conn, name, QueueViewMBean.class, true);
+
+			if (qbean.getName().matches(qname)) {
 				return qbean;
 			}
 		} 
@@ -113,12 +134,31 @@ public class QueueManagerApi extends HbirdApi implements IQueueManagement {
 
 		List<String> queues = new ArrayList<String>();
 		for (ObjectName name : getBrokerBean().getQueues()) {
-			queues.add(name.getCanonicalName());
+			queues.add(name.getKeyProperty("Destination"));
 		}
 
 		return queues;
 	}
 
+
+	/**
+	 * Method to list all queues in the system.
+	 * 
+	 * @return List of all queues. The list is a pretty printed queue.
+	 * @throws MalformedObjectNameException
+	 * @throws MalformedURLException
+	 * @throws NullPointerException
+	 * @throws IOException
+	 */
+	public List<String> listTopics() throws MalformedObjectNameException, MalformedURLException, NullPointerException, IOException {
+
+		List<String> topics = new ArrayList<String>();
+		for (ObjectName name : getBrokerBean().getTopics()) {
+			topics.add(name.getKeyProperty("Destination"));
+		}
+
+		return topics;
+	}
 
 	/**
 	 * Method to get all elements of a specific queue
@@ -203,7 +243,41 @@ public class QueueManagerApi extends HbirdApi implements IQueueManagement {
 	 * @throws Exception
 	 */
 	public Boolean clearQueue(String queueName) throws Exception {
-		getQueueViewBean(getBrokerBean(), queueName).purge();
+		QueueViewMBean bean = getQueueViewBean(getBrokerBean(), queueName);
+		if (bean != null) {
+			bean.purge();
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Method to delete all entries in a queue.
+	 * 
+	 * @param command The clear command. Contains the name of the queue to be purged.
+	 * @return True
+	 * @throws Exception
+	 */
+	public Boolean clearTopic(String topicName) throws Exception {
+		/** We cannot purge topics. Instead we remove it.*/
+		getBrokerBean().removeTopic(topicName);
+		return true;
+	}
+
+	public boolean clearAll() {
+		try {
+			BrokerViewMBean mbean = getBrokerBean();
+			
+			for (String queue : listQueues()) {
+				clearQueue(queue);
+			}
+			for (String topic : listTopics()) {
+				clearTopic(topic);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return true;
 	}
 }

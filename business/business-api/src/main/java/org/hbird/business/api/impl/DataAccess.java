@@ -28,6 +28,7 @@ import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
+import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.LocationContactEventRequest;
 import org.hbird.exchange.dataaccess.LocationRequest;
@@ -62,6 +63,9 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 	}
 
 
+	public void forceCommit() {
+		template.sendBody(new CommitRequest(issuedBy));
+	}
 	
 	/** INITIALIZATION */
 	public Parameter getParameter(String name) {
