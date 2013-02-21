@@ -20,122 +20,122 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * A NUMERICAL parameter. The parameter type is at the core of the information model. It 
- * is used to describe a name-value pair, attaching the meta-data for description 
+ * A NUMERICAL parameter. The parameter type is at the core of the information model. It
+ * is used to describe a name-value pair, attaching the meta-data for description
  * and unit.
  * 
  * There is no predefined set of parameters in the form of a database. Creating
- * a new parameter is simply the creation of a Parameter with a new name.   
+ * a new parameter is simply the creation of a Parameter with a new name.
  *
  */
 public class Parameter extends Named implements Comparable<Parameter> {
 
-	/** The unique UID. */
-	private static final long serialVersionUID = 889400984561961325L;
-	
-	/** The value of the parameter. May be any type. */
-	protected Number value;
+    /** The unique UID. */
+    private static final long serialVersionUID = 889400984561961325L;
 
-	/** The unit of the argument. */
-	protected String unit;
+    /** The value of the parameter. May be any type. */
+    protected Number value;
 
-	/**
-	 * Creates a Parameter with a timestamp set to 'now'.
-	 * 
-	 * @param name The name of the parameter
-	 * @param description A description of the parameter.
-	 * @param value An object holding the value.
-	 * @param unit The unit of the value.
-	 */
-	public Parameter(String issuedBy, String name, String type, String description, Number value, String unit) {
-		super(issuedBy, name, "Parameter", description);
-		this.unit = unit;
-		this.value = value;
-	}
+    /** The unit of the argument. */
+    protected String unit;
 
-	public Parameter(Parameter base) {
-		this(base.issuedBy, base.name, base.type, base.description, base.value, base.unit);
-	}
-	
-	/**
-	 * Creates a Parameter with a timestamp set to 'now'.
-	 * 
-	 * @param name The name of the parameter
-	 * @param description A description of the parameter.
-	 * @param value An object holding the value.
-	 * @param unit The unit of the value.
-	 */
-	public Parameter(String issuedBy, String name, String type, String description, Number value, String unit, long timestamp) {
-		super(issuedBy, name, "Parameter", description, timestamp);
-		this.unit = unit;
-		this.value = value;
-	}
+    /**
+     * Creates a Parameter with a timestamp set to 'now'.
+     * 
+     * @param name The name of the parameter
+     * @param description A description of the parameter.
+     * @param value An object holding the value.
+     * @param unit The unit of the value.
+     */
+    public Parameter(String issuedBy, String name, String type, String description, Number value, String unit) {
+        super(issuedBy, name, "Parameter", description);
+        this.unit = unit;
+        this.value = value;
+    }
 
-	/**
-	 * Constructor of the parameter.
-	 * 
-	 * @param name The name of the parameter
-	 * @param description A description of the parameter.
-	 * @param timestamp The timestamp of the parameter.
-	 * @param value An object holding the value.
-	 * @param unit The unit of the value.
-	 */
-	public Parameter(String issuedBy, String name, String type, String description, long timestamp, Number value, String unit) {
-		super(issuedBy, name, "Parameter", description, timestamp);
-		this.unit = unit;
-		this.value = value;
-	}
-	
-	public Parameter() {
-		// TODO Auto-generated constructor stub
-	}
+    public Parameter(Parameter base) {
+        this(base.issuedBy, base.name, base.type, base.description, base.value, base.unit);
+    }
 
-	/**
-	 * Returns the value of the Parameter as an Object. 
-	 * 
-	 * @return An Object holding the value. The class type can of cause be found using 
-	 * reflection, or through the 'clazz' attribute.
-	 */
-	public Number getValue() {
-		return value;
-	}
-	
-	public double asDouble() {
-		return value.doubleValue();
-	}
+    /**
+     * Creates a Parameter with a timestamp set to 'now'.
+     * 
+     * @param name The name of the parameter
+     * @param description A description of the parameter.
+     * @param value An object holding the value.
+     * @param unit The unit of the value.
+     */
+    public Parameter(String issuedBy, String name, String type, String description, Number value, String unit, long timestamp) {
+        super(issuedBy, name, "Parameter", description, timestamp);
+        this.unit = unit;
+        this.value = value;
+    }
 
-	public int asInt() {
-		return value.intValue();
-	}
+    /**
+     * Constructor of the parameter.
+     * 
+     * @param name The name of the parameter
+     * @param description A description of the parameter.
+     * @param timestamp The timestamp of the parameter.
+     * @param value An object holding the value.
+     * @param unit The unit of the value.
+     */
+    public Parameter(String issuedBy, String name, String type, String description, long timestamp, Number value, String unit) {
+        super(issuedBy, name, "Parameter", description, timestamp);
+        this.unit = unit;
+        this.value = value;
+    }
 
-	/**
-	 * Setter for the value. Will also set the 'clazz' attribute to the Java name of the
-	 * class set as value.
-	 * 
-	 * @param value The value to be set.
-	 */
-	public void setValue(Number value) {
-		this.value = value;
-	}
-	
-	/**
-	 * Returns the string representing the unit of this parameter.
-	 * 
-	 * @return STring representing the unit.
-	 */
-	public String getUnit() {
-		return unit;
-	}
+    public Parameter() {
+        // TODO Auto-generated constructor stub
+    }
 
-	
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 * 
-	 * Notice that the method has extra been implemented to allow comparison of types that are
-	 * not the same, i.e. Integer and Double.
-	 */
-	public int compareTo(Parameter rhs) {
+    /**
+     * Returns the value of the Parameter as an Object.
+     * 
+     * @return An Object holding the value. The class type can of cause be found using
+     * reflection, or through the 'clazz' attribute.
+     */
+    public Number getValue() {
+        return value;
+    }
+
+    public double asDouble() {
+        return value.doubleValue();
+    }
+
+    public int asInt() {
+        return value.intValue();
+    }
+
+    /**
+     * Setter for the value. Will also set the 'clazz' attribute to the Java name of the
+     * class set as value.
+     * 
+     * @param value The value to be set.
+     */
+    public void setValue(Number value) {
+        this.value = value;
+    }
+
+    /**
+     * Returns the string representing the unit of this parameter.
+     * 
+     * @return STring representing the unit.
+     */
+    public String getUnit() {
+        return unit;
+    }
+
+
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     * 
+     * Notice that the method has extra been implemented to allow comparison of types that are
+     * not the same, i.e. Integer and Double.
+     */
+    public int compareTo(Parameter rhs) {
 
         if(this.value instanceof Short && rhs.value instanceof Short)
         {
@@ -173,9 +173,10 @@ public class Parameter extends Named implements Comparable<Parameter> {
         {
             throw new RuntimeException("Ooopps!");
         }
-	}
+    }
 
-	public String prettyPrint() {
-		return "Parameter {name=" + name + ", value=" + value.toString() + ", timestamp=" + timestamp + "}";
-	}
+    @Override
+    public String prettyPrint() {
+        return "Parameter {name=" + name + ", value=" + String.valueOf(value) + ", timestamp=" + timestamp + "}";
+    }
 }
