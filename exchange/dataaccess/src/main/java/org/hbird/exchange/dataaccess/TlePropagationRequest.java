@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.exchange.navigation;
+package org.hbird.exchange.dataaccess;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 public class TlePropagationRequest extends Command {
 
@@ -32,7 +33,7 @@ public class TlePropagationRequest extends Command {
 		arguments.put("satellite", new CommandArgument("satellite", "The name of the satellite.", "String", "", null, true));
 		arguments.put("starttime", new CommandArgument("starttime", "The start time of the propagation.", "long", "Seconds", null, true));
 		arguments.put("locations", new CommandArgument("locations", "The name of the location(s) to which contact shall be calculated. If left empty all Locations registered in the archive will be taken.", "List<String>", "", new ArrayList<String>(), false));
-		arguments.put("deltaPropagation", new CommandArgument("deltaPropagation", "The delta propagation from the starttime.", "Long", "Seconds", 2 * 60 * 60d, true));
+		arguments.put("deltaPropagation", new CommandArgument("deltaPropagation", "The delta propagation from the starttime.", "Long", "Seconds", 2 * 60 * 60l, true));
 		arguments.put("stepSize", new CommandArgument("stepSize", "The propagation step size.", "Long", "Seconds", 60d, true));
 		arguments.put("contactDataStepSize", new CommandArgument("contactDataStepSize", "The propagation step size when calculating Contact Data between a location and a satellite between which visibility exist.", "Long", "Milliseconds", 500l, true));
 		arguments.put("tleparameters", new CommandArgument("tleparameters", "The two line elements of a specific satellite. If left empty the latest TLE for the satellite will be taken.", "TleOrbitalParameters", "", null, false));

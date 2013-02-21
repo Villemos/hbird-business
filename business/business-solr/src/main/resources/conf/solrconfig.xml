@@ -126,8 +126,8 @@
          maxDocs - number of updates since last commit is greater than this
          maxTime - oldest uncommited update (in ms) is this long ago -->
     <autoCommit>
-      <maxDocs>10000</maxDocs>
-      <maxTime>60000</maxTime> 
+      <maxDocs>100</maxDocs>
+      <maxTime>2000</maxTime> 
     </autoCommit>
 
     <!-- The RunExecutableListener executes an external command.

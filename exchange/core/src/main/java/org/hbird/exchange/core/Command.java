@@ -153,6 +153,7 @@ public class Command extends Named implements IScheduled {
 	}
 	
 	public void addArgument(String key, Object value) {
+		
 		if (arguments.containsKey(key) == false) {
 			System.out.println("ERROR: Attempt to set non-standard command argument '" + key + "'.");
 		}

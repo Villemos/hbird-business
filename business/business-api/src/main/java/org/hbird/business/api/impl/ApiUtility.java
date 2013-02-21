@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api;
+package org.hbird.business.api.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;

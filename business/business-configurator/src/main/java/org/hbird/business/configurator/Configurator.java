@@ -63,6 +63,7 @@ public class Configurator extends ComponentBuilder {
 		classes.put("org.hbird.exchange.configurator.StartArchiveComponent", ArchiveComponentBuilder.class.getName());	
 		classes.put("org.hbird.exchange.configurator.StartScriptComponent", ScriptComponentBuilder.class.getName());
 		classes.put("org.hbird.exchange.configurator.StartQueueManagerComponent", QueueManagerBuilder.class.getName());
+		classes.put("org.hbird.exchange.configurator.StartAntennaControllerComponent", AntennaControllerBuilder.class.getName());
 	}
 
 	{	
@@ -152,9 +153,9 @@ public class Configurator extends ComponentBuilder {
 		.end();
 
 		/** Setup the BusinessCard */
-		//BusinessCard card = new BusinessCard(name, 5000l, commands);
-		//ProcessorDefinition<?> route = from("timer:businessCard_" + name + "?period=5000").bean(card);
-		//addInjectionRoute(route);
+		BusinessCard card = new BusinessCard(name, 5000l, commands);
+		ProcessorDefinition<?> route = from("timer:businessCard_" + name + "?period=5000").bean(card);
+		addInjectionRoute(route);
 	}
 
 	@Override

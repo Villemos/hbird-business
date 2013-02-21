@@ -16,8 +16,8 @@
  */
 package org.hbird.business.validation.limits;
 
-import org.hbird.business.api.DataAccess;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.impl.DataAccess;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.validation.Limit;
 

@@ -24,28 +24,35 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.apache.camel.Handler;
-import org.hbird.exchange.core.DataSet;
+import org.apache.log4j.Logger;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitPrediction;
+import org.hbird.business.api.impl.DataAccess;
+import org.hbird.business.api.impl.OrbitPropagation;
 import org.hbird.exchange.core.Named;
-import org.hbird.exchange.dataaccess.CommitRequest;
-import org.hbird.exchange.navigation.ContactData;
+import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
-import org.hbird.exchange.navigation.TlePropagationRequest;
 
 public class NavigationTester extends SystemTest {
 
+	private static org.apache.log4j.Logger LOG = Logger.getLogger(NavigationTester.class);
+	
 	@Handler
 	public void process() throws InterruptedException {
 
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+		LOG.info("Starting");
+		
 		startMonitoringArchive();
 		startOrbitPredictor();
 
 		Thread.sleep(2000);
 
-		orbitalListener.elements.clear();
+		orbitalStateListener.elements.clear();
 		
 		/** Store a set of locations */
 		injection.sendBody(new Location("SystemTest", "TARTU", "Test location 1", Math.toRadians(58.3000D), Math.toRadians(26.7330D), 59.0D, 146.92 * 1000000));
@@ -69,74 +76,46 @@ public class NavigationTester extends SystemTest {
 		injection.sendBody(tleParameter);
 
 		/** Send command to commit all changes. */
-		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
-
-		Thread.sleep(5000);
-
-		orbitalListener.elements.clear();
+		forceCommit();
+		
+		orbitalStateListener.elements.clear();
 
 		/** Send a TLE request for a satellite and a subset of locations */
-		TlePropagationRequest request = new TlePropagationRequest("SystemTest", "ESTcube", tleLine1, tleLine2, 1355385448149l, locations);
-		request.addArgument("stream", true);
-		request.setDatasetidentifier("TEST_SET_1");
+		IOrbitPrediction api = new OrbitPropagation("SystemTest");
+		api.requestOrbitPropagationStream("ESTcube", locations, 1355385448149l, 1355385448149l + 2 * 60 * 60 * 1000);
 
 		int totalSleep = 0;
-
-		injection.sendBody(request);
-
-		while (totalSleep < 120000 && orbitalListener.elements.size() != 3) {
+		while (totalSleep < 120000 && orbitalStateListener.elements.size() != 121) {
 			Thread.sleep(2000);
 			totalSleep += 2000;
 		}
 
-		/** Find the set of orbital states and check them. */
-		DataSet orbitalStates = null;
-		for (Named obj : orbitalListener.elements) {
-			orbitalStates = (DataSet) obj;
-			if (orbitalStates.getType().equals("OrbitalStates")) {
-				break;
-			}
-		} 
-		azzert(orbitalStates.getDataset().size() == 121, "Received orbital states. Received " + orbitalStates.getDataset().size());
-		print(orbitalStates.getDataset());
-		
-		/** Find the set of TARTU contacts and check them. */
-		orbitalStates = null;
-		for (Named obj : orbitalListener.elements) {
-			orbitalStates = (DataSet) obj;
-			if (orbitalStates.getType().equals("ContactData") && orbitalStates.getLocation().equals("TARTU")) {
-				break;
-			}
-		} 
-		azzert(orbitalStates.getDataset().size() == 433, "Received contact events for TARTU. Expected 433, received " + orbitalStates.getDataset().size());
-		print(orbitalStates.getDataset());
-		
-		/** Find the set of Aalbrog contacts and check them. */
-		orbitalStates = null;
-		for (Named obj : orbitalListener.elements) {
-			orbitalStates = (DataSet) obj;
-			if (orbitalStates.getType().equals("ContactData") && orbitalStates.getLocation().equals("Aalborg")) {
-				break;
-			}
-		} 
-		azzert(orbitalStates.getDataset().size() == 960, "Received contact events for Aalborg. Received " + orbitalStates.getDataset().size());
-		print(orbitalStates.getDataset());
+		azzert(orbitalStateListener.elements.size() == 121, "Expect to receive 121 orbital states. Received " + orbitalStateListener.elements.size());
+		print(orbitalStateListener.elements);
+			
+		azzert(locationEventListener.elements.size() == 5, "Expect to receive 5 location events. Received " + locationEventListener.elements.size());
+		print(locationEventListener.elements);
 
-		orbitalListener.elements.clear();		
+		/** Send command to commit all changes. */
+		forceCommit();
 		
-		/** Send a request without the TLE and without locations. The latest TLE and all locations should be taken. */
-		request = new TlePropagationRequest("SystemTest", "ESTcube");
-		request.addArgument("starttime", 1355385448149l);
-		injection.sendBody(request);
+		/** Retrieve the next set of TARTU events and check them. */
+		IDataAccess dataApi = new DataAccess("SystemTest");
+		List<LocationContactEvent> contactEvents = dataApi.retrieveNextLocationContactEventsFor("TARTU", 1355385522265l);
+		
+		azzert(contactEvents.size() == 2);
+		azzert(contactEvents.get(0).getTimestamp() == 1355390844725l);
+		azzert(contactEvents.get(1).getTimestamp() == 1355391059951l);
 
-		totalSleep = 0;
-		while (totalSleep < 120000 && orbitalListener.elements.size() != 3) {
-			Thread.sleep(2000);
-			totalSleep += 2000;
-		}
-		azzert(orbitalListener.elements.size() == 1689, "Received orbital states, events and contact data. Expected 1689. Received " + orbitalListener.elements.size());
+		/** Check the contact events with Aalborg. Notice that there is one LOST contact event first. The retrieval should NOT get this. */
+		contactEvents = dataApi.retrieveNextLocationContactEventsFor("Aalborg", 1355385522265l);
 		
-		print(orbitalListener.elements);		
+		
+		azzert(contactEvents.size() == 2);
+		azzert(contactEvents.get(0).getTimestamp() == 1355390970221l);
+		azzert(contactEvents.get(1).getTimestamp() == 1355391211998l);
+		
+		LOG.info("Finished");
 	}
 	
 	protected void print(List<Named> elements) {
@@ -162,14 +141,14 @@ public class NavigationTester extends SystemTest {
 			else if (element instanceof LocationContactEvent) {
 				LocationContactEvent event = (LocationContactEvent) element;
 				if (event.isVisible == true) {
-					System.out.println(new Date(element.getTimestamp()) +" Location Event: " + event.location + " got contact to " + event.satellite);
+					System.out.println(new Date(element.getTimestamp()) +" Location Event: " + event.getTimestamp() + " " + event.location + " got contact to " + event.satellite);
 				}
 				else {
-					System.out.println(new Date(element.getTimestamp()) +" Location Event: " + event.location + " lost contact to " + event.satellite);
+					System.out.println(new Date(element.getTimestamp()) +" Location Event: " + event.getTimestamp() + " " + event.location + " lost contact to " + event.satellite);
 				}
 			}
-			else if (element instanceof ContactData) {
-				ContactData event = (ContactData) element;
+			else if (element instanceof PointingData) {
+				PointingData event = (PointingData) element;
 				System.out.println(new Date(element.getTimestamp()) +"     Contact Data: sat=" + event.getSatellite() + ", loc=" + event.getLocation() + ", azm=" + event.getAzimuth() + ", ele=" + event.getElevation() + ", dop=" + event.getDoppler() + ", dopshift=" + event.getDopplerShift());
 			}
 		}

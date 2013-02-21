@@ -32,6 +32,9 @@ public class Finisher extends SystemTest {
 
 	public void process(Exchange exchange) throws InterruptedException {
 		
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+		LOG.info("Starting");
+
 		startQueueManager();
 		
 		LOG.info("System Test done.");

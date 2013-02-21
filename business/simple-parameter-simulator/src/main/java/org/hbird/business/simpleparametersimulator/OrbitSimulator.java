@@ -22,8 +22,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hbird.business.navigation.KeplianOrbitPredictor;
+import org.hbird.exchange.dataaccess.OrbitPredictionRequest;
 import org.hbird.exchange.navigation.D3Vector;
-import org.hbird.exchange.navigation.OrbitPredictionRequest;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.orekit.errors.OrekitException;
 

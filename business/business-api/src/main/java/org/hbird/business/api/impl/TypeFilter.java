@@ -14,25 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.exchange.core;
+package org.hbird.business.api.impl;
 
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hbird.exchange.core.Named;
 
+public class TypeFilter<T> {
 
-
-public class NamedTimestampComperator implements Comparator<Named> {
-
-	public int compare(Named lhs, Named rhs) {
-		
-		if (lhs.getTimestamp() < rhs.getTimestamp()) {
-			return -1;
-		}
-		else if (lhs.getTimestamp() > rhs.getTimestamp()) {
-			return 1;
-		}
-		
-		return 0;
+	protected Class<?> clazz = null;
+	
+	public TypeFilter(Class<?> clazz) {
+		this.clazz = clazz;
 	}
+	
+	public List<T> getObjects(List<Named> elements) {
+		List<T> results = new ArrayList<T>();
+		for (Named entry : elements) {
+			if (entry.getClass() == clazz) {
+				results.add((T) entry);
+			}
+		}
+		
+		return results;	
+	}	
 }

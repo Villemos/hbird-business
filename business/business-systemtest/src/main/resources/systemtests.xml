@@ -18,8 +18,9 @@
 	<bean id="parameter.listener" class="org.hbird.business.systemtest.Listener" />
 	<bean id="state.listener" class="org.hbird.business.systemtest.Listener" />
 	<bean id="label.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="orbital.listener" class="org.hbird.business.systemtest.Listener" />
-								
+	<bean id="orbitalstate.listener" class="org.hbird.business.systemtest.Listener" />
+	<bean id="orbitallocationevent.listener" class="org.hbird.business.systemtest.Listener" />
+									
 	<bean id="testerTemplate" abstract="true" class="org.hbird.business.systemtest.Tester">
 		<property name="monitoringListener" ref="monitoring.listener" />
 		<property name="commandingListener" ref="commanding.listener" />
@@ -28,21 +29,23 @@
 		<property name="parameterListener" ref="parameter.listener"/>
 		<property name="stateListener" ref="state.listener"/>
 		<property name="labelListener" ref="label.listener"/>
-		<property name="orbitalListener" ref="orbital.listener"/>
+		<property name="orbitalStateListener" ref="orbitalstate.listener"/>
+		<property name="locationEventListener" ref="orbitallocationevent.listener"/>
 		<property name="context" ref="basic"/>
 	</bean>
 
-	<bean id="test0" class="org.hbird.business.systemtest.BusinessCardTester" parent="testerTemplate"/>
-	<bean id="test1" class="org.hbird.business.systemtest.ParameterArchivalTester" parent="testerTemplate"/>
-	<bean id="test2" class="org.hbird.business.systemtest.StateArchivalTester" parent="testerTemplate"/>
-	<bean id="test3" class="org.hbird.business.systemtest.LimitCheckTester" parent="testerTemplate"/>
-	<bean id="test4" class="org.hbird.business.systemtest.ScriptTester" parent="testerTemplate"/>
-	<bean id="test5" class="org.hbird.business.systemtest.TaskingTester" parent="testerTemplate"/>
-	<bean id="test6" class="org.hbird.business.systemtest.CommandingTester" parent="testerTemplate"/>
+	<bean id="businesscard" class="org.hbird.business.systemtest.BusinessCardTester" parent="testerTemplate"/>
+	<bean id="parameterarchive" class="org.hbird.business.systemtest.ParameterArchivalTester" parent="testerTemplate"/>
+	<bean id="archive" class="org.hbird.business.systemtest.StateArchivalTester" parent="testerTemplate"/>
+	<bean id="limitcheck" class="org.hbird.business.systemtest.LimitCheckTester" parent="testerTemplate"/>
+	<bean id="scripting" class="org.hbird.business.systemtest.ScriptTester" parent="testerTemplate"/>
+	<bean id="tasking" class="org.hbird.business.systemtest.TaskingTester" parent="testerTemplate"/>
+	<bean id="commanding" class="org.hbird.business.systemtest.CommandingTester" parent="testerTemplate"/>
 	<bean id="navigation" class="org.hbird.business.systemtest.NavigationTester" parent="testerTemplate"/>
-	<bean id="test8" class="org.hbird.business.systemtest.QueueManagerTester" parent="testerTemplate"/>
+	<bean id="queuemanager" class="org.hbird.business.systemtest.QueueManagerTester" parent="testerTemplate"/>
 	<bean id="dataaccessapi" class="org.hbird.business.systemtest.DataAccessApiTester" parent="testerTemplate"/>
 	<bean id="navigationcontroller" class="org.hbird.business.systemtest.NavigationControllerTester" parent="testerTemplate"/>
+	<bean id="antennacontroller" class="org.hbird.business.systemtest.AntennaControlTester" parent="testerTemplate"/>
 	<bean id="finisher" class="org.hbird.business.systemtest.Finisher" parent="testerTemplate"/>
 						
 	<bean id="scheduler" class="org.hbird.business.core.Scheduler"/>
@@ -51,16 +54,17 @@
 
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
-<!-- 				<to uri="bean:test0" /> -->
-<!-- 				<to uri="bean:test1" /> -->
-<!-- 				<to uri="bean:test2" /> -->
-<!-- 				<to uri="bean:test3" /> -->
-<!-- 				<to uri="bean:test4" /> -->
-<!-- 		 		<to uri="bean:test5" /> -->
-<!-- 	 			<to uri="bean:test6" /> -->
-<!-- 	 			<to uri="bean:navigation" /> -->
-<!-- 	 			<to uri="bean:test8" /> -->
-<!-- 	 			<to uri="bean:dataaccessapi" /> -->
+				<to uri="bean:businesscard" />
+				<to uri="bean:parameterarchive" />
+				<to uri="bean:archive" />
+				<to uri="bean:limitcheck" />
+				<to uri="bean:scripting" />
+		 		<to uri="bean:tasking" />
+	 			<to uri="bean:commanding" />
+	 			<to uri="bean:navigation" />
+	 			<to uri="bean:antennacontroller" />
+	 			<to uri="bean:queuemanager" />
+	 			<to uri="bean:dataaccessapi" />
 	 			<to uri="bean:navigationcontroller" />
 	 			<to uri="bean:finisher" />
 		</route>
@@ -134,7 +138,7 @@
 			<to uri="bean:failed.commanding.listener" />
 		</route>
 
-		<route id="businesscard">
+		<route id="listen.businesscard">
 			<from uri="activemq:topic:hbird.monitoring?selector=type='BusinessCard'" />
 			<to uri="bean:businesscard.listener" />
 		</route>
@@ -154,9 +158,14 @@
 			<to uri="bean:label.listener" />
 		</route>
 
-		<route id="orbital">
-			<from uri="activemq:topic:hbird.monitoring?selector=type='ContactData' OR type='OrbitalStates'" />
-			<to uri="bean:orbital.listener" />
+		<route id="orbitalState">
+			<from uri="activemq:topic:hbird.monitoring?selector=type='OrbitalState'" />
+			<to uri="bean:orbitalstate.listener" />
+		</route>
+		
+		<route id="orbitalLocationEvent">
+			<from uri="activemq:topic:hbird.monitoring?selector=type='LocationContactEvent'" />
+			<to uri="bean:orbitallocationevent.listener" />
 		</route>
 
 	</camelContext>

@@ -6,13 +6,24 @@
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
-  <groupId>business-antennacontrol</groupId>
   <artifactId>business-antennacontrol</artifactId>
 
 <dependencies>
   <dependency>
   <groupId>org.hbird.exchange</groupId>
   <artifactId>dataaccess</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  </dependency>
+
+  <dependency>
+  <groupId>org.hbird.business</groupId>
+  <artifactId>business-navigation</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  </dependency>
+
+  <dependency>
+  <groupId>org.hbird.business</groupId>
+  <artifactId>business-api</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   </dependency>
   

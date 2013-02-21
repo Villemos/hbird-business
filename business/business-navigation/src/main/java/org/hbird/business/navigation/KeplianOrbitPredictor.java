@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
-import org.hbird.exchange.core.DataSet;
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.bodies.GeodeticPoint;
@@ -50,9 +50,9 @@ import org.orekit.utils.PVCoordinates;
  */
 public class KeplianOrbitPredictor {
 
-	public List<DataSet> predictOrbit(List<Location> locations, PVCoordinates pvCoordinates, long startTime, String satellite, double stepSize, double deltaPropagation, long contactDataStepSize, long generationTime, String datasetIdentifier, TleOrbitalParameters parameters, CamelContext context, boolean publish) throws OrekitException {
+	public List<Named> predictOrbit(List<Location> locations, PVCoordinates pvCoordinates, long startTime, String satellite, double stepSize, double deltaPropagation, long contactDataStepSize, TleOrbitalParameters parameters, CamelContext context, boolean publish) throws OrekitException {
 
-		List<DataSet> results = new ArrayList<DataSet>();
+		List<Named> results = new ArrayList<Named>();
 		
 		AbsoluteDate initialDate = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());
 
@@ -61,7 +61,7 @@ public class KeplianOrbitPredictor {
 
 		Propagator propagator = new KeplerianPropagator(initialOrbit);
 
-		OrbitalStateCollector injector = new OrbitalStateCollector(satellite, generationTime, datasetIdentifier, parameters, context, publish);
+		OrbitalStateCollector injector = new OrbitalStateCollector(satellite, parameters, context, publish);
 
 		/** Register the visibility events for the requested locations. */
 		for (Location location : locations) {
@@ -69,7 +69,7 @@ public class KeplianOrbitPredictor {
 			TopocentricFrame sta1Frame = new TopocentricFrame(Constants.earth, point, location.getName());
 
 			/** Register the injector that will send the detected events, for this location, to the propagator. */
-			EventDetector sta1Visi = new LocationContactEventCollector(location.getThresholdElevation(), sta1Frame, satellite, location, contactDataStepSize, generationTime, datasetIdentifier, parameters, context, publish);
+			EventDetector sta1Visi = new LocationContactEventCollector(location.getThresholdElevation(), sta1Frame, satellite, location.getName(), parameters, context, publish);
 			propagator.addEventDetector(sta1Visi);				
 		}
 
@@ -77,11 +77,11 @@ public class KeplianOrbitPredictor {
 		propagator.propagate(new AbsoluteDate(initialDate, deltaPropagation));
 
 		/** Add the data set with the orbital data. */
-		results.add(injector.getDataSet());
+		results.addAll(injector.getDataSet());
 		
 		/** Add all the data sets with contact data. */
 		for (EventDetector detector : propagator.getEventsDetectors()) {
-			results.addAll( ((LocationContactEventCollector) detector).getDatasets() );
+			results.addAll( ((LocationContactEventCollector) detector).getDataSet());
 		}
 		
 		return results;

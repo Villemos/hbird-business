@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api;
+package org.hbird.business.api.impl;
 
 import java.util.List;
 
+import org.hbird.business.api.IPublish;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Binary;
 import org.hbird.exchange.core.Command;
@@ -25,9 +26,7 @@ import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.navigation.D3Vector;
 import org.hbird.exchange.navigation.Location;
-import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.tasking.Task;
 
@@ -59,7 +58,7 @@ public class Publish extends HbirdApi implements IPublish {
 	}
 
 	public void publishMeasuredOrbitalState(String name, String description, long timestamp, long generationTime, String satellite, double px, double py, double pz, double vx, double vy, double vz, double mx, double my, double mz, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
-		template.sendBody(inject, new OrbitalState(issuedBy, name, description, timestamp, generationTime, satellite, new D3Vector(issuedBy, "position", "", "", px, py, pz), new D3Vector(issuedBy, "velocity", "", "", vx, vy, vz), new D3Vector(issuedBy, "momentum", "", "", mx, my, mz), derivedFromName, derivedFromTimestamp, derivedFromType));
+		// TODO
 	}
 		
 	public void publishLabel(String name, String type, String description, String value) {

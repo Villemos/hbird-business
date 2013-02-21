@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.Handler;
+import org.apache.log4j.Logger;
 import org.hbird.exchange.commandrelease.CommandRequest;
-import org.hbird.exchange.configurator.StartQueueManagerComponent;
 import org.hbird.queuemanagement.ClearQueue;
 import org.hbird.queuemanagement.ListQueues;
 import org.hbird.queuemanagement.QueueHelper;
@@ -15,9 +15,14 @@ import org.hbird.queuemanagement.ViewQueue;
 
 public class QueueManagerTester extends SystemTest {
 
+	private static org.apache.log4j.Logger LOG = Logger.getLogger(QueueManagerTester.class);
+	
 	@Handler
 	public void process() throws InterruptedException {
 	
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+		LOG.info("Starting");
+		
 		startQueueManager();
 		
 		Thread.sleep(2000);
@@ -62,5 +67,6 @@ public class QueueManagerTester extends SystemTest {
 		entries = (Map<String, String>) injection.requestBody(new RemoveQueueElements("SystemTest", "CommandingQueueManager", "systemtest.", true));
 		azzert(entries.size() == 2, "Expect 2 entries in the queue.");
 
+		LOG.info("Finished");
 	}
 }

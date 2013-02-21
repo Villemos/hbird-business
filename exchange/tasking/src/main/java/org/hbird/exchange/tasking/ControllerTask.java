@@ -1,6 +1,5 @@
 package org.hbird.exchange.tasking;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.exchange.core.Named;

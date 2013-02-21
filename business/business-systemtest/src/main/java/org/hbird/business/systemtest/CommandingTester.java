@@ -25,7 +25,6 @@ import org.apache.log4j.Logger;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.tasking.SetParameter;
 import org.hbird.exchange.tasking.Task;
 
@@ -36,6 +35,9 @@ public class CommandingTester extends SystemTest {
 	@Handler
 	public void process() throws InterruptedException {
 
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+		LOG.info("Starting");
+		
 		startMonitoringArchive();
 		startCommandingChain();
 		
@@ -79,9 +81,7 @@ public class CommandingTester extends SystemTest {
         injection.sendBody(new State("SystemTestSuite", "STATE_COM4", "A test description,", "COM2", true));
 
         /** Send command to commit all changes. */
-		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
-        		
-        Thread.sleep(2000);
+		forceCommit();
         
         /** The command should fail, as one of the states is 'false'. */
 		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", states, tasks, command));
@@ -98,16 +98,14 @@ public class CommandingTester extends SystemTest {
         injection.sendBody(new State("SystemTestSuite", "STATE_COM3", "A test description,", "COM2", true));
 
         /** Send command to commit all changes. */
-		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
-
-		Thread.sleep(2000);
+		forceCommit();
 		
         /** The command should fail, as one of the states is 'false'. */
 		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", states, tasks, command));
 		
 		Thread.sleep(2000);
 		
-		azzert(commandingListener.lastReceived.getName().equals("COM2"));
+		azzert(failedCommandRequestListener.lastReceived.getName().equals("CommandContainerCOMREQ1"));
 		
 
 		
@@ -115,9 +113,7 @@ public class CommandingTester extends SystemTest {
         injection.sendBody(new State("SystemTestSuite", "STATE_OTHER", "A test description,", "COM2", false));
 
 		/** Send command to commit all changes. */
-		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
-		
-		Thread.sleep(2000);
+		forceCommit();
 		
         /** The command should fail, as one of the states is 'false'. */
 		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", states, tasks, command));
@@ -125,5 +121,7 @@ public class CommandingTester extends SystemTest {
 		Thread.sleep(2000);
 		
 		azzert(failedCommandRequestListener.lastReceived.getName().equals("CommandContainerCOMREQ1"));
+		
+		LOG.info("Finished");
 	}
 }

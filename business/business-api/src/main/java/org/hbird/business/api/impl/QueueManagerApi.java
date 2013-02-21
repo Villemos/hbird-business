@@ -1,4 +1,20 @@
-package org.hbird.business.queuemanagement;
+/**
+ * Licensed to the Hummingbird Foundation (HF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The HF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.hbird.business.api.impl;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,10 +35,7 @@ import javax.management.remote.JMXServiceURL;
 import org.apache.activemq.broker.jmx.BrokerViewMBean;
 import org.apache.activemq.broker.jmx.CompositeDataConstants;
 import org.apache.activemq.broker.jmx.QueueViewMBean;
-import org.apache.camel.Body;
-import org.hbird.queuemanagement.ClearQueue;
-import org.hbird.queuemanagement.RemoveQueueElements;
-import org.hbird.queuemanagement.ViewQueue;
+import org.hbird.business.api.IQueueManagement;
 
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.OpenDataException;
@@ -33,11 +46,14 @@ import javax.management.openmbean.OpenDataException;
  * @author Gert Villemos
  *
  */
-public class QueueManager {
+public class QueueManagerApi extends HbirdApi implements IQueueManagement {
 
 	/** The connection to the server. */
 	protected MBeanServerConnection conn = null;
 
+	public QueueManagerApi(String issuedBy) {
+		super(issuedBy);
+	}	
 
 	/**
 	 * Method to get the XBean of the Activemq Broker
@@ -116,8 +132,8 @@ public class QueueManager {
 	 * @throws NullPointerException
 	 * @throws IOException
 	 */
-	public Map<String, String> viewQueue(@Body ViewQueue command) throws InvalidSelectorException, OpenDataException, MalformedObjectNameException, MalformedURLException, NullPointerException, IOException {
-		return listQueueElements(command.getQueueName());
+	public Map<String, String> viewQueue(String queueName) throws InvalidSelectorException, OpenDataException, MalformedObjectNameException, MalformedURLException, NullPointerException, IOException {
+		return listQueueElements(queueName);
 	}
 
 
@@ -136,9 +152,12 @@ public class QueueManager {
 
 		/** Go through all messages in the queue. */
 		Map<String, String> entries = new HashMap<String, String>();
-		for (CompositeData cdata : getQueueViewBean(getBrokerBean(), qname).browse()) {
-			entries.put((String) cdata.get("JMSMessageID"), (String) cdata.get(CompositeDataConstants.PROPERTIES));
-		} 
+		QueueViewMBean bean = getQueueViewBean(getBrokerBean(), qname);
+		if (bean != null) {
+			for (CompositeData cdata : bean.browse()) {
+				entries.put((String) cdata.get("JMSMessageID"), (String) cdata.get(CompositeDataConstants.PROPERTIES));
+			} 
+		}
 
 		return entries;
 	}
@@ -150,14 +169,13 @@ public class QueueManager {
 	 * @return A Map defining the current set of elements.
 	 * @throws Exception
 	 */
-	public Map<String, String> removeQueueElements(@Body RemoveQueueElements command) throws Exception {
+	public Map<String, String> removeQueueElements(String queueName, String pattern) throws Exception {
 
-		QueueViewMBean qbean = getQueueViewBean(getBrokerBean(), command.getQueueName());
+		QueueViewMBean qbean = getQueueViewBean(getBrokerBean(), queueName);
 
-		List<String> toDelete = command.getElements();
+		List<String> toDelete = new ArrayList<String>();
 
 		/** See if a pattern has been set. If yes, then identify the messages that matches and add them to the list. */
-		String pattern = command.getPattern();
 		if (pattern != null) {
 			for (CompositeData cdata : qbean.browse()) {
 				String properties = (String) cdata.get(CompositeDataConstants.PROPERTIES);
@@ -173,7 +191,7 @@ public class QueueManager {
 		}
 
 		/** Return the current view of the queue. */
-		return listQueueElements(command.getQueueName());
+		return listQueueElements(queueName);
 	}
 
 
@@ -184,8 +202,8 @@ public class QueueManager {
 	 * @return True
 	 * @throws Exception
 	 */
-	public Boolean clearQueue(@Body ClearQueue command) throws Exception {
-		getQueueViewBean(getBrokerBean(), command.getQueueName()).purge();
+	public Boolean clearQueue(String queueName) throws Exception {
+		getQueueViewBean(getBrokerBean(), queueName).purge();
 		return true;
 	}
 }

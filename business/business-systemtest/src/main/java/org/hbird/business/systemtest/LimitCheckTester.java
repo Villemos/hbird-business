@@ -30,6 +30,9 @@ public class LimitCheckTester extends SystemTest {
 	@Handler
 	public void process() throws InterruptedException {
 			
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+		LOG.info("Starting");
+		
 		/** Start a limit checker. */
 		LOG.info("Issuing commands for starting two lower limit limitcheckers.");
 
@@ -85,6 +88,8 @@ public class LimitCheckTester extends SystemTest {
 		Thread.sleep(2000);
 		
 		azzert(stateListener.lastReceived.getName().equals("PARA1_UpperSoftLimit") == false, "Disabled state was not distributed.");
+		
+		LOG.info("Finished");
 	}	
 	
 	protected void send(Double value, String soft, boolean expectedSoft, String hard, boolean expectedHard) throws InterruptedException {

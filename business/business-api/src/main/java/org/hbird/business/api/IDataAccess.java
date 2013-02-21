@@ -23,6 +23,8 @@ import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.DataRequest;
+import org.hbird.exchange.navigation.PointingData;
+import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
@@ -541,4 +543,64 @@ public interface IDataAccess {
 	 * @return A list of all orbital states applicable to the satellites
 	 */	
 	public List<TleOrbitalParameters> retrieveTleFor(String satellite, long from, long to);	
+	
+	
+	/**
+	 * Method to retrieve the next contact start/end event pair. The method will return
+	 * <li>Two events, the first being the start event and the next being the following end event.</li>
+	 * 
+	 * @param location
+	 * @return
+	 */
+	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location);
+
+	/**
+	 * Method to retrieve the next contact start/end event pair. The method will return
+	 * <li>Two events, the first being the start event and the next being the following end event.</li>
+	 * 
+	 * @param location
+	 * @return
+	 */
+	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, long from);
+
+	/**
+	 * Method to retrieve the next contact start/end event pair. The method will return
+	 * <li>Two events, the first being the start event and the next being the following end event.</li>
+	 * 
+	 * @param location
+	 * @return
+	 */
+	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, String satellite);
+
+	/**
+	 * Method to retrieve the next contact start/end event pair. The method will return
+	 * <li>Two events, the first being the start event and the next being the following end event.</li>
+	 * 
+	 * @param location
+	 * @return
+	 */
+	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, String satellite, long from);
+
+	/**
+	 * Method to retrieve the next contact opportunity with any satellite.
+	 * 
+	 * @param location The location for which to retrieve the contact data for. The method will return
+	 * <li>All contact data related to the next set of contact events (start-end of contact).</li>
+	 * <li>Sorted ASCENDING on timestamp</li>
+	 * 
+	 * @return List containing the next set of contact data
+	 */
+	public List<PointingData> retrieveNextLocationContactDataFor(String location);
+		
+	/**
+	 * @param location The location for which to retrieve the contact data for. The method will return
+	 * <li>All contact data related to the next set of contact events (start-end of contact).</li>
+	 * <li>Sorted ASCENDING on timestamp</li>
+	 * 
+	 * @return List containing the next set of contact data
+	 */
+	public List<PointingData> retrieveNextLocationContactDataFor(String location, String satellite);
+
+	public List<PointingData> retrieveLocationContactDataFor(String location, long from, long to);
+	
 }

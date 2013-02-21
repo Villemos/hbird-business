@@ -31,6 +31,7 @@ public class StateRequest extends DataRequest {
 		super(issuedBy, "any", "StateRequest", "A request for the state(s) of a Named object");
 
 		setClass(State.class.getSimpleName());
+		setType("State");
 		addArgument("isStateOf", isStateOf);
 		setIsInitialization(true);
 	}	
@@ -39,6 +40,7 @@ public class StateRequest extends DataRequest {
 		super(issuedBy, "any", "StateRequest", "A request for the state(s) of a Named object");
 
 		setClass(State.class.getSimpleName());
+		setType("State");
 		addArgument("isStateOf", isStateOf);
 		setFrom(from);
 		setTo(to);
@@ -49,6 +51,7 @@ public class StateRequest extends DataRequest {
 		super(issuedBy, "any", "StateRequest", "A request for the state(s) of a Named object");
 
 		setClass(State.class.getSimpleName());
+		setType("State");
 		addArgument("isStateOf", isStateOf);
 		addArgument("names", names);
 		setIsInitialization(true);
@@ -58,6 +61,7 @@ public class StateRequest extends DataRequest {
 		super(issuedBy, destination, "StateRequest", "A request for the state(s) of a Named object");
 
 		setClass(State.class.getSimpleName());
+		setType("State");
 		addArgument("isStateOf", isStateOf);
 		setIsInitialization(true);
 	}	

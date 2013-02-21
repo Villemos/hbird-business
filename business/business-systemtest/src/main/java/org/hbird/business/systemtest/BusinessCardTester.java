@@ -29,6 +29,9 @@ public class BusinessCardTester extends SystemTest {
 	@Handler
 	public void process() throws InterruptedException {
 
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+		LOG.info("Starting");
+		
 		/** See if we have the businesscards of the Configurator. */
 		Thread.sleep(5000);
 		
@@ -92,5 +95,7 @@ public class BusinessCardTester extends SystemTest {
 			
 			azzert(!archiveDidArrive, "Business card messages not arriving from Archive");
 		}		
+		
+		LOG.info("Finished*");
 	}
 }

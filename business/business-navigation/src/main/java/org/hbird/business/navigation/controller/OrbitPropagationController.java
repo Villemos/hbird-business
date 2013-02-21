@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hbird.business.api.DataAccess;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IOrbitPrediction;
-import org.hbird.business.api.OrbitPropagation;
+import org.hbird.business.api.impl.DataAccess;
+import org.hbird.business.api.impl.OrbitPropagation;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;

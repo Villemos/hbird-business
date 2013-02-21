@@ -22,6 +22,12 @@ import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.tasking.Task;
 
+/**
+ * 
+ * 
+ * @author Gert Villemos
+ *
+ */
 public interface IPublish {
 
 	public void publish(Named object);

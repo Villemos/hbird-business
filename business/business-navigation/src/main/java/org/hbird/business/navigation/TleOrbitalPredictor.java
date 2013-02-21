@@ -23,15 +23,13 @@ import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
-import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.dataaccess.LocationRequest;
+import org.hbird.exchange.dataaccess.TlePropagationRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
 import org.hbird.exchange.navigation.Location;import org.hbird.exchange.navigation.TleOrbitalParameters;
-import org.hbird.exchange.navigation.TlePropagationRequest;
 import org.orekit.errors.OrekitException;
 import org.orekit.time.AbsoluteDate;
 import org.orekit.time.TimeScalesFactory;
@@ -69,7 +67,7 @@ public class TleOrbitalPredictor {
 	 * 
 	 * @throws OrekitException */
 	@Handler
-	public List<DataSet> predictOrbit(@Body TlePropagationRequest request, CamelContext context) throws OrekitException {
+	public List<Named> predictOrbit(@Body TlePropagationRequest request, CamelContext context) throws OrekitException {
 
 		/** Create the TLE element */
 		TleOrbitalParameters parameters = request.getTleParameters();
@@ -77,13 +75,7 @@ public class TleOrbitalPredictor {
 			parameters = getTleParameters(request.getSatellite(), context);
 		}
 
-		List<DataSet> results = null;
-
-		/** Set the unique generationtime and the datasetidentifier for all generated objects from this 'session'. 
-		 * The dataset identifier is the same as the TLE. This allos the values generated as a result of the TLE
-		 * to be traced. */
-		long generationtime = parameters.getTimestamp();
-		String datasetidentifier = parameters.getDatasetidentifier();
+		List<Named> results = null;
 
 		/** If no TLE found, then we cant propagate.*/
 		if (parameters == null) {
@@ -100,7 +92,7 @@ public class TleOrbitalPredictor {
 			PVCoordinates initialOrbitalState = TLEPropagator.selectExtrapolator(tle).getPVCoordinates(startDate);
 
 			/** Calculate the orbital states and the contact events from the initial time forwards */
-			results = keplianOrbitPredictor.predictOrbit(locations, initialOrbitalState, request.getStartTime(), request.getSatellite(), request.getStepSize(), request.getDeltaPropagation(), request.getContactDataStepSize(), generationtime, datasetidentifier, parameters, context, request.getPublish());
+			results = keplianOrbitPredictor.predictOrbit(locations, initialOrbitalState, request.getStartTime(), request.getSatellite(), request.getStepSize(), request.getDeltaPropagation(), request.getContactDataStepSize(), parameters, context, request.getPublish());
 		}
 
 		/** Return the data. */

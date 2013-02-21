@@ -18,10 +18,8 @@
 package org.hbird.exchange.navigation;
 
 import org.hbird.exchange.core.DerivedNamed;
-import org.hbird.exchange.core.IGenerationTimestamped;
 import org.hbird.exchange.core.ILocationSpecific;
 import org.hbird.exchange.core.ISatelliteSpecific;
-import org.hbird.exchange.core.Named;
 
 /**
  * Class describing the attributes between two objects, such as
@@ -30,12 +28,10 @@ import org.hbird.exchange.core.Named;
  * @author Admin
  *
  */
-public class ContactData extends DerivedNamed implements IGenerationTimestamped, ISatelliteSpecific, ILocationSpecific {
+public class PointingData extends DerivedNamed implements ISatelliteSpecific, ILocationSpecific {
 
 	private static final long serialVersionUID = -6892848291146482728L;
 
-	protected long generationTime = 0;
-	
 	protected Double azimuth;
 	protected Double elevation;
 	protected Double doppler;
@@ -47,8 +43,8 @@ public class ContactData extends DerivedNamed implements IGenerationTimestamped,
 	/** The other object. */
 	protected String location;
 	
-	public ContactData(String issuedBy, String name, String type, String description, long timestamp, long generationTime, String datasetIdentifier, Double azimuth, Double elevation, Double doppler, Double dopplerShift, String satellite, String location, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
-		super(issuedBy, name, "ContactData", description, timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
+	public PointingData(String issuedBy, long timestamp, Double azimuth, Double elevation, Double doppler, Double dopplerShift, String satellite, String location, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+		super(issuedBy, "PointingData", "ContactData", "Contact data between a satellite and a location", timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
 
 		this.azimuth = azimuth;
 		this.elevation = elevation;
@@ -57,8 +53,6 @@ public class ContactData extends DerivedNamed implements IGenerationTimestamped,
 		
 		this.satellite = satellite;
 		this.location = location;
-		
-		this.generationTime = generationTime;
 	}
 
 	public Double getAzimuth() {
@@ -108,14 +102,8 @@ public class ContactData extends DerivedNamed implements IGenerationTimestamped,
 	public void setLocation(String location) {
 		this.location = location;
 	}
-
-	public long getGenerationTime() {
-		return generationTime;
-	}
-
-	public void setGenerationTime(long generationTime) {
-		this.generationTime = generationTime;
-	}
 	
-	
+	public String prettyPrint() {
+		return "class=" + this.getClass().getSimpleName() + ", name=" + name + ", timestamp=" + timestamp + ", location=" + getLocation() + ", satellite=" + satellite + ", para=" + this.azimuth + ":" + this.doppler + ":" + this.dopplerShift;
+	}
 }

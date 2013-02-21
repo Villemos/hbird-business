@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.camel.Handler;
+import org.apache.log4j.Logger;
 import org.hbird.exchange.configurator.StartScriptComponent;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Parameter;
@@ -27,9 +28,14 @@ import org.hbird.exchange.core.State;
 
 public class ScriptTester extends SystemTest {
 
+	private static org.apache.log4j.Logger LOG = Logger.getLogger(ScriptTester.class);
+	
 	@Handler
 	public void process() throws InterruptedException {
 
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+		LOG.info("Starting");
+		
 		/** Create script component from scratch. */
 		String script = "var value=in1.asDouble()*10 + in2.asDouble(); output.setValue(value);\n";
 
@@ -147,5 +153,7 @@ public class ScriptTester extends SystemTest {
 		azzert(labelListener.lastReceived.getName().equals("SYN3") == true);
 		out5 = (Label) labelListener.lastReceived;
 		azzert(out5.getValue().equals("ON"));
+		
+		LOG.info("Finished");
 	}
 }

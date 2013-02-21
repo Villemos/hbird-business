@@ -21,14 +21,22 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.CamelContext;
+import org.apache.log4j.Logger;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.impl.DataAccess;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.dataaccess.CommitRequest;
-import org.hbird.exchange.dataaccess.StateRequest;
 
 public class StateArchivalTester extends SystemTest {
 
+	private static org.apache.log4j.Logger LOG = Logger.getLogger(StateArchivalTester.class);
+	
     public void process(CamelContext context) throws InterruptedException {
     	        
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+    	LOG.info("Starting");
+    	
+    	IDataAccess api = new DataAccess("SystemTest");
+    	
     	startMonitoringArchive();
 		
 		Thread.sleep(2000);
@@ -53,11 +61,11 @@ public class StateArchivalTester extends SystemTest {
         injection.sendBody(new State("SystemTestSuite", "STATE15", "A test description,", "COMMAND3", true));
         injection.sendBody(new State("SystemTestSuite", "STATE16", "A test description,", "COMMAND3", true));
 
-		/** Send command to commit all changes. */
-		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
-
+        forceCommit();
+		
         /** Test retrieval. */
-		Object respond = injection.requestBody(new StateRequest("SystemTest", "ParameterArchive", "COMMAND1"));
+		//Object respond = injection.requestBody(new StateRequest("SystemTest", "ParameterArchive", "COMMAND1"));
+		Object respond = api.retrieveState("COMMAND1");
 		azzert(respond != null, "Received a response.");
         
         Map<String, State> states = new HashMap<String, State>();
@@ -81,40 +89,17 @@ public class StateArchivalTester extends SystemTest {
         injection.sendBody(new State("SystemTestSuite", "STATE7", "A test description,", "COMMAND1", true));
 
 		/** Send command to commit all changes. */
-		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
-
-        /** Test retrieval. */
-		respond = injection.requestBody(new StateRequest("SystemTest", "ParameterArchive", "COMMAND1"));
-		azzert(respond != null, "Received a response.");
-
-        states = new HashMap<String, State>();
-        for (State state : (List<State>) respond) {
-        	states.put(state.getName(), state);
-        }
-        azzert(states.get("STATE1").getValue() == true);
-        azzert(states.get("STATE2").getValue() == true);
-        azzert(states.get("STATE3").getValue() == false);
-        azzert(states.get("STATE4").getValue() == true);
-        azzert(states.get("STATE5").getValue() == false);
-        azzert(states.get("STATE6").getValue() == true);
-        azzert(states.get("STATE7").getValue() == true);
-
-		/** Send command to commit all changes. */
-		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
-
-        /** Test retrieval. */
-		StateRequest stateRequest = new StateRequest("SystemTest", "ParameterArchive", "COMMAND1");
-        stateRequest.addName("STATE11");
-        stateRequest.addName("STATE15");
+		forceCommit();
 		
-		respond = injection.requestBody(stateRequest);
+        /** Test retrieval. */
+		// respond = injection.requestBody(new StateRequest("SystemTest", "ParameterArchive", "COMMAND1"));
+		respond = api.retrieveState("COMMAND1");
 		azzert(respond != null, "Received a response.");
 
         states = new HashMap<String, State>();
         for (State state : (List<State>) respond) {
         	states.put(state.getName(), state);
         }
-
         azzert(states.get("STATE1").getValue() == true);
         azzert(states.get("STATE2").getValue() == true);
         azzert(states.get("STATE3").getValue() == false);
@@ -122,7 +107,7 @@ public class StateArchivalTester extends SystemTest {
         azzert(states.get("STATE5").getValue() == false);
         azzert(states.get("STATE6").getValue() == true);
         azzert(states.get("STATE7").getValue() == true);
-        azzert(states.get("STATE11").getValue() == true);
-        azzert(states.get("STATE15").getValue() == true);
+
+		LOG.info("Finished");
     }
 }

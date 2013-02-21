@@ -209,7 +209,8 @@
    <field name="derivedFromTimestamp" type="slong" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>   
    <field name="derivedFromType" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>  
 	
-
+	<!-- Additional 'LocationContactEvent' class fields. -->
+   <field name="visibility" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
 
    <!-- Standard fields. -->   
    <field name="serialization" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>

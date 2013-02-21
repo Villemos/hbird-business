@@ -16,27 +16,18 @@
  */
 package org.hbird.business.api;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Map;
 
-import org.hbird.exchange.core.Named;
+import javax.jms.InvalidSelectorException;
+import javax.management.MalformedObjectNameException;
+import javax.management.openmbean.OpenDataException;
 
-public class TypeFilter<T> {
-
-	protected Class<?> clazz = null;
-	
-	public TypeFilter(Class<?> clazz) {
-		this.clazz = clazz;
-	}
-	
-	public List<T> getObjects(List<Named> elements) {
-		List<T> results = new ArrayList<T>();
-		for (Named entry : elements) {
-			if (entry.getClass() == clazz) {
-				results.add((T) entry);
-			}
-		}
-		
-		return results;	
-	}	
+public interface IQueueManagement {
+	public List<String> listQueues() throws MalformedObjectNameException, MalformedURLException, NullPointerException, IOException;
+	public Map<String, String> viewQueue(String queueName) throws InvalidSelectorException, OpenDataException, MalformedObjectNameException, MalformedURLException, NullPointerException, IOException;
+	public Map<String, String> removeQueueElements(String queueName, String elementIdPattern) throws Exception;
+	public Boolean clearQueue(String queueName) throws Exception;
 }

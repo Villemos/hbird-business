@@ -20,8 +20,8 @@ import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.navigation.KeplianOrbitPredictor;
 import org.hbird.business.navigation.TleOrbitalPredictor;
 import org.hbird.exchange.configurator.StandardEndpoints;
-import org.hbird.exchange.navigation.OrbitPredictionRequest;
-import org.hbird.exchange.navigation.TlePropagationRequest;
+import org.hbird.exchange.dataaccess.OrbitPredictionRequest;
+import org.hbird.exchange.dataaccess.TlePropagationRequest;
 
 /**
  * Component builder to create a Navigation Component

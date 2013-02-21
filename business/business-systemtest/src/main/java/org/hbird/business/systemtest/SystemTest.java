@@ -50,11 +50,13 @@ public abstract class SystemTest {
 
 	protected Listener businessCardListener = null;
 	
-	protected Listener stateListener = null;
+	protected Listener orbitalStateListener = null;
+	
+	protected Listener locationEventListener = null;
 	
 	protected Listener labelListener = null;
 	
-	protected Listener orbitalListener = null;
+	protected Listener stateListener = null;
 	
 	protected CamelContext context = null;
 	
@@ -192,14 +194,22 @@ public abstract class SystemTest {
 
 	public void setParameterListener(Listener parameterListener) {
 		this.parameterListener = parameterListener;
+	}	
+	
+	public Listener getOrbitalStateListener() {
+		return orbitalStateListener;
 	}
 
-	public Listener getStateListener() {
-		return stateListener;
+	public void setOrbitalStateListener(Listener orbitalStateListener) {
+		this.orbitalStateListener = orbitalStateListener;
 	}
 
-	public void setStateListener(Listener stateListener) {
-		this.stateListener = stateListener;
+	public Listener getLocationEventListener() {
+		return locationEventListener;
+	}
+
+	public void setLocationEventListener(Listener locationEventListener) {
+		this.locationEventListener = locationEventListener;
 	}
 
 	public Listener getLabelListener() {
@@ -210,12 +220,12 @@ public abstract class SystemTest {
 		this.labelListener = labelListener;
 	}
 
-	public Listener getOrbitalListener() {
-		return orbitalListener;
+	public Listener getStateListener() {
+		return stateListener;
 	}
 
-	public void setOrbitalListener(Listener orbitalListener) {
-		this.orbitalListener = orbitalListener;
+	public void setStateListener(Listener orbitalListener) {
+		this.stateListener = orbitalListener;
 	}
 
 	public CamelContext getContext() {
@@ -226,5 +236,9 @@ public abstract class SystemTest {
 		this.context = context;
 	}
 
-	
+	protected void forceCommit() throws InterruptedException {
+		/** Send command to commit all changes. */
+		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
+		Thread.sleep(2000);
+	}
 }

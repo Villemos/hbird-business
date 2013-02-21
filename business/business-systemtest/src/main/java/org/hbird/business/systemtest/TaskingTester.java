@@ -17,6 +17,7 @@
 package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
+import org.apache.log4j.Logger;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.tasking.SendCommand;
@@ -25,9 +26,14 @@ import org.hbird.exchange.tasking.Task;
 
 public class TaskingTester extends SystemTest {
 
+	private static org.apache.log4j.Logger LOG = Logger.getLogger(TaskingTester.class);
+	
 	@Handler
 	public void process() throws InterruptedException {
 	
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+		LOG.info("Starting");
+		
 		/** Start two task executors. */
 		startTaskComponent("TaskExecutor1");
 		startTaskComponent("TaskExecutor2");
@@ -67,5 +73,6 @@ public class TaskingTester extends SystemTest {
 		
 		azzert(commandingListener.lastReceived.getName().equals("COM1"), "Received command.");	
 		
+		LOG.info("Finished");
 	}
 }

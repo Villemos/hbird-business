@@ -47,6 +47,7 @@ public class ArchiveComponentBuilder extends ComponentBuilder {
 	@Override
 	protected void doConfigure() {
 
+		//  + "selector=type!='BusinessCard'"
 		from(StandardEndpoints.monitoring).to("solr:" + getComponentName());
 		from(StandardEndpoints.commands).to("solr:" + getComponentName());
 	};

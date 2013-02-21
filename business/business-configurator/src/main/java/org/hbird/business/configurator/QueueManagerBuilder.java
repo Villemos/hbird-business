@@ -1,6 +1,6 @@
 package org.hbird.business.configurator;
 
-import org.hbird.business.queuemanagement.QueueManager;
+import org.hbird.business.api.impl.QueueManager;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.queuemanagement.ClearQueue;
 import org.hbird.queuemanagement.ListQueues;
@@ -19,7 +19,7 @@ public class QueueManagerBuilder extends ComponentBuilder {
 	@Override
 	protected void doConfigure() {
 
-		QueueManager manager = new QueueManager();
+		QueueManager manager = new QueueManager("");
 		
 		from(StandardEndpoints.commands + "?" + addDestinationSelector(getComponentName()))
 		.choice()

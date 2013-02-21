@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api;
+package org.hbird.business.api.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,18 +22,23 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.model.RouteDefinition;
+import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.DataRequest;
+import org.hbird.exchange.dataaccess.LocationContactEventRequest;
 import org.hbird.exchange.dataaccess.LocationRequest;
 import org.hbird.exchange.dataaccess.OrbitalStateRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
 import org.hbird.exchange.dataaccess.SatelliteRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
+import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Location;
+import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -197,6 +202,8 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 
 	public List<State> retrieveState(String isStateOf) {
 		StateRequest request = new StateRequest(issuedBy, isStateOf);
+		request.setIsInitialization(true);
+		request.setRows(1);
 		return stateFilter.getObjects(template.requestBody(inject, request, List.class));
 	}
 
@@ -316,5 +323,81 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 	protected List<Parameter> getParameterWithoutState(ParameterRequest request) {
 		List<Named> respond = template.requestBody(inject, request, List.class);
 		return parameterFilter.getObjects(respond);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
+	 */
+	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location) {
+		return retrieveNextLocationContactEventsFor(location, null, (new Date()).getTime());
+	}
+
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
+	 */
+	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, long from) {
+		return retrieveNextLocationContactEventsFor(location, null, from);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
+	 */
+	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, String satellite) {
+		return retrieveNextLocationContactEventsFor(location, satellite, (new Date()).getTime());
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
+	 */
+	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, String satellite, long from) {
+
+		List<LocationContactEvent> events = new ArrayList<LocationContactEvent>();
+		
+		/** Get next start event. */
+		LocationContactEventRequest request = new LocationContactEventRequest(issuedBy, location, true);
+		request.setRows(1);
+		request.setSatellite(satellite);
+		request.setFrom(from);
+	    List<Named> start = template.requestBody(inject, request, List.class);
+		
+	    /** If we found one, find the following end event. */
+	    if (start.isEmpty() == false) {
+
+	    	LocationContactEvent startEvent = (LocationContactEvent) start.get(0);
+	    	
+			request = new LocationContactEventRequest(issuedBy, location, false);
+			request.setRows(1);
+			request.setSatellite(startEvent.getSatellite());
+			request.setLocation(startEvent.getLocation());
+			request.setFrom(startEvent.getTimestamp());
+		    List<Named> end = template.requestBody(inject, request, List.class);
+
+		    if (end.isEmpty() == false) {
+		    	events.add(startEvent);
+		    	events.add((LocationContactEvent) end.get(0));
+		    }
+	    }
+	    
+		return events;
+	}
+
+	public List<PointingData> retrieveNextLocationContactDataFor(String location) {
+		return retrieveNextLocationContactDataFor(location, null);
+	}
+
+	public List<PointingData> retrieveNextLocationContactDataFor(String location, String satellite) {
+		List<LocationContactEvent> events = retrieveNextLocationContactEventsFor(location);
+		
+		if (events.isEmpty() == false) {
+			return retrieveLocationContactDataFor(location, events.get(0).getTimestamp(), events.get(1).getTimestamp());
+		}
+		
+		return new ArrayList<PointingData>();
+	}
+
+	public List<PointingData> retrieveLocationContactDataFor(String location, long from, long to) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

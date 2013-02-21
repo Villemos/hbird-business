@@ -1,4 +1,4 @@
-/**
+ /**
  * Licensed to the Hummingbird Foundation (HF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.hbird.exchange.core;
+
 
 import java.io.Serializable;
 import java.util.Date;

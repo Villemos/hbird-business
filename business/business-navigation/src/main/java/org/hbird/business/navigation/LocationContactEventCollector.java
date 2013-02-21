@@ -17,31 +17,18 @@
 package org.hbird.business.navigation;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
-import org.apache.commons.math.geometry.Vector3D;
-import org.hbird.exchange.core.DataSet;
-import org.hbird.exchange.navigation.ContactData;
-import org.hbird.exchange.navigation.Location;
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
-import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
-import org.orekit.frames.LocalOrbitalFrame;
-import org.orekit.frames.LocalOrbitalFrame.LOFType;
 import org.orekit.frames.TopocentricFrame;
-import org.orekit.orbits.CartesianOrbit;
-import org.orekit.orbits.Orbit;
-import org.orekit.propagation.Propagator;
 import org.orekit.propagation.SpacecraftState;
-import org.orekit.propagation.analytical.KeplerianPropagator;
 import org.orekit.propagation.events.ElevationDetector;
-import org.orekit.time.AbsoluteDate;
 import org.orekit.time.TimeScalesFactory;
-import org.orekit.utils.PVCoordinates;
 
 /**
  * This camel route processor will receive callbacks from the orekit library 
@@ -54,30 +41,21 @@ public class LocationContactEventCollector extends ElevationDetector {
 	private static final long serialVersionUID = 801203905525890103L;
 
 	/** The location that comes into contact. */
-	protected Location location = null;
-	
+	protected String location = null;
+
 	/** The satellite. */
 	protected String satellite = null;
-	
-	/** ... in milliseconds. */
-	protected long contactDataStepSize = 500;
-	
+
 	/** FIXME I don't know what this does but OREKIT needs it...*/
 	public static final double maxcheck = 1.;
 
-	protected SpacecraftState contactStartState = null;
-
-	protected List<DataSet> datasets = new ArrayList<DataSet>();
-	
-	protected long generationTime = 0;
-	
-	protected String datasetIdentifier = "";
-
-	protected TleOrbitalParameters parameters;
-
 	protected ProducerTemplate producer = null;
-	
+
 	protected boolean publish = false;
+
+	protected TleOrbitalParameters parameters = null;
+
+	protected List<Named> events = new ArrayList<Named>();
 	
 	/**
 	 * COnstructor of an injector of location contact events.
@@ -88,110 +66,37 @@ public class LocationContactEventCollector extends ElevationDetector {
 	 * @param location The location to which contact has been established / lost if this event occurs.
 	 * @param contactDataStepSize
 	 */
-	public LocationContactEventCollector(double elevation, TopocentricFrame topo, String satellite, Location location, long contactDataStepSize, long generationTime, String datasetIdentifier, TleOrbitalParameters parameters, CamelContext context, boolean publish) {
+	public LocationContactEventCollector(double elevation, TopocentricFrame topo, String satellite, String location, TleOrbitalParameters parameters, CamelContext context, boolean publish) {
 		super(maxcheck, elevation, topo);
-		
+
 		this.publish = publish;
 		if (publish) {
 			producer = context.createProducerTemplate();
 		}
-		
+
 		this.satellite = satellite;
 		this.location = location;
-		this.contactDataStepSize = contactDataStepSize;
-		this.generationTime = generationTime;
-		this.datasetIdentifier = datasetIdentifier;
 		this.parameters = parameters;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.orekit.propagation.events.ElevationDetector#eventOccurred(org.orekit.propagation.SpacecraftState, boolean)
 	 */
-	public int eventOccurred(final SpacecraftState currentState, final boolean increasing) throws OrekitException {
-		
-		/** If a START event, then register. */
-		if (increasing == true) {
-			contactStartState = currentState;
+	public int eventOccurred(final SpacecraftState state, final boolean increasing) throws OrekitException {
+
+		LocationContactEvent event = new LocationContactEvent("OrbitPredictor", state.getDate().toDate(TimeScalesFactory.getUTC()).getTime(), location, satellite, increasing, NavigationUtilities.toOrbitalState(state, satellite, parameters.getName(), parameters.getTimestamp(), parameters.getType()), parameters.getName(), parameters.getTimestamp(), parameters.getType());
+		events.add(event);			
+
+		/** If stream mode, then deliver the data as a stream. */
+		if (publish) {
+			producer.sendBody("direct:navigationinjection", event);
 		}
-		/** If an end event and we already had a start event. */
-		else if (increasing == false && contactStartState != null) {
-			
-			long startTime = contactStartState.getDate().toDate(TimeScalesFactory.getUTC()).getTime();
-			long endTime = currentState.getDate().toDate(TimeScalesFactory.getUTC()).getTime();
-			
-			DataSet dataset = new DataSet("OrbitPredictor", "ContactData", "ContactData", "Contact data between a specific location and satellite.", generationTime, datasetIdentifier);
-			dataset.setLocation(location.getName());
-			dataset.setSatellite(satellite);
-			
-			/** Register start event. */
-			LocationContactEvent event = new LocationContactEvent("OrbitPredictor", "Visibility", "", startTime, generationTime, datasetIdentifier, location.getName(), satellite, true, parameters.getName(), parameters.getTimestamp(), parameters.getType());
-			dataset.getDataset().add(event);
 
-			/** If stream mode, then deliver the data as a stream. */
-			if (publish) {
-				producer.sendBody("direct:navigationinjection", event);
-			}
-
-			GeodeticPoint point = new GeodeticPoint(location.p1, location.p2, location.p3);
-			TopocentricFrame locationOnEarth = new TopocentricFrame(Constants.earth, point, "");
-
-			/** Calculate contact data. */
-			for (int i = 0; startTime + contactDataStepSize * i < endTime; i++) {
-				AbsoluteDate date = new AbsoluteDate(new Date(startTime + contactDataStepSize*i), TimeScalesFactory.getUTC());
-
-				double azimuth = calculateAzimuth(locationOnEarth, date, currentState.getPVCoordinates());
-				double elevation = calculateElevation(currentState.getPVCoordinates(), locationOnEarth, date);
-				double doppler = calculateDoppler(currentState.getPVCoordinates(), locationOnEarth, date);
-				double dopplerShift = calculateDopplerShift(doppler, location.getFrequency());
-
-				ContactData data = new ContactData("OrbitPredictor", "ContactData", "Contact Data", "The contact data between a satellite and a location", startTime + contactDataStepSize*i, generationTime, datasetIdentifier, azimuth, elevation, doppler, dopplerShift, satellite, location.getName(), parameters.getName(), parameters.getTimestamp(), parameters.getType());
-				dataset.addData(data);
-
-				/** If stream mode, then deliver the data as a stream. */
-				if (publish) {
-					producer.sendBody("direct:navigationinjection", data);
-				}
-			}
-			
-			/** Register end event. */
-			event = new LocationContactEvent("OrbitPredictor", "Visibility", "", endTime, generationTime, datasetIdentifier, location.getName(), satellite, false, parameters.getName(), parameters.getTimestamp(), parameters.getType());
-			dataset.getDataset().add(event);			
-
-			/** If stream mode, then deliver the data as a stream. */
-			if (publish) {
-				producer.sendBody("direct:navigationinjection", event);
-			}
-
-			datasets.add(dataset);
-			
-			contactStartState = null;
-		}
-		
 		/** Continue listening for events. */
 		return CONTINUE;
 	}
 	
-	protected double calculateAzimuth(TopocentricFrame locationOnEarth, AbsoluteDate absoluteDate, PVCoordinates state) throws OrekitException {
-		return locationOnEarth.getAzimuth(state.getPosition(), Constants.frame, absoluteDate);
-	}
-
-	protected double calculateElevation(PVCoordinates satellite, TopocentricFrame locationOnEarth, AbsoluteDate absoluteDate) throws OrekitException {
-		return Math.toDegrees(locationOnEarth.getElevation(satellite.getPosition(), Constants.frame, absoluteDate));
-	}
-
-	protected double calculateDoppler(PVCoordinates satellite, TopocentricFrame locationOnEarth, AbsoluteDate absoluteDate) throws OrekitException {
-		Orbit initialOrbit = new CartesianOrbit(satellite, Constants.frame, absoluteDate, Constants.MU); //an orbit defined by the position and the velocity of the satellite in the inertial frame at the date.
-		Propagator propagator = new KeplerianPropagator(initialOrbit);//as a propagator, we consider a simple KeplerianPropagator.  
-		LocalOrbitalFrame lof = new LocalOrbitalFrame(Constants.frame, LOFType.QSW, propagator, "QSW"); //local orbital frame.
-		PVCoordinates pv = locationOnEarth.getTransformTo(lof, absoluteDate).transformPVCoordinates(PVCoordinates.ZERO);
-		return Vector3D.dotProduct(pv.getPosition(), pv.getVelocity()) / pv.getPosition().getNorm();
-	}
-
-	protected double calculateDopplerShift(double doppler, double frequency) {
-		return ((1 - (doppler / Constants.SPEED_OF_LIGHT)) * frequency) - frequency;
-	}
-
-	public List<DataSet> getDatasets() {
-		return datasets;
+	public List<Named> getDataSet() {
+		return events;
 	}
 }

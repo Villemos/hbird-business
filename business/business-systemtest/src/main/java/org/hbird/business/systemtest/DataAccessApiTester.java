@@ -8,10 +8,9 @@ import java.util.Map.Entry;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.api.DataAccess;
+import org.hbird.business.api.impl.DataAccess;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.Satellite;
 
@@ -22,6 +21,9 @@ public class DataAccessApiTester extends SystemTest {
 	@Handler
 	public void process() throws InterruptedException {
 
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+		LOG.info("Starting");
+		
 		startMonitoringArchive();
 		
 		Thread.sleep(2000);
@@ -112,9 +114,7 @@ public class DataAccessApiTester extends SystemTest {
 		Thread.sleep(5000);
 		
 		/** Send command to commit all changes. */
-		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
-
-		Thread.sleep(5000);
+		forceCommit();
 		
 		DataAccess api = new DataAccess("systemtest");
 		
@@ -259,6 +259,6 @@ public class DataAccessApiTester extends SystemTest {
 		parameterAndStates = api.retrieveParametersAndStates(names, 3, 15, 5);
 		azzert(parameterAndStates.size() == 2, "Expect to receive 2 values. Received " + parameterAndStates.size());
 		
-		
+		LOG.info("Finished");		
 	}
 }

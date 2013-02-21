@@ -20,7 +20,10 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultProducer;
@@ -32,6 +35,7 @@ import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
+import org.hbird.exchange.businesscard.BusinessCard;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.DataSet;
@@ -47,6 +51,7 @@ import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
+import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.tasking.Task;
 import org.slf4j.Logger;
@@ -79,6 +84,11 @@ public class SolrProducer extends DefaultProducer {
 	public void process(Exchange exchange) throws Exception {
 		try {
 			Object body = exchange.getIn().getBody();
+			
+			if (body instanceof BusinessCard) {
+				return;
+			}
+			
 			if (body instanceof DeletionRequest) {
 				delete((DeletionRequest) body);
 				commit();
@@ -135,7 +145,9 @@ public class SolrProducer extends DefaultProducer {
 		String namePart = null;
 		String isStateOfPart = null;
 		String ofSatellitePart = null;
+		String locationPart = null;
 		String derivedFromPart = null;
+		String visibilityPart = null;
 		
 		/** Set the class of data we are retrieving. */
 //		if (body.getArgument("class") != null) {
@@ -167,6 +179,7 @@ public class SolrProducer extends DefaultProducer {
 		if (body.getArgument("isStateOf") != null) {
 			isStateOfPart = "isStateOf:" + (String) body.getArgument("isStateOf");
 		}
+
 		if (body.getArgument("derivedfrom") != null) {
 			NamedInstanceIdentifier id = (NamedInstanceIdentifier) body.getArgument("derivedfrom");
 			derivedFromPart = "derivedFromName:" + id.name + " AND derivedFromTimestamp:" + id.timestamp + " AND derivedFromType:" + id.type;
@@ -176,8 +189,13 @@ public class SolrProducer extends DefaultProducer {
 			ofSatellitePart = "ofSatellite:" + (String) body.getArgument("satellite");
 		}
 
+		if (body.getArgument("location") != null) {
+			locationPart = "ofLocation:" + (String) body.getArgument("location");
+		}
 		
-		
+		if (body.getArgument("visibility") != null) {
+			visibilityPart = "visibility:" + body.getArgument("visibility");
+		}
 		
 		if (request == null && typePart != null) {
 			request = typePart;
@@ -189,6 +207,10 @@ public class SolrProducer extends DefaultProducer {
 
 		if (derivedFromPart != null) {
 			request += " AND (" + derivedFromPart + ")";
+		}
+
+		if (visibilityPart != null) {
+			request += " AND " + visibilityPart;
 		}
 
 		if (namePart != null && isStateOfPart != null) {
@@ -214,6 +236,10 @@ public class SolrProducer extends DefaultProducer {
 
 		if (ofSatellitePart != null) {
 			request += " AND " + ofSatellitePart;
+		}
+
+		if (locationPart != null) {
+			request += " AND " + locationPart;
 		}
 
 		request += createTimestampElement((Long) body.getArgument("from"), (Long) body.getArgument("to"));
@@ -381,7 +407,11 @@ public class SolrProducer extends DefaultProducer {
 	 */
 	protected void insert(Named io) throws Exception {
 
-		LOG.info("Storing object: {}[name={}, timestamp={}, uuid={}]", new Object[] { io.getClass().getSimpleName(), io.getName(), io.getTimestamp(), io.getUuid() });
+		if (io.getType().equals("LocationContactEvent")) {
+			log.debug("");
+		}
+		
+		LOG.info("Storing object: " + io.prettyPrint());
 
 		/** The document we will be storing. */
 		SolrInputDocument document = new SolrInputDocument();
@@ -430,6 +460,10 @@ public class SolrProducer extends DefaultProducer {
 			Satellite satellite = (Satellite) io;
 			document.addField("withID", satellite.getSatelliteNumber());
 			document.addField("designator", satellite.getDesignator());
+		}
+		else if (io instanceof LocationContactEvent) {
+			LocationContactEvent event = (LocationContactEvent) io;
+			document.addField("visibility", event.isVisible);
 		}
 
 		if (io instanceof IGenerationTimestamped) {

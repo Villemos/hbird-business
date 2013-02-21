@@ -17,10 +17,8 @@
 package org.hbird.exchange.navigation;
 
 import org.hbird.exchange.core.DerivedNamed;
-import org.hbird.exchange.core.IGenerationTimestamped;
 import org.hbird.exchange.core.ILocationSpecific;
 import org.hbird.exchange.core.ISatelliteSpecific;
-import org.hbird.exchange.core.Named;
 
 
 /**
@@ -32,7 +30,7 @@ import org.hbird.exchange.core.Named;
  * by a station or satellite.
  * 
  */
-public class LocationContactEvent extends DerivedNamed implements IGenerationTimestamped, ILocationSpecific, ISatelliteSpecific {
+public class LocationContactEvent extends DerivedNamed implements ILocationSpecific, ISatelliteSpecific {
 
 	private static final long serialVersionUID = 6129893135305263533L; 
 
@@ -43,7 +41,10 @@ public class LocationContactEvent extends DerivedNamed implements IGenerationTim
 	
 	/** The satellite that contact has been established /lost with. */
 	public String satellite = null;
-	 
+
+	/** The state of the satellite as the event occurs. */
+	public OrbitalState satelliteState = null;
+	
 	/** Flag indicating whether the visibility (contact) is now established or lost. */
 	public boolean isVisible = true;
 	
@@ -57,21 +58,12 @@ public class LocationContactEvent extends DerivedNamed implements IGenerationTim
 	 * @param location The location to which contact has been established / lost.
 	 * @param satellite The satellite to which contact has been established / lost. 
 	 */
-	public LocationContactEvent(String issuedBy, String name, String description, long timestamp, long generationTime, String datasetidentifier, String location, String satellite, boolean isVisible, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
-		super(issuedBy, name, "LocationContactEvent", description, timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
+	public LocationContactEvent(String issuedBy, long timestamp, String location, String satellite, boolean isVisible, OrbitalState satelliteState, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+		super(issuedBy, "ContactEvent", "LocationContactEvent", "A contact event between a satellite and a location", timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
 		this.location = location;
 		this.satellite = satellite;
 		this.isVisible = isVisible;
-		
-		this.generationTime = generationTime;
-	}
-
-	public long getGenerationTime() {
-		return generationTime;
-	}
-
-	public void setGenerationTime(long generationTime) {
-		this.generationTime = generationTime;
+		this.satelliteState = satelliteState;
 	}
 
 	public String getLocation() {
@@ -96,5 +88,9 @@ public class LocationContactEvent extends DerivedNamed implements IGenerationTim
 
 	public void setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
+	}
+	
+	public String prettyPrint() {
+		return "class=" + this.getClass().getSimpleName() + ", name=" + name + ", timestamp=" + timestamp + ", location=" + getLocation() + ", visibility=" + isVisible;
 	}
 }

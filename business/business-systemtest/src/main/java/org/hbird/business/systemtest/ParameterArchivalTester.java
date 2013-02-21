@@ -24,7 +24,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
 
 public class ParameterArchivalTester extends SystemTest {
@@ -34,6 +33,9 @@ public class ParameterArchivalTester extends SystemTest {
 	@Handler
 	public void process(CamelContext context) throws InterruptedException {
 
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+		LOG.info("Starting");
+		
 		startMonitoringArchive();
 		
 		Thread.sleep(2000);
@@ -68,7 +70,7 @@ public class ParameterArchivalTester extends SystemTest {
 		injection.sendBody(new Parameter("SystemTestSuite", "PARA3", "", "A test description,", 35f, "Seconds"));
 
 		/** Send command to commit all changes. */
-		injection.sendBody(new CommitRequest("SystemTest", "ParameterArchive"));	
+		forceCommit();
 
 		/** Check whether they were published on ActiveMQ to the listener. */
 		azzert(parameterListener.elements.size() == 15, "Expect to receive 15 parameters. Received " + parameterListener.elements.size());
@@ -81,6 +83,7 @@ public class ParameterArchivalTester extends SystemTest {
 
 			Object respond = injection.requestBody(new ParameterRequest("PARA1", 1));
 			azzert(respond != null, "Received a response.");
+			azzert(((List) respond).isEmpty() == false, "Expected to receive at least one element.");
 			
 			Parameter parameter = (Parameter) ((List) respond).get(0);
 			azzert(parameter.getValue().doubleValue() == 2.6d, "Last value should be 2.6. Received " + parameter.getValue().doubleValue());			
@@ -118,5 +121,7 @@ public class ParameterArchivalTester extends SystemTest {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		LOG.info("Finished");
 	}
 }

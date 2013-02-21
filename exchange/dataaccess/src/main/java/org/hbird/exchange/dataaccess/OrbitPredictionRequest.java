@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.exchange.navigation;
+package org.hbird.exchange.dataaccess;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -22,6 +22,10 @@ import java.util.List;
 
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.navigation.D3Vector;
+import org.hbird.exchange.navigation.Location;
+import org.hbird.exchange.navigation.OrbitalState;
+import org.hbird.exchange.navigation.Satellite;
 
 /** 
  * Request for orbit predictions. The prediction will result in a stream of 'OrbitalState'
@@ -62,7 +66,7 @@ public class OrbitPredictionRequest extends Command {
 		addArgument("starttime", starttime);
 		addArgument("locations", locations);
 		
-		addArgument("initialstate", new OrbitalState(issuedBy, name, description, starttime, starttime, satellite, position, velocity, momentum, "", 0, ""));
+		addArgument("initialstate", new OrbitalState(issuedBy, name, description, starttime, satellite, position, velocity, momentum, "", 0, ""));
 	}
 
 	/**

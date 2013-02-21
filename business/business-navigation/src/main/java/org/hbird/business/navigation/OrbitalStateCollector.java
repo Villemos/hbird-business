@@ -16,18 +16,17 @@
  */
 package org.hbird.business.navigation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
-import org.hbird.exchange.core.DataSet;
-import org.hbird.exchange.navigation.D3Vector;
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
-import org.orekit.errors.OrekitException;
 import org.orekit.errors.PropagationException;
 import org.orekit.propagation.SpacecraftState;
 import org.orekit.propagation.sampling.OrekitFixedStepHandler;
-import org.orekit.time.TimeScalesFactory;
-import org.orekit.time.UTCScale;
 
 
 /**
@@ -42,32 +41,24 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 	/** The unique UID */
 	private static final long serialVersionUID = 3944670616542918255L;
 
-	protected DataSet dataSet = null;
-
-	protected UTCScale scale = null;
-	
 	protected TleOrbitalParameters parameters;
 	
 	protected ProducerTemplate producer = null;
 	
 	protected boolean publish = false;
-	
-	public OrbitalStateCollector(String satellite, long generationTime, String datasetIdentifier, TleOrbitalParameters parameters, CamelContext context, boolean publish) {
-		dataSet = new DataSet("OrbitPredictor", "OrbitalStates", "OrbitalStates", "The orbital states of a satellite.", generationTime, datasetIdentifier);
-		dataSet.setSatellite(satellite);
 
+	protected String satellite = null;
+
+	protected List<Named> states = new ArrayList<Named>();
+	
+	public OrbitalStateCollector(String satellite, TleOrbitalParameters parameters, CamelContext context, boolean publish) {
 		this.publish = publish;
+		this.satellite = satellite;
 		if (publish) {
 			producer = context.createProducerTemplate();
 		}
 		
-		this.parameters = parameters;
-		
-		try {
-			scale = TimeScalesFactory.getUTC();
-		} catch (OrekitException e) {
-			e.printStackTrace();
-		}
+		this.parameters = parameters;		
 	}
 	
 	/* (non-Javadoc)
@@ -75,26 +66,8 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 	 */
 	public void handleStep(SpacecraftState currentState, boolean isLast) throws PropagationException {
 
-		/** Create position vector. */
-		D3Vector position = new D3Vector("", "Position", "Position", "The orbital position of the satellite at the given time.", 
-				currentState.getOrbit().getPVCoordinates().getPosition().getX(),
-				currentState.getOrbit().getPVCoordinates().getPosition().getY(),
-				currentState.getOrbit().getPVCoordinates().getPosition().getZ());
-
-		/** Create velocity vector. */
-		D3Vector velocity = new D3Vector("", "Velocity", "Velocity", "The orbital velocity of the satellite at the given time", 
-				currentState.getOrbit().getPVCoordinates().getVelocity().getX(),
-				currentState.getOrbit().getPVCoordinates().getVelocity().getY(),
-				currentState.getOrbit().getPVCoordinates().getVelocity().getZ());
-
-		/** Create momentum vector. */
-		D3Vector momentum = new D3Vector("", "Velocity", "Velocity", "The orbital velocity of the satellite at the given time", 
-				currentState.getOrbit().getPVCoordinates().getMomentum().getX(),
-				currentState.getOrbit().getPVCoordinates().getMomentum().getY(),
-				currentState.getOrbit().getPVCoordinates().getMomentum().getZ());
-
-		OrbitalState state = new OrbitalState("OrbitPredictor", "OrbitalState", "Orbital state of satellite", currentState.getDate().toDate(scale).getTime(), dataSet.getGenerationTime(), dataSet.getSatellite(), position, velocity, momentum, parameters.getName(), parameters.getTimestamp(), parameters.getType());
-		dataSet.addData(state);
+		OrbitalState state = NavigationUtilities.toOrbitalState(currentState, satellite, parameters.getName(), parameters.getTimestamp(), parameters.getType());
+		states.add(state);
 
 		/** If stream mode, then deliver the data as a stream. */
 		if (publish) {
@@ -102,7 +75,7 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 		}
 	}
 
-	public DataSet getDataSet() {
-		return dataSet;
+	public List<Named> getDataSet() {
+		return states;
 	}
 }

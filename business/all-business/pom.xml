@@ -83,6 +83,12 @@
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.hbird.business</groupId>
+      <artifactId>business-antennacontrol</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
   </dependencies>
 
   <name>Business - All Business</name>

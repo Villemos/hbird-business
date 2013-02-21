@@ -24,6 +24,13 @@ import org.hbird.exchange.core.State;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.Satellite;
 
+/**
+ * Interface to retrieve catalogue type data from a central archive. With catalogue data is
+ * here understood summaries of the data in the archive. 
+ * 
+ * @author Gert Villemos
+ *
+ */
 public interface ICatalogue {
 
 	/**
@@ -45,23 +52,23 @@ public interface ICatalogue {
 	
 	
 	/**
-	 * TODO
+	 * Method to retrieve a definition of each command supported by the system.
 	 * 
-	 * @return
+	 * @return List of commands supported by the system.
 	 */
 	public List<Command> getCommandMetadata();
 
 	/**
-	 * TODO
+	 * Method to retrieve all location definitions stored in the archive.
 	 * 
-	 * @return
+	 * @return List of all locations.
 	 */
 	public List<Location> getLocationMetadata();
 	
 	/**
-	 * TODO
+	 * Method to retrieve all satellite definitions stored in the archive.
 	 * 
-	 * @return
+	 * @return List of all satelittes.
 	 */
 	public List<Satellite> getSatelliteMetadata();
 }
