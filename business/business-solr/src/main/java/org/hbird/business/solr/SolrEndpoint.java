@@ -22,20 +22,19 @@ import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.impl.ScheduledPollEndpoint;
-import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
+import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import org.apache.solr.core.CoreContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.core.CoreContainer;
 
 /**
  * The endpoint for production of solr producers. The endpoint does
  * not support consumers.
  * 
- * The endpoint manages connections to a underlying Solr {@link http://lucene.apache.org/solr/} 
+ * The endpoint manages connections to a underlying Solr {@link http://lucene.apache.org/solr/}
  * repository. The repository must be preinstalled and running. The Solr repository will be
  * accessed through HTTP, using the SolrJ API {@link http://wiki.apache.org/solr/Solrj}}.
  * 
@@ -43,11 +42,11 @@ import org.apache.solr.core.CoreContainer;
  * a document submitted for indexing. The endpoint assume per default that the following fields
  * are available
  *    'content'. The main field holding a large portion of text to be indexed.
- *    
+ * 
  * The body of each insert exchanges are inserted in the content field.
- *    
- * In addition the exchange can contain any number of additional fields, set in the header. 
- * Each field must have the format 'solr.field.[name]'. It must as value contain a value object or 
+ * 
+ * In addition the exchange can contain any number of additional fields, set in the header.
+ * Each field must have the format 'solr.field.[name]'. It must as value contain a value object or
  * a list of value objects. Setting the header field 'solr.field.url' with the value
  * 'file:c:/foo/baa.txt' will thus lead to the solr field 'url' being added to the solr document
  * prior to storage.
@@ -55,19 +54,17 @@ import org.apache.solr.core.CoreContainer;
  */
 public class SolrEndpoint extends ScheduledPollEndpoint {
 
+	public static final String PROPERTY_SOLR_URL = "solr.url";
+
+	public static final String DEFAULT_SOLR_URL = "http://localhost:8080/apache-solr-3.5.0/";
+
 	/** Da' logger! */
 	private static final transient Logger LOG = LoggerFactory.getLogger(SolrEndpoint.class);
 
-	{
-		if (System.getProperty("solr.url") != null) {
-			solrServerUrl = System.getProperty("solr.url");
-		}		
-	}
-	
 	/** The url of the SOLR server. The URL must have the format:
-	 *    [protocol]://[host IP or DNS name]:[port]/[path to solr] 
+	 *    [protocol]://[host IP or DNS name]:[port]/[path to solr]
 	 *  Default is http://localhost:8080/apache-solr-1.4.1 */
-	protected String solrServerUrl = "http://localhost:8080/apache-solr-3.5.0/";
+	protected String solrServerUrl = System.getProperty(PROPERTY_SOLR_URL, DEFAULT_SOLR_URL);
 
 	/** The solr name of the field holding the content. */
 	protected String contentFieldName = "withRawText";
@@ -82,7 +79,7 @@ public class SolrEndpoint extends ScheduledPollEndpoint {
 	protected boolean forceCommit = true;
 
 	/** The server. Will be initialized upon first access. */
-	protected SolrServer server = null;	
+	protected SolrServer server = null;
 
 	protected String queryHandler = null;
 
@@ -121,14 +118,14 @@ public class SolrEndpoint extends ScheduledPollEndpoint {
 	/** Flag indicating whether a commit should always be done after a request. */
 	protected boolean commit = false;
 
-	/** Flag indicating whether the facets returned should include a 
+	/** Flag indicating whether the facets returned should include a
 	 * counter of all entries that do not have the given facet field.  */
 	protected boolean facetMissing = false;
 
 	protected int minCount = 1;
 
 	/** Two delivery modes are supported;
-	 * - Batch where all results of the query is delivered in one ResultSet (DEFAULT). 
+	 * - Batch where all results of the query is delivered in one ResultSet (DEFAULT).
 	 * - Stream where each element in the results of the query is delivered individually. */
 	protected String deliveryMode = "batch";
 
@@ -159,7 +156,7 @@ public class SolrEndpoint extends ScheduledPollEndpoint {
 		Consumer consumer = new SolrConsumer(this, processor);
 		configureConsumer(consumer);
 
-		return consumer; 
+		return consumer;
 	}
 
 
@@ -179,7 +176,7 @@ public class SolrEndpoint extends ScheduledPollEndpoint {
 	public synchronized SolrServer getServer() {
 
 		if (server == null) {
-			try {			
+			try {
 				if (isEmbedded()) {
 					if (System.getProperty("solr.solr.home") == null) {
 						LOG.info("Solr home not set. Using default value '" + solrhome + "'. Use the route option 'solrhome' to set the home; 'uri=\"solr:foo?solrhome=/my/solr/home\"'");
@@ -198,10 +195,10 @@ public class SolrEndpoint extends ScheduledPollEndpoint {
 			} catch (MalformedURLException e) {
 				LOG.error("Failed to contact the solr server on URL '" + solrServerUrl + "'. Is the server running?");
 				e.printStackTrace();
-			}		
+			}
 			catch (Exception e) {
 				e.printStackTrace();
-			}		
+			}
 		}
 
 		return server;
@@ -219,7 +216,7 @@ public class SolrEndpoint extends ScheduledPollEndpoint {
 
 
 	/**
-	 * Sets the URL to the Solr server. Should be in the format 
+	 * Sets the URL to the Solr server. Should be in the format
 	 * http://[host IP or DSN][:[port]]/[path]
 	 * 
 	 * @param solrServerUrl
@@ -230,7 +227,7 @@ public class SolrEndpoint extends ScheduledPollEndpoint {
 
 
 	/**
-	 * Get the name of the Solr field that 
+	 * Get the name of the Solr field that
 	 * 
 	 * @return
 	 */
