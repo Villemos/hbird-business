@@ -19,6 +19,7 @@ package org.hbird.business.systemmonitoring;
 import java.io.File;
 import java.net.UnknownHostException;
 
+import org.apache.camel.Handler;
 import org.hbird.business.core.naming.Base;
 import org.hbird.exchange.core.Parameter;
 
@@ -35,6 +36,7 @@ public class HarddiskMonitor extends Monitor {
      * @param exchange The exchange to hold the new value.
      * @throws UnknownHostException
      */
+    @Handler
     public Parameter[] check() {
 
         File[] roots = File.listRoots();

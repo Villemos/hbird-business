@@ -2,6 +2,7 @@ package org.hbird.business.systemmonitoring;
 
 import java.lang.management.ManagementFactory;
 
+import org.apache.camel.Handler;
 import org.hbird.business.core.naming.Base;
 import org.hbird.exchange.core.Parameter;
 
@@ -16,6 +17,7 @@ public class UptimeMonitor extends Monitor {
         parameterName = naming.createAbsoluteName(Base.HOST, HostInfo.getHostName(), PARAMETER_RELATIVE_NAME);
     }
 
+    @Handler
     public Parameter check() {
         return new Parameter(componentId, parameterName, "MonitoredResource", "JVM uptime",
                 ManagementFactory.getRuntimeMXBean().getUptime(), "ms");

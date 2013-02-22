@@ -18,6 +18,7 @@ package org.hbird.business.systemmonitoring;
 
 import java.lang.management.ManagementFactory;
 
+import org.apache.camel.Handler;
 import org.hbird.business.core.naming.Base;
 import org.hbird.exchange.core.Parameter;
 
@@ -62,6 +63,7 @@ public class ThreadCountMonitor extends Monitor {
      * 
      * @param exchange The exchange to hold the new value.
      */
+    @Handler
     public Parameter check() {
         return new Parameter(componentId, parameterName, "MonitoredResource", "The number of threads used",
                 ManagementFactory.getThreadMXBean().getThreadCount(), "Count");

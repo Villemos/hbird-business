@@ -19,6 +19,7 @@ package org.hbird.business.systemmonitoring;
 import java.lang.management.ManagementFactory;
 import java.net.UnknownHostException;
 
+import org.apache.camel.Handler;
 import org.hbird.business.core.naming.Base;
 import org.hbird.exchange.core.Parameter;
 
@@ -40,6 +41,7 @@ public class CpuMonitor extends Monitor {
      * @param exchange The exchange to hold the new value.
      * @throws UnknownHostException
      */
+    @Handler
     public Parameter check() {
         return new Parameter(componentId, parameterName, "MonitoredResource", "The average CPU usage the last minute.",
                 ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage(), "Percentage/CPU");
