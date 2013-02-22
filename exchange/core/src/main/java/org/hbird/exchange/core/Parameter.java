@@ -53,6 +53,19 @@ public class Parameter extends Named implements Comparable<Parameter> {
         this.value = value;
     }
 
+    /**
+     * Creates a Parameter with a timestamp set to 'now'.
+     * 
+     * @param name The name of the parameter
+     * @param description A description of the parameter.
+     * @param value An object holding the value.
+     * @param unit The unit of the value.
+     */
+    public Parameter(String issuedBy, String name, String type, String description, String unit) {
+        super(issuedBy, name, "Parameter", description);
+        this.unit = unit;
+    }
+
     public Parameter(Parameter base) {
         this(base.issuedBy, base.name, base.type, base.description, base.value, base.unit);
     }

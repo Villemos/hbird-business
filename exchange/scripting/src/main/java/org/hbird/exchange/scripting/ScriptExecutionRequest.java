@@ -70,5 +70,14 @@ public class ScriptExecutionRequest implements Serializable {
 		this.inputBinding = inputBinding;
 	}	
 
+	public ScriptExecutionRequest(String name, String script, String format, Named output, String input, String binding) {
+		this.name = name;
+		this.script = script;
+		this.format = format;
+		this.output = output;
+		this.inputBinding = new HashMap<String, String>();
+		this.inputBinding.put(input, binding);
+	}	
+
 	public ScriptExecutionRequest() {}
 }

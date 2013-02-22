@@ -90,4 +90,30 @@ public class StartScriptComponent extends StartComponent {
 		ScriptExecutionRequest request = new ScriptExecutionRequest(scriptname, "", "javascript", output, inputBinding);
 		addArgument("scriptdefinition",request);
 	}		
+	
+	/**
+	 * Constructor to create a script component using a script in the library and creating an output Parameter.
+	 * 
+	 * @param issuedBy
+	 * @param name
+	 * @param script
+	 * @param bindings
+	 * @param output
+	 */	
+	public StartScriptComponent(String componentname, String scriptName, String script, String format, String paraName, String paraType, String paraDescription, String paraUnit, String bindings) {
+		super(componentname, "StartScriptComponent", "Command to a configurator to start a scripting component.");
+
+		Parameter output = new Parameter("", paraName, paraType, paraDescription, 0d, paraUnit);
+
+		Map<String, String> inputBinding = new HashMap<String, String>();
+		String[] bindingPairs = bindings.split(":");
+		for (String binding : bindingPairs) {
+			String[] entries = binding.split("=");
+			inputBinding.put(entries[0], entries[1]);
+		}
+		
+		ScriptExecutionRequest request = new ScriptExecutionRequest(scriptName, script, format, output, inputBinding);
+		addArgument("scriptdefinition", request);
+	}		
+
 }
