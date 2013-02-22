@@ -63,6 +63,11 @@ public class CommandReleaser {
 	@Handler
 	public void process(@Body CommandRequest command, @Headers Map<String, Object> headers, CamelContext context) {
 
+		if (command.getCommand() == null) {
+			LOG.error("Command container '" + command.getName() + "' holds no command.");
+			return;
+		}
+		
 		LOG.info("Received command '" + command.getCommand().getName() + "' for release.");
 
 		if (command.getCommand() == null) {

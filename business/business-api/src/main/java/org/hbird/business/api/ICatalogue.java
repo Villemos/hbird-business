@@ -28,6 +28,9 @@ import org.hbird.exchange.navigation.Satellite;
  * Interface to retrieve catalogue type data from a central archive. With catalogue data is
  * here understood summaries of the data in the archive. 
  * 
+ * The API should be used by any component which needs to obtain lists of which types of data
+ * is available in the system.
+ * 
  * @author Gert Villemos
  *
  */

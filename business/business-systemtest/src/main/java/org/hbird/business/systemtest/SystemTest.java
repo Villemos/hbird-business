@@ -119,14 +119,16 @@ public abstract class SystemTest {
 			/** Give the component time to startup. */
 			Thread.sleep(1000);
 			
-			/** TODO Send command to the archive to delete all data. */
-			injection.sendBody(new DeletionRequest("SystemTest", "Archive", "*:*"));	
-
-	        /** Send command to commit all changes. */
-			injection.sendBody(new CommitRequest("SystemTest", "Archive"));	
-
 			monitoringArchiveStarted = true;
 		}		
+		
+		/** TODO Send command to the archive to delete all data. */
+		injection.sendBody(new DeletionRequest("SystemTest", "Archive", "*:*"));	
+
+        /** Send command to commit all changes. */
+		injection.sendBody(new CommitRequest("SystemTest", "Archive"));	
+
+
 	}
 
 	protected static List<String> startedTaskComponents = new ArrayList<String>();

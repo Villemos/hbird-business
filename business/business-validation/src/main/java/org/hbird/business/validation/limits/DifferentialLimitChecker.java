@@ -17,7 +17,6 @@
 package org.hbird.business.validation.limits;
 
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.impl.DataAccess;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.validation.Limit;
 
@@ -33,6 +32,8 @@ import org.hbird.exchange.validation.Limit;
  */
 public class DifferentialLimitChecker extends BaseLimitChecker {
 
+	protected IDataAccess api = null;
+	
 	/**
 	 * Constructor
 	 * 
@@ -42,7 +43,7 @@ public class DifferentialLimitChecker extends BaseLimitChecker {
 		super(limit);
 		
 		/** Get the current value. */
-		IDataAccess api = new DataAccess("");
+		this.api = api;
 		lastValue = api.getParameter(limit.limitOfParameter);
 	}
 
@@ -51,4 +52,14 @@ public class DifferentialLimitChecker extends BaseLimitChecker {
 		/** Calculate difference between lastValue and parameter. */
 		return Math.abs(lastValue.getValue().doubleValue() - parameter.getValue().doubleValue()) < limit.getValue().doubleValue();
 	}
+
+	public IDataAccess getApi() {
+		return api;
+	}
+
+	public void setApi(IDataAccess api) {
+		this.api = api;
+	}
+	
+	
 }

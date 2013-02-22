@@ -31,6 +31,10 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
 /**
  * API for retrieving data from a hbird based system.
  * 
+ * This API should be used by any component which needs to access previously published data (see the IPublish
+ * API interface). The API access the underlying data store. It does not trigger the creation of data. Data 
+ * that has not been stored cannot be requested through this interface.
+ * 
  * The API wraps the underlying hbird control mechanisms. In its basic form a request in hbird consists of
  * <li>Creation of a DataRequest object from the org.hbird.exchange.dataaccess module.</li>
  * <li>The publishing of the request to the system as a Request-Reply (in-out) exchange</li>
@@ -587,25 +591,53 @@ public interface IDataAccess {
 	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, String satellite, long from);
 
 	/**
-	 * Method to retrieve the next contact opportunity with any satellite.
-	 * 
-	 * @param location The location for which to retrieve the contact data for. The method will return
+	 * Method to retrieve the next pointing data to a specific satellite. The method will return
 	 * <li>All contact data related to the next set of contact events (start-end of contact).</li>
+	 * <li>Of the specified location</li>
+	 * <li>And ANY satellite</li>
 	 * <li>Sorted ASCENDING on timestamp</li>
+	 * 
+	 * @param location The location for which to retrieve the contact data for. 
 	 * 
 	 * @return List containing the next set of contact data
 	 */
-	public List<PointingData> retrieveNextLocationContactDataFor(String location);
+	public List<PointingData> retrieveNextLocationPointingDataFor(String location);
 		
 	/**
-	 * @param location The location for which to retrieve the contact data for. The method will return
+	 * Method to retrieve the next pointing data to a specific satellite. The method will return
 	 * <li>All contact data related to the next set of contact events (start-end of contact).</li>
+	 * <li>Of the specified location</li>
+	 * <li>And the specified satellite</li>
 	 * <li>Sorted ASCENDING on timestamp</li>
+	 * 
+	 * @param location The location for which to retrieve the contact data for. 
+	 * @param satellite The name of the satellite 
 	 * 
 	 * @return List containing the next set of contact data
 	 */
-	public List<PointingData> retrieveNextLocationContactDataFor(String location, String satellite);
+	public List<PointingData> retrieveNextLocationPointingDataFor(String location, String satellite);
 
-	public List<PointingData> retrieveLocationContactDataFor(String location, long from, long to);
+	/**
+	 * Method to retrieve the next pointing data to a specific satellite. The method will return
+	 * <li>All contact data related to the set of contact events (start-end of contact).</li>
+	 * <li>Lying in the from-to period.</li>
+	 * <li>Of the specified location</li>
+	 * <li>And the specified satellite</li>
+	 * <li>Sorted ASCENDING on timestamp</li>
+	 * 
+	 * @param location The location for which to retrieve the contact data for. 
+	 * @param satellite The name of the satellite 
+	 * 
+	 * @return List containing the next set of contact data
+	 */	
+	public List<PointingData> retrieveLocationPointingDataFor(String location, long from, long to);
 	
+	
+	/**
+	 * Method to retrieve the metadata of an object.
+	 * 
+	 * @param subject The Named object that the metadata must be applicable to.
+	 * @return A list with zero or more metadata objects applicable to the subject
+	 */
+	public List<Named> getMetadata(Named subject);
 }

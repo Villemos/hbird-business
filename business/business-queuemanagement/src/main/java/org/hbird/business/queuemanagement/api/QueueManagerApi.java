@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api.impl;
+package org.hbird.business.queuemanagement.api;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -36,6 +36,7 @@ import org.apache.activemq.broker.jmx.BrokerViewMBean;
 import org.apache.activemq.broker.jmx.CompositeDataConstants;
 import org.apache.activemq.broker.jmx.QueueViewMBean;
 import org.apache.activemq.broker.jmx.TopicViewMBean;
+import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IQueueManagement;
 
 import javax.management.openmbean.CompositeData;
@@ -198,7 +199,7 @@ public class QueueManagerApi extends HbirdApi implements IQueueManagement {
 				entries.put((String) cdata.get("JMSMessageID"), (String) cdata.get(CompositeDataConstants.PROPERTIES));
 			} 
 		}
-
+		
 		return entries;
 	}
 

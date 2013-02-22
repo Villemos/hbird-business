@@ -14,13 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api.impl;
+package org.hbird.business.navigation.api;
 
 import java.util.List;
 
+import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IOrbitPrediction;
+import org.hbird.business.navigation.NavigationUtilities;
 import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
+import org.hbird.exchange.navigation.Location;
+import org.hbird.exchange.navigation.LocationContactEvent;
+import org.hbird.exchange.navigation.PointingData;
+import org.orekit.errors.OrekitException;
 
 public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
 
@@ -80,5 +86,16 @@ public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
 	protected void sendRequestStream(TlePropagationRequest request) {
 		request.addArgument("publish", true);
 		template.sendBody(inject, request);
+	}
+
+	public List<PointingData> requestPointingDataFor(LocationContactEvent startContactEvent, LocationContactEvent endContactEvent, Location location, long contactDataStepSize) {	
+		List<PointingData> pointing = null;
+		try {
+			pointing = NavigationUtilities.calculateContactData(startContactEvent, endContactEvent, location, contactDataStepSize);
+		} catch (OrekitException e) {
+			e.printStackTrace();
+		}
+		 
+		 return pointing;
 	}
 }

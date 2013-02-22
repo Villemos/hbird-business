@@ -209,6 +209,12 @@
    <field name="derivedFromTimestamp" type="slong" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>   
    <field name="derivedFromType" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>  
 	
+   <!-- Additional 'IApplicableTo' class fields. -->
+   <field name="applicableToName" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>      
+   <field name="applicableToTimestamp" type="slong" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>   
+   <field name="applicableToType" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>  
+
+	
 	<!-- Additional 'LocationContactEvent' class fields. -->
    <field name="visibility" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
 

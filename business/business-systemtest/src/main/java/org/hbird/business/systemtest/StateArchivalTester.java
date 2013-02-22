@@ -22,8 +22,8 @@ import java.util.Map;
 
 import org.apache.camel.CamelContext;
 import org.apache.log4j.Logger;
+import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.impl.DataAccess;
 import org.hbird.exchange.core.State;
 
 public class StateArchivalTester extends SystemTest {
@@ -35,7 +35,7 @@ public class StateArchivalTester extends SystemTest {
 		LOG.info("------------------------------------------------------------------------------------------------------------");
     	LOG.info("Starting");
     	
-    	IDataAccess api = new DataAccess("SystemTest");
+    	IDataAccess api = ApiFactory.getDataAccessApi("SystemTest");
     	
     	startMonitoringArchive();
 		

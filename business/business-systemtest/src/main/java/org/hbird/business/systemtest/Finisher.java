@@ -16,21 +16,21 @@
  */
 package org.hbird.business.systemtest;
 
-import java.util.List;
+import java.io.IOException;
+import java.net.MalformedURLException;
+
+import javax.management.MalformedObjectNameException;
 
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.configurator.StartQueueManagerComponent;
-import org.hbird.exchange.dataaccess.DeletionRequest;
-import org.hbird.queuemanagement.ClearQueue;
-import org.hbird.queuemanagement.ListQueues;
-import org.hbird.queuemanagement.QueueHelper;
+import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.IQueueManagement;
 
 public class Finisher extends SystemTest {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(Finisher.class);
 
-	public void process(Exchange exchange) throws InterruptedException {
+	public void process(Exchange exchange) throws MalformedObjectNameException, MalformedURLException, NullPointerException, IOException, Exception {
 		
 		LOG.info("------------------------------------------------------------------------------------------------------------");
 		LOG.info("Starting");
@@ -39,23 +39,26 @@ public class Finisher extends SystemTest {
 		
 		LOG.info("System Test done.");
 		
-		LOG.info("Cleaning archive.");
+		LOG.info("Purging all activemq topics and queues.");
 		
-		injection.sendBody(new DeletionRequest("SystemTest", "Archive", "*:*"));	
+		/** Check that the antenna schedule has been filled. */
+		IQueueManagement api = ApiFactory.getQueueManagementApi("SystemTest");
 
-		LOG.info("Purging queues.");
-		
-		/** List all queues. */
-		List<String> queues = (List<String>) injection.requestBody(new ListQueues("SystemTest", "CommandingQueueManager"));
-				
-		/** Purge all. */
-		for (String canonicalName : queues) {
-			injection.requestBody(new ClearQueue("SystemTest", "CommandingQueueManager", QueueHelper.getQueueName(canonicalName)));
+		for (String queueName : api.listQueues()) {
+			LOG.info(" - Purging queue '" + queueName + "'.");
+			api.clearQueue(queueName);
 		}
-		
-		LOG.info("Ciao.");
-		
+
+		for (String topicName : api.listTopics()) {
+			LOG.info(" - Purging topic '" + topicName + "'.");
+			api.clearTopic(topicName);
+		}
+
 		Thread.sleep(2000);
+
+		LOG.info("Ciao!");
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+		
 		System.exit(1);
 	}	
 }

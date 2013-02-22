@@ -21,33 +21,38 @@ import java.util.Map;
 
 /**
  * Class for metadata to another Named object. The object 'points' to the subject through the
- * 'subject' field.
+ * 'subject' field. Currently the metadata can only be applicable to a single other obejct.
  * 
- * @author Admin
+ * @author Gert Villemos
  *
  */
-public class Metadata extends Named {
+public class Metadata extends Named implements IApplicableTo {
 
 	private static final long serialVersionUID = 2804335094757225970L;
 
-	/** The object(s) that this metadata is applicable to (the subject of the metadata). The value must be in the format
-	 *       [type]:[name]:[timestamp]
-	 *       
-	 *  Any of the fields can contain and/or be a wildcard (*). This can be used to apply the metadata to
-	 *     [type]:*:*      All objects of a given type ('All Parameters')
-	 *     [type]:[name]:* All objects with a specific type and name, regardless of timestamp ('All PARA1 instances'). 
-	 *     *:*[name]:*      All objects with a name containing [name] 
-	 *     
-	 */
-	protected String subject = "";
+	/** The identifier of the object that this is applicable too. */
+	protected NamedInstanceIdentifier subject = null;
 	
 	/** The metadata itself. Can be any type, keyed on string. */
 	protected Map<String, Object> metadata = null;
 
-	public Metadata(String issuedBy, String name, String type, String description, String subject, Map<String, Object> metadata) {
-		super(issuedBy, name, type, description);
-		
-		this.subject = subject;
+	
+	/**
+	 * Constructor to create metadata for a specific object.
+	 * 
+	 * @param issuedBy The name of the entity who have issued this metadata
+	 * @param name The name of the metadata. Can be used to give logical names such as 'documentation' or 'note'.
+	 * @param toSubject A Named object that this metadata is applicable to.
+	 * @param metadata The metadata. Map keyed on a string ID and hold an object.
+	 */
+	public Metadata(String issuedBy, String name, Named toSubject, Map<String, Object> metadata) {
+		super(issuedBy, "Name", "Metadata", "Metadata applicable to another Named object.");
+
+		this.subject = new NamedInstanceIdentifier(toSubject.getName(), toSubject.getTimestamp(), toSubject.getType());
 		this.metadata = metadata;
+	}
+
+	public NamedInstanceIdentifier applicableTo() {
+		return subject;
 	}
 }

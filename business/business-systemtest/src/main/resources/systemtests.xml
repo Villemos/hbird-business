@@ -34,6 +34,7 @@
 		<property name="context" ref="basic"/>
 	</bean>
 
+	<bean id="starter" class="org.hbird.business.systemtest.Starter" parent="testerTemplate"/>
 	<bean id="businesscard" class="org.hbird.business.systemtest.BusinessCardTester" parent="testerTemplate"/>
 	<bean id="parameterarchive" class="org.hbird.business.systemtest.ParameterArchivalTester" parent="testerTemplate"/>
 	<bean id="archive" class="org.hbird.business.systemtest.StateArchivalTester" parent="testerTemplate"/>
@@ -54,17 +55,18 @@
 
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
+				<to uri="bean:starter" />
 				<to uri="bean:businesscard" />
+	 			<to uri="bean:queuemanager" />
 				<to uri="bean:parameterarchive" />
 				<to uri="bean:archive" />
+	 			<to uri="bean:dataaccessapi" />
 				<to uri="bean:limitcheck" />
 				<to uri="bean:scripting" />
 		 		<to uri="bean:tasking" />
 	 			<to uri="bean:commanding" />
 	 			<to uri="bean:navigation" />
 	 			<to uri="bean:antennacontroller" />
-	 			<to uri="bean:queuemanager" />
-	 			<to uri="bean:dataaccessapi" />
 	 			<to uri="bean:navigationcontroller" />
 	 			<to uri="bean:finisher" />
 		</route>

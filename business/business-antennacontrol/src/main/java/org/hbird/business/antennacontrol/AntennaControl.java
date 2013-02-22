@@ -23,15 +23,12 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IQueueManagement;
-import org.hbird.business.api.impl.DataAccess;
-import org.hbird.business.api.impl.QueueManagerApi;
 import org.hbird.business.navigation.NavigationUtilities;
 import org.hbird.exchange.movementcontrol.PointingRequest;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.orekit.errors.OrekitException;
-
 
 
 /**
@@ -50,7 +47,6 @@ import org.orekit.errors.OrekitException;
  * To keep the component as simple as possible the component is not event based. It will instead poll the archive
  * to check whether new contact events are available.
  * 
- * 
  * @author Gert Villemos
  *
  */
@@ -66,7 +62,7 @@ public class AntennaControl {
 	protected String name;
 
 	/** The name of the activemq queue holding the antenna schedule. */
-	protected String queueName = "hbird.antennaschedule";
+	protected String queueUri = "hbird.antennaschedule";
 	
 	/** The name of the route used to inject data to the schedule. The route must be available in the context. */
 	protected String injectUri = "seda:inject.schedule.";
@@ -80,20 +76,27 @@ public class AntennaControl {
 	/** The last retrieved contact events for the location / satellite. */
 	protected List<LocationContactEvent> nextContactEvents = new ArrayList<LocationContactEvent>();
 
-	public AntennaControl(String name, Location location, String satellite, String queueName) {
+	/**
+	 * Constructor.
+	 * 
+	 * @param name The name of this component. Used when issue requests (issuedBy).
+	 * @param location The location (antenna) that this controller is controlling.
+	 * @param satellite The satellite that the controller manages the schedule for.
+	 * @param queueName The name of the queue into which the antenna control commands shall be injected.
+	 */
+	public AntennaControl(String name, Location location, String satellite, String queueUri) {
 		this.name = name;
 		this.location = location;
 		this.satellite = satellite;
-		this.queueName = queueName;
+		this.queueUri = queueUri;
 		injectUri += name;
-		
-		api = new DataAccess(this.name);		
-		queueApi = new QueueManagerApi(this.name);
 	}
 	
 	
 	/**
-	 * Method to be called at intervals.
+	 * Method to be called at intervals. The method will, based on the next set of contact events for
+	 * the location and satellite, create a schedule of time-tagged commands and inject them into the
+	 * queue of the antenna.
 	 * 
 	 * @param context The context of the processor. Must contain a 'from' route as defined by the 'injectName' attribute.
 	 * @throws OrekitException
@@ -111,7 +114,7 @@ public class AntennaControl {
 
 				/** Purge the existing schedule. */
 				try {
-					queueApi.clearQueue(queueName);
+					queueApi.clearQueue(queueUri);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -124,12 +127,13 @@ public class AntennaControl {
 				/** Create the commands to be executed PRE parse, i.e. for setup / configuration. */
 				// TODO
 				
+				int counter = 0;
+				
 				/** Calculate the contact data details based on the contact events. Create the WHILE parse commands. */
 				for (PointingData point : NavigationUtilities.calculateContactData(contactEvents.get(0), contactEvents.get(1), location, 500)) {
 					PointingRequest command = new PointingRequest(this.name, "", point.getAzimuth(), point.getElevation(), point.getDoppler(), point.getDopplerShift());
 					command.setReleaseTime(point.getTimestamp());
 					template.sendBody(injectUri, command);
-					System.out.println(point.prettyPrint());
 				}
 				
 				/** Create the commands to be executed AFTER parse. */
@@ -139,7 +143,32 @@ public class AntennaControl {
 	}
 
 
+	/**
+	 * Getter of the URI of the route starting point used to inject the schedule.  
+	 * 
+	 * @return The URI of the 'from' in the route.
+	 */
 	public String getInjectUri() {
 		return injectUri;
 	}
+
+
+	public IDataAccess getApi() {
+		return api;
+	}
+
+
+	public void setApi(IDataAccess api) {
+		this.api = api;
+	}
+
+
+	public IQueueManagement getQueueApi() {
+		return queueApi;
+	}
+
+
+	public void setQueueApi(IQueueManagement queueApi) {
+		this.queueApi = queueApi;
+	}	
 }

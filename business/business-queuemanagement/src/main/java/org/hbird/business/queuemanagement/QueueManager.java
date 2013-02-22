@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api.impl;
+package org.hbird.business.queuemanagement;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -26,6 +26,7 @@ import javax.management.MalformedObjectNameException;
 
 import org.apache.camel.Body;
 import org.hbird.business.api.IQueueManagement;
+import org.hbird.business.queuemanagement.api.QueueManagerApi;
 import org.hbird.queuemanagement.ClearQueue;
 import org.hbird.queuemanagement.RemoveQueueElements;
 import org.hbird.queuemanagement.ViewQueue;

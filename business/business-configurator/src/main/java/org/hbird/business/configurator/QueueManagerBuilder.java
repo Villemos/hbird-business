@@ -1,6 +1,6 @@
 package org.hbird.business.configurator;
 
-import org.hbird.business.api.impl.QueueManager;
+import org.hbird.business.queuemanagement.QueueManager;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.queuemanagement.ClearQueue;
 import org.hbird.queuemanagement.ListQueues;

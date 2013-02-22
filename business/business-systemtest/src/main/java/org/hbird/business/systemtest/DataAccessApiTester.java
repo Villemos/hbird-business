@@ -8,7 +8,9 @@ import java.util.Map.Entry;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.api.impl.DataAccess;
+import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.navigation.Location;
@@ -16,6 +18,7 @@ import org.hbird.exchange.navigation.Satellite;
 
 public class DataAccessApiTester extends SystemTest {
 
+	
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(CommandingTester.class);
 
 	@Handler
@@ -116,7 +119,8 @@ public class DataAccessApiTester extends SystemTest {
 		/** Send command to commit all changes. */
 		forceCommit();
 		
-		DataAccess api = new DataAccess("systemtest");
+		IDataAccess api = ApiFactory.getDataAccessApi("systemtest");
+		ICatalogue catalogueApi = ApiFactory.getCatalogueApi("systemtest");
 		
 		Parameter parameter = null;
 		Map<Parameter, List<State>> parameterAndStates = null;
@@ -131,16 +135,16 @@ public class DataAccessApiTester extends SystemTest {
 
 		
 		/** Test the CATALOGUE interface. */
-		List<Parameter> parameterCatalogue = api.getParameterMetadata();
+		List<Parameter> parameterCatalogue = catalogueApi.getParameterMetadata();
 		azzert(parameterCatalogue.size() == 5, "Expect to receive 5 parameter metadata. Received " + parameterCatalogue.size());
 		
-		List<State> stateCatalogue = api.getStateMetadata();
+		List<State> stateCatalogue = catalogueApi.getStateMetadata();
 		azzert(stateCatalogue.size() == 4, "Expect to receive 4 state metadata. Received " + stateCatalogue.size());
 
-		List<Location> locationCatalogue = api.getLocationMetadata();
+		List<Location> locationCatalogue = catalogueApi.getLocationMetadata();
 		azzert(locationCatalogue.size() == 3, "Expect to receive 3 location metadata. Received " + locationCatalogue.size());
 		
-		List<Satellite> satelliteCatalogue = api.getSatelliteMetadata();
+		List<Satellite> satelliteCatalogue = catalogueApi.getSatelliteMetadata();
 		azzert(satelliteCatalogue.size() == 2, "Expect to receive 2 location metadata. Received " + satelliteCatalogue.size());
 
 		

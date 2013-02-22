@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IOrbitPrediction;
-import org.hbird.business.api.impl.DataAccess;
-import org.hbird.business.api.impl.OrbitPropagation;
+import org.hbird.business.navigation.api.OrbitPropagation;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -124,10 +124,8 @@ public class OrbitPropagationController extends ControllerTask {
 		 * 
 		 * */
 
-		/** Create the API*/
-		IDataAccess api = new DataAccess(this.getName());
-
 		/** Get the latest TLE */
+		IDataAccess api = ApiFactory.getDataAccessApi(this.name);
 		TleOrbitalParameters tleParameters = api.retrieveTleFor(satellite);
 
 		if (tleParameters == null) {
@@ -169,7 +167,7 @@ public class OrbitPropagationController extends ControllerTask {
 		/** Check the last orbital state in the system. */
 		/** Get the latest orbital state */
 
-		IDataAccess api = new DataAccess(this.getName());
+		IDataAccess api = ApiFactory.getDataAccessApi(this.name);
 		OrbitalState state = api.retrieveOrbitalStateFor(satellite);
 
 		/** If we for some reason do not have a state, then initialize. Should have been done automatically already. But someone

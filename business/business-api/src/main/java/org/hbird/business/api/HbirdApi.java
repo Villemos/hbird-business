@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api.impl;
+package org.hbird.business.api;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.model.RouteDefinition;
 import org.hbird.business.core.HbirdRouteBuilder;
-import org.hbird.exchange.core.Command;
 
 public abstract class HbirdApi extends HbirdRouteBuilder {
 

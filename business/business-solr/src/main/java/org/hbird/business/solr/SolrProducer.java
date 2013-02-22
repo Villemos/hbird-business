@@ -20,10 +20,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultProducer;
@@ -39,7 +36,7 @@ import org.hbird.exchange.businesscard.BusinessCard;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.DataSet;
-import org.hbird.exchange.core.DerivedNamed;
+import org.hbird.exchange.core.IApplicableTo;
 import org.hbird.exchange.core.IDerived;
 import org.hbird.exchange.core.IGenerationTimestamped;
 import org.hbird.exchange.core.ILocationSpecific;
@@ -104,8 +101,8 @@ public class SolrProducer extends DefaultProducer {
 
 					String request = createRequest((DataRequest) body);
 					LOG.info("Search string = " + request);
-					List<Named> results = doInitializationRequest((DataRequest) body, request);
-
+					List<Named> results = doInitializationRequest(dataRequest, request);
+					
 					LOG.info("Returning {} entries.", results.size());
 					exchange.getOut().setBody(results);
 				}
@@ -115,7 +112,7 @@ public class SolrProducer extends DefaultProducer {
 					String request = createRequest((DataRequest) body);
 					LOG.info("Search string = {}.", request);
 
-					SolrQuery query = createQuery((DataRequest) body, request);
+					SolrQuery query = createQuery(dataRequest, request);
 					List<Named> results = retrieve(query);
 
 					LOG.info("Returning {} entries.", results.size());
@@ -147,6 +144,7 @@ public class SolrProducer extends DefaultProducer {
 		String ofSatellitePart = null;
 		String locationPart = null;
 		String derivedFromPart = null;
+		String applicableToPart = null;
 		String visibilityPart = null;
 		
 		/** Set the class of data we are retrieving. */
@@ -185,6 +183,11 @@ public class SolrProducer extends DefaultProducer {
 			derivedFromPart = "derivedFromName:" + id.name + " AND derivedFromTimestamp:" + id.timestamp + " AND derivedFromType:" + id.type;
 		}
 
+		if (body.getArgument("applicableto") != null) {
+			NamedInstanceIdentifier id = (NamedInstanceIdentifier) body.getArgument("applicableto");
+			applicableToPart = "applicableToName:" + id.name + " AND applicableToTimestamp:" + id.timestamp + " AND applicableToType:" + id.type;
+		}
+
 		if (body.getArgument("satellite") != null) {
 			ofSatellitePart = "ofSatellite:" + (String) body.getArgument("satellite");
 		}
@@ -207,6 +210,10 @@ public class SolrProducer extends DefaultProducer {
 
 		if (derivedFromPart != null) {
 			request += " AND (" + derivedFromPart + ")";
+		}
+
+		if (applicableToPart != null) {
+			request += " AND (" + applicableToPart + ")";
 		}
 
 		if (visibilityPart != null) {
@@ -479,6 +486,11 @@ public class SolrProducer extends DefaultProducer {
 			document.addField("derivedFromName", ((IDerived) io).from().name);
 			document.addField("derivedFromTimestamp", ((IDerived) io).from().timestamp);
 			document.addField("derivedFromType", ((IDerived) io).from().type);
+		}
+		if (io instanceof IApplicableTo) {
+			document.addField("applicableToName", ((IApplicableTo) io).applicableTo().name);
+			document.addField("applicableToTimestamp", ((IApplicableTo) io).applicableTo().timestamp);
+			document.addField("applicableToType", ((IApplicableTo) io).applicableTo().type);
 		}
 
 		/** Insert the serialization. */

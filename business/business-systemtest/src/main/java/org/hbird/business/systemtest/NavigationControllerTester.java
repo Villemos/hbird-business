@@ -9,7 +9,6 @@ import org.hbird.business.navigation.controller.OrbitPropagationController;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
-import org.hbird.exchange.tasking.Task;
 
 public class NavigationControllerTester extends SystemTest {
 	
@@ -57,7 +56,8 @@ public class NavigationControllerTester extends SystemTest {
 		forceCommit();
 		
 		/** Create a controller task and inject it. */
-		Task task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 180 * 1000, "ESTcube", locations);
+		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 180 * 1000, "ESTcube", locations);
+		task.setRepeat(3);
 		injection.sendBody(task);
 		
 		Thread.sleep(2000);

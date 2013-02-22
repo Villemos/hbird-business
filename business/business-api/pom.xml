@@ -11,6 +11,7 @@
   <description>A set of APIs for accessing the services of hbird.</description>
   
       <dependencies>
+
   	<dependency>
   		<groupId>org.hbird.business</groupId>
   		<artifactId>business-core</artifactId>

@@ -96,6 +96,6 @@ public class BusinessCardTester extends SystemTest {
 			azzert(!archiveDidArrive, "Business card messages not arriving from Archive");
 		}		
 		
-		LOG.info("Finished*");
+		LOG.info("Finished");
 	}
 }

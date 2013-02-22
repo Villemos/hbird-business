@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api.impl;
+package org.hbird.business.solr.api;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,9 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.model.RouteDefinition;
-import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.ApiUtility;
+import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IDataAccess;
-import org.hbird.exchange.core.Command;
+import org.hbird.business.api.TypeFilter;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
@@ -32,9 +33,9 @@ import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.LocationContactEventRequest;
 import org.hbird.exchange.dataaccess.LocationRequest;
+import org.hbird.exchange.dataaccess.MetadataRequest;
 import org.hbird.exchange.dataaccess.OrbitalStateRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
-import org.hbird.exchange.dataaccess.SatelliteRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
 import org.hbird.exchange.navigation.PointingData;
@@ -44,7 +45,7 @@ import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
-public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
+public class DataAccess extends HbirdApi implements IDataAccess {
 
 	protected TypeFilter<Parameter> parameterFilter = new TypeFilter<Parameter>(Parameter.class);
 	protected TypeFilter<State> stateFilter = new TypeFilter<State>(State.class);
@@ -273,43 +274,6 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 	
 	
 	
-	public List<Location> getLocationMetadata() {
-		LocationRequest request = new LocationRequest(issuedBy);
-		request.setIsInitialization(true);
-		request.setType("Location");
-		request.setRows(1);
-		return locationFilter.getObjects(template.requestBody(inject, request, List.class));
-	}
-	
-	public List<Satellite> getSatelliteMetadata() {
-		SatelliteRequest request = new SatelliteRequest(issuedBy);
-		request.setIsInitialization(true);
-		request.setType("Satellite");
-		request.setRows(1);
-		return satelliteFilter.getObjects(template.requestBody(inject, request, List.class));
-	}
-
-	public List<Parameter> getParameterMetadata() {
-		ParameterRequest request = new ParameterRequest(new ArrayList<String>(), 1000);
-		request.setIsInitialization(true);
-		request.setType("Parameter");
-		request.setRows(1);
-		return getParameterWithoutState(request);
-	}
-
-	public List<State> getStateMetadata() {
-		ParameterRequest request = new ParameterRequest(new ArrayList<String>(), 1000);
-		request.setIsInitialization(true);
-		request.setType("State");
-		request.setRows(1);
-		return stateFilter.getObjects(template.requestBody(inject, request, List.class));
-	}
-
-	public List<Command> getCommandMetadata() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	@Override
 	public void configure() throws Exception {
 		/** This configures a direct connection to SOLR. */
@@ -386,22 +350,30 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 		return events;
 	}
 
-	public List<PointingData> retrieveNextLocationContactDataFor(String location) {
-		return retrieveNextLocationContactDataFor(location, null);
+	public List<PointingData> retrieveNextLocationPointingDataFor(String location) {
+		return retrieveNextLocationPointingDataFor(location, null);
 	}
 
-	public List<PointingData> retrieveNextLocationContactDataFor(String location, String satellite) {
+	public List<PointingData> retrieveNextLocationPointingDataFor(String location, String satellite) {
 		List<LocationContactEvent> events = retrieveNextLocationContactEventsFor(location);
 		
 		if (events.isEmpty() == false) {
-			return retrieveLocationContactDataFor(location, events.get(0).getTimestamp(), events.get(1).getTimestamp());
+			return retrieveLocationPointingDataFor(location, events.get(0).getTimestamp(), events.get(1).getTimestamp());
 		}
 		
 		return new ArrayList<PointingData>();
 	}
 
-	public List<PointingData> retrieveLocationContactDataFor(String location, long from, long to) {
+	public List<PointingData> retrieveLocationPointingDataFor(String location, long from, long to) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public List<Named> getMetadata(Named subject) {
+		/** Get next start event. */
+		MetadataRequest request = new MetadataRequest(issuedBy, subject);
+		List<Named> respond = template.requestBody(inject, request, List.class);
+		return respond;
 	}
 }

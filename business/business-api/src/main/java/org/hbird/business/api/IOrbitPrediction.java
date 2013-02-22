@@ -19,9 +19,14 @@ package org.hbird.business.api;
 import java.util.List;
 
 import org.hbird.exchange.core.DataSet;
+import org.hbird.exchange.navigation.Location;
+import org.hbird.exchange.navigation.LocationContactEvent;
+import org.hbird.exchange.navigation.PointingData;
 
 /**
  * API interface offering methods to request the propagation (prediction) of an satellites orbit.
+ * 
+ * This API should be used by any component which requires orbital prediction.-
  *
  * The API underneath create orbital request messages of the hbird exchange tier and submit these
  * to the activemq commanding topic for distribution.
@@ -146,4 +151,16 @@ public interface IOrbitPrediction {
 	 * @return A DataSet containing all orbital events.
 	 */
 	public void requestOrbitPropagationStream(String satellite, List<String> locations, long from, long to);
+
+	
+	/**
+	 * Method to request pointing data for a location to a satellite based on a start-end of contact event pair.
+	 * 
+	 * @param startContactEvent The start of contact event
+	 * @param endContactEvent The end of contact event
+	 * @param location The location
+	 * @param contactDataStepSize The step size (ms) when propagating the pointing.
+	 * @return Sorted list of Pointing Data.
+	 */
+	public List<PointingData> requestPointingDataFor(LocationContactEvent startContactEvent, LocationContactEvent endContactEvent, Location location, long contactDataStepSize);
 }

@@ -25,10 +25,12 @@ import java.util.TreeMap;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
+import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IOrbitPrediction;
-import org.hbird.business.api.impl.DataAccess;
-import org.hbird.business.api.impl.OrbitPropagation;
+import org.hbird.business.api.IPublish;
+import org.hbird.business.navigation.api.OrbitPropagation;
+import org.hbird.business.solr.api.Publish;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Location;
@@ -54,34 +56,39 @@ public class NavigationTester extends SystemTest {
 
 		orbitalStateListener.elements.clear();
 		
+		IPublish publishApi = ApiFactory.getPublishApi("SystemTest");
+		
 		/** Store a set of locations */
-		injection.sendBody(new Location("SystemTest", "TARTU", "Test location 1", Math.toRadians(58.3000D), Math.toRadians(26.7330D), 59.0D, 146.92 * 1000000));
-		injection.sendBody(new Location("SystemTest", "Aalborg", "Test location 2", Math.toRadians(55.659306D), Math.toRadians(12.587585D), 59.0D, 136.92 * 1000000));
-		injection.sendBody(new Location("SystemTest", "Darmstadt", "Test location 3", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D, 126.92 * 1000000));
-		injection.sendBody(new Location("SystemTest", "New York", "Test location 4", Math.toRadians(40.66564D), Math.toRadians(-74.036865D), 59.0D, 116.92 * 1000000));
+		publishApi.publishLocation("TARTU", "Test location 1", Math.toRadians(58.3000D), Math.toRadians(26.7330D), 59.0D, 146.92 * 1000000);
+		publishApi.publishLocation("Aalborg", "Test location 2", Math.toRadians(55.659306D), Math.toRadians(12.587585D), 59.0D, 136.92 * 1000000);
+		publishApi.publishLocation("Darmstadt", "Test location 3", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D, 126.92 * 1000000);
+		publishApi.publishLocation("New York", "Test location 4", Math.toRadians(40.66564D), Math.toRadians(-74.036865D), 59.0D, 116.92 * 1000000);
 
 		/** Store a set of satellites */
-		injection.sendBody(new Satellite("SystemTest", "ESTcube", "Test satellite 1"));
-		injection.sendBody(new Satellite("SystemTest", "DKcube", "Test satellite 2"));
-		injection.sendBody(new Satellite("SystemTest", "DEcube", "Test satellite 3"));
+		publishApi.publishSatellite("ESTcube", "Test satellite 1");
+		publishApi.publishSatellite("DKcube", "Test satellite 2");
+		publishApi.publishSatellite("DEcube", "Test satellite 3");
 
 		List<String> locations = new ArrayList<String>();
 		locations.add("TARTU");
 		locations.add("Aalborg");
 
+		/** CReate the TLE elements */
 		String tleLine1 = "1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478";
 		String tleLine2 = "2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935";
-		TleOrbitalParameters tleParameter = new TleOrbitalParameters("SystemTest", "ESTcube", tleLine1, tleLine2);
-		tleParameter.setDatasetidentifier("TLE/test");
-		injection.sendBody(tleParameter);
-
+		TleOrbitalParameters parameters = new TleOrbitalParameters("SystemTest", "ESTcube", tleLine1, tleLine2);
+		publishApi.publish(parameters);
+		
+		/** Insert a metadata comment. */
+		publishApi.publichMetadata(parameters, "Author", "This file was approved by Gert Villemos the " + (new Date()).toString());
+		
 		/** Send command to commit all changes. */
 		forceCommit();
 		
 		orbitalStateListener.elements.clear();
 
 		/** Send a TLE request for a satellite and a subset of locations */
-		IOrbitPrediction api = new OrbitPropagation("SystemTest");
+		IOrbitPrediction api = ApiFactory.getOrbitPredictionApi("SystemTest");
 		api.requestOrbitPropagationStream("ESTcube", locations, 1355385448149l, 1355385448149l + 2 * 60 * 60 * 1000);
 
 		int totalSleep = 0;
@@ -100,7 +107,7 @@ public class NavigationTester extends SystemTest {
 		forceCommit();
 		
 		/** Retrieve the next set of TARTU events and check them. */
-		IDataAccess dataApi = new DataAccess("SystemTest");
+		IDataAccess dataApi = ApiFactory.getDataAccessApi("SystemTest");
 		List<LocationContactEvent> contactEvents = dataApi.retrieveNextLocationContactEventsFor("TARTU", 1355385522265l);
 		
 		azzert(contactEvents.size() == 2);
@@ -114,6 +121,11 @@ public class NavigationTester extends SystemTest {
 		azzert(contactEvents.size() == 2);
 		azzert(contactEvents.get(0).getTimestamp() == 1355390970221l);
 		azzert(contactEvents.get(1).getTimestamp() == 1355391211998l);
+
+		/** See if we can get the metadata */
+		IDataAccess dataAccessApi = ApiFactory.getDataAccessApi("SystemTest");
+		List<Named> response = dataAccessApi.getMetadata(parameters);
+		azzert(response.size() == 1, "Expected to receive 1 piece of metadata. Received " + response.size());
 		
 		LOG.info("Finished");
 	}

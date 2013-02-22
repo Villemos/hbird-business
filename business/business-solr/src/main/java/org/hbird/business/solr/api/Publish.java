@@ -14,20 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api.impl;
+package org.hbird.business.solr.api;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IPublish;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Binary;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Label;
+import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.Satellite;
+import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.tasking.Task;
 
 public class Publish extends HbirdApi implements IPublish {
@@ -75,5 +80,22 @@ public class Publish extends HbirdApi implements IPublish {
 
 	public void publishCommand(String name, String description, Command command, List<String> lockStates, List<Task> tasks) {
 		template.sendBody(inject, new CommandRequest(issuedBy, name, description, lockStates, tasks, command));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IPublish#publichMetadata(org.hbird.exchange.core.Named, java.lang.String, java.lang.String)
+	 */
+	public void publichMetadata(Named subject, String key, String value) {
+		Map<String, Object> metadata = new HashMap<String, Object>();
+		metadata.put(key, value);
+		
+		template.sendBody(inject, new Metadata(issuedBy, "Metadata", subject, metadata));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IPublish#publishTleParameters(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	public void publishTleParameters(String satellite, String tle1, String tle2) {
+		template.sendBody(inject, new TleOrbitalParameters(issuedBy, satellite, tle1, tle2));
 	}
 }
