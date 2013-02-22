@@ -19,22 +19,31 @@ package org.hbird.business.systemmonitoring;
 import java.lang.management.ManagementFactory;
 import java.net.UnknownHostException;
 
+import org.apache.camel.Handler;
+import org.hbird.business.core.naming.Base;
 import org.hbird.exchange.core.Parameter;
 
 public class CpuMonitor extends Monitor {
 
-	public CpuMonitor(String componentId) {
-		super(componentId);
-	}
-	
-	/**
-	 * Method to create a new instance of the memory parameter. The body of the 
-	 * exchange will be updated.
-	 * 
-	 * @param exchange The exchange to hold the new value.
-	 * @throws UnknownHostException 
-	 */
-	public Parameter check() {		
-		return new Parameter(componentId, "Average CPU Usage", "MonitoredResource", "The average CPU usage the last minute.", ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage(), "Percentage/CPU");
-	}	
+    public static final String PARAMETER_RELATIVE_NAME = "Load Average";
+
+    private final String parameterName;
+
+    public CpuMonitor(String componentId) {
+        super(componentId);
+        parameterName = naming.createAbsoluteName(Base.HOST, HostInfo.getHostName(), PARAMETER_RELATIVE_NAME);
+    }
+
+    /**
+     * Method to create a new instance of the memory parameter. The body of the
+     * exchange will be updated.
+     * 
+     * @param exchange The exchange to hold the new value.
+     * @throws UnknownHostException
+     */
+    @Handler
+    public Parameter check() {
+        return new Parameter(componentId, parameterName, "MonitoredResource", "The average CPU usage the last minute.",
+                ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage(), "Percentage/CPU");
+    }
 }

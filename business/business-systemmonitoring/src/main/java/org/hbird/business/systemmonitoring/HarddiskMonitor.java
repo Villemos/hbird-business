@@ -19,33 +19,47 @@ package org.hbird.business.systemmonitoring;
 import java.io.File;
 import java.net.UnknownHostException;
 
+import org.apache.camel.Handler;
+import org.hbird.business.core.naming.Base;
 import org.hbird.exchange.core.Parameter;
 
 public class HarddiskMonitor extends Monitor {
 
-	public HarddiskMonitor(String componentId) {
-		super(componentId);
-	}
+    public HarddiskMonitor(String componentId) {
+        super(componentId);
+    }
 
-	protected File rootFile = null;
-	
-	{
-		if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-			rootFile = new File("c://");
-		}
-		else {
-			rootFile = new File("/");
-		}
-	}
-	
-	/**
-	 * Method to create a new instance of the memory parameter. The body of the 
-	 * exchange will be updated.
-	 * 
-	 * @param exchange The exchange to hold the new value.
-	 * @throws UnknownHostException 
-	 */
-	public Parameter check() throws UnknownHostException {
-		return new Parameter(componentId, "Free Harddisk", "MonitoredResource", "The free harddisk space.", rootFile.getFreeSpace(), "Byte");
-	}
+    /**
+     * Method to create a new instance of the memory parameter. The body of the
+     * exchange will be updated.
+     * 
+     * @param exchange The exchange to hold the new value.
+     * @throws UnknownHostException
+     */
+    @Handler
+    public Parameter[] check() {
+
+        File[] roots = File.listRoots();
+        Parameter[] list = new Parameter[roots.length * 3];
+
+        for (int i = 0; i < roots.length; i++) {
+            File root = roots[i];
+            String name = root.getPath();
+            long total = root.getTotalSpace();
+            long free = root.getFreeSpace();
+            double used = total == 0 ? 0 : (100D - ((100 * free) / total));
+
+            list[i * 3 + 0] = new Parameter(componentId, naming.createAbsoluteName(Base.HOST.toString(),
+                    HostInfo.getHostName(),
+                    name, "Available Disk Space"), "MonitoredResource", "The available harddisk space.",
+                    total, "Byte");
+            list[i * 3 + 1] = new Parameter(componentId, naming.createAbsoluteName(Base.HOST.toString(),
+                    HostInfo.getHostName(),
+                    name, "Free Disk Space"), "MonitoredResource", "The free harddisk space.", free, "Byte");
+            list[i * 3 + 2] = new Parameter(componentId, naming.createAbsoluteName(Base.HOST.toString(),
+                    HostInfo.getHostName(),
+                    name, "Used Disk Space"), "MonitoredResource", "The used harddisk space.", used, "%");
+        }
+        return list;
+    }
 }
