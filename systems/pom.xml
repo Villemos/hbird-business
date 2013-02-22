@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>hummingbird</artifactId>
 		<groupId>org.hbird</groupId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.5-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>systems</artifactId>
@@ -14,6 +14,7 @@
 
 	<modules>
 		<module>estcube</module>
+		<module>thunderbird</module>
 	</modules>
 
 	<url>http://hbird.de</url>

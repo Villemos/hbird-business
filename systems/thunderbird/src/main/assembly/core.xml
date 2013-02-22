@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<import resource="injection.xml"/>
+
+	<bean id="configurator" class="org.hbird.business.configurator.Configurator"/>
+	
+	<!-- String componentname, String scriptName, String script, String format, String paraName, String paraType, String paraDescription, String paraUnit, String bindings -->
+	<bean id="script.temperature.calibration" class="org.hbird.exchange.configurator.StartScriptComponent">
+		<constructor-arg index="0" value="ScriptEngine"/>
+		<constructor-arg index="1" value="TemperatureCalibrationScript"/>
+		<constructor-arg index="2" value="var value=RAW.asDouble()/10; output.setValue(value);"/>
+		<constructor-arg index="3" value="JavaScript"/>
+		<constructor-arg index="4" value="Temperature"/>
+		<constructor-arg index="5" value="Double"/>
+		<constructor-arg index="6" value="The calibrated temperature."/>
+		<constructor-arg index="7" value="Celcius"/>	
+		<constructor-arg index="8" value="RawTemperature=RAW"/>
+	</bean>
+
+	<bean id="loader" class="org.hbird.business.metadatapublisher.ObjectPublisher">
+		<property name="objects">
+		    <list>
+ 		       	<ref bean="script.temperature.calibration"/>
+         	</list>
+		</property>
+	</bean>
+
+	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
+
+		<routeContextRef ref="injectionRoutes"/>
+
+		<route id="initiator">
+			<from uri="timer:initator?repeatCount=1" />
+			<split>
+				<method bean="loader" />
+				<to uri="direct:injection" />
+			</split>
+		</route>
+
+	</camelContext>
+</beans>
