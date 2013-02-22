@@ -56,6 +56,16 @@
 		</repository>
 
 
+		<!-- Repository dependency for Sonatype Snapshots repository (for hbird transport) -->
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>sonatyperepository</id>
+			<name>sonatyperepository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</repository>
+		
 	</repositories>
 
     <!--  Properties can be overridden in ~/.m2/settings.xml to configure environment specific values. -->
