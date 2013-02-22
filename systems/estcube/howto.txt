@@ -1,0 +1,9 @@
+
+
+
+To prepare:
+Update the version ID in the following files
+
+To package:
+Run 'mvn assembly:assembly' from the command line. This will create the zip file.
+

@@ -45,7 +45,7 @@
 	            </when>	            
 	            <when>
 	                <simple>${in.body} is 'org.hbird.exchange.commandrelease.CommandRequest'</simple>
-	      			<to uri="activemq:queue:hbird.scheduledCommandRequests"/>
+	      			<to uri="activemq:queue:hbird.requests"/>
 	            </when>
 	            <otherwise>
 	            	<to uri="activemq:topic:hbird.monitoring"/>

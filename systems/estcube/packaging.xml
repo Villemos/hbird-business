@@ -55,9 +55,9 @@
 
 	<files>
 		<file>
-			<source>${basedir}/target/estcube-0.0.1-SNAPSHOT.jar</source>
+			<source>${basedir}/target/estcube-0.5-SNAPSHOT.jar</source>
 			<outputDirectory>/</outputDirectory>
-			<destName>hbird-0.0.1.jar</destName>
+			<destName>hbird-0.5.jar</destName>
 		</file>
 		<file>
 			<source>${basedir}/../../business/business-systemtest/src/main/resources/systemtests.xml</source>
