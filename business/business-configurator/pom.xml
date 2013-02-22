@@ -6,8 +6,8 @@
   <parent>
     <artifactId>hummingbird-business</artifactId>
     <groupId>org.hbird.business</groupId>
-    <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
+    <version>0.5-SNAPSHOT</version>
   </parent>
   <artifactId>business-configurator</artifactId>
 
@@ -16,13 +16,11 @@
 		<dependency>
 			<artifactId>all-business</artifactId>
 			<groupId>org.hbird.business</groupId>
-			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<artifactId>all-exchange</artifactId>
 			<groupId>org.hbird.exchange</groupId>
-			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -31,6 +29,4 @@
 		</dependency>
 
 	</dependencies>
-
-	<version>0.0.2-SNAPSHOT</version>
 </project>

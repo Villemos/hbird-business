@@ -4,12 +4,11 @@
   <parent>
     <artifactId>hummingbird-business</artifactId>
     <groupId>org.hbird.business</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>simple-parameter-simulator</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
   <name>Business - Simple Parameter Simulator Module</name>
   <description>A Simulator that produces parameters according to its setup.</description>
 
@@ -50,25 +49,21 @@
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>core</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>orbitprediction</artifactId>
-      <version>0.0.1-SNAPSHOT</version>  
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-navigation</artifactId>
-      <version>0.0.1-SNAPSHOT</version>  
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-commanding</artifactId>
-      <version>0.0.1-SNAPSHOT</version>  
     </dependency>
 
     <dependency>

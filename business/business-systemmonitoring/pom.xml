@@ -4,7 +4,7 @@
   <parent>
     <artifactId>hummingbird-business</artifactId>
     <groupId>org.hbird.business</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
   </parent>
 
   <artifactId>business-systemmonitoring</artifactId>
@@ -39,7 +39,6 @@
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>core</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
   </dependencies>

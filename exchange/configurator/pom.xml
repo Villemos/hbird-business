@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>hummingbird-exchange</artifactId>
 		<groupId>org.hbird.exchange</groupId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.5-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>configurator</artifactId>
@@ -15,61 +15,51 @@
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>businesscard</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>commandrelease</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>queuemanagement</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>movementcontrol</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
      <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>orbitprediction</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>commandrelease</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>validation</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>scripting</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>tasking</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>dataaccess</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
 	</dependencies>

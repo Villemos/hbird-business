@@ -3,7 +3,7 @@
   <parent>
     <artifactId>hummingbird-business</artifactId>
     <groupId>org.hbird.business</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>business-celestrack</artifactId>
@@ -19,7 +19,6 @@
   	<dependency>
 		<groupId>org.hbird.exchange</groupId>
 		<artifactId>orbitprediction</artifactId>
-		<version>0.0.1-SNAPSHOT</version>	  		
   	</dependency>
   </dependencies>
   <name>Business - Celestrack Integration</name>

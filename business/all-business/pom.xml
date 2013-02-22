@@ -4,7 +4,7 @@
   <parent>
     <artifactId>hummingbird-business</artifactId>
     <groupId>org.hbird.business</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>all-business</artifactId>
@@ -14,79 +14,66 @@
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-commanding</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-queuemanagement</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-core</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-metadatapublisher</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-navigation</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-parameter-storage</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-scripting</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-systemmonitoring</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-taskexecutor</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-validation</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-solr</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-api</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-antennacontrol</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
   </dependencies>

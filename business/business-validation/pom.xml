@@ -3,7 +3,7 @@
   <parent>
     <artifactId>hummingbird-business</artifactId>
     <groupId>org.hbird.business</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>	
@@ -17,7 +17,6 @@
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-api</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 	
     <dependency>
@@ -61,14 +60,7 @@
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>validation</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.hbird.exchange</groupId>
-      <artifactId>parametervalidation</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    
   </dependencies>
 </project>

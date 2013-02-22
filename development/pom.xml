@@ -3,9 +3,15 @@
   <parent>
     <artifactId>hummingbird</artifactId>
     <groupId>org.hbird</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>hummingbird-development</artifactId>
   <groupId>org.hbird.development</groupId>
+  <name>Hummingbird Development Environment</name>
+  <description>This module holds configuration data of the development environment. This includes
+
+* Code templates.
+* Maven settings.
+* Eclipse plugin import file.</description>
 </project>

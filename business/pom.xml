@@ -4,7 +4,7 @@
   <parent>
     <artifactId>hummingbird</artifactId>
     <groupId>org.hbird</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -24,7 +24,6 @@
     <module>business-scripting</module>
     <module>business-systemmonitoring</module>
     <module>business-taskexecutor</module>
-    <module>business-time-correlation</module>
     <module>business-validation</module>
     <module>business-commanding</module>
     <module>business-cfdp</module>

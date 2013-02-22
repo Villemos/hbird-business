@@ -47,6 +47,7 @@
 	<bean id="dataaccessapi" class="org.hbird.business.systemtest.DataAccessApiTester" parent="testerTemplate"/>
 	<bean id="navigationcontroller" class="org.hbird.business.systemtest.NavigationControllerTester" parent="testerTemplate"/>
 	<bean id="antennacontroller" class="org.hbird.business.systemtest.AntennaControlTester" parent="testerTemplate"/>
+	<bean id="jmstester" class="org.hbird.business.systemtest.JmsSelectorTester" parent="testerTemplate"/>
 	<bean id="finisher" class="org.hbird.business.systemtest.Finisher" parent="testerTemplate"/>
 						
 	<bean id="scheduler" class="org.hbird.business.core.Scheduler"/>
@@ -56,18 +57,19 @@
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
-				<to uri="bean:businesscard" />
-	 			<to uri="bean:queuemanager" />
-				<to uri="bean:parameterarchive" />
-				<to uri="bean:archive" />
-	 			<to uri="bean:dataaccessapi" />
-				<to uri="bean:limitcheck" />
-				<to uri="bean:scripting" />
-		 		<to uri="bean:tasking" />
-	 			<to uri="bean:commanding" />
-	 			<to uri="bean:navigation" />
-	 			<to uri="bean:antennacontroller" />
-	 			<to uri="bean:navigationcontroller" />
+<!-- 				<to uri="bean:businesscard" /> -->
+<!-- 	 			<to uri="bean:queuemanager" /> -->
+<!-- 				<to uri="bean:parameterarchive" /> -->
+<!-- 				<to uri="bean:archive" /> -->
+<!-- 	 			<to uri="bean:dataaccessapi" /> -->
+<!-- 				<to uri="bean:limitcheck" /> -->
+<!-- 				<to uri="bean:scripting" /> -->
+<!-- 		 		<to uri="bean:tasking" /> -->
+<!-- 	 			<to uri="bean:commanding" /> -->
+<!-- 	 			<to uri="bean:navigation" /> -->
+<!-- 	 			<to uri="bean:antennacontroller" /> -->
+<!-- 	 			<to uri="bean:navigationcontroller" /> -->
+	 			<to uri="bean:jmstester" />
 	 			<to uri="bean:finisher" />
 		</route>
 

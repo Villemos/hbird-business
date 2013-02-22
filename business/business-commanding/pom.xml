@@ -3,7 +3,7 @@
   <parent>
     <artifactId>hummingbird-business</artifactId>
     <groupId>org.hbird.business</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>	
@@ -17,26 +17,28 @@
   <dependencies>
 
     <dependency>
+    	<groupId>org.hbird.exchange</groupId>
+    	<artifactId>core</artifactId>
+    </dependency>
+    
+    <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>commandrelease</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>dataaccess</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-test</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-parameter-storage</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-test</artifactId>
     </dependency>
 
     <dependency>
@@ -61,11 +63,5 @@
 <!--      <version>2.5</version>-->
     </dependency>
         
-    <dependency>
-    	<groupId>org.hbird.exchange</groupId>
-    	<artifactId>core</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    
   </dependencies>
 </project>
