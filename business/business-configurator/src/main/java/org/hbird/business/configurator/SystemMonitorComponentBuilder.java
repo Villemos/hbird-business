@@ -20,28 +20,33 @@ import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.systemmonitoring.CpuMonitor;
 import org.hbird.business.systemmonitoring.HarddiskMonitor;
 import org.hbird.business.systemmonitoring.HeapMemoryUsageMonitor;
+import org.hbird.business.systemmonitoring.OsMonitor;
 import org.hbird.business.systemmonitoring.ThreadCountMonitor;
+import org.hbird.business.systemmonitoring.UptimeMonitor;
 
 /**
  * Component builder to create a system monitoring component.
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class SystemMonitorComponentBuilder extends ComponentBuilder {
 
-	@Override
-	public void doConfigure() {
-		from("timer://systemmonitor?fixedRate=true&period=10000").multicast().to("seda:heap", "seda:thread", "seda:cpu", "seda:harddisk");
+    @Override
+    public void doConfigure() {
+        from("timer://systemmonitor?fixedRate=true&period=10000").multicast().to("seda:heap", "seda:thread",
+                "seda:cpu", "seda:harddisk", "seda:os", "seda:uptime");
 
-		from("seda:heap").bean(new HeapMemoryUsageMonitor(command.getName())).to("seda:out");
-		from("seda:thread").bean(new ThreadCountMonitor(command.getName())).to("seda:out");
-		from("seda:cpu").bean(new CpuMonitor(command.getName())).to("seda:out");
-		from("seda:harddisk").bean(new HarddiskMonitor(command.getName())).to("seda:out");
+        from("seda:heap").bean(new HeapMemoryUsageMonitor(command.getName())).split(simple("${body}")).to("seda:out");
+        from("seda:thread").bean(new ThreadCountMonitor(command.getName())).to("seda:out");
+        from("seda:cpu").bean(new CpuMonitor(command.getName())).to("seda:out");
+        from("seda:harddisk").bean(new HarddiskMonitor(command.getName())).split(simple("${body}")).to("seda:out");
+        from("seda:os").bean(new OsMonitor(command.getName())).to("seda:out");
+        from("seda:uptime").bean(new UptimeMonitor(command.getName())).to("seda:out");
 
-		ProcessorDefinition<?> route = from("seda:out");
-		addInjectionRoute(route);
-		
-		addCommandHandler();
-	}
+        ProcessorDefinition<?> route = from("seda:out");
+        addInjectionRoute(route);
+
+        addCommandHandler();
+    }
 }
