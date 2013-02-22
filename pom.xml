@@ -16,6 +16,7 @@
 		<module>exchange</module>
 		<module>business</module>
 		<module>systems</module>
+		<module>development</module>
 	</modules>
 
 	<licenses>
