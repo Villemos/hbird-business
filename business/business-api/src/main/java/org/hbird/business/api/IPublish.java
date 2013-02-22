@@ -30,18 +30,23 @@ import org.hbird.exchange.tasking.Task;
  */
 public interface IPublish {
 
+	/**
+	 * Method to force a commit of all data. Any process should flush buffers and cashes.
+	 */
+	public void commit();
+
 	public void publish(Named object);
-	
+
 	public void publishParameter(String name, String type, String description, Number value, String unit);
-	
+
 	public void publishState(String name, String description, String isStateOf, Boolean state);
-	
+
 	public void publishLocation(String name, String description, Double lon, Double lat, Double ele, Double frequency);
-	
+
 	public void publishLabel(String name, String type, String description, String value);
-	
+
 	public void publishBinary(String name, String type, String description, byte[] rawdata);
-	
+
 	public void publishCommand(String name, String description, Command command);
 	public void publishCommand(String name, String description, Command command, List<String> lockStates, List<Task> tasks);
 }

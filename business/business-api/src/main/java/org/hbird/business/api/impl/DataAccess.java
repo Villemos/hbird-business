@@ -28,7 +28,6 @@ import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.LocationContactEventRequest;
 import org.hbird.exchange.dataaccess.LocationRequest;
@@ -37,10 +36,10 @@ import org.hbird.exchange.dataaccess.ParameterRequest;
 import org.hbird.exchange.dataaccess.SatelliteRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
-import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
+import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
@@ -62,11 +61,6 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 		return template.requestBody(inject, request, List.class);
 	}
 
-
-	public void forceCommit() {
-		template.sendBody(new CommitRequest(issuedBy));
-	}
-	
 	/** INITIALIZATION */
 	public Parameter getParameter(String name) {
 		List<Parameter> parameter = getParameter(name, 1);
@@ -88,9 +82,9 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 		request.setTo(at);
 		return getParameterWithoutState(request);
 	}
-	
 
-	
+
+
 
 	public List<Parameter> getParameters(List<String> names) {
 		return getParametersAt(names, (new Date()).getTime(), 1);
@@ -99,7 +93,7 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 	public List<Parameter> getParameters(List<String> names, int rows) {
 		return getParametersAt(names, (new Date()).getTime(), rows);
 	}
-	
+
 	public List<Parameter> getParametersAt(List<String> names, long at) {
 		return getParametersAt(names, at, 1);
 	}
@@ -111,8 +105,8 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 		return getParameterWithoutState(request);
 
 	}
-	
-	
+
+
 
 	public Map<Parameter, List<State>> getParameterAndStates(String name) {
 		return getParameterAndStatesAt(name, (new Date().getTime()), 1);
@@ -133,12 +127,12 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 		return getParameterWithState(request);
 	}
 
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	public Map<Parameter, List<State>> getParametersAndStates(List<String> names) {
 		return getParametersAndStateAt(names, (new Date()).getTime(), 1);
 	}
@@ -158,11 +152,11 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 		return getParameterWithState(request);
 	}
 
-	
-	
-	
+
+
+
 	/** STEPPING */
-	
+
 	public List<Parameter> retrieveParameter(String name, long from, long to) {
 		ParameterRequest request =  new ParameterRequest(name, from, to);
 		return getParameterWithoutState(request);
@@ -229,7 +223,7 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 		OrbitalStateRequest request = new OrbitalStateRequest(satellite, from, to);
 		request.setDerivedFrom(derivedFromName, derivedFromTimestamp, "TleOrbitalParameters");
 		return orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));
-	}	
+	}
 
 	public OrbitalState retrieveOrbitalStateFor(String satellite, String derivedFromName, long derivedFromTimestamp) {
 		OrbitalStateRequest request = new OrbitalStateRequest(satellite);
@@ -242,12 +236,12 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 
 	public OrbitalState retrieveOrbitalStateFor(String satellite) {
 		TleOrbitalParameters parameter = retrieveTleFor(satellite);
-		
+
 		return parameter == null ? null : retrieveOrbitalStateFor(satellite, parameter.getName(), parameter.getTimestamp());
 	}
 
-	
-	
+
+
 	public List<TleOrbitalParameters> retrieveTleFor(String satellite, long from, long to) {
 		TleRequest request = new TleRequest(issuedBy, satellite, from, to);
 		return tleOrbitalParameterFilter.getObjects(template.requestBody(inject, request, List.class));
@@ -257,22 +251,22 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 		TleRequest request = new TleRequest(issuedBy, satellite);
 		request.setIsInitialization(true);
 		List<TleOrbitalParameters> parameters = tleOrbitalParameterFilter.getObjects(template.requestBody(inject, request, List.class));
-		
+
 		return parameters.isEmpty() ? null : parameters.get(0);
 	}
-	
 
-	
-	
+
+
+
 	public Location retrieveLocation(String location) {
 		LocationRequest request = new LocationRequest(issuedBy, location);
 		List respond = template.requestBody(inject, request, List.class);
-		return respond.isEmpty() ? null : (Location) respond.get(0);		
+		return respond.isEmpty() ? null : (Location) respond.get(0);
 	}
-	
-	
-	
-	
+
+
+
+
 	public List<Location> getLocationMetadata() {
 		LocationRequest request = new LocationRequest(issuedBy);
 		request.setIsInitialization(true);
@@ -280,7 +274,7 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 		request.setRows(1);
 		return locationFilter.getObjects(template.requestBody(inject, request, List.class));
 	}
-	
+
 	public List<Satellite> getSatelliteMetadata() {
 		SatelliteRequest request = new SatelliteRequest(issuedBy);
 		request.setIsInitialization(true);
@@ -309,15 +303,15 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public void configure() throws Exception {
 		/** This configures a direct connection to SOLR. */
 		RouteDefinition route = from(inject).to("solr:api");
-		
+
 		template = getContext().createProducerTemplate();
 	}
-	
+
 	protected Map<Parameter, List<State>> getParameterWithState(ParameterRequest request) {
 		request.setIncludeStates(true);
 		List<Named> respond = template.requestBody(inject, request, List.class);
@@ -350,39 +344,39 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, String satellite) {
 		return retrieveNextLocationContactEventsFor(location, satellite, (new Date()).getTime());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
 	 */
 	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, String satellite, long from) {
 
 		List<LocationContactEvent> events = new ArrayList<LocationContactEvent>();
-		
+
 		/** Get next start event. */
 		LocationContactEventRequest request = new LocationContactEventRequest(issuedBy, location, true);
 		request.setRows(1);
 		request.setSatellite(satellite);
 		request.setFrom(from);
-	    List<Named> start = template.requestBody(inject, request, List.class);
-		
-	    /** If we found one, find the following end event. */
-	    if (start.isEmpty() == false) {
+		List<Named> start = template.requestBody(inject, request, List.class);
 
-	    	LocationContactEvent startEvent = (LocationContactEvent) start.get(0);
-	    	
+		/** If we found one, find the following end event. */
+		if (start.isEmpty() == false) {
+
+			LocationContactEvent startEvent = (LocationContactEvent) start.get(0);
+
 			request = new LocationContactEventRequest(issuedBy, location, false);
 			request.setRows(1);
 			request.setSatellite(startEvent.getSatellite());
 			request.setLocation(startEvent.getLocation());
 			request.setFrom(startEvent.getTimestamp());
-		    List<Named> end = template.requestBody(inject, request, List.class);
+			List<Named> end = template.requestBody(inject, request, List.class);
 
-		    if (end.isEmpty() == false) {
-		    	events.add(startEvent);
-		    	events.add((LocationContactEvent) end.get(0));
-		    }
-	    }
-	    
+			if (end.isEmpty() == false) {
+				events.add(startEvent);
+				events.add((LocationContactEvent) end.get(0));
+			}
+		}
+
 		return events;
 	}
 
@@ -392,11 +386,11 @@ public class DataAccess extends HbirdApi implements IDataAccess, ICatalogue {
 
 	public List<PointingData> retrieveNextLocationContactDataFor(String location, String satellite) {
 		List<LocationContactEvent> events = retrieveNextLocationContactEventsFor(location);
-		
+
 		if (events.isEmpty() == false) {
 			return retrieveLocationContactDataFor(location, events.get(0).getTimestamp(), events.get(1).getTimestamp());
 		}
-		
+
 		return new ArrayList<PointingData>();
 	}
 

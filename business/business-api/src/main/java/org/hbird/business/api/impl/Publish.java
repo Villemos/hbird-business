@@ -26,6 +26,7 @@ import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
+import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.tasking.Task;
@@ -35,14 +36,14 @@ public class Publish extends HbirdApi implements IPublish {
 	public Publish(String issuedBy) {
 		super(issuedBy);
 	}
-	
+
 	public void publish(Named object) {
 		object.setIssuedBy(issuedBy);
 		template.sendBody(inject, object);
 	}
-	
+
 	public void publishParameter(String name, String type, String description, Number value, String unit) {
-		template.sendBody(inject, new Parameter(issuedBy, name, type, description, value, unit));		
+		template.sendBody(inject, new Parameter(issuedBy, name, type, description, value, unit));
 	}
 
 	public void publishState(String name, String description, String isStateOf, Boolean state) {
@@ -60,7 +61,7 @@ public class Publish extends HbirdApi implements IPublish {
 	public void publishMeasuredOrbitalState(String name, String description, long timestamp, long generationTime, String satellite, double px, double py, double pz, double vx, double vy, double vz, double mx, double my, double mz, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
 		// TODO
 	}
-		
+
 	public void publishLabel(String name, String type, String description, String value) {
 		template.sendBody(inject, new Label(issuedBy, name, type, description, value));
 	}
@@ -75,5 +76,9 @@ public class Publish extends HbirdApi implements IPublish {
 
 	public void publishCommand(String name, String description, Command command, List<String> lockStates, List<Task> tasks) {
 		template.sendBody(inject, new CommandRequest(issuedBy, name, description, lockStates, tasks, command));
+	}
+
+	public void commit() {
+		template.sendBody(inject, new CommitRequest(issuedBy));
 	}
 }
