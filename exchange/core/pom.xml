@@ -27,7 +27,12 @@
       <artifactId>spring-test</artifactId>
       <scope>test</scope>
     </dependency>
-		
+
+    <dependency>
+    	<groupId>org.hbird.core</groupId>
+    	<artifactId>space-system-model</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
 </project>
