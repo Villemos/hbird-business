@@ -19,61 +19,75 @@ package org.hbird.queuemanagement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 
 public class RemoveQueueElements extends Command {
 
-	private static final long serialVersionUID = 4855448569441799079L;
+    private static final long serialVersionUID = -1098717855471670249L;
 
-	{
-		arguments.put("queuename", new CommandArgument("queuename", "The name of the queue to be displayed.", "String (queue ID)", "", "hbird.requests", true));
-		arguments.put("elements", new CommandArgument("elements", "List of JMS IDs of the elements to be removed. Can be set in paralle to the 'pattern'.", "String (JMS ID)", "", new ArrayList<String>(), true));
-		arguments.put("pattern", new CommandArgument("pattern", "A pattern based on which to remove elements. Can be set on parallel to the specific 'elements' list. The pattern is matched against the 'properties' string which is in the format '{[property]=[value],[property]=[value],...}'.", "String (Reg.Ex.)", "", null, true));
-	}
-	
-	public RemoveQueueElements(String issuedBy, String destination, List<String> elements) {
-		super(issuedBy, destination, "RemoveQueueElements", "Will remove the elements from the queue. The elements are identified through a unique ID as assigned by the queue.");
-		setElements(elements);
-	}
+    public RemoveQueueElements(String issuedBy, String destination, List<String> elements) {
+        super(issuedBy, destination, "RemoveQueueElements",
+                "Will remove the elements from the queue. The elements are identified through a unique ID as assigned by the queue.");
+        setElements(elements);
+    }
 
-	public RemoveQueueElements(String issuedBy, String destination, String element) {
-		super(issuedBy, destination, "RemoveQueueElements", "Will remove the elements from the queue. The elements are identified through a unique ID as assigned by the queue.");
-		getElements().add(element);
-	}
+    public RemoveQueueElements(String issuedBy, String destination, String element) {
+        super(issuedBy, destination, "RemoveQueueElements",
+                "Will remove the elements from the queue. The elements are identified through a unique ID as assigned by the queue.");
+        getElements().add(element);
+    }
 
-	public RemoveQueueElements(String issuedBy, String destination, String element, boolean pattern) {
-		super(issuedBy, destination, "RemoveQueueElements", "Will remove the elements from the queue. The elements are identified through a unique ID as assigned by the queue.");
+    public RemoveQueueElements(String issuedBy, String destination, String element, boolean pattern) {
+        super(issuedBy, destination, "RemoveQueueElements",
+                "Will remove the elements from the queue. The elements are identified through a unique ID as assigned by the queue.");
 
-		if (pattern == false) {
-			getElements().add(element);
-		}
-		else {
-			setPattern(element);
-		}
-	}
+        if (pattern == false) {
+            getElements().add(element);
+        }
+        else {
+            setPattern(element);
+        }
+    }
 
-	public String getQueueName() {
-		return (String) arguments.get("queuename").value;
-	}
-	
-	public void setQueueName(String queuename) {
-		arguments.get("queuename").value = queuename;
-	}
+    /**
+     * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
+     */
+    @Override
+    protected List<CommandArgument> getArgumentDefinitions() {
+        List<CommandArgument> args = new ArrayList<CommandArgument>(3);
+        args.add(new CommandArgument(StandardArguments.QUEUE_NAME, "The name of the queue to be displayed.", "String (queue ID)", "", "hbird.requests", true));
+        args.add(new CommandArgument(StandardArguments.ELEMENTS, "List of JMS IDs of the elements to be removed. Can be set in paralle to the 'pattern'.",
+                "String (JMS ID)", "", new ArrayList<String>(), true));
+        args.add(new CommandArgument(
+                StandardArguments.PATTERN,
+                "A pattern based on which to remove elements. Can be set on parallel to the specific 'elements' list. The pattern is matched against the 'properties' string which is in the format '{[property]=[value],[property]=[value],...}'.",
+                "String (Reg.Ex.)", "", null, true));
+        return args;
+    }
 
-	public List<String> getElements() {
-		return (List<String>) arguments.get("elements").value;
-	}
-	
-	public void setElements(List<String> elements) {
-		arguments.get("elements").value = elements;
-	}
+    public String getQueueName() {
+        return getArgumentValue(StandardArguments.QUEUE_NAME, String.class);
+    }
 
-	public String getPattern() {
-		return (String) arguments.get("pattern").value;
-	}
-	
-	public void setPattern(String pattern) {
-		arguments.get("pattern").value = pattern;
-	}
+    public void setQueueName(String queuename) {
+        setArgumentValue(StandardArguments.QUEUE_NAME, queuename);
+    }
+
+    public List<String> getElements() {
+        return getArgumentValue(StandardArguments.ELEMENTS, List.class);
+    }
+
+    public void setElements(List<String> elements) {
+        setArgumentValue(StandardArguments.ELEMENTS, elements);
+    }
+
+    public String getPattern() {
+        return getArgumentValue(StandardArguments.PATTERN, String.class);
+    }
+
+    public void setPattern(String pattern) {
+        setArgumentValue(StandardArguments.PATTERN, pattern);
+    }
 }

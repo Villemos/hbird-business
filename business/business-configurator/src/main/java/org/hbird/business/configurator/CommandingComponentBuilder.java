@@ -20,44 +20,47 @@ import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.command.releaser.CommandReleaser;
 import org.hbird.business.core.FieldBasedSplitter;
 import org.hbird.exchange.configurator.StandardEndpoints;
+import org.hbird.exchange.constants.StandardArguments;
 
-/** Route builder to create a commanding chain. 
+/**
+ * Route builder to create a commanding chain.
  * 
  * @author Gert Villemos
  */
 public class CommandingComponentBuilder extends ComponentBuilder {
 
-	@Override
-	public void doConfigure() {
-		
-		/** Create the route and the interface for getting the command states. */
-		from("direct:statestore").to("solr:statestore");
+    @Override
+    public void doConfigure() {
 
-		CommandReleaser releaser = new CommandReleaser();
+        /** Create the route and the interface for getting the command states. */
+        from("direct:statestore").to("solr:statestore");
 
-		/** Read from the scheduled queue and release the command. The release consists of the validation
-		 * that all lock states are valid and the ejection of the command itself.
-		 * */
-		from(StandardEndpoints.requests)
-		.bean(releaser)
-		.wireTap("seda:reportCommandRequestState")
-		.choice()
-		.when(header("Valid").isEqualTo(true)).to("seda:validCommandRequests")
-		.otherwise().to(StandardEndpoints.failedRequests);		
+        CommandReleaser releaser = new CommandReleaser();
 
-		/** Extract the tasks from the command request and schedule them. Extract the command and release it. */
-		ProcessorDefinition<?> route = from("seda:validCommandRequests")
-				.wireTap("seda:taskExtractor")
-				.setBody(simple("${in.body.command}"))
-				.setHeader("destination", simple("${in.body.destination}"));
-		addInjectionRoute(route);
+        /**
+         * Read from the scheduled queue and release the command. The release consists of the validation
+         * that all lock states are valid and the ejection of the command itself.
+         * */
+        from(StandardEndpoints.requests)
+                .bean(releaser)
+                .wireTap("seda:reportCommandRequestState")
+                .choice()
+                .when(header("Valid").isEqualTo(true)).to("seda:validCommandRequests")
+                .otherwise().to(StandardEndpoints.failedRequests);
 
-		FieldBasedSplitter splitter = new FieldBasedSplitter();
+        /** Extract the tasks from the command request and schedule them. Extract the command and release it. */
+        ProcessorDefinition<?> route = from("seda:validCommandRequests")
+                .wireTap("seda:taskExtractor")
+                .setBody(simple("${in.body.command}"))
+                .setHeader(StandardArguments.DESTINATION, simple("${in.body.destination}"));
+        addInjectionRoute(route);
 
-		route = from("seda:taskExtractor")
-				.split().method(splitter);	
-		addInjectionRoute(route);
-		
-		addCommandHandler();
-	}
+        FieldBasedSplitter splitter = new FieldBasedSplitter();
+
+        route = from("seda:taskExtractor")
+                .split().method(splitter);
+        addInjectionRoute(route);
+
+        addCommandHandler();
+    }
 }

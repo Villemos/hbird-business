@@ -92,11 +92,11 @@ public class OrbitalState extends DerivedNamed implements IGenerationTimestamped
 		this.velocity = velocity;
 	}
 
-	public String getSatellite() {
+	public String getSatelliteName() {
 		return satellite;
 	}
 
-	public void setSatellite(String satellite) {
+	public void setSatelliteName(String satellite) {
 		this.satellite = satellite;
 	}
 

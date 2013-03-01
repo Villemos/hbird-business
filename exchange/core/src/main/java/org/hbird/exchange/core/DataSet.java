@@ -73,19 +73,19 @@ public class DataSet extends Named implements IGenerationTimestamped, ILocationS
 		this.timestamp = generationtime;
 	}
 
-	public String getLocation() {
+	public String getLocationName() {
 		return location;
 	}
 
-	public void setLocation(String location) {
+	public void setLocationName(String location) {
 		this.location = location;
 	}
 
-	public String getSatellite() {
+	public String getSatelliteName() {
 		return satellite;
 	}
 
-	public void setSatellite(String satellite) {
+	public void setSatelliteName(String satellite) {
 		this.satellite = satellite;
 	}
 	

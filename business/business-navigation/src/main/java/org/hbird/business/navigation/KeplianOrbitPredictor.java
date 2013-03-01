@@ -22,7 +22,8 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.hbird.exchange.core.Named;
-import org.hbird.exchange.navigation.Location;
+import org.hbird.exchange.navigation.D3Vector;
+import org.hbird.exchange.navigation.GroundStation;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
@@ -36,11 +37,13 @@ import org.orekit.time.AbsoluteDate;
 import org.orekit.time.TimeScalesFactory;
 import org.orekit.utils.PVCoordinates;
 
-/** 
+/**
  * Processor of 'OrbitalPredictionRequests', implemented based on the OREKIT open source
- * tool. 
+ * tool.
  * 
- * For an example of how to use, see https://www.orekit.org/forge/projects/orekit/repository/revisions/4decf40db88b02ce82ec9cac7629536c701ac535/entry/src/tutorials/fr/cs/examples/propagation/VisibilityCheck.java
+ * For an example of how to use, see
+ * https://www.orekit.org/forge/projects/orekit/repository/revisions/4decf40db88b02ce82ec9cac7629536c701ac535
+ * /entry/src/tutorials/fr/cs/examples/propagation/VisibilityCheck.java
  * 
  * NOTE NOTE NOTE NOTE
  * 
@@ -50,40 +53,44 @@ import org.orekit.utils.PVCoordinates;
  */
 public class KeplianOrbitPredictor {
 
-	public List<Named> predictOrbit(List<Location> locations, PVCoordinates pvCoordinates, long startTime, String satellite, double stepSize, double deltaPropagation, long contactDataStepSize, TleOrbitalParameters parameters, CamelContext context, boolean publish) throws OrekitException {
+    public List<Named> predictOrbit(List<GroundStation> groundStations, PVCoordinates pvCoordinates, long startTime, String satellite, double stepSize,
+            double deltaPropagation, long contactDataStepSize, TleOrbitalParameters parameters, CamelContext context, boolean publish) throws OrekitException {
 
-		List<Named> results = new ArrayList<Named>();
-		
-		AbsoluteDate initialDate = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());
+        List<Named> results = new ArrayList<Named>();
 
-		// Initial date
-		Orbit initialOrbit = new KeplerianOrbit(pvCoordinates, Constants.frame, initialDate, Constants.MU);
+        AbsoluteDate initialDate = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());
 
-		Propagator propagator = new KeplerianPropagator(initialOrbit);
+        // Initial date
+        Orbit initialOrbit = new KeplerianOrbit(pvCoordinates, Constants.frame, initialDate, Constants.MU);
 
-		OrbitalStateCollector injector = new OrbitalStateCollector(satellite, parameters, context, publish);
+        Propagator propagator = new KeplerianPropagator(initialOrbit);
 
-		/** Register the visibility events for the requested locations. */
-		for (Location location : locations) {
-			GeodeticPoint point = new GeodeticPoint((Double) location.p1, (Double) location.p2, (Double) location.p3);				
-			TopocentricFrame sta1Frame = new TopocentricFrame(Constants.earth, point, location.getName());
+        OrbitalStateCollector injector = new OrbitalStateCollector(satellite, parameters, context, publish);
 
-			/** Register the injector that will send the detected events, for this location, to the propagator. */
-			EventDetector sta1Visi = new LocationContactEventCollector(location.getThresholdElevation(), sta1Frame, satellite, location.getName(), parameters, context, publish);
-			propagator.addEventDetector(sta1Visi);				
-		}
+        /** Register the visibility events for the requested locations. */
+        for (GroundStation groundStation : groundStations) {
+            D3Vector location = groundStation.getGeoLocation();
+            GeodeticPoint point = new GeodeticPoint(location.p1, location.p2, location.p3);
+            TopocentricFrame sta1Frame = new TopocentricFrame(Constants.earth, point, location.getName());
 
-		propagator.setMasterMode(stepSize, injector);			
-		propagator.propagate(new AbsoluteDate(initialDate, deltaPropagation));
+            /** Register the injector that will send the detected events, for this location, to the propagator. */
+            EventDetector sta1Visi = new LocationContactEventCollector(groundStation.getRotatorProperties().getThresholdElevation(), sta1Frame, satellite,
+                    location.getName(), parameters,
+                    context, publish);
+            propagator.addEventDetector(sta1Visi);
+        }
 
-		/** Add the data set with the orbital data. */
-		results.addAll(injector.getDataSet());
-		
-		/** Add all the data sets with contact data. */
-		for (EventDetector detector : propagator.getEventsDetectors()) {
-			results.addAll( ((LocationContactEventCollector) detector).getDataSet());
-		}
-		
-		return results;
-	}
+        propagator.setMasterMode(stepSize, injector);
+        propagator.propagate(new AbsoluteDate(initialDate, deltaPropagation));
+
+        /** Add the data set with the orbital data. */
+        results.addAll(injector.getDataSet());
+
+        /** Add all the data sets with contact data. */
+        for (EventDetector detector : propagator.getEventsDetectors()) {
+            results.addAll(((LocationContactEventCollector) detector).getDataSet());
+        }
+
+        return results;
+    }
 }

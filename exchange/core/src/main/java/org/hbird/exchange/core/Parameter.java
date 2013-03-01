@@ -26,7 +26,7 @@ import java.math.BigInteger;
  * 
  * There is no predefined set of parameters in the form of a database. Creating
  * a new parameter is simply the creation of a Parameter with a new name.
- *
+ * 
  */
 public class Parameter extends Named implements Comparable<Parameter> {
 
@@ -48,8 +48,7 @@ public class Parameter extends Named implements Comparable<Parameter> {
      * @param unit The unit of the value.
      */
     public Parameter(String issuedBy, String name, String type, String description, Number value, String unit) {
-        super(issuedBy, name, "Parameter", description);
-        this.unit = unit;
+        this(issuedBy, name, type, description, unit);
         this.value = value;
     }
 
@@ -62,26 +61,12 @@ public class Parameter extends Named implements Comparable<Parameter> {
      * @param unit The unit of the value.
      */
     public Parameter(String issuedBy, String name, String type, String description, String unit) {
-        super(issuedBy, name, "Parameter", description);
+        super(issuedBy, name, type, description);
         this.unit = unit;
     }
 
     public Parameter(Parameter base) {
         this(base.issuedBy, base.name, base.type, base.description, base.value, base.unit);
-    }
-
-    /**
-     * Creates a Parameter with a timestamp set to 'now'.
-     * 
-     * @param name The name of the parameter
-     * @param description A description of the parameter.
-     * @param value An object holding the value.
-     * @param unit The unit of the value.
-     */
-    public Parameter(String issuedBy, String name, String type, String description, Number value, String unit, long timestamp) {
-        super(issuedBy, name, "Parameter", description, timestamp);
-        this.unit = unit;
-        this.value = value;
     }
 
     /**
@@ -94,20 +79,19 @@ public class Parameter extends Named implements Comparable<Parameter> {
      * @param unit The unit of the value.
      */
     public Parameter(String issuedBy, String name, String type, String description, long timestamp, Number value, String unit) {
-        super(issuedBy, name, "Parameter", description, timestamp);
-        this.unit = unit;
+        this(issuedBy, name, type, description, unit);
+        setTimestamp(timestamp);
         this.value = value;
     }
 
     public Parameter() {
-        // TODO Auto-generated constructor stub
     }
 
     /**
      * Returns the value of the Parameter as an Object.
      * 
      * @return An Object holding the value. The class type can of cause be found using
-     * reflection, or through the 'clazz' attribute.
+     *         reflection, or through the 'clazz' attribute.
      */
     public Number getValue() {
         return value;
@@ -140,56 +124,59 @@ public class Parameter extends Named implements Comparable<Parameter> {
         return unit;
     }
 
-
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      * 
      * Notice that the method has extra been implemented to allow comparison of types that are
      * not the same, i.e. Integer and Double.
      */
+    @Override
     public int compareTo(Parameter rhs) {
 
-        if(this.value instanceof Short && rhs.value instanceof Short)
+        if (this.value instanceof Short && rhs.value instanceof Short)
         {
             return ((Short) this.value).compareTo((Short) rhs.value);
         }
-        else if(this.value instanceof Long && rhs.value instanceof Long)
+        else if (this.value instanceof Long && rhs.value instanceof Long)
         {
             return ((Long) this.value).compareTo((Long) rhs.value);
         }
-        else if(this.value instanceof Integer && rhs.value instanceof Integer)
+        else if (this.value instanceof Integer && rhs.value instanceof Integer)
         {
             return ((Integer) this.value).compareTo((Integer) rhs.value);
         }
-        else if(this.value instanceof Float && rhs.value instanceof Float)
+        else if (this.value instanceof Float && rhs.value instanceof Float)
         {
             return ((Float) this.value).compareTo((Float) rhs.value);
         }
-        else if(this.value instanceof Double && rhs.value instanceof Double)
+        else if (this.value instanceof Double && rhs.value instanceof Double)
         {
             return ((Double) this.value).compareTo((Double) rhs.value);
         }
-        else if(this.value instanceof Byte && rhs.value instanceof Byte)
+        else if (this.value instanceof Byte && rhs.value instanceof Byte)
         {
             return ((Byte) this.value).compareTo((Byte) rhs.value);
         }
-        else if(this.value instanceof BigInteger && rhs.value instanceof BigInteger)
+        else if (this.value instanceof BigInteger && rhs.value instanceof BigInteger)
         {
             return ((BigInteger) this.value).compareTo((BigInteger) rhs.value);
         }
-        else if(this.value instanceof BigDecimal && rhs.value instanceof BigDecimal)
+        else if (this.value instanceof BigDecimal && rhs.value instanceof BigDecimal)
         {
             return ((BigDecimal) this.value).compareTo((BigDecimal) rhs.value);
         }
         else
         {
-            throw new RuntimeException("Ooopps!");
+            String message = String.format("Failed to compare values of %s and %s; value types are %s and %s", this.prettyPrint(), rhs.prettyPrint(),
+                    this.value != null ? this.value.getClass() : "null", rhs.value != null ? rhs.value.getClass() : "null");
+            throw new RuntimeException(message);
         }
     }
 
     @Override
     public String prettyPrint() {
-        return "Parameter {name=" + name + ", value=" + String.valueOf(value) + ", timestamp=" + timestamp + "}";
+        return String.format("Parameter[name=%s, value=%s, timestamp=%s]", name, value, timestamp);
     }
 }

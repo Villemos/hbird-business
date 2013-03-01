@@ -23,6 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
@@ -33,198 +37,203 @@ import org.hbird.exchange.tasking.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
-
 public class ImportAccessor {
 
-	private static final transient Logger LOG = LoggerFactory.getLogger(ImportConsumer.class);
+    private static final transient Logger LOG = LoggerFactory.getLogger(ImportConsumer.class);
 
-	protected ImportEndpoint endpoint = null;
-	
-	protected Map<String, Object> parameters = new HashMap<String, Object>();
+    protected ImportEndpoint endpoint = null;
 
-	protected Map<String, Task> tasks = new HashMap<String, Task>();
+    protected Map<String, Object> parameters = new HashMap<String, Object>();
 
-	protected Map<String, CommandRequest> commands = new HashMap<String, CommandRequest>();
+    protected Map<String, Task> tasks = new HashMap<String, Task>();
 
-	public ImportAccessor(ImportEndpoint endpoint) {
-		this.endpoint = endpoint;
-	}
+    protected Map<String, CommandRequest> commands = new HashMap<String, CommandRequest>();
 
-	public List<Object> getObjects() throws BiffException, IOException {
-		List<Object> objects = new ArrayList<Object>();
-		
-		File input = new File(endpoint.getFilename());
+    public ImportAccessor(ImportEndpoint endpoint) {
+        this.endpoint = endpoint;
+    }
 
-		if (input.exists() == false) {
-			LOG.warn("File '" + input.getAbsolutePath() + "' does not exist.");
-			return null;
-		}
+    public List<Object> getObjects() throws BiffException, IOException {
+        List<Object> objects = new ArrayList<Object>();
 
-		Workbook workbook = Workbook.getWorkbook(input);
+        File input = new File(endpoint.getFilename());
 
-		readParameters(workbook);
-		readTasks(workbook);
-		readCommands(workbook);
+        if (input.exists() == false) {
+            LOG.warn("File '" + input.getAbsolutePath() + "' does not exist.");
+            return null;
+        }
 
+        Workbook workbook = Workbook.getWorkbook(input);
 
-		objects.addAll(parameters.values());
-		objects.addAll(tasks.values());
-		objects.addAll(commands.values());
-		
-		return objects;
-	}
+        readParameters(workbook);
+        readTasks(workbook);
+        readCommands(workbook);
 
-	private void readCommands(Workbook workbook) {
+        objects.addAll(parameters.values());
+        objects.addAll(tasks.values());
+        objects.addAll(commands.values());
 
-		/** Get the commands.*/
-		Sheet bodySheet = workbook.getSheet("Commands");
+        return objects;
+    }
 
-		/** Iterate through the rows. */
-		/** A starting row may have been set. */
-		for (int row = 1; row < bodySheet.getRows(); row++) {
+    private void readCommands(Workbook workbook) {
 
-			if (bodySheet.getCell(1, row).getContents().equals("")) {
-				continue;
-			}
-			
-			/** Format
-			 * 
-			 *  String issuedBy, String name, String description, long releaseTime, long executionTime, List<Parameter> arguments
-			 *   0.  issuedBy
-			 *   1.  Command Name
-			 *   2.  Command Description.
-			 *   3.  releaseTime
-			 *   4.  executionTime
-			 *   5.  argumentName
-			 *   6.  argumentValue
-			 *   7.  lockstates
-			 *   8.  taskName
-			 *   9.  taskParameterValue
-			 * */
+        /** Get the commands. */
+        Sheet bodySheet = workbook.getSheet("Commands");
 
-			String issuedBy = bodySheet.getCell(0, row).getContents();
-			String commandName = bodySheet.getCell(1, row).getContents();
-			String commandDescription = bodySheet.getCell(2, row).getContents();
-			String releaseTime = bodySheet.getCell(3, row).getContents();
-			String executionTime = bodySheet.getCell(4, row).getContents();
+        /** Iterate through the rows. */
+        /** A starting row may have been set. */
+        for (int row = 1; row < bodySheet.getRows(); row++) {
 
-			Map<String, CommandArgument> arguments = new HashMap<String, CommandArgument>();
-			int tempRow = row;
-			while (tempRow < bodySheet.getRows() && (bodySheet.getCell(1, tempRow).getContents().equals("") || tempRow == row) && bodySheet.getCell(5, tempRow).getContents().equals("") == false) {
-				String argumentName = bodySheet.getCell(5, tempRow).getContents();
-			
-				CommandArgument arg = null;
-				arguments.put(argumentName, arg);
-				tempRow++;
-			}
+            if (bodySheet.getCell(1, row).getContents().equals("")) {
+                continue;
+            }
 
-			List<String> lockstates = new ArrayList<String>();
-			tempRow = row;
-			while ((bodySheet.getCell(1, tempRow).getContents().equals("") || tempRow == row) && bodySheet.getCell(7, tempRow).getContents().equals("") == false) {
-				lockstates.add(bodySheet.getCell(7, tempRow).getContents());
-				tempRow++;
-			}
+            /**
+             * Format
+             * 
+             * String issuedBy, String name, String description, long releaseTime, long executionTime, List<Parameter>
+             * arguments
+             * 0. issuedBy
+             * 1. Command Name
+             * 2. Command Description.
+             * 3. releaseTime
+             * 4. executionTime
+             * 5. argumentName
+             * 6. argumentValue
+             * 7. lockstates
+             * 8. taskName
+             * 9. taskParameterValue
+             * */
 
-			List<Task> commandTasks = new ArrayList<Task>();
-			tempRow = row;
-			while (tempRow < bodySheet.getRows() && (bodySheet.getCell(1, tempRow).getContents().equals("")|| tempRow == row)  && bodySheet.getCell(8, tempRow).getContents().equals("") == false) {
-				String taskName = bodySheet.getCell(8, tempRow).getContents();
-				SetParameter task = new SetParameter((SetParameter) tasks.get(taskName));
-				
-				/** Deep copy the parameter. Else the task paramegter will be the same object as the actual parameter. */
-				task.setParameter(new Parameter(((SetParameter) tasks.get(taskName)).getParameter()));
-				
-				Parameter para = task.getParameter();
-				para.setValue(getValue(para.getValue().getClass().toString(), bodySheet.getCell(9, tempRow).getContents()));
-				
-				task.setParameter(para);
-				commandTasks.add(task);
-				
-				tempRow++;
-			}
-			
-			commands.put(commandName, new CommandRequest(issuedBy, commandName, commandDescription, lockstates, commandTasks, new Command("", "", commandName, commandDescription, Long.parseLong(releaseTime), Long.parseLong(executionTime), arguments)));
-		}
-	}
+            String issuedBy = bodySheet.getCell(0, row).getContents();
+            String commandName = bodySheet.getCell(1, row).getContents();
+            String commandDescription = bodySheet.getCell(2, row).getContents();
+            String releaseTime = bodySheet.getCell(3, row).getContents();
+            String executionTime = bodySheet.getCell(4, row).getContents();
 
-	private void readTasks(Workbook workbook) {
-		Sheet bodySheet = workbook.getSheet("Tasks");
+            Map<String, CommandArgument> arguments = new HashMap<String, CommandArgument>();
+            int tempRow = row;
+            while (tempRow < bodySheet.getRows() && (bodySheet.getCell(1, tempRow).getContents().equals("") || tempRow == row)
+                    && bodySheet.getCell(5, tempRow).getContents().equals("") == false) {
+                String argumentName = bodySheet.getCell(5, tempRow).getContents();
 
-		/** Format;
-		 * 0. Name
-		 * 1. Description
-		 * 2. ExecutionTime
-		 * 3. Type
-		 * 4. Parameter
-		 * 5. ParameterValue 
-		 * */
+                CommandArgument arg = null;
+                arguments.put(argumentName, arg);
+                tempRow++;
+            }
 
-		for (int row = 1; row < bodySheet.getRows(); row++) {
-			String name = bodySheet.getCell(0, row).getContents();
-			String description = bodySheet.getCell(1, row).getContents();
-			String executionTime = bodySheet.getCell(2, row).getContents();
-			String type = bodySheet.getCell(3, row).getContents();
-			String parameter = bodySheet.getCell(4, row).getContents();
-			String parameterValue = bodySheet.getCell(5, row).getContents();
-			
-			if (type.equals("set")) {
-				Parameter para = new Parameter((Parameter) parameters.get(parameter));
-				para.setValue(getValue(para.getValue().getClass().toString(), parameterValue));
-				tasks.put(name, new SetParameter("", name, description, Long.parseLong(executionTime), para));
-			}
-		}
-	}
+            List<String> lockstates = new ArrayList<String>();
+            tempRow = row;
+            while ((bodySheet.getCell(1, tempRow).getContents().equals("") || tempRow == row)
+                    && bodySheet.getCell(7, tempRow).getContents().equals("") == false) {
+                lockstates.add(bodySheet.getCell(7, tempRow).getContents());
+                tempRow++;
+            }
 
-	private void readParameters(Workbook workbook) {
+            List<Task> commandTasks = new ArrayList<Task>();
+            tempRow = row;
+            while (tempRow < bodySheet.getRows() && (bodySheet.getCell(1, tempRow).getContents().equals("") || tempRow == row)
+                    && bodySheet.getCell(8, tempRow).getContents().equals("") == false) {
+                String taskName = bodySheet.getCell(8, tempRow).getContents();
+                SetParameter task = new SetParameter((SetParameter) tasks.get(taskName));
 
-		Sheet bodySheet = workbook.getSheet("Parameters");
+                /** Deep copy the parameter. Else the task paramegter will be the same object as the actual parameter. */
+                task.setParameter(new Parameter(((SetParameter) tasks.get(taskName)).getParameter()));
 
-		/** Format;
-		 * 0. Name
-		 * 1. Description
-		 * 2. IsStateOf
-		 * 3. Type
-		 * 4. Value
-		 * 5. Unit. */
+                Parameter para = task.getParameter();
+                para.setValue(getValue(para.getValue().getClass().toString(), bodySheet.getCell(9, tempRow).getContents()));
 
+                task.setParameter(para);
+                commandTasks.add(task);
 
-		for (int row = 1; row < bodySheet.getRows(); row++) {
-			String name = bodySheet.getCell(0, row).getContents();
-			String description = bodySheet.getCell(1, row).getContents();
-			String isstateof = bodySheet.getCell(2, row).getContents();
-			String type = bodySheet.getCell(3, row).getContents();
-			String value = bodySheet.getCell(4, row).getContents();
-			String unit = bodySheet.getCell(5, row).getContents();
+                tempRow++;
+            }
 
-			if (isstateof.equals("")) {
-				parameters.put(name, new Parameter("", name, "", description, getValue(type, value), unit));
-			}
-			else {
-				parameters.put(name, new State("", name, description, isstateof, Boolean.parseBoolean(value)));
-			}
-		}
-	}
-	
-	protected Number getValue(String type, String value) {
-		Number obj = null;
-		
-		if (type.equals("int") || type.contains("Integer")) {
-			obj = Integer.parseInt(value);
-		}
-		else if (type.equals("double") || type.contains("Double")) {
-			obj = Double.parseDouble(value);
-		}
-		else if (type.equals("float") || type.contains("Float")) {
-			obj = Float.parseFloat(value);
-		}
-		else if (type.equals("long")  || type.contains("Long")) {
-			obj = Long.parseLong(value);
-		}
+            Command cmd = new Command("", "", commandName, commandDescription, Long.parseLong(releaseTime), Long.parseLong(executionTime));
+            cmd.addArguments(arguments);
 
-		return obj;
-	}
+            commands.put(commandName, new CommandRequest(issuedBy, commandName, commandDescription, lockstates, commandTasks, cmd));
+        }
+    }
+
+    private void readTasks(Workbook workbook) {
+        Sheet bodySheet = workbook.getSheet("Tasks");
+
+        /**
+         * Format;
+         * 0. Name
+         * 1. Description
+         * 2. ExecutionTime
+         * 3. Type
+         * 4. Parameter
+         * 5. ParameterValue
+         * */
+
+        for (int row = 1; row < bodySheet.getRows(); row++) {
+            String name = bodySheet.getCell(0, row).getContents();
+            String description = bodySheet.getCell(1, row).getContents();
+            String executionTime = bodySheet.getCell(2, row).getContents();
+            String type = bodySheet.getCell(3, row).getContents();
+            String parameter = bodySheet.getCell(4, row).getContents();
+            String parameterValue = bodySheet.getCell(5, row).getContents();
+
+            if (type.equals("set")) {
+                Parameter para = new Parameter((Parameter) parameters.get(parameter));
+                para.setValue(getValue(para.getValue().getClass().toString(), parameterValue));
+                tasks.put(name, new SetParameter("", name, description, Long.parseLong(executionTime), para));
+            }
+        }
+    }
+
+    private void readParameters(Workbook workbook) {
+
+        Sheet bodySheet = workbook.getSheet("Parameters");
+
+        /**
+         * Format;
+         * 0. Name
+         * 1. Description
+         * 2. IsStateOf
+         * 3. Type
+         * 4. Value
+         * 5. Unit.
+         */
+
+        for (int row = 1; row < bodySheet.getRows(); row++) {
+            String name = bodySheet.getCell(0, row).getContents();
+            String description = bodySheet.getCell(1, row).getContents();
+            String isstateof = bodySheet.getCell(2, row).getContents();
+            String type = bodySheet.getCell(3, row).getContents();
+            String value = bodySheet.getCell(4, row).getContents();
+            String unit = bodySheet.getCell(5, row).getContents();
+
+            if (isstateof.equals("")) {
+                parameters.put(name, new Parameter("", name, "", description, getValue(type, value), unit));
+            }
+            else {
+                parameters.put(name, new State("", name, description, isstateof, Boolean.parseBoolean(value)));
+            }
+        }
+    }
+
+    protected Number getValue(String type, String value) {
+        Number obj = null;
+
+        if (type.equals("int") || type.contains("Integer")) {
+            obj = Integer.parseInt(value);
+        }
+        else if (type.equals("double") || type.contains("Double")) {
+            obj = Double.parseDouble(value);
+        }
+        else if (type.equals("float") || type.contains("Float")) {
+            obj = Float.parseFloat(value);
+        }
+        else if (type.equals("long") || type.contains("Long")) {
+            obj = Long.parseLong(value);
+        }
+
+        return obj;
+    }
 
 }

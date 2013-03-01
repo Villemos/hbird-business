@@ -16,48 +16,61 @@
  */
 package org.hbird.exchange.dataaccess;
 
+import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_NAME;
+import static org.hbird.exchange.dataaccess.Arguments.create;
+
+import java.util.List;
+
+import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.navigation.OrbitalState;
 
 public class OrbitalStateRequest extends DataRequest {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3599199372427419649L;
- 
-	{
-		arguments.put("satellite", new CommandArgument("satellite", "The name of the satellite for which to retrieve the states.", "String", "", null, true));
-	}
-	
-	public OrbitalStateRequest(String satellite) {
-		super("", "Archive", "OrbitalStateRequest", "A request for the latest orbital state of a satellite");
-		
-		setSatellite(satellite);
-		addArgument("sort", "timestamp");
-		addArgument("sortorder", "DESC");
-		addArgument("rows", 1);
-		addArgument("type", "OrbitalState");
-		setIsInitialization(true);
-	}
-	
-	public OrbitalStateRequest(String satellite, Long from, Long to) {
-		super("", "", "OrbitalStateRequest", "A request for the latest orbital state of a satellite");
-		
-		addArgument("type", "OrbitalState");
-		setSatellite(satellite);
-		setFromTime(from);
-		setToTime(to);
-	}
+    public static final String DESCRIPTION = "A request for the latest orbital state of a satellite";
 
-	public void setSatellite(String satellite) {
-		addArgument("satellite", satellite);
-	}
-	
-	public void setFromTime(Long from) {
-		addArgument("from", from);
-	}
-	
-	public void setToTime(Long to) {
-		addArgument("to", to);
-	}
+    private static final long serialVersionUID = -5920513650830048315L;
+
+    public OrbitalStateRequest(String satellite) {
+        // TODO - 27.02.2013, kimmell - set issuedBy!
+        super("", StandardComponents.ARCHIVE, OrbitalStateRequest.class.getSimpleName(), DESCRIPTION);
+        setSatelliteName(satellite);
+        setType(OrbitalState.class.getSimpleName());
+        setIsInitialization(true);
+        setRows(1);
+        setSort(StandardArguments.TIMESTAMP);
+        setSortOrder("DESC");
+    }
+
+    public OrbitalStateRequest(String satellite, Long from, Long to) {
+        // TODO - 27.02.2013, kimmell - set issuedBy!
+        super("", StandardComponents.ARCHIVE, OrbitalStateRequest.class.getSimpleName(), DESCRIPTION);
+        setSatelliteName(satellite);
+        setType(OrbitalState.class.getSimpleName());
+        setFromTime(from);
+        setToTime(to);
+    }
+
+    /**
+     * @see org.hbird.exchange.dataaccess.DataRequest#getArgumentDefinitions()
+     */
+    @Override
+    protected List<CommandArgument> getArgumentDefinitions() {
+        List<CommandArgument> args = super.getArgumentDefinitions();
+        args.add(create(SATELLITE_NAME));
+        return args;
+    }
+
+    public void setSatelliteName(String satellite) {
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+    }
+
+    public void setFromTime(Long from) {
+        setFrom(from);
+    }
+
+    public void setToTime(Long to) {
+        setTo(to);
+    }
 }

@@ -16,22 +16,23 @@
  */
 package org.hbird.exchange.configurator;
 
+import org.hbird.exchange.constants.StandardComponents;
+
 public class StartSystemMonitoringComponent extends StartComponent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3898965757266005926L;
+    public static final String DESCRIPTION = "Command to a configurator to start a system monitoring component.";
 
-	public StartSystemMonitoringComponent() {
-		super("SystemMonitoring", "StartSystemMonitoringComponent", "Command to a configurator to start a system monitoring component.");
-	}	
-	
-	public StartSystemMonitoringComponent(String componentname) {
-		super(componentname, "StartSystemMonitoringComponent", "Command to a configurator to start a system monitoring component.");
-	}	
+    private static final long serialVersionUID = 7342903528591022504L;
 
-	public StartSystemMonitoringComponent(String issuedBy, String destination, String componentname) {
-		super(issuedBy, destination, componentname, "StartSystemMonitoringComponent", "Command to a configurator to start a system monitoring component.");
-	}	
+    public StartSystemMonitoringComponent() {
+        this(StandardComponents.SYSTEM_MONITORING);
+    }
+
+    public StartSystemMonitoringComponent(String componentname) {
+        super(componentname, StartSystemMonitoringComponent.class.getSimpleName(), DESCRIPTION);
+    }
+
+    public StartSystemMonitoringComponent(String issuedBy, String destination, String componentname) {
+        super(issuedBy, destination, componentname, StartSystemMonitoringComponent.class.getSimpleName(), DESCRIPTION);
+    }
 }

@@ -1,38 +1,48 @@
 package org.hbird.exchange.configurator;
 
+import java.util.List;
+
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.navigation.Location;
+import org.hbird.exchange.navigation.GroundStation;
+import org.hbird.exchange.navigation.Satellite;
 
 public class StartAntennaControllerComponent extends StartComponent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1971324667157956566L;
+    public static final String DESCRIPTION = "Command to a configurator to start an antenna control component.";
 
-	{
-		arguments.put("location", new CommandArgument("location", "Name of the location. The location must be defined and exist as an object in the system.", "String", "", null, true));
-		arguments.put("satellite", new CommandArgument("satellite", "Name of the satellite. The satellite must be defined and exist as an object in the system.", "String", "", null, true));
-		arguments.put("queuename", new CommandArgument("queuename", "The name of the queue into which the schedule shall be send.", "String", "", null, true));
-	}
+    private static final long serialVersionUID = -8452914494565954568L;
 
-	public StartAntennaControllerComponent(String componentname, Location location, String satellite) {
-		super(componentname, "StartAntennaController", "Command to a configurator to start an antenna control component.");
-		
-		addArgument("location", location);
-		addArgument("satellite", satellite);
-		addArgument("queuename", "hbird.antennaschedule." + location.getName());
-	}
+    public StartAntennaControllerComponent(String componentname, GroundStation groundStation, Satellite satellite) {
+        super(componentname, StartAntennaControllerComponent.class.getSimpleName(), DESCRIPTION);
+        setArgumentValue(StandardArguments.GROUND_STATION_NAME, groundStation);
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+        setArgumentValue(StandardArguments.QUEUE_NAME, "hbird.antennaschedule." + groundStation.getName());
+    }
 
-	public Location getLocation() {
-		return (Location) getArgument("location");
-	}	
-	
-	public String getSatellite() {
-		return (String) getArgument("satellite");
-	}	
+    /**
+     * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
+     */
+    // TODO - 27.02.2013, kimmell - CHECK Satellite vs name of the satellite
+    // TODO - 27.02.2013, kimmell - CHECK for string "groundStation"
+    @Override
+    protected List<CommandArgument> getArgumentDefinitions() {
+        List<CommandArgument> args = super.getArgumentDefinitions();
+        args.add(new CommandArgument(StandardArguments.GROUND_STATION_NAME, "GroundStation definition.", "GroundStation", "", null, true));
+        args.add(new CommandArgument(StandardArguments.SATELLITE_NAME, "Satellite definition", "Satellite", "", null, true));
+        args.add(new CommandArgument(StandardArguments.QUEUE_NAME, "The name of the queue into which the schedule shall be send.", "String", "", null, true));
+        return args;
+    }
 
-	public String getQueueName() {
-		return (String) getArgument("queuename");
-	}	
+    public GroundStation getGroundStation() {
+        return getArgumentValue("groundStation", GroundStation.class);
+    }
+
+    public Satellite getSatellite() {
+        return getArgumentValue(StandardArguments.SATELLITE_NAME, Satellite.class);
+    }
+
+    public String getQueueName() {
+        return getArgumentValue(StandardArguments.QUEUE_NAME, String.class);
+    }
 }

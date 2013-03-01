@@ -61,11 +61,11 @@ public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 		this.datasetidentifier = "TLE/" + timestamp;
 	}
 
-	public String getSatellite() {
+	public String getSatelliteName() {
 		return satellite;
 	}
 
-	public void setSatellite(String satellite) {
+	public void setSatelliteName(String satellite) {
 		this.satellite = satellite;
 	}
 

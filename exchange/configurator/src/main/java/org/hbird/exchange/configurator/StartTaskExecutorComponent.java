@@ -16,22 +16,23 @@
  */
 package org.hbird.exchange.configurator;
 
+import org.hbird.exchange.constants.StandardComponents;
+
 public class StartTaskExecutorComponent extends StartComponent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3982371669802672264L;
+    public static final String DESCRIPTION = "Command to a configurator to start a task executor component.";
 
-	public StartTaskExecutorComponent() {
-		super("TaskExecutor", "StartTaskExecutorComponent", "Command to a configurator to start a task executor component.");
-	}	
-	
-	public StartTaskExecutorComponent(String componentname) {
-		super(componentname, "StartTaskExecutorComponent", "Command to a configurator to start a task executor component.");
-	}	
+    private static final long serialVersionUID = -1986382658492908225L;
 
-	public StartTaskExecutorComponent(String issuedBy, String destination, String componentname) {
-		super(issuedBy, destination, componentname, "StartTaskExecutorComponent", "Command to a configurator to start a task executor component.");
-	}	
+    public StartTaskExecutorComponent() {
+        this(StandardComponents.TASK_EXECUTOR);
+    }
+
+    public StartTaskExecutorComponent(String componentname) {
+        super(componentname, StartTaskExecutorComponent.class.getSimpleName(), DESCRIPTION);
+    }
+
+    public StartTaskExecutorComponent(String issuedBy, String destination, String componentname) {
+        super(issuedBy, destination, componentname, StartTaskExecutorComponent.class.getSimpleName(), DESCRIPTION);
+    }
 }

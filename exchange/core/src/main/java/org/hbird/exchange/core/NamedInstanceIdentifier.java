@@ -16,24 +16,43 @@
  */
 package org.hbird.exchange.core;
 
-
 import java.io.Serializable;
 
 public class NamedInstanceIdentifier implements Serializable {
-	
-	/**
+
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = 2768378707513305322L;
+    private static final long serialVersionUID = 2768378707513305322L;
 
-	public String name;
-	public long timestamp;	
-	public String type;
-	
-	public NamedInstanceIdentifier(String name, long timestamp, String type) {
-		super();
-		this.name = name;
-		this.timestamp = timestamp;
-		this.type = type;
-	}
+    private final String name;
+    private final long timestamp;
+    private final String type;
+
+    public NamedInstanceIdentifier(String name, long timestamp, String type) {
+        this.name = name;
+        this.timestamp = timestamp;
+        this.type = type;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return the timestamp
+     */
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
 }

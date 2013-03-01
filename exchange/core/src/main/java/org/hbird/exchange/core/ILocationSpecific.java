@@ -17,6 +17,8 @@
 package org.hbird.exchange.core;
 
 public interface ILocationSpecific {
-	public String getLocation();
-	public void setLocation(String location);
+
+    public String getLocationName();
+
+    public void setLocationName(String location);
 }

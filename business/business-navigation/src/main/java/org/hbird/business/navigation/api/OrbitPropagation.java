@@ -21,81 +21,89 @@ import java.util.List;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.navigation.NavigationUtilities;
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
-import org.hbird.exchange.navigation.Location;
+import org.hbird.exchange.navigation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
+import org.hbird.exchange.navigation.Satellite;
 import org.orekit.errors.OrekitException;
 
 public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
 
-	public OrbitPropagation(String issuedBy) {
-		super(issuedBy);
-	}
+    public OrbitPropagation(String issuedBy) {
+        super(issuedBy);
+    }
 
-	public DataSet requestOrbitPropagation(String satellite) {
-		TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite);
-		return sendRequest(request);
-	}
+    @Override
+    public DataSet requestOrbitPropagation(String satellite) {
+        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite);
+        return sendRequest(request);
+    }
 
-	public DataSet requestOrbitPropagation(String satellite, long from, long to) {
-		TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, from, to);
-		return sendRequest(request);
-	}
+    @Override
+    public DataSet requestOrbitPropagation(String satellite, long from, long to) {
+        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, from, to);
+        return sendRequest(request);
+    }
 
-	public DataSet requestOrbitPropagation(String satellite, String location, long from, long to) {
-		TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, location, from, to);
-		return sendRequest(request);
-	}
+    @Override
+    public DataSet requestOrbitPropagation(String satellite, String location, long from, long to) {
+        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, location, from, to);
+        return sendRequest(request);
+    }
 
-	public DataSet requestOrbitPropagation(String satellite, List<String> locations, long from, long to) {
-		TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, locations, from, to);
-		return sendRequest(request);
-	}
+    @Override
+    public DataSet requestOrbitPropagation(String satellite, List<String> locations, long from, long to) {
+        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, locations, from, to);
+        return sendRequest(request);
+    }
 
-	
-	
-	
-	public void requestOrbitPropagationStream(String satellite) {
-		TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite);
-		sendRequestStream(request);
-	}
+    @Override
+    public void requestOrbitPropagationStream(String satellite) {
+        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite);
+        sendRequestStream(request);
+    }
 
-	public void requestOrbitPropagationStream(String satellite, long from, long to) {
-		TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, from, to);
-		sendRequestStream(request);
-	}
+    @Override
+    public void requestOrbitPropagationStream(String satellite, long from, long to) {
+        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, from, to);
+        sendRequestStream(request);
+    }
 
-	public void requestOrbitPropagationStream(String satellite, String location, long from, long to) {
-		TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, location, from, to);
-		sendRequestStream(request);
-	}
+    @Override
+    public void requestOrbitPropagationStream(String satellite, String location, long from, long to) {
+        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, location, from, to);
+        sendRequestStream(request);
+    }
 
-	public void requestOrbitPropagationStream(String satellite, List<String> locations, long from, long to) {
-		TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, locations, from, to);
-		sendRequestStream(request);
-	}
-	
-	
-	
-	protected DataSet sendRequest(TlePropagationRequest request) {
-		return template.requestBody(inject, request, DataSet.class);			
-	}
-	
-	protected void sendRequestStream(TlePropagationRequest request) {
-		request.addArgument("publish", true);
-		template.sendBody(inject, request);
-	}
+    @Override
+    public void requestOrbitPropagationStream(String satellite, List<String> locations, long from, long to) {
+        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, locations, from, to);
+        sendRequestStream(request);
+    }
 
-	public List<PointingData> requestPointingDataFor(LocationContactEvent startContactEvent, LocationContactEvent endContactEvent, Location location, long contactDataStepSize) {	
-		List<PointingData> pointing = null;
-		try {
-			pointing = NavigationUtilities.calculateContactData(startContactEvent, endContactEvent, location, contactDataStepSize);
-		} catch (OrekitException e) {
-			e.printStackTrace();
-		}
-		 
-		 return pointing;
-	}
+    protected DataSet sendRequest(TlePropagationRequest request) {
+        return template.requestBody(inject, request, DataSet.class);
+    }
+
+    protected void sendRequestStream(TlePropagationRequest request) {
+        request.setArgumentValue(StandardArguments.PUBLISH, true);
+        template.sendBody(inject, request);
+    }
+
+    @Override
+    public List<PointingData> requestPointingDataFor(LocationContactEvent startContactEvent, LocationContactEvent endContactEvent, GroundStation groundStation,
+            Satellite satellite, long contactDataStepSize) {
+        List<PointingData> pointing = null;
+        try {
+            pointing = NavigationUtilities.calculateContactData(startContactEvent, endContactEvent, groundStation, satellite, contactDataStepSize);
+        }
+        catch (OrekitException e) {
+            e.printStackTrace();
+        }
+
+        return pointing;
+    }
 }

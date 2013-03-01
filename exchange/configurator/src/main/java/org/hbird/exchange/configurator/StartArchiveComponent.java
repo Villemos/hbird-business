@@ -16,22 +16,23 @@
  */
 package org.hbird.exchange.configurator;
 
+import org.hbird.exchange.constants.StandardComponents;
+
 public class StartArchiveComponent extends StartComponent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 401570426742630847L;
+    public static final String DESCRIPTION = "Command to a configurator to start an archive component.";
 
-	public StartArchiveComponent() {
-		super("Archive", "StartArchiveComponent", "Command to a configurator to start an archive component.");
-	}	
-	
-	public StartArchiveComponent(String componentname) {
-		super(componentname, "StartParameterArchiveComponent", "Command to a configurator to start a parameter archive component.");
-	}	
+    private static final long serialVersionUID = 7907508899039986489L;
 
-	public StartArchiveComponent(String issuedBy, String destination, String componentname) {
-		super(issuedBy, destination, componentname, "StartParameterArchiveComponent", "Command to a configurator to start a parameter archive component.");
-	}	
+    public StartArchiveComponent() {
+        this(StandardComponents.ARCHIVE);
+    }
+
+    public StartArchiveComponent(String componentname) {
+        super(componentname, StartArchiveComponent.class.getSimpleName(), DESCRIPTION);
+    }
+
+    public StartArchiveComponent(String issuedBy, String destination, String componentname) {
+        super(issuedBy, destination, componentname, StartArchiveComponent.class.getSimpleName(), DESCRIPTION);
+    }
 }

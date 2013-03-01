@@ -18,51 +18,36 @@ package org.hbird.exchange.dataaccess;
 
 import java.util.List;
 
+import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.State;
 
 public class StateRequest extends DataRequest {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5274506775743830200L;
+    public static final String DESCRIPTION = "A request for the state(s) of a Named object";
 
-	public StateRequest(String issuedBy, String isStateOf) {
-		super(issuedBy, "any", "StateRequest", "A request for the state(s) of a Named object");
+    private static final long serialVersionUID = -6214262098953498288L;
 
-		setClass(State.class.getSimpleName());
-		setType("State");
-		addArgument("isStateOf", isStateOf);
-		setIsInitialization(true);
-	}	
+    public StateRequest(String issuedBy, String isStateOf) {
+        this(issuedBy, StandardComponents.ANY, isStateOf);
+    }
 
-	public StateRequest(String issuedBy, String isStateOf, long from, long to) {
-		super(issuedBy, "any", "StateRequest", "A request for the state(s) of a Named object");
+    public StateRequest(String issuedBy, String isStateOf, long from, long to) {
+        this(issuedBy, StandardComponents.ANY, isStateOf);
+        setFrom(from);
+        setTo(to);
+    }
 
-		setClass(State.class.getSimpleName());
-		setType("State");
-		addArgument("isStateOf", isStateOf);
-		setFrom(from);
-		setTo(to);
-		setIsInitialization(true);
-	}	
+    public StateRequest(String issuedBy, String isStateOf, List<String> names) {
+        this(issuedBy, StandardComponents.ANY, isStateOf);
+        addName(names);
+    }
 
-	public StateRequest(String issuedBy, String isStateOf, List<String> names) {
-		super(issuedBy, "any", "StateRequest", "A request for the state(s) of a Named object");
-
-		setClass(State.class.getSimpleName());
-		setType("State");
-		addArgument("isStateOf", isStateOf);
-		addArgument("names", names);
-		setIsInitialization(true);
-	}	
-
-	public StateRequest(String issuedBy, String destination, String isStateOf) {
-		super(issuedBy, destination, "StateRequest", "A request for the state(s) of a Named object");
-
-		setClass(State.class.getSimpleName());
-		setType("State");
-		addArgument("isStateOf", isStateOf);
-		setIsInitialization(true);
-	}	
+    public StateRequest(String issuedBy, String destination, String isStateOf) {
+        super(issuedBy, destination, StateRequest.class.getSimpleName(), DESCRIPTION);
+        setClass(State.class.getSimpleName());
+        setType(State.class.getSimpleName());
+        setIsInitialization(true);
+        setArgumentValue(StandardArguments.IS_STATE_OF, isStateOf);
+    }
 }

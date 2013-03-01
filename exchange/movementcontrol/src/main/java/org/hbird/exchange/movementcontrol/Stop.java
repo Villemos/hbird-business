@@ -20,17 +20,16 @@ import org.hbird.exchange.core.Command;
 
 public class Stop extends Command {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7051648798211264707L;
+    public static final String DESCRIPTION = "Stop all movement.";
 
-	public Stop(String issuedBy) {
-		super(issuedBy, "", "Stop", "Stop all movement.");
-	}
+    private static final long serialVersionUID = -1721160626653889307L;
 
-	public Stop(String issuedBy, long executionTime) {
-		super(issuedBy, "", "Stop", "Stop all movement.");
-		this.executionTime = executionTime;
-	}
+    public Stop(String issuedBy) {
+        super(issuedBy, "", Stop.class.getSimpleName(), DESCRIPTION);
+    }
+
+    public Stop(String issuedBy, long executionTime) {
+        super(issuedBy, "", Stop.class.getSimpleName(), DESCRIPTION);
+        this.executionTime = executionTime;
+    }
 }

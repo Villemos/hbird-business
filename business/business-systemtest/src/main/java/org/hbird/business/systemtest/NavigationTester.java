@@ -161,7 +161,7 @@ public class NavigationTester extends SystemTest {
 			}
 			else if (element instanceof PointingData) {
 				PointingData event = (PointingData) element;
-				System.out.println(new Date(element.getTimestamp()) +"     Contact Data: sat=" + event.getSatellite() + ", loc=" + event.getLocation() + ", azm=" + event.getAzimuth() + ", ele=" + event.getElevation() + ", dop=" + event.getDoppler() + ", dopshift=" + event.getDopplerShift());
+				System.out.println(new Date(element.getTimestamp()) +"     Contact Data: sat=" + event.getSatelliteName() + ", loc=" + event.getLocationName() + ", azm=" + event.getAzimuth() + ", ele=" + event.getElevation() + ", dop=" + event.getDoppler() + ", dopshift=" + event.getDopplerShift());
 			}
 		}
 	}

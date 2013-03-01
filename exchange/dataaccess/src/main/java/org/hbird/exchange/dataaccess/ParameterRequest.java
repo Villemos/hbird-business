@@ -18,68 +18,63 @@ package org.hbird.exchange.dataaccess;
 
 import java.util.List;
 
+import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Parameter;
 
 public class ParameterRequest extends DataRequest {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2494842649084114764L;
+    public static final String DESCRIPTION = "A request for the latest value of a parameter";
 
-	public ParameterRequest(String parameter, int rows) {
-		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
+    private static final long serialVersionUID = -210475353836504189L;
 
-		setClass(Parameter.class.getSimpleName());
-		addName(parameter);
-		addArgument("sort", "timestamp");
-		addArgument("sortorder", "DESC");
-		addArgument("rows", rows);
-	}
+    public ParameterRequest(String parameter) {
+        super(StandardComponents.ASSEMBLY, StandardComponents.PARAMETER_ARCHIVE, ParameterRequest.class.getSimpleName(), DESCRIPTION);
+        setClass(Parameter.class.getSimpleName());
+        addName(parameter);
+    }
 
-	public ParameterRequest(String parameter, Long from, Long to) {
-		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
+    public ParameterRequest(List<String> parameter) {
+        super(StandardComponents.ASSEMBLY, StandardComponents.PARAMETER_ARCHIVE, ParameterRequest.class.getSimpleName(), DESCRIPTION);
+        setClass(Parameter.class.getSimpleName());
+        addName(parameter);
+    }
 
-		setClass(Parameter.class.getSimpleName());
-		addName(parameter);
-		setFrom(from);
-		setTo(to);
-	}
+    public ParameterRequest(String parameter, int rows) {
+        this(parameter);
+        setSort(StandardArguments.TIMESTAMP);
+        setSortOrder("DESC");
+        setRows(rows);
+    }
 
-	public ParameterRequest(String parameter, Long from, Long to, int rows) {
-		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
+    public ParameterRequest(String parameter, Long from, Long to) {
+        this(parameter);
+        setFrom(from);
+        setTo(to);
+    }
 
-		setClass(Parameter.class.getSimpleName());
-		addName(parameter);
-		setFrom(from);
-		setTo(to);
-		addArgument("rows", rows);
-	}
+    public ParameterRequest(String parameter, Long from, Long to, int rows) {
+        this(parameter);
+        setFrom(from);
+        setTo(to);
+        setRows(rows);
+    }
 
-	public ParameterRequest(List<String> parameters, int rows) {
-		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
+    public ParameterRequest(List<String> parameters, int rows) {
+        this(parameters);
+        setRows(rows);
+    }
 
-		setClass(Parameter.class.getSimpleName());
-		addName(parameters);
-		addArgument("rows", rows);
-	}
+    public ParameterRequest(List<String> parameters, Long from, Long to) {
+        this(parameters);
+        setFrom(from);
+        setTo(to);
+    }
 
-	public ParameterRequest(List<String> parameters, Long from, Long to) {
-		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
-
-		setClass(Parameter.class.getSimpleName());
-		addName(parameters);
-		setFrom(from);
-		setTo(to);
-	}
-
-	public ParameterRequest(List<String> parameters, Long from, Long to, int rows) {
-		super("Assembly", "ParameterArchive", "ParameterRequest", "A request for the latest value of a parameter");
-
-		setClass(Parameter.class.getSimpleName());
-		addName(parameters);
-		setFrom(from);
-		setTo(to);
-		addArgument("rows", rows);
-	}
+    public ParameterRequest(List<String> parameters, Long from, Long to, int rows) {
+        this(parameters);
+        setFrom(from);
+        setTo(to);
+        setRows(rows);
+    }
 }

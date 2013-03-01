@@ -20,7 +20,7 @@ import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
-import org.hbird.exchange.dataaccess.LocationRequest;
+import org.hbird.exchange.dataaccess.GroundStationRequest;
 import org.hbird.exchange.dataaccess.OrbitalStateRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
@@ -33,22 +33,22 @@ import org.hbird.exchange.dataaccess.TleRequest;
  */
 public class ArchiveComponentBuilder extends ComponentBuilder {
 
-	{
-		commands.add(new CommitRequest("", ""));
-		commands.add(new DataRequest("", ""));
-		commands.add(new DeletionRequest("", "", ""));
-		commands.add(new LocationRequest("", ""));
-		commands.add(new OrbitalStateRequest(""));
-		commands.add(new ParameterRequest("", 0));
-		commands.add(new StateRequest("", ""));
-		commands.add(new TleRequest("", ""));
-	}
-	
-	@Override
-	protected void doConfigure() {
+    {
+        commands.add(new CommitRequest("", ""));
+        commands.add(new DataRequest("", ""));
+        commands.add(new DeletionRequest("", "", ""));
+        commands.add(new GroundStationRequest("", ""));
+        commands.add(new OrbitalStateRequest(""));
+        commands.add(new ParameterRequest("", 0));
+        commands.add(new StateRequest("", ""));
+        commands.add(new TleRequest("", ""));
+    }
 
-		//  + "selector=type!='BusinessCard'"
-		from(StandardEndpoints.monitoring).to("solr:" + getComponentName());
-		from(StandardEndpoints.commands).to("solr:" + getComponentName());
-	};
+    @Override
+    protected void doConfigure() {
+
+        // + "selector=type!='BusinessCard'"
+        from(StandardEndpoints.monitoring).to("solr:" + getComponentName());
+        from(StandardEndpoints.commands).to("solr:" + getComponentName());
+    };
 }

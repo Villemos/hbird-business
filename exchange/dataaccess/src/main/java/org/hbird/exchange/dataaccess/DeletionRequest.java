@@ -16,22 +16,33 @@
  */
 package org.hbird.exchange.dataaccess;
 
+import static org.hbird.exchange.dataaccess.Arguments.DELETION_QUERY;
+import static org.hbird.exchange.dataaccess.Arguments.create;
+
+import java.util.List;
+
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 
 public class DeletionRequest extends Command {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7374733690642382839L;
+    public static final String DESCRIPTION = "A request to delete part or all data in an archive.";
 
-	{
-		arguments.put("deletionquery", new CommandArgument("deletionquery", "The query based on which data will be deleted.", "String", "", null, true));
-	}
-	
-	public DeletionRequest(String issuedBy, String destination, String deletionquery) {
-		super(issuedBy, destination, "DeletionRequest", "A request to delete part or all data in an archive.");
-		addArgument("deletionquery", deletionquery);
-	}	
+    private static final long serialVersionUID = -811265458963306125L;
+
+    public DeletionRequest(String issuedBy, String destination, String deletionquery) {
+        super(issuedBy, destination, DeletionRequest.class.getSimpleName(), DESCRIPTION);
+        setArgumentValue(StandardArguments.DELETION_QUERY, deletionquery);
+    }
+
+    /**
+     * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
+     */
+    @Override
+    protected List<CommandArgument> getArgumentDefinitions() {
+        List<CommandArgument> args = super.getArgumentDefinitions();
+        args.add(create(DELETION_QUERY));
+        return args;
+    }
 }

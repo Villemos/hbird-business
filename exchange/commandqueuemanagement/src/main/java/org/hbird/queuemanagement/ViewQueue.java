@@ -16,28 +16,39 @@
  */
 package org.hbird.queuemanagement;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 
 public class ViewQueue extends Command {
 
-	private static final long serialVersionUID = 3485417554095535572L;
-	
-	{
-		arguments.put("queuename", new CommandArgument("queuename", "The name of the queue to be displayed.", "String (ID)", "", "hbird.requests", true));
-	}
+    public static final String DESCRIPTION = "Command to get a dump of all messages in the queue.";
 
-	public ViewQueue(String issuedBy, String destination, String queuename) {
-		super(issuedBy, destination, "ViewQueue", "Command to get a dump of all messages in the queue.");
-		
-		setQueueName(queuename);
-	}	
-	
-	public String getQueueName() {
-		return (String) arguments.get("queuename").value;
-	}
-	
-	public void setQueueName(String queuename) {
-		arguments.get("queuename").value = queuename;
-	}
+    private static final long serialVersionUID = -7902068983023742679L;
+
+    public ViewQueue(String issuedBy, String destination, String queuename) {
+        super(issuedBy, destination, ViewQueue.class.getSimpleName(), DESCRIPTION);
+        setQueueName(queuename);
+    }
+
+    /**
+     * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
+     */
+    @Override
+    protected List<CommandArgument> getArgumentDefinitions() {
+        List<CommandArgument> args = new ArrayList<CommandArgument>(1);
+        args.add(new CommandArgument(StandardArguments.QUEUE_NAME, "The name of the queue to be displayed.", "String (ID)", "", "hbird.requests", true));
+        return args;
+    }
+
+    public String getQueueName() {
+        return getArgumentValue(StandardArguments.QUEUE_NAME, String.class);
+    }
+
+    public void setQueueName(String queuename) {
+        setArgumentValue(StandardArguments.QUEUE_NAME, queuename);
+    }
 }

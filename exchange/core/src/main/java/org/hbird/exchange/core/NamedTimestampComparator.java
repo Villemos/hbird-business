@@ -22,7 +22,7 @@ import org.hbird.exchange.core.Named;
 
 
 
-public class NamedTimestampComperator implements Comparator<Named> {
+public class NamedTimestampComparator implements Comparator<Named> {
 
 	public int compare(Named lhs, Named rhs) {
 		

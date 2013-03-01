@@ -20,51 +20,55 @@ import org.hbird.exchange.core.ISatelliteSpecific;
 import org.hbird.exchange.core.Named;
 
 /**
- * Class representing a satellite. 
- *
+ * Class representing a satellite.
+ * 
  */
 public class Satellite extends Named implements ISatelliteSpecific {
 
-	/** The unique UUID. */
-	private static final long serialVersionUID = 6169559659135516782L;
+    /** The unique UUID. */
+    private static final long serialVersionUID = 6169559659135516782L;
 
-	protected String designator;
-	
-	protected String satelliteNumber;
-	
-	public Satellite() {};
-	
-	/**
-	 * Constructor.
-	 * 
-	 * @param name The name of the satellite.
-	 * @param description The description of the satellite.
-	 */
-	public Satellite(String issuedBy, String name, String description) {
-		super(issuedBy, name, "Satellite", description);
-	}
+    protected String designator;
 
-	public String getDesignator() {
-		return designator;
-	}
-	
-	public void setDesignator(String designator) {
-		this.designator = designator;
-	}
+    protected String satelliteNumber;
 
-	public String getSatelliteNumber() {
-		return satelliteNumber;
-	}
+    public Satellite() {
+    };
 
-	public void setSatelliteNumber(String satelliteNumber) {
-		this.satelliteNumber = satelliteNumber;
-	}
+    /**
+     * Constructor.
+     * 
+     * @param name The name of the satellite.
+     * @param description The description of the satellite.
+     */
+    public Satellite(String issuedBy, String name, String description) {
+        // FIXME - 27.02.2013, kimmell - "Satellite"
+        super(issuedBy, name, "Satellite", description);
+    }
 
-	public String getSatellite() {
-		return name;
-	}
+    public String getDesignator() {
+        return designator;
+    }
 
-	public void setSatellite(String satellite) {
-		this.name = satellite;
-	}
+    public void setDesignator(String designator) {
+        this.designator = designator;
+    }
+
+    public String getSatelliteNumber() {
+        return satelliteNumber;
+    }
+
+    public void setSatelliteNumber(String satelliteNumber) {
+        this.satelliteNumber = satelliteNumber;
+    }
+
+    @Override
+    public String getSatelliteName() {
+        return name;
+    }
+
+    @Override
+    public void setSatelliteName(String satellite) {
+        this.name = satellite;
+    }
 }

@@ -20,82 +20,83 @@ import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.configurator.StopComponent;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Named;
 
 public class BusinessCardTester extends SystemTest {
 
-	private static org.apache.log4j.Logger LOG = Logger.getLogger(BusinessCardTester.class);
-	
-	@Handler
-	public void process() throws InterruptedException {
+    private static org.apache.log4j.Logger LOG = Logger.getLogger(BusinessCardTester.class);
 
-		LOG.info("------------------------------------------------------------------------------------------------------------");
-		LOG.info("Starting");
-		
-		/** See if we have the businesscards of the Configurator. */
-		Thread.sleep(5000);
-		
-		synchronized (businessCardListener.elements) {
-			Boolean didArrive = false;
-			for (Named obj : businessCardListener.elements) {
-				/** Notice that the name given to the configurator in the assembly is 'Main Configurator'*/
-				if (obj.getIssuedBy().equals("Configurator")) {
-					didArrive = true;
-					break;
-				}
-			}
-			
-			azzert(didArrive, "Business card messages arrive from Configurator");
-			businessCardListener.elements.clear();
-		}
-		
-		startMonitoringArchive();
-		
-		Thread.sleep(3000);
+    @Handler
+    public void process() throws InterruptedException {
 
-		synchronized (businessCardListener.elements) {
-			Boolean archiveDidArrive = false;
-			for (Named obj : businessCardListener.elements) {
-				if (obj.getIssuedBy().equals("Archive")) {
-					archiveDidArrive = true;
-					break;
-				}
-			}
-			
-			azzert(archiveDidArrive, "Business card messages arrive from Archive");
-			businessCardListener.elements.clear();
-		}		
-		
-		Thread.sleep(3000);
+        LOG.info("------------------------------------------------------------------------------------------------------------");
+        LOG.info("Starting");
 
-		Object data = injection.requestBody(new ReportStatus("SystemTest", "Configurator"));
-		azzert(data != null, "Status received from Configurator.");
-		
-		/** Stop the archive and check that it is actually stopped. */
-		injection.sendBody(new StopComponent("SystemTest", "Configurator", "Archive"));
-		
-		Thread.sleep(3000);
-		
-		this.monitoringArchiveStarted = false;
+        /** See if we have the businesscards of the Configurator. */
+        Thread.sleep(5000);
 
-		Thread.sleep(2000);
+        synchronized (businessCardListener.elements) {
+            Boolean didArrive = false;
+            for (Named obj : businessCardListener.elements) {
+                /** Notice that the name given to the configurator in the assembly is 'Main Configurator' */
+                if (obj.getIssuedBy().equals("Configurator")) {
+                    didArrive = true;
+                    break;
+                }
+            }
 
-		businessCardListener.elements.clear();
+            azzert(didArrive, "Business card messages arrive from Configurator");
+            businessCardListener.elements.clear();
+        }
 
-		Thread.sleep(3000);
+        startMonitoringArchive();
 
-		synchronized (businessCardListener.elements) {
-			Boolean archiveDidArrive = false;
-			for (Named obj : businessCardListener.elements) {
-				if (obj.getIssuedBy().equals("Archive")) {
-					archiveDidArrive = true;
-					break;
-				}
-			}
-			
-			azzert(!archiveDidArrive, "Business card messages not arriving from Archive");
-		}		
-		
-		LOG.info("Finished");
-	}
+        Thread.sleep(3000);
+
+        synchronized (businessCardListener.elements) {
+            Boolean archiveDidArrive = false;
+            for (Named obj : businessCardListener.elements) {
+                if (obj.getIssuedBy().equals(StandardComponents.ARCHIVE)) {
+                    archiveDidArrive = true;
+                    break;
+                }
+            }
+
+            azzert(archiveDidArrive, "Business card messages arrive from Archive");
+            businessCardListener.elements.clear();
+        }
+
+        Thread.sleep(3000);
+
+        Object data = injection.requestBody(new ReportStatus("SystemTest", "Configurator"));
+        azzert(data != null, "Status received from Configurator.");
+
+        /** Stop the archive and check that it is actually stopped. */
+        injection.sendBody(new StopComponent("SystemTest", "Configurator", StandardComponents.ARCHIVE));
+
+        Thread.sleep(3000);
+
+        this.monitoringArchiveStarted = false;
+
+        Thread.sleep(2000);
+
+        businessCardListener.elements.clear();
+
+        Thread.sleep(3000);
+
+        synchronized (businessCardListener.elements) {
+            Boolean archiveDidArrive = false;
+            for (Named obj : businessCardListener.elements) {
+                if (obj.getIssuedBy().equals(StandardComponents.ARCHIVE)) {
+                    archiveDidArrive = true;
+                    break;
+                }
+            }
+
+            azzert(!archiveDidArrive, "Business card messages not arriving from Archive");
+        }
+
+        LOG.info("Finished");
+    }
 }

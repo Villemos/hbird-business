@@ -16,42 +16,56 @@
  */
 package org.hbird.exchange.dataaccess;
 
+import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_NAME;
+import static org.hbird.exchange.dataaccess.Arguments.create;
+
+import java.util.List;
+
+import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 public class TleRequest extends DataRequest {
 
-	private static final long serialVersionUID = -4895555326865366387L;
+    public static final String DESCRIPTION = "A request for the TLE parameters of a satellite.";
 
-	{
-		arguments.put("satellite", new CommandArgument("satellite", "The name of the satellite for which to retrieve the states.", "String", "", null, true));
-	}
+    private static final long serialVersionUID = 5283711249928543145L;
 
-	public TleRequest(String issuedBy, String satellite) {
-		super(issuedBy, "Archive", "TleRequest", "A request for the TLE parameters of a satellite.");
+    public TleRequest(String issuedBy, String satellite) {
+        super(issuedBy, StandardComponents.ARCHIVE, TleRequest.class.getSimpleName(), DESCRIPTION);
+        setSatelliteName(satellite);
+        setType(TleOrbitalParameters.class.getSimpleName());
+        setIsInitialization(true);
+        setSort(StandardArguments.TIMESTAMP);
+        setSortOrder("DESC");
+        setRows(1);
+    }
 
-		setSatellite(satellite);
-		addArgument("sort", "timestamp");
-		addArgument("sortorder", "DESC");
-		addArgument("rows", 1);
-		addArgument("type", "TleOrbitalParameters");
-		setIsInitialization(true);
-	}
+    public TleRequest(String issuedBy, String satellite, long from, long to) {
+        super(issuedBy, StandardComponents.ARCHIVE, TleRequest.class.getSimpleName(), DESCRIPTION);
+        setSatelliteName(satellite);
+        setType(TleOrbitalParameters.class.getSimpleName());
+        setIsInitialization(true);
+        setFrom(from);
+        setTo(to);
+    }
 
-	public TleRequest(String issuedBy, String satellite, long from, long to) {
-		super(issuedBy, "Archive", "TleRequest", "A request for the TLE parameters of a satellite.");
+    /**
+     * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
+     */
+    @Override
+    protected List<CommandArgument> getArgumentDefinitions() {
+        List<CommandArgument> args = super.getArgumentDefinitions();
+        args.add(create(SATELLITE_NAME));
+        return args;
+    }
 
-		setSatellite(satellite);
-		addArgument("from", from);
-		addArgument("to", to);
-		addArgument("type", "TleOrbitalParameters");
-		setIsInitialization(true);
-	}
+    public void setSatelliteName(String satellite) {
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+    }
 
-	public void setSatellite(String satellite) {
-		addArgument("satellite", satellite);
-	}
-	
-	public String getSatellite() {
-		return (String) getArgument("Satellite");
-	}
+    public String getSatelliteName() {
+        return getArgumentValue(StandardArguments.SATELLITE_NAME, String.class);
+    }
 }

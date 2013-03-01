@@ -16,91 +16,93 @@
  */
 package org.hbird.exchange.core;
 
-/** A boolean state parameter. 
- *  Any other type may have a (set of) states associated. The association is
- *  not through direct dependency, but through the states 'isstateOff' field. 
- *  
- *  A state parameter is a parameter with the following constrains;
- *  - Type must be 'Boolean'.
- *  - The field 'isStateOff' must provide the name of the object its a state of. */
+/**
+ * A boolean state parameter.
+ * Any other type may have a (set of) states associated. The association is
+ * not through direct dependency, but through the states 'isstateOff' field.
+ * 
+ * A state parameter is a parameter with the following constrains;
+ * - Type must be 'Boolean'.
+ * - The field 'isStateOff' must provide the name of the object its a state of.
+ */
 public class State extends Named {
-	
-	/** The unique UID. */
-	private static final long serialVersionUID = 6234660528925795242L;
-	
-	/** The ID of the object that this state parameter is a state of. */
-	protected String isStateOf;
-		
-	protected Boolean state = true;
-	
-	/**
-	 * Constructor of the state parameter. The timestamp will be set to the current time.
-	 * 
-	 * @param stateName the name of this state.
-	 * @param description A description of this state.
-	 * @param isStateOff The object that this state is a state off.
-	 * @param state The current state.
-	 */
-	public State(String issuedBy, String stateName, String description, String isStateOff, boolean state) {
-		super(issuedBy, stateName, "State", description);
-		this.isStateOf = isStateOff;
-		this.state = state;
-	}
 
-	/**
-	 * Constructor of the state parameter. The timestamp will be set to the current time.
-	 * 
-	 * @param stateName the name of this state.
-	 * @param description A description of this state.
-	 * @param timestamp The time at which the state parameter was calculated. Should be after the object
-	 * that this parameter is a state off.
-	 * @param isStateOff The object that this state is a state off.
-	 * @param state The current state.
-	 */
-	public State(String issuedBy, String stateName, String description, String isStateOff, boolean state, long timestamp) {
-		super(issuedBy, stateName, "State", description, timestamp);
-		this.isStateOf = isStateOff;
-		this.state = state;
-	}
+    /** The unique UID. */
+    private static final long serialVersionUID = 6234660528925795242L;
 
-	public String getIsStateOf() {
-		return isStateOf;
-	}
+    /** The ID of the object that this state parameter is a state of. */
+    protected String isStateOf;
 
-	public void setIsStateOf(String isStateOf) {
-		this.isStateOf = isStateOf;
-	}
+    protected Boolean state = true;
 
-	/**
-	 * Method similar to the Parameter::getValue(), where the return value is
-	 * case to a Booolean. The StateParameter value must be a Boolean value.
-	 * 
-	 * @return The Parameter value cast to a Boolean.
-	 */
-	public Boolean getValue() {
-		return state;
-	}
-	
-	public void setValid() {
-		state = true;
-	}
+    /**
+     * Constructor of the state parameter. The timestamp will be set to the current time.
+     * 
+     * @param stateName the name of this state.
+     * @param description A description of this state.
+     * @param isStateOff The object that this state is a state off.
+     * @param state The current state.
+     */
+    public State(String issuedBy, String stateName, String description, String isStateOff, boolean state) {
+        super(issuedBy, stateName, State.class.getSimpleName(), description);
+        this.isStateOf = isStateOff;
+        this.state = state;
+    }
 
-	public void setInvalid() {
-		state = false;
-	}
+    /**
+     * Constructor of the state parameter. The timestamp will be set to the current time.
+     * 
+     * @param stateName the name of this state.
+     * @param description A description of this state.
+     * @param timestamp The time at which the state parameter was calculated. Should be after the object
+     *            that this parameter is a state off.
+     * @param isStateOff The object that this state is a state off.
+     * @param state The current state.
+     */
+    public State(String issuedBy, String stateName, String description, String isStateOff, boolean state, long timestamp) {
+        this(issuedBy, stateName, description, isStateOff, state);
+        setTimestamp(timestamp);
+    }
 
-	/**
-	 * Type safe setter for the StateParameter type. Checks that the value being set is
-	 * indeed an instance of Boolean prior to setting it. If this is not the case, then
-	 * the value is not set and a System.out warning is printed.
-	 * 
-	 * @param Object The value to be set. Must be a Boolean.
-	 */
-	public void setValue(Boolean value) {
-		this.state = value;
-	}
-	
-	public String prettyPrint() {
-		return "State {name=" + name + ", state=" + state + ", timestamp=" + timestamp + "}";
-	}
+    public String getIsStateOf() {
+        return isStateOf;
+    }
+
+    public void setIsStateOf(String isStateOf) {
+        this.isStateOf = isStateOf;
+    }
+
+    /**
+     * Method similar to the Parameter::getValue(), where the return value is
+     * case to a Booolean. The StateParameter value must be a Boolean value.
+     * 
+     * @return The Parameter value cast to a Boolean.
+     */
+    public Boolean getValue() {
+        return state;
+    }
+
+    public void setValid() {
+        state = true;
+    }
+
+    public void setInvalid() {
+        state = false;
+    }
+
+    /**
+     * Type safe setter for the StateParameter type. Checks that the value being set is
+     * indeed an instance of Boolean prior to setting it. If this is not the case, then
+     * the value is not set and a System.out warning is printed.
+     * 
+     * @param Object The value to be set. Must be a Boolean.
+     */
+    public void setValue(Boolean value) {
+        this.state = value;
+    }
+
+    @Override
+    public String prettyPrint() {
+        return String.format("State {name=%s, state=%s, isStateOf=%s, timestamp=%s}", name, state, isStateOf, timestamp);
+    }
 }

@@ -46,16 +46,16 @@ public class GroundStation extends Named implements ILocationSpecific {
     }
 
     /**
-     * @see org.hbird.exchange.core.ILocationSpecific#getLocation()
+     * @see org.hbird.exchange.core.ILocationSpecific#getLocationName()
      */
-    public String getLocation() {
+    public String getLocationName() {
         return name;
     }
 
     /**
-     * @see org.hbird.exchange.core.ILocationSpecific#setLocation(java.lang.String)
+     * @see org.hbird.exchange.core.ILocationSpecific#setLocationName(java.lang.String)
      */
-    public void setLocation(String location) {
+    public void setLocationName(String location) {
         this.name = location;
     }
 

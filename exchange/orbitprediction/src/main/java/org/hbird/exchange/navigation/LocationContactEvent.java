@@ -66,19 +66,19 @@ public class LocationContactEvent extends DerivedNamed implements ILocationSpeci
 		this.satelliteState = satelliteState;
 	}
 
-	public String getLocation() {
+	public String getLocationName() {
 		return location;
 	}
 
-	public void setLocation(String location) {
+	public void setLocationName(String location) {
 		this.location = location;
 	}
 
-	public String getSatellite() {
+	public String getSatelliteName() {
 		return satellite;
 	}
 
-	public void setSatellite(String satellite) {
+	public void setSatelliteName(String satellite) {
 		this.satellite = satellite;
 	}
 
@@ -91,6 +91,6 @@ public class LocationContactEvent extends DerivedNamed implements ILocationSpeci
 	}
 	
 	public String prettyPrint() {
-		return "class=" + this.getClass().getSimpleName() + ", name=" + name + ", timestamp=" + timestamp + ", location=" + getLocation() + ", visibility=" + isVisible;
+		return "class=" + this.getClass().getSimpleName() + ", name=" + name + ", timestamp=" + timestamp + ", location=" + getLocationName() + ", visibility=" + isVisible;
 	}
 }

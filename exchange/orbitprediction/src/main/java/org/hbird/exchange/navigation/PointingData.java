@@ -87,23 +87,23 @@ public class PointingData extends DerivedNamed implements ISatelliteSpecific, IL
 		this.dopplerShift = dopplerShift;
 	}
 
-	public String getSatellite() {
+	public String getSatelliteName() {
 		return satellite;
 	}
 
-	public void setSatellite(String satellite) {
+	public void setSatelliteName(String satellite) {
 		this.satellite = satellite;
 	}
 
-	public String getLocation() {
+	public String getLocationName() {
 		return location;
 	}
 
-	public void setLocation(String location) {
+	public void setLocationName(String location) {
 		this.location = location;
 	}
 	
 	public String prettyPrint() {
-		return "class=" + this.getClass().getSimpleName() + ", name=" + name + ", timestamp=" + timestamp + ", location=" + getLocation() + ", satellite=" + satellite + ", para=" + this.azimuth + ":" + this.doppler + ":" + this.dopplerShift;
+		return "class=" + this.getClass().getSimpleName() + ", name=" + name + ", timestamp=" + timestamp + ", location=" + getLocationName() + ", satellite=" + satellite + ", para=" + this.azimuth + ":" + this.doppler + ":" + this.dopplerShift;
 	}
 }

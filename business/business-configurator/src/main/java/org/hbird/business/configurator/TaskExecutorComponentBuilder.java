@@ -19,22 +19,23 @@ package org.hbird.business.configurator;
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.taskexecutor.TaskExecutor;
 import org.hbird.exchange.configurator.StandardEndpoints;
+import org.hbird.exchange.constants.StandardArguments;
 
 /**
  * Component builder to create a Task Executor component
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class TaskExecutorComponentBuilder extends ComponentBuilder {
 
-	@Override
-	public void doConfigure() {
+    @Override
+    public void doConfigure() {
 
-		String componentname = (String) command.getArgument("componentname");
-		ProcessorDefinition<?> route = from(StandardEndpoints.tasks).split().method(new TaskExecutor(componentname), "receive");
-		addInjectionRoute(route);
-		
-		addCommandHandler();
-	}
+        String componentname = command.getArgumentValue(StandardArguments.COMPONENT_NAME, String.class);
+        ProcessorDefinition<?> route = from(StandardEndpoints.tasks).split().method(new TaskExecutor(componentname), "receive");
+        addInjectionRoute(route);
+
+        addCommandHandler();
+    }
 }

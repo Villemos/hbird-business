@@ -16,23 +16,23 @@
  */
 package org.hbird.exchange.movementcontrol;
 
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Parameter;
 
 public class TurnLeft extends Command {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6985003473990743853L;	
-	
-	public TurnLeft(String issuedBy) {
-		super(issuedBy, "", "TurnLeft", "Turns the bot left. The Angle (in degrees) is set by the argument 'Angle'.");
-		addArgument("Angle", new Parameter(issuedBy, "Angle", "Argument", "Angle to turn", 45,  "Degree"));	
-	}
+    private static final String DESCRIPTION = "Turns the bot left. The Angle (in degrees) is set by the argument 'Angle'.";
 
-	public TurnLeft(String issuedBy, long executionTime) {
-		super(issuedBy, "", "TurnLeft", "Turns the bot left. The Angle (in degrees) is set by the argument 'Angle'.");
-		this.executionTime = executionTime;
-	}
+    private static final long serialVersionUID = -6594366546232192688L;
+
+    public TurnLeft(String issuedBy) {
+        super(issuedBy, "", TurnLeft.class.getSimpleName(), DESCRIPTION);
+        setArgumentValue(StandardArguments.ANGLE, new Parameter(issuedBy, StandardArguments.ANGLE, "Argument", "Angle to turn", 45, "Degree"));
+    }
+
+    public TurnLeft(String issuedBy, long executionTime) {
+        super(issuedBy, "", TurnLeft.class.getSimpleName(), DESCRIPTION);
+        this.executionTime = executionTime;
+    }
 }

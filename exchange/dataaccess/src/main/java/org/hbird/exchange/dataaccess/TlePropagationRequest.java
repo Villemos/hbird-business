@@ -16,131 +16,143 @@
  */
 package org.hbird.exchange.dataaccess;
 
-import java.util.ArrayList;
+import static org.hbird.exchange.dataaccess.Arguments.CONTACT_DATA_STEP_SIZE;
+import static org.hbird.exchange.dataaccess.Arguments.DELTA_PROPAGATION;
+import static org.hbird.exchange.dataaccess.Arguments.GROUND_STATION_NAMES;
+import static org.hbird.exchange.dataaccess.Arguments.PUBLISH;
+import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_NAME;
+import static org.hbird.exchange.dataaccess.Arguments.START_TIME;
+import static org.hbird.exchange.dataaccess.Arguments.STEP_SIZE;
+import static org.hbird.exchange.dataaccess.Arguments.TLE_PARAMETERS;
+import static org.hbird.exchange.dataaccess.Arguments.create;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 public class TlePropagationRequest extends Command {
 
-	private static final long serialVersionUID = 3877529427922153061L;
+    public static final String DESCRIPTION = "A request for orbit prediction.";
 
-	{
-		arguments.put("satellite", new CommandArgument("satellite", "The name of the satellite.", "String", "", null, true));
-		arguments.put("starttime", new CommandArgument("starttime", "The start time of the propagation.", "long", "Seconds", null, true));
-		arguments.put("locations", new CommandArgument("locations", "The name of the location(s) to which contact shall be calculated. If left empty all Locations registered in the archive will be taken.", "List<String>", "", new ArrayList<String>(), false));
-		arguments.put("deltaPropagation", new CommandArgument("deltaPropagation", "The delta propagation from the starttime.", "Long", "Seconds", 2 * 60 * 60l, true));
-		arguments.put("stepSize", new CommandArgument("stepSize", "The propagation step size.", "Long", "Seconds", 60d, true));
-		arguments.put("contactDataStepSize", new CommandArgument("contactDataStepSize", "The propagation step size when calculating Contact Data between a location and a satellite between which visibility exist.", "Long", "Milliseconds", 500l, true));
-		arguments.put("tleparameters", new CommandArgument("tleparameters", "The two line elements of a specific satellite. If left empty the latest TLE for the satellite will be taken.", "TleOrbitalParameters", "", null, false));
+    private static final long serialVersionUID = 4417878827527226757L;
 
-		arguments.put("publish", new CommandArgument("publish", "Flag indicating whether the propagation data should be returned as a stream to the monitoring topic (=true) or as a list (=false).", "Boolean", "", true, false));
-	}
+    /**
+     * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
+     */
+    @Override
+    protected List<CommandArgument> getArgumentDefinitions() {
+        List<CommandArgument> args = super.getArgumentDefinitions();
+        args.add(create(SATELLITE_NAME));
+        args.add(create(START_TIME));
+        args.add(create(GROUND_STATION_NAMES));
+        args.add(create(DELTA_PROPAGATION));
+        args.add(create(STEP_SIZE));
+        args.add(create(CONTACT_DATA_STEP_SIZE));
+        args.add(create(TLE_PARAMETERS));
+        args.add(create(PUBLISH));
+        return args;
+    }
 
-	
-	public TlePropagationRequest(String issuedBy, String satellite) {
-		super(issuedBy, "OrbitPredictor", "TlePropagationRequest", "A request for orbit prediction.");
-		
-		addArgument("satellite", satellite);	
-		addArgument("starttime", ((new Date()).getTime()));
-	}
+    public TlePropagationRequest(String issuedBy, String satellite) {
+        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+        setArgumentValue(StandardArguments.START_TIME, System.currentTimeMillis());
+    }
 
-	/**
-	 * Constructor of a orbital prediction request.
-	 * 
-	 * @param satellite The satellite that should be predicted.
-	 * @param position The current position of the satellite.
-	 * @param velocity The current velocity of the satellite.
-	 * @param starttime The start time at which the prediction should start. This must correspond to the time of the position and velocity.
-	 * @param locations A list of locations, to which orbital events (establishment / loss of contact, etc) should be calculated and issued.
-	 */
-	public TlePropagationRequest(String issuedBy, String satellite, String tleLine1, String tleLine2, Long starttime, List<String> locations) {
-		super(issuedBy, "OrbitPredictor", "TlePropagationRequest", "A request for orbit prediction.");
-		
-		addArgument("satellite", satellite);	
-		addArgument("starttime", starttime);
-		addArgument("locations", locations);
-		addArgument("tleparameters", new TleOrbitalParameters(issuedBy, satellite, tleLine1, tleLine2));
-	}
+    /**
+     * Constructor of a orbital prediction request.
+     * 
+     * @param satellite The satellite that should be predicted.
+     * @param position The current position of the satellite.
+     * @param velocity The current velocity of the satellite.
+     * @param starttime The start time at which the prediction should start. This must correspond to the time of the
+     *            position and velocity.
+     * @param locations A list of locations, to which orbital events (establishment / loss of contact, etc) should be
+     *            calculated and issued.
+     */
+    public TlePropagationRequest(String issuedBy, String satellite, String tleLine1, String tleLine2, Long starttime, List<String> locations) {
+        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+        setArgumentValue(StandardArguments.START_TIME, starttime);
+        setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
+        setArgumentValue(StandardArguments.TLE_PARAMETERS, new TleOrbitalParameters(issuedBy, satellite, tleLine1, tleLine2));
+    }
 
-	/**
-	 * Constructor based on a current Orbital State.
-	 * 
-	 * @param name The name of the request.
-	 * @param satellite The satellite for which the prediction is done.
-	 * @param state The initial orbital state.
-	 * @param locations List of locations for which contact events shall be generated.
-	 */
-	public TlePropagationRequest(String issuedBy, String satellite, TleOrbitalParameters state, List<String> locations) {
-		super(issuedBy, "OrbitPredictor", "TlePropagationRequest", "A request for orbit prediction.");
+    /**
+     * Constructor based on a current Orbital State.
+     * 
+     * @param name The name of the request.
+     * @param satellite The satellite for which the prediction is done.
+     * @param state The initial orbital state.
+     * @param locations List of locations for which contact events shall be generated.
+     */
+    public TlePropagationRequest(String issuedBy, String satellite, TleOrbitalParameters state, List<String> locations) {
+        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+        setArgumentValue(StandardArguments.START_TIME, (new Date()).getTime());
+        setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
+        setArgumentValue(StandardArguments.TLE_PARAMETERS, state);
+    }
 
-		addArgument("satellite", satellite);
-		addArgument("starttime", (new Date()).getTime());
-		addArgument("locations", locations);
-		addArgument("tleparameters", state);
-	}
-	
-	public TlePropagationRequest(String issuedBy, String satellite, long from, long to) {
-		super(issuedBy, "OrbitPredictor", "TlePropagationRequest", "A request for orbit prediction.");
+    public TlePropagationRequest(String issuedBy, String satellite, long from, long to) {
+        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+        setArgumentValue(StandardArguments.START_TIME, from);
+        setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);
+    }
 
-		addArgument("satellite", satellite);
-		addArgument("starttime", from);
-		addArgument("deltaPropagation", (to - from) / 1000);
-	}
+    public TlePropagationRequest(String issuedBy, String satellite, String location, long from, long to) {
+        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+        setArgumentValue(StandardArguments.START_TIME, from);
+        setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);
 
-	public TlePropagationRequest(String issuedBy, String satellite, String location, long from, long to) {
-		super(issuedBy, "OrbitPredictor", "TlePropagationRequest", "A request for orbit prediction.");
+        setArgumentValue(StandardArguments.GROUND_STATION_NAMES, Arrays.asList(location));
+    }
 
-		addArgument("satellite", satellite);
-		addArgument("starttime", from);
-		addArgument("deltaPropagation", (to - from) / 1000);
-		
-		addArgument("locations", Arrays.asList(location));		
-	}
+    public TlePropagationRequest(String issuedBy, String satellite, List<String> locations, long from, long to) {
+        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+        setArgumentValue(StandardArguments.START_TIME, from);
+        setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);
+        setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
+    }
 
-	public TlePropagationRequest(String issuedBy, String satellite, List<String> locations, long from, long to) {
-		super(issuedBy, "OrbitPredictor", "TlePropagationRequest", "A request for orbit prediction.");
+    public String getSatellite() {
+        return getArgumentValue(StandardArguments.SATELLITE_NAME, String.class);
+    }
 
-		addArgument("satellite", satellite);
-		addArgument("starttime", from);
-		addArgument("deltaPropagation", (to - from) / 1000);
-		
-		addArgument("locations", locations);		
-	}
+    public Long getContactDataStepSize() {
+        return getArgumentValue(StandardArguments.CONTACT_DATA_STEP_SIZE, Long.class);
+    }
 
-	public String getSatellite() {
-		return (String) getArgument("satellite");
-	}
-	
-	public Long getContactDataStepSize() {
-		return (Long) getArgument("contactDataStepSize");
-	}
+    public Long getStartTime() {
+        return getArgumentValue(StandardArguments.START_TIME, Long.class);
+    }
 
-	public Long getStartTime() {
-		return (Long) getArgument("starttime");
-	}
-	
-	public Long getDeltaPropagation() {
-		return (Long) getArgument("deltaPropagation");
-	}
-		
-	public Double getStepSize() {
-		return (Double) getArgument("stepSize");
-	}
-	
-	public List<String> getLocations() {
-		return (List<String>) getArgument("locations");
-	}
+    public Long getDeltaPropagation() {
+        return getArgumentValue(StandardArguments.DELTA_PROPAGATION, Long.class);
+    }
 
-	public TleOrbitalParameters getTleParameters() {
-		return (TleOrbitalParameters) getArgument("tleparameters");
-	}
+    public Double getStepSize() {
+        return getArgumentValue(StandardArguments.STEP_SIZE, Double.class);
+    }
 
-	public boolean getPublish() {
-		return (Boolean) getArgument("publish");
-	}
+    public List<String> getLocations() {
+        return getArgumentValue(StandardArguments.GROUND_STATION_NAMES, List.class);
+    }
+
+    public TleOrbitalParameters getTleParameters() {
+        return getArgumentValue(StandardArguments.TLE_PARAMETERS, TleOrbitalParameters.class);
+    }
+
+    public boolean getPublish() {
+        return getArgumentValue(StandardArguments.PUBLISH, Boolean.class);
+    }
 }

@@ -94,6 +94,7 @@
 		<commons-io.version>2.0.1</commons-io.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
 		<solrj.version>3.5.0</solrj.version>
+        <mockito.version>1.9.0</mockito.version>
 	</properties>
 
     <distributionManagement>
@@ -558,6 +559,13 @@
 				<artifactId>solr-solrj</artifactId>
 				<version>${solrj.version}</version>
 			</dependency>
+            
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
 
 		</dependencies>
 	</dependencyManagement>
@@ -571,6 +579,7 @@
 				<version>2.5.1</version>
 				<configuration>
 					<target>${version.java}</target>
+                    <source>${version.java}</source>
 				</configuration>
 			</plugin>
 

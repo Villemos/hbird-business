@@ -1,24 +1,36 @@
 package org.hbird.exchange.dataaccess;
 
+import static org.hbird.exchange.dataaccess.Arguments.APPLICABLE_TO;
+import static org.hbird.exchange.dataaccess.Arguments.create;
+
+import java.util.List;
+
+import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.NamedInstanceIdentifier;
 
 public class MetadataRequest extends DataRequest {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -87368332296845820L;
+    private static final long serialVersionUID = -7231902449829794969L;
 
-	{
-		arguments.put("applicableto", new CommandArgument("applicableto", "The Named object the metadata must be appliable to.", "String", "", null, false));
-	}
-	
-	public MetadataRequest(String issuedBy, Named applicableTo) {
-		super(issuedBy, "Archive");
-		
-		this.addArgument("applicableto", new NamedInstanceIdentifier(applicableTo.getName(), applicableTo.getTimestamp(), applicableTo.getType()));
-		setType("Metadata");
-	}
+    public MetadataRequest(String issuedBy, Named applicableTo) {
+        super(issuedBy, StandardComponents.ARCHIVE);
+
+        this.setArgumentValue(StandardArguments.APPLICABLE_TO,
+                new NamedInstanceIdentifier(applicableTo.getName(), applicableTo.getTimestamp(), applicableTo.getType()));
+        setType(Metadata.class.getSimpleName());
+    }
+
+    /**
+     * @see org.hbird.exchange.dataaccess.DataRequest#getArgumentDefinitions()
+     */
+    @Override
+    protected List<CommandArgument> getArgumentDefinitions() {
+        List<CommandArgument> args = super.getArgumentDefinitions();
+        args.add(create(APPLICABLE_TO));
+        return args;
+    }
 }

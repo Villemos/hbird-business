@@ -8,7 +8,7 @@ public class ParameterTest {
 
     @Test
     public void testPrettyPrint() {
-        Parameter parameter = new Parameter("issuer", "name", "type", "description", null, "unit");
+        Parameter parameter = new Parameter("issuer", "A name", "type-0", "parameter description", null, "unit of the parameter");
         assertNotNull(parameter.prettyPrint());
     }
 }

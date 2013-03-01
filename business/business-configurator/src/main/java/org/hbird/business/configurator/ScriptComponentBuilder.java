@@ -19,29 +19,30 @@ package org.hbird.business.configurator;
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.scripting.ScriptExecutor;
 import org.hbird.exchange.configurator.StandardEndpoints;
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.scripting.ScriptExecutionRequest;
 
 /**
  * Component builder to create a script engine component.
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class ScriptComponentBuilder extends ComponentBuilder {
 
-	@Override
-	protected void doConfigure() {
-		
-		ScriptExecutor executor = new ScriptExecutor((ScriptExecutionRequest) command.getArgument("scriptdefinition"));			
-		
-		/** Iterate over each dependency needed by this script. */
-		for (String dependency : executor.getDependencies()) {
-		
-			/** Create the routes for receiving the data needed by the script. */
-			ProcessorDefinition<?> route = from(StandardEndpoints.monitoring + "?" + addNameSelector(dependency)).bean(executor, "calculate");
-			addInjectionRoute(route);			
-			
-			addCommandHandler();
-		}		
-	}
+    @Override
+    protected void doConfigure() {
+
+        ScriptExecutor executor = new ScriptExecutor(command.getArgumentValue(StandardArguments.SCRIPT_DEFINITION, ScriptExecutionRequest.class));
+
+        /** Iterate over each dependency needed by this script. */
+        for (String dependency : executor.getDependencies()) {
+
+            /** Create the routes for receiving the data needed by the script. */
+            ProcessorDefinition<?> route = from(StandardEndpoints.monitoring + "?" + addNameSelector(dependency)).bean(executor, "calculate");
+            addInjectionRoute(route);
+
+            addCommandHandler();
+        }
+    }
 }

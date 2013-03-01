@@ -16,22 +16,23 @@
  */
 package org.hbird.exchange.configurator;
 
+import org.hbird.exchange.constants.StandardComponents;
+
 public class StartCommandComponent extends StartComponent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8698880622780816407L;
-	
-	public StartCommandComponent() {
-		super("CommandingChain", "StartCommandComponent", "Command to a configurator to start a command component.");
-	}	
-	
-	public StartCommandComponent(String componentname) {
-		super(componentname, "StartCommandComponent", "Command to a configurator to start a command component.");
-	}	
+    public static final String DESCRIPTION = "Command to a configurator to start a command component.";
 
-	public StartCommandComponent(String issuedBy, String destination, String componentname) {
-		super(issuedBy, destination, componentname, "StartCommandComponent", "Command to a configurator to start a command component.");
-	}	
+    private static final long serialVersionUID = -6699015161668631249L;
+
+    public StartCommandComponent() {
+        this(StandardComponents.COMMANDING_CHAIN);
+    }
+
+    public StartCommandComponent(String componentname) {
+        super(componentname, StartCommandComponent.class.getSimpleName(), DESCRIPTION);
+    }
+
+    public StartCommandComponent(String issuedBy, String destination, String componentname) {
+        super(issuedBy, destination, componentname, "StartCommandComponent", DESCRIPTION);
+    }
 }

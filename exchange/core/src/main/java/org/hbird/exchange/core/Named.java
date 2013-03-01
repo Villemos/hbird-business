@@ -1,4 +1,4 @@
- /**
+/**
  * Licensed to the Hummingbird Foundation (HF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,206 +16,211 @@
  */
 package org.hbird.exchange.core;
 
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-/** The super class of all types being exchanged. Contains the information needed to uniquely identify
- *  an object as well as describe it.
- *  
- *  The class is intended to be subtyped, into specific types exchanged within the system such as 
- *  parameters, commands and tasks. Each subtype thus share a set of attributes.
- *  
- *  Some values are generated as a set of values, that belongs together, such as a
- *  orbit prediction which consists of multiple orbital states. A user will typically
- *  want the complete data set, and replace the data set when a new becomes available. 
- *  To support this objects can be assigned a datasetidentifier, which will be the 
- *  same for all entries in the data set. The data set identifier will typically be
- *  the generation time of the data set, and can thus also be used to identify which data
- *  set is the most recent.
+/**
+ * The super class of all types being exchanged. Contains the information needed to uniquely identify
+ * an object as well as describe it.
+ * 
+ * The class is intended to be subtyped, into specific types exchanged within the system such as
+ * parameters, commands and tasks. Each subtype thus share a set of attributes.
+ * 
+ * Some values are generated as a set of values, that belongs together, such as a
+ * orbit prediction which consists of multiple orbital states. A user will typically
+ * want the complete data set, and replace the data set when a new becomes available.
+ * To support this objects can be assigned a datasetidentifier, which will be the
+ * same for all entries in the data set. The data set identifier will typically be
+ * the generation time of the data set, and can thus also be used to identify which data
+ * set is the most recent.
  * */
 public abstract class Named implements Serializable {
 
-	/** The unique UID of this class. */
-	private static final long serialVersionUID = -5803219773253020746L;
+    /** The unique UID of this class. */
+    private static final long serialVersionUID = -5803219773253020746L;
 
-	/** The unique UID of this object. */
-	protected String uuid = UUID.randomUUID().toString();
-	
-	/** The ID / Name of the component that has issued this object. */
-	protected String issuedBy = "";
-	
-	/** The time at which this object represented a valid state of the system. Default value is the
-	 *  time of creation. */
-	protected long timestamp = (new Date()).getTime();
-	
-	/** The name of the object. */
-	protected String name;
+    /** The unique UID of this object. */
+    protected String uuid = UUID.randomUUID().toString();
 
-	/** A description of the object. */
-	protected String description;
+    /** The ID / Name of the component that has issued this object. */
+    protected String issuedBy = "";
 
-	/** A definition of what this parameter represents. Should not be 'double' or 'integer', but the
-	 *  meaning of the type such as 'Temperature' or 'Charge'. */
-	protected String type;
-	
-	/** A unique identifier of a set of data. All elements of the data set should be
-	 *  assigned the same datasetidentifier, marking the data as being one logical
-	 *  group. The identifier can be any number, but should in practice always be
-	 *  the time at which the series was generated. Its the responsibility of the creator
-	 *  of the objects to ensure that the identifier is unique and consistent. A 
-	 *  value of 0 means no data series. */
-	protected String datasetidentifier = null;
+    /**
+     * The time at which this object represented a valid state of the system. Default value is the
+     * time of creation.
+     */
+    protected long timestamp = (new Date()).getTime();
 
-	public Named() {};
-	
-	/**
-	 * Constructor of a Named object. The timestamp will be set to the creation time.
-	 * 
-	 * @param name The name of the object.
-	 * @param description The description of the object.
-	 */
-	public Named(String issuedBy, String name, String type, String description) {
-		this.issuedBy = issuedBy;
-		this.name = name;
-		this.type = type;
-		this.description = description;
-	}
+    /** The name of the object. */
+    protected String name;
 
-	/**
-	 * Constructor of a Named object with a specific timestamp. 
-	 * 
-	 * @param name The name of the object.
-	 * @param description The description of the object.
-	 * @param timestamp The timestamp of the object.
-	 */
-	public Named(String issuedBy, String name, String type, String description, long timestamp) {
-		this.issuedBy = issuedBy;
-		this.name = name;
-		this.type = type;
-		this.description = description;
-		this.timestamp = timestamp;
-	}
+    /** A description of the object. */
+    protected String description;
 
-	/**
-	 * Constructor of a Named object with a specific timestamp. 
-	 * 
-	 * @param name The name of the object.
-	 * @param description The description of the object.
-	 * @param timestamp The timestamp of the object.
-	 */
-	public Named(String issuedBy, String name, String type, String description, long timestamp, String datasetidentifier) {
-		this.issuedBy = issuedBy;
-		this.name = name;
-		this.type = type;
-		this.description = description;
-		this.timestamp = timestamp;
-		this.datasetidentifier = datasetidentifier;
-	}
+    /**
+     * A definition of what this parameter represents. Should not be 'double' or 'integer', but the
+     * meaning of the type such as 'Temperature' or 'Charge'.
+     */
+    protected String type;
 
-	public Named(String issuedBy) {
-		this.issuedBy = issuedBy;
-	}
+    /**
+     * A unique identifier of a set of data. All elements of the data set should be
+     * assigned the same datasetidentifier, marking the data as being one logical
+     * group. The identifier can be any number, but should in practice always be
+     * the time at which the series was generated. Its the responsibility of the creator
+     * of the objects to ensure that the identifier is unique and consistent. A
+     * value of 0 means no data series.
+     */
+    protected String datasetidentifier = null;
 
-	/**
-	 * Getter of the object name.
-	 * 
-	 * @return The name of the object.
-	 */
-	public String getName() {
-		return name;
-	}
-		
-	/**
-	 * Getter of the description of the object.
-	 * 
-	 * @return The description of the object.
-	 */
-	public String getDescription() {
-		return description;
-	}
+    public Named() {
+    };
 
-	
-	/**
-	 * Setter of the object timestamp.
-	 * 
-	 * @param timestamp The time of the object. Default value is the creation time of the object.
-	 */
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
+    /**
+     * Constructor of a Named object. The timestamp will be set to the creation time.
+     * 
+     * @param name The name of the object.
+     * @param description The description of the object.
+     */
+    public Named(String issuedBy, String name, String type, String description) {
+        this.issuedBy = issuedBy;
+        this.name = name;
+        this.type = type;
+        this.description = description;
+    }
 
-	/**
-	 * Getter of the dataset identifier.
-	 * 
-	 * @return The data set identifier, identifying the data set this object is part of.
-	 * */
-	public String getDatasetidentifier() {
-		return datasetidentifier;
-	}
+    /**
+     * Constructor of a Named object with a specific timestamp.
+     * 
+     * @param name The name of the object.
+     * @param description The description of the object.
+     * @param timestamp The timestamp of the object.
+     */
+    public Named(String issuedBy, String name, String type, String description, long timestamp) {
+        this.issuedBy = issuedBy;
+        this.name = name;
+        this.type = type;
+        this.description = description;
+        this.timestamp = timestamp;
+    }
 
-	/**
-	 * In case that an already created Parameter object is reused, i.e. is use to
-	 * create a new object, then the objectid and the timestamp must be changed. Else
-	 * the object will be considered the same as the previous object.
-	 * 
-	 * The method mark this object as a new object. The objectid is set to a new 
-	 * value and the timestamp set to 'now'.
-	 */
-	public void newInstance() {
-		timestamp = (new Date()).getTime();		
-	}
+    /**
+     * Constructor of a Named object with a specific timestamp.
+     * 
+     * @param name The name of the object.
+     * @param description The description of the object.
+     * @param timestamp The timestamp of the object.
+     */
+    public Named(String issuedBy, String name, String type, String description, long timestamp, String datasetidentifier) {
+        this.issuedBy = issuedBy;
+        this.name = name;
+        this.type = type;
+        this.description = description;
+        this.timestamp = timestamp;
+        this.datasetidentifier = datasetidentifier;
+    }
 
-	public long getTimestamp() {
-		return timestamp;
-	}
+    public Named(String issuedBy) {
+        this.issuedBy = issuedBy;
+    }
 
-	public String getIssuedBy() {
-		return issuedBy;
-	}
+    /**
+     * Getter of the object name.
+     * 
+     * @return The name of the object.
+     */
+    public String getName() {
+        return name;
+    }
 
-	public void setIssuedBy(String issuedBy) {
-		this.issuedBy = issuedBy;
-	}
+    /**
+     * Getter of the description of the object.
+     * 
+     * @return The description of the object.
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * Setter of the object timestamp.
+     * 
+     * @param timestamp The time of the object. Default value is the creation time of the object.
+     */
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    /**
+     * Getter of the dataset identifier.
+     * 
+     * @return The data set identifier, identifying the data set this object is part of.
+     * */
+    public String getDatasetidentifier() {
+        return datasetidentifier;
+    }
 
-	public void setDatasetidentifier(String datasetidentifier) {
-		this.datasetidentifier = datasetidentifier;
-	}
+    /**
+     * In case that an already created Parameter object is reused, i.e. is use to
+     * create a new object, then the objectid and the timestamp must be changed. Else
+     * the object will be considered the same as the previous object.
+     * 
+     * The method mark this object as a new object. The objectid is set to a new
+     * value and the timestamp set to 'now'.
+     */
+    public void newInstance() {
+        timestamp = (new Date()).getTime();
+    }
 
-	public String getType() {
-		return type;
-	}
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}	
+    public String getIssuedBy() {
+        return issuedBy;
+    }
 
-	
-	public String getUuid() {
-		return uuid;
-	}
+    public void setIssuedBy(String issuedBy) {
+        this.issuedBy = issuedBy;
+    }
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Named instance() {
-		uuid = UUID.randomUUID().toString();
-		timestamp = (new Date()).getTime();
-		
-		return this;
-	}
-	
-	public String prettyPrint() {
-		return "class=" + this.getClass().getSimpleName() + ", name=" + name + ", timestamp=" + timestamp;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDatasetidentifier(String datasetidentifier) {
+        this.datasetidentifier = datasetidentifier;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public Named instance() {
+        uuid = UUID.randomUUID().toString();
+        timestamp = (new Date()).getTime();
+
+        return this;
+    }
+
+    public String prettyPrint() {
+        return String.format("%s[name=%s, timestamp=%s]", this.getClass().getSimpleName(), name, timestamp);
+    }
 }

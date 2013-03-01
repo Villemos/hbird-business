@@ -1,41 +1,61 @@
 package org.hbird.exchange.dataaccess;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.hbird.exchange.dataaccess.Arguments.GROUND_STATION_NAME;
+import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_NAME;
+import static org.hbird.exchange.dataaccess.Arguments.VISIBILITY;
+import static org.hbird.exchange.dataaccess.Arguments.create;
 
+import java.util.List;
+
+import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.navigation.LocationContactEvent;
 
 public class LocationContactEventRequest extends DataRequest {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 9003134846725607506L;
+    private static final long serialVersionUID = -5990938785008117581L;
 
-	{
-		arguments.put("satellite", new CommandArgument("satellite", "The satellite comming / leaving contact.", "String", "Name", null, false));
-		arguments.put("location", new CommandArgument("location", "The location.", "String", "Name", null, true));
-		arguments.put("visibility", new CommandArgument("contactevent", "Whether the contact event is a start of contact (true) or end of contact (false).", "boolean", "", true, true));
-	}
-	
-	public LocationContactEventRequest(String issuedBy, String location) {
-		super(issuedBy, "Archive");
-		addArgument("type", "LocationContactEvent");
-		addArgument("location", location);
-	}
+    public LocationContactEventRequest(String issuedBy, String location) {
+        super(issuedBy, StandardComponents.ARCHIVE);
+        setType(LocationContactEvent.class.getSimpleName());
+        setArgumentValue(StandardArguments.GROUND_STATION_NAME, location);
+    }
 
-	public LocationContactEventRequest(String issuedBy, String location, boolean visibility) {
-		super(issuedBy, "Archive");
-		addArgument("type", "LocationContactEvent");
-		addArgument("location", location);
-		addArgument("visibility", visibility);
-	}
-	
-	public void setSatellite(String satellite) {
-		addArgument("satellite", satellite);		
-	}
-	
-	public void setLocation(String location) {
-		addArgument("location", location);		
-	}
+    public LocationContactEventRequest(String issuedBy, String location, boolean visibility) {
+        this(issuedBy, location);
+        setArgumentValue(StandardArguments.VISIBILITY, visibility);
+    }
+
+    /**
+     * @see org.hbird.exchange.dataaccess.DataRequest#getArgumentDefinitions()
+     */
+    @Override
+    protected List<CommandArgument> getArgumentDefinitions() {
+        List<CommandArgument> args = super.getArgumentDefinitions();
+        args.add(create(SATELLITE_NAME));
+        args.add(create(GROUND_STATION_NAME));
+        args.add(create(VISIBILITY));
+        return args;
+    }
+
+    public void setSatelliteName(String satellite) {
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+    }
+
+    public void setLocation(String location) {
+        setArgumentValue(StandardArguments.GROUND_STATION_NAME, location);
+    }
+
+    public String getSatelliteName() {
+        return getArgumentValue(StandardArguments.SATELLITE_NAME, String.class);
+    }
+
+    public String getGroundStationName() {
+        return getArgumentValue(StandardArguments.GROUND_STATION_NAME, String.class);
+    }
+
+    public boolean getVisibility() {
+        return getArgumentValue(StandardArguments.VISIBILITY, Boolean.class);
+    }
 }

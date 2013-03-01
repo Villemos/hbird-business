@@ -16,138 +16,180 @@
  */
 package org.hbird.exchange.dataaccess;
 
+import static org.hbird.exchange.dataaccess.Arguments.CLASS;
+import static org.hbird.exchange.dataaccess.Arguments.DERIVED_FROM;
+import static org.hbird.exchange.dataaccess.Arguments.FROM;
+import static org.hbird.exchange.dataaccess.Arguments.INCLUDE_STATES;
+import static org.hbird.exchange.dataaccess.Arguments.INITIALIZATION;
+import static org.hbird.exchange.dataaccess.Arguments.IS_STATE_OF;
+import static org.hbird.exchange.dataaccess.Arguments.NAMES;
+import static org.hbird.exchange.dataaccess.Arguments.ROWS;
+import static org.hbird.exchange.dataaccess.Arguments.SORT;
+import static org.hbird.exchange.dataaccess.Arguments.SORT_ORDER;
+import static org.hbird.exchange.dataaccess.Arguments.TO;
+import static org.hbird.exchange.dataaccess.Arguments.TYPE;
+import static org.hbird.exchange.dataaccess.Arguments.create;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.NamedInstanceIdentifier;
+import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.core.State;
 
 public class DataRequest extends Command {
 
-	private static final long serialVersionUID = -5586555577244975789L;
+    public static final String DESCRIPTION = "A generic request to the archive for data.";
 
-	{
-		arguments.put("type", new CommandArgument("type", "The type of the Named object.", "String", "", null, false));
-		arguments.put("class", new CommandArgument("class", "The class of the Named object.", "", "", null, false));
-		arguments.put("from", new CommandArgument("from", "The start of a range search on timestamp. Default to '*'.", "Long", "Seconds", null, false));
-		arguments.put("to", new CommandArgument("to", "The end of a range search on timestamp. Default to '*'.", "Long", "Seconds", null, false));
-		arguments.put("isStateOf", new CommandArgument("isStateOf", "Name of the object which this is the state of.", "String", "", null, false));
-		arguments.put("names", new CommandArgument("names", "List of names of named objects to be retrieved.", "String", "", null, false));
-		arguments.put("includeStates", new CommandArgument("getStates", "Flag defining that all states applicable to the named objects should also be retrieved", "Boolean", "", false, true));		
-		arguments.put("sortorder", new CommandArgument("sortorder", "The order in which the returned data should be returned.", "String", "", "ASC", true));
-		arguments.put("sort", new CommandArgument("sort", "The sort field. Default is timestamp.", "String", "", "timestamp", true));
-		arguments.put("rows", new CommandArgument("rows", "The maximum number of rows to be retrieved.", "Integer", "", 1000, true));
-		arguments.put("initialization", new CommandArgument("initialization", "If set to true, then the value below the 'to' time of each named object matching the search criterions will be retrieved.", "Boolean", "", false, true));
-		arguments.put("derivedfrom", new CommandArgument("derivedfrom", "Identifier of the named object of which an object must be derived from.", "NamedInstanceIdentifier", "", null, false));
-	}
-	
-	public DataRequest(String issuedBy, String destination) {
-		super(issuedBy, destination, "DataRequest", "A generic request to the archive for data.");
-	}
+    private static final long serialVersionUID = 344371026722929043L;
 
-	public DataRequest(String issuedBy, String destination, String name, String description) {
-		super(issuedBy, destination, name, description);
-	}
+    public DataRequest(String issuedBy, String destination) {
+        super(issuedBy, destination, DataRequest.class.getSimpleName(), DESCRIPTION);
+    }
 
-	public void setRows(int rows) {
-		addArgument("rows", rows);
-	}
+    public DataRequest(String issuedBy, String destination, String name, String description) {
+        super(issuedBy, destination, name, description);
+    }
 
-	public void setType(String type) {
-		addArgument("type", type);
-	}
+    /**
+     * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
+     */
+    @Override
+    protected List<CommandArgument> getArgumentDefinitions() {
+        List<CommandArgument> args = new ArrayList<CommandArgument>(12);
+        args.add(create(TYPE));
+        args.add(create(CLASS));
+        args.add(create(FROM));
+        args.add(create(TO));
+        args.add(create(IS_STATE_OF));
+        args.add(create(NAMES));
+        args.add(create(INCLUDE_STATES));
+        args.add(create(SORT_ORDER));
+        args.add(create(SORT));
+        args.add(create(ROWS));
+        args.add(create(INITIALIZATION));
+        args.add(create(DERIVED_FROM));
+        return args;
+    }
 
-	public void setClass(String clazz) {
-		addArgument("class", clazz);
-	}
+    public void setRows(int rows) {
+        setArgumentValue(StandardArguments.ROWS, rows);
+    }
 
-	public void setFrom(Long from) {
-		if (from != null) {
-			addArgument("from", from);
-		}
-	}
+    @Override
+    public void setType(String type) {
+        setArgumentValue(StandardArguments.TYPE, type);
+    }
 
-	public void setTo(Long to) {
-		if (to != null) {
-			addArgument("to", to);
-		}
-	}
+    public void setClass(String clazz) {
+        setArgumentValue(StandardArguments.CLASS, clazz);
+    }
 
-	public void setIsStateOf(String isStateOf) {
-		addArgument("isStateOf", isStateOf);
-	}
+    public void setFrom(Long from) {
+        if (from != null) {
+            setArgumentValue(StandardArguments.FROM, from);
+        }
+    }
 
-	public void setIsInitialization(Boolean isInitialization) {
-		addArgument("initialization", isInitialization);
-	}
+    public void setTo(Long to) {
+        if (to != null) {
+            setArgumentValue(StandardArguments.TO, to);
+        }
+    }
 
-	public void addName(List<String> names) {
-		for (String name : names) {
-			addName(name);
-		}
-	}
+    public void setIsStateOf(String isStateOf) {
+        setArgumentValue(StandardArguments.IS_STATE_OF, isStateOf);
+    }
 
-	public void addName(String name) {
-		if (name != null) {
-			if (arguments.get("names").value == null) {
-				arguments.get("names").value = new ArrayList<String>();
-			}
-			
-			((List<String>)arguments.get("names").value).add(name);
-		}
-	}
+    public void setIsInitialization(Boolean isInitialization) {
+        setArgumentValue(StandardArguments.INITIALIZATION, isInitialization);
+    }
 
-	public void addNames(List<String> names) {
-		for (String name : names) {
-			addName(name);
-		}
-	}	
+    public void addName(List<String> names) {
+        for (String name : names) {
+            addName(name);
+        }
+    }
 
-	public void retrieveParameter(long from, long to, String parameter) {
-		setClass("parameter");
-		setFrom(from);
-		setTo(to);
-		addName(parameter);
-	}
+    public void addName(String name) {
+        if (name != null) {
+            if (!hasArgumentValue(StandardArguments.NAME)) {
+                setArgumentValue(StandardArguments.NAMES, new ArrayList<String>());
+            }
+            List<String> names = getArgumentValue(StandardArguments.NAMES, List.class);
+            names.add(name);
+        }
+    }
 
-	public void retrieveState(long from, long to, String state, String isStateOf) {
-		setClass("state");
-		setFrom(from);
-		setTo(to);
-		addName(state);
-		setIsStateOf(isStateOf);
-	}	
-	
-	public void setIncludeStates(boolean includeStates) {
-		addArgument("includeStates", includeStates);
-	}
+    public void addNames(List<String> names) {
+        for (String name : names) {
+            addName(name);
+        }
+    }
 
-	public boolean shallIncludeStates() {
-		return (Boolean) getArgument("includeStates");
-	}
+    public void retrieveParameter(long from, long to, String parameter) {
+        setClass(Parameter.class.getSimpleName());
+        setFrom(from);
+        setTo(to);
+        addName(parameter);
+    }
 
-	public Integer getRows() {
-		return (Integer) getArgument("rows");
-	}
+    public void retrieveState(long from, long to, String state, String isStateOf) {
+        setClass(State.class.getSimpleName());
+        setFrom(from);
+        setTo(to);
+        addName(state);
+        setIsStateOf(isStateOf);
+    }
 
-	public Long getFrom() {
-		return (Long) getArgument("from");
-	}
+    public void setIncludeStates(boolean includeStates) {
+        setArgumentValue(StandardArguments.INCLUDE_STATES, includeStates);
+    }
 
-	public Long getTo() {
-		return (Long) getArgument("to");
-	}
-	
-	public void setDerivedFrom(String name, long timestamp, String type) {
-		addArgument("derivedfrom", new NamedInstanceIdentifier(name, timestamp, type));
-	}
-	
-	public void setDerivedFrom(NamedInstanceIdentifier identifier) {
-		addArgument("derivedfrom", identifier);
-	}
-	
-	public NamedInstanceIdentifier getDerivedFrom() {
-		return (NamedInstanceIdentifier) getArgument("derivedfrom");
-	}
+    public boolean shallIncludeStates() {
+        return getArgumentValue(StandardArguments.INCLUDE_STATES, Boolean.class);
+    }
+
+    public Integer getRows() {
+        return getArgumentValue(StandardArguments.ROWS, Integer.class);
+    }
+
+    public Long getFrom() {
+        return getArgumentValue(StandardArguments.FROM, Long.class);
+    }
+
+    public Long getTo() {
+        return getArgumentValue(StandardArguments.TO, Long.class);
+    }
+
+    public void setDerivedFrom(String name, long timestamp, String type) {
+        setArgumentValue(StandardArguments.DERIVED_FROM, new NamedInstanceIdentifier(name, timestamp, type));
+    }
+
+    public void setDerivedFrom(NamedInstanceIdentifier identifier) {
+        setArgumentValue(StandardArguments.DERIVED_FROM, identifier);
+    }
+
+    public NamedInstanceIdentifier getDerivedFrom() {
+        return getArgumentValue(StandardArguments.DERIVED_FROM, NamedInstanceIdentifier.class);
+    }
+
+    public void setSort(String sortBy) {
+        setArgumentValue(StandardArguments.SORT, sortBy);
+    }
+
+    public void setSortOrder(String order) {
+        setArgumentValue(StandardArguments.SORT_ORDER, order);
+    }
+
+    public String getSort() {
+        return getArgumentValue(StandardArguments.SORT, String.class);
+    }
+
+    public String getSortOrder() {
+        return getArgumentValue(StandardArguments.SORT_ORDER, String.class);
+    }
 }

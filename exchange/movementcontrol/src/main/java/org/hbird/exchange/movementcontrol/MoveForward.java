@@ -29,7 +29,7 @@ public class MoveForward extends Command {
 
 	public MoveForward(String issuedBy) {
 		super(issuedBy, "", "MoveForward", "Move the bot forwards. The distance (in meter) is set by the argument 'Distance'.");
-		addArgument("Distance", new Parameter(issuedBy, "Distance", "Argument", "The distance in meter.", null, "Meter"));
+		setArgumentValue("Distance", new Parameter(issuedBy, "Distance", "Argument", "The distance in meter.", null, "Meter"));
 	}
 
 	public MoveForward(String issuedBy, long executionTime) {

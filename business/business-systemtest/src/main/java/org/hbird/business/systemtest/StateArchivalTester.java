@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.State;
+import org.hbird.exchange.constants.StandardComponents;
 
 public class StateArchivalTester extends SystemTest {
 
@@ -64,7 +65,7 @@ public class StateArchivalTester extends SystemTest {
         forceCommit();
 		
         /** Test retrieval. */
-		//Object respond = injection.requestBody(new StateRequest("SystemTest", "ParameterArchive", "COMMAND1"));
+		//Object respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE, "COMMAND1"));
 		Object respond = api.retrieveState("COMMAND1");
 		azzert(respond != null, "Received a response.");
         
@@ -92,7 +93,7 @@ public class StateArchivalTester extends SystemTest {
 		forceCommit();
 		
         /** Test retrieval. */
-		// respond = injection.requestBody(new StateRequest("SystemTest", "ParameterArchive", "COMMAND1"));
+		// respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE, "COMMAND1"));
 		respond = api.retrieveState("COMMAND1");
 		azzert(respond != null, "Received a response.");
 

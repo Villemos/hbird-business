@@ -16,44 +16,55 @@
  */
 package org.hbird.exchange.configurator;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 
 public abstract class StartComponent extends Command {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5607028481851891556L;
+    private static final long serialVersionUID = 3880066748415223278L;
 
-	{
-		arguments.put("componentname", new CommandArgument("componentname", "The name of the component to be started. Is used to route messages to the component. All data will be 'issuedby' this name.", "String", "", null, true));
-		arguments.put("heartbeat", new CommandArgument("heartbeat", "The period between heartbeat signals (BusinessCards) from this component.", "Long", "Milliseconds", 5000l, true));
-	}
-	
-	public StartComponent(String issuedBy, String destination, String componentname, String requestname, String description) {
-		super(issuedBy, destination, requestname, description);
-		addComponentName(componentname);
-	}
+    public StartComponent(String issuedBy, String destination, String componentname, String requestname, String description) {
+        super(issuedBy, destination, requestname, description);
+        addComponentName(componentname);
+    }
 
-	public StartComponent(String componentname, String requestname, String description) {
-		super("Assembly", "Configurator", requestname, description);
-		addComponentName(componentname);
-	}
+    public StartComponent(String componentname, String requestname, String description) {
+        super(StandardComponents.ASSEMBLY, "Configurator", requestname, description);
+        addComponentName(componentname);
+    }
 
-	protected void addComponentName(String componentname) {
-		addArgument("componentname", componentname);
-	}
+    /**
+     * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
+     */
+    @Override
+    protected List<CommandArgument> getArgumentDefinitions() {
+        List<CommandArgument> args = new ArrayList<CommandArgument>();
+        args.add(new CommandArgument(StandardArguments.COMPONENT_NAME,
+                "The name of the component to be started. Is used to route messages to the component. All data will be 'issuedby' this name.", "String", "",
+                null, true));
+        args.add(new CommandArgument(StandardArguments.HEART_BEAT, "The period between heartbeat signals (BusinessCards) from this component.", "Long",
+                "Milliseconds", 5000L, true));
+        return args;
+    }
 
-	protected void addHeartbeat(long period) {
-		addArgument("heartbeat", period);
-	}
+    protected void addComponentName(String componentname) {
+        setArgumentValue(StandardArguments.COMPONENT_NAME, componentname);
+    }
 
-	public void setHeartbeat(long period) {
-		addHeartbeat(period);
-	}
-	
-	public long getHeartbeat() {
-		return (Long) getArgument("heartbeat");
-	}
+    protected void addHeartbeat(long period) {
+        setArgumentValue(StandardArguments.HEART_BEAT, period);
+    }
+
+    public void setHeartbeat(long period) {
+        addHeartbeat(period);
+    }
+
+    public long getHeartbeat() {
+        return getArgumentValue(StandardArguments.HEART_BEAT, Long.class);
+    }
 }

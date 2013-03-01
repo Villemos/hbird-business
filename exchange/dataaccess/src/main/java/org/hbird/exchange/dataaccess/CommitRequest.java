@@ -16,20 +16,20 @@
  */
 package org.hbird.exchange.dataaccess;
 
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Command;
 
 public class CommitRequest extends Command {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2865838932564359124L;
+    public static final String DESCRIPTION = "Request to force the commitment of all stored data, i.e. flush cashes and buffers.";
 
-	public CommitRequest(String issuedBy) {
-		super(issuedBy, "Archive", "CommitRequest", "Request to force the commitment of all stored data, i.e. flush cashes and buffers.");
-	}
-	
-	public CommitRequest(String issuedBy, String destination) {
-		super(issuedBy, destination, "CommitRequest", "Request to force the commitment of all stored data, i.e. flush cashes and buffers.");
-	}
+    private static final long serialVersionUID = 3068998173204822616L;
+
+    public CommitRequest(String issuedBy) {
+        this(issuedBy, StandardComponents.ARCHIVE);
+    }
+
+    public CommitRequest(String issuedBy, String destination) {
+        super(issuedBy, destination, CommitRequest.class.getSimpleName(), DESCRIPTION);
+    }
 }
