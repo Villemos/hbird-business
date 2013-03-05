@@ -16,10 +16,10 @@
  */
 package org.hbird.exchange.core;
 
-public interface ILocationSpecific {
+public interface IGroundStationSpecific {
 
-    public String getLocationName();
+    public String getGroundStationName();
 
-    public void setLocationName(String location);
+    public void setGroundStationName(String groundStationName);
 
 }

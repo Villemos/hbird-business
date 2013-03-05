@@ -136,7 +136,7 @@ public class NavigationUtilities {
         return Vector3D.dotProduct(pv.getPosition(), pv.getVelocity()) / pv.getPosition().getNorm();
     }
 
-    protected static double calculateDopplerShift(double doppler, double frequency) {
+    public static double calculateDopplerShift(double doppler, double frequency) {
         return ((1 - (doppler / Constants.SPEED_OF_LIGHT)) * frequency) - frequency;
     }
 }

@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.navigation.GroundStation;
-import org.hbird.exchange.navigation.Satellite;
 
 public class StartAntennaControllerComponent extends StartComponent {
 
@@ -15,31 +13,29 @@ public class StartAntennaControllerComponent extends StartComponent {
 
     public StartAntennaControllerComponent(String componentname, String groundStation, String satellite) {
         super(componentname, StartAntennaControllerComponent.class.getSimpleName(), DESCRIPTION);
-        setArgumentValue(StandardArguments.GROUND_STATION_NAME, groundStation);
-        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+        setArgumentValue(StandardArguments.GROUND_STATION_NAME, groundStationName);
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satelliteName);
         setArgumentValue(StandardArguments.QUEUE_NAME, "hbird.antennaschedule." + groundStation);
     }
 
     /**
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
-    // TODO - 27.02.2013, kimmell - CHECK Satellite vs name of the satellite
-    // TODO - 27.02.2013, kimmell - CHECK for string "groundStation"
     @Override
     protected List<CommandArgument> getArgumentDefinitions() {
         List<CommandArgument> args = super.getArgumentDefinitions();
-        args.add(new CommandArgument(StandardArguments.GROUND_STATION_NAME, "GroundStation definition.", "GroundStation", "", null, true));
-        args.add(new CommandArgument(StandardArguments.SATELLITE_NAME, "Satellite definition", "Satellite", "", null, true));
+        args.add(new CommandArgument(StandardArguments.GROUND_STATION_NAME, "GroundStation name.", "String", "", null, true));
+        args.add(new CommandArgument(StandardArguments.SATELLITE_NAME, "Satellite name.", "String", "", null, true));
         args.add(new CommandArgument(StandardArguments.QUEUE_NAME, "The name of the queue into which the schedule shall be send.", "String", "", null, true));
         return args;
     }
 
-    public GroundStation getGroundStation() {
-        return getArgumentValue("groundStation", GroundStation.class);
+    public String getGroundStationName() {
+        return getArgumentValue(StandardArguments.GROUND_STATION_NAME, String.class);
     }
 
-    public Satellite getSatellite() {
-        return getArgumentValue(StandardArguments.SATELLITE_NAME, Satellite.class);
+    public String getSatelliteName() {
+        return getArgumentValue(StandardArguments.SATELLITE_NAME, String.class);
     }
 
     public String getQueueName() {

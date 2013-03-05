@@ -60,6 +60,8 @@ public class StandardArguments {
 
     public static final String FROM = "from";
 
+    public static final String FREQUENCY = "frequency";
+
     public static final String GROUND_STATION_NAME = "location";
 
     public static final String GROUND_STATION_NAMES = "locations";

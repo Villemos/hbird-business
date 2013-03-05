@@ -17,7 +17,7 @@
 package org.hbird.exchange.navigation;
 
 import org.hbird.exchange.core.DerivedNamed;
-import org.hbird.exchange.core.ILocationSpecific;
+import org.hbird.exchange.core.IGroundStationSpecific;
 import org.hbird.exchange.core.ISatelliteSpecific;
 
 
@@ -30,7 +30,7 @@ import org.hbird.exchange.core.ISatelliteSpecific;
  * by a station or satellite.
  * 
  */
-public class LocationContactEvent extends DerivedNamed implements ILocationSpecific, ISatelliteSpecific {
+public class LocationContactEvent extends DerivedNamed implements IGroundStationSpecific, ISatelliteSpecific {
 
 	private static final long serialVersionUID = 6129893135305263533L; 
 
@@ -66,11 +66,11 @@ public class LocationContactEvent extends DerivedNamed implements ILocationSpeci
 		this.satelliteState = satelliteState;
 	}
 
-	public String getLocationName() {
+	public String getGroundStationName() {
 		return location;
 	}
 
-	public void setLocationName(String location) {
+	public void setGroundStationName(String location) {
 		this.location = location;
 	}
 
@@ -91,6 +91,6 @@ public class LocationContactEvent extends DerivedNamed implements ILocationSpeci
 	}
 	
 	public String prettyPrint() {
-		return "class=" + this.getClass().getSimpleName() + ", name=" + name + ", timestamp=" + timestamp + ", location=" + getLocationName() + ", visibility=" + isVisible;
+		return "class=" + this.getClass().getSimpleName() + ", name=" + name + ", timestamp=" + timestamp + ", location=" + getGroundStationName() + ", visibility=" + isVisible;
 	}
 }

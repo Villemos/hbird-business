@@ -343,7 +343,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
             request = new LocationContactEventRequest(issuedBy, location, false);
             request.setRows(1);
             request.setSatelliteName(startEvent.getSatelliteName());
-            request.setLocation(startEvent.getLocationName());
+            request.setLocation(startEvent.getGroundStationName());
             request.setFrom(startEvent.getTimestamp());
             List<Named> end = template.requestBody(inject, request, List.class);
 

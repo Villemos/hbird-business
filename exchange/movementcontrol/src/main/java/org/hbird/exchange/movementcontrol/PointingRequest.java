@@ -11,14 +11,13 @@ public class PointingRequest extends Command {
 
     public static final String DESCRIPTION = "A command to point an antenna to a point (azimuth / elevation).";
 
-    private static final long serialVersionUID = 1222993693772995662L;
+    private static final long serialVersionUID = 4093011979495519927L;
 
-    public PointingRequest(String issuedBy, String destination, double azimuth, double elevation, double doppler, double dopplerShift) {
+    public PointingRequest(String issuedBy, String destination, double azimuth, double elevation, double doppler) {
         super(issuedBy, destination, "PointTo", DESCRIPTION);
         setArgumentValue(StandardArguments.AZIMUTH, azimuth);
         setArgumentValue(StandardArguments.ELEVATION, elevation);
         setArgumentValue(StandardArguments.DOPPLER, doppler);
-        setArgumentValue(StandardArguments.DOPPLER_SHIFT, dopplerShift);
     }
 
     /**
@@ -27,12 +26,10 @@ public class PointingRequest extends Command {
     @Override
     protected List<CommandArgument> getArgumentDefinitions() {
         List<CommandArgument> args = new ArrayList<CommandArgument>();
-        args.add(new CommandArgument(StandardArguments.AZIMUTH, "The satellite comming / leaving contact.", "String", "Name", null, false));
-        args.add(new CommandArgument(StandardArguments.ELEVATION, "The location.", "String", "Name", null, true));
-        args.add(new CommandArgument(StandardArguments.DOPPLER, "Whether the contact event is a start of contact (true) or end of contact (false).", "boolean",
-                "", true, true));
-        args.add(new CommandArgument(StandardArguments.DOPPLER_SHIFT, "Whether the contact event is a start of contact (true) or end of contact (false).",
-                "boolean", "", true, true));
+        args.add(new CommandArgument(StandardArguments.AZIMUTH, "The azimuth to point the antenna", "Double", "degree", null, true));
+        args.add(new CommandArgument(StandardArguments.ELEVATION, "The elevation to point the antenna.", "Double", "degree", null, true));
+        args.add(new CommandArgument(StandardArguments.DOPPLER, "Value to use for calculating Doppler shift for the radio frequencies", "Double", "", null,
+                false));
         return args;
     }
 }

@@ -33,7 +33,7 @@ public class Satellite extends Named implements ISatelliteSpecific {
     protected String satelliteNumber;
 
     public Satellite() {
-    };
+    }
 
     /**
      * Constructor.

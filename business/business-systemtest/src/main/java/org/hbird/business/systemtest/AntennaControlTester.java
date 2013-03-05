@@ -43,6 +43,24 @@ public class AntennaControlTester extends SystemTest {
 
         publishGroundStationsAndSatellites();
         publishTleParameters();
+                .toRadians(12.587585D), 59.0D));
+        injection.sendBody(gsAalborg);
+
+        GroundStation gsDarmstadt = new GroundStation();
+        gsDarmstadt.setIssuedBy("SystemTest");
+        gsDarmstadt.setName("Darmstadt Ground Station");
+        gsDarmstadt.setDescription("Test Location 3");
+        gsDarmstadt.setGeoLocation(new D3Vector("SystemTest", "Darmstadt", D3Vector.class.getSimpleName(), "Test location 3", Math.toRadians(49.831605D), Math
+                .toRadians(8.673706D), 59.0D));
+        injection.sendBody(gsDarmstadt);
+
+        GroundStation gsNY = new GroundStation();
+        gsNY.setIssuedBy("SystemTest");
+        gsNY.setName("New York Ground Station");
+        gsNY.setDescription("Test location 4");
+        gsNY.setGeoLocation(new D3Vector("SystemTest", "New York", D3Vector.class.getSimpleName(), "Test location 4", Math.toRadians(40.66564D), Math
+                .toRadians(-74.036865D), 59.0D));
+        injection.sendBody(gsNY);
         
         List<String> locations = new ArrayList<String>();
         locations.add("TARTU");
