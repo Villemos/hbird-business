@@ -58,8 +58,8 @@ public class LocationContactEvent extends DerivedNamed implements ILocationSpeci
 	 * @param location The location to which contact has been established / lost.
 	 * @param satellite The satellite to which contact has been established / lost. 
 	 */
-	public LocationContactEvent(String issuedBy, long timestamp, String location, String satellite, boolean isVisible, OrbitalState satelliteState, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
-		super(issuedBy, "ContactEvent", "LocationContactEvent", "A contact event between a satellite and a location", timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
+	public LocationContactEvent(String issuedBy, String type, long timestamp, String location, String satellite, boolean isVisible, OrbitalState satelliteState, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+		super(issuedBy, "ContactEvent", type, "A contact event between a satellite and a location", timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
 		this.location = location;
 		this.satellite = satellite;
 		this.isVisible = isVisible;

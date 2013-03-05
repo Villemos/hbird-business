@@ -28,7 +28,16 @@ public class RotatorProperties implements Serializable {
     private int minElevation;
     private int maxElevation;
 
-    /**
+    public RotatorProperties(int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation) {
+		super();
+		this.thresholdElevation = thresholdElevation;
+		this.minAzimuth = minAzimuth;
+		this.maxAzimuth = maxAzimuth;
+		this.minElevation = minElevation;
+		this.maxElevation = maxElevation;
+	}
+
+	/**
      * @return the thresholdElevation
      */
     public int getThresholdElevation() {

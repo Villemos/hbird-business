@@ -43,8 +43,8 @@ public class State extends Named {
      * @param isStateOff The object that this state is a state off.
      * @param state The current state.
      */
-    public State(String issuedBy, String stateName, String description, String isStateOff, boolean state) {
-        super(issuedBy, stateName, State.class.getSimpleName(), description);
+    public State(String issuedBy, String stateName, String type, String description, String isStateOff, boolean state) {
+        super(issuedBy, stateName, type, description);
         this.isStateOf = isStateOff;
         this.state = state;
     }
@@ -59,8 +59,8 @@ public class State extends Named {
      * @param isStateOff The object that this state is a state off.
      * @param state The current state.
      */
-    public State(String issuedBy, String stateName, String description, String isStateOff, boolean state, long timestamp) {
-        this(issuedBy, stateName, description, isStateOff, state);
+    public State(String issuedBy, String stateName, String type, String description, String isStateOff, boolean state, long timestamp) {
+        this(issuedBy, stateName, type, description, isStateOff, state);
         setTimestamp(timestamp);
     }
 

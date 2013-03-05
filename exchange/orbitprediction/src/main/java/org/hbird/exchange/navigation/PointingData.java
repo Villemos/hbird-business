@@ -43,8 +43,8 @@ public class PointingData extends DerivedNamed implements ISatelliteSpecific, IL
 	/** The other object. */
 	protected String location;
 	
-	public PointingData(String issuedBy, long timestamp, Double azimuth, Double elevation, Double doppler, Double dopplerShift, String satellite, String location, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
-		super(issuedBy, "PointingData", "ContactData", "Contact data between a satellite and a location", timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
+	public PointingData(String issuedBy, String type, long timestamp, Double azimuth, Double elevation, Double doppler, Double dopplerShift, String satellite, String location, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+		super(issuedBy, "PointingData", type, "Contact data between a satellite and a location", timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
 
 		this.azimuth = azimuth;
 		this.elevation = elevation;

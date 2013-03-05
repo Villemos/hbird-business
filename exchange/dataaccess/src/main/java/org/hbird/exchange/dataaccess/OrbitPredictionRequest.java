@@ -68,8 +68,7 @@ public class OrbitPredictionRequest extends Command {
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, starttime);
         setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
-        setArgumentValue(StandardArguments.INITIAL_STATE, new OrbitalState(issuedBy, name, description, starttime, satellite, position, velocity, momentum, "",
-                0, ""));
+        setArgumentValue(StandardArguments.INITIAL_STATE, new OrbitalState(issuedBy, name, "Initial", description, starttime, satellite, position, velocity, momentum, "", 0, ""));
     }
 
     /**

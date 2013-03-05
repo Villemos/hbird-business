@@ -65,6 +65,29 @@ public class StartScriptComponent extends StartComponent {
     /**
      * Constructor of a script engine request based on a script in a local script library.
      * 
+     * The output is a named object. This is frequently a Parameter, but can be any named object. The script can thus
+     * generate not a parameter, but a Command, or a Task or any other Named subtype. The script can access and change
+     * the
+     * attributes of the named object.
+     * 
+     * @param componentname The name of the script component to start. Used for monitoring of the scripting component.
+     * @param scriptname The name of the script. The script will be lookedup in the script library (use the runtime
+     *            property '-Dhbird.scriptlibrary=[library root]' to set the library folder)
+     * @param output The object that is the output of the script. The script may manipulate some or all of the values,
+     *            i.e. set the value based on input parameters.
+     * @param bindings A Map defining the bindings between monitoring parameters of the system and the parameters in the
+     *            script.
+     */
+    public StartScriptComponent(String componentname, String scriptName, String script, Named output, Map<String, String> bindings) {
+        super(componentname, StartScriptComponent.class.getSimpleName(), DESCRIPTION);
+        
+        ScriptExecutionRequest request = new ScriptExecutionRequest(scriptName, script, "JavaScript", output, bindings);
+        setArgumentValue(StandardArguments.SCRIPT_DEFINITION, request);
+    }
+
+    /**
+     * Constructor of a script engine request based on a script in a local script library.
+     * 
      * The output of the script is a Parameter.
      * 
      * Use a short form of the binding definition to simplify Spring based configuration. The binding defines how

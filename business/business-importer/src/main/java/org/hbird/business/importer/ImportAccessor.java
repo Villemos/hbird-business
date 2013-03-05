@@ -153,7 +153,7 @@ public class ImportAccessor {
             Command cmd = new Command("", "", commandName, commandDescription, Long.parseLong(releaseTime), Long.parseLong(executionTime));
             cmd.addArguments(arguments);
 
-            commands.put(commandName, new CommandRequest(issuedBy, commandName, commandDescription, lockstates, commandTasks, cmd));
+            commands.put(commandName, new CommandRequest(issuedBy, commandName, "", commandDescription, lockstates, commandTasks, cmd));
         }
     }
 
@@ -212,7 +212,7 @@ public class ImportAccessor {
                 parameters.put(name, new Parameter("", name, "", description, getValue(type, value), unit));
             }
             else {
-                parameters.put(name, new State("", name, description, isstateof, Boolean.parseBoolean(value)));
+                parameters.put(name, new State("", name, "", description, isstateof, Boolean.parseBoolean(value)));
             }
         }
     }

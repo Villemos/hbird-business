@@ -57,19 +57,19 @@
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
-<!-- 				<to uri="bean:businesscard" /> -->
-<!-- 	 			<to uri="bean:queuemanager" /> -->
-<!-- 				<to uri="bean:parameterarchive" /> -->
-<!-- 				<to uri="bean:archive" /> -->
-<!-- 	 			<to uri="bean:dataaccessapi" /> -->
-<!-- 				<to uri="bean:limitcheck" /> -->
-<!-- 				<to uri="bean:scripting" /> -->
-<!-- 		 		<to uri="bean:tasking" /> -->
-<!-- 	 			<to uri="bean:commanding" /> -->
-<!-- 	 			<to uri="bean:navigation" /> -->
-<!-- 	 			<to uri="bean:antennacontroller" /> -->
-<!-- 	 			<to uri="bean:navigationcontroller" /> -->
-	 			<to uri="bean:jmstester" />
+				<to uri="bean:businesscard" />
+	 			<to uri="bean:queuemanager" />
+				<to uri="bean:parameterarchive" />
+				<to uri="bean:archive" />
+	 			<to uri="bean:dataaccessapi" />
+				<to uri="bean:limitcheck" />
+				<to uri="bean:scripting" />
+		 		<to uri="bean:tasking" />
+	 			<to uri="bean:commanding" />
+	 			<to uri="bean:navigation" />
+	 			<to uri="bean:antennacontroller" />
+	 			<to uri="bean:navigationcontroller" />
+<!-- 	 			<to uri="bean:jmstester" /> -->
 	 			<to uri="bean:finisher" />
 		</route>
 
@@ -97,14 +97,14 @@
 			<choice>
 				<when>
 		            <simple>${in.body} is 'org.hbird.exchange.core.ILocationSpecific'</simple>
-		            <setHeader headerName="location"><simple>${in.body.location}</simple></setHeader>
+		            <setHeader headerName="location"><simple>${in.body.locationName}</simple></setHeader>
 				</when>
 			</choice>
 
 			<choice>
 				<when>
 		            <simple>${in.body} is 'org.hbird.exchange.core.ISatelliteSpecific'</simple>
-		            <setHeader headerName="satellite"><simple>${in.body.satellite}</simple></setHeader>
+		            <setHeader headerName="satellite"><simple>${in.body.satelliteName}</simple></setHeader>
 				</when>
 			</choice>
 	        

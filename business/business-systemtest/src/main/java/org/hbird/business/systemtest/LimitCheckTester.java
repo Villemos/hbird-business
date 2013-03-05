@@ -19,8 +19,6 @@ package org.hbird.business.systemtest;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.configurator.StartLimitComponent;
-import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.core.State;
 import org.hbird.exchange.validation.Limit.eLimitType;
 
 public class LimitCheckTester extends SystemTest {
@@ -77,7 +75,7 @@ public class LimitCheckTester extends SystemTest {
 
 		/** Disable limit. */
 		LOG.info("Disabling limit 'PARA1_UpperSoftLimit'.");
-		injection.sendBody(new State("SystemTestSuite", "PARA1_UpperSoftLimit_SWITCH", "A test description", "PARA1_UpperSoftLimit", false));
+		publishApi.publishState("PARA1_UpperSoftLimit_SWITCH", "", "A test description", "PARA1_UpperSoftLimit", false);
 
 		Thread.sleep(2000);		
 		
@@ -94,7 +92,7 @@ public class LimitCheckTester extends SystemTest {
 	
 	protected void send(Double value, String soft, boolean expectedSoft, String hard, boolean expectedHard) throws InterruptedException {
 		LOG.info("Publishing parameters.");
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA1", "", "A test description,", value, "Volt"));
+		publishApi.publishParameter("PARA1", "", "A test description,", value, "Volt");
 
 		/** Give the limit checkers a bit of time. */
 		Thread.sleep(2000);

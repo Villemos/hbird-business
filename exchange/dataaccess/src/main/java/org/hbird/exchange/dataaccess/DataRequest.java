@@ -116,7 +116,7 @@ public class DataRequest extends Command {
 
     public void addName(String name) {
         if (name != null) {
-            if (!hasArgumentValue(StandardArguments.NAME)) {
+            if (!hasArgumentValue(StandardArguments.NAMES)) {
                 setArgumentValue(StandardArguments.NAMES, new ArrayList<String>());
             }
             List<String> names = getArgumentValue(StandardArguments.NAMES, List.class);

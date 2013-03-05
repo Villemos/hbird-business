@@ -48,7 +48,7 @@ public class ScriptExecutorTest {
 
         Map<String, String> binding = new HashMap<String, String>();
         binding.put("Parameter1", "in1");
-        ScriptExecutionRequest request = new ScriptExecutionRequest("", script, "javascript", new State("ScriptEngine", "TestState", "", "Parameter100", true),
+        ScriptExecutionRequest request = new ScriptExecutionRequest("", script, "javascript", new State("ScriptEngine", "TestState", "", "", "Parameter100", true),
                 binding);
 
         ScriptExecutor executor = new ScriptExecutor(request);
@@ -130,8 +130,8 @@ public class ScriptExecutorTest {
 
         ScriptExecutor executor = new ScriptExecutor(request);
 
-        Parameter out = (Parameter) executor.calculate(new Location("test", "Copenhagen", "Location A", 49.982314d, 8.811035d, 0d, 140000000d));
-        out = (Parameter) executor.calculate(new Location("test", "Frankfurt", "Location B", 55.61683d, 12.601318d, 0d, 140000000d));
+        Parameter out = (Parameter) executor.calculate(new Location("test", "Copenhagen", "", "Location A", 49.982314d, 8.811035d, 0d, 140000000d));
+        out = (Parameter) executor.calculate(new Location("test", "Frankfurt", "", "Location B", 55.61683d, 12.601318d, 0d, 140000000d));
 
         assertTrue(out != null);
         assertTrue(out instanceof Parameter);

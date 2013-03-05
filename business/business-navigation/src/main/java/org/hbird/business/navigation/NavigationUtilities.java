@@ -30,7 +30,7 @@ import org.orekit.utils.PVCoordinates;
 public class NavigationUtilities {
 
     protected static UTCScale scale = null;
-
+    
     static {
         try {
             scale = TimeScalesFactory.getUTC();
@@ -68,7 +68,7 @@ public class NavigationUtilities {
                 state.getOrbit().getPVCoordinates().getMomentum().getY(),
                 state.getOrbit().getPVCoordinates().getMomentum().getZ());
 
-        return new OrbitalState(StandardComponents.ORBIT_PREDICTOR, "OrbitalState", "Orbital state of satellite", state.getDate().toDate(scale).getTime(),
+        return new OrbitalState(StandardComponents.ORBIT_PREDICTOR, "OrbitalState", "Predicted", "Orbital state of satellite", state.getDate().toDate(scale).getTime(),
                 satellite, position,
                 velocity, momentum, derivedFromName, derivedFromTimestamp, derivedFromType);
     }
@@ -99,7 +99,7 @@ public class NavigationUtilities {
             // double dopplerShift = calculateDopplerShift(doppler, location.getFrequency());
             double dopplerShift = 0.0D;
 
-            PointingData entry = new PointingData(StandardComponents.ORBIT_PREDICTOR, startTime + contactDataStepSize * i, azimuth, elevation, doppler,
+            PointingData entry = new PointingData(StandardComponents.ORBIT_PREDICTOR, "Predicted", startTime + contactDataStepSize * i, azimuth, elevation, doppler,
                     dopplerShift,
                     startContactEvent.satellite, location.getName(), startContactEvent.from().getName(), startContactEvent.from().getTimestamp(),
                     startContactEvent.from().getType());

@@ -82,6 +82,8 @@ public class StandardArguments {
 
     public static final String LIMIT_VALUE = "limitvalue";
 
+    public static final String LOCATION = "location";
+    
     public static final String NAME = "name";
 
     public static final String NAMES = "names";

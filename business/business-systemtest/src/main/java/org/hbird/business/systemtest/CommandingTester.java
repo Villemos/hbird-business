@@ -22,9 +22,7 @@ import java.util.List;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.State;
 import org.hbird.exchange.tasking.SetParameter;
 import org.hbird.exchange.tasking.Task;
 
@@ -47,7 +45,7 @@ public class CommandingTester extends SystemTest {
 		Command command = new Command("SystemTest", "GroundStation1", "COM2", "A test command"); 
 		
 		/** Send a simple command request. */
-		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", null, null, command));
+		publishApi.publishCommandRequest("COMREQ1", "A simple command request container with no lock states and no tasks.", command, null, null);
 		
 		Thread.sleep(2000);
 		
@@ -58,10 +56,9 @@ public class CommandingTester extends SystemTest {
 		Date now = new Date();
 		command.setReleaseTime(now.getTime() + 2000);
 		
-		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", null, null, command));
+		publishApi.publishCommandRequest("COMREQ1", "A simple command request container with no lock states and no tasks.", command, null, null);
 		
 		Thread.sleep(2000);
-
 		
 		/** Add tasks to be done and lock states. */
 		List<Task> tasks = new ArrayList<Task>();
@@ -75,33 +72,31 @@ public class CommandingTester extends SystemTest {
 		states.add("STATE_COM4");
 		
 		/** Set the values of the states. */
-        injection.sendBody(new State("SystemTestSuite", "STATE_COM1", "A test description,", "COM2", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE_COM2", "A test description,", "COM2", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE_COM3", "A test description,", "COM2", false));
-        injection.sendBody(new State("SystemTestSuite", "STATE_COM4", "A test description,", "COM2", true));
+		
+		publishApi.publishState("STATE_COM1", "", "A test description,", "COM2", true);
+		publishApi.publishState("STATE_COM2", "", "A test description,", "COM2", true);
+		publishApi.publishState("STATE_COM3", "", "A test description,", "COM2", false);
+		publishApi.publishState("STATE_COM4", "", "A test description,", "COM2", true);
 
         /** Send command to commit all changes. */
 		forceCommit();
         
         /** The command should fail, as one of the states is 'false'. */
-		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", states, tasks, command));
+		publishApi.publishCommandRequest("COMREQ1", "A simple command request container with no lock states and no tasks.", command, states, tasks);
 		
 		Thread.sleep(2000);
 		
 		azzert(failedCommandRequestListener.lastReceived.getName().equals("CommandContainerCOMREQ1"));
 		failedCommandRequestListener.lastReceived = null;
 		
-		
-		
-		
 		/** Update state to make the command succeed. */
-        injection.sendBody(new State("SystemTestSuite", "STATE_COM3", "A test description,", "COM2", true));
+		publishApi.publishState("STATE_COM3", "", "A test description,", "COM2", true);
 
         /** Send command to commit all changes. */
 		forceCommit();
 		
         /** The command should fail, as one of the states is 'false'. */
-		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", states, tasks, command));
+		publishApi.publishCommandRequest("COMREQ1", "A simple command request container with no lock states and no tasks.", command, states, tasks);
 		
 		Thread.sleep(2000);
 		
@@ -110,13 +105,13 @@ public class CommandingTester extends SystemTest {
 
 		
 		/** Add a state that is not inserted in the command, but which is a state of the command. See if the command fails.*/
-        injection.sendBody(new State("SystemTestSuite", "STATE_OTHER", "A test description,", "COM2", false));
+		publishApi.publishState("STATE_OTHER", "", "A test description", "COM2", false);
 
 		/** Send command to commit all changes. */
 		forceCommit();
 		
         /** The command should fail, as one of the states is 'false'. */
-		injection.sendBody(new CommandRequest("SystemTest", "COMREQ1", "A simple command request container with no lock states and no tasks.", states, tasks, command));
+		publishApi.publishCommandRequest("COMREQ1", "A simple command request container with no lock states and no tasks.", command, states, tasks);
 
 		Thread.sleep(2000);
 		

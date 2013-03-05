@@ -25,13 +25,18 @@ import org.hbird.business.api.IPublish;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Binary;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
+import org.hbird.exchange.navigation.D3Vector;
+import org.hbird.exchange.navigation.GroundStation;
 import org.hbird.exchange.navigation.Location;
+import org.hbird.exchange.navigation.RadioChannel;
+import org.hbird.exchange.navigation.RotatorProperties;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.tasking.Task;
@@ -42,45 +47,67 @@ public class Publish extends HbirdApi implements IPublish {
 		super(issuedBy);
 	}
 
-	public void publish(Named object) {
+	public Named publish(Named object) {
 		object.setIssuedBy(issuedBy);
 		template.sendBody(inject, object);
+		return object;
 	}
 
-	public void publishParameter(String name, String type, String description, Number value, String unit) {
-		template.sendBody(inject, new Parameter(issuedBy, name, type, description, value, unit));
+	public Parameter publishParameter(String name, String type, String description, Number value, String unit) {
+		return (Parameter) publish(new Parameter(issuedBy, name, type, description, value, unit));
 	}
 
-	public void publishState(String name, String description, String isStateOf, Boolean state) {
-		template.sendBody(inject, new State(issuedBy, name, description, isStateOf, state));
+	public Parameter publishParameter(String name, String type, String description, Number value, String unit, long timestamp) {
+		return (Parameter) publish(new Parameter(issuedBy, name, type, description, value, unit, timestamp));
 	}
 
-	public void publishLocation(String name, String description, Double lon, Double lat, Double ele, Double frequency) {
-		template.sendBody(inject, new Location(issuedBy, name, description, lon, lat, ele, frequency));
+	
+	public State publishState(String name, String type, String description, String isStateOf, Boolean state) {
+		return (State) publish(new State(issuedBy, name, type, description, isStateOf, state));
 	}
 
-	public void publishSatellite(String name, String description) {
-		template.sendBody(inject, new Satellite(issuedBy, name, description));
+	public State publishState(String name, String type, String description, String isStateOf, Boolean state, long timestamp) {
+		return (State) publish(new State(issuedBy, name, type, description, isStateOf, state, timestamp));
+	}
+
+	public Location publishLocation(String name, String type, String description, Double lon, Double lat, Double ele, Double frequency) {
+		return (Location) publish(new Location(issuedBy, name, type, description, lon, lat, ele, frequency));
+	}
+
+	public GroundStation publishGroundStation(String name, String type, String description, D3Vector geoLocation, RotatorProperties rotator, List<RadioChannel> radioChannel) {
+		return (GroundStation) publish(new GroundStation(issuedBy, name, type, description, geoLocation, rotator, radioChannel));
+	}
+
+	public Satellite publishSatellite(String name, String type, String description) {
+		return (Satellite) publish(new Satellite(issuedBy, name, type, description));
 	}
 
 	public void publishMeasuredOrbitalState(String name, String description, long timestamp, long generationTime, String satellite, double px, double py, double pz, double vx, double vy, double vz, double mx, double my, double mz, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
 		// TODO
 	}
 
-	public void publishLabel(String name, String type, String description, String value) {
-		template.sendBody(inject, new Label(issuedBy, name, type, description, value));
+	public Label publishLabel(String name, String type, String description, String value) {
+		return (Label) publish(new Label(issuedBy, name, type, description, value));
 	}
 
-	public void publishBinary(String name, String type, String description, byte[] rawdata) {
-		template.sendBody(inject, new Binary(issuedBy, name, type, description, rawdata));
+	public Binary publishBinary(String name, String type, String description, byte[] rawdata) {
+		return (Binary) publish(new Binary(issuedBy, name, type, description, rawdata));
 	}
 
-	public void publishCommand(String name, String description, Command command) {
-		template.sendBody(inject, new CommandRequest(issuedBy, name, description, null, null, command));
+	public Command publishCommand(String name, String description, List<CommandArgument> arguments) {
+		return (Command) publish(new Command(issuedBy, name, "Command", description, arguments));
 	}
 
-	public void publishCommand(String name, String description, Command command, List<String> lockStates, List<Task> tasks) {
-		template.sendBody(inject, new CommandRequest(issuedBy, name, description, lockStates, tasks, command));
+	public Command publishCommandTemplate(String name, String description, List<CommandArgument> arguments) {
+		return (Command) publish(new Command(issuedBy, name, "CommandTemplate", description, arguments));
+	}
+
+	public CommandRequest publishCommandRequest(String name, String description, Command command) {
+		return (CommandRequest) publish(new CommandRequest(issuedBy, name, "Command", description, null, null, command));
+	}
+
+	public CommandRequest publishCommandRequest(String name, String description, Command command, List<String> lockStates, List<Task> tasks) {
+		return (CommandRequest) publish(new CommandRequest(issuedBy, name, "CommandRequest", description, lockStates, tasks, command));
 	}
 
 	public void commit() {
@@ -90,17 +117,19 @@ public class Publish extends HbirdApi implements IPublish {
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publichMetadata(org.hbird.exchange.core.Named, java.lang.String, java.lang.String)
 	 */
-	public void publichMetadata(Named subject, String key, String value) {
+	public Metadata publichMetadata(Named subject, String key, String value) {
 		Map<String, Object> metadata = new HashMap<String, Object>();
 		metadata.put(key, value);
 		
-		template.sendBody(inject, new Metadata(issuedBy, "Metadata", subject, metadata));
+		return (Metadata) publish(new Metadata(issuedBy, "Metadata", subject, metadata));
 	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publishTleParameters(java.lang.String, java.lang.String, java.lang.String)
 	 */
-	public void publishTleParameters(String satellite, String tle1, String tle2) {
-		template.sendBody(inject, new TleOrbitalParameters(issuedBy, satellite, tle1, tle2));
+	public TleOrbitalParameters publishTleParameters(String satellite, String type, String tle1, String tle2) {
+		TleOrbitalParameters obj = new TleOrbitalParameters(issuedBy, type, satellite, tle1, tle2); 
+		template.sendBody(inject, obj);
+		return obj;
 	}
 }

@@ -90,6 +90,12 @@ public class Command extends Named implements IScheduled {
         this.arguments = createArgumentMap();
     }
 
+    public Command(String issuedBy, String destination, String name, String description, List<CommandArgument> arguments) {
+        super(issuedBy, name, Command.class.getSimpleName(), description);
+        this.destination = destination;
+        this.arguments = createArgumentMap(arguments);
+    }
+
     /**
      * Basic constructor
      * 
@@ -115,8 +121,21 @@ public class Command extends Named implements IScheduled {
      * @see #getArgumentDefinitions()
      */
     protected Map<String, CommandArgument> createArgumentMap() {
-        List<CommandArgument> args = getArgumentDefinitions();
+        Map<String, CommandArgument> map = new HashMap<String, CommandArgument>();
+        return map;
+    }
+
+    /**
+     * Creates {@link Map} of {@link CommandArgument}s.
+     * 
+     * Method {@link #getArgumentDefinitions()} is used to fill the {@link Map}.
+     * 
+     * @return {@link Map} of {@link CommandArgument}s
+     * @see #getArgumentDefinitions()
+     */
+    protected Map<String, CommandArgument> createArgumentMap(List<CommandArgument> args) {
         Map<String, CommandArgument> map = new HashMap<String, CommandArgument>(args.size());
+
         for (CommandArgument arg : args) {
             map.put(arg.getName(), arg);
         }
@@ -132,7 +151,8 @@ public class Command extends Named implements IScheduled {
      * @see #createArgumentMap()
      */
     protected List<CommandArgument> getArgumentDefinitions() {
-        return Collections.emptyList();
+        return new ArrayList<CommandArgument>();
+    	// return Collections.emptyList();
     }
 
     public Map<String, CommandArgument> getArguments() {
@@ -243,13 +263,11 @@ public class Command extends Named implements IScheduled {
     }
 
     // TODO - 01.03.2013, kimmell - check this!
-    @Override
     public long getDelay() {
         long now = System.currentTimeMillis();
         return now < transferTime ? now - transferTime : 0;
     }
 
-    @Override
     public long getDeliveryTime() {
         return transferTime;
     }

@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
+import org.hbird.exchange.configurator.StartScriptComponent;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
@@ -41,12 +42,10 @@ public class ScriptTester extends SystemTest {
         Map<String, String> binding = new HashMap<String, String>();
         binding.put("PARA3", "in1");
         binding.put("PARA4", "in2");
-        // FIXME - 27.02.2013, kimmell - compilaton errors
-        // injection.sendBody(new StartScriptComponent("ScriptComponent_SYN1", "SYN1", script, new
-        // Parameter("ScriptEngine", "SYN1", "Power", "A test script parameter.", new Double(0), "Volt"), binding));
+        
+        injection.sendBody(new StartScriptComponent("ScriptComponent_SYN1", "SYN1", script, new Parameter("ScriptEngine", "SYN1", "", "A test script parameter.", new Double(0), "Volt"), binding));
 
         Thread.sleep(2000);
-
         /** Send one of the two parameters. Should NOT trigger the script. */
         injection.sendBody(new Parameter("SystemTest", "PARA3", "", "A parameter", 2d, "Volt"));
 
@@ -72,9 +71,7 @@ public class ScriptTester extends SystemTest {
         binding = new HashMap<String, String>();
         binding.put("PARA5", "in1");
 
-        // FIXME - 27.02.2013, kimmell - compilaton errors
-        // injection.sendBody(new StartScriptComponent("ScriptComponent_SYN_STATE1", "SYN_STATE1", script, new
-        // State("ScriptEngine", "SYN_STATE1", "", "PARA2", true), binding));
+        injection.sendBody(new StartScriptComponent("ScriptComponent_SYN_STATE1", "SYN_STATE1", script, new State("ScriptEngine", "SYN_STATE1", "", "", "PARA2", true), binding));
 
         Thread.sleep(2000);
 
@@ -100,9 +97,7 @@ public class ScriptTester extends SystemTest {
         new HashMap<String, String>();
         binding.put("PARA6", "in1");
 
-        // FIXME - 27.02.2013, kimmell - compilaton errors
-        // injection.sendBody(new StartScriptComponent("ScriptComponent3", "Fahrenheit2CelsiusConvertion", binding, new
-        // Parameter("ScriptComponent3", "SYN2", "Temperature", "Temperature in CELCIUS.", new Double(0), "Celsius")));
+        injection.sendBody(new StartScriptComponent("ScriptComponent3", "Fahrenheit2CelsiusConvertion", new Parameter("ScriptComponent3", "SYN2", "", "Temperature in CELCIUS.", new Double(0), "Celsius"), binding));
 
         Thread.sleep(2000);
 
@@ -120,9 +115,7 @@ public class ScriptTester extends SystemTest {
         binding.put("PARA8", "in1");
         binding.put("PARA7", "threshold");
 
-        // FIXME - 27.02.2013, kimmell - compilaton errors
-        // injection.sendBody(new StartScriptComponent("ScriptComponent4", "OnOffSpline", binding, new
-        // Label("ScriptEngine", "SYN3", "Battery Status", "Whether the battery is ON or OFF", "ON")));
+        injection.sendBody(new StartScriptComponent("ScriptComponent4", "OnOffSpline", new Label("ScriptEngine", "SYN3", "Battery Status", "Whether the battery is ON or OFF", "ON"), binding));
 
         Thread.sleep(2000);
 

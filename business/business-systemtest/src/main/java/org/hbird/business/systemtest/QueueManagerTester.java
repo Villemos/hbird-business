@@ -35,11 +35,11 @@ public class QueueManagerTester extends SystemTest {
 		Date now = new Date();
 		
 		/** Send a few scheduled requests. */
-		CommandRequest req1 = new CommandRequest("SystemTest", "REQ_1", "", null, null, null, now.getTime() + 15000);
-		CommandRequest req2 = new CommandRequest("SystemTest", "REQ_1", "", null, null, null, now.getTime() + 20000);
-		CommandRequest req3 = new CommandRequest("SystemTest", "REQ_1", "", null, null, null, now.getTime() + 25000);
-		CommandRequest req4 = new CommandRequest("SystemTest", "REQ_1", "", null, null, null, now.getTime() + 30000);
-		CommandRequest req5 = new CommandRequest("SystemTest", "REQ_1", "", null, null, null, now.getTime() + 35000);
+		CommandRequest req1 = new CommandRequest("SystemTest", "REQ_1", "", "", null, null, null, now.getTime() + 15000);
+		CommandRequest req2 = new CommandRequest("SystemTest", "REQ_1", "", "", null, null, null, now.getTime() + 20000);
+		CommandRequest req3 = new CommandRequest("SystemTest", "REQ_1", "", "", null, null, null, now.getTime() + 25000);
+		CommandRequest req4 = new CommandRequest("SystemTest", "REQ_1", "", "", null, null, null, now.getTime() + 30000);
+		CommandRequest req5 = new CommandRequest("SystemTest", "REQ_1", "", "", null, null, null, now.getTime() + 35000);
 		
 		req1.setDatasetidentifier("systemtest.datasetidentifier");
 		req2.setDatasetidentifier("systemtest.datasetidentifier");

@@ -28,12 +28,25 @@
 	                <simple>${in.body} is 'org.hbird.exchange.core.State'</simple>
 	      			<setHeader headerName="isStateOf"><simple>${in.body.isStateOf}</simple></setHeader>
 	            </when>
+	        </choice>
+	        <choice>
 	            <when>
 	                <simple>${in.body} is 'org.hbird.exchange.core.Command'</simple>
 	      			<setHeader headerName="destination"><simple>${in.body.destination}</simple></setHeader>
-	            </when>	            
+	            </when>	             
 	        </choice>
-	        
+			<choice>
+				<when>
+		            <simple>${in.body} is 'org.hbird.exchange.core.ILocationSpecific'</simple>
+		            <setHeader headerName="location"><simple>${in.body.locationName}</simple></setHeader>
+				</when>
+			</choice>
+			<choice>
+				<when>
+		            <simple>${in.body} is 'org.hbird.exchange.core.ISatelliteSpecific'</simple>
+		            <setHeader headerName="satellite"><simple>${in.body.satelliteName}</simple></setHeader>
+				</when>
+			</choice>
 			<choice>
 	            <when>
 	                <simple>${in.body} is 'org.hbird.exchange.tasking.Task'</simple>

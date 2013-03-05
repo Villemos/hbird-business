@@ -60,6 +60,20 @@ public class Parameter extends Named implements Comparable<Parameter> {
      * @param value An object holding the value.
      * @param unit The unit of the value.
      */
+    public Parameter(String issuedBy, String name, String type, String description, Number value, String unit, long timestamp) {
+        this(issuedBy, name, type, description, unit);
+        this.value = value;
+        this.timestamp = timestamp;
+    }
+
+    /**
+     * Creates a Parameter with a timestamp set to 'now'.
+     * 
+     * @param name The name of the parameter
+     * @param description A description of the parameter.
+     * @param value An object holding the value.
+     * @param unit The unit of the value.
+     */
     public Parameter(String issuedBy, String name, String type, String description, String unit) {
         super(issuedBy, name, type, description);
         this.unit = unit;
@@ -67,21 +81,6 @@ public class Parameter extends Named implements Comparable<Parameter> {
 
     public Parameter(Parameter base) {
         this(base.issuedBy, base.name, base.type, base.description, base.value, base.unit);
-    }
-
-    /**
-     * Constructor of the parameter.
-     * 
-     * @param name The name of the parameter
-     * @param description A description of the parameter.
-     * @param timestamp The timestamp of the parameter.
-     * @param value An object holding the value.
-     * @param unit The unit of the value.
-     */
-    public Parameter(String issuedBy, String name, String type, String description, long timestamp, Number value, String unit) {
-        this(issuedBy, name, type, description, unit);
-        setTimestamp(timestamp);
-        this.value = value;
     }
 
     public Parameter() {
@@ -132,7 +131,6 @@ public class Parameter extends Named implements Comparable<Parameter> {
      * Notice that the method has extra been implemented to allow comparison of types that are
      * not the same, i.e. Integer and Double.
      */
-    @Override
     public int compareTo(Parameter rhs) {
 
         if (this.value instanceof Short && rhs.value instanceof Short)

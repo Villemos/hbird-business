@@ -51,7 +51,6 @@ public class Metadata extends Named implements IApplicableTo {
         this.metadata = metadata;
     }
 
-    @Override
     public NamedInstanceIdentifier applicableTo() {
         return subject;
     }

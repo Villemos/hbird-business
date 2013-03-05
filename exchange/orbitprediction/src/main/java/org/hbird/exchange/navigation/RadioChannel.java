@@ -34,7 +34,17 @@ public class RadioChannel implements Serializable {
     private boolean isDownlink;
     private long gain;
 
-    /**
+    
+    public RadioChannel(long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain) {
+		super();
+		this.minFrequency = minFrequency;
+		this.maxFrequency = maxFrequency;
+		this.isUplink = isUplink;
+		this.isDownlink = isDownlink;
+		this.gain = gain;
+	}
+
+	/**
      * @return the minFrequency
      */
     public long getMinFrequency() {

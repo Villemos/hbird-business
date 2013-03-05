@@ -43,8 +43,7 @@ public class DifferentialLimitChecker extends BaseLimitChecker {
 		super(limit);
 		
 		/** Get the current value. */
-		this.api = api;
-		lastValue = api.getParameter(limit.limitOfParameter);
+		lastValue = getApi().getParameter(limit.limitOfParameter);
 	}
 
 	@Override

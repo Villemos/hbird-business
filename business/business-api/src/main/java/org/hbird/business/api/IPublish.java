@@ -18,8 +18,22 @@ package org.hbird.business.api;
 
 import java.util.List;
 
+import org.hbird.exchange.commandrelease.CommandRequest;
+import org.hbird.exchange.core.Binary;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.core.Label;
+import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.core.State;
+import org.hbird.exchange.navigation.D3Vector;
+import org.hbird.exchange.navigation.GroundStation;
+import org.hbird.exchange.navigation.Location;
+import org.hbird.exchange.navigation.RadioChannel;
+import org.hbird.exchange.navigation.RotatorProperties;
+import org.hbird.exchange.navigation.Satellite;
+import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.tasking.Task;
 
 /**
@@ -40,22 +54,28 @@ public interface IPublish {
 	 */
 	public void commit();
 
-	public void publish(Named object);
+	public Named publish(Named object);
 
-	public void publishParameter(String name, String type, String description, Number value, String unit);
-
-	public void publishState(String name, String description, String isStateOf, Boolean state);
-
-	public void publishLocation(String name, String description, Double lon, Double lat, Double ele, Double frequency);
-
-	public void publishSatellite(String name, String description);
+	public Parameter publishParameter(String name, String type, String description, Number value, String unit);
+	public Parameter publishParameter(String name, String type, String description, Number value, String unit, long timestamp);
 	
-	public void publishLabel(String name, String type, String description, String value);
+	public State publishState(String name, String type, String description, String isStateOf, Boolean state);
+	public State publishState(String name, String type, String description, String isStateOf, Boolean state, long timestamp);
+	
+	public Location publishLocation(String name, String type, String description, Double lon, Double lat, Double ele, Double frequency);
 
-	public void publishBinary(String name, String type, String description, byte[] rawdata);
+	public GroundStation publishGroundStation(String name, String type, String description, D3Vector geoLocation, RotatorProperties rotatorProperties, List<RadioChannel> radioChannels);
+	
+	public Satellite publishSatellite(String name, String type, String description);
+	
+	public Label publishLabel(String name, String type, String description, String value);
 
-	public void publishCommand(String name, String description, Command command);
-	public void publishCommand(String name, String description, Command command, List<String> lockStates, List<Task> tasks);
+	public Binary publishBinary(String name, String type, String description, byte[] rawdata);
+
+	public Command publishCommand(String name, String description, List<CommandArgument> arguments);
+	public Command publishCommandTemplate(String name, String description, List<CommandArgument> arguments);
+	public CommandRequest publishCommandRequest(String name, String description, Command command);
+	public CommandRequest publishCommandRequest(String name, String description, Command command, List<String> lockStates, List<Task> tasks);
 	
 	/**
 	 * Method to create and publish a piece of metadata associated to a Named object.
@@ -64,7 +84,7 @@ public interface IPublish {
 	 * @param key The key of the metadata.
 	 * @param metadata The value of the metadata
 	 */
-	public void publichMetadata(Named subject, String key, String metadata);
+	public Metadata publichMetadata(Named subject, String key, String metadata);
 
-	public void publishTleParameters(String satellite, String tle1, String tle2);
+	public TleOrbitalParameters publishTleParameters(String satellite, String type, String tle1, String tle2);
 }

@@ -41,9 +41,8 @@ public class Satellite extends Named implements ISatelliteSpecific {
      * @param name The name of the satellite.
      * @param description The description of the satellite.
      */
-    public Satellite(String issuedBy, String name, String description) {
-        // FIXME - 27.02.2013, kimmell - "Satellite"
-        super(issuedBy, name, "Satellite", description);
+    public Satellite(String issuedBy, String name, String type, String description) {
+        super(issuedBy, name, type, description);
     }
 
     public String getDesignator() {

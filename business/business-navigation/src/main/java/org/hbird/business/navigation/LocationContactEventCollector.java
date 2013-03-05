@@ -90,7 +90,7 @@ public class LocationContactEventCollector extends ElevationDetector {
     @Override
     public int eventOccurred(final SpacecraftState state, final boolean increasing) throws OrekitException {
 
-        LocationContactEvent event = new LocationContactEvent(StandardComponents.ORBIT_PREDICTOR, state.getDate().toDate(TimeScalesFactory.getUTC()).getTime(),
+        LocationContactEvent event = new LocationContactEvent(StandardComponents.ORBIT_PREDICTOR, "Predicted", state.getDate().toDate(TimeScalesFactory.getUTC()).getTime(),
                 location, satellite, increasing, NavigationUtilities.toOrbitalState(state, satellite, parameters.getName(), parameters.getTimestamp(),
                         parameters.getType()), parameters.getName(), parameters.getTimestamp(), parameters.getType());
         events.add(event);

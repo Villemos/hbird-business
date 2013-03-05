@@ -119,7 +119,7 @@ public abstract class BaseLimitChecker {
 		State state = null;
 
 		if (isEnabled() == true && isReady()) {
-			state = new State("LimitChecker", limit.getName(), limit.getDescription(), parameter.getName(), checkLimit(parameter));
+			state = new State("LimitChecker", limit.getName(), limit.getType(), limit.getDescription(), parameter.getName(), checkLimit(parameter));
 		}
 		
 		return state;

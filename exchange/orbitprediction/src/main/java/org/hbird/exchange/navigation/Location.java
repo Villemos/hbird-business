@@ -43,8 +43,8 @@ public class Location extends D3Vector implements ILocationSpecific {
      * @param p2 The second element (Longitude). The parameter instance can describe the element in detail.
      * @param p3 The third element (Elevation). The parameter instance can describe the element in detail.
      */
-    public Location(String issuedBy, String name, String description, Double p1, Double p2, Double p3, Double frequency) {
-        super(issuedBy, name, "Location", description, p1, p2, p3);
+    public Location(String issuedBy, String name, String type, String description, Double p1, Double p2, Double p3, Double frequency) {
+        super(issuedBy, name, type, description, p1, p2, p3);
         this.frequency = frequency;
     }
 
@@ -94,12 +94,10 @@ public class Location extends D3Vector implements ILocationSpecific {
         this.thresholdElevation = thresholdElevation;
     }
 
-    @Override
     public String getLocationName() {
         return name;
     }
 
-    @Override
     public void setLocationName(String location) {
         this.name = location;
     }

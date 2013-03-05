@@ -81,7 +81,7 @@ public class TlePropagationRequest extends Command {
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, starttime);
         setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
-        setArgumentValue(StandardArguments.TLE_PARAMETERS, new TleOrbitalParameters(issuedBy, satellite, tleLine1, tleLine2));
+        setArgumentValue(StandardArguments.TLE_PARAMETERS, new TleOrbitalParameters(issuedBy, satellite, "Initial", tleLine1, tleLine2));
     }
 
     /**

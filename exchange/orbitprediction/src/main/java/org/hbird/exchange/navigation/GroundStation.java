@@ -19,6 +19,7 @@
  */
 package org.hbird.exchange.navigation;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,18 +32,26 @@ import org.hbird.exchange.core.Named;
 public class GroundStation extends Named implements ILocationSpecific {
 
     public static final String DESCRIPTION = "Ground Station description"; // TODO - 26.02.2013, kimmell -
-    public static final String TYPE = "Ground Station type"; // TODO - 26.02.2013, kimmell -
+    public static final String TYPE = "GroundStation"; // TODO - 26.02.2013, kimmel
 
     private static final long serialVersionUID = -8558418536858999621L;
 
     private D3Vector geoLocation;
     private RotatorProperties rotatorProperties;
-    private final List<RadioChannel> radioChannels = Collections.emptyList();
+    private List<RadioChannel> radioChannels = new ArrayList<RadioChannel>();
 
     public GroundStation() {
         super();
         setDescription(DESCRIPTION);
         setType(TYPE);
+    }
+
+    public GroundStation(String issuedBy, String name, String type, String description, D3Vector geoLocation, RotatorProperties rotatorProperties, List<RadioChannel> radioChannels) {
+    	super(issuedBy, name, type, description);
+
+    	this.geoLocation = geoLocation;
+    	this.rotatorProperties = rotatorProperties;
+    	this.radioChannels = radioChannels;
     }
 
     /**

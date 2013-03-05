@@ -59,8 +59,8 @@ public class OrbitalState extends DerivedNamed implements IGenerationTimestamped
 	 * @param position The position of the orbit. 
 	 * @param velocity The velocity of the orbit.
 	 */
-	public OrbitalState(String issuedBy, String name, String description, long timestamp, long generationTime, String datasetidentifier, String satellite, D3Vector position, D3Vector velocity, D3Vector momentum, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
-		super(issuedBy, name, "OrbitalState", description, timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
+	public OrbitalState(String issuedBy, String name, String type, String description, long timestamp, long generationTime, String datasetidentifier, String satellite, D3Vector position, D3Vector velocity, D3Vector momentum, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+		super(issuedBy, name, type, description, timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
 		this.satellite = satellite;
 		this.position = position;
 		this.velocity = velocity;
@@ -68,8 +68,8 @@ public class OrbitalState extends DerivedNamed implements IGenerationTimestamped
 		this.generationTime = generationTime;
 	}
 	
-	public OrbitalState(String issuedBy, String name, String description, long timestamp, String satellite, D3Vector position, D3Vector velocity, D3Vector momentum, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
-		super(issuedBy, name, "OrbitalState", description, timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
+	public OrbitalState(String issuedBy, String name, String type, String description, long timestamp, String satellite, D3Vector position, D3Vector velocity, D3Vector momentum, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+		super(issuedBy, name, type, description, timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
 		this.satellite = satellite;
 		this.position = position;
 		this.velocity = velocity;

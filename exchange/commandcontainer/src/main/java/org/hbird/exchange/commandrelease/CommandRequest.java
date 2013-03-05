@@ -58,16 +58,16 @@ public class CommandRequest extends Named implements IScheduled {
 	 * @param transferTime The time at which the command should be released by the MCS for transfer to the satellite.
 	 * @param executionTime The time at which the command should be executed onboard.
 	 */
-	public CommandRequest(String issuedBy, String name, String description, List<String> lockStates, List<Task> tasks, Command command) {
-		super(issuedBy, "CommandContainer" + name, "CommandContainer", "Command container holding lock states and tasks for the command '" + name + "'.");
+	public CommandRequest(String issuedBy, String name, String type, String description, List<String> lockStates, List<Task> tasks, Command command) {
+		super(issuedBy, "CommandContainer" + name, type, "Command container holding lock states and tasks for the command '" + name + "'.");
 		this.command = command;
 		this.lockStates = lockStates;
 		this.tasks = tasks;
 	}
 	
 
-	public CommandRequest(String issuedBy, String name, String description, List<String> lockStates, List<Task> tasks, Command command, long releaseTime) {
-		super(issuedBy, "CommandContainer" + name, "CommandContainer", "Command container holding lock states and tasks for the command '" + name + "'.");
+	public CommandRequest(String issuedBy, String name, String type, String description, List<String> lockStates, List<Task> tasks, Command command, long releaseTime) {
+		super(issuedBy, "CommandContainer" + name, type, "Command container holding lock states and tasks for the command '" + name + "'.");
 		this.command = command;
 		this.lockStates = lockStates;
 		this.tasks = tasks;

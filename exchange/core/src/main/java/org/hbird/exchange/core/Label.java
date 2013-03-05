@@ -40,7 +40,7 @@ public class Label extends Named {
      * @param value An object holding the value of the label.
      */
     public Label(String issuedBy, String name, String type, String description, String value) {
-        super(issuedBy, name, Label.class.getSimpleName(), description);
+        super(issuedBy, name, type, description);
         this.value = value;
     }
 

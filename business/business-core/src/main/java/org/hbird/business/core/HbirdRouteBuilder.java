@@ -6,6 +6,8 @@ import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.ILocationSpecific;
+import org.hbird.exchange.core.ISatelliteSpecific;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.tasking.Task;
 
@@ -41,6 +43,10 @@ public abstract class HbirdRouteBuilder extends RouteBuilder {
                 .setHeader(StandardArguments.IS_STATE_OF, simple("${in.body.isStateOf}"))
                 .when(body().isInstanceOf(Command.class))
                 .setHeader(StandardArguments.DESTINATION, simple("${in.body.destination}"))
+                .when(body().isInstanceOf(ILocationSpecific.class))
+                .setHeader(StandardArguments.LOCATION, simple("${in.body.locationName}"))
+                .when(body().isInstanceOf(ISatelliteSpecific.class))
+                .setHeader(StandardArguments.SATELLITE_NAME, simple("${in.body.satelliteName}"))
                 .end()
 
                 /** Schedule the release, if this object implements IScheduled. */

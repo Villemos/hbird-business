@@ -33,89 +33,81 @@ public class DataAccessApiTester extends SystemTest {
         /** Publish parameters. */
         LOG.info("Publishing parameters.");
 
-        injection.sendBody(new Parameter("", "PARA1", "", "", 1, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA1", "", "PARA1", true, 1));
-        injection.sendBody(new State("", "STATE2_OF_PARA1", "", "PARA1", true, 1));
+        publishApi.publishParameter("PARA1", "", "", 1, "", 1);
+        publishApi.publishState("STATE1_OF_PARA1", "", "", "PARA1", true, 1);
+        publishApi.publishState("STATE2_OF_PARA1", "", "", "PARA1", true, 1);
 
-        injection.sendBody(new Parameter("", "PARA1", "", "", 2, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA1", "", "PARA1", true, 2));
-        injection.sendBody(new State("", "STATE2_OF_PARA1", "", "PARA1", true, 2));
+        publishApi.publishParameter("PARA1", "", "", 1, "", 2);
+        publishApi.publishState("STATE1_OF_PARA1", "", "", "PARA1", true, 2);
+        publishApi.publishState("STATE2_OF_PARA1", "", "", "PARA1", true, 2);
 
-        injection.sendBody(new Parameter("", "PARA2", "", "", 3, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA2", "", "PARA2", true, 3));
+        publishApi.publishParameter("PARA2", "", "", 2, "", 3);
+        publishApi.publishState("STATE1_OF_PARA2", "", "", "PARA2", true, 3);
 
-        injection.sendBody(new Parameter("", "PARA1", "", "", 4, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA1", "", "PARA1", true, 4));
-        injection.sendBody(new State("", "STATE2_OF_PARA1", "", "PARA1", true, 4));
+        publishApi.publishParameter("PARA1", "", "", 1, "", 4);
+        publishApi.publishState("STATE1_OF_PARA1", "", "", "PARA1", true, 4);
+        publishApi.publishState("STATE2_OF_PARA1", "", "", "PARA1", true, 4);
 
-        injection.sendBody(new Parameter("", "PARA1", "", "", 5, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA1", "", "PARA1", true, 5));
-        injection.sendBody(new State("", "STATE2_OF_PARA1", "", "PARA1", true, 5));
+        publishApi.publishParameter("PARA1", "", "", 1, "", 5);
+        publishApi.publishState("STATE1_OF_PARA1", "", "", "PARA1", true, 5);
+        publishApi.publishState("STATE2_OF_PARA1", "", "", "PARA1", true, 5);
 
-        injection.sendBody(new Parameter("", "PARA2", "", "", 6, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA2", "", "PARA2", true, 6));
+        publishApi.publishParameter("PARA2", "", "", 1, "", 6);
+        publishApi.publishState("STATE1_OF_PARA2", "", "", "PARA2", true, 6);
 
-        injection.sendBody(new Parameter("", "PARA3", "", "", 7, 1, ""));
+        publishApi.publishParameter("PARA3", "", "", 1, "", 7);
 
-        injection.sendBody(new Parameter("", "PARA1", "", "", 8, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA1", "", "PARA1", true, 8));
-        injection.sendBody(new State("", "STATE2_OF_PARA1", "", "PARA1", true, 8));
+        publishApi.publishParameter("PARA1", "", "", 1, "", 8);
+        publishApi.publishState("STATE1_OF_PARA1", "", "", "PARA1", true, 8);
+        publishApi.publishState("STATE2_OF_PARA1", "", "", "PARA1", true, 8);
 
-        injection.sendBody(new Parameter("", "PARA1", "", "", 9, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA1", "", "PARA1", true, 9));
-        injection.sendBody(new State("", "STATE2_OF_PARA1", "", "PARA1", true, 9));
+        publishApi.publishParameter("PARA1", "", "", 1, "", 9);
+        publishApi.publishState("STATE1_OF_PARA1", "", "", "PARA1", true, 9);
+        publishApi.publishState("STATE2_OF_PARA1", "", "", "PARA1", true, 9);
 
-        injection.sendBody(new Parameter("", "PARA4", "", "", 10, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA4", "", "PARA4", true, 10));
+        publishApi.publishParameter("PARA4", "", "", 1, "", 10);
+        publishApi.publishState("STATE1_OF_PARA4", "", "", "PARA4", true, 10);
 
-        injection.sendBody(new Parameter("", "PARA5", "", "", 11, 1, ""));
+        publishApi.publishParameter("PARA5", "", "", 1, "", 11);
 
-        injection.sendBody(new Parameter("", "PARA1", "", "", 12, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA1", "", "PARA1", true, 12));
-        injection.sendBody(new State("", "STATE2_OF_PARA1", "", "PARA1", true, 12));
+        publishApi.publishParameter("PARA1", "", "", 1, "", 12);
+        publishApi.publishState("STATE1_OF_PARA1", "", "", "PARA1", true, 12);
+        publishApi.publishState("STATE2_OF_PARA1", "", "", "PARA1", true, 12);
 
-        injection.sendBody(new Parameter("", "PARA2", "", "", 13, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA2", "", "PARA2", true, 13));
+        publishApi.publishParameter("PARA2", "", "", 1, "", 13);
+        publishApi.publishState("STATE1_OF_PARA2", "", "", "PARA2", true, 13);
 
-        injection.sendBody(new Parameter("", "PARA2", "", "", 14, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA2", "", "PARA2", true, 14));
+        publishApi.publishParameter("PARA2", "", "", 1, "", 14);
+        publishApi.publishState("STATE1_OF_PARA2", "", "", "PARA2", true, 14);
 
-        injection.sendBody(new State("", "STATE1_OF_PARA1", "", "PARA1", true, 15));
-        injection.sendBody(new Parameter("", "PARA1", "", "", 15, 1, ""));
-        injection.sendBody(new State("", "STATE2_OF_PARA1", "", "PARA1", true, 15));
+        publishApi.publishState("STATE1_OF_PARA1", "", "", "PARA1", true, 15);
+        publishApi.publishParameter("PARA1", "", "", 1, "", 15);
+        publishApi.publishState("STATE2_OF_PARA1", "", "", "PARA1", true, 15);
 
-        injection.sendBody(new State("", "STATE1_OF_PARA1", "", "PARA1", true, 16));
-        injection.sendBody(new State("", "STATE2_OF_PARA1", "", "PARA1", true, 16));
-        injection.sendBody(new Parameter("", "PARA1", "", "", 16, 1, ""));
+        publishApi.publishState("STATE1_OF_PARA1", "", "", "PARA1", true, 16);
+        publishApi.publishState("STATE2_OF_PARA1", "", "", "PARA1", true, 16);
+        publishApi.publishParameter("PARA1", "", "", 1, "", 16);
 
-        injection.sendBody(new Parameter("", "PARA3", "", "", 17, 1, ""));
+        publishApi.publishParameter("PARA3", "", "", 1, "", 17);
 
-        injection.sendBody(new Parameter("", "PARA1", "", "", 18, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA1", "", "PARA1", true, 18));
-        injection.sendBody(new State("", "STATE2_OF_PARA1", "", "PARA1", true, 18));
+        publishApi.publishParameter("PARA1", "", "", 1, "", 18);
+        publishApi.publishState("STATE1_OF_PARA1", "", "", "PARA1", true, 18);
+        publishApi.publishState("STATE2_OF_PARA1", "", "", "PARA1", true, 18);
 
-        injection.sendBody(new Parameter("", "PARA3", "", "", 19, 1, ""));
+        publishApi.publishParameter("PARA3", "", "", 1, "", 19);
 
-        injection.sendBody(new Parameter("", "PARA1", "", "", 20, 1, ""));
-        injection.sendBody(new State("", "STATE1_OF_PARA1", "", "PARA1", true, 20));
-        injection.sendBody(new State("", "STATE2_OF_PARA1", "", "PARA1", true, 20));
+        publishApi.publishParameter("PARA1", "", "", 1, "", 20);
+        publishApi.publishState("STATE1_OF_PARA1", "", "", "PARA1", true, 20);
+        publishApi.publishState("STATE2_OF_PARA1", "", "", "PARA1", true, 20);
 
-        GroundStation gs1 = new GroundStation();
-        gs1.setName("LOC1");
-        injection.sendBody(gs1);
-        GroundStation gs2 = new GroundStation();
-        gs2.setName("LOC2");
-        injection.sendBody(gs2);
-        GroundStation gs3 = new GroundStation();
-        gs3.setName("LOC3");
-        injection.sendBody(gs3);
-        GroundStation gs4 = new GroundStation();
-        gs4.setName("LOC1");
-        injection.sendBody(gs4);
-
-        injection.sendBody(new Satellite("", "SAT1", ""));
-        injection.sendBody(new Satellite("", "SAT2", ""));
-        injection.sendBody(new Satellite("", "SAT1", ""));
+        publishApi.publishGroundStation("LOC1", "", "", null, null, null);
+        publishApi.publishGroundStation("LOC2", "", "", null, null, null);
+        publishApi.publishGroundStation("LOC3", "", "", null, null, null);
+        publishApi.publishGroundStation("LOC4", "", "", null, null, null);
+        
+        publishApi.publishSatellite("SAT1", "", "");
+        publishApi.publishSatellite("SAT2", "", "");
+        publishApi.publishSatellite("SAT3", "", "");
 
         Thread.sleep(5000);
 

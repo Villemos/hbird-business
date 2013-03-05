@@ -42,32 +42,32 @@ public class ParameterArchivalTester extends SystemTest {
 
 		/** Publish parameters. */
 		LOG.info("Publishing parameters.");
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA1", "", "A test description,", 2d, "Volt"));
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA1", "", "A test description,", 2.1d, "Volt"));
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA1", "", "A test description,", 2.2d, "Volt"));
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA1", "", "A test description,", 2.3d, "Volt"));
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA1", "", "A test description,", 2.4d, "Volt"));
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA1", "", "A test description,", 2.5d, "Volt"));
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA1", "", "A test description,", 2.6d, "Volt"));
+		publishApi.publishParameter("PARA1", "", "A test description,", 2d, "Volt");
+		publishApi.publishParameter("PARA1", "", "A test description,", 2.1d, "Volt");
+		publishApi.publishParameter("PARA1", "", "A test description,", 2.2d, "Volt");
+		publishApi.publishParameter("PARA1", "", "A test description,", 2.3d, "Volt");
+		publishApi.publishParameter("PARA1", "", "A test description,", 2.4d, "Volt");
+		publishApi.publishParameter("PARA1", "", "A test description,", 2.5d, "Volt");
+		publishApi.publishParameter("PARA1", "", "A test description,", 2.6d, "Volt");
 
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA2", "", "A test description,", 2l, "Meter"));
+		publishApi.publishParameter("PARA2", "", "A test description,", 2l, "Meter");
 
 		/** Make sure we have different timestamps. */
 		Thread.sleep(1000);
 		Date start = new Date();
 		
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA2", "", "A test description,", 3l, "Meter"));
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA2", "", "A test description,", 4l, "Meter"));
+		publishApi.publishParameter("PARA2", "", "A test description,", 3l, "Meter");
+		publishApi.publishParameter("PARA2", "", "A test description,", 4l, "Meter");
 
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA3", "", "A test description,", 10f, "Seconds"));
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA3", "", "A test description,", 15f, "Seconds"));
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA3", "", "A test description,", 20f, "Seconds"));
+		publishApi.publishParameter("PARA3", "", "A test description,", 10f, "Seconds");
+		publishApi.publishParameter("PARA3", "", "A test description,", 15f, "Seconds");
+		publishApi.publishParameter("PARA3", "", "A test description,", 20f, "Seconds");
 
 		Date end = new Date();
 		Thread.sleep(1000);
 		
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA2", "", "A test description,", 5l, "Meter"));
-		injection.sendBody(new Parameter("SystemTestSuite", "PARA3", "", "A test description,", 35f, "Seconds"));
+		publishApi.publishParameter("PARA2", "", "A test description,", 5l, "Meter");
+		publishApi.publishParameter("PARA3", "", "A test description,", 35f, "Seconds");
 
 		/** Send command to commit all changes. */
 		forceCommit();
@@ -114,7 +114,8 @@ public class ParameterArchivalTester extends SystemTest {
 
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			Object respond = injection.requestBody(new ParameterRequest(Arrays.asList("PARA1", "PARA2", "PARA3"), start.getTime(), end.getTime()));
+			ParameterRequest request = new ParameterRequest(Arrays.asList("PARA1", "PARA2", "PARA3"), start.getTime(), end.getTime());
+			Object respond = injection.requestBody(request);
 			azzert(respond != null, "Received a response.");			
 			azzert(((List) respond).size() == 5, "Expect 5 entries. Received " + ((List) respond).size());			
 		}

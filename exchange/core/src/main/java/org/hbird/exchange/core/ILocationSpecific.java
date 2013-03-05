@@ -21,4 +21,5 @@ public interface ILocationSpecific {
     public String getLocationName();
 
     public void setLocationName(String location);
+
 }

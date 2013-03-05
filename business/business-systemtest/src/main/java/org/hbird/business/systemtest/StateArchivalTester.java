@@ -25,7 +25,6 @@ import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.constants.StandardComponents;
 
 public class StateArchivalTester extends SystemTest {
 
@@ -43,24 +42,24 @@ public class StateArchivalTester extends SystemTest {
 		Thread.sleep(2000);
 
     	/** Store states. */
-        injection.sendBody(new State("SystemTestSuite", "STATE1", "A test description,", "COMMAND1", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE2", "A test description,", "COMMAND1", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE3", "A test description,", "COMMAND1", false));
-        injection.sendBody(new State("SystemTestSuite", "STATE4", "A test description,", "COMMAND1", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE5", "A test description,", "COMMAND1", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE6", "A test description,", "COMMAND1", false));
-        injection.sendBody(new State("SystemTestSuite", "STATE7", "A test description,", "COMMAND1", true));
+        publishApi.publishState("STATE1", "", "A test description", "COMMAND1", true);
+        publishApi.publishState("STATE2", "", "A test description", "COMMAND1", true);
+        publishApi.publishState("STATE3", "", "A test description", "COMMAND1", false);
+        publishApi.publishState("STATE4", "", "A test description", "COMMAND1", true);
+        publishApi.publishState("STATE5", "", "A test description", "COMMAND1", true);
+        publishApi.publishState("STATE6", "", "A test description", "COMMAND1", false);
+        publishApi.publishState("STATE7", "", "A test description", "COMMAND1", true);
         
-        injection.sendBody(new State("SystemTestSuite", "STATE8", "A test description,", "COMMAND2", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE9", "A test description,", "COMMAND2", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE10", "A test description,", "COMMAND2", false));
-        injection.sendBody(new State("SystemTestSuite", "STATE11", "A test description,", "COMMAND2", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE12", "A test description,", "COMMAND2", true));
+        publishApi.publishState("STATE8", "", "A test description", "COMMAND2", true);
+        publishApi.publishState("STATE9", "", "A test description", "COMMAND2", true);
+        publishApi.publishState("STATE10", "", "A test description", "COMMAND2", false);
+        publishApi.publishState("STATE11", "", "A test description", "COMMAND2", true);
+        publishApi.publishState("STATE12", "", "A test description", "COMMAND2", true);
         
-        injection.sendBody(new State("SystemTestSuite", "STATE13", "A test description,", "COMMAND3", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE14", "A test description,", "COMMAND3", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE15", "A test description,", "COMMAND3", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE16", "A test description,", "COMMAND3", true));
+        publishApi.publishState("STATE13", "", "A test description", "COMMAND3", true);
+        publishApi.publishState("STATE14", "", "A test description", "COMMAND3", true);
+        publishApi.publishState("STATE15", "", "A test description", "COMMAND3", true);
+        publishApi.publishState("STATE16", "", "A test description", "COMMAND3", true);
 
         forceCommit();
 		
@@ -83,11 +82,11 @@ public class StateArchivalTester extends SystemTest {
         azzert(states.get("STATE7").getValue() == true);
 
     	/** Store a new set of states. Notice that STATE1 and STATE3 doesnt change. */
-        injection.sendBody(new State("SystemTestSuite", "STATE2", "A test description,", "COMMAND1", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE4", "A test description,", "COMMAND1", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE5", "A test description,", "COMMAND1", false));
-        injection.sendBody(new State("SystemTestSuite", "STATE6", "A test description,", "COMMAND1", true));
-        injection.sendBody(new State("SystemTestSuite", "STATE7", "A test description,", "COMMAND1", true));
+        publishApi.publishState("STATE2", "", "A test description", "COMMAND1", true);
+        publishApi.publishState("STATE4", "", "A test description", "COMMAND1", true);
+        publishApi.publishState("STATE5", "", "A test description", "COMMAND1", false);
+        publishApi.publishState("STATE6", "", "A test description", "COMMAND1", true);
+        publishApi.publishState("STATE7", "", "A test description", "COMMAND1", true);
 
 		/** Send command to commit all changes. */
 		forceCommit();

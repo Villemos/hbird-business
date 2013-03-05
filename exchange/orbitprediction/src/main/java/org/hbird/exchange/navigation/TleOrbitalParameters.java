@@ -20,6 +20,12 @@ package org.hbird.exchange.navigation;
 import org.hbird.exchange.core.ISatelliteSpecific;
 import org.hbird.exchange.core.Named;
 
+/**
+ * 
+ * 
+ * @author Gert Villemos
+ *
+ */
 public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 
 	/**
@@ -36,24 +42,24 @@ public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 	/** TLE line element 2. */
 	protected String tleLine2;
 	
-	public TleOrbitalParameters(String issuedBy, String name, String description, long timestamp, String datasetidentifier, String satellite, String tleLine1, String tleLine2) {
-		super(issuedBy, name, "TleOrbitalParameters", description, timestamp, datasetidentifier);
+	public TleOrbitalParameters(String issuedBy, String name, String type, String description, long timestamp, String datasetidentifier, String satellite, String tleLine1, String tleLine2) {
+		super(issuedBy, name, type, description, timestamp, datasetidentifier);
 		
 		this.satellite = satellite;
 		this.tleLine1 = tleLine1;
 		this.tleLine2 = tleLine2;		
 	}
 	
-	public TleOrbitalParameters(String issuedBy, String name, String description, String satellite, String tleLine1, String tleLine2) {
-		super(issuedBy, name, "TleOrbitalParameters", description);
+	public TleOrbitalParameters(String issuedBy, String name, String type, String description, String satellite, String tleLine1, String tleLine2) {
+		super(issuedBy, name, type, description);
 		
 		this.satellite = satellite;
 		this.tleLine1 = tleLine1;
 		this.tleLine2 = tleLine2;		
 	}
 
-	public TleOrbitalParameters(String issuedBy, String satellite, String tleLine1, String tleLine2) {
-		super(issuedBy, "TLE/" + satellite, "TleOrbitalParameters", "The TLE state of the satellite.");
+	public TleOrbitalParameters(String issuedBy, String type, String satellite, String tleLine1, String tleLine2) {
+		super(issuedBy, "TLE/" + satellite, type, "The TLE state of the satellite.");
 		
 		this.satellite = satellite;
 		this.tleLine1 = tleLine1;
