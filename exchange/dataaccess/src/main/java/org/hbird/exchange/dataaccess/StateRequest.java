@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.constants.StandardComponents;
+import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 
 public class StateRequest extends DataRequest {
@@ -46,8 +47,13 @@ public class StateRequest extends DataRequest {
     public StateRequest(String issuedBy, String destination, String isStateOf) {
         super(issuedBy, destination, StateRequest.class.getSimpleName(), DESCRIPTION);
         setClass(State.class.getSimpleName());
-        setType(State.class.getSimpleName());
         setIsInitialization(true);
         setArgumentValue(StandardArguments.IS_STATE_OF, isStateOf);
     }
+    
+    public StateRequest() {
+        super(StandardComponents.ASSEMBLY, StandardComponents.PARAMETER_ARCHIVE, StateRequest.class.getSimpleName(), DESCRIPTION);
+        setClass(State.class.getSimpleName());
+    }
+
 }

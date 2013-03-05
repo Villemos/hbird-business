@@ -11,11 +11,11 @@ public class StartAntennaControllerComponent extends StartComponent {
 
     private static final long serialVersionUID = -8452914494565954568L;
 
-    public StartAntennaControllerComponent(String componentname, String groundStation, String satellite) {
+    public StartAntennaControllerComponent(String componentname, String groundStationName, String satelliteName) {
         super(componentname, StartAntennaControllerComponent.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.GROUND_STATION_NAME, groundStationName);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satelliteName);
-        setArgumentValue(StandardArguments.QUEUE_NAME, "hbird.antennaschedule." + groundStation);
+        setArgumentValue(StandardArguments.QUEUE_NAME, "hbird.antennaschedule." + groundStationName);
     }
 
     /**

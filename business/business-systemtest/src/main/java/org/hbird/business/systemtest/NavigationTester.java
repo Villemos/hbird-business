@@ -31,6 +31,7 @@ import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
+import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 public class NavigationTester extends SystemTest {
@@ -54,7 +55,7 @@ public class NavigationTester extends SystemTest {
 		TleOrbitalParameters parameters = publishTleParameters();
 		
         List<String> locations = new ArrayList<String>();
-        locations.add("TARTU");
+        locations.add("ES5EC");
         locations.add("Aalborg");
 		
         /** Send command to commit all changes. */
@@ -64,7 +65,7 @@ public class NavigationTester extends SystemTest {
 
         /** Send a TLE request for a satellite and a subset of locations */
         IOrbitPrediction api = ApiFactory.getOrbitPredictionApi("SystemTest");
-        api.requestOrbitPropagationStream("ESTcube", locations, 1355385448149l, 1355385448149l + 2 * 60 * 60 * 1000);
+        api.requestOrbitPropagationStream("ESTCube-1", locations, 1355385448149l, 1355385448149l + 2 * 60 * 60 * 1000);
 
         int totalSleep = 0;
         while (totalSleep < 120000 && orbitalStateListener.elements.size() != 121) {
@@ -75,7 +76,7 @@ public class NavigationTester extends SystemTest {
         azzert(orbitalStateListener.elements.size() == 121, "Expect to receive 121 orbital states. Received " + orbitalStateListener.elements.size());
         print(orbitalStateListener.elements);
 
-        azzert(locationEventListener.elements.size() == 5, "Expect to receive 5 location events. Received " + locationEventListener.elements.size());
+        azzert(locationEventListener.elements.size() == 6, "Expect to receive 6 location events. Received " + locationEventListener.elements.size());
         print(locationEventListener.elements);
 
         /** Send command to commit all changes. */
@@ -83,11 +84,11 @@ public class NavigationTester extends SystemTest {
 
         /** Retrieve the next set of TARTU events and check them. */
         IDataAccess dataApi = ApiFactory.getDataAccessApi("SystemTest");
-        List<LocationContactEvent> contactEvents = dataApi.retrieveNextLocationContactEventsFor("TARTU", 1355385522265l);
+        List<LocationContactEvent> contactEvents = dataApi.retrieveNextLocationContactEventsFor("ES5EC", 1355385522265l);
 
         azzert(contactEvents.size() == 2);
-        azzert(contactEvents.get(0).getTimestamp() == 1355390844725l);
-        azzert(contactEvents.get(1).getTimestamp() == 1355391059951l);
+        azzert(contactEvents.get(0).getTimestamp() == 1355390676020l);
+        azzert(contactEvents.get(1).getTimestamp() == 1355391229267l);
 
         /**
          * Check the contact events with Aalborg. Notice that there is one LOST contact event first. The retrieval
@@ -96,12 +97,11 @@ public class NavigationTester extends SystemTest {
         contactEvents = dataApi.retrieveNextLocationContactEventsFor("Aalborg", 1355385522265l);
 
         azzert(contactEvents.size() == 2);
-        azzert(contactEvents.get(0).getTimestamp() == 1355390970221l);
-        azzert(contactEvents.get(1).getTimestamp() == 1355391211998l);
+        azzert(contactEvents.get(0).getTimestamp() == 1355390809139l);
+        azzert(contactEvents.get(1).getTimestamp() == 1355391373642l);
 
         /** See if we can get the metadata */
-        IDataAccess dataAccessApi = ApiFactory.getDataAccessApi("SystemTest");
-        List<Named> response = dataAccessApi.getMetadata(parameters);
+        List<Named> response = accessApi.getMetadata(parameters);
         azzert(response.size() == 1, "Expected to receive 1 piece of metadata. Received " + response.size());
 
         LOG.info("Finished");

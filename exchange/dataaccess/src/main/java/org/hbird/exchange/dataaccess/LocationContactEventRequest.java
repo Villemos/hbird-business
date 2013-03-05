@@ -18,12 +18,13 @@ public class LocationContactEventRequest extends DataRequest {
 
     public LocationContactEventRequest(String issuedBy, String location) {
         super(issuedBy, StandardComponents.ARCHIVE);
-        setType(LocationContactEvent.class.getSimpleName());
+        setClass(LocationContactEvent.class.getSimpleName());
         setArgumentValue(StandardArguments.GROUND_STATION_NAME, location);
     }
 
     public LocationContactEventRequest(String issuedBy, String location, boolean visibility) {
         this(issuedBy, location);
+        setClass(LocationContactEvent.class.getSimpleName());
         setArgumentValue(StandardArguments.VISIBILITY, visibility);
     }
 

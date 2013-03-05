@@ -34,6 +34,11 @@ public class ParameterRequest extends DataRequest {
         addName(parameter);
     }
 
+    public ParameterRequest() {
+        super(StandardComponents.ASSEMBLY, StandardComponents.PARAMETER_ARCHIVE, ParameterRequest.class.getSimpleName(), DESCRIPTION);
+        setClass(Parameter.class.getSimpleName());
+    }
+
     public ParameterRequest(List<String> parameter) {
         super(StandardComponents.ASSEMBLY, StandardComponents.PARAMETER_ARCHIVE, ParameterRequest.class.getSimpleName(), DESCRIPTION);
         setClass(Parameter.class.getSimpleName());

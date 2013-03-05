@@ -138,7 +138,7 @@ public class SolrProducer extends DefaultProducer {
     }
 
     protected String createRequest(DataRequest body) {
-        String request = null;
+        String request = "";
 
         String classPart = null;
         String typePart = null;
@@ -151,9 +151,15 @@ public class SolrProducer extends DefaultProducer {
         String visibilityPart = null;
 
         /** Set the class of data we are retrieving. */
-        // if (body.getArgument(StandardArguments.CLASS) != null) {
-        // classPart = "class:" + body.getArgument(StandardArguments.CLASS);
-        // }
+         if (body.hasArgumentValue(StandardArguments.CLASS)) {
+        	 
+        	 if (body.shallIncludeStates()) {
+            	 classPart = "(class:" + body.getArgumentValue(StandardArguments.CLASS, String.class) + " OR class:State)";
+        	 }
+        	 else {
+        		 classPart = "class:" + body.getArgumentValue(StandardArguments.CLASS, String.class);         
+        	 }
+         }
 
         /** Set the type of data we are retrieving. */
         if (body.hasArgumentValue(StandardArguments.TYPE)) {
@@ -202,51 +208,42 @@ public class SolrProducer extends DefaultProducer {
             visibilityPart = "visibility:" + body.getArgumentValue(StandardArguments.VISIBILITY, Boolean.class);
         }
 
-        if (request == null && typePart != null) {
-            request = typePart;
+        if (typePart != null) {
+            request += request.equals("") ? typePart : " AND " + typePart;
         }
 
         if (classPart != null) {
-            request += " AND " + classPart;
+            request += request.equals("") ? classPart : " AND " + classPart;
         }
 
         if (derivedFromPart != null) {
-            request += " AND (" + derivedFromPart + ")";
+            request += request.equals("") ? "(" + derivedFromPart + ")" : " AND (" + derivedFromPart + ")";
         }
 
         if (applicableToPart != null) {
-            request += " AND (" + applicableToPart + ")";
+            request += request.equals("") ? "(" + applicableToPart + ")" : " AND (" + applicableToPart + ")";
         }
 
         if (visibilityPart != null) {
-            request += " AND " + visibilityPart;
+            request += request.equals("") ? visibilityPart : " AND " + visibilityPart;
         }
 
         if (namePart != null && isStateOfPart != null) {
-            request += " AND (" + namePart + " OR " + isStateOfPart + ")";
+            request += request.equals("") ? "(" + namePart + " OR " + isStateOfPart + ")" : " AND (" + namePart + " OR " + isStateOfPart + ")";
         }
-        else {
-            if (request == null && namePart != null) {
-                request = "(" + namePart + ")";
-            }
-            else if (namePart != null) {
-                request += " AND (" + namePart + ")";
-            }
-
-            if (request == null && isStateOfPart != null) {
-                request = isStateOfPart;
-            }
-            else if (isStateOfPart != null) {
-                request += " AND " + isStateOfPart;
-            }
+        else if (namePart != null && isStateOfPart == null) {
+            request += request.equals("") ? "(" + namePart + ")" : " AND (" + namePart + ")";
+        }
+        else if (namePart == null && isStateOfPart != null) {
+            request += request.equals("") ? "(" + isStateOfPart + ")" : " AND (" + isStateOfPart + ")";
         }
 
         if (ofSatellitePart != null) {
-            request += " AND " + ofSatellitePart;
+            request += request.equals("") ? ofSatellitePart : " AND " + ofSatellitePart;
         }
 
         if (locationPart != null) {
-            request += " AND " + locationPart;
+            request += request.equals("") ? locationPart : " AND " + locationPart;
         }
 
         request += createTimestampElement(body.getArgumentValue(StandardArguments.FROM, Long.class), body.getArgumentValue(StandardArguments.TO, Long.class));
@@ -321,9 +318,12 @@ public class SolrProducer extends DefaultProducer {
 
                 /** For each facet, retrieve 'rows' samples. */
                 for (FacetField facetfield : response.getFacetFields()) {
-
+                	
                     if (facetfield.getValues() != null) {
-                        for (Count count : facetfield.getValues()) {
+
+                    	LOG.info("Found " + facetfield.getValueCount() + " entries for facet value " + facetfield.getName());
+
+                    	for (Count count : facetfield.getValues()) {
                             SolrQuery sampleQuery = new SolrQuery("name:" + count.getName() + createTimestampElement(body.getFrom(), body.getTo()));
                             sampleQuery.setRows(body.getRows());
                             sampleQuery.setSortField(StandardArguments.TIMESTAMP, ORDER.desc);
@@ -413,10 +413,6 @@ public class SolrProducer extends DefaultProducer {
      * @throws Exception
      */
     protected void insert(Named io) throws Exception {
-
-        if (io.getType().equals("LocationContactEvent")) {
-            log.debug("");
-        }
 
         LOG.info("Storing object: " + io.prettyPrint());
 

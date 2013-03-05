@@ -6,9 +6,6 @@ import java.util.List;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.business.navigation.controller.OrbitPropagationController;
-import org.hbird.exchange.navigation.Location;
-import org.hbird.exchange.navigation.Satellite;
-import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 public class NavigationControllerTester extends SystemTest {
 	

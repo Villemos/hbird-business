@@ -220,6 +220,12 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     @Override
+    public List<State> retrieveStates(List<String> states) {
+        StateRequest request = new StateRequest(issuedBy, null, states);
+        return stateFilter.getObjects(template.requestBody(inject, request, List.class));
+    }
+
+    @Override
     public List<OrbitalState> retrieveOrbitalStatesFor(String satellite, long from, long to) {
         OrbitalStateRequest request = new OrbitalStateRequest(satellite, from, to);
         return orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));

@@ -138,7 +138,7 @@ public class CommandTest {
         inOrder.verify(arg2, times(1)).getName();
         inOrder.verifyNoMoreInteractions();
 
-        Map<String, CommandArgument> args = cmd.createArgumentMap();
+        Map<String, CommandArgument> args = cmd.getArguments();
         assertNotNull(args);
         assertEquals(2, args.size());
         assertTrue(args.containsKey(ARG1));

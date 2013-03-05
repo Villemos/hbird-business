@@ -26,6 +26,8 @@ import org.apache.camel.Handler;
 import org.apache.camel.Headers;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.log4j.Logger;
+import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.StateRequest;
@@ -55,6 +57,8 @@ public class CommandReleaser {
 	/** The header flag that indicates whether the command can be released. */
 	protected String validityHeaderField = "Valid";
 
+	protected IDataAccess api = ApiFactory.getDataAccessApi("CommandReleaser");
+	
 	/**
 	 * Processor for the scheduling of validation task for a command as well as the
 	 * release of the command.
@@ -80,12 +84,14 @@ public class CommandReleaser {
 		headers.put("Valid", true);
 
 		/** Request all states that are lock states of this command. */
-		Exchange exchange = new DefaultExchange(context);
-		exchange.getIn().setBody(new StateRequest("CommandReleaser", command.getCommand().getName(), command.getLockStates()));
-		context.createProducerTemplate().send("direct:statestore", exchange);
-
+		
+		List<State> states = api.retrieveState(command.getCommand().getName());
+		if (command.getLockStates() != null) { 
+			states.addAll(api.retrieveStates(command.getLockStates()));
+		}
+		
 		/** See if any of the states have the value FALSE*/
-		for (State state :  (List<State>) exchange.getOut().getBody()) {
+		for (State state :  states) {
 			if (state.getValue() == false) {
 				LOG.error("Validation state '" + state.getName() + "' is FALSE. Command '" + command.getCommand().getName() + "' release state marked as invalid.");
 				headers.put(validityHeaderField, false);	

@@ -13,14 +13,10 @@ import javax.management.openmbean.OpenDataException;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IQueueManagement;
 import org.hbird.business.navigation.controller.OrbitPropagationController;
 import org.hbird.exchange.configurator.StartAntennaControllerComponent;
-import org.hbird.exchange.navigation.D3Vector;
 import org.hbird.exchange.navigation.LocationContactEvent;
-import org.hbird.exchange.navigation.RadioChannel;
-import org.hbird.exchange.navigation.RotatorProperties;
 
 public class AntennaControlTester extends SystemTest {
 
@@ -43,35 +39,16 @@ public class AntennaControlTester extends SystemTest {
 
         publishGroundStationsAndSatellites();
         publishTleParameters();
-                .toRadians(12.587585D), 59.0D));
-        injection.sendBody(gsAalborg);
 
-        GroundStation gsDarmstadt = new GroundStation();
-        gsDarmstadt.setIssuedBy("SystemTest");
-        gsDarmstadt.setName("Darmstadt Ground Station");
-        gsDarmstadt.setDescription("Test Location 3");
-        gsDarmstadt.setGeoLocation(new D3Vector("SystemTest", "Darmstadt", D3Vector.class.getSimpleName(), "Test location 3", Math.toRadians(49.831605D), Math
-                .toRadians(8.673706D), 59.0D));
-        injection.sendBody(gsDarmstadt);
-
-        GroundStation gsNY = new GroundStation();
-        gsNY.setIssuedBy("SystemTest");
-        gsNY.setName("New York Ground Station");
-        gsNY.setDescription("Test location 4");
-        gsNY.setGeoLocation(new D3Vector("SystemTest", "New York", D3Vector.class.getSimpleName(), "Test location 4", Math.toRadians(40.66564D), Math
-                .toRadians(-74.036865D), 59.0D));
-        injection.sendBody(gsNY);
-        
         List<String> locations = new ArrayList<String>();
-        locations.add("TARTU");
+        locations.add("ES5EC");
         locations.add("Darmstadt");
-
 
         /** Send command to commit all changes. */
         forceCommit();
 
         /** Create a controller task and inject it. */
-        OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000, "ESTcube", locations);
+        OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000, "ESTCube-1", locations);
         injection.sendBody(task);
 
         Thread.sleep(1000);
@@ -87,15 +64,13 @@ public class AntennaControlTester extends SystemTest {
          */
 
         /** Retrieve the next set of contact events (start-end) for this station. */
-        IDataAccess dataaccessApi = ApiFactory.getDataAccessApi("SystemTest");
-
-        int totalDelay = 0;
+         int totalDelay = 0;
         while (totalDelay < 130000) {
             Thread.sleep(5000);
             totalDelay += 5000;
 
             /** Check if we have contact events */
-            List<LocationContactEvent> contactEvents = dataaccessApi.retrieveNextLocationContactEventsFor("TARTU", "ESTcube");
+            List<LocationContactEvent> contactEvents = accessApi.retrieveNextLocationContactEventsFor("ES5EC", "ESTCube-1");
             if (contactEvents.size() > 2) {
                 break;
             }
@@ -110,7 +85,7 @@ public class AntennaControlTester extends SystemTest {
         List<String> queues = api.listQueues();
         boolean found = false;
         for (String queue : queues) {
-            if (queue.equals("hbird.antennaschedule.TARTU")) {
+            if (queue.equals("hbird.antennaschedule.ES5EC")) {
                 found = true;
                 break;
             }
@@ -118,7 +93,7 @@ public class AntennaControlTester extends SystemTest {
 
         azzert(found, "The queue 'hbird.antennaschedule.TARTU' exist. ");
 
-        Map<String, String> schedule = api.viewQueue("hbird.antennaschedule.TARTU");
+        Map<String, String> schedule = api.viewQueue("hbird.antennaschedule.ES5EC");
         azzert(schedule.size() > 0, "Queue contains messages. Contains " + schedule.size());
 
         LOG.info("Finished");

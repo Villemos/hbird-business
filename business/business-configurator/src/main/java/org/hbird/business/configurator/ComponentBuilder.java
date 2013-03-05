@@ -139,7 +139,8 @@ public abstract class ComponentBuilder extends RouteBuilder {
                 .setHeader(StandardArguments.ISSUED_BY, simple("${in.body.issuedBy}"))
                 .setHeader(StandardArguments.TYPE, simple("${in.body.type}"))
                 .setHeader(StandardArguments.DATA_SET_ID, simple("${in.body.datasetidentifier}"))
-
+                .setHeader("class", simple("${in.body.class.simpleName}"))
+                
                 /** Set object specific headers. */
                 .choice()
                 .when(body().isInstanceOf(State.class))

@@ -75,12 +75,6 @@ public class BusinessCardTester extends SystemTest {
         /** Stop the archive and check that it is actually stopped. */
         injection.sendBody(new StopComponent("SystemTest", "Configurator", StandardComponents.ARCHIVE));
 
-        Thread.sleep(3000);
-
-        this.monitoringArchiveStarted = false;
-
-        Thread.sleep(2000);
-
         businessCardListener.elements.clear();
 
         Thread.sleep(3000);
@@ -97,6 +91,8 @@ public class BusinessCardTester extends SystemTest {
             azzert(!archiveDidArrive, "Business card messages not arriving from Archive");
         }
 
+        this.monitoringArchiveStarted = false;
+        
         LOG.info("Finished");
     }
 }

@@ -35,7 +35,7 @@ public class TleRequest extends DataRequest {
     public TleRequest(String issuedBy, String satellite) {
         super(issuedBy, StandardComponents.ARCHIVE, TleRequest.class.getSimpleName(), DESCRIPTION);
         setSatelliteName(satellite);
-        setType(TleOrbitalParameters.class.getSimpleName());
+        setClass(TleOrbitalParameters.class.getSimpleName());
         setIsInitialization(true);
         setSort(StandardArguments.TIMESTAMP);
         setSortOrder("DESC");
@@ -45,7 +45,7 @@ public class TleRequest extends DataRequest {
     public TleRequest(String issuedBy, String satellite, long from, long to) {
         super(issuedBy, StandardComponents.ARCHIVE, TleRequest.class.getSimpleName(), DESCRIPTION);
         setSatelliteName(satellite);
-        setType(TleOrbitalParameters.class.getSimpleName());
+        setClass(TleOrbitalParameters.class.getSimpleName());
         setIsInitialization(true);
         setFrom(from);
         setTo(to);

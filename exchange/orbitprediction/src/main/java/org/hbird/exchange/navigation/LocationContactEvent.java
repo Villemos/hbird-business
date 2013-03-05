@@ -91,6 +91,6 @@ public class LocationContactEvent extends DerivedNamed implements IGroundStation
 	}
 	
 	public String prettyPrint() {
-		return "class=" + this.getClass().getSimpleName() + ", name=" + name + ", timestamp=" + timestamp + ", location=" + getGroundStationName() + ", visibility=" + isVisible;
+		return this.getClass().getSimpleName() + "[name=" + name + ", timestamp=" + timestamp + ", location=" + getGroundStationName() + ", satellite=" + satellite + ", visibility=" + isVisible + "]";
 	}
 }

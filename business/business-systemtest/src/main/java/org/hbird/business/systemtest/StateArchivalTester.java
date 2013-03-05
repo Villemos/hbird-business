@@ -43,24 +43,39 @@ public class StateArchivalTester extends SystemTest {
 
     	/** Store states. */
         publishApi.publishState("STATE1", "", "A test description", "COMMAND1", true);
+		Thread.sleep(1);
         publishApi.publishState("STATE2", "", "A test description", "COMMAND1", true);
+		Thread.sleep(1);
         publishApi.publishState("STATE3", "", "A test description", "COMMAND1", false);
+		Thread.sleep(1);
         publishApi.publishState("STATE4", "", "A test description", "COMMAND1", true);
+		Thread.sleep(1);
         publishApi.publishState("STATE5", "", "A test description", "COMMAND1", true);
+		Thread.sleep(1);
         publishApi.publishState("STATE6", "", "A test description", "COMMAND1", false);
+		Thread.sleep(1);
         publishApi.publishState("STATE7", "", "A test description", "COMMAND1", true);
-        
+		Thread.sleep(1);
         publishApi.publishState("STATE8", "", "A test description", "COMMAND2", true);
+		Thread.sleep(1);
         publishApi.publishState("STATE9", "", "A test description", "COMMAND2", true);
+		Thread.sleep(1);
         publishApi.publishState("STATE10", "", "A test description", "COMMAND2", false);
+		Thread.sleep(1);
         publishApi.publishState("STATE11", "", "A test description", "COMMAND2", true);
+		Thread.sleep(1);
         publishApi.publishState("STATE12", "", "A test description", "COMMAND2", true);
-        
+		Thread.sleep(1);
         publishApi.publishState("STATE13", "", "A test description", "COMMAND3", true);
+		Thread.sleep(1);
         publishApi.publishState("STATE14", "", "A test description", "COMMAND3", true);
+		Thread.sleep(1);
         publishApi.publishState("STATE15", "", "A test description", "COMMAND3", true);
+		Thread.sleep(1);
         publishApi.publishState("STATE16", "", "A test description", "COMMAND3", true);
 
+        Thread.sleep(2000);
+        
         forceCommit();
 		
         /** Test retrieval. */
@@ -88,6 +103,8 @@ public class StateArchivalTester extends SystemTest {
         publishApi.publishState("STATE6", "", "A test description", "COMMAND1", true);
         publishApi.publishState("STATE7", "", "A test description", "COMMAND1", true);
 
+        Thread.sleep(2000);
+        
 		/** Send command to commit all changes. */
 		forceCommit();
 		

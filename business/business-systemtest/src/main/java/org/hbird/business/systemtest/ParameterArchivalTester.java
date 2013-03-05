@@ -24,7 +24,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.dataaccess.ParameterRequest;
 
 public class ParameterArchivalTester extends SystemTest {
 
@@ -43,32 +42,46 @@ public class ParameterArchivalTester extends SystemTest {
 		/** Publish parameters. */
 		LOG.info("Publishing parameters.");
 		publishApi.publishParameter("PARA1", "", "A test description,", 2d, "Volt");
+		Thread.sleep(1);
 		publishApi.publishParameter("PARA1", "", "A test description,", 2.1d, "Volt");
+		Thread.sleep(1);
 		publishApi.publishParameter("PARA1", "", "A test description,", 2.2d, "Volt");
+		Thread.sleep(1);
 		publishApi.publishParameter("PARA1", "", "A test description,", 2.3d, "Volt");
+		Thread.sleep(1);
 		publishApi.publishParameter("PARA1", "", "A test description,", 2.4d, "Volt");
+		Thread.sleep(1);
 		publishApi.publishParameter("PARA1", "", "A test description,", 2.5d, "Volt");
+		Thread.sleep(1);
 		publishApi.publishParameter("PARA1", "", "A test description,", 2.6d, "Volt");
-
+		Thread.sleep(1);
 		publishApi.publishParameter("PARA2", "", "A test description,", 2l, "Meter");
 
 		/** Make sure we have different timestamps. */
-		Thread.sleep(1000);
+		Thread.sleep(1);
 		Date start = new Date();
+		Thread.sleep(1);
 		
 		publishApi.publishParameter("PARA2", "", "A test description,", 3l, "Meter");
+		Thread.sleep(1);
 		publishApi.publishParameter("PARA2", "", "A test description,", 4l, "Meter");
-
+		Thread.sleep(1);
 		publishApi.publishParameter("PARA3", "", "A test description,", 10f, "Seconds");
+		Thread.sleep(1);
 		publishApi.publishParameter("PARA3", "", "A test description,", 15f, "Seconds");
+		Thread.sleep(1);
 		publishApi.publishParameter("PARA3", "", "A test description,", 20f, "Seconds");
-
+		
+		Thread.sleep(1);
 		Date end = new Date();
-		Thread.sleep(1000);
+		Thread.sleep(1);
 		
 		publishApi.publishParameter("PARA2", "", "A test description,", 5l, "Meter");
+		Thread.sleep(1);
 		publishApi.publishParameter("PARA3", "", "A test description,", 35f, "Seconds");
 
+        Thread.sleep(2000);
+		
 		/** Send command to commit all changes. */
 		forceCommit();
 
@@ -81,12 +94,10 @@ public class ParameterArchivalTester extends SystemTest {
 		try {
 			LOG.info("Retrieveing last value of PARA1");
 
-			Object respond = injection.requestBody(new ParameterRequest("PARA1", 1));
+			Parameter respond = accessApi.getParameter("PARA1");
 			azzert(respond != null, "Received a response.");
-			azzert(((List) respond).isEmpty() == false, "Expected to receive at least one element.");
 			
-			Parameter parameter = (Parameter) ((List) respond).get(0);
-			azzert(parameter.getValue().doubleValue() == 2.6d, "Last value should be 2.6. Received " + parameter.getValue().doubleValue());			
+			azzert(respond.asDouble() == 2.6d, "Last value should be 2.6. Received " + respond.asDouble());			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -94,9 +105,9 @@ public class ParameterArchivalTester extends SystemTest {
 		
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			Object respond = injection.requestBody(new ParameterRequest("PARA2", start.getTime(), null));
+			List<Parameter> respond = accessApi.retrieveParameter("PARA2", start.getTime(), (new Date()).getTime());
 			azzert(respond != null, "Received a response.");			
-			azzert(((List) respond).size() == 3, "Expect 3 entries. Received " + ((List) respond).size());			
+			azzert(respond.size() == 3, "Expect 3 entries. Received " + respond.size());			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -104,9 +115,9 @@ public class ParameterArchivalTester extends SystemTest {
 
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			Object respond = injection.requestBody(new ParameterRequest("PARA2", start.getTime(), end.getTime()));
+			List<Parameter> respond = accessApi.retrieveParameter("PARA2", start.getTime(), end.getTime());
 			azzert(respond != null, "Received a response.");			
-			azzert(((List) respond).size() == 2, "Expect 2 entries. Received " + ((List) respond).size());			
+			azzert(respond.size() == 2, "Expect 2 entries. Received " + respond.size());			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -114,10 +125,9 @@ public class ParameterArchivalTester extends SystemTest {
 
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			ParameterRequest request = new ParameterRequest(Arrays.asList("PARA1", "PARA2", "PARA3"), start.getTime(), end.getTime());
-			Object respond = injection.requestBody(request);
+			List<Parameter> respond = accessApi.retrieveParameters(Arrays.asList("PARA1", "PARA2", "PARA3"), start.getTime(), end.getTime());
 			azzert(respond != null, "Received a response.");			
-			azzert(((List) respond).size() == 5, "Expect 5 entries. Received " + ((List) respond).size());			
+			azzert(respond.size() == 5, "Expect 5 entries. Received " + respond.size());			
 		}
 		catch (Exception e) {
 			e.printStackTrace();

@@ -7,7 +7,7 @@ import org.hbird.business.api.IQueueManagement;
 
 public class Starter extends SystemTest {
 
-	private static org.apache.log4j.Logger LOG = Logger.getLogger(AntennaControlTester.class);
+	private static org.apache.log4j.Logger LOG = Logger.getLogger(Starter.class);
 	
 	@Handler
 	public void process() throws Exception {

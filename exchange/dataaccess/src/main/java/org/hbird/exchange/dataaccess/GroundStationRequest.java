@@ -36,7 +36,6 @@ public class GroundStationRequest extends DataRequest {
 
     public GroundStationRequest(String issuedBy) {
         super(issuedBy, StandardComponents.ARCHIVE, GroundStationRequest.class.getSimpleName(), DESCRIPTION);
-        setType(GroundStation.class.getSimpleName());
         setIsInitialization(true);
     }
 

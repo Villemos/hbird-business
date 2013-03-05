@@ -473,6 +473,18 @@ public interface IDataAccess {
 	 */
 	public List<State> retrieveState(String isStateOf, long from, long to);
 
+	/**
+	 * Method to retrieve the current value of a set of states.
+	 * <li>All state samples</li>
+	 * <li>With a sample timestamp between 'from' and 'to'</li>
+	 * <li>and sorted on timestamp in ASCENDING order</li>
+	 * 
+	 * @param isStateOf The name of the Named object that the state must be a state of
+	 * @param from The earliest time (Java time).
+	 * @param to The latest time (Java time)
+	 * @return A list of all states applicable to the Named object
+	 */
+	public List<State> retrieveStates(List<String> states);
 
 
 	/**

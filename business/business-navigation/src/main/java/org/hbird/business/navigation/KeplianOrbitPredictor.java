@@ -75,7 +75,7 @@ public class KeplianOrbitPredictor {
 
             /** Register the injector that will send the detected events, for this location, to the propagator. */
             EventDetector sta1Visi = new LocationContactEventCollector(groundStation.getRotatorProperties().getThresholdElevation(), sta1Frame, satellite,
-                    location.getName(), parameters,
+            		groundStation.getName(), parameters,
                     context, publish);
             propagator.addEventDetector(sta1Visi);
         }

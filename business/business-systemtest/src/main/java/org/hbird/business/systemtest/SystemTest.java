@@ -27,8 +27,6 @@ import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublish;
-import org.hbird.business.solr.api.DataAccess;
-import org.hbird.business.solr.api.Publish;
 import org.hbird.exchange.configurator.StartArchiveComponent;
 import org.hbird.exchange.configurator.StartCommandComponent;
 import org.hbird.exchange.configurator.StartNavigationComponent;
@@ -71,9 +69,9 @@ public abstract class SystemTest {
 
     protected CamelContext context = null;
 
-    protected IPublish publishApi = ApiFactory.getPublishApi("SystemTest");
+    protected static IPublish publishApi = ApiFactory.getPublishApi("SystemTest");
     
-    protected IDataAccess accessApi = ApiFactory.getDataAccessApi("SystemTest");
+    protected static IDataAccess accessApi = ApiFactory.getDataAccessApi("SystemTest");
     
     protected void azzert(boolean assertion) {
         if (assertion == false) {
@@ -292,7 +290,7 @@ public abstract class SystemTest {
         /** Store TLE*/
         String tleLine1 = "1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478";
         String tleLine2 = "2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935";
-        TleOrbitalParameters parameters = publishApi.publishTleParameters("ESTcube", "Measured", tleLine1, tleLine2);
+        TleOrbitalParameters parameters = publishApi.publishTleParameters("ESTCube-1", "Measured", tleLine1, tleLine2);
         
 		publishApi.publichMetadata(parameters, "Author", "This file was approved by Gert Villemos the " + (new Date()).toString());
 		

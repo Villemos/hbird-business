@@ -136,10 +136,10 @@ public class DataAccessApiTester extends SystemTest {
         azzert(stateCatalogue.size() == 4, "Expect to receive 4 state metadata. Received " + stateCatalogue.size());
 
         List<GroundStation> locationCatalogue = catalogueApi.getGroundStations();
-        azzert(locationCatalogue.size() == 3, "Expect to receive 3 location metadata. Received " + locationCatalogue.size());
+        azzert(locationCatalogue.size() == 4, "Expect to receive 3 ground station metadata. Received " + locationCatalogue.size());
 
         List<Satellite> satelliteCatalogue = catalogueApi.getSatellites();
-        azzert(satelliteCatalogue.size() == 2, "Expect to receive 2 location metadata. Received " + satelliteCatalogue.size());
+        azzert(satelliteCatalogue.size() == 3, "Expect to receive 3 satellite metadata. Received " + satelliteCatalogue.size());
 
         /** Test the initialization API. */
 

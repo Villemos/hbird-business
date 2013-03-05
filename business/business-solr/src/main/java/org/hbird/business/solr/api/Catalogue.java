@@ -1,6 +1,5 @@
 package org.hbird.business.solr.api;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.business.api.HbirdApi;
@@ -12,6 +11,7 @@ import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.GroundStationRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
 import org.hbird.exchange.dataaccess.SatelliteRequest;
+import org.hbird.exchange.dataaccess.StateRequest;
 import org.hbird.exchange.navigation.GroundStation;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.Satellite;
@@ -66,14 +66,13 @@ public class Catalogue extends HbirdApi implements ICatalogue {
 
     @Override
     public List<Parameter> getParameters() {
-        ParameterRequest request = createParameterRequest(1000); // TODO - 27.02.2013, kimmell - check the limit
+        ParameterRequest request = createParameterRequest(); 
         return executeRequest(parameterFilter, request);
     }
 
     @Override
     public List<State> getStates() {
-        // TODO - 27.02.2013, kimmell - use StateRequest instead?
-        ParameterRequest request = createStateRequest(1000); // TODO - 27.02.2013, kimmell - check the limit
+        StateRequest request = createStateRequest(); 
         return executeRequest(stateFilter, request);
     }
 
@@ -86,10 +85,10 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     /**
      * @return
      */
-    GroundStationRequest createGroundStationRequest(String issuedBy) {
+    protected GroundStationRequest createGroundStationRequest(String issuedBy) {
         GroundStationRequest request = new GroundStationRequest(issuedBy);
         request.setIsInitialization(true);
-        request.setType(GroundStation.class.getSimpleName());
+        request.setClass(GroundStation.class.getSimpleName());
         request.setRows(1);
         return request;
     }
@@ -97,10 +96,10 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     /**
      * @return
      */
-    SatelliteRequest createSatelliteRequest(String issuedBy) {
+    protected SatelliteRequest createSatelliteRequest(String issuedBy) {
         SatelliteRequest request = new SatelliteRequest(issuedBy);
         request.setIsInitialization(true);
-        request.setType(Satellite.class.getSimpleName());
+        request.setClass(Satellite.class.getSimpleName());
         request.setRows(1);
         return request;
     }
@@ -108,10 +107,9 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     /**
      * @return
      */
-    ParameterRequest createParameterRequest(int limit) {
-        ParameterRequest request = new ParameterRequest(new ArrayList<String>(), limit);
+    protected ParameterRequest createParameterRequest() {
+        ParameterRequest request = new ParameterRequest();
         request.setIsInitialization(true);
-        request.setType(Parameter.class.getSimpleName());
         request.setRows(1);
         return request;
     }
@@ -119,9 +117,10 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     /**
      * @return
      */
-    ParameterRequest createStateRequest(int limit) {
-        ParameterRequest request = createParameterRequest(limit);
-        request.setType(State.class.getSimpleName());
+    protected StateRequest createStateRequest() {
+        StateRequest request = new StateRequest();
+        request.setIsInitialization(true);
+        request.setRows(1);
         return request;
     }
 }

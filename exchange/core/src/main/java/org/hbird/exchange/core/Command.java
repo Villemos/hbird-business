@@ -17,7 +17,6 @@
 package org.hbird.exchange.core;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -84,12 +83,33 @@ public class Command extends Named implements IScheduled {
     /** List of arguments. The value is embedded in the header of the exchange. */
     private final Map<String, CommandArgument> arguments;
 
+    /**
+     * Constructor to create a command with the standard set of arguments. The arguments
+     * will be created using the method {@link #getArgumentDefinitions()}
+     * 
+     * @param issuedBy The name of the entity issuing this command
+     * @param destination The destination of the command
+     * @param name The name of the command
+     * @param description The description of the command
+     */
     public Command(String issuedBy, String destination, String name, String description) {
         super(issuedBy, name, Command.class.getSimpleName(), description);
         this.destination = destination;
-        this.arguments = createArgumentMap();
+        this.arguments = createArgumentMap(getArgumentDefinitions());
     }
 
+    
+    /**
+     * Constructor to create a command with a custom set of arguments. The provided
+     * set of arguments override the arguments defined by the 
+     * {@link #getArgumentDefinitions()} method. 
+     * 
+     * @param issuedBy The name of the entity issuing this command
+     * @param destination The destination of the command
+     * @param name The name of the command
+     * @param description The description of the command
+     * @param arguments The arguments to be used
+     */
     public Command(String issuedBy, String destination, String name, String description, List<CommandArgument> arguments) {
         super(issuedBy, name, Command.class.getSimpleName(), description);
         this.destination = destination;
@@ -120,21 +140,9 @@ public class Command extends Named implements IScheduled {
      * @return {@link Map} of {@link CommandArgument}s
      * @see #getArgumentDefinitions()
      */
-    protected Map<String, CommandArgument> createArgumentMap() {
-        Map<String, CommandArgument> map = new HashMap<String, CommandArgument>();
-        return map;
-    }
-
-    /**
-     * Creates {@link Map} of {@link CommandArgument}s.
-     * 
-     * Method {@link #getArgumentDefinitions()} is used to fill the {@link Map}.
-     * 
-     * @return {@link Map} of {@link CommandArgument}s
-     * @see #getArgumentDefinitions()
-     */
     protected Map<String, CommandArgument> createArgumentMap(List<CommandArgument> args) {
-        Map<String, CommandArgument> map = new HashMap<String, CommandArgument>(args.size());
+       
+    	Map<String, CommandArgument> map = new HashMap<String, CommandArgument>(args.size());
 
         for (CommandArgument arg : args) {
             map.put(arg.getName(), arg);
