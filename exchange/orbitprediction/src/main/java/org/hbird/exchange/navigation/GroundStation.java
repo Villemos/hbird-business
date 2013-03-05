@@ -22,16 +22,16 @@ package org.hbird.exchange.navigation;
 import java.util.Collections;
 import java.util.List;
 
-import org.hbird.exchange.core.ILocationSpecific;
+import org.hbird.exchange.core.IGroundStationSpecific;
 import org.hbird.exchange.core.Named;
 
 /**
  *
  */
-public class GroundStation extends Named implements ILocationSpecific {
+public class GroundStation extends Named implements IGroundStationSpecific {
 
-    public static final String DESCRIPTION = "Ground Station description"; // TODO - 26.02.2013, kimmell -
-    public static final String TYPE = "Ground Station type"; // TODO - 26.02.2013, kimmell -
+    public static final String DESCRIPTION = "GroundStation definition";
+    public static final String TYPE = GroundStation.class.getSimpleName();
 
     private static final long serialVersionUID = -8558418536858999621L;
 
@@ -46,16 +46,18 @@ public class GroundStation extends Named implements ILocationSpecific {
     }
 
     /**
-     * @see org.hbird.exchange.core.ILocationSpecific#getLocationName()
+     * @see org.hbird.exchange.core.IGroundStationSpecific#getGroundStationName()
      */
-    public String getLocationName() {
+    @Override
+    public String getGroundStationName() {
         return name;
     }
 
     /**
-     * @see org.hbird.exchange.core.ILocationSpecific#setLocationName(java.lang.String)
+     * @see org.hbird.exchange.core.IGroundStationSpecific#setGroundStationName(java.lang.String)
      */
-    public void setLocationName(String location) {
+    @Override
+    public void setGroundStationName(String location) {
         this.name = location;
     }
 

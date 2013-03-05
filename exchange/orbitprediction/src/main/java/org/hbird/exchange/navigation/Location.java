@@ -16,7 +16,7 @@
  */
 package org.hbird.exchange.navigation;
 
-import org.hbird.exchange.core.ILocationSpecific;
+import org.hbird.exchange.core.IGroundStationSpecific;
 
 /**
  * As the name indicates, a 'Location' is a fixed place on (or near) earths surface.
@@ -29,7 +29,7 @@ import org.hbird.exchange.core.ILocationSpecific;
  * 
  */
 @Deprecated
-public class Location extends D3Vector implements ILocationSpecific {
+public class Location extends D3Vector implements IGroundStationSpecific {
 
     /** Unique UID. */
     private static final long serialVersionUID = -2884807949988009796L;
@@ -95,12 +95,12 @@ public class Location extends D3Vector implements ILocationSpecific {
     }
 
     @Override
-    public String getLocationName() {
+    public String getGroundStationName() {
         return name;
     }
 
     @Override
-    public void setLocationName(String location) {
+    public void setGroundStationName(String location) {
         this.name = location;
     }
 }

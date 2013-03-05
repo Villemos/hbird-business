@@ -35,9 +35,7 @@ import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.navigation.D3Vector;
-import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.OrbitalState;
-import org.hbird.exchange.navigation.Satellite;
 
 /**
  * Request for orbit predictions. The prediction will result in a stream of 'OrbitalState'
@@ -160,9 +158,8 @@ public class OrbitPredictionRequest extends Command {
         return getArgumentValue(StandardArguments.SATELLITE_NAME, String.class);
     }
 
-    // TODO - 27.02.2013, kimmell - CHECK THIS!
-    public void setSatellite(Satellite satellite) {
-        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+    public void setSatelliteName(String satelliteName) {
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satelliteName);
     }
 
     public Long getStarttime() {
@@ -210,12 +207,11 @@ public class OrbitPredictionRequest extends Command {
         setArgumentValue(StandardArguments.CONTACT_DATA_STEP_SIZE, contactDataStepSize);
     }
 
-    public List<String> getLocations() {
+    public List<String> getGroundStationNames() {
         return getArgumentValue(StandardArguments.GROUND_STATION_NAMES, List.class);
     }
 
-    // TODO - 28.02.2013, kimmell - check this!
-    public void setLocations(List<Location> locations) {
+    public void setGroundStationNames(List<String> locations) {
         setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
     }
 }

@@ -40,7 +40,7 @@ import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.core.IApplicableTo;
 import org.hbird.exchange.core.IDerived;
 import org.hbird.exchange.core.IGenerationTimestamped;
-import org.hbird.exchange.core.ILocationSpecific;
+import org.hbird.exchange.core.IGroundStationSpecific;
 import org.hbird.exchange.core.ISatelliteSpecific;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.NamedInstanceIdentifier;
@@ -479,8 +479,8 @@ public class SolrProducer extends DefaultProducer {
         if (io instanceof ISatelliteSpecific) {
             document.addField("ofSatellite", ((ISatelliteSpecific) io).getSatelliteName());
         }
-        if (io instanceof ILocationSpecific) {
-            document.addField("ofLocation", ((ILocationSpecific) io).getLocationName());
+        if (io instanceof IGroundStationSpecific) {
+            document.addField("ofLocation", ((IGroundStationSpecific) io).getGroundStationName());
         }
         if (io instanceof IDerived) {
             document.addField("derivedFromName", ((IDerived) io).from().getName());

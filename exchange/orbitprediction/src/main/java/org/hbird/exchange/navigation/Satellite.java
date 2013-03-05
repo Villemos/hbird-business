@@ -33,7 +33,7 @@ public class Satellite extends Named implements ISatelliteSpecific {
     protected String satelliteNumber;
 
     public Satellite() {
-    };
+    }
 
     /**
      * Constructor.
@@ -42,8 +42,7 @@ public class Satellite extends Named implements ISatelliteSpecific {
      * @param description The description of the satellite.
      */
     public Satellite(String issuedBy, String name, String description) {
-        // FIXME - 27.02.2013, kimmell - "Satellite"
-        super(issuedBy, name, "Satellite", description);
+        super(issuedBy, name, Satellite.class.getSimpleName(), description);
     }
 
     public String getDesignator() {

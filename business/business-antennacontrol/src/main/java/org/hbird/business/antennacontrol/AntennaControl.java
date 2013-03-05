@@ -21,15 +21,19 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
+import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IQueueManagement;
 import org.hbird.business.navigation.NavigationUtilities;
 import org.hbird.exchange.movementcontrol.PointingRequest;
+import org.hbird.exchange.movementcontrol.SetRadioFrequencyRequest;
 import org.hbird.exchange.navigation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Satellite;
 import org.orekit.errors.OrekitException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The antenna control will generate a schedule for a specific antenna (location) for tracking of a
@@ -52,14 +56,16 @@ import org.orekit.errors.OrekitException;
  */
 public class AntennaControl {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AntennaControl.class);
+
     /** The definition of {@link GroundStation}. */
-    protected GroundStation groundStation = null;
+    protected final String groundStationName;
 
     /** The definition of the {@link Satellite} to track. */
-    protected Satellite satellite = null;
+    protected final String satelliteName;
 
     /** The name of this component. */
-    protected String name;
+    protected final String name;
 
     /** The name of the activemq queue holding the antenna schedule. */
     protected String queueUri = "hbird.antennaschedule";
@@ -73,6 +79,9 @@ public class AntennaControl {
     /** API to manage the antenna schedule queue. */
     protected IQueueManagement queueApi = null;
 
+    /** API for retrieving Satellite and GroundStation objects. */
+    protected ICatalogue catalogueApi = null;
+
     /** The last retrieved contact events for the location / satellite. */
     protected List<LocationContactEvent> nextContactEvents = new ArrayList<LocationContactEvent>();
 
@@ -81,13 +90,13 @@ public class AntennaControl {
      * 
      * @param name The name of this component. Used when issue requests (issuedBy).
      * @param location The location (antenna) that this controller is controlling.
-     * @param satellite The satellite that the controller manages the schedule for.
+     * @param satelliteName The satellite that the controller manages the schedule for.
      * @param queueName The name of the queue into which the antenna control commands shall be injected.
      */
-    public AntennaControl(String name, GroundStation groundStation, Satellite satellite, String queueUri) {
+    public AntennaControl(String name, String groundStationName, String satelliteName, String queueUri) {
         this.name = name;
-        this.groundStation = groundStation;
-        this.satellite = satellite;
+        this.groundStationName = groundStationName;
+        this.satelliteName = satelliteName;
         this.queueUri = queueUri;
         injectUri += name;
     }
@@ -104,7 +113,7 @@ public class AntennaControl {
     public void process(CamelContext context) throws OrekitException {
 
         /** Retrieve the next set of contact events (start-end) for this station. */
-        List<LocationContactEvent> contactEvents = api.retrieveNextLocationContactEventsFor(groundStation.getName(), satellite.getName());
+        List<LocationContactEvent> contactEvents = api.retrieveNextLocationContactEventsFor(groundStationName, satelliteName);
 
         /** If there are contact events. */
         if (contactEvents.size() == 2) {
@@ -117,7 +126,7 @@ public class AntennaControl {
                     queueApi.clearQueue(queueUri);
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    LOG.error("Failed to clear command queue at {}", queueUri, e);
                 }
 
                 /** Create the new schedule. */
@@ -125,23 +134,46 @@ public class AntennaControl {
 
                 ProducerTemplate template = context.createProducerTemplate();
 
+                GroundStation groundStation = catalogueApi.getGroundStationByName(groundStationName);
+                if (groundStation == null) {
+                    LOG.error("No Ground Station available for the name {}", groundStationName);
+                    return;
+                }
+
+                Satellite satellite = catalogueApi.getSatelliteByName(satelliteName);
+                if (satellite == null) {
+                    LOG.error("No Satellite available for the name {}", satelliteName);
+                    return;
+                }
+
                 /** Create the commands to be executed PRE parse, i.e. for setup / configuration. */
                 // TODO
 
-                int counter = 0;
-
                 /** Calculate the contact data details based on the contact events. Create the WHILE parse commands. */
                 for (PointingData point : NavigationUtilities.calculateContactData(contactEvents.get(0), contactEvents.get(1), groundStation, satellite, 500)) {
-                    PointingRequest command = new PointingRequest(this.name, "", point.getAzimuth(), point.getElevation(), point.getDoppler(),
-                            point.getDopplerShift());
-                    command.setReleaseTime(point.getTimestamp());
-                    template.sendBody(injectUri, command);
+                    PointingRequest antennCommand = new PointingRequest(this.name, "", point.getAzimuth(), point.getElevation(), point.getDoppler());
+
+                    // TODO - 05.03.2013, kimmell - actually there can be more than one frequency to set: up-link &
+                    // down-link
+                    double baseFrequency = getFrequency(groundStation, satellite);
+                    double frequencyToSet = NavigationUtilities.calculateDopplerShift(point.getDoppler(), baseFrequency);
+                    SetRadioFrequencyRequest radioCommand = new SetRadioFrequencyRequest(this.name, "", frequencyToSet);
+
+                    antennCommand.setReleaseTime(point.getTimestamp());
+                    radioCommand.setReleaseTime(point.getTimestamp());
+                    template.sendBody(injectUri, antennCommand);
+                    template.sendBody(injectUri, radioCommand);
                 }
 
                 /** Create the commands to be executed AFTER parse. */
                 // TODO
             }
         }
+    }
+
+    double getFrequency(GroundStation groundStation, Satellite satellite) {
+        // TODO - 05.03.2013, kimmell - implement
+        return -1.0D;
     }
 
     /**
@@ -167,5 +199,13 @@ public class AntennaControl {
 
     public void setQueueApi(IQueueManagement queueApi) {
         this.queueApi = queueApi;
+    }
+
+    public void setCatalogueApi(ICatalogue catalogueApi) {
+        this.catalogueApi = catalogueApi;
+    }
+
+    public ICatalogue getCatalogueApi() {
+        return catalogueApi;
     }
 }

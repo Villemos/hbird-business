@@ -27,7 +27,7 @@ import java.util.List;
  * @author Gert Villemos
  *
  */
-public class DataSet extends Named implements IGenerationTimestamped, ILocationSpecific, ISatelliteSpecific {
+public class DataSet extends Named implements IGenerationTimestamped, IGroundStationSpecific, ISatelliteSpecific {
 
 	private static final long serialVersionUID = 1999602415313253135L;
 
@@ -73,11 +73,11 @@ public class DataSet extends Named implements IGenerationTimestamped, ILocationS
 		this.timestamp = generationtime;
 	}
 
-	public String getLocationName() {
+	public String getGroundStationName() {
 		return location;
 	}
 
-	public void setLocationName(String location) {
+	public void setGroundStationName(String location) {
 		this.location = location;
 	}
 

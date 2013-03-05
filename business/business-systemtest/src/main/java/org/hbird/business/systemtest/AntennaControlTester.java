@@ -19,7 +19,6 @@ import org.hbird.business.navigation.controller.OrbitPropagationController;
 import org.hbird.exchange.configurator.StartAntennaControllerComponent;
 import org.hbird.exchange.navigation.D3Vector;
 import org.hbird.exchange.navigation.GroundStation;
-import org.hbird.exchange.navigation.Location;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -48,21 +47,38 @@ public class AntennaControlTester extends SystemTest {
         es5ec.setIssuedBy("SystemTest");
         es5ec.setName("ES5EC");
         es5ec.setDescription("Test location 1");
-        D3Vector geoLocation = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Tartu, Tähe 4", Math.toRadians(58.3000D),
-                Math.toRadians(26.7330D), 59.0D);
-        es5ec.setGeoLocation(geoLocation);
+        es5ec.setGeoLocation(new D3Vector("SystemTest", "Tartu", D3Vector.class.getSimpleName(), "Tartu, Tähe 4", Math.toRadians(58.3000D), Math
+                .toRadians(26.7330D), 59.0D));
 
         Satellite estcube = new Satellite();
         estcube.setName("ESTCube-1");
         estcube.setIssuedBy("SystemTest");
 
         injection.sendBody(es5ec);
-        injection.sendBody(new Location("SystemTest", "Aalborg", "Test location 2", Math.toRadians(55.659306D), Math.toRadians(12.587585D), 59.0D,
-                136.92 * 1000000));
-        injection.sendBody(new Location("SystemTest", "Darmstadt", "Test location 3", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D,
-                126.92 * 1000000));
-        injection.sendBody(new Location("SystemTest", "New York", "Test location 4", Math.toRadians(40.66564D), Math.toRadians(-74.036865D), 59.0D,
-                116.92 * 1000000));
+
+        GroundStation gsAalborg = new GroundStation();
+        gsAalborg.setIssuedBy("SystemTest");
+        gsAalborg.setName("Aalborg Ground Station");
+        gsAalborg.setDescription("Test location 2");
+        gsAalborg.setGeoLocation(new D3Vector("SystemTest", "Aalborg", D3Vector.class.getSimpleName(), "Aalborg, ", Math.toRadians(55.659306D), Math
+                .toRadians(12.587585D), 59.0D));
+        injection.sendBody(gsAalborg);
+
+        GroundStation gsDarmstadt = new GroundStation();
+        gsDarmstadt.setIssuedBy("SystemTest");
+        gsDarmstadt.setName("Darmstadt Ground Station");
+        gsDarmstadt.setDescription("Test Location 3");
+        gsDarmstadt.setGeoLocation(new D3Vector("SystemTest", "Darmstadt", D3Vector.class.getSimpleName(), "Test location 3", Math.toRadians(49.831605D), Math
+                .toRadians(8.673706D), 59.0D));
+        injection.sendBody(gsDarmstadt);
+
+        GroundStation gsNY = new GroundStation();
+        gsNY.setIssuedBy("SystemTest");
+        gsNY.setName("New York Ground Station");
+        gsNY.setDescription("Test location 4");
+        gsNY.setGeoLocation(new D3Vector("SystemTest", "New York", D3Vector.class.getSimpleName(), "Test location 4", Math.toRadians(40.66564D), Math
+                .toRadians(-74.036865D), 59.0D));
+        injection.sendBody(gsNY);
 
         /** Store a set of satellites */
         injection.sendBody(new Satellite("SystemTest", "ESTcube", "Test satellite 1"));
@@ -90,7 +106,7 @@ public class AntennaControlTester extends SystemTest {
         Thread.sleep(1000);
 
         /** Now start the antenna controller. */
-        injection.sendBody(new StartAntennaControllerComponent("TestAntenna", es5ec, estcube));
+        injection.sendBody(new StartAntennaControllerComponent("TestAntenna", es5ec.getGroundStationName(), estcube.getSatelliteName()));
 
         Thread.sleep(5000);
 
