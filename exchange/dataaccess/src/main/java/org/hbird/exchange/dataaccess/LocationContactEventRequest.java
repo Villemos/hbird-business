@@ -32,8 +32,8 @@ public class LocationContactEventRequest extends DataRequest {
      * @see org.hbird.exchange.dataaccess.DataRequest#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = super.getArgumentDefinitions();
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        args = super.getArgumentDefinitions(args);
         args.add(create(SATELLITE_NAME));
         args.add(create(GROUND_STATION_NAME));
         args.add(create(VISIBILITY));

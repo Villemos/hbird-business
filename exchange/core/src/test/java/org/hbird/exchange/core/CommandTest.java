@@ -23,13 +23,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,9 @@ public class CommandTest {
     @Mock
     private CommandArgument arg2;
 
+    @Mock
+    private List<CommandArgument> in;
+
     private InOrder inOrder;
 
     Map<String, CommandArgument> map = new HashMap<String, CommandArgument>();
@@ -76,7 +80,7 @@ public class CommandTest {
     @Before
     public void setUp() throws Exception {
         command = new Command(ISSUER, DESTINATION, NAME, DESCRIPTION, RELEASE_TIME, EXEC_TIME);
-        inOrder = inOrder(arg1, arg2);
+        inOrder = inOrder(arg1, arg2, in);
         when(arg1.getName()).thenReturn(ARG1);
         when(arg2.getName()).thenReturn(ARG2);
         map.put(ARG1, arg1);
@@ -130,8 +134,10 @@ public class CommandTest {
     public void testCreateArgumentMap() {
         Command cmd = new Command(ISSUER, DESTINATION, NAME, DESCRIPTION) {
             @Override
-            protected List<CommandArgument> getArgumentDefinitions() {
-                return Arrays.asList(arg1, arg2);
+            protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+                args.add(arg1);
+                args.add(arg2);
+                return args;
             }
         };
         inOrder.verify(arg1, times(1)).getName();
@@ -152,9 +158,10 @@ public class CommandTest {
      */
     @Test
     public void testGetArgumentDefinitions() {
-        List<CommandArgument> args = command.getArgumentDefinitions();
+        List<CommandArgument> args = command.getArgumentDefinitions(in);
+        inOrder.verifyNoMoreInteractions();
         assertNotNull(args);
-        assertEquals(0, args.size());
+        assertSame(in, args);
     }
 
     /**
@@ -250,7 +257,28 @@ public class CommandTest {
      * Test method for {@link org.hbird.exchange.core.Command#setArgumentValue(java.lang.String, java.lang.Object)}.
      */
     @Test
+    public void testSetArgumentValueWithWrongType() {
+        command.addArguments(map);
+
+        doReturn(String.class).when(arg1).getType();
+        try {
+            command.setArgumentValue(ARG1, new Object());
+            fail("exception expected");
+        }
+        catch (Exception e) {
+            assertEquals(IllegalArgumentException.class, e.getClass());
+        }
+        inOrder.verify(arg1, times(1)).getType();
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    /**
+     * Test method for {@link org.hbird.exchange.core.Command#setArgumentValue(java.lang.String, java.lang.Object)}.
+     */
+    @Test
     public void testSetArgumentValue() {
+        doReturn(Object.class).when(arg1).getType();
+        doReturn(Number.class).when(arg2).getType();
         command.addArguments(map);
         command.setArgumentValue(ARG1, NAME);
         command.setArgumentValue(ARG2, NOW);
@@ -310,13 +338,18 @@ public class CommandTest {
         assertNull(command.getArgumentValue(ARG1, Double.class));
         command.addArguments(map);
         when(arg1.getValue()).thenReturn(NAME);
+        doReturn(Double.class).when(arg1).getType();
         try {
+            @SuppressWarnings("unused")
             Double value = command.getArgumentValue(ARG1, Double.class);
             fail("Exception expected");
         }
         catch (ClassCastException cce) {
             assertNotNull(cce.getMessage());
         }
+        inOrder.verify(arg1, times(1)).getType();
+        inOrder.verify(arg1, times(1)).getValue();
+        inOrder.verifyNoMoreInteractions();
     }
 
     /**
@@ -328,17 +361,47 @@ public class CommandTest {
         assertNull(command.getArgumentValue(ARG2, Long.class));
         command.addArguments(map);
         when(arg1.getValue()).thenReturn(NAME);
+        doReturn(String.class).when(arg1).getType();
+        doReturn(Long.class).when(arg2).getType();
         when(arg2.getValue()).thenReturn(NOW);
         assertEquals(NAME, command.getArgumentValue(ARG1, String.class));
         assertEquals(new Long(NOW), command.getArgumentValue(ARG2, Long.class));
+        inOrder.verify(arg1, times(1)).getType();
         inOrder.verify(arg1, times(1)).getValue();
+        inOrder.verify(arg2, times(1)).getType();
         inOrder.verify(arg2, times(1)).getValue();
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    /**
+     * Test method for {@link org.hbird.exchange.core.Command#getArgumentValue(java.lang.String, java.lang.Class)}.
+     */
+    @Test
+    public void testGetArgumentValueStringClassOfTWithWrongType() {
+        command.addArguments(map);
+        doReturn(Number.class).when(arg1).getType();
+        when(arg1.getValue()).thenReturn(123L);
+        assertEquals(123L, command.getArgumentValue(ARG1, Number.class));
+        assertEquals(123L, command.getArgumentValue(ARG1, Object.class));
+        try {
+            command.getArgumentValue(ARG1, Long.class);
+            fail("Exception expected");
+        }
+        catch (Exception e) {
+            assertEquals(IllegalArgumentException.class, e.getClass());
+        }
+        inOrder.verify(arg1, times(1)).getType();
+        inOrder.verify(arg1, times(1)).getValue();
+        inOrder.verify(arg1, times(1)).getType();
+        inOrder.verify(arg1, times(1)).getValue();
+        inOrder.verify(arg1, times(1)).getType();
         inOrder.verifyNoMoreInteractions();
     }
 
     /**
      * Test method for {@link org.hbird.exchange.core.Command#getArgumentValue(java.lang.String)}.
      */
+    @SuppressWarnings("deprecation")
     @Test
     public void testGetArgumentValueString() {
         assertNull(command.getArgumentValue(ARG1));

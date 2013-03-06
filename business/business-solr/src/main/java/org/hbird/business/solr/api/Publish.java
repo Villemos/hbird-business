@@ -117,7 +117,7 @@ public class Publish extends HbirdApi implements IPublish {
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publichMetadata(org.hbird.exchange.core.Named, java.lang.String, java.lang.String)
 	 */
-	public Metadata publichMetadata(Named subject, String key, String value) {
+	public Metadata publishMetadata(Named subject, String key, String value) {
 		Map<String, Object> metadata = new HashMap<String, Object>();
 		metadata.put(key, value);
 		

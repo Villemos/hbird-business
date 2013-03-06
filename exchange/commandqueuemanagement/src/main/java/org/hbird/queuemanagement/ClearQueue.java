@@ -16,7 +16,6 @@
  */
 package org.hbird.queuemanagement;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
@@ -37,9 +36,8 @@ public class ClearQueue extends Command {
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = new ArrayList<CommandArgument>(1);
-        args.add(new CommandArgument(StandardArguments.QUEUE_NAME, "The name of the queue to be displayed.", "String (ID)",
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        args.add(new CommandArgument(StandardArguments.QUEUE_NAME, "The name of the queue to be displayed.", String.class,
                 "", "hbird.requests", true));
         return args;
     }

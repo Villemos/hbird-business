@@ -16,7 +16,6 @@
  */
 package org.hbird.exchange.core;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,9 +56,8 @@ public class NativeCommand extends Command {
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = new ArrayList<CommandArgument>(1);
-        args.add(new CommandArgument(ARGUMENT_COMMAND_TO_EXECUTE, DESCRIPTION, "String", "", null, true));
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        args.add(new CommandArgument(ARGUMENT_COMMAND_TO_EXECUTE, DESCRIPTION, String.class, true));
         return args;
     }
 

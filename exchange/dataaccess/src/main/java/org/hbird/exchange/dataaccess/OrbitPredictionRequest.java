@@ -66,7 +66,8 @@ public class OrbitPredictionRequest extends Command {
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, starttime);
         setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
-        setArgumentValue(StandardArguments.INITIAL_STATE, new OrbitalState(issuedBy, name, "Initial", description, starttime, satellite, position, velocity, momentum, "", 0, ""));
+        setArgumentValue(StandardArguments.INITIAL_STATE, new OrbitalState(issuedBy, name, "Initial", description, starttime, satellite, position, velocity,
+                momentum, "", 0, ""));
     }
 
     /**
@@ -140,8 +141,8 @@ public class OrbitPredictionRequest extends Command {
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = super.getArgumentDefinitions();
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        args = super.getArgumentDefinitions(args);
         args.add(create(SATELLITE_NAME));
         args.add(create(START_TIME));
         args.add(create(GROUND_STATION_NAMES));

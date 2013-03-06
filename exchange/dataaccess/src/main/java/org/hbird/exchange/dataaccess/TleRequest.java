@@ -55,8 +55,8 @@ public class TleRequest extends DataRequest {
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = super.getArgumentDefinitions();
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        args = super.getArgumentDefinitions(args);
         args.add(create(SATELLITE_NAME));
         return args;
     }

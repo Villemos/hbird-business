@@ -55,15 +55,14 @@ public class RemoveQueueElements extends Command {
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = new ArrayList<CommandArgument>(3);
-        args.add(new CommandArgument(StandardArguments.QUEUE_NAME, "The name of the queue to be displayed.", "String (queue ID)", "", "hbird.requests", true));
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        args.add(new CommandArgument(StandardArguments.QUEUE_NAME, "The ID of the queue to be displayed.", String.class, "", "hbird.requests", true));
         args.add(new CommandArgument(StandardArguments.ELEMENTS, "List of JMS IDs of the elements to be removed. Can be set in paralle to the 'pattern'.",
-                "String (JMS ID)", "", new ArrayList<String>(), true));
+                List.class, "", new ArrayList<String>(), true));
         args.add(new CommandArgument(
                 StandardArguments.PATTERN,
-                "A pattern based on which to remove elements. Can be set on parallel to the specific 'elements' list. The pattern is matched against the 'properties' string which is in the format '{[property]=[value],[property]=[value],...}'.",
-                "String (Reg.Ex.)", "", null, true));
+                "A reg. ex. pattern based on which to remove elements. Can be set on parallel to the specific 'elements' list. The pattern is matched against the 'properties' string which is in the format '{[property]=[value],[property]=[value],...}'.",
+                String.class, true));
         return args;
     }
 

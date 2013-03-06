@@ -16,7 +16,6 @@
  */
 package org.hbird.exchange.configurator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
@@ -42,12 +41,11 @@ public abstract class StartComponent extends Command {
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = new ArrayList<CommandArgument>();
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
         args.add(new CommandArgument(StandardArguments.COMPONENT_NAME,
-                "The name of the component to be started. Is used to route messages to the component. All data will be 'issuedby' this name.", "String", "",
-                null, true));
-        args.add(new CommandArgument(StandardArguments.HEART_BEAT, "The period between heartbeat signals (BusinessCards) from this component.", "Long",
+                "The name of the component to be started. Is used to route messages to the component. All data will be 'issuedby' this name.", String.class,
+                true));
+        args.add(new CommandArgument(StandardArguments.HEART_BEAT, "The period between heartbeat signals (BusinessCards) from this component.", Long.class,
                 "Milliseconds", 5000L, true));
         return args;
     }

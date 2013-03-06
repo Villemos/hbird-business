@@ -58,8 +58,7 @@ public class DataRequest extends Command {
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = new ArrayList<CommandArgument>(12);
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
         args.add(create(TYPE));
         args.add(create(CLASS));
         args.add(create(FROM));

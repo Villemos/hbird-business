@@ -84,7 +84,7 @@ public interface IPublish {
 	 * @param key The key of the metadata.
 	 * @param metadata The value of the metadata
 	 */
-	public Metadata publichMetadata(Named subject, String key, String metadata);
+	public Metadata publishMetadata(Named subject, String key, String metadata);
 
 	public TleOrbitalParameters publishTleParameters(String satellite, String type, String tle1, String tle2);
 }

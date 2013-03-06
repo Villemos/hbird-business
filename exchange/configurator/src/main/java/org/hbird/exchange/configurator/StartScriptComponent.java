@@ -80,7 +80,7 @@ public class StartScriptComponent extends StartComponent {
      */
     public StartScriptComponent(String componentname, String scriptName, String script, Named output, Map<String, String> bindings) {
         super(componentname, StartScriptComponent.class.getSimpleName(), DESCRIPTION);
-        
+
         ScriptExecutionRequest request = new ScriptExecutionRequest(scriptName, script, "JavaScript", output, bindings);
         setArgumentValue(StandardArguments.SCRIPT_DEFINITION, request);
     }
@@ -170,9 +170,9 @@ public class StartScriptComponent extends StartComponent {
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = super.getArgumentDefinitions();
-        args.add(new CommandArgument(StandardArguments.SCRIPT_DEFINITION, "The definition of the script.", "ScriptExecutionRequest", "", null, true));
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        args = super.getArgumentDefinitions(args);
+        args.add(new CommandArgument(StandardArguments.SCRIPT_DEFINITION, "The definition of the script.", ScriptExecutionRequest.class, true));
         return args;
     }
 }

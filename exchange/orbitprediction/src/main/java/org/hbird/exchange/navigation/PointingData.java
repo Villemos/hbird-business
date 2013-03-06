@@ -51,6 +51,8 @@ public class PointingData extends DerivedNamed implements ISatelliteSpecific, IG
      * 
      * This formula is implemented in package org.hbird.business.business-navigation.
      * 
+     * See Doppler factor - http://en.wikipedia.org/wiki/Relativistic_Doppler_effect#Motion_along_the_line_of_sight
+     * 
      * @see NavigationUtilities#calculateDopplerShift(double doppler, doubel frequency)
      */
     protected Double doppler;
@@ -59,9 +61,9 @@ public class PointingData extends DerivedNamed implements ISatelliteSpecific, IG
     protected String satelliteName;
 
     protected String groundStationName;
-    
-    public PointingData(String issuedBy, String type, long timestamp, Double azimuth, Double elevation, Double doppler, Double dopplerShift, String satelliteName,
-            String groundStationName, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+
+    public PointingData(String issuedBy, String type, long timestamp, Double azimuth, Double elevation, Double doppler, Double dopplerShift,
+            String satelliteName, String groundStationName, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
         super(issuedBy, PointingData.class.getSimpleName(), type, "Contact data between a satellite and a location", timestamp, derivedFromName,
                 derivedFromTimestamp, derivedFromType);
         this.azimuth = azimuth;

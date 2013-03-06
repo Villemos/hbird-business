@@ -24,12 +24,12 @@ public class CommandArgument implements Serializable {
 
     private final String name;
     private final String description;
-    private final String type;
+    private final Class<?> type;
     private final String unit;
     private Object value;
     private final Boolean mandatory;
 
-    public CommandArgument(String name, String description, String type, String unit, Object value, Boolean mandatory) {
+    public CommandArgument(String name, String description, Class<?> type, String unit, Object value, Boolean mandatory) {
         this.name = name;
         this.description = description;
         this.type = type;
@@ -38,13 +38,12 @@ public class CommandArgument implements Serializable {
         this.mandatory = mandatory;
     }
 
+    public CommandArgument(String name, String description, Class<?> type, Boolean mandatory) {
+        this(name, description, type, null, null, mandatory);
+    }
+
     public CommandArgument(CommandArgument copyFrom) {
-        this.name = copyFrom.getName();
-        this.description = copyFrom.getDescription();
-        this.type = copyFrom.getType();
-        this.unit = copyFrom.getUnit();
-        this.value = copyFrom.getValue();
-        this.mandatory = copyFrom.getMandatory();
+        this(copyFrom.getName(), copyFrom.getDescription(), copyFrom.getType(), copyFrom.getUnit(), copyFrom.getValue(), copyFrom.getMandatory());
     }
 
     /**
@@ -64,7 +63,7 @@ public class CommandArgument implements Serializable {
     /**
      * @return the type
      */
-    public String getType() {
+    public Class<?> getType() {
         return type;
     }
 

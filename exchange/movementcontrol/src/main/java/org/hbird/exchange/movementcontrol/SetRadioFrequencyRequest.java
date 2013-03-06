@@ -19,7 +19,6 @@
  */
 package org.hbird.exchange.movementcontrol;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
@@ -45,9 +44,8 @@ public class SetRadioFrequencyRequest extends Command {
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = new ArrayList<CommandArgument>();
-        args.add(new CommandArgument(StandardArguments.FREQUENCY, "The radio frequency to set.", "Double", "Hertz", null, true));
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        args.add(new CommandArgument(StandardArguments.FREQUENCY, "The radio frequency to set.", Double.class, "Hertz", null, true));
         return args;
     }
 }

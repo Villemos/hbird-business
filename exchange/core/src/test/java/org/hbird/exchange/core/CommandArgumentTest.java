@@ -21,6 +21,7 @@ package org.hbird.exchange.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -40,7 +41,6 @@ public class CommandArgumentTest {
 
     private static final String NAME = "Argument name";
     private static final String DESCRIPTION = "Description of the argument";
-    private static final String TYPE = "Argument type";
     private static final String UNIT = "Unit of the argument";
     private static final Boolean MANDATORY = Boolean.TRUE;
 
@@ -59,7 +59,7 @@ public class CommandArgumentTest {
      */
     @Before
     public void setUp() throws Exception {
-        commandArgument = new CommandArgument(NAME, DESCRIPTION, TYPE, UNIT, value, MANDATORY);
+        commandArgument = new CommandArgument(NAME, DESCRIPTION, Object.class, UNIT, value, MANDATORY);
         inOrder = inOrder(copyFrom, value);
     }
 
@@ -86,7 +86,7 @@ public class CommandArgumentTest {
     public void testCommandArgumentCommandArgument() {
         when(copyFrom.getName()).thenReturn("N");
         when(copyFrom.getDescription()).thenReturn("D");
-        when(copyFrom.getType()).thenReturn("T");
+        doReturn(Float.class).when(copyFrom).getType();
         when(copyFrom.getUnit()).thenReturn("U");
         when(copyFrom.getValue()).thenReturn(value);
         when(copyFrom.getMandatory()).thenReturn(Boolean.FALSE);
@@ -100,7 +100,7 @@ public class CommandArgumentTest {
         inOrder.verifyNoMoreInteractions();
         assertEquals("N", ca.getName());
         assertEquals("D", ca.getDescription());
-        assertEquals("T", ca.getType());
+        assertEquals(Float.class, ca.getType());
         assertEquals("U", ca.getUnit());
         assertEquals(value, ca.getValue());
         assertEquals(Boolean.FALSE, ca.getMandatory());
@@ -127,7 +127,7 @@ public class CommandArgumentTest {
      */
     @Test
     public void testGetType() {
-        assertEquals(TYPE, commandArgument.getType());
+        assertEquals(Object.class, commandArgument.getType());
     }
 
     /**

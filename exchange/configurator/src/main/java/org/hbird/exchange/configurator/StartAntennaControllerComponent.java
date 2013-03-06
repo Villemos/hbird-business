@@ -22,11 +22,11 @@ public class StartAntennaControllerComponent extends StartComponent {
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = super.getArgumentDefinitions();
-        args.add(new CommandArgument(StandardArguments.GROUND_STATION_NAME, "GroundStation name.", "String", "", null, true));
-        args.add(new CommandArgument(StandardArguments.SATELLITE_NAME, "Satellite name.", "String", "", null, true));
-        args.add(new CommandArgument(StandardArguments.QUEUE_NAME, "The name of the queue into which the schedule shall be send.", "String", "", null, true));
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        args = super.getArgumentDefinitions(args);
+        args.add(new CommandArgument(StandardArguments.GROUND_STATION_NAME, "GroundStation name.", String.class, true));
+        args.add(new CommandArgument(StandardArguments.SATELLITE_NAME, "Satellite name.", String.class, true));
+        args.add(new CommandArgument(StandardArguments.QUEUE_NAME, "The name of the queue into which the schedule shall be send.", String.class, true));
         return args;
     }
 

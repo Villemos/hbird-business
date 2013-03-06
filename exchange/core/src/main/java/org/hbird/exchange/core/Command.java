@@ -95,14 +95,12 @@ public class Command extends Named implements IScheduled {
     public Command(String issuedBy, String destination, String name, String description) {
         super(issuedBy, name, Command.class.getSimpleName(), description);
         this.destination = destination;
-        this.arguments = createArgumentMap(getArgumentDefinitions());
+        this.arguments = createArgumentMap(getArgumentDefinitions(new ArrayList<CommandArgument>()));
     }
 
-    
     /**
      * Constructor to create a command with a custom set of arguments. The provided
-     * set of arguments override the arguments defined by the 
-     * {@link #getArgumentDefinitions()} method. 
+     * set of arguments override the arguments defined by the {@link #getArgumentDefinitions()} method.
      * 
      * @param issuedBy The name of the entity issuing this command
      * @param destination The destination of the command
@@ -141,8 +139,8 @@ public class Command extends Named implements IScheduled {
      * @see #getArgumentDefinitions()
      */
     protected Map<String, CommandArgument> createArgumentMap(List<CommandArgument> args) {
-       
-    	Map<String, CommandArgument> map = new HashMap<String, CommandArgument>(args.size());
+
+        Map<String, CommandArgument> map = new HashMap<String, CommandArgument>(args.size());
 
         for (CommandArgument arg : args) {
             map.put(arg.getName(), arg);
@@ -151,16 +149,18 @@ public class Command extends Named implements IScheduled {
     }
 
     /**
-     * Returns list of {@link CommandArgument}s for the {@link Command}.
+     * Adds {@link CommandArgument}s to the {@link Command} argument list.
+     * 
+     * Result of this method is used to create {@link Command}'s argument map.
      * 
      * Override this method to add custom {@link CommandArgument}s to the {@link Command} object.
      * 
+     * @param args {@link List} of {@link CommandArgument}s
      * @return List of {@link CommandArgument}s for the {@link Command}
      * @see #createArgumentMap()
      */
-    protected List<CommandArgument> getArgumentDefinitions() {
-        return new ArrayList<CommandArgument>();
-    	// return Collections.emptyList();
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        return args;
     }
 
     public Map<String, CommandArgument> getArguments() {
@@ -220,12 +220,31 @@ public class Command extends Named implements IScheduled {
         this.destination = destination;
     }
 
+    /**
+     * Sets value of the {@link CommandArgument}.
+     * 
+     * {@link CommandArgument} is selected by the key.
+     * If {@link CommandArgument} for the key is not found {@link IllegalArgumentException} is thrown.
+     * In case class of the value is not assignable for {@link CommandArgument}'s type {@link IllegalArgumentException}
+     * is thrown
+     * 
+     * @param key {@link CommandArgument} identifier
+     * @param value vale for the {@link CommandArgument}
+     * @throws IllegalArgumentException if {@link CommandArgument} is not found for the key or value type is not
+     *             accepted
+     */
     public void setArgumentValue(String key, Object value) throws IllegalArgumentException {
         if (!arguments.containsKey(key)) {
             throw new IllegalArgumentException("Command " + getClass().getSimpleName() + "{name=" + name + "} doesn't have argument with name \"" + key + "\"");
         }
+        CommandArgument arg = arguments.get(key);
+        Class<?> type = arg.getType();
+        if (type.isAssignableFrom(value.getClass())) {
+            arg.setValue(value);
+        }
         else {
-            arguments.get(key).setValue(value);
+            throw new IllegalArgumentException("CommandArgument{name=" + name + ", type=" + type.getName()
+                    + "} is not accepting values with type " + value.getClass().getName());
         }
     }
 
@@ -237,11 +256,31 @@ public class Command extends Named implements IScheduled {
         return hasArgument(key) ? arguments.get(key).getValue() != null : false;
     }
 
+    /**
+     * Returns {@link CommandArgument} value for given key.
+     * 
+     * Return type of the method is defined by the parameter clazz.
+     * Return null if {@link CommandArgument} is not found for the key.
+     * Throws {@link IllegalArgumentException} if value type is not assignable for the clazz.
+     * 
+     * @param key {@link CommandArgument} identifier
+     * @param clazz return type
+     * @return {@link CommandArgument} value in type clazz
+     * @throws IllegalArgumentException if value type is not assignable for the clazz
+     */
     @SuppressWarnings("unchecked")
     public <T> T getArgumentValue(String key, Class<T> clazz) {
         T value = null;
         if (arguments.containsKey(key)) {
-            value = (T) arguments.get(key).getValue();
+            CommandArgument arg = arguments.get(key);
+            Class<?> type = arg.getType();
+            if (clazz.isAssignableFrom(type)) {
+                value = (T) arg.getValue();
+            }
+            else {
+                throw new IllegalArgumentException("CommandArgument{name=" + name + ", type=" + type.getName()
+                        + "} is not assignable for type " + clazz.getName());
+            }
         }
         return value;
     }
@@ -271,11 +310,13 @@ public class Command extends Named implements IScheduled {
     }
 
     // TODO - 01.03.2013, kimmell - check this!
+    @Override
     public long getDelay() {
         long now = System.currentTimeMillis();
         return now < transferTime ? now - transferTime : 0;
     }
 
+    @Override
     public long getDeliveryTime() {
         return transferTime;
     }

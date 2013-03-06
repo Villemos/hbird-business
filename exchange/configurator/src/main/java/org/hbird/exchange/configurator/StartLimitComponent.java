@@ -44,9 +44,9 @@ public class StartLimitComponent extends StartComponent {
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = super.getArgumentDefinitions();
-        args.add(new CommandArgument(StandardArguments.LIMIT, "The limit definition.", "Limit", "", null, true));
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        args = super.getArgumentDefinitions(args);
+        args.add(new CommandArgument(StandardArguments.LIMIT, "The limit definition.", Limit.class, true));
         return args;
     }
 

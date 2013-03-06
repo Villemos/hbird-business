@@ -292,7 +292,7 @@ public abstract class SystemTest {
         String tleLine2 = "2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935";
         TleOrbitalParameters parameters = publishApi.publishTleParameters("ESTCube-1", "Measured", tleLine1, tleLine2);
         
-		publishApi.publichMetadata(parameters, "Author", "This file was approved by Gert Villemos the " + (new Date()).toString());
+		publishApi.publishMetadata(parameters, "Author", "This file was approved by Gert Villemos the " + (new Date()).toString());
 		
 		return parameters;
     }

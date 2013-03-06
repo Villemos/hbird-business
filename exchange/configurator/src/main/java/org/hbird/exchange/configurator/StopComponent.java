@@ -16,7 +16,6 @@
  */
 package org.hbird.exchange.configurator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
@@ -38,9 +37,8 @@ public class StopComponent extends Command {
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
-    protected List<CommandArgument> getArgumentDefinitions() {
-        List<CommandArgument> args = new ArrayList<CommandArgument>(1);
-        args.add(new CommandArgument(StandardArguments.COMPONENT_NAME, "The name of the component to be stopped.", "String", "", null, true));
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        args.add(new CommandArgument(StandardArguments.COMPONENT_NAME, "The name of the component to be stopped.", String.class, true));
         return args;
     }
 
