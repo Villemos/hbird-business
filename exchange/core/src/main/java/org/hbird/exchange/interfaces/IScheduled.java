@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.exchange.core;
+package org.hbird.exchange.interfaces;
 
-public interface IGroundStationSpecific {
 
-    public String getGroundStationName();
+public interface IScheduled {
 
-    public void setGroundStationName(String groundStationName);
+	public long getDelay();
 
+	public long getDeliveryTime();
 }

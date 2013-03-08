@@ -129,13 +129,13 @@ public class NavigationTester extends SystemTest {
             }
             else if (element instanceof LocationContactEvent) {
                 LocationContactEvent event = (LocationContactEvent) element;
-                if (event.isVisible == true) {
-                    System.out.println(new Date(element.getTimestamp()) + " Location Event: " + event.getTimestamp() + " " + event.location
-                            + " got contact to " + event.satellite);
+                if (event.isVisible() == true) {
+                    System.out.println(new Date(element.getTimestamp()) + " Location Event: " + event.getTimestamp() + " " + event.getGroundStationName()
+                            + " got contact to " + event.getSatelliteName());
                 }
                 else {
-                    System.out.println(new Date(element.getTimestamp()) + " Location Event: " + event.getTimestamp() + " " + event.location
-                            + " lost contact to " + event.satellite);
+                    System.out.println(new Date(element.getTimestamp()) + " Location Event: " + event.getTimestamp() + " " + event.getGroundStationName()
+                            + " lost contact to " + event.getSatelliteName());
                 }
             }
             else if (element instanceof PointingData) {

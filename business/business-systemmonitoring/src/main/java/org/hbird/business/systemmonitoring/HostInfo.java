@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class HostInfo {
 
+	
     private static final Logger LOG = LoggerFactory.getLogger(HostInfo.class);
 
     private static final String FALLBACK_HOST_IDENTIFIER = UUID.randomUUID().toString();

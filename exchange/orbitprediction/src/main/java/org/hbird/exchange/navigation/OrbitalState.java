@@ -17,8 +17,8 @@
 package org.hbird.exchange.navigation;
 
 import org.hbird.exchange.core.DerivedNamed;
-import org.hbird.exchange.core.IGenerationTimestamped;
-import org.hbird.exchange.core.ISatelliteSpecific;
+import org.hbird.exchange.interfaces.IGenerationTimestamped;
+import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
 
 /** Class describing a specific orbital state at a give point in time. 

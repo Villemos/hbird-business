@@ -1,4 +1,6 @@
-package org.hbird.exchange.core;
+package org.hbird.exchange.interfaces;
+
+import org.hbird.exchange.core.NamedInstanceIdentifier;
 
 public interface IApplicableTo {
 

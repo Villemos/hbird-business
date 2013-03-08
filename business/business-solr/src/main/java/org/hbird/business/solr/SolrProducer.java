@@ -37,11 +37,6 @@ import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.DataSet;
-import org.hbird.exchange.core.IApplicableTo;
-import org.hbird.exchange.core.IDerived;
-import org.hbird.exchange.core.IGenerationTimestamped;
-import org.hbird.exchange.core.IGroundStationSpecific;
-import org.hbird.exchange.core.ISatelliteSpecific;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.NamedInstanceIdentifier;
 import org.hbird.exchange.core.Parameter;
@@ -49,6 +44,12 @@ import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
+import org.hbird.exchange.interfaces.IApplicableTo;
+import org.hbird.exchange.interfaces.IDerived;
+import org.hbird.exchange.interfaces.IGenerationTimestamped;
+import org.hbird.exchange.interfaces.IGroundStationSpecific;
+import org.hbird.exchange.interfaces.IPartOf;
+import org.hbird.exchange.interfaces.ISatelliteSpecific;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.tasking.Task;
@@ -149,7 +150,8 @@ public class SolrProducer extends DefaultProducer {
         String derivedFromPart = null;
         String applicableToPart = null;
         String visibilityPart = null;
-
+        String isPartOfPart = null;
+        
         /** Set the class of data we are retrieving. */
          if (body.hasArgumentValue(StandardArguments.CLASS)) {
         	 
@@ -208,6 +210,10 @@ public class SolrProducer extends DefaultProducer {
             visibilityPart = "visibility:" + body.getArgumentValue(StandardArguments.VISIBILITY, Boolean.class);
         }
 
+        if (body.hasArgumentValue(StandardArguments.IS_PART_OF)) {
+            isPartOfPart = "isPartOf:" + body.getArgumentValue(StandardArguments.IS_PART_OF, String.class);
+        }
+
         if (typePart != null) {
             request += request.equals("") ? typePart : " AND " + typePart;
         }
@@ -246,6 +252,10 @@ public class SolrProducer extends DefaultProducer {
             request += request.equals("") ? locationPart : " AND " + locationPart;
         }
 
+        if (isPartOfPart != null) {
+            request += request.equals("") ? isPartOfPart : " AND " + isPartOfPart;
+        }
+
         request += createTimestampElement(body.getArgumentValue(StandardArguments.FROM, Long.class), body.getArgumentValue(StandardArguments.TO, Long.class));
 
         return request;
@@ -267,25 +277,6 @@ public class SolrProducer extends DefaultProducer {
     }
 
     private List<Named> doInitializationRequest(DataRequest body, String request) {
-
-        // String queryString = "";
-        // if (request.getArgument(StandardArguments.IS_STATE_OF) != null) {
-        // queryString += "isStateOf:" + (String) request.getArgument(StandardArguments.IS_STATE_OF);
-        // }
-        //
-        // if (request.getArgument(StandardArguments.NAMES) != null) {
-        // queryString += " OR name:(";
-        // String separator = "";
-        // for (String name : (List<String>) request.getArgument(StandardArguments.NAMES)) {
-        // queryString += separator + name;
-        // separator = " OR ";
-        // }
-        // queryString += ")";
-        // }
-        //
-        // if (request.getArgument("attime") != null) {
-        // queryString += " AND " + createTimestampElement(null, (Long) request.getArgument("attime"));
-        // }
 
         SolrQuery query = new SolrQuery(request);
 
@@ -466,7 +457,7 @@ public class SolrProducer extends DefaultProducer {
         }
         else if (io instanceof LocationContactEvent) {
             LocationContactEvent event = (LocationContactEvent) io;
-            document.addField(StandardArguments.VISIBILITY, event.isVisible);
+            document.addField(StandardArguments.VISIBILITY, event.isVisible());
         }
 
         if (io instanceof IGenerationTimestamped) {
@@ -482,6 +473,9 @@ public class SolrProducer extends DefaultProducer {
             document.addField("derivedFromName", ((IDerived) io).from().getName());
             document.addField("derivedFromTimestamp", ((IDerived) io).from().getTimestamp());
             document.addField("derivedFromType", ((IDerived) io).from().getType());
+        }
+        if (io instanceof IPartOf) {
+            document.addField("isPartOf", ((IPartOf) io).getIsPartOf());
         }
         if (io instanceof IApplicableTo) {
             document.addField("applicableToName", ((IApplicableTo) io).applicableTo().getName());

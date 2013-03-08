@@ -21,10 +21,13 @@ package org.hbird.exchange.navigation;
 
 import java.io.Serializable;
 
+import org.hbird.exchange.core.Named;
+import org.hbird.exchange.interfaces.IPartOf;
+
 /**
  *
  */
-public class RadioChannel implements Serializable {
+public class RadioChannel implements Serializable, IPartOf {
 
     private static final long serialVersionUID = -8145860056366710301L;
 
@@ -34,6 +37,7 @@ public class RadioChannel implements Serializable {
     private boolean isDownlink;
     private long gain;
 
+    protected Named isPartOf = null;
     
     public RadioChannel(long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain) {
 		super();
@@ -118,4 +122,12 @@ public class RadioChannel implements Serializable {
     public void setGain(long gain) {
         this.gain = gain;
     }
+
+	public Named getIsPartOf() {
+		return isPartOf;
+	}
+
+	public void setIsPartOf(Named isPartOf) {
+		this.isPartOf = isPartOf;
+	}
 }

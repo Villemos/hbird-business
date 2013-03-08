@@ -19,6 +19,10 @@ package org.hbird.exchange.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hbird.exchange.interfaces.IGenerationTimestamped;
+import org.hbird.exchange.interfaces.IGroundStationSpecific;
+import org.hbird.exchange.interfaces.ISatelliteSpecific;
+
 /**
  * A dataset is a collection of Named objects.
  * 

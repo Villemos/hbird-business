@@ -18,6 +18,7 @@ package org.hbird.exchange.navigation;
 
 import java.io.Serializable;
 
+
 public class RotatorProperties implements Serializable {
 
     private static final long serialVersionUID = 3342094403064808285L;

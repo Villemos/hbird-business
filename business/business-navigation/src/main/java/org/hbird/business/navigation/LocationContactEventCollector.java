@@ -41,9 +41,12 @@ public class LocationContactEventCollector extends ElevationDetector {
     /** The unique UID */
     private static final long serialVersionUID = 801203905525890103L;
 
-    /** The location that comes into contact. */
-    protected String location = null;
+    /** The ground station / location that comes into contact. */
+    protected String groundStation = null;
 
+    /** The name of the antenna. */
+    protected String antenna = null;
+    
     /** The satellite. */
     protected String satellite = null;
 
@@ -67,7 +70,7 @@ public class LocationContactEventCollector extends ElevationDetector {
      * @param location The location to which contact has been established / lost if this event occurs.
      * @param contactDataStepSize
      */
-    public LocationContactEventCollector(double elevation, TopocentricFrame topo, String satellite, String location, TleOrbitalParameters parameters,
+    public LocationContactEventCollector(double elevation, TopocentricFrame topo, String satellite, String location, String antenna, TleOrbitalParameters parameters,
             CamelContext context, boolean publish) {
         super(maxcheck, elevation, topo);
 
@@ -77,7 +80,8 @@ public class LocationContactEventCollector extends ElevationDetector {
         }
 
         this.satellite = satellite;
-        this.location = location;
+        this.groundStation = location;
+        this.antenna = antenna;
         this.parameters = parameters;
     }
 
@@ -91,7 +95,7 @@ public class LocationContactEventCollector extends ElevationDetector {
     public int eventOccurred(final SpacecraftState state, final boolean increasing) throws OrekitException {
 
         LocationContactEvent event = new LocationContactEvent(StandardComponents.ORBIT_PREDICTOR, "Predicted", state.getDate().toDate(TimeScalesFactory.getUTC()).getTime(),
-                location, satellite, increasing, NavigationUtilities.toOrbitalState(state, satellite, parameters.getName(), parameters.getTimestamp(),
+                groundStation, antenna, satellite, increasing, NavigationUtilities.toOrbitalState(state, satellite, parameters.getName(), parameters.getTimestamp(),
                         parameters.getType()), parameters.getName(), parameters.getTimestamp(), parameters.getType());
         events.add(event);
 

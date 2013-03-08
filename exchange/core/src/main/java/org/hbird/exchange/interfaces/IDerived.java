@@ -14,11 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.exchange.core;
+package org.hbird.exchange.interfaces;
 
-public interface ISatelliteSpecific {
+import org.hbird.exchange.core.NamedInstanceIdentifier;
 
-    public String getSatelliteName();
 
-    public void setSatelliteName(String satellite);
+public interface IDerived {
+
+	/**
+	 * Method to retrieve the identifier of the Named object that this Named object is retrieved from.
+	 * 
+	 * @return
+	 */
+	public NamedInstanceIdentifier from(); 
 }

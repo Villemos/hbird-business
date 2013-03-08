@@ -33,6 +33,7 @@ import org.apache.camel.Handler;
  */
 public class FieldBasedSplitter {
 
+	
 	/**
 	 * The name of the field in the body object to be accessed as a time. 
 	 */

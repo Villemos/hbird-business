@@ -147,7 +147,7 @@ public class AntennaControl {
                 }
 
                 /** Create the commands to be executed PRE parse, i.e. for setup / configuration. */
-                // TODO
+                // TODO Issue one command; 'PrepareParse'. The driver can then perform the detailed configuration.
 
                 /** Calculate the contact data details based on the contact events. Create the WHILE parse commands. */
                 for (PointingData point : NavigationUtilities.calculateContactData(contactEvents.get(0), contactEvents.get(1), groundStation, satellite, 500)) {

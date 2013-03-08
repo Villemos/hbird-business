@@ -84,7 +84,7 @@ public class NavigationUtilities {
         GeodeticPoint point = new GeodeticPoint(location.p1, location.p2, location.p3);
         TopocentricFrame locationOnEarth = new TopocentricFrame(Constants.earth, point, "");
 
-        PVCoordinates coord = toPVCoordinates(startContactEvent.satelliteState.position, startContactEvent.satelliteState.velocity);
+        PVCoordinates coord = toPVCoordinates(startContactEvent.getSatelliteState().position, startContactEvent.getSatelliteState().velocity);
 
         /** Calculate contact data. */
         for (int i = 0; startTime + contactDataStepSize * i < endTime; i++) {
@@ -101,7 +101,7 @@ public class NavigationUtilities {
 
             PointingData entry = new PointingData(StandardComponents.ORBIT_PREDICTOR, "Predicted", startTime + contactDataStepSize * i, azimuth, elevation, doppler,
                     dopplerShift,
-                    startContactEvent.satellite, location.getName(), startContactEvent.from().getName(), startContactEvent.from().getTimestamp(),
+                    startContactEvent.getSatelliteName(), location.getName(), startContactEvent.from().getName(), startContactEvent.from().getTimestamp(),
                     startContactEvent.from().getType());
             data.add(entry);
         }

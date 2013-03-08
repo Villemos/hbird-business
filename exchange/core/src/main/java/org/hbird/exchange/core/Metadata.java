@@ -18,6 +18,8 @@ package org.hbird.exchange.core;
 
 import java.util.Map;
 
+import org.hbird.exchange.interfaces.IApplicableTo;
+
 /**
  * Class for metadata to another Named object. The object 'points' to the subject through the
  * 'subject' field. Currently the metadata can only be applicable to a single other obejct.

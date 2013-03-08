@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hbird.exchange.core.Named;
-import org.hbird.exchange.core.IScheduled;
+import org.hbird.exchange.interfaces.IScheduled;
 
 
 

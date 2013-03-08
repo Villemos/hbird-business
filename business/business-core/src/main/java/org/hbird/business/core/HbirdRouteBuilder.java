@@ -6,10 +6,11 @@ import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.IGroundStationSpecific;
-import org.hbird.exchange.core.ISatelliteSpecific;
 import org.hbird.exchange.core.State;
+import org.hbird.exchange.interfaces.IGroundStationSpecific;
+import org.hbird.exchange.interfaces.ISatelliteSpecific;
 import org.hbird.exchange.tasking.Task;
+
 
 public abstract class HbirdRouteBuilder extends RouteBuilder {
 

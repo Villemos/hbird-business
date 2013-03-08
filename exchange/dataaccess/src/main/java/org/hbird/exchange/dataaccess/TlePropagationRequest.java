@@ -140,8 +140,8 @@ public class TlePropagationRequest extends Command {
         return getArgumentValue(StandardArguments.DELTA_PROPAGATION, Long.class);
     }
 
-    public Double getStepSize() {
-        return getArgumentValue(StandardArguments.STEP_SIZE, Double.class);
+    public Long getStepSize() {
+        return getArgumentValue(StandardArguments.STEP_SIZE, Long.class);
     }
 
     public List<String> getLocations() {

@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.exchange.core;
+package org.hbird.exchange.interfaces;
 
-public interface IScheduled {
+public interface IGenerationTimestamped {
 
-	public long getDelay();
-
-	public long getDeliveryTime();
+	public long getGenerationTime();
+	public void setGenerationTime(long generationtime);
 }

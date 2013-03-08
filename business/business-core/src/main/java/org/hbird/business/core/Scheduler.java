@@ -21,7 +21,7 @@ import java.util.Map;
 import org.apache.camel.Body;
 import org.apache.camel.Handler;
 import org.apache.camel.Headers;
-import org.hbird.exchange.core.IScheduled;
+import org.hbird.exchange.interfaces.IScheduled;
 
 /**
  * The scheduler set the activemq AMQ_SCHEDULED_DELAY flag on all object which implements the Scheduled interface.

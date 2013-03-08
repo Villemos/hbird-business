@@ -23,8 +23,8 @@ import java.util.Map;
 
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.core.IScheduled;
 import org.hbird.exchange.core.Named;
+import org.hbird.exchange.interfaces.IScheduled;
 import org.hbird.exchange.tasking.Task;
 
 public class CommandRequest extends Named implements IScheduled {

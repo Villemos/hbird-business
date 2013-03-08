@@ -16,8 +16,8 @@
  */
 package org.hbird.exchange.navigation;
 
-import org.hbird.exchange.core.ISatelliteSpecific;
 import org.hbird.exchange.core.Named;
+import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
 /**
  * Class representing a satellite.

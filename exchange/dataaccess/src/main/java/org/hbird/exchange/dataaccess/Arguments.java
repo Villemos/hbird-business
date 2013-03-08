@@ -33,9 +33,9 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
 public class Arguments {
 
     public static final CommandArgument APPLICABLE_TO = new CommandArgument(StandardArguments.APPLICABLE_TO,
-            "The Named object the metadata must be appliable to.", String.class, false);
+            "The Named object the metadata must be appliable to.", NamedInstanceIdentifier.class, false);
 
-    public static final CommandArgument CLASS = new CommandArgument(StandardArguments.CLASS, "The class of the Named object.", Class.class, false);
+    public static final CommandArgument CLASS = new CommandArgument(StandardArguments.CLASS, "The class of the Named object.", String.class, false);
 
     public static final CommandArgument CONTACT_DATA_STEP_SIZE = new CommandArgument(StandardArguments.CONTACT_DATA_STEP_SIZE,
             "The propagation step size when calculating Contact Data between a location and a satellite between which visibility exist.", Long.class,
@@ -73,7 +73,7 @@ public class Arguments {
     public static final CommandArgument IS_STATE_OF = new CommandArgument(StandardArguments.IS_STATE_OF, "Name of the object which this is the state of.",
             String.class, false);
 
-    public static final CommandArgument NAMES = new CommandArgument(StandardArguments.NAMES, "List of names of named objects to be retrieved.", String.class,
+    public static final CommandArgument NAMES = new CommandArgument(StandardArguments.NAMES, "List of names of named objects to be retrieved.", List.class,
             false);
 
     public static final CommandArgument PUBLISH = new CommandArgument(StandardArguments.PUBLISH,
@@ -95,7 +95,7 @@ public class Arguments {
     public static final CommandArgument START_TIME = new CommandArgument(StandardArguments.START_TIME, "The start time of the propagation.", Long.class,
             "Seconds", null, true);
 
-    public static final CommandArgument STEP_SIZE = new CommandArgument(StandardArguments.STEP_SIZE, "The propagation step size.", Long.class, "Seconds", 60D,
+    public static final CommandArgument STEP_SIZE = new CommandArgument(StandardArguments.STEP_SIZE, "The propagation step size.", Long.class, "Seconds", 60L,
             true);
 
     public static final CommandArgument TLE_PARAMETERS = new CommandArgument(StandardArguments.TLE_PARAMETERS,
@@ -108,6 +108,9 @@ public class Arguments {
 
     public static final CommandArgument VISIBILITY = new CommandArgument(StandardArguments.VISIBILITY,
             "Whether the contact event is a start of contact (true) or end of contact (false).", Boolean.class, "", Boolean.TRUE, true);
+
+    public static final CommandArgument IS_PART_OF = new CommandArgument(StandardArguments.IS_PART_OF,
+            "The name of the object that the found objects must be defined as being a part of.", String.class, "", "", true);
 
     public static CommandArgument create(CommandArgument template) {
         return new CommandArgument(template);

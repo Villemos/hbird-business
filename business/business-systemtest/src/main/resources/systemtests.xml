@@ -97,14 +97,21 @@
 
 			<choice>
 				<when>
-		            <simple>${in.body} is 'org.hbird.exchange.core.IGroundStationSpecific'</simple>
+		            <simple>${in.body} is 'org.hbird.exchange.interfaces.IGroundStationSpecific'</simple>
 		            <setHeader headerName="location"><simple>${in.body.groundStationName}</simple></setHeader>
 				</when>
 			</choice>
 
 			<choice>
 				<when>
-		            <simple>${in.body} is 'org.hbird.exchange.core.ISatelliteSpecific'</simple>
+		            <simple>${in.body} is 'org.hbird.exchange.interfaces.IPartOf'</simple>
+		            <setHeader headerName="isPartOf"><simple>${in.body.isPartOf}</simple></setHeader>
+				</when>
+			</choice>
+
+			<choice>
+				<when>
+		            <simple>${in.body} is 'org.hbird.exchange.interfaces.ISatelliteSpecific'</simple>
 		            <setHeader headerName="satellite"><simple>${in.body.satelliteName}</simple></setHeader>
 				</when>
 			</choice>

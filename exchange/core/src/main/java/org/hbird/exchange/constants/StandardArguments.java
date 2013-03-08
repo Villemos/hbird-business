@@ -24,6 +24,7 @@ package org.hbird.exchange.constants;
  */
 public class StandardArguments {
 
+	
     public static final String ANGLE = "Angle";
 
     public static final String APPLICABLE_TO = "applicableto";
@@ -127,4 +128,6 @@ public class StandardArguments {
     public static final String VALUE_PARAMETER = "valueparameter";
 
     public static final String VISIBILITY = "visibility";
+    
+    public static final String IS_PART_OF = "ispartof";
 }

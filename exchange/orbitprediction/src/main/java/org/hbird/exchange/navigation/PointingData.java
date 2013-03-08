@@ -18,8 +18,8 @@
 package org.hbird.exchange.navigation;
 
 import org.hbird.exchange.core.DerivedNamed;
-import org.hbird.exchange.core.IGroundStationSpecific;
-import org.hbird.exchange.core.ISatelliteSpecific;
+import org.hbird.exchange.interfaces.IGroundStationSpecific;
+import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
 /**
  * Class describing the attributes between two objects, such as

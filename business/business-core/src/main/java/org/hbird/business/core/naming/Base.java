@@ -2,6 +2,7 @@ package org.hbird.business.core.naming;
 
 public enum Base {
 
+	
 	SATELLITE("Satellite"),
 	GROUND_STATION("GroundStation"),
 	WEATHER_STATION("WeatherStation"),

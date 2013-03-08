@@ -16,6 +16,7 @@
  */
 package org.hbird.exchange.configurator;
 
+
 public class StandardEndpoints {
 
 	/** Monitoring data. */

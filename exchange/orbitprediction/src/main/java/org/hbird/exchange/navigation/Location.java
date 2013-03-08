@@ -16,7 +16,7 @@
  */
 package org.hbird.exchange.navigation;
 
-import org.hbird.exchange.core.IGroundStationSpecific;
+import org.hbird.exchange.interfaces.IGroundStationSpecific;
 
 /**
  * As the name indicates, a 'Location' is a fixed place on (or near) earths surface.

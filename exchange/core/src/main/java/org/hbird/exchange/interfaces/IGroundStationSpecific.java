@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.exchange.core;
+package org.hbird.exchange.interfaces;
 
-public interface IGenerationTimestamped {
+public interface IGroundStationSpecific {
 
-	public long getGenerationTime();
-	public void setGenerationTime(long generationtime);
+    public String getGroundStationName();
+
+    public void setGroundStationName(String groundStationName);
 }

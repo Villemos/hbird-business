@@ -17,8 +17,8 @@
 package org.hbird.exchange.navigation;
 
 import org.hbird.exchange.core.DerivedNamed;
-import org.hbird.exchange.core.IGroundStationSpecific;
-import org.hbird.exchange.core.ISatelliteSpecific;
+import org.hbird.exchange.interfaces.IAntennaSpecific;
+import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
 
 /**
@@ -30,23 +30,27 @@ import org.hbird.exchange.core.ISatelliteSpecific;
  * by a station or satellite.
  * 
  */
-public class LocationContactEvent extends DerivedNamed implements IGroundStationSpecific, ISatelliteSpecific {
+public class LocationContactEvent extends DerivedNamed implements IAntennaSpecific, ISatelliteSpecific {
 
 	private static final long serialVersionUID = 6129893135305263533L; 
 
 	protected long generationTime = 0;
 
 	/** The location that contact has been established /lost with. */
-	public String location = null;
+	protected String location = null;
+	
+	/** The antenna at the location. The same location may have multiple antennas. This event if for a specific
+	 * groundstation / antenna pair.*/
+	protected String antenna = null;
 	
 	/** The satellite that contact has been established /lost with. */
-	public String satellite = null;
+	protected String satellite = null;
 
 	/** The state of the satellite as the event occurs. */
-	public OrbitalState satelliteState = null;
+	protected OrbitalState satelliteState = null;
 	
 	/** Flag indicating whether the visibility (contact) is now established or lost. */
-	public boolean isVisible = true;
+	protected boolean isVisible = true;
 	
 	/**
 	 * Constructor of a location contact event.
@@ -58,9 +62,10 @@ public class LocationContactEvent extends DerivedNamed implements IGroundStation
 	 * @param location The location to which contact has been established / lost.
 	 * @param satellite The satellite to which contact has been established / lost. 
 	 */
-	public LocationContactEvent(String issuedBy, String type, long timestamp, String location, String satellite, boolean isVisible, OrbitalState satelliteState, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+	public LocationContactEvent(String issuedBy, String type, long timestamp, String location, String antenna, String satellite, boolean isVisible, OrbitalState satelliteState, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
 		super(issuedBy, "ContactEvent", type, "A contact event between a satellite and a location", timestamp, derivedFromName, derivedFromTimestamp, derivedFromType);
 		this.location = location;
+		this.antenna = antenna;
 		this.satellite = satellite;
 		this.isVisible = isVisible;
 		this.satelliteState = satelliteState;
@@ -93,4 +98,22 @@ public class LocationContactEvent extends DerivedNamed implements IGroundStation
 	public String prettyPrint() {
 		return this.getClass().getSimpleName() + "[name=" + name + ", timestamp=" + timestamp + ", location=" + getGroundStationName() + ", satellite=" + satellite + ", visibility=" + isVisible + "]";
 	}
+
+	public String getAntennaName() {
+		return antenna;
+	}
+
+	public void setAntennaName(String antenna) {
+		this.antenna = antenna;
+	}
+
+	public OrbitalState getSatelliteState() {
+		return satelliteState;
+	}
+
+	public void setSatelliteState(OrbitalState satelliteState) {
+		this.satelliteState = satelliteState;
+	}
+	
+	
 }

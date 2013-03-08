@@ -20,6 +20,7 @@ package org.hbird.exchange.navigation;
 
 import org.hbird.exchange.core.Named;
 
+
 /** A 3D vector, i.e. three values describing a spartial property such as position, velocity or acceleration. */
 public class D3Vector extends Named {
 
