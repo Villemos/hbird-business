@@ -62,12 +62,6 @@ public class StartablePart extends Part implements IStartablePart {
 		this.driverName = driverName;
 	}
 
-	public void start(String issuedBy) {
-	}
-	
-	public void stop(String issuedBy) {
-	}
-
 	public String getDriverName() {
 		return driverName;
 	}

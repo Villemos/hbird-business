@@ -30,34 +30,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.configurator;
+package org.hbird.business.api;
 
-import org.hbird.exchange.configurator.StartComponent;
-import org.hbird.exchange.configurator.StopComponent;
-import org.hbird.exchange.core.StartablePart;
-
+import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
  * @author Admin
  *
  */
-public class ConfiguratorComponent extends StartablePart {
+public interface IPartManager {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2865072999875952015L;
-
-	{
-		commands.add(new StartComponent("", null));
-		commands.add(new StopComponent("", ""));
-	}
-
-	/**
-	 * @param name
-	 * @param description
-	 */
-	public ConfiguratorComponent(String name, String driver) {
-		super(name, "A component for starting other component.", driver);
-	}
+	public void start(IStartablePart part);
+	
+	public void stop(String name);
 }

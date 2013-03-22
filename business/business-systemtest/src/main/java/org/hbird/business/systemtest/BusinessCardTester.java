@@ -40,7 +40,7 @@ public class BusinessCardTester extends SystemTest {
             Boolean didArrive = false;
             for (Named obj : businessCardListener.elements) {
                 /** Notice that the name given to the configurator in the assembly is 'Main Configurator' */
-                if (obj.getIssuedBy().equals("Configurator")) {
+                if (obj.getIssuedBy().equals("/Configurator")) {
                     didArrive = true;
                     break;
                 }
@@ -73,7 +73,7 @@ public class BusinessCardTester extends SystemTest {
         azzert(data != null, "Status received from Configurator.");
 
         /** Stop the archive and check that it is actually stopped. */
-        injection.sendBody(new StopComponent("SystemTest", "Configurator", StandardComponents.ARCHIVE));
+        injection.sendBody(new StopComponent("SystemTest", StandardComponents.ARCHIVE));
 
         businessCardListener.elements.clear();
 

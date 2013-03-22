@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPartManager;
 import org.hbird.business.api.IPublish;
 import org.hbird.business.archive.ArchiveComponent;
 import org.hbird.business.command.releaser.CommandingComponent;
@@ -34,6 +35,7 @@ import org.hbird.business.groundstationcontrol.TrackingComponent;
 import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.business.systemmonitoring.SystemMonitorComponent;
 import org.hbird.business.taskexecutor.TaskExecutionComponent;
+import org.hbird.business.websockets.WebsocketInterfaceComponent;
 import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.Part;
@@ -89,6 +91,7 @@ public abstract class SystemTest {
     
     protected static ICatalogue catalogueApi = ApiFactory.getCatalogueApi("SystemTest");
     
+    protected static IPartManager partmanagerApu = ApiFactory.getPartManagerApi("SystemTest");
     
     protected static Satellite estcube1 = null;
     protected static Satellite dkCube1 = null;
@@ -242,8 +245,10 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a parameter archive.");
 
             IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.ARCHIVE);
-            part.start("SystemTest");
+            partmanagerApu.start(part);
 
+            part.getQualifiedName();
+            
             /** Give the component time to startup. */
             Thread.sleep(1000);
 
@@ -274,7 +279,7 @@ public abstract class SystemTest {
             publishApi.publish(taskPart);
 
             /** Start the part. */
-            taskPart.start("SystemTest");
+            partmanagerApu.start(taskPart);
             
             /** Give the component time to startup. */
             Thread.sleep(1000);
@@ -292,7 +297,7 @@ public abstract class SystemTest {
 
             /** Create command component. */
             IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.COMMANDING_CHAIN);
-            part.start("SystemTest");
+            partmanagerApu.start(part);
 
             Thread.sleep(2000);
             
@@ -309,7 +314,7 @@ public abstract class SystemTest {
 
             /** Create command component. */
             IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.ORBIT_PREDICTOR);
-            part.start("SystemTest");
+            partmanagerApu.start(part);
 
             Thread.sleep(2000);
 
@@ -326,7 +331,7 @@ public abstract class SystemTest {
 
             /** Create command component. */
             IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.WEB_SOCKET);
-            part.start("SystemTest");
+            partmanagerApu.start(part);
 
             Thread.sleep(2000);
 
@@ -347,7 +352,7 @@ public abstract class SystemTest {
         	TrackingComponent antennaController = new TrackingComponent("ES5EC -> ESTCUBE", "The component automating the track of ESTCube-1 by ES5EC.", "ESTCube-1", "ES5EC");
         	antennaController.setIsPartOf(parent);            
             
-            antennaController.start("SystemTest");
+            partmanagerApu.start(antennaController);
 
             Thread.sleep(2000);
 

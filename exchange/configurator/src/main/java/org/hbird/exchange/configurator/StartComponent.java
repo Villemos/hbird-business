@@ -35,7 +35,7 @@ public class StartComponent extends Command {
     }
 
     public StartComponent(String issuedBy, IStartablePart part) {
-        super(issuedBy, "any", "StartComponent", DESC_STRING);
+        super(issuedBy, "Configurator", "StartComponent", DESC_STRING);
         addPart(part);
     }
 

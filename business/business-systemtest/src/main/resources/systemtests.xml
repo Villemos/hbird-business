@@ -124,7 +124,7 @@
 
 			<choice>
 				<when>
-		            <simple>${in.body} is 'org.hbird.exchange.interfaces.IPartOf'</simple>
+		            <simple>${in.body} is 'org.hbird.exchange.interfaces.IPart'</simple>
 		            <setHeader headerName="isPartOf"><simple>${in.body.isPartOf}</simple></setHeader>
 				</when>
 			</choice>

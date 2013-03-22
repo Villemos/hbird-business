@@ -30,34 +30,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.configurator;
+package org.hbird.business.archive.api;
 
+import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.HbirdApi;
+import org.hbird.business.api.IPartManager;
+import org.hbird.business.api.IPublish;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
-import org.hbird.exchange.core.StartablePart;
-
+import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
  * @author Admin
  *
  */
-public class ConfiguratorComponent extends StartablePart {
+public class PartManager extends HbirdApi implements IPartManager {
 
 	/**
-	 * 
+	 * @param issuedBy
 	 */
-	private static final long serialVersionUID = 2865072999875952015L;
-
-	{
-		commands.add(new StartComponent("", null));
-		commands.add(new StopComponent("", ""));
+	public PartManager(String issuedBy) {
+		super(issuedBy);
 	}
 
-	/**
-	 * @param name
-	 * @param description
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IPartManager#start(org.hbird.exchange.interfaces.IStartablePart)
 	 */
-	public ConfiguratorComponent(String name, String driver) {
-		super(name, "A component for starting other component.", driver);
+	@Override
+	public void start(IStartablePart part) {
+		IPublish api = ApiFactory.getPublishApi(issuedBy);
+		api.publish(new StartComponent(issuedBy, part));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IPartManager#stop(java.lang.String)
+	 */
+	@Override
+	public void stop(String partName) {
+		IPublish api = ApiFactory.getPublishApi(issuedBy);
+		api.publish(new StopComponent(issuedBy, partName));
 	}
 }

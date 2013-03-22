@@ -103,7 +103,7 @@ public class Part extends Named implements IPart {
 	 */
 	@Override
 	public String getQualifiedName(String separator) {
-		return parent == null ? separator + name : parent.getQualifiedName(separator);
+		return parent == null ? separator + name : parent.getQualifiedName(separator) + separator + name;
 	}
 
 	public List<Command> getCommands() {

@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.parts.ScriptComponent;
+import org.hbird.business.scripting.ScriptComponent;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Parameter;

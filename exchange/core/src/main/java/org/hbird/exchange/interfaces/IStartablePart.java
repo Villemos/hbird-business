@@ -38,10 +38,6 @@ package org.hbird.exchange.interfaces;
  */
 public interface IStartablePart extends IPart {
 	
-	public void start(String issuedBy);
-	
-	public void stop(String issuedBy);
-	
 	public String getDriverName();
 
 	public void setDriverName(String driverName);

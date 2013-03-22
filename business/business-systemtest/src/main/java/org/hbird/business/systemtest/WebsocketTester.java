@@ -36,7 +36,7 @@ import java.util.Date;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.parts.WebsocketInterfaceComponent;
+import org.hbird.business.websockets.WebsocketInterfaceComponent;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.Event;
 import org.hbird.exchange.core.Parameter;
