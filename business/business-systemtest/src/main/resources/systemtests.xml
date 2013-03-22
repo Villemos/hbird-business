@@ -9,7 +9,7 @@
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<bean id="configurator" class="org.hbird.business.configurator.Configurator"/>
+	<bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponentDriver"/>
 
 	<bean id="monitoring.listener" class="org.hbird.business.systemtest.Listener" />
 	<bean id="commanding.listener" class="org.hbird.business.systemtest.Listener" />
@@ -20,7 +20,9 @@
 	<bean id="label.listener" class="org.hbird.business.systemtest.Listener" />
 	<bean id="orbitalstate.listener" class="org.hbird.business.systemtest.Listener" />
 	<bean id="orbitallocationevent.listener" class="org.hbird.business.systemtest.Listener" />
-									
+	<bean id="groundstationpart.listener" class="org.hbird.business.systemtest.Listener" />
+	<bean id="inmemorytest.listener" class="org.hbird.business.systemtest.Listener" />
+											
 	<bean id="testerTemplate" abstract="true" class="org.hbird.business.systemtest.Tester">
 		<property name="monitoringListener" ref="monitoring.listener" />
 		<property name="commandingListener" ref="commanding.listener" />
@@ -31,6 +33,8 @@
 		<property name="labelListener" ref="label.listener"/>
 		<property name="orbitalStateListener" ref="orbitalstate.listener"/>
 		<property name="locationEventListener" ref="orbitallocationevent.listener"/>
+		<property name="groundStationPartListener" ref="groundstationpart.listener"/>
+		<property name="inMemoryTestListener" ref="inmemorytest.listener"/>
 		<property name="context" ref="basic"/>
 	</bean>
 
@@ -43,14 +47,27 @@
 	<bean id="tasking" class="org.hbird.business.systemtest.TaskingTester" parent="testerTemplate"/>
 	<bean id="commanding" class="org.hbird.business.systemtest.CommandingTester" parent="testerTemplate"/>
 	<bean id="navigation" class="org.hbird.business.systemtest.NavigationTester" parent="testerTemplate"/>
-	<bean id="queuemanager" class="org.hbird.business.systemtest.QueueManagerTester" parent="testerTemplate"/>
 	<bean id="dataaccessapi" class="org.hbird.business.systemtest.DataAccessApiTester" parent="testerTemplate"/>
 	<bean id="navigationcontroller" class="org.hbird.business.systemtest.NavigationControllerTester" parent="testerTemplate"/>
-	<bean id="antennacontroller" class="org.hbird.business.systemtest.AntennaControlTester" parent="testerTemplate"/>
+	<bean id="parsecontroller" class="org.hbird.business.systemtest.ParseControlTester" parent="testerTemplate"/>
 	<bean id="jmstester" class="org.hbird.business.systemtest.JmsSelectorTester" parent="testerTemplate"/>
+	<bean id="websockettester" class="org.hbird.business.systemtest.WebsocketTester" parent="testerTemplate"/>
+	<bean id="groundstationdriver" class="org.hbird.business.systemtest.GroundStationDriverTester" parent="testerTemplate"/>
+	<bean id="endtoendtracking" class="org.hbird.business.systemtest.EndToEndTrackingTester" parent="testerTemplate"/>
+	<bean id="inmemoryscheduler" class="org.hbird.business.systemtest.InMemorySchedulerTester" parent="testerTemplate"/>
 	<bean id="finisher" class="org.hbird.business.systemtest.Finisher" parent="testerTemplate"/>
 						
 	<bean id="scheduler" class="org.hbird.business.core.Scheduler"/>
+
+	<!-- Beans for the driver routes. -->
+    <bean id="decoderSplitOnNewline" class="eu.estcube.gs.hamlib.DecoderSplitOnNewline" />
+    <bean id="decoderBytesToString" class="eu.estcube.gs.hamlib.DecoderBytesToString" />
+    <bean id="decoderBufferer" class="eu.estcube.gs.hamlib.DecoderBufferer" />
+    <bean id="decoderStringLogger" class="eu.estcube.gs.hamlib.DecoderStringLogger" />
+    <bean id="decoderStringToTelemetryObject" class="eu.estcube.gs.hamlib.DecoderStringToTelemetryObject" />
+    <bean id="encoderStringToBytes" class="eu.estcube.gs.hamlib.EncoderStringToBytes" />
+
+
 
 	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
 
@@ -58,18 +75,21 @@
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
 				<to uri="bean:businesscard" />
-	 			<to uri="bean:queuemanager" />
-				<to uri="bean:parameterarchive" />
-				<to uri="bean:archive" />
-	 			<to uri="bean:dataaccessapi" />
-				<to uri="bean:limitcheck" />
-				<to uri="bean:scripting" />
-		 		<to uri="bean:tasking" />
-	 			<to uri="bean:commanding" />
-	 			<to uri="bean:navigation" />
-	 			<to uri="bean:antennacontroller" />
-	 			<to uri="bean:navigationcontroller" />
+<!-- 				<to uri="bean:parameterarchive" /> -->
+<!-- 				<to uri="bean:archive" /> -->
+<!-- 	 			<to uri="bean:dataaccessapi" /> -->
+<!-- 				<to uri="bean:limitcheck" /> -->
+<!-- 				<to uri="bean:scripting" /> -->
+<!-- 		 		<to uri="bean:tasking" /> -->
+<!-- 	 			<to uri="bean:commanding" /> -->
+<!-- 	 			<to uri="bean:navigation" /> -->
+<!-- 	 			<to uri="bean:parsecontroller" /> -->
+<!-- 	 			<to uri="bean:navigationcontroller" /> -->
+<!-- 	 			<to uri="bean:groundstationdriver" /> -->
+<!-- 	 			<to uri="bean:endtoendtracking" /> -->
+<!-- 				<to uri="bean:inmemoryscheduler" /> -->
 <!-- 	 			<to uri="bean:jmstester" /> -->
+<!-- 	 	 		<to uri="bean:websockettester" /> -->
 	 			<to uri="bean:finisher" />
 		</route>
 
@@ -180,5 +200,15 @@
 			<to uri="bean:orbitallocationevent.listener" />
 		</route>
 
+		<route id="groundstationSchedule">
+			<from uri="activemq:queue:hbird.antennaschedule.ES5EC.internal" />
+			<to uri="bean:groundstationpart.listener" />
+		</route>
+
+		<route id="inmemorytest">
+			<from uri="direct:inmemorytest" />
+			<to uri="bean:inmemorytest.listener" />
+		</route>
+	
 	</camelContext>
 </beans>

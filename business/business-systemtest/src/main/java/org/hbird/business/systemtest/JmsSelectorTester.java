@@ -32,13 +32,6 @@
  */
 package org.hbird.business.systemtest;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-
-import javax.jms.InvalidSelectorException;
-import javax.management.MalformedObjectNameException;
-import javax.management.openmbean.OpenDataException;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
 import org.apache.camel.builder.RouteBuilder;
@@ -52,7 +45,7 @@ import org.hbird.exchange.core.Named;
  */
 public class JmsSelectorTester extends SystemTest {
 
-	private static org.apache.log4j.Logger LOG = Logger.getLogger(AntennaControlTester.class);
+	private static org.apache.log4j.Logger LOG = Logger.getLogger(ParseControlTester.class);
 	
 	class TestType extends Named {
 

@@ -113,7 +113,7 @@ public class CelestrackAccessor extends HttpAccessor {
 			
 			int index = 0;
 			while (index < elements.length) {
-				Satellite satellite = new Satellite();
+				Satellite satellite = new Satellite("", "");
 				
 				String name = elements[index];				
 				satellite.setName(name);

@@ -8,7 +8,7 @@
 	<parent>
 		<artifactId>hummingbird-business</artifactId>
 		<groupId>org.hbird.business</groupId>
-		<version>0.6.0-SNAPSHOT</version>
+		<version>0.7.0-SNAPSHOT</version>
 	</parent>
 
 	<build>
@@ -26,7 +26,7 @@
 		<dependency>
   			<groupId>org.apache.camel</groupId>
   			<artifactId>camel-xstream</artifactId>
-  			<version>${camel.version}</version>
+<!--   			<version>${camel.version}</version> -->
 		</dependency>
 			
 		<dependency>
@@ -42,19 +42,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-jdbc</artifactId>
 			<version>${camel.version}</version>
@@ -63,7 +50,6 @@
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-stream</artifactId>
-			<version>${camel.version}</version>
 		</dependency>
 
 
@@ -76,19 +62,11 @@
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-test</artifactId>
-			<version>${camel.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		
 		  <dependency>

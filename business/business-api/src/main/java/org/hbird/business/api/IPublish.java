@@ -22,16 +22,17 @@ import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Binary;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.navigation.D3Vector;
-import org.hbird.exchange.navigation.GroundStation;
-import org.hbird.exchange.navigation.Location;
-import org.hbird.exchange.navigation.RadioChannel;
-import org.hbird.exchange.navigation.RotatorProperties;
+import org.hbird.exchange.groundstation.GroundStation;
+import org.hbird.exchange.groundstation.Modem;
+import org.hbird.exchange.groundstation.RadioDevice;
+import org.hbird.exchange.groundstation.Rotator;
+import org.hbird.exchange.groundstation.SoftwareDefinedRadio;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.tasking.Task;
@@ -62,9 +63,7 @@ public interface IPublish {
 	public State publishState(String name, String type, String description, String isStateOf, Boolean state);
 	public State publishState(String name, String type, String description, String isStateOf, Boolean state, long timestamp);
 	
-	public Location publishLocation(String name, String type, String description, Double lon, Double lat, Double ele, Double frequency);
-
-	public GroundStation publishGroundStation(String name, String type, String description, D3Vector geoLocation, RotatorProperties rotatorProperties, List<RadioChannel> radioChannels);
+	public GroundStation publishGroundStation(String name, D3Vector geoLocation, Rotator rotatorProperties, RadioDevice radioChannels, Modem modems, SoftwareDefinedRadio softwareDefinedRadios);
 	
 	public Satellite publishSatellite(String name, String type, String description);
 	

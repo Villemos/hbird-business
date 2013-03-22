@@ -1,90 +1,96 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>business-navigation</artifactId>
-  <name>Business - Navigation Orekit</name>
-  
-  <description>This module is an implementation of a Hummingbird navigation module based on the OREKIT open source library.</description>
-  
-  	<parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>business-navigation</artifactId>
+	<name>Business - Navigation Orekit</name>
+
+	<description>This module is an implementation of a Hummingbird navigation module based on the OREKIT open source library.</description>
+
+	<parent>
 		<artifactId>hummingbird-business</artifactId>
 		<groupId>org.hbird.business</groupId>
-		<version>0.6.0-SNAPSHOT</version>
+		<version>0.7.0-SNAPSHOT</version>
 	</parent>
-  
-  
-  <build>
-  	<plugins>
-  	
-  	<plugin>
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-source-plugin</artifactId>
-  <executions>
-    <execution>
-      <id>attach-sources</id>
-      <goals>
-        <goal>jar</goal>
-      </goals>
-    </execution>
-  </executions>
-</plugin>
-  	</plugins>
-  
-  </build>
-  
-  
-  <properties>
-  	<orekit.version>5.0.3</orekit.version>
-  </properties>
-  
-  <dependencies>
- 	<dependency>
- 	  <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-camel</artifactId>
-   </dependency>
 
-  <dependency>
-    <groupId>org.apache.camel</groupId>
-    <artifactId>camel-test</artifactId>
-    <scope>test</scope>
-  </dependency>
 
-  <dependency>
-  	<groupId>org.orekit</groupId>
-  	<artifactId>orekit</artifactId>
-  	<version>${orekit.version}</version>
-  </dependency>
-  
-  <dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-web</artifactId> 
-  </dependency>
-  
-  <dependency>
-  <groupId>org.hbird.exchange</groupId>
-  <artifactId>orbitprediction</artifactId>
-  </dependency>
+	<build>
+		<plugins>
 
-  <dependency>
-  <groupId>org.hbird.exchange</groupId>
-  <artifactId>dataaccess</artifactId>
-  </dependency>
-  
-  <dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-test</artifactId>
-    <scope>test</scope>
-  </dependency>
-  
-  <dependency>
-    <groupId>org.springframework</groupId>
-	<artifactId>spring-beans</artifactId>
-  </dependency>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 
-  <dependency>
-  <groupId>org.hbird.business</groupId>
-  <artifactId>business-api</artifactId>
-  </dependency>
-  
-  </dependencies>
+	</build>
+
+
+	<properties>
+		<orekit.version>5.0.3</orekit.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-camel</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.orekit</groupId>
+			<artifactId>orekit</artifactId>
+			<version>${orekit.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hbird.exchange</groupId>
+			<artifactId>navigation</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hbird.exchange</groupId>
+			<artifactId>groundstation</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hbird.exchange</groupId>
+			<artifactId>dataaccess</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hbird.business</groupId>
+			<artifactId>business-api</artifactId>
+		</dependency>
+
+	</dependencies>
 
 </project>

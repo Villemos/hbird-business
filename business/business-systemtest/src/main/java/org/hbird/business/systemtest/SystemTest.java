@@ -25,20 +25,30 @@ import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublish;
-import org.hbird.exchange.configurator.StartArchiveComponent;
-import org.hbird.exchange.configurator.StartCommandComponent;
-import org.hbird.exchange.configurator.StartNavigationComponent;
-import org.hbird.exchange.configurator.StartQueueManagerComponent;
-import org.hbird.exchange.configurator.StartTaskExecutorComponent;
+import org.hbird.business.archive.ArchiveComponent;
+import org.hbird.business.command.releaser.CommandingComponent;
+import org.hbird.business.groundstationcontrol.TrackingComponent;
+import org.hbird.business.navigation.NavigationComponent;
+import org.hbird.business.systemmonitoring.SystemMonitorComponent;
+import org.hbird.business.taskexecutor.TaskExecutionComponent;
 import org.hbird.exchange.constants.StandardComponents;
+import org.hbird.exchange.core.D3Vector;
+import org.hbird.exchange.core.Part;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
-import org.hbird.exchange.navigation.D3Vector;
-import org.hbird.exchange.navigation.RadioChannel;
-import org.hbird.exchange.navigation.RotatorProperties;
+import org.hbird.exchange.groundstation.Antenna;
+import org.hbird.exchange.groundstation.GroundStation;
+import org.hbird.exchange.groundstation.RadioDevice;
+import org.hbird.exchange.groundstation.Rotator;
+import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
+
+import eu.estcube.gs.radio.HamlibRadioPart;
+import eu.estcube.gs.rotator.HamlibRotatorPart;
 
 public abstract class SystemTest {
 
@@ -66,12 +76,117 @@ public abstract class SystemTest {
     protected Listener labelListener = null;
 
     protected Listener stateListener = null;
+    
+    protected Listener groundStationPartListener = null;
+
+    protected Listener inMemoryTestListener = null;
 
     protected CamelContext context = null;
 
     protected static IPublish publishApi = ApiFactory.getPublishApi("SystemTest");
     
     protected static IDataAccess accessApi = ApiFactory.getDataAccessApi("SystemTest");
+    
+    protected static ICatalogue catalogueApi = ApiFactory.getCatalogueApi("SystemTest");
+    
+    
+    protected static Satellite estcube1 = null;
+    protected static Satellite dkCube1 = null;
+    protected static Satellite deCube1 = null;    
+    protected static Satellite strand = null;
+
+    protected static GroundStation es5ec = null;
+    protected static GroundStation gsAalborg = null;
+    protected static GroundStation gsDarmstadt = null;
+    protected static GroundStation gsNewYork = null;
+    
+    static {
+    	/** Build the system model, starting from 'the mission'*/
+    	Part mission = new Part("ESTCUBE", "The root system. Complete, everything.");
+
+    	/** Define the satellites */
+    	Part satellites = new Satellite("Satellites", "The satellite(s) of the mission");
+    	satellites.setIsPartOf(mission);
+    	
+    	estcube1 = new Satellite("ESTCube-1", "ESTcube, the student satellite from TARTU");
+    	estcube1.setIsPartOf(satellites);
+
+    	
+    	/** Define the ground station*/
+    	Part groundstations = new Part("Ground Station", "The groundstation(s) of the mission");
+    	groundstations.setIsPartOf(mission);
+    	
+        D3Vector geoLocationTartu = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Tartu, Tähe 4", Math.toRadians(58.3000D), Math.toRadians(26.7330D), 59.0D);
+    	es5ec = new GroundStation("ES5EC", "The main control centre", geoLocationTartu);
+    	es5ec.setIsPartOf(groundstations);
+ 
+        Rotator rotator = new HamlibRotatorPart("Rotator", 0, -90, 360, 0, 180);
+        RadioDevice radio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l); 
+    	Antenna antenna = new Antenna("Antenna 1", "The prime antenna", rotator, radio);
+    	antenna.setIsPartOf(es5ec);
+    	
+    	/** Define the ground segment control*/
+    	Part mof = new Part("Mission Operation Center", "The groundsystem(s) of the mission");
+    	mof.setIsPartOf(mission);
+
+    	Part trackAutomation = new Part("Track Automation", "The component automating the track of ESTCube-1 by ES5EC.");
+    	trackAutomation.setIsPartOf(mof);    	
+    	
+    	ArchiveComponent archive = new ArchiveComponent(StandardComponents.ARCHIVE);
+    	archive.setIsPartOf(mof);
+    	
+    	CommandingComponent comComponent = new CommandingComponent(StandardComponents.COMMANDING_CHAIN);
+    	comComponent.setIsPartOf(mof);
+
+    	NavigationComponent navComponent = new NavigationComponent(StandardComponents.NAVIGATION);
+    	navComponent.setIsPartOf(mof);
+    	
+    	Part scripts = new Part("Synthetic Parameters", "The synthetic parameters / scripts");
+    	scripts.setIsPartOf(mof);
+    	
+    	SystemMonitorComponent sysMon = new SystemMonitorComponent("System Monitoring");
+    	sysMon.setIsPartOf(mof);
+    	
+    	Part taskComponent = new Part("Task Executor", "");
+    	taskComponent.setIsPartOf(mof);
+    	
+    	WebsocketInterfaceComponent webComponent = new WebsocketInterfaceComponent(StandardComponents.WEB_SOCKET);
+    	webComponent.setIsPartOf(mof);
+
+    	
+    	
+    	
+    	
+    	/** Setup the external satellites and ground stations. */
+    	Part external = new Part("Externals", "External parts which we are interested in.");
+
+    	Part eSatellites = new Part("Satellites", "External satellites.");
+    	eSatellites.setIsPartOf(external);
+
+    	dkCube1 = new Satellite("DKCube-1", "DKcube, the student satellite from AALBORG");
+    	dkCube1.setIsPartOf(eSatellites);
+    	
+    	deCube1 = new Satellite("DECube-1", "DEcube, the student satellite from BERLINE");
+    	deCube1.setIsPartOf(eSatellites);
+
+    	strand = new Satellite("STRaND-1", "SSTL Smartphone nanosatellite");
+    	strand.setIsPartOf(eSatellites);
+    	
+    	Part eGs = new Part("GroundStations", "External ground stations.");
+    	eSatellites.setIsPartOf(external);
+
+        D3Vector geoLocationAalborg = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Aalborg", Math.toRadians(55.659306D), Math.toRadians(12.587585D), 59.0D);
+    	gsAalborg = new GroundStation("Aalborg", "Supportive antenna from Aalborg university", geoLocationAalborg);
+    	gsAalborg.setIsPartOf(eGs);
+    	
+        D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
+    	gsDarmstadt = new GroundStation("Darmstadt", "Supportive antenna from Darmstadt university", geoLocationDarmstadt);
+    	gsDarmstadt.setIsPartOf(eGs);
+
+        D3Vector geoLocationNewYork = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "New York", Math.toRadians(40.66564D), Math.toRadians(-74.036865D), 59.0D);
+        gsNewYork = new GroundStation("NewYork", "Supportive antenna from NewYork university", geoLocationNewYork);
+        gsNewYork.setIsPartOf(eGs);
+    }
     
     protected void azzert(boolean assertion) {
         if (assertion == false) {
@@ -126,8 +241,8 @@ public abstract class SystemTest {
         if (monitoringArchiveStarted == false) {
             LOG.info("Issuing command for start of a parameter archive.");
 
-            StartArchiveComponent request = new StartArchiveComponent(StandardComponents.ARCHIVE);
-            injection.sendBody(request);
+            IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.ARCHIVE);
+            part.start("SystemTest");
 
             /** Give the component time to startup. */
             Thread.sleep(1000);
@@ -150,8 +265,17 @@ public abstract class SystemTest {
         if (startedTaskComponents.contains(name) == false) {
             LOG.info("Issuing command for start of a task executor component '" + name + "'.");
 
-            injection.sendBody(new StartTaskExecutorComponent(name));
+            Part parent = Part.getAllParts().get("Task Executor");
+            
+            TaskExecutionComponent taskPart = new TaskExecutionComponent(name);
+            taskPart.setIsPartOf(parent);
+            
+            /** Publish the knowledge of the part. */
+            publishApi.publish(taskPart);
 
+            /** Start the part. */
+            taskPart.start("SystemTest");
+            
             /** Give the component time to startup. */
             Thread.sleep(1000);
 
@@ -167,7 +291,11 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a commanding chain.");
 
             /** Create command component. */
-            injection.sendBody(new StartCommandComponent("CommandingChain1"));
+            IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.COMMANDING_CHAIN);
+            part.start("SystemTest");
+
+            Thread.sleep(2000);
+            
             commandingChainStarted = true;
         }
     }
@@ -180,24 +308,68 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a orbital predictor.");
 
             /** Create command component. */
-            injection.sendBody(new StartNavigationComponent(StandardComponents.ORBIT_PREDICTOR));
+            IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.ORBIT_PREDICTOR);
+            part.start("SystemTest");
+
+            Thread.sleep(2000);
+
             orbitPredictorStarted = true;
         }
     }
 
-    protected static boolean queueManagerStarted = false;
+    protected static boolean websocketsStarted = false;
 
-    public void startQueueManager() throws InterruptedException {
+    public void startWebSockets() throws InterruptedException {
 
-        if (queueManagerStarted == false) {
-            LOG.info("Issuing command for start of a queue manager.");
+        if (websocketsStarted == false) {
+            LOG.info("Issuing command for start of a orbital predictor.");
 
             /** Create command component. */
-            injection.sendBody(new StartQueueManagerComponent("CommandingQueueManager"));
-            queueManagerStarted = true;
+            IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.WEB_SOCKET);
+            part.start("SystemTest");
+
+            Thread.sleep(2000);
+
+            websocketsStarted = true;
         }
     }
 
+    protected static boolean antennaControllerStarter = false;
+
+    public void startAntennaController() throws InterruptedException {
+
+        if (antennaControllerStarter == false) {
+            LOG.info("Issuing command for start of an antenna controller.");
+
+            Part parent = Part.getAllParts().get("Track Automation");
+
+            /** Create command component. */
+        	TrackingComponent antennaController = new TrackingComponent("ES5EC -> ESTCUBE", "The component automating the track of ESTCube-1 by ES5EC.", "ESTCube-1", "ES5EC");
+        	antennaController.setIsPartOf(parent);            
+            
+            antennaController.start("SystemTest");
+
+            Thread.sleep(2000);
+
+            antennaControllerStarter = true;
+        }
+    }
+    
+
+    /**
+	 * 
+	 */
+	protected void publishGroundStationsAndSatellites() {
+		
+		for (Part part : Part.getAllParts().values()) {
+			if (part instanceof Satellite || part instanceof GroundStation) {
+				publishApi.publish(part);
+			}
+		}
+	}
+
+
+    
     public Listener getBusinessCardListener() {
         return businessCardListener;
     }
@@ -246,7 +418,17 @@ public abstract class SystemTest {
         this.stateListener = orbitalListener;
     }
 
-    public CamelContext getContext() {
+    
+    
+    public Listener getGroundStationPartListener() {
+		return groundStationPartListener;
+	}
+
+	public void setGroundStationPartListener(Listener groundStationPartListener) {
+		this.groundStationPartListener = groundStationPartListener;
+	}
+
+	public CamelContext getContext() {
         return context;
     }
 
@@ -259,33 +441,7 @@ public abstract class SystemTest {
         injection.sendBody(new CommitRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE));
         Thread.sleep(2000);
     }
-    
-    protected void publishGroundStationsAndSatellites() {
-        /** Store a set of Ground Stations */
-        RotatorProperties rotatorProperties = new RotatorProperties(0, -90, 360, 0, 180);
-        RadioChannel channel = new RadioChannel(136920000l, 136920000l, true, true, 20l);
-        List<RadioChannel> radioChannels = new ArrayList<RadioChannel>();
-        radioChannels.add(channel);
-        
-        D3Vector geoLocationTartu = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Tartu, Tähe 4", Math.toRadians(58.3000D), Math.toRadians(26.7330D), 59.0D);
-        publishApi.publishGroundStation("ES5EC", "Main Control", "the main control centre", geoLocationTartu, rotatorProperties, radioChannels);
 
-        D3Vector geoLocationAalborg = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Aalborg", Math.toRadians(55.659306D), Math.toRadians(12.587585D), 59.0D);
-        publishApi.publishGroundStation("Aalborg", "Supporting Receiver", "the main control centre", geoLocationAalborg, rotatorProperties, radioChannels);
-
-        D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
-        publishApi.publishGroundStation("Darmstadt", "Supporting Receiver", "the main control centre", geoLocationDarmstadt, rotatorProperties, radioChannels);
-
-        D3Vector geoLocationNewYork = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "New York", Math.toRadians(40.66564D), Math.toRadians(-74.036865D), 59.0D);
-        publishApi.publishGroundStation("NewYork", "Supporting Receiver", "the main control centre", geoLocationNewYork, rotatorProperties, radioChannels);
-
-
-        /** Store a set of satellites */
-        publishApi.publishSatellite("ESTCube-1", "Controlled Satellite", "ESTcube, the student satellite from TARTU");
-        publishApi.publishSatellite("DKCube-1", "Monitored Satellite", "DKcube, the student satellite from AALBORG");
-        publishApi.publishSatellite("DECube-1", "Monitored Satellite", "DEcube, the student satellite from BERLINE");        
-    }
-    
     protected TleOrbitalParameters publishTleParameters() {
         /** Store TLE*/
         String tleLine1 = "1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478";
@@ -296,4 +452,14 @@ public abstract class SystemTest {
 		
 		return parameters;
     }
+
+	public Listener getInMemoryTestListener() {
+		return inMemoryTestListener;
+	}
+
+	public void setInMemoryTestListener(Listener inMemoryTestListener) {
+		this.inMemoryTestListener = inMemoryTestListener;
+	}
+    
+    
 }

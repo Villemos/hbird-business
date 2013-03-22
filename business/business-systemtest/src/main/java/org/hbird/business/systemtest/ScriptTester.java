@@ -21,7 +21,8 @@ import java.util.Map;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.configurator.StartScriptComponent;
+import org.hbird.business.parts.ScriptComponent;
+import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
@@ -43,7 +44,7 @@ public class ScriptTester extends SystemTest {
         binding.put("PARA3", "in1");
         binding.put("PARA4", "in2");
         
-        injection.sendBody(new StartScriptComponent("ScriptComponent_SYN1", "SYN1", script, new Parameter("ScriptEngine", "SYN1", "", "A test script parameter.", new Double(0), "Volt"), binding));
+        injection.sendBody(new StartComponent("SystemTest", new ScriptComponent("ScriptComponent_SYN1", "SYN1", script, new Parameter("ScriptEngine", "SYN1", "", "A test script parameter.", new Double(0), "Volt"), binding)));
 
         Thread.sleep(2000);
         /** Send one of the two parameters. Should NOT trigger the script. */
@@ -71,7 +72,7 @@ public class ScriptTester extends SystemTest {
         binding = new HashMap<String, String>();
         binding.put("PARA5", "in1");
 
-        injection.sendBody(new StartScriptComponent("ScriptComponent_SYN_STATE1", "SYN_STATE1", script, new State("ScriptEngine", "SYN_STATE1", "", "", "PARA2", true), binding));
+        injection.sendBody(new StartComponent("SystemTest", new ScriptComponent("ScriptComponent_SYN_STATE1", "SYN_STATE1", script, new State("ScriptEngine", "SYN_STATE1", "", "", "PARA2", true), binding)));
 
         Thread.sleep(2000);
 
@@ -97,7 +98,7 @@ public class ScriptTester extends SystemTest {
         new HashMap<String, String>();
         binding.put("PARA6", "in1");
 
-        injection.sendBody(new StartScriptComponent("ScriptComponent3", "Fahrenheit2CelsiusConvertion", new Parameter("ScriptComponent3", "SYN2", "", "Temperature in CELCIUS.", new Double(0), "Celsius"), binding));
+        injection.sendBody(new StartComponent("SystemTest", new ScriptComponent("ScriptComponent3", "Fahrenheit2CelsiusConvertion", new Parameter("ScriptComponent3", "SYN2", "", "Temperature in CELCIUS.", new Double(0), "Celsius"), binding)));
 
         Thread.sleep(2000);
 
@@ -115,7 +116,7 @@ public class ScriptTester extends SystemTest {
         binding.put("PARA8", "in1");
         binding.put("PARA7", "threshold");
 
-        injection.sendBody(new StartScriptComponent("ScriptComponent4", "OnOffSpline", new Label("ScriptEngine", "SYN3", "Battery Status", "Whether the battery is ON or OFF", "ON"), binding));
+        injection.sendBody(new StartComponent("SystemTest", new ScriptComponent("ScriptComponent4", "OnOffSpline", new Label("ScriptEngine", "SYN3", "Battery Status", "Whether the battery is ON or OFF", "ON"), binding)));
 
         Thread.sleep(2000);
 

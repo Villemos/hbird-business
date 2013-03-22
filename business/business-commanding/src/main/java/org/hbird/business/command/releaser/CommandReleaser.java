@@ -21,16 +21,13 @@ import java.util.Map;
 
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 import org.apache.camel.Headers;
-import org.apache.camel.impl.DefaultExchange;
 import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.dataaccess.StateRequest;
 
 /**
  * The command releaser validates whether a 'Command' within a 'CommandRequest' can be released.

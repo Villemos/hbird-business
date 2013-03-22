@@ -30,7 +30,7 @@ import org.hbird.exchange.core.Named;
 import org.hbird.exchange.dataaccess.GroundStationRequest;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
-import org.hbird.exchange.navigation.GroundStation;
+import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.errors.OrekitException;
 import org.orekit.time.AbsoluteDate;
@@ -69,6 +69,8 @@ public class TleOrbitalPredictor {
     @Handler
     public List<Named> predictOrbit(@Body TlePropagationRequest request, CamelContext context) throws OrekitException {
 
+    	LOG.info("Received TLE propagation request from '" + request.getIssuedBy() + "'.");
+    	
         /** Create the TLE element */
         TleOrbitalParameters parameters = request.getTleParameters();
         if (parameters == null) {
@@ -84,19 +86,28 @@ public class TleOrbitalPredictor {
         else {
             TLE tle = new TLE(parameters.getTleLine1(), parameters.getTleLine2());
 
+        	LOG.info("Propagating based on TLE timestamped '" + parameters.getTimestamp() + "'");
+            
             /** Get the definition of the Locations. */
             List<GroundStation> locations = getLocations(request.getLocations(), context);
-
+            
             /** Get the initial orbital state at the requested start time. */
             AbsoluteDate startDate = new AbsoluteDate(new Date(request.getStartTime()), TimeScalesFactory.getUTC());
             PVCoordinates initialOrbitalState = TLEPropagator.selectExtrapolator(tle).getPVCoordinates(startDate);
 
+            String gsNames = "all";
+            for (GroundStation entry : locations) {
+            	gsNames = gsNames.equals("all") ? entry.getName() : gsNames + ", " + entry.getName();
+            }            
+        	LOG.info("Propagating for groundstation(s) '" + gsNames + "' and satellite '" + request.getSatellite() + "'...");
+            
             /** Calculate the orbital states and the contact events from the initial time forwards */
             results = keplianOrbitPredictor.predictOrbit(locations, initialOrbitalState, request.getStartTime(), request.getSatellite(), request.getStepSize(),
                     request.getDeltaPropagation(), request.getContactDataStepSize(), parameters, context, request.getPublish());
         }
 
         /** Return the data. */
+    	LOG.info("Propagating done. Have injected " + results.size() + " orbital states and events.");
         return results;
     }
 

@@ -35,8 +35,6 @@ public class Finisher extends SystemTest {
 		LOG.info("------------------------------------------------------------------------------------------------------------");
 		LOG.info("Starting");
 
-		startQueueManager();
-		
 		LOG.info("System Test done.");
 		
 		LOG.info("Purging all activemq topics and queues.");

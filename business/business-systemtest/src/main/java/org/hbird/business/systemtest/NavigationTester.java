@@ -107,7 +107,7 @@ public class NavigationTester extends SystemTest {
         LOG.info("Finished");
     }
 
-    protected void print(List<Named> elements) {
+	protected void print(List<Named> elements) {
 
         TreeMap<Long, Named> sorted = new TreeMap<Long, Named>();
 

@@ -28,6 +28,8 @@ import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.tasking.ControllerTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Controller to manage the propagation of an predicted orbit for a satellite and a set of
@@ -106,6 +108,7 @@ public class OrbitPropagationController extends ControllerTask {
 		super(issuedBy, name, description, executionDelay);
 		this.satellite = satellite;
 	}
+	
 
 	@Override
 	protected List<Named> onFirstExecution() {
@@ -124,6 +127,10 @@ public class OrbitPropagationController extends ControllerTask {
 		 * 
 		 * */
 
+		/** Create local logger. Dont want to serialize the logger class hierachy when sending around this object... */
+		Logger LOG = LoggerFactory.getLogger(OrbitPropagationController.class);
+		LOG.info("Propagating orbit of satellite '" + satellite + "' (first execution).");
+		
 		/** Get the latest TLE */
 		IDataAccess api = ApiFactory.getDataAccessApi(this.name);
 		TleOrbitalParameters tleParameters = api.retrieveTleFor(satellite);
@@ -144,19 +151,20 @@ public class OrbitPropagationController extends ControllerTask {
 		if (state == null || state.getTimestamp() < now) {
 			from = now;
 			to = now + leadTime + executionDelay;
+			LOG.info("No state or old state. Requesting TLE based propagating from '" + from + "' (NOW) to '" + to + "'");
 		}
 		/** If the latest orbital state is AFTER now and BEFORE the required leadTime, then propagate from state to now + leadTime.*/
 		else if (now < state.getTimestamp() && state.getTimestamp() < now + leadTime + executionDelay) {
 			from = state.getTimestamp();
 			to = now + leadTime + executionDelay;
+			LOG.info("Need to extend. Requesting TLE based from '" + from + "' to '" + to + "'");
 		}
 		/** Else there is nothing to do... */
 
 		if (from != 0 && to != 0) {
 			/** Request a propagation of the orbit. We use the 'stream' version of the method which means the result
 			 * is published directly by the propegator to the system. */
-			IOrbitPrediction predictionApi = new OrbitPropagation(this.getName());
-			predictionApi.requestOrbitPropagationStream(satellite, locations, from, to);
+			doRequest(from, to);
 		}
 
 		return new ArrayList<Named>();
@@ -166,6 +174,10 @@ public class OrbitPropagationController extends ControllerTask {
 	protected List<Named> onExecution() {
 		/** Check the last orbital state in the system. */
 		/** Get the latest orbital state */
+
+		/** Create local logger. Dont want to serialize the logger class hierachy when sending around this object... */
+		Logger LOG = LoggerFactory.getLogger(OrbitPropagationController.class);
+		LOG.info("Propagating orbit of satellite '" + satellite + "' (propagation #" + count + ").");
 
 		IDataAccess api = ApiFactory.getDataAccessApi(this.name);
 		OrbitalState state = api.retrieveOrbitalStateFor(satellite);
@@ -178,12 +190,18 @@ public class OrbitPropagationController extends ControllerTask {
 		if (state == null) {
 			long from = now;
 			long to = now + leadTime + executionDelay;
-
+			LOG.info("No state. Requesting TLE based from '" + from + "' (NOW) to '" + to + "'");
+			
 			doRequest(from, to);
 		}		
 		else if (now + leadTime + executionDelay > state.getTimestamp()) {
 			long delta = now + leadTime + executionDelay - state.getTimestamp();
-			doRequest(state.getTimestamp(), state.getTimestamp() + delta);
+			long from = state.getTimestamp();
+			long to = state.getTimestamp() + delta;
+
+			LOG.info("No state. Requesting TLE based from '" + from + "' to '" + to + "'");
+			
+			doRequest(from, to);
 		}
 
 		return new ArrayList<Named>();

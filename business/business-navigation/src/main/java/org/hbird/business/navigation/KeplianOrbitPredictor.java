@@ -21,10 +21,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
+import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.Named;
-import org.hbird.exchange.navigation.Antenna;
-import org.hbird.exchange.navigation.D3Vector;
-import org.hbird.exchange.navigation.GroundStation;
+import org.hbird.exchange.groundstation.Antenna;
+import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
@@ -78,7 +78,7 @@ public class KeplianOrbitPredictor {
 			for (Antenna antenna : groundStation.getAntennas()) {
 
 				/** Register the injector that will send the detected events, for this location and antenna, to the propagator. */
-				EventDetector sta1Visi = new LocationContactEventCollector(antenna.getRotatorProperties().getThresholdElevation(), sta1Frame, satellite, groundStation.getName(), antenna.getName(), parameters, context, publish);
+				EventDetector sta1Visi = new LocationContactEventCollector(antenna.getRotator().getThresholdElevation(), sta1Frame, satellite, groundStation.getName(), antenna.getName(), parameters, context, publish);
 				propagator.addEventDetector(sta1Visi);
 			}
 		}

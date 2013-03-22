@@ -17,6 +17,7 @@
 package org.hbird.business.navigation;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
@@ -30,6 +31,8 @@ import org.orekit.frames.TopocentricFrame;
 import org.orekit.propagation.SpacecraftState;
 import org.orekit.propagation.events.ElevationDetector;
 import org.orekit.time.TimeScalesFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This camel route processor will receive callbacks from the orekit library
@@ -41,6 +44,8 @@ public class LocationContactEventCollector extends ElevationDetector {
     /** The unique UID */
     private static final long serialVersionUID = 801203905525890103L;
 
+    private static final Logger LOG = LoggerFactory.getLogger(LocationContactEventCollector.class);
+    
     /** The ground station / location that comes into contact. */
     protected String groundStation = null;
 
@@ -94,13 +99,15 @@ public class LocationContactEventCollector extends ElevationDetector {
     @Override
     public int eventOccurred(final SpacecraftState state, final boolean increasing) throws OrekitException {
 
-        LocationContactEvent event = new LocationContactEvent(StandardComponents.ORBIT_PREDICTOR, "Predicted", state.getDate().toDate(TimeScalesFactory.getUTC()).getTime(),
+    	long atTime = state.getDate().toDate(TimeScalesFactory.getUTC()).getTime();
+        LocationContactEvent event = new LocationContactEvent(StandardComponents.ORBIT_PREDICTOR, "Predicted", atTime,
                 groundStation, antenna, satellite, increasing, NavigationUtilities.toOrbitalState(state, satellite, parameters.getName(), parameters.getTimestamp(),
                         parameters.getType()), parameters.getName(), parameters.getTimestamp(), parameters.getType());
         events.add(event);
 
         /** If stream mode, then deliver the data as a stream. */
         if (publish) {
+        	LOG.info("Injecting " + (increasing == true? "START" : "END") + " contact event at '" + atTime + " (" + (new Date(atTime)).toLocaleString() + ")' for satellite '" + satellite + "' and groundstation '" + groundStation + "'");
             producer.sendBody("direct:navigationinjection", event);
         }
 

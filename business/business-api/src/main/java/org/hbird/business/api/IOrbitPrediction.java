@@ -19,7 +19,7 @@ package org.hbird.business.api;
 import java.util.List;
 
 import org.hbird.exchange.core.DataSet;
-import org.hbird.exchange.navigation.GroundStation;
+import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Satellite;

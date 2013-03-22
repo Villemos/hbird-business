@@ -34,7 +34,7 @@ public class BusinessCardTester extends SystemTest {
         LOG.info("Starting");
 
         /** See if we have the businesscards of the Configurator. */
-        Thread.sleep(5000);
+        Thread.sleep(8000);
 
         synchronized (businessCardListener.elements) {
             Boolean didArrive = false;

@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.apache.commons.math.geometry.Vector3D;
 import org.hbird.exchange.constants.StandardComponents;
-import org.hbird.exchange.navigation.D3Vector;
-import org.hbird.exchange.navigation.GroundStation;
+import org.hbird.exchange.core.D3Vector;
+import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.PointingData;

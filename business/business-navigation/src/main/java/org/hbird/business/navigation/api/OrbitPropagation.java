@@ -24,7 +24,7 @@ import org.hbird.business.navigation.NavigationUtilities;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
-import org.hbird.exchange.navigation.GroundStation;
+import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Satellite;

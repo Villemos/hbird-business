@@ -13,7 +13,7 @@ import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.navigation.GroundStation;
+import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.Satellite;
 
 public class DataAccessApiTester extends SystemTest {
@@ -100,10 +100,10 @@ public class DataAccessApiTester extends SystemTest {
         publishApi.publishState("STATE1_OF_PARA1", "", "", "PARA1", true, 20);
         publishApi.publishState("STATE2_OF_PARA1", "", "", "PARA1", true, 20);
 
-        publishApi.publishGroundStation("LOC1", "", "", null, null, null);
-        publishApi.publishGroundStation("LOC2", "", "", null, null, null);
-        publishApi.publishGroundStation("LOC3", "", "", null, null, null);
-        publishApi.publishGroundStation("LOC4", "", "", null, null, null);
+        publishApi.publishGroundStation("LOC1", null, null, null, null, null);
+        publishApi.publishGroundStation("LOC2", null, null, null, null, null);
+        publishApi.publishGroundStation("LOC3", null, null, null, null, null);
+        publishApi.publishGroundStation("LOC4", null, null, null, null, null);
         
         publishApi.publishSatellite("SAT1", "", "");
         publishApi.publishSatellite("SAT2", "", "");

@@ -39,6 +39,7 @@ public class Scheduler {
 	 */
 	@Handler
 	public void schedule(@Body Object body, @Headers Map<String, Object> headers) {
+		
 		if (body instanceof IScheduled) {
 			headers.put("AMQ_SCHEDULED_DELAY", ((IScheduled) body).getDelay());
 			headers.put("deliverytime", ((IScheduled) body).getDeliveryTime());

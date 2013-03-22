@@ -8,7 +8,7 @@ import java.util.Map;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.navigation.Location;
+import org.hbird.exchange.groundstation.Location;
 import org.hbird.exchange.scripting.ScriptExecutionRequest;
 import org.junit.Test;
 

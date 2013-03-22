@@ -18,7 +18,9 @@ package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.configurator.StartLimitComponent;
+import org.hbird.business.validation.base.LimitCheckComponent;
+import org.hbird.exchange.configurator.StartComponent;
+import org.hbird.exchange.validation.Limit;
 import org.hbird.exchange.validation.Limit.eLimitType;
 
 public class LimitCheckTester extends SystemTest {
@@ -34,10 +36,11 @@ public class LimitCheckTester extends SystemTest {
 		/** Start a limit checker. */
 		LOG.info("Issuing commands for starting two lower limit limitcheckers.");
 
-		StartLimitComponent request = new StartLimitComponent("PARA1_LowerSoftLimit", eLimitType.Lower, "PARA1", "2d", "PARA1_LOWER_SOFTLIMIT", "The first lower limit of PARA1");
+		StartComponent request = new StartComponent("SystemTest", new LimitCheckComponent("PARA1_LowerSoftLimit", new Limit(eLimitType.Lower, "PARA1", 2d, "PARA1_LOWER_SOFTLIMIT", "The first lower limit of PARA1")));
 		injection.sendBody(request);
 
-		request = new StartLimitComponent("PARA1_LowerHardLimit", eLimitType.Lower, "PARA1", "0d", "PARA1_LOWER_HARDLIMIT", "The second lower limit of PARA1");
+		request = new StartComponent("SystemTest", new LimitCheckComponent("PARA1_LowerSoftLimit", new Limit(eLimitType.Lower, "PARA1", 2d, "PARA1_LOWER_SOFTLIMIT", "The first lower limit of PARA1")));
+		request = new StartComponent("SystemTest", new LimitCheckComponent("PARA1_LowerHardLimit", new Limit(eLimitType.Lower, "PARA1", 0d, "PARA1_LOWER_HARDLIMIT", "The second lower limit of PARA1")));
 		injection.sendBody(request);
 
 		Thread.sleep(2000);
@@ -55,10 +58,10 @@ public class LimitCheckTester extends SystemTest {
 		/** Start a limit checker. */
 		LOG.info("Issuing commands for starting two upper limit limitcheckers.");
 
-		request = new StartLimitComponent("PARA1_UpperSoftLimit", eLimitType.Upper, "PARA1", "10.5d", "PARA1_UPPER_SOFTLIMIT", "The first upper limit of PARA1");
+		request = new StartComponent("SystemTest", new LimitCheckComponent("PARA1_UpperSoftLimit", new Limit(eLimitType.Upper, "PARA1", 10.5d, "PARA1_UPPER_SOFTLIMIT", "The first upper limit of PARA1")));
 		injection.sendBody(request);
 
-		request = new StartLimitComponent("PARA1_UpperHardLimit", eLimitType.Upper, "PARA1", "15d", "PARA1_UPPER_HARDLIMIT", "The second upper limit of PARA1");
+		request = new StartComponent("SystemTest", new LimitCheckComponent("PARA1_UpperHardLimit", new Limit(eLimitType.Upper, "PARA1", 15d, "PARA1_UPPER_HARDLIMIT", "The second upper limit of PARA1")));
 		injection.sendBody(request);
 
 		Thread.sleep(2000);
