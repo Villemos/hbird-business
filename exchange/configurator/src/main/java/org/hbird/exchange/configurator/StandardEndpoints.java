@@ -19,6 +19,10 @@ package org.hbird.exchange.configurator;
 
 public class StandardEndpoints {
 
+	/** Route managing the injection of data. Will ensure that the right headers are set and that
+	 * things like scheduling is performed. Route is defined in the 'injection.xml' Spring DSL. */
+	public static String injection = "seda:injection";
+	
 	/** Monitoring data. */
 	public static String monitoring = "activemq:topic:hbird.monitoring";
 

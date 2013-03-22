@@ -42,4 +42,6 @@ public class StandardComponents {
     public static final String SYSTEM_MONITORING = "SystemMonitoring";
 
     public static final String TASK_EXECUTOR = "TaskExecutor";
+
+	public static final String WEB_SOCKET = "Websockets";
 }

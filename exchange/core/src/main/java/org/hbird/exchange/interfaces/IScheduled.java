@@ -16,7 +16,6 @@
  */
 package org.hbird.exchange.interfaces;
 
-
 public interface IScheduled {
 
 	public long getDelay();

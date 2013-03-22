@@ -19,22 +19,24 @@ package org.hbird.exchange.configurator;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.interfaces.IStartablePart;
 
-public abstract class StartComponent extends Command {
+public class StartComponent extends Command {
 
     private static final long serialVersionUID = 3880066748415223278L;
 
-    public StartComponent(String issuedBy, String destination, String componentname, String requestname, String description) {
-        super(issuedBy, destination, requestname, description);
-        addComponentName(componentname);
+    public static final String DESC_STRING = "Request to start a component.";
+    
+    public StartComponent(String issuedBy, String destination, IStartablePart part) {
+        super(issuedBy, destination, "StartComponent", DESC_STRING);
+        addPart(part);
     }
 
-    public StartComponent(String componentname, String requestname, String description) {
-        super(StandardComponents.ASSEMBLY, "Configurator", requestname, description);
-        addComponentName(componentname);
+    public StartComponent(String issuedBy, IStartablePart part) {
+        super(issuedBy, "any", "StartComponent", DESC_STRING);
+        addPart(part);
     }
 
     /**
@@ -42,16 +44,17 @@ public abstract class StartComponent extends Command {
      */
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
-        args.add(new CommandArgument(StandardArguments.COMPONENT_NAME,
-                "The name of the component to be started. Is used to route messages to the component. All data will be 'issuedby' this name.", String.class,
+        args.add(new CommandArgument(StandardArguments.PART,
+                "The system part that this command requests the start of.", 
+                IStartablePart.class,
                 true));
         args.add(new CommandArgument(StandardArguments.HEART_BEAT, "The period between heartbeat signals (BusinessCards) from this component.", Long.class,
                 "Milliseconds", 5000L, true));
         return args;
     }
 
-    protected void addComponentName(String componentname) {
-        setArgumentValue(StandardArguments.COMPONENT_NAME, componentname);
+    protected void addPart(IStartablePart part) {
+        setArgumentValue(StandardArguments.PART, part);
     }
 
     protected void addHeartbeat(long period) {
@@ -64,5 +67,9 @@ public abstract class StartComponent extends Command {
 
     public long getHeartbeat() {
         return getArgumentValue(StandardArguments.HEART_BEAT, Long.class);
+    }
+    
+    public IStartablePart getPart() {
+        return getArgumentValue(StandardArguments.PART, IStartablePart.class);
     }
 }

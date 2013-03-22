@@ -42,7 +42,7 @@ public class StopComponent extends Command {
         return args;
     }
 
-    public String getComponent() {
+    public String getComponentName() {
         return getArgumentValue(StandardArguments.COMPONENT_NAME, String.class);
     }
 

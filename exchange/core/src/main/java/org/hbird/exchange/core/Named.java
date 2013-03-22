@@ -35,7 +35,7 @@ import java.util.UUID;
  * the generation time of the data set, and can thus also be used to identify which data
  * set is the most recent.
  * */
-public abstract class Named implements Serializable {
+public abstract class Named implements Serializable, Comparable<Named> {
 
     /** The unique UID of this class. */
     private static final long serialVersionUID = -5803219773253020746L;
@@ -73,9 +73,6 @@ public abstract class Named implements Serializable {
      * value of 0 means no data series.
      */
     protected String datasetidentifier = null;
-
-    public Named() {
-    };
 
     /**
      * Constructor of a Named object. The timestamp will be set to the creation time.
@@ -223,4 +220,16 @@ public abstract class Named implements Serializable {
     public String prettyPrint() {
         return String.format("%s[name=%s, timestamp=%s]", this.getClass().getSimpleName(), name, timestamp);
     }
+    
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(Named o) {
+		if (this == o) {
+			return 0;
+		}
+		
+		return 1;
+	}
 }

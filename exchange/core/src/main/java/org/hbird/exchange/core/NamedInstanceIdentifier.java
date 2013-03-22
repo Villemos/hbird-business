@@ -35,6 +35,12 @@ public class NamedInstanceIdentifier implements Serializable {
         this.type = type;
     }
 
+    public NamedInstanceIdentifier(Named parent) {
+        this.name = parent.getName();
+        this.timestamp = parent.getTimestamp();
+        this.type = parent.getType();
+    }
+
     /**
      * @return the name
      */

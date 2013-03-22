@@ -130,4 +130,6 @@ public class StandardArguments {
     public static final String VISIBILITY = "visibility";
     
     public static final String IS_PART_OF = "ispartof";
+
+	public static final String PART = "part";
 }

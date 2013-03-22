@@ -34,7 +34,7 @@ import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.navigation.D3Vector;
+import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.navigation.OrbitalState;
 
 /**
