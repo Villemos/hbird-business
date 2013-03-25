@@ -17,6 +17,8 @@
  * under the License. */
 package org.hbird.exchange.navigation;
 
+import java.util.Date;
+
 import org.hbird.exchange.core.DerivedNamed;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
@@ -28,9 +30,7 @@ import org.hbird.exchange.interfaces.ISatelliteSpecific;
  * @author Admin
  * 
  */
-public class PointingData extends DerivedNamed implements ISatelliteSpecific, IGroundStationSpecific {
-
-    private static final long serialVersionUID = -5455362840245907345L;
+public class PointingData implements ISatelliteSpecific, IGroundStationSpecific {
 
     /** Azimuth to look at the ground station to see the satellite; in degrees. */
     protected Double azimuth;
@@ -57,20 +57,24 @@ public class PointingData extends DerivedNamed implements ISatelliteSpecific, IG
      */
     protected Double doppler;
 
+    protected Double dopplerShift;
+    
     /** Name of the satellite. */
     protected String satelliteName;
 
     protected String groundStationName;
 
-    public PointingData(String issuedBy, String type, long timestamp, Double azimuth, Double elevation, Double doppler, Double dopplerShift,
-            String satelliteName, String groundStationName, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
-        super(issuedBy, PointingData.class.getSimpleName(), type, "Contact data between a satellite and a location", timestamp, derivedFromName,
-                derivedFromTimestamp, derivedFromType);
-        this.azimuth = azimuth;
+    protected long timestamp;
+    
+    public PointingData(long timestamp, Double azimuth, Double elevation, Double doppler, Double dopplerShift,
+            String satelliteName, String groundStationName) {
+    	this.timestamp = timestamp;
+    	this.azimuth = azimuth;
         this.elevation = elevation;
         this.doppler = doppler;
         this.satelliteName = satelliteName;
         this.groundStationName = groundStationName;
+        this.dopplerShift = dopplerShift;
     }
 
     public Double getAzimuth() {
@@ -116,10 +120,26 @@ public class PointingData extends DerivedNamed implements ISatelliteSpecific, IG
     public void setGroundStationName(String location) {
         this.groundStationName = location;
     }
+    
+    
+    
+    public Double getDopplerShift() {
+		return dopplerShift;
+	}
 
-    @Override
-    public String prettyPrint() {
-        return String.format("%s{name=%s, gs=%s, sat=%s, timestamp=%s, azimuth=%.3f, elevation=%.3f, doppler=%.3f}", this.getClass().getSimpleName(), name,
-                getGroundStationName(), getSatelliteName(), timestamp, azimuth, elevation, doppler);
+	public void setDopplerShift(Double dopplerShift) {
+		this.dopplerShift = dopplerShift;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String prettyPrint() {
+    	return (new Date(timestamp)).toLocaleString() + ", Azimuth:" + azimuth + ", Elevation:" + elevation + ", doppler:" + doppler + ", dopplerShift:" + dopplerShift; 
     }
 }

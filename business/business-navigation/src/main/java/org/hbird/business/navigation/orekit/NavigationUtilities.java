@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.math.geometry.Vector3D;
+import org.apache.log4j.Logger;
 import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.groundstation.GroundStation;
@@ -18,6 +19,7 @@ import org.orekit.frames.LocalOrbitalFrame;
 import org.orekit.frames.LocalOrbitalFrame.LOFType;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.orbits.CartesianOrbit;
+import org.orekit.orbits.KeplerianOrbit;
 import org.orekit.orbits.Orbit;
 import org.orekit.propagation.Propagator;
 import org.orekit.propagation.SpacecraftState;
@@ -29,6 +31,8 @@ import org.orekit.utils.PVCoordinates;
 
 public class NavigationUtilities {
 
+    private static org.apache.log4j.Logger LOG = Logger.getLogger(NavigationUtilities.class);
+	
     protected static UTCScale scale = null;
     
     static {
@@ -86,31 +90,47 @@ public class NavigationUtilities {
 
         PVCoordinates coord = toPVCoordinates(startContactEvent.getSatelliteState().position, startContactEvent.getSatelliteState().velocity);
 
-        /** Calculate contact data. */
-        for (int i = 0; startTime + contactDataStepSize * i < endTime; i++) {
-            AbsoluteDate date = new AbsoluteDate(new Date(startTime + contactDataStepSize * i), TimeScalesFactory.getUTC());
+        AbsoluteDate date = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());            
+		Orbit initialOrbit = new KeplerianOrbit(coord, Constants.frame, date, Constants.MU);
+		Propagator propagator = new KeplerianPropagator(initialOrbit);
 
-            double azimuth = calculateAzimuth(locationOnEarth, date, coord);
-            double elevation = calculateElevation(coord, locationOnEarth, date);
-            double doppler = calculateDoppler(coord, locationOnEarth, date);
+		/** Register initial point */
+    	double azimuth = calculateAzimuth(coord, locationOnEarth, date);
+        double elevation = calculateElevation(coord, locationOnEarth, date);
+        double doppler = calculateDoppler(coord, locationOnEarth, date);
+        double dopplerShift = calculateDopplerShift(doppler, satellite.getFrequency());
 
-            // TODO - 27.02.2013, kimmell - calculate dopplerShift for the up-link and down-link frequency.
-            // NOTE: frequencies are properties of the Satellite not GroundStation.
-            // double dopplerShift = calculateDopplerShift(doppler, location.getFrequency());
-            double dopplerShift = 0.0D;
+        PointingData entry = new PointingData(startTime, azimuth, elevation, doppler, dopplerShift, startContactEvent.getSatelliteName(), location.getName());
 
-            PointingData entry = new PointingData(StandardComponents.ORBIT_PREDICTOR, "Predicted", startTime + contactDataStepSize * i, azimuth, elevation, doppler,
-                    dopplerShift,
-                    startContactEvent.getSatelliteName(), location.getName(), startContactEvent.from().getName(), startContactEvent.from().getTimestamp(),
-                    startContactEvent.from().getType());
-            data.add(entry);
+        LOG.debug(entry.prettyPrint());
+        data.add(entry);
+
+        /** Calculate contact data. */		
+        for (int i = 1; startTime + contactDataStepSize * i < endTime; i++) {
+
+        	/** New target date */
+            AbsoluteDate target = new AbsoluteDate(new Date(startTime + contactDataStepSize * i), TimeScalesFactory.getUTC());            
+    		SpacecraftState newState = propagator.propagate(target);
+        	coord = newState.getPVCoordinates();
+
+        	azimuth = calculateAzimuth(coord, locationOnEarth, date);
+            elevation = calculateElevation(coord, locationOnEarth, date);
+            doppler = calculateDoppler(coord, locationOnEarth, date);
+            dopplerShift = calculateDopplerShift(doppler, satellite.getFrequency());
+
+            long time = startTime + contactDataStepSize * i;
+            
+            entry = new PointingData(time, azimuth, elevation, doppler, dopplerShift, startContactEvent.getSatelliteName(), location.getName());
+
+            LOG.debug(entry.prettyPrint());
+            data.add(entry);            
         }
 
         return data;
     }
 
-    protected static double calculateAzimuth(TopocentricFrame locationOnEarth, AbsoluteDate absoluteDate, PVCoordinates state) throws OrekitException {
-        return locationOnEarth.getAzimuth(state.getPosition(), Constants.frame, absoluteDate);
+    protected static double calculateAzimuth(PVCoordinates state, TopocentricFrame locationOnEarth, AbsoluteDate absoluteDate) throws OrekitException {
+        return Math.toDegrees(locationOnEarth.getAzimuth(state.getPosition(), Constants.frame, absoluteDate));
     }
 
     protected static double calculateElevation(PVCoordinates satellite, TopocentricFrame locationOnEarth, AbsoluteDate absoluteDate) throws OrekitException {

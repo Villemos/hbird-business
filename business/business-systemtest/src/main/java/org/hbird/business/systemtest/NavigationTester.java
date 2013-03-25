@@ -31,7 +31,6 @@ import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
-import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 public class NavigationTester extends SystemTest {
@@ -137,11 +136,6 @@ public class NavigationTester extends SystemTest {
                     System.out.println(new Date(element.getTimestamp()) + " Location Event: " + event.getTimestamp() + " " + event.getGroundStationName()
                             + " lost contact to " + event.getSatelliteName());
                 }
-            }
-            else if (element instanceof PointingData) {
-                PointingData event = (PointingData) element;
-                System.out.println(new Date(element.getTimestamp()) + "     Contact Data: sat=" + event.getSatelliteName() + ", loc="
-                        + event.getGroundStationName() + ", azm=" + event.getAzimuth() + ", ele=" + event.getElevation() + ", dop=" + event.getDoppler());
             }
         }
     }

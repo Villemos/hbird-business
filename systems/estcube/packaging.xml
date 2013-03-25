@@ -55,9 +55,9 @@
 
 	<files>
 		<file>
-			<source>${basedir}/target/estcube-0.6.0-SNAPSHOT.jar</source>
+			<source>${basedir}/target/estcube-${version}.jar</source>
 			<outputDirectory>/</outputDirectory>
-			<destName>hbird-0.5.jar</destName>
+			<destName>hbird-${version}.jar</destName>
 		</file>
 		<file>
 			<source>${basedir}/../../business/business-systemtest/src/main/resources/systemtests.xml</source>
@@ -65,7 +65,7 @@
 			<destName>systemtest.xml</destName>
 		</file>
 		<file>
-			<source>${basedir}/../../business/business-solr/src/main/resources/webapp/apache-solr-3.5.0.war</source>
+			<source>${basedir}/../../business/business-archive/src/main/resources/webapp/apache-solr-3.5.0.war</source>
 			<outputDirectory>/solr/webapp</outputDirectory>
 			<destName>apache-solr-3.5.0.war</destName>
 		</file>		

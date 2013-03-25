@@ -1,1 +1,1 @@
-java -jar -Dhbird.assembly=assemblies/groundstation-es5ec.xml -Dhbird.scriptlibrary=scripts -Dorekit.data.path=resources -Dlog4j.configuration=file:resources/log4j.properties  -Dhbird.log=groundstation hbird-0.5.jar 
+java -jar -Dhbird.assembly=assemblies/groundstation-es5ec.xml -Dhbird.scriptlibrary=scripts -Dorekit.data.path=resources -Dlog4j.configuration=file:resources/log4j.properties  -Dhbird.log=groundstation hbird--0.7.0-SNAPSHOT.jar 
