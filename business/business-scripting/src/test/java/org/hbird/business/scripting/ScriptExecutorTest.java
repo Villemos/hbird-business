@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hbird.business.scripting.bean.ScriptExecutor;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
@@ -21,18 +22,18 @@ public class ScriptExecutorTest {
         Map<String, String> binding = new HashMap<String, String>();
         binding.put("Parameter1", "in1");
         binding.put("Parameter2", "in2");
-        ScriptExecutionRequest request = new ScriptExecutionRequest("", script, "javascript", new Parameter("ScriptEngine", "Parameter10", "Power",
+        ScriptExecutionRequest request = new ScriptExecutionRequest("", script, "javascript", new Parameter("ScriptEngine", "Parameter10",
                 "A test script parameter.", new Double(0), "Volt"), binding);
 
         ScriptExecutor executor = new ScriptExecutor(request);
 
-        Object out = executor.calculate(new Parameter("test", "Parameter1", "", "A parameter", 2d, "Volt"));
+        Object out = executor.calculate(new Parameter("test", "Parameter1", "A parameter", 2d, "Volt"));
         assertTrue(out == null);
 
-        out = executor.calculate(new Parameter("test", "Parameter1", "", "A parameter", 3d, "Volt"));
+        out = executor.calculate(new Parameter("test", "Parameter1", "A parameter", 3d, "Volt"));
         assertTrue(out == null);
 
-        out = executor.calculate(new Parameter("test", "Parameter2", "", "A parameter", 5d, "Volt"));
+        out = executor.calculate(new Parameter("test", "Parameter2", "A parameter", 5d, "Volt"));
         assertTrue(out != null);
         assertTrue(out instanceof Parameter);
         assertTrue(((Parameter) out).getName().equals("Parameter10"));
@@ -48,18 +49,18 @@ public class ScriptExecutorTest {
 
         Map<String, String> binding = new HashMap<String, String>();
         binding.put("Parameter1", "in1");
-        ScriptExecutionRequest request = new ScriptExecutionRequest("", script, "javascript", new State("ScriptEngine", "TestState", "", "", "Parameter100", true),
+        ScriptExecutionRequest request = new ScriptExecutionRequest("", script, "javascript", new State("ScriptEngine", "TestState", "", "Parameter100", true),
                 binding);
 
         ScriptExecutor executor = new ScriptExecutor(request);
 
-        State out = (State) executor.calculate(new Parameter("test", "Parameter1", "", "A parameter", 5d, "Volt"));
+        State out = (State) executor.calculate(new Parameter("test", "Parameter1", "A parameter", 5d, "Volt"));
         assertTrue(out != null);
         assertTrue(out instanceof State);
         assertTrue(out.getIsStateOf().equals("Parameter100"));
         assertTrue(out.getValue() == false);
 
-        out = (State) executor.calculate(new Parameter("test", "Parameter1", "", "A parameter", 4d, "Volt"));
+        out = (State) executor.calculate(new Parameter("test", "Parameter1", "A parameter", 4d, "Volt"));
         assertTrue(out != null);
         assertTrue(out instanceof State);
         assertTrue(out.getIsStateOf().equals("Parameter100"));
@@ -71,11 +72,11 @@ public class ScriptExecutorTest {
         Map<String, String> binding = new HashMap<String, String>();
         binding.put("Parameter201", "in1");
         ScriptExecutionRequest request = new ScriptExecutionRequest("Fahrenheit2CelsiusConvertion", "", "javascript", new Parameter("ScriptEngine",
-                "Parameter200", "Temperature", "Temperature in CELCIUS.", new Double(0), "Celsius"), binding);
+                "Parameter200", "Temperature in CELCIUS.", new Double(0), "Celsius"), binding);
 
         ScriptExecutor executor = new ScriptExecutor(request);
 
-        Parameter out = (Parameter) executor.calculate(new Parameter("test", "Parameter201", "Temperature", "The temperature in FAHRENHEIT.", 200d,
+        Parameter out = (Parameter) executor.calculate(new Parameter("test", "Parameter201", "The temperature in FAHRENHEIT.", 200d,
                 "Fahrenheit"));
         assertTrue(out != null);
         assertTrue(out instanceof Parameter);
@@ -91,27 +92,27 @@ public class ScriptExecutorTest {
         binding.put("Parameter300", "in1");
         binding.put("Parameter301", "threshold");
         ScriptExecutionRequest request = new ScriptExecutionRequest("OnOffSpline", "", "javascript", new Label("ScriptEngine", "Parameter300",
-                "Battery Status", "Whether the battery is ON or OFF", "ON"), binding);
+                "Whether the battery is ON or OFF", "ON"), binding);
 
         ScriptExecutor executor = new ScriptExecutor(request);
 
-        Label out = (Label) executor.calculate(new Parameter("test", "Parameter301", "Threshold", "The ON / OFF threshold.", 300d, "Volt"));
+        Label out = (Label) executor.calculate(new Parameter("test", "Parameter301", "The ON / OFF threshold.", 300d, "Volt"));
 
-        out = (Label) executor.calculate(new Parameter("test", "Parameter300", "Measurement", "Dont know.", 200d, "Volt"));
+        out = (Label) executor.calculate(new Parameter("test", "Parameter300", "Dont know.", 200d, "Volt"));
 
         assertTrue(out != null);
         assertTrue(out instanceof Label);
         assertTrue(out.getName().equals("Parameter300"));
         assertTrue(out.getValue().equals("OFF"));
 
-        out = (Label) executor.calculate(new Parameter("test", "Parameter300", "Measurement", "Dont know.", 300d, "Volt"));
+        out = (Label) executor.calculate(new Parameter("test", "Parameter300", "Dont know.", 300d, "Volt"));
 
         assertTrue(out != null);
         assertTrue(out instanceof Label);
         assertTrue(out.getName().equals("Parameter300"));
         assertTrue(out.getValue().equals("ON"));
 
-        out = (Label) executor.calculate(new Parameter("test", "Parameter300", "Measurement", "Dont know.", 400d, "Volt"));
+        out = (Label) executor.calculate(new Parameter("test", "Parameter300", "Dont know.", 400d, "Volt"));
 
         assertTrue(out != null);
         assertTrue(out instanceof Label);
@@ -126,7 +127,7 @@ public class ScriptExecutorTest {
         binding.put("Copenhagen", "location1");
         binding.put("Frankfurt", "location2");
         ScriptExecutionRequest request = new ScriptExecutionRequest("GeospartialDistance", "", "javascript", new Parameter("ScriptEngine", "DistanceFromAtoB",
-                "Distance", "The distance from A to B", 0d, "Meter"), binding);
+                "The distance from A to B", 0d, "Meter"), binding);
 
         ScriptExecutor executor = new ScriptExecutor(request);
 
@@ -146,13 +147,13 @@ public class ScriptExecutorTest {
         binding.put("Parameter501", "lostCharge");
         binding.put("Parameter502", "chargerOutput");
         ScriptExecutionRequest request = new ScriptExecutionRequest("BatteryRechargeTime", "", "javascript", new Parameter("ScriptEngine", "Recharge Time",
-                "Time", "The time it will take to recharge the battery.", 0d, "Seconds"), binding);
+                "The time it will take to recharge the battery.", 0d, "Seconds"), binding);
 
         ScriptExecutor executor = new ScriptExecutor(request);
 
-        Parameter out = (Parameter) executor.calculate(new Parameter("", "Parameter500", "", "", 1000, "mAh"));
-        out = (Parameter) executor.calculate(new Parameter("", "Parameter501", "", "", 20, "Percentage"));
-        out = (Parameter) executor.calculate(new Parameter("", "Parameter502", "", "", 50, "mAh"));
+        Parameter out = (Parameter) executor.calculate(new Parameter("", "Parameter500", "", 1000, "mAh"));
+        out = (Parameter) executor.calculate(new Parameter("", "Parameter501", "", 20, "Percentage"));
+        out = (Parameter) executor.calculate(new Parameter("", "Parameter502", "", 50, "mAh"));
 
         assertTrue(out != null);
         assertTrue(out instanceof Parameter);

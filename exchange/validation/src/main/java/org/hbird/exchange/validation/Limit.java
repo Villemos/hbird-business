@@ -26,7 +26,7 @@ public class Limit extends Parameter {
     private static final long serialVersionUID = -4304941431961981299L;
 
     public Limit(eLimitType type, String ofParameter, Number value, String stateName, String description) {
-        super("", stateName, Limit.class.getSimpleName(), description, value, "");
+        super("", stateName, description, value, "");
 
         this.type = type;
         this.limitOfParameter = ofParameter;
@@ -54,5 +54,4 @@ public class Limit extends Parameter {
 
     /** The name of the parameter being checker. */
     public String limitOfParameter = null;
-
 }

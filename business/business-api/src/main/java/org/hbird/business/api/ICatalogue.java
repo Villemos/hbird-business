@@ -88,4 +88,10 @@ public interface ICatalogue {
      * @return {@link Satellite}
      */
     public Satellite getSatelliteByName(String name);
+
+	/**
+	 * @param names
+	 * @return
+	 */
+	List<GroundStation> getGroundStationsByName(List<String> names);
 }

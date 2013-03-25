@@ -89,7 +89,6 @@ public class OrbitPropagationController extends ControllerTask {
 	 */
 	public OrbitPropagationController(String issuedBy, String name, String description, long executionDelay, long leadTime, String satellite, List<String> locations) {
 		super(issuedBy, name, description, executionDelay);
-
 		this.leadTime = leadTime;
 		this.satellite = satellite;
 		this.locations = locations;

@@ -3,6 +3,7 @@ package org.hbird.business.systemmonitoring;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.hbird.business.systemmonitoring.bean.HeapMemoryUsageMonitor;
 import org.hbird.exchange.core.Parameter;
 import org.junit.Before;
 import org.junit.Test;

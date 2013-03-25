@@ -33,7 +33,6 @@ public abstract class BaseParameter {
 
 	protected String issuedBy;
 	protected String name;
-	protected String type;
 	protected String description;
 	protected Number value;
 	protected String unit;
@@ -49,10 +48,9 @@ public abstract class BaseParameter {
 	 * @param name
 	 * @param description
 	 */
-	public BaseParameter(String issuedBy, String name, String type, String description) {
+	public BaseParameter(String issuedBy, String name, String description) {
 		this.issuedBy = issuedBy;
 		this.name = name;
-		this.type = type;
 		this.description = description;
 	}
 
@@ -63,10 +61,9 @@ public abstract class BaseParameter {
 	 * @param value
 	 * @param unit
 	 */
-	public BaseParameter(String issuedBy, String name, String type, String description, Number value, String unit) {
+	public BaseParameter(String issuedBy, String name, String description, Number value, String unit) {
 		this.issuedBy = issuedBy;
 		this.name = name;
-		this.type = type;
 		this.description = description;
 		this.value = value;
 		this.unit = unit;

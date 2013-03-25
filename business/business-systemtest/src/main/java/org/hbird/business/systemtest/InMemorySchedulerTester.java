@@ -46,7 +46,7 @@ import org.hbird.exchange.core.Named;
  */
 public class InMemorySchedulerTester extends SystemTest {
 
-    private static org.apache.log4j.Logger LOG = Logger.getLogger(GroundStationDriverTester.class);
+    private static org.apache.log4j.Logger LOG = Logger.getLogger(InMemorySchedulerTester.class);
 
     @Handler
     public void process(CamelContext context) throws InterruptedException {

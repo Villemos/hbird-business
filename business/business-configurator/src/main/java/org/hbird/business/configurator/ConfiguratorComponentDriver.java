@@ -46,14 +46,14 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
 	/** The name of the Configurator. */
 	protected String name = "Configurator";
 
-	
+
 
 	protected CamelContext context = null;
 
 	public ConfiguratorComponentDriver() {
 		this.context = getContext();
 		this.part = new ConfiguratorComponent("Configurator", this.getClass().getName());
-		
+
 		try {
 			context.addRoutes(this);
 			this.context.start();
@@ -61,7 +61,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 
 	}
 
@@ -69,35 +69,40 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
 		this.name = name;
 		this.context = context;
 		this.part = new ConfiguratorComponent(name, this.getClass().getName());
-		
+
 		try {
 			context.addRoutes(this);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 
 	}
 
 	public synchronized void startComponent(@Body StartComponent request, CamelContext context) throws Exception {
 		LOG.info("Received start request for part '" + request.getPart().getQualifiedName() + "'. Will use driver '" + request.getPart().getDriverName() + "'.");
 
-		/** Find the component builder and get it to setup and start the component. */
-		if (request.getPart().getDriverName() == null) {
-			LOG.error("Cannot start part '" + request.getPart().getQualifiedName() + "'. No driver set.");
+		if (components.containsKey(request.getPart().getQualifiedName())) {
+			LOG.error("Received second request for start of the same component.");
 		}
 		else {
-			try {
-				SoftwareComponentDriver builder = (SoftwareComponentDriver) Class.forName(request.getPart().getDriverName()).newInstance();
-				builder.setCommand(request);
-				context.addRoutes(builder);
-
-				/** Register component in list of components maintained by this configurator. */
-				components.put(request.getPart().getQualifiedName(), builder.getRouteCollection());
+			/** Find the component builder and get it to setup and start the component. */
+			if (request.getPart().getDriverName() == null) {
+				LOG.error("Cannot start part '" + request.getPart().getQualifiedName() + "'. No driver set.");
 			}
-			catch (Exception e) {
-				LOG.error("Received exception '" + e + "'. Failed to start part '" + request.getPart().getQualifiedName());
+			else {
+				try {
+					SoftwareComponentDriver builder = (SoftwareComponentDriver) Class.forName(request.getPart().getDriverName()).newInstance();
+					builder.setCommand(request);
+					context.addRoutes(builder);
+
+					/** Register component in list of components maintained by this configurator. */
+					components.put(request.getPart().getQualifiedName(), builder.getRouteCollection());
+				}
+				catch (Exception e) {
+					LOG.error("Received exception '" + e + "'. Failed to start part '" + request.getPart().getQualifiedName());
+				}
 			}
 		}
 	}
@@ -142,9 +147,9 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
 		.end();
 
 		/** Setup the BusinessCard */
-        BusinessCardSender cardSender = new BusinessCardSender(new BusinessCard(part.getQualifiedName(), part.getCommands()), 5000l);
-        ProcessorDefinition<?> route = from(addTimer("businesscard", part.getHeartbeat())).bean(cardSender);
-        addInjectionRoute(route);
+		BusinessCardSender cardSender = new BusinessCardSender(new BusinessCard(part.getQualifiedName(), part.getCommands()), 5000l);
+		ProcessorDefinition<?> route = from(addTimer("businesscard", part.getHeartbeat())).bean(cardSender);
+		addInjectionRoute(route);
 	}
 
 	@Override

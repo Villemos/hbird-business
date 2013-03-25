@@ -36,8 +36,7 @@ public abstract class HbirdRouteBuilder extends RouteBuilder {
                 .setHeader(StandardArguments.NAME, simple("${in.body.name}"))
                 .setHeader(StandardArguments.ISSUED_BY, simple("${in.body.issuedBy}"))
                 .setHeader(StandardArguments.TYPE, simple("${in.body.type}"))
-                .setHeader(StandardArguments.DATA_SET_ID, simple("${in.body.datasetidentifier}"))
-                .setHeader("class", simple("${in.body.class.simpleName}"))
+                .setHeader(StandardArguments.CLASS, simple("${in.body.class.simpleName}"))
                 
                 /** Set object specific headers. */
                 .choice()

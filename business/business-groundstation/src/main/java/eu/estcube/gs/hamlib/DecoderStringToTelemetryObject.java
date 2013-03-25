@@ -22,7 +22,7 @@ public class DecoderStringToTelemetryObject extends OneToOneDecoder {
 
         System.out.println("name[0] = " + name[0]);
         System.out.println("state   = " + message.toString().contains("RPRT 0"));
-        State label = new State("", "ExecutionState", "NativeCommandState", "Raw response from Hamlib", name[0], message.toString().contains("RPRT 0"));
+        State label = new State("", "NativeCommandState", "Raw response from Hamlib", name[0], message.toString().contains("RPRT 0"));
 
         label.setTimestamp(System.currentTimeMillis());
         return label;

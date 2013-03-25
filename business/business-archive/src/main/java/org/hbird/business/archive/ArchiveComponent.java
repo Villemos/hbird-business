@@ -32,6 +32,7 @@
  */
 package org.hbird.business.archive;
 
+import org.hbird.business.archive.solr.ArchiveComponentDriver;
 import org.hbird.exchange.core.StartablePart;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;

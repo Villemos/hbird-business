@@ -16,10 +16,10 @@
  */
 package org.hbird.exchange.core;
 
-import org.hbird.exchange.interfaces.IDerived;
+import org.hbird.exchange.interfaces.IDerivedFrom;
 
 
-public class DerivedNamed extends Named implements IDerived {
+public class DerivedNamed extends Named implements IDerivedFrom {
 
 	/**
 	 * 

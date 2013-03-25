@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.hbird.business.core.InMemoryScheduler;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.Part;
+import org.hbird.exchange.groundstation.Antenna;
 import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
@@ -65,11 +66,16 @@ public class GroundStationDriverTester extends SystemTest {
     	/** Issue request to start the websockets. */
         startWebSockets();
         
+        
+        Antenna antenna = (Antenna) Part.getAllParts().get("Antenna1");
 
     	/** Get the drivers (part of the system model)*/
         HamlibRotatorPart rotator = (HamlibRotatorPart) Part.getAllParts().get("Rotator");
+        rotator.setIsPartOf(antenna);
         rotator.setFailOldRequests(false);
+        
         HamlibRadioPart radio = (HamlibRadioPart) Part.getAllParts().get("Radio");
+        radio.setIsPartOf(antenna);
         radio.setFailOldRequests(false);
         
         /** Create a verifier, which we need for the Drivers*/

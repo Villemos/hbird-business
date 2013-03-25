@@ -37,9 +37,8 @@ public class TncFrameToLabel {
     public Label process(@Header(HEADER_TIMESTAMP) Long timestamp,
             @Header(Headers.ISSUED_BY) String issuedBy, @Body TncFrame frame) {
         String value = ByteUtil.toHexString(frame.getData());
-        Label label = new Label(issuedBy, finalParameterName, TncFrame.class.getSimpleName(), DESCRIPTION, value);
+        Label label = new Label(issuedBy, finalParameterName, DESCRIPTION, value);
         label.setTimestamp(timestamp);
-        label.setDatasetidentifier(String.format("%s port %s", issuedBy, frame.getTarget()));
         return label;
     }
 }

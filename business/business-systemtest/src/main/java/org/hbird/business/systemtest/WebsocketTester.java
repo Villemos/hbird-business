@@ -59,17 +59,14 @@ public class WebsocketTester extends SystemTest {
     	/** Issue request to start the websockets. */
     	injection.sendBody(new StartComponent("SystemTest", new WebsocketInterfaceComponent("websockets")));
     	
-    	Double value = 1d;
-    	
     	boolean state = true;
     	
     	/** Circle and insert log messages and parameters... */
-    	while (true) {
-    		injection.sendBody(new Parameter("SystemTest", "/groundstation/TARTU/Rotator/Temperature", "Temperature", "A test parameter", value, "Celcius"));
-    		injection.sendBody(new Parameter("SystemTest", "/groundstation/TARTU/Rotator/Longitude", "Longitude", "Another test parameter", value, "Radians"));
-    		injection.sendBody(new Parameter("SystemTest", "/groundstation/TARTU/Radio/Frequency", "Frequency", "Another test parameter", value, "MHerz"));
+    	for (double value = 0; value < 20; value++) {
+    		injection.sendBody(new Parameter("SystemTest", "/groundstation/TARTU/Rotator/Temperature", "A test parameter", value, "Celcius"));
+    		injection.sendBody(new Parameter("SystemTest", "/groundstation/TARTU/Rotator/Longitude", "Another test parameter", value, "Radians"));
+    		injection.sendBody(new Parameter("SystemTest", "/groundstation/TARTU/Radio/Frequency", "Another test parameter", value, "MHerz"));
     		
-    		value++;
     		LOG.info("Publishing parameter 'PARA1' with value " + value);
     		
     		LOG.warn("A warning");
@@ -77,8 +74,8 @@ public class WebsocketTester extends SystemTest {
     		
     		publishApi.publish(new Event("SystemTest", "Event1", "TestEvent", "A test event", (new Date()).getTime()));
 
-    		publishApi.publish(new State("SystemTest", "State2", "Lower Limit", "The lower limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", true));
-    		publishApi.publish(new State("SystemTest", "State1", "Upper Limit", "The upper limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", state));
+    		publishApi.publish(new State("SystemTest", "State2", "The lower limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", true));
+    		publishApi.publish(new State("SystemTest", "State1", "The upper limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", state));
     		state = !state;    		
     		
     		Thread.sleep(1000);

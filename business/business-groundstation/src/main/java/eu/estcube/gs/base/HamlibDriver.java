@@ -127,7 +127,7 @@ public class HamlibDriver extends SoftwareComponentDriver {
         
         /** Setup route for the PART to receive the verifications. The part will verify the respond and if
          * it fails, or the verification stage is complete, issue a State. */
-        from("hbird" + nameDot + ".verification")
+        from("direct:hbird" + nameDot + ".verification")
             .bean(verifier, "verify")
             .choice()
                 .when(simple("${in.body} == null")).stop()
@@ -153,7 +153,7 @@ public class HamlibDriver extends SoftwareComponentDriver {
             .log(LoggingLevel.INFO, "Sending command '" + simple("${body}").getText() + "' to " + name)
             .inOut(HamlibIO.getDeviceDriverUrl((HamlibDriverConfiguration) config))
             .removeHeader("AMQ_SCHEDULED_DELAY")
-            .to("hbird" + nameDot + ".verification")
+            .to("direct:hbird" + nameDot + ".verification")
         .routeId(name + ": Command execution");
         
         

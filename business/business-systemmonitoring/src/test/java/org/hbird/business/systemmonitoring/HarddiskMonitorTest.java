@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import java.io.File;
 import java.net.UnknownHostException;
 
+import org.hbird.business.systemmonitoring.bean.HarddiskMonitor;
 import org.hbird.exchange.core.Parameter;
 import org.junit.Before;
 import org.junit.Test;

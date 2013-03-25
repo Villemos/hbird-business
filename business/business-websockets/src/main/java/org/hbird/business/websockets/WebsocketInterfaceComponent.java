@@ -32,6 +32,7 @@
  */
 package org.hbird.business.websockets;
 
+import org.hbird.business.websockets.bean.WebsocketInterfaceComponentDriver;
 import org.hbird.exchange.core.StartablePart;
 
 /**

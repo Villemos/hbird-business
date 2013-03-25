@@ -39,13 +39,13 @@ public class Label extends Named {
      * @param description A description of the label.
      * @param value An object holding the value of the label.
      */
-    public Label(String issuedBy, String name, String type, String description, String value) {
-        super(issuedBy, name, type, description);
+    public Label(String issuedBy, String name, String description, String value) {
+        super(issuedBy, name, "Parameter", description);
         this.value = value;
     }
 
     public Label(Label base) {
-        this(base.issuedBy, base.name, base.type, base.description, base.value);
+        this(base.issuedBy, base.name, base.description, base.value);
     }
 
     public String getValue() {

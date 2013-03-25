@@ -19,7 +19,7 @@ package org.hbird.exchange.navigation;
 import org.hbird.exchange.core.Event;
 import org.hbird.exchange.core.NamedInstanceIdentifier;
 import org.hbird.exchange.interfaces.IAntennaSpecific;
-import org.hbird.exchange.interfaces.IDerived;
+import org.hbird.exchange.interfaces.IDerivedFrom;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
 
@@ -42,7 +42,7 @@ import org.hbird.exchange.interfaces.ISatelliteSpecific;
  * by a station or satellite.
  * 
  */
-public class LocationContactEvent extends Event implements IAntennaSpecific, ISatelliteSpecific, IDerived {
+public class LocationContactEvent extends Event implements IAntennaSpecific, ISatelliteSpecific, IDerivedFrom {
 
 	private static final long serialVersionUID = 6129893135305263533L; 
 

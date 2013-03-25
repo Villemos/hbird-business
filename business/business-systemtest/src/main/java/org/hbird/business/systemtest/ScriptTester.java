@@ -25,6 +25,7 @@ import org.hbird.business.scripting.ScriptComponent;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.core.Part;
 import org.hbird.exchange.core.State;
 
 public class ScriptTester extends SystemTest {
@@ -40,26 +41,33 @@ public class ScriptTester extends SystemTest {
         /** Create script component from scratch. */
         String script = "var value=in1.asDouble()*10 + in2.asDouble(); output.setValue(value);\n";
 
-        Map<String, String> binding = new HashMap<String, String>();
-        binding.put("PARA3", "in1");
-        binding.put("PARA4", "in2");
+        // 
+        Part scripts = (Part) Part.getAllParts().get("Synthetic Parameters");
+
         
-        injection.sendBody(new StartComponent("SystemTest", new ScriptComponent("ScriptComponent_SYN1", "SYN1", script, new Parameter("ScriptEngine", "SYN1", "", "A test script parameter.", new Double(0), "Volt"), binding)));
+        Map<String, String> binding = new HashMap<String, String>();
+        binding.put(estcube1.getQualifiedName() + "/PARA3", "in1");
+        binding.put(estcube1.getQualifiedName() + "/PARA4", "in2");
+
+        ScriptComponent com = new ScriptComponent("ScriptComponent_SYN1", "SYN1", script, new Parameter("ScriptEngine", estcube1.getQualifiedName() + "/SYN1", "A test script parameter.", new Double(0), "Volt"), binding);
+        com.setIsPartOf(scripts);
+        
+        injection.sendBody(new StartComponent("SystemTest", com));
 
         Thread.sleep(2000);
         /** Send one of the two parameters. Should NOT trigger the script. */
-        injection.sendBody(new Parameter("SystemTest", "PARA3", "", "A parameter", 2d, "Volt"));
+        injection.sendBody(new Parameter("SystemTest", estcube1.getQualifiedName() + "/PARA3", "A parameter", 2d, "Volt"));
 
         Thread.sleep(2000);
 
         azzert(parameterListener.lastReceived.getName().equals("SYN_PARA1") == false);
 
         /** Send the other parameter. Should trigger the script. */
-        injection.sendBody(new Parameter("SystemTest", "PARA4", "", "A parameter", 5d, "Volt"));
+        injection.sendBody(new Parameter("SystemTest", estcube1.getQualifiedName() + "/PARA4", "A parameter", 5d, "Volt"));
 
         Thread.sleep(2000);
 
-        azzert(parameterListener.lastReceived.getName().equals("SYN1") == true);
+        azzert(parameterListener.lastReceived.getName().equals(estcube1.getQualifiedName() + "/SYN1") == true);
         azzert(parameterListener.lastReceived instanceof Parameter);
         Parameter out = (Parameter) parameterListener.lastReceived;
         azzert(out.getDescription().equals("A test script parameter."));
@@ -70,13 +78,15 @@ public class ScriptTester extends SystemTest {
         script = "if (in1.asInt() == 4) {output.setValid()} else {output.setInvalid()}\n";
 
         binding = new HashMap<String, String>();
-        binding.put("PARA5", "in1");
+        binding.put(estcube1.getQualifiedName() + "/PARA5", "in1");
 
-        injection.sendBody(new StartComponent("SystemTest", new ScriptComponent("ScriptComponent_SYN_STATE1", "SYN_STATE1", script, new State("ScriptEngine", "SYN_STATE1", "", "", "PARA2", true), binding)));
+        com = new ScriptComponent("ScriptComponent_SYN_STATE1", "SYN_STATE1", script, new State("ScriptEngine", "SYN_STATE1", "", "PARA2", true), binding);
+        com.setIsPartOf(scripts);
+        injection.sendBody(new StartComponent("SystemTest", com));
 
         Thread.sleep(2000);
 
-        injection.sendBody(new Parameter("SystemTest", "PARA5", "", "A parameter", 5d, "Volt"));
+        injection.sendBody(new Parameter("SystemTest", estcube1.getQualifiedName() + "/PARA5", "A parameter", 5d, "Volt"));
 
         Thread.sleep(2000);
 
@@ -85,7 +95,7 @@ public class ScriptTester extends SystemTest {
         State out2 = (State) stateListener.lastReceived;
         azzert(out2.getValue() == false);
 
-        injection.sendBody(new Parameter("SystemTest", "PARA5", "", "A parameter", 4d, "Volt"));
+        injection.sendBody(new Parameter("SystemTest", estcube1.getQualifiedName() + "/PARA5", "A parameter", 4d, "Volt"));
 
         Thread.sleep(2000);
 
@@ -96,53 +106,57 @@ public class ScriptTester extends SystemTest {
 
         /** Test the triggering of a script from the library */
         new HashMap<String, String>();
-        binding.put("PARA6", "in1");
+        binding.put(estcube1.getQualifiedName() + "/PARA6", "in1");
 
-        injection.sendBody(new StartComponent("SystemTest", new ScriptComponent("ScriptComponent3", "Fahrenheit2CelsiusConvertion", new Parameter("ScriptComponent3", "SYN2", "", "Temperature in CELCIUS.", new Double(0), "Celsius"), binding)));
-
-        Thread.sleep(2000);
-
-        injection.sendBody(new Parameter("SystemTest", "PARA6", "Temperature", "The temperature in FAHRENHEIT.", 200d, "Fahrenheit"));
+        com = new ScriptComponent("ScriptComponent3", "Fahrenheit2CelsiusConvertion", new Parameter("ScriptComponent3", estcube1.getQualifiedName() + "/SYN2", "Temperature in CELCIUS.", new Double(0), "Celsius"), binding);
+        com.setIsPartOf(scripts);
+        injection.sendBody(new StartComponent("SystemTest", com));
 
         Thread.sleep(2000);
 
-        azzert(parameterListener.lastReceived.getName().equals("SYN2") == true);
+        injection.sendBody(new Parameter("SystemTest", estcube1.getQualifiedName() + "/PARA6", "The temperature in FAHRENHEIT.", 200d, "Fahrenheit"));
+
+        Thread.sleep(2000);
+
+        azzert(parameterListener.lastReceived.getName().equals(estcube1.getQualifiedName() + "/SYN2") == true);
         azzert(parameterListener.lastReceived instanceof Parameter);
         Parameter out4 = (Parameter) parameterListener.lastReceived;
         azzert(out4.getValue().doubleValue() == 93.33333333333333);
 
         /** Test script that creates a label */
         binding = new HashMap<String, String>();
-        binding.put("PARA8", "in1");
-        binding.put("PARA7", "threshold");
+        binding.put(estcube1.getQualifiedName() + "/PARA8", "in1");
+        binding.put(estcube1.getQualifiedName() + "/PARA7", "threshold");
 
-        injection.sendBody(new StartComponent("SystemTest", new ScriptComponent("ScriptComponent4", "OnOffSpline", new Label("ScriptEngine", "SYN3", "Battery Status", "Whether the battery is ON or OFF", "ON"), binding)));
-
-        Thread.sleep(2000);
-
-        injection.sendBody(new Parameter("SystemTest", "PARA7", "Threshold", "The ON / OFF threshold.", 300d, "Volt"));
-        injection.sendBody(new Parameter("SystemTest", "PARA8", "Measurement", "Dont know.", 200d, "Volt"));
+        com = new ScriptComponent("ScriptComponent4", "OnOffSpline", new Label("ScriptEngine", estcube1.getQualifiedName() + "/SYN3", "Whether the battery is ON or OFF", "ON"), binding);
+        com.setIsPartOf(scripts);
+        injection.sendBody(new StartComponent("SystemTest", com));
 
         Thread.sleep(2000);
 
-        azzert(labelListener.lastReceived.getName().equals("SYN3") == true);
+        injection.sendBody(new Parameter("SystemTest", estcube1.getQualifiedName() + "/PARA7", "The ON / OFF threshold.", 300d, "Volt"));
+        injection.sendBody(new Parameter("SystemTest", estcube1.getQualifiedName() + "/PARA8", "Dont know.", 200d, "Volt"));
+
+        Thread.sleep(2000);
+
+        azzert(labelListener.lastReceived.getName().equals(estcube1.getQualifiedName() + "/SYN3") == true);
         azzert(labelListener.lastReceived instanceof Label);
         Label out5 = (Label) labelListener.lastReceived;
         azzert(out5.getValue().equals("OFF"));
 
-        injection.sendBody(new Parameter("test", "PARA8", "Measurement", "Dont know.", 300d, "Volt"));
+        injection.sendBody(new Parameter("test", estcube1.getQualifiedName() + "/PARA8", "Dont know.", 300d, "Volt"));
 
         Thread.sleep(2000);
 
-        azzert(labelListener.lastReceived.getName().equals("SYN3") == true);
+        azzert(labelListener.lastReceived.getName().equals(estcube1.getQualifiedName() + "/SYN3") == true);
         out5 = (Label) labelListener.lastReceived;
         azzert(out5.getValue().equals("ON"));
 
-        injection.sendBody(new Parameter("test", "PARA8", "Measurement", "Dont know.", 400d, "Volt"));
+        injection.sendBody(new Parameter("test", estcube1.getQualifiedName() + "/PARA8", "Dont know.", 400d, "Volt"));
 
         Thread.sleep(2000);
 
-        azzert(labelListener.lastReceived.getName().equals("SYN3") == true);
+        azzert(labelListener.lastReceived.getName().equals(estcube1.getQualifiedName() + "/SYN3") == true);
         out5 = (Label) labelListener.lastReceived;
         azzert(out5.getValue().equals("ON"));
 

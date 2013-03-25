@@ -39,46 +39,50 @@ public class ParameterArchivalTester extends SystemTest {
 		
 		Thread.sleep(2000);
 
+		String para1Name = estcube1.getQualifiedName() + "/" + "PARA1";
+		String para2Name = estcube1.getQualifiedName() + "/" + "PARA2";
+		String para3Name = estcube1.getQualifiedName() + "/" + "PARA3";
+		
 		/** Publish parameters. */
 		LOG.info("Publishing parameters.");
-		publishApi.publishParameter("PARA1", "", "A test description,", 2d, "Volt");
+		publishApi.publishParameter(para1Name,  "A test description,", 2d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter("PARA1", "", "A test description,", 2.1d, "Volt");
+		publishApi.publishParameter(para1Name,  "A test description,", 2.1d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter("PARA1", "", "A test description,", 2.2d, "Volt");
+		publishApi.publishParameter(para1Name,  "A test description,", 2.2d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter("PARA1", "", "A test description,", 2.3d, "Volt");
+		publishApi.publishParameter(para1Name,  "A test description,", 2.3d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter("PARA1", "", "A test description,", 2.4d, "Volt");
+		publishApi.publishParameter(para1Name,  "A test description,", 2.4d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter("PARA1", "", "A test description,", 2.5d, "Volt");
+		publishApi.publishParameter(para1Name,  "A test description,", 2.5d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter("PARA1", "", "A test description,", 2.6d, "Volt");
+		publishApi.publishParameter(para1Name,  "A test description,", 2.6d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter("PARA2", "", "A test description,", 2l, "Meter");
+		publishApi.publishParameter(para2Name,  "A test description,", 2l, "Meter");
 
 		/** Make sure we have different timestamps. */
 		Thread.sleep(1);
 		Date start = new Date();
 		Thread.sleep(1);
 		
-		publishApi.publishParameter("PARA2", "", "A test description,", 3l, "Meter");
+		publishApi.publishParameter(para2Name,  "A test description,", 3l, "Meter");
 		Thread.sleep(1);
-		publishApi.publishParameter("PARA2", "", "A test description,", 4l, "Meter");
+		publishApi.publishParameter(para2Name,  "A test description,", 4l, "Meter");
 		Thread.sleep(1);
-		publishApi.publishParameter("PARA3", "", "A test description,", 10f, "Seconds");
+		publishApi.publishParameter(para3Name,  "A test description,", 10f, "Seconds");
 		Thread.sleep(1);
-		publishApi.publishParameter("PARA3", "", "A test description,", 15f, "Seconds");
+		publishApi.publishParameter(para3Name,  "A test description,", 15f, "Seconds");
 		Thread.sleep(1);
-		publishApi.publishParameter("PARA3", "", "A test description,", 20f, "Seconds");
+		publishApi.publishParameter(para3Name,  "A test description,", 20f, "Seconds");
 		
 		Thread.sleep(1);
 		Date end = new Date();
 		Thread.sleep(1);
 		
-		publishApi.publishParameter("PARA2", "", "A test description,", 5l, "Meter");
+		publishApi.publishParameter(para2Name,  "A test description,", 5l, "Meter");
 		Thread.sleep(1);
-		publishApi.publishParameter("PARA3", "", "A test description,", 35f, "Seconds");
+		publishApi.publishParameter(para3Name,  "A test description,", 35f, "Seconds");
 
         Thread.sleep(2000);
 		
@@ -94,7 +98,7 @@ public class ParameterArchivalTester extends SystemTest {
 		try {
 			LOG.info("Retrieveing last value of PARA1");
 
-			Parameter respond = accessApi.getParameter("PARA1");
+			Parameter respond = accessApi.getParameter(para1Name);
 			azzert(respond != null, "Received a response.");
 			
 			azzert(respond.asDouble() == 2.6d, "Last value should be 2.6. Received " + respond.asDouble());			
@@ -105,7 +109,7 @@ public class ParameterArchivalTester extends SystemTest {
 		
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			List<Parameter> respond = accessApi.retrieveParameter("PARA2", start.getTime(), (new Date()).getTime());
+			List<Parameter> respond = accessApi.retrieveParameter(para2Name, start.getTime(), (new Date()).getTime());
 			azzert(respond != null, "Received a response.");			
 			azzert(respond.size() == 3, "Expect 3 entries. Received " + respond.size());			
 		}
@@ -115,7 +119,7 @@ public class ParameterArchivalTester extends SystemTest {
 
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			List<Parameter> respond = accessApi.retrieveParameter("PARA2", start.getTime(), end.getTime());
+			List<Parameter> respond = accessApi.retrieveParameter(para2Name, start.getTime(), end.getTime());
 			azzert(respond != null, "Received a response.");			
 			azzert(respond.size() == 2, "Expect 2 entries. Received " + respond.size());			
 		}
@@ -125,7 +129,7 @@ public class ParameterArchivalTester extends SystemTest {
 
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			List<Parameter> respond = accessApi.retrieveParameters(Arrays.asList("PARA1", "PARA2", "PARA3"), start.getTime(), end.getTime());
+			List<Parameter> respond = accessApi.retrieveParameters(Arrays.asList(para1Name, para2Name, para3Name), start.getTime(), end.getTime());
 			azzert(respond != null, "Received a response.");			
 			azzert(respond.size() == 5, "Expect 5 entries. Received " + respond.size());			
 		}

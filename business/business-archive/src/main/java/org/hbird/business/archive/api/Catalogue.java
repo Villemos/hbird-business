@@ -1,5 +1,6 @@
 package org.hbird.business.archive.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.business.api.HbirdApi;
@@ -32,7 +33,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
 
     @Override
     public List<GroundStation> getGroundStations() {
-        GroundStationRequest request = createGroundStationRequest(issuedBy);
+        GroundStationRequest request = createGroundStationRequest(issuedBy, null);
         return executeRequest(groundStationFilter, request);
     }
 
@@ -41,10 +42,20 @@ public class Catalogue extends HbirdApi implements ICatalogue {
      */
     @Override
     public GroundStation getGroundStationByName(String name) {
-        GroundStationRequest request = createGroundStationRequest(issuedBy);
-        request.addName(name);
+    	List<String> names = new ArrayList<String>();
+		names.add(name);
+    	GroundStationRequest request = createGroundStationRequest(issuedBy, names);
         List<GroundStation> stations = executeRequest(groundStationFilter, request);
         return getFirst(stations);
+    }
+
+    /**
+     * @see org.hbird.business.api.ICatalogue#getGroundStationByName(java.lang.String)
+     */
+    @Override
+    public List<GroundStation> getGroundStationsByName(List<String> names) {
+        GroundStationRequest request = createGroundStationRequest(issuedBy, names);
+        return executeRequest(groundStationFilter, request);
     }
 
     @Override
@@ -83,10 +94,11 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     }
 
     /**
+     * @param n 
      * @return
      */
-    protected GroundStationRequest createGroundStationRequest(String issuedBy) {
-        GroundStationRequest request = new GroundStationRequest(issuedBy);
+    protected GroundStationRequest createGroundStationRequest(String issuedBy, List<String> names) {
+        GroundStationRequest request = new GroundStationRequest(issuedBy, names);
         request.setIsInitialization(true);
         request.setClass(GroundStation.class.getSimpleName());
         request.setRows(1);

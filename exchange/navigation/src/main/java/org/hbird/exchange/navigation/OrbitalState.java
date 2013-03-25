@@ -116,4 +116,8 @@ public class OrbitalState extends DerivedNamed implements IGenerationTimestamped
 	public void setGenerationTime(long generationTime) {
 		this.generationTime = generationTime;
 	}	
+	
+    public String prettyPrint() {
+        return String.format("%s[name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getQualifiedName(), timestamp, satellite);
+    }
 }

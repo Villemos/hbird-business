@@ -40,6 +40,7 @@ import org.apache.log4j.Logger;
 import org.hbird.business.core.InMemoryScheduler;
 import org.hbird.business.navigation.controller.OrbitPropagationController;
 import org.hbird.exchange.core.Part;
+import org.hbird.exchange.groundstation.Antenna;
 
 import eu.estcube.gs.base.HamlibDriver;
 import eu.estcube.gs.base.Verifier;
@@ -70,7 +71,6 @@ public class EndToEndTrackingTester extends SystemTest {
     	startWebSockets();
         
 		/** Create an antenna controller task and inject it. */
-        /** Now start the antenna controller. */
     	startAntennaController();
 
 		publishTleParameters();
@@ -78,10 +78,16 @@ public class EndToEndTrackingTester extends SystemTest {
 
         forceCommit();        
 
+        Antenna antenna = (Antenna) Part.getAllParts().get("Antenna1");
+
     	/** Get the drivers (part of the system model)*/
         HamlibRotatorPart rotator = (HamlibRotatorPart) Part.getAllParts().get("Rotator");
+        rotator.setIsPartOf(antenna);
         rotator.setFailOldRequests(false);
+        
         HamlibRadioPart radio = (HamlibRadioPart) Part.getAllParts().get("Radio");
+        
+        radio.setIsPartOf(antenna);
         radio.setFailOldRequests(false);
         
         /** Create a verifier, which we need for the Drivers*/
@@ -107,7 +113,7 @@ public class EndToEndTrackingTester extends SystemTest {
             
         List<String> locations = new ArrayList<String>();
         locations.add(es5ec.getName());
-        locations.add(gsAalborg.getName());
+        // locations.add(gsAalborg.getName());
 
 		/** Create a controller task and inject it. 
 		 * 
@@ -115,7 +121,7 @@ public class EndToEndTrackingTester extends SystemTest {
 		 *  Lead Time (frequency of check whether orbit needs to be propagated) to 60 minutes.
 		 *  Interval (the time for which orbit data must as a minimum be available) to 6es hours.
 		 * */
-		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 60 * 1000, 6 * 60 * 60 * 1000, "ESTCube-1", locations);
+		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 60 * 1000, 6 * 60 * 60 * 1000, es5ec.getQualifiedName(), locations);
 		task.setRepeat(0);
 		injection.sendBody(task);
         

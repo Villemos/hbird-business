@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import org.hbird.business.core.naming.DefaultNaming;
 import org.hbird.business.core.naming.Naming;
+import org.hbird.business.systemmonitoring.bean.Monitor;
 import org.junit.Before;
 import org.junit.Test;
 

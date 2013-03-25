@@ -42,153 +42,155 @@ import org.hbird.exchange.core.State;
 
 public class DataRequest extends Command {
 
-    public static final String DESCRIPTION = "A generic request to the archive for data.";
+	public static final String DESCRIPTION = "A generic request to the archive for data.";
 
-    private static final long serialVersionUID = 344371026722929043L;
+	private static final long serialVersionUID = 344371026722929043L;
 
-    public DataRequest(String issuedBy, String destination) {
-        super(issuedBy, destination, DataRequest.class.getSimpleName(), DESCRIPTION);
-    }
+	public DataRequest(String issuedBy, String destination) {
+		super(issuedBy, destination, DataRequest.class.getSimpleName(), DESCRIPTION);
+	}
 
-    public DataRequest(String issuedBy, String destination, String name, String description) {
-        super(issuedBy, destination, name, description);
-    }
+	public DataRequest(String issuedBy, String destination, String name, String description) {
+		super(issuedBy, destination, name, description);
+	}
 
-    /**
-     * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
-     */
-    @Override
-    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
-        args.add(create(TYPE));
-        args.add(create(CLASS));
-        args.add(create(FROM));
-        args.add(create(TO));
-        args.add(create(IS_STATE_OF));
-        args.add(create(NAMES));
-        args.add(create(INCLUDE_STATES));
-        args.add(create(SORT_ORDER));
-        args.add(create(SORT));
-        args.add(create(ROWS));
-        args.add(create(INITIALIZATION));
-        args.add(create(DERIVED_FROM));
-        return args;
-    }
+	/**
+	 * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
+	 */
+	@Override
+	protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+		args.add(create(TYPE));
+		args.add(create(CLASS));
+		args.add(create(FROM));
+		args.add(create(TO));
+		args.add(create(IS_STATE_OF));
+		args.add(create(NAMES));
+		args.add(create(INCLUDE_STATES));
+		args.add(create(SORT_ORDER));
+		args.add(create(SORT));
+		args.add(create(ROWS));
+		args.add(create(INITIALIZATION));
+		args.add(create(DERIVED_FROM));
+		return args;
+	}
 
-    public void setRows(int rows) {
-        setArgumentValue(StandardArguments.ROWS, rows);
-    }
+	public void setRows(int rows) {
+		setArgumentValue(StandardArguments.ROWS, rows);
+	}
 
-    @Override
-    public void setType(String type) {
-        setArgumentValue(StandardArguments.TYPE, type);
-    }
+	@Override
+	public void setType(String type) {
+		setArgumentValue(StandardArguments.TYPE, type);
+	}
 
-    public void setClass(String clazz) {
-        setArgumentValue(StandardArguments.CLASS, clazz);
-    }
+	public void setClass(String clazz) {
+		setArgumentValue(StandardArguments.CLASS, clazz);
+	}
 
-    public void setFrom(Long from) {
-        if (from != null) {
-            setArgumentValue(StandardArguments.FROM, from);
-        }
-    }
+	public void setFrom(Long from) {
+		if (from != null) {
+			setArgumentValue(StandardArguments.FROM, from);
+		}
+	}
 
-    public void setTo(Long to) {
-        if (to != null) {
-            setArgumentValue(StandardArguments.TO, to);
-        }
-    }
+	public void setTo(Long to) {
+		if (to != null) {
+			setArgumentValue(StandardArguments.TO, to);
+		}
+	}
 
-    public void setIsStateOf(String isStateOf) {
-        setArgumentValue(StandardArguments.IS_STATE_OF, isStateOf);
-    }
+	public void setIsStateOf(String isStateOf) {
+		setArgumentValue(StandardArguments.IS_STATE_OF, isStateOf);
+	}
 
-    public void setIsInitialization(Boolean isInitialization) {
-        setArgumentValue(StandardArguments.INITIALIZATION, isInitialization);
-    }
+	public void setIsInitialization(Boolean isInitialization) {
+		setArgumentValue(StandardArguments.INITIALIZATION, isInitialization);
+	}
 
-    public void addName(List<String> names) {
-        for (String name : names) {
-            addName(name);
-        }
-    }
+	public void addName(List<String> names) {
+		for (String name : names) {
+			addName(name);
+		}
+	}
 
-    public void addName(String name) {
-        if (name != null) {
-            if (!hasArgumentValue(StandardArguments.NAMES)) {
-                setArgumentValue(StandardArguments.NAMES, new ArrayList<String>());
-            }
-            List<String> names = getArgumentValue(StandardArguments.NAMES, List.class);
-            names.add(name);
-        }
-    }
+	public void addName(String name) {
+		if (name != null) {
+			if (!hasArgumentValue(StandardArguments.NAMES)) {
+				setArgumentValue(StandardArguments.NAMES, new ArrayList<String>());
+			}
+			List<String> names = getArgumentValue(StandardArguments.NAMES, List.class);
+			names.add(name);
+		}
+	}
 
-    public void addNames(List<String> names) {
-        for (String name : names) {
-            addName(name);
-        }
-    }
+	public void addNames(List<String> names) {
+		if (names != null) {
+			for (String name : names) {
+				addName(name);
+			}
+		}
+	}
 
-    public void retrieveParameter(long from, long to, String parameter) {
-        setClass(Parameter.class.getSimpleName());
-        setFrom(from);
-        setTo(to);
-        addName(parameter);
-    }
+	public void retrieveParameter(long from, long to, String parameter) {
+		setClass(Parameter.class.getSimpleName());
+		setFrom(from);
+		setTo(to);
+		addName(parameter);
+	}
 
-    public void retrieveState(long from, long to, String state, String isStateOf) {
-        setClass(State.class.getSimpleName());
-        setFrom(from);
-        setTo(to);
-        addName(state);
-        setIsStateOf(isStateOf);
-    }
+	public void retrieveState(long from, long to, String state, String isStateOf) {
+		setClass(State.class.getSimpleName());
+		setFrom(from);
+		setTo(to);
+		addName(state);
+		setIsStateOf(isStateOf);
+	}
 
-    public void setIncludeStates(boolean includeStates) {
-        setArgumentValue(StandardArguments.INCLUDE_STATES, includeStates);
-    }
+	public void setIncludeStates(boolean includeStates) {
+		setArgumentValue(StandardArguments.INCLUDE_STATES, includeStates);
+	}
 
-    public boolean shallIncludeStates() {
-        return getArgumentValue(StandardArguments.INCLUDE_STATES, Boolean.class);
-    }
+	public boolean shallIncludeStates() {
+		return getArgumentValue(StandardArguments.INCLUDE_STATES, Boolean.class);
+	}
 
-    public Integer getRows() {
-        return getArgumentValue(StandardArguments.ROWS, Integer.class);
-    }
+	public Integer getRows() {
+		return getArgumentValue(StandardArguments.ROWS, Integer.class);
+	}
 
-    public Long getFrom() {
-        return getArgumentValue(StandardArguments.FROM, Long.class);
-    }
+	public Long getFrom() {
+		return getArgumentValue(StandardArguments.FROM, Long.class);
+	}
 
-    public Long getTo() {
-        return getArgumentValue(StandardArguments.TO, Long.class);
-    }
+	public Long getTo() {
+		return getArgumentValue(StandardArguments.TO, Long.class);
+	}
 
-    public void setDerivedFrom(String name, long timestamp, String type) {
-        setArgumentValue(StandardArguments.DERIVED_FROM, new NamedInstanceIdentifier(name, timestamp, type));
-    }
+	public void setDerivedFrom(String name, long timestamp, String type) {
+		setArgumentValue(StandardArguments.DERIVED_FROM, new NamedInstanceIdentifier(name, timestamp, type));
+	}
 
-    public void setDerivedFrom(NamedInstanceIdentifier identifier) {
-        setArgumentValue(StandardArguments.DERIVED_FROM, identifier);
-    }
+	public void setDerivedFrom(NamedInstanceIdentifier identifier) {
+		setArgumentValue(StandardArguments.DERIVED_FROM, identifier);
+	}
 
-    public NamedInstanceIdentifier getDerivedFrom() {
-        return getArgumentValue(StandardArguments.DERIVED_FROM, NamedInstanceIdentifier.class);
-    }
+	public NamedInstanceIdentifier getDerivedFrom() {
+		return getArgumentValue(StandardArguments.DERIVED_FROM, NamedInstanceIdentifier.class);
+	}
 
-    public void setSort(String sortBy) {
-        setArgumentValue(StandardArguments.SORT, sortBy);
-    }
+	public void setSort(String sortBy) {
+		setArgumentValue(StandardArguments.SORT, sortBy);
+	}
 
-    public void setSortOrder(String order) {
-        setArgumentValue(StandardArguments.SORT_ORDER, order);
-    }
+	public void setSortOrder(String order) {
+		setArgumentValue(StandardArguments.SORT_ORDER, order);
+	}
 
-    public String getSort() {
-        return getArgumentValue(StandardArguments.SORT, String.class);
-    }
+	public String getSort() {
+		return getArgumentValue(StandardArguments.SORT, String.class);
+	}
 
-    public String getSortOrder() {
-        return getArgumentValue(StandardArguments.SORT_ORDER, String.class);
-    }
+	public String getSortOrder() {
+		return getArgumentValue(StandardArguments.SORT_ORDER, String.class);
+	}
 }

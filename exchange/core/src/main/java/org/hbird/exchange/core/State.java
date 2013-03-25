@@ -16,6 +16,8 @@
  */
 package org.hbird.exchange.core;
 
+import org.hbird.exchange.interfaces.IState;
+
 /**
  * A boolean state parameter.
  * Any other type may have a (set of) states associated. The association is
@@ -25,7 +27,7 @@ package org.hbird.exchange.core;
  * - Type must be 'Boolean'.
  * - The field 'isStateOff' must provide the name of the object its a state of.
  */
-public class State extends Named {
+public class State extends Named implements IState {
 
     /** The unique UID. */
     private static final long serialVersionUID = 6234660528925795242L;
@@ -43,8 +45,8 @@ public class State extends Named {
      * @param isStateOff The object that this state is a state off.
      * @param state The current state.
      */
-    public State(String issuedBy, String stateName, String type, String description, String isStateOff, boolean state) {
-        super(issuedBy, stateName, type, description);
+    public State(String issuedBy, String stateName, String description, String isStateOff, boolean state) {
+        super(issuedBy, stateName, "State", description);
         this.isStateOf = isStateOff;
         this.state = state;
     }
@@ -59,8 +61,8 @@ public class State extends Named {
      * @param isStateOff The object that this state is a state off.
      * @param state The current state.
      */
-    public State(String issuedBy, String stateName, String type, String description, String isStateOff, boolean state, long timestamp) {
-        this(issuedBy, stateName, type, description, isStateOff, state);
+    public State(String issuedBy, String stateName, String description, String isStateOff, boolean state, long timestamp) {
+        this(issuedBy, stateName, description, isStateOff, state);
         setTimestamp(timestamp);
     }
 
@@ -105,4 +107,16 @@ public class State extends Named {
     public String prettyPrint() {
         return String.format("State {name=%s, state=%s, isStateOf=%s, timestamp=%s}", name, state, isStateOf, timestamp);
     }
+
+	/* (non-Javadoc)
+	 * @see org.hbird.exchange.interfaces.IIsStateOf#setIsStateOf(org.hbird.exchange.core.Named)
+	 */
+	@Override
+	public void setIsStateOf(Named isStateOf) {
+		this.isStateOf = isStateOf.getQualifiedName();
+	}
+	
+	public String getQualifiedName(String separator) {
+		return isStateOf + separator + name;
+	}
 }

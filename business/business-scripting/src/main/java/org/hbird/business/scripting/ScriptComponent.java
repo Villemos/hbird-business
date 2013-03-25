@@ -35,6 +35,7 @@ package org.hbird.business.scripting;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hbird.business.scripting.bean.ScriptComponentDriver;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.StartablePart;
@@ -121,11 +122,11 @@ public class ScriptComponent extends StartablePart {
      * @param bindings A String defining the mapping from runtime parameters to script parameters. Must be in the format
      *            '[def 1]:[def 2]:...' with [def] being '[runtime name]=[script name]'.
      */
-    public ScriptComponent(String componentname, String scriptname, String paraName, String paraType, String paraDescription, String paraUnit,
+    public ScriptComponent(String componentname, String scriptname, String paraName, String paraDescription, String paraUnit,
             String bindings) {
         super(componentname, DESC_STRING, ScriptComponentDriver.class.getName());
 
-        Parameter output = new Parameter("", paraName, paraType, paraDescription, 0d, paraUnit);
+        Parameter output = new Parameter("", paraName, paraDescription, 0d, paraUnit);
 
         Map<String, String> inputBinding = new HashMap<String, String>();
         String[] bindingPairs = bindings.split(":");
@@ -161,11 +162,11 @@ public class ScriptComponent extends StartablePart {
      * @param bindings A String defining the mapping from runtime parameters to script parameters. Must be in the format
      *            '[def 1]:[def 2]:...' with [def] being '[runtime name]=[script name]'.
      */
-    public ScriptComponent(String componentname, String scriptName, String script, String format, String paraName, String paraType,
+    public ScriptComponent(String componentname, String scriptName, String script, String format, String paraName, 
             String paraDescription, String paraUnit, String bindings) {
         super(componentname, DESC_STRING, ScriptComponentDriver.class.getName());
 
-        Parameter output = new Parameter("", paraName, paraType, paraDescription, 0d, paraUnit);
+        Parameter output = new Parameter("", paraName, paraDescription, 0d, paraUnit);
 
         Map<String, String> inputBinding = new HashMap<String, String>();
         String[] bindingPairs = bindings.split(":");
@@ -176,4 +177,14 @@ public class ScriptComponent extends StartablePart {
 
         request = new ScriptExecutionRequest(scriptName, script, format, output, inputBinding);
     }
+
+	public ScriptExecutionRequest getRequest() {
+		return request;
+	}
+
+	public void setRequest(ScriptExecutionRequest request) {
+		this.request = request;
+	}
+    
+    
 }

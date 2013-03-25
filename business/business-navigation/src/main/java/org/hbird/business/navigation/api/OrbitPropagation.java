@@ -20,9 +20,9 @@ import java.util.List;
 
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IOrbitPrediction;
-import org.hbird.business.navigation.NavigationUtilities;
+import org.hbird.business.navigation.orekit.NavigationUtilities;
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.core.DataSet;
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
@@ -37,25 +37,25 @@ public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
     }
 
     @Override
-    public DataSet requestOrbitPropagation(String satellite) {
+    public List<Named> requestOrbitPropagation(String satellite) {
         TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite);
         return sendRequest(request);
     }
 
     @Override
-    public DataSet requestOrbitPropagation(String satellite, long from, long to) {
+    public List<Named> requestOrbitPropagation(String satellite, long from, long to) {
         TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, from, to);
         return sendRequest(request);
     }
 
     @Override
-    public DataSet requestOrbitPropagation(String satellite, String location, long from, long to) {
+    public List<Named> requestOrbitPropagation(String satellite, String location, long from, long to) {
         TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, location, from, to);
         return sendRequest(request);
     }
 
     @Override
-    public DataSet requestOrbitPropagation(String satellite, List<String> locations, long from, long to) {
+    public List<Named> requestOrbitPropagation(String satellite, List<String> locations, long from, long to) {
         TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, locations, from, to);
         return sendRequest(request);
     }
@@ -84,8 +84,8 @@ public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
         sendRequestStream(request);
     }
 
-    protected DataSet sendRequest(TlePropagationRequest request) {
-        return template.requestBody(inject, request, DataSet.class);
+    protected List<Named> sendRequest(TlePropagationRequest request) {
+        return template.requestBody(inject, request, List.class);
     }
 
     protected void sendRequestStream(TlePropagationRequest request) {

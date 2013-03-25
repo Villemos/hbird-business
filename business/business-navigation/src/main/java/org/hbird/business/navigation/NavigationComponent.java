@@ -32,6 +32,7 @@
  */
 package org.hbird.business.navigation;
 
+import org.hbird.business.navigation.orekit.NavigationComponentDriver;
 import org.hbird.exchange.core.StartablePart;
 import org.hbird.exchange.dataaccess.OrbitPredictionRequest;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;

@@ -54,8 +54,8 @@ public class LinearParameter extends BaseParameter {
 	 * @param modolus The delta time at which the value resets.
 	 * @param name The name of the parameter to be generated.
 	 */
-	public LinearParameter(String issuedBy, String name, String description, String type, String unit, double intercept, double deltaFrequency, long modolus) {
-		super(issuedBy, name, type, description);
+	public LinearParameter(String issuedBy, String name, String description, String unit, double intercept, double deltaFrequency, long modolus) {
+		super(issuedBy, name, description);
 		this.intercept = intercept;
 		this.deltaFrequency = deltaFrequency;	
 		this.modolus = modolus;
@@ -73,7 +73,7 @@ public class LinearParameter extends BaseParameter {
 		logger.debug("Sending new linear value with name '" + name + "'.");
 		this.value = new Double(intercept + deltaFrequency * (((new Date()).getTime() - startTime.getTime()) % modolus));
 
-		return new Parameter(issuedBy, name, type, description, value, unit);
+		return new Parameter(issuedBy, name, description, value, unit);
 	}
 
 	public double getIntercept() {

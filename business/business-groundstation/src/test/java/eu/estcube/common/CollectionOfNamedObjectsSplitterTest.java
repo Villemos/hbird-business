@@ -16,7 +16,6 @@ public class CollectionOfNamedObjectsSplitterTest {
     private CollectionOfNamedObjectsSplitter splitter;
     private ArrayList<Named> namedObjects;
     private String issuedBy = "issuer";
-    private String type = "type";
     private String description = "description";
     private String labelName1 = "labelName1";
     private String labelName2 = "labelName2";
@@ -26,8 +25,8 @@ public class CollectionOfNamedObjectsSplitterTest {
     @Before
     public void setUp() {
         splitter = new CollectionOfNamedObjectsSplitter();
-        Named named1 = new Label(issuedBy, labelName1, type, description, value1);
-        Named named2 = new Label(issuedBy, labelName2, type, description, value2);
+        Named named1 = new Label(issuedBy, labelName1, description, value1);
+        Named named2 = new Label(issuedBy, labelName2, description, value2);
         namedObjects = new ArrayList<Named>();
         namedObjects.add(named1);
         namedObjects.add(named2);

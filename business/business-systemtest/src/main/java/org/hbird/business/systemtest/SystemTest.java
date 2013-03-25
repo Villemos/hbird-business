@@ -30,11 +30,11 @@ import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPartManager;
 import org.hbird.business.api.IPublish;
 import org.hbird.business.archive.ArchiveComponent;
-import org.hbird.business.command.releaser.CommandingComponent;
-import org.hbird.business.groundstationcontrol.TrackingComponent;
+import org.hbird.business.commanding.CommandingComponent;
 import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.business.systemmonitoring.SystemMonitorComponent;
 import org.hbird.business.taskexecutor.TaskExecutionComponent;
+import org.hbird.business.tracking.TrackingComponent;
 import org.hbird.business.websockets.WebsocketInterfaceComponent;
 import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.D3Vector;
@@ -125,7 +125,8 @@ public abstract class SystemTest {
  
         Rotator rotator = new HamlibRotatorPart("Rotator", 0, -90, 360, 0, 180);
         RadioDevice radio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l); 
-    	Antenna antenna = new Antenna("Antenna 1", "The prime antenna", rotator, radio);
+    	Antenna antenna = new Antenna("Antenna1", "The prime antenna", rotator, radio);
+    	es5ec.addAntenna(antenna);
     	antenna.setIsPartOf(es5ec);
     	
     	/** Define the ground segment control*/
@@ -141,7 +142,7 @@ public abstract class SystemTest {
     	CommandingComponent comComponent = new CommandingComponent(StandardComponents.COMMANDING_CHAIN);
     	comComponent.setIsPartOf(mof);
 
-    	NavigationComponent navComponent = new NavigationComponent(StandardComponents.NAVIGATION);
+    	NavigationComponent navComponent = new NavigationComponent(StandardComponents.ORBIT_PREDICTOR);
     	navComponent.setIsPartOf(mof);
     	
     	Part scripts = new Part("Synthetic Parameters", "The synthetic parameters / scripts");
@@ -152,7 +153,10 @@ public abstract class SystemTest {
     	
     	Part taskComponent = new Part("Task Executor", "");
     	taskComponent.setIsPartOf(mof);
-    	
+
+    	Part limits = new Part("Limits", "The limit checkers of the system");
+    	limits.setIsPartOf(mof);
+
     	WebsocketInterfaceComponent webComponent = new WebsocketInterfaceComponent(StandardComponents.WEB_SOCKET);
     	webComponent.setIsPartOf(mof);
 
@@ -176,19 +180,26 @@ public abstract class SystemTest {
     	strand.setIsPartOf(eSatellites);
     	
     	Part eGs = new Part("GroundStations", "External ground stations.");
-    	eSatellites.setIsPartOf(external);
+    	eGs.setIsPartOf(external);
 
         D3Vector geoLocationAalborg = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Aalborg", Math.toRadians(55.659306D), Math.toRadians(12.587585D), 59.0D);
     	gsAalborg = new GroundStation("Aalborg", "Supportive antenna from Aalborg university", geoLocationAalborg);
     	gsAalborg.setIsPartOf(eGs);
-    	
+    	gsAalborg.addAntenna(antenna);
+
+        Rotator darmstadtRotator = new HamlibRotatorPart("Rotator", 0, -90, 360, 0, 180);
+        RadioDevice darmstadtRadio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l); 
+    	Antenna darmstadtAntenna = new Antenna("Antenna1", "The prime antenna of DARMSTADT", darmstadtRotator, darmstadtRadio);
+    	darmstadtAntenna.setIsPartOf(gsDarmstadt);   	
         D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
     	gsDarmstadt = new GroundStation("Darmstadt", "Supportive antenna from Darmstadt university", geoLocationDarmstadt);
     	gsDarmstadt.setIsPartOf(eGs);
-
+    	gsDarmstadt.addAntenna(darmstadtAntenna);
+    	
         D3Vector geoLocationNewYork = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "New York", Math.toRadians(40.66564D), Math.toRadians(-74.036865D), 59.0D);
         gsNewYork = new GroundStation("NewYork", "Supportive antenna from NewYork university", geoLocationNewYork);
         gsNewYork.setIsPartOf(eGs);
+        gsNewYork.addAntenna(antenna);
     }
     
     protected void azzert(boolean assertion) {
@@ -247,8 +258,6 @@ public abstract class SystemTest {
             IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.ARCHIVE);
             partmanagerApu.start(part);
 
-            part.getQualifiedName();
-            
             /** Give the component time to startup. */
             Thread.sleep(1000);
 
@@ -349,7 +358,7 @@ public abstract class SystemTest {
             Part parent = Part.getAllParts().get("Track Automation");
 
             /** Create command component. */
-        	TrackingComponent antennaController = new TrackingComponent("ES5EC -> ESTCUBE", "The component automating the track of ESTCube-1 by ES5EC.", "ESTCube-1", "ES5EC");
+        	TrackingComponent antennaController = new TrackingComponent("ES5EC -> ESTCUBE", "The component automating the track of ESTCube-1 by ES5EC.", estcube1.getQualifiedName(), es5ec.getQualifiedName());
         	antennaController.setIsPartOf(parent);            
             
             partmanagerApu.start(antennaController);
@@ -359,18 +368,40 @@ public abstract class SystemTest {
             antennaControllerStarter = true;
         }
     }
-    
+
+    public void startStrandAntennaController() throws InterruptedException {
+
+        if (antennaControllerStarter == false) {
+            LOG.info("Issuing command for start of an Strand -> Darmstadt antenna controller.");
+
+            Part parent = Part.getAllParts().get("Track Automation");
+
+            /** Create command component. */
+        	TrackingComponent antennaController = new TrackingComponent("Darmstadt -> STRAND", "The component automating the track of Strand-1 by Darmstadt.", strand.getQualifiedName(), gsDarmstadt.getQualifiedName());
+        	antennaController.setIsPartOf(parent);            
+            
+            partmanagerApu.start(antennaController);
+
+            Thread.sleep(2000);
+
+            antennaControllerStarter = true;
+        }
+    }
+
 
     /**
+     * @throws InterruptedException 
 	 * 
 	 */
-	protected void publishGroundStationsAndSatellites() {
+	protected void publishGroundStationsAndSatellites() throws InterruptedException {
 		
 		for (Part part : Part.getAllParts().values()) {
 			if (part instanceof Satellite || part instanceof GroundStation) {
 				publishApi.publish(part);
 			}
 		}
+		
+		forceCommit();
 	}
 
 
@@ -451,7 +482,14 @@ public abstract class SystemTest {
         /** Store TLE*/
         String tleLine1 = "1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478";
         String tleLine2 = "2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935";
-        TleOrbitalParameters parameters = publishApi.publishTleParameters("ESTCube-1", "Measured", tleLine1, tleLine2);
+        TleOrbitalParameters parameters = publishApi.publishTleParameters(estcube1.getQualifiedName() + "/TLE", estcube1.getQualifiedName(), tleLine1, tleLine2);
+        
+		publishApi.publishMetadata(parameters, "Author", "This file was approved by Gert Villemos the " + (new Date()).toString());
+		
+		
+		tleLine1 = "1 39090U 13009E   13083.97990177  .00000074  00000-0  42166-4 0   342";
+		tleLine2 = "2 39090  98.6360 274.2877 0009214 187.6058 172.4992 14.34286321  3925";
+        parameters = publishApi.publishTleParameters(strand.getQualifiedName() + "/TLE", strand.getQualifiedName(), tleLine1, tleLine2);
         
 		publishApi.publishMetadata(parameters, "Author", "This file was approved by Gert Villemos the " + (new Date()).toString());
 		

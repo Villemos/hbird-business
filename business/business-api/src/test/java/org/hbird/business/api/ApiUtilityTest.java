@@ -21,72 +21,72 @@ public class ApiUtilityTest {
 		/** Create the test data*/
 		List<Named> testData = new ArrayList<Named>();
 		
-        testData.add(new Parameter("", "PARA1", "", "", 1, "", 1));
-        testData.add(new State("", "STATE1_OF_PARA1", "", "", "PARA1", true, 1));
-        testData.add(new State("", "STATE2_OF_PARA1", "", "", "PARA1", true, 1));
+        testData.add(new Parameter("", "PARA1", "", 1, "", 1));
+        testData.add(new State("", "STATE1_OF_PARA1", "","PARA1", true, 1));
+        testData.add(new State("", "STATE2_OF_PARA1", "","PARA1", true, 1));
 
-        testData.add(new Parameter("", "PARA1", "", "", 1, "", 2));
-        testData.add(new State("", "STATE1_OF_PARA1", "", "", "PARA1", true, 2));
-        testData.add(new State("", "STATE2_OF_PARA1", "", "", "PARA1", true, 2));
+        testData.add(new Parameter("", "PARA1", "", 1, "", 2));
+        testData.add(new State("", "STATE1_OF_PARA1", "","PARA1", true, 2));
+        testData.add(new State("", "STATE2_OF_PARA1", "","PARA1", true, 2));
 
-        testData.add(new Parameter("", "PARA2", "", "", 2, "", 3));
-        testData.add(new State("", "STATE1_OF_PARA2", "", "", "PARA2", true, 3));
+        testData.add(new Parameter("", "PARA2", "", 2, "", 3));
+        testData.add(new State("", "STATE1_OF_PARA2", "","PARA2", true, 3));
 
-        testData.add(new Parameter("", "PARA1", "", "", 1, "", 4));
-        testData.add(new State("", "STATE1_OF_PARA1", "", "", "PARA1", true, 4));
-        testData.add(new State("", "STATE2_OF_PARA1", "", "", "PARA1", true, 4));
+        testData.add(new Parameter("", "PARA1", "", 1, "", 4));
+        testData.add(new State("", "STATE1_OF_PARA1", "","PARA1", true, 4));
+        testData.add(new State("", "STATE2_OF_PARA1", "","PARA1", true, 4));
 
-        testData.add(new Parameter("", "PARA1", "", "", 1, "", 5));
-        testData.add(new State("", "STATE1_OF_PARA1", "", "", "PARA1", true, 5));
-        testData.add(new State("", "STATE2_OF_PARA1", "", "", "PARA1", true, 5));
+        testData.add(new Parameter("", "PARA1", "", 1, "", 5));
+        testData.add(new State("", "STATE1_OF_PARA1", "","PARA1", true, 5));
+        testData.add(new State("", "STATE2_OF_PARA1", "","PARA1", true, 5));
 
-        testData.add(new Parameter("", "PARA2", "", "", 1, "", 6));
-        testData.add(new State("", "STATE1_OF_PARA2", "", "", "PARA2", true, 6));
+        testData.add(new Parameter("", "PARA2", "", 1, "", 6));
+        testData.add(new State("", "STATE1_OF_PARA2", "","PARA2", true, 6));
 
-        testData.add(new Parameter("", "PARA3", "", "", 1, "", 7));
+        testData.add(new Parameter("", "PARA3", "", 1, "", 7));
 
-        testData.add(new Parameter("", "PARA1", "", "", 1, "", 8));
-        testData.add(new State("", "STATE1_OF_PARA1", "", "", "PARA1", true, 8));
-        testData.add(new State("", "STATE2_OF_PARA1", "", "", "PARA1", true, 8));
+        testData.add(new Parameter("", "PARA1", "", 1, "", 8));
+        testData.add(new State("", "STATE1_OF_PARA1", "","PARA1", true, 8));
+        testData.add(new State("", "STATE2_OF_PARA1", "","PARA1", true, 8));
 
-        testData.add(new Parameter("", "PARA1", "", "", 1, "", 9));
-        testData.add(new State("", "STATE1_OF_PARA1", "", "", "PARA1", true, 9));
-        testData.add(new State("", "STATE2_OF_PARA1", "", "", "PARA1", true, 9));
+        testData.add(new Parameter("", "PARA1", "", 1, "", 9));
+        testData.add(new State("", "STATE1_OF_PARA1", "","PARA1", true, 9));
+        testData.add(new State("", "STATE2_OF_PARA1", "","PARA1", true, 9));
 
-        testData.add(new Parameter("", "PARA4", "", "", 1, "", 10));
-        testData.add(new State("", "STATE1_OF_PARA4", "", "", "PARA4", true, 10));
+        testData.add(new Parameter("", "PARA4", "", 1, "", 10));
+        testData.add(new State("", "STATE1_OF_PARA4", "","PARA4", true, 10));
 
-        testData.add(new Parameter("", "PARA5", "", "", 1, "", 11));
+        testData.add(new Parameter("", "PARA5", "", 1, "", 11));
 
-        testData.add(new Parameter("", "PARA1", "", "", 1, "", 12));
-        testData.add(new State("", "STATE1_OF_PARA1", "", "", "PARA1", true, 12));
-        testData.add(new State("", "STATE2_OF_PARA1", "", "", "PARA1", true, 12));
+        testData.add(new Parameter("", "PARA1", "", 1, "", 12));
+        testData.add(new State("", "STATE1_OF_PARA1", "","PARA1", true, 12));
+        testData.add(new State("", "STATE2_OF_PARA1", "","PARA1", true, 12));
 
-        testData.add(new Parameter("", "PARA2", "", "", 1, "", 13));
-        testData.add(new State("", "STATE1_OF_PARA2", "", "", "PARA2", true, 13));
+        testData.add(new Parameter("", "PARA2", "", 1, "", 13));
+        testData.add(new State("", "STATE1_OF_PARA2", "","PARA2", true, 13));
 
-        testData.add(new Parameter("", "PARA2", "", "", 1, "", 14));
-        testData.add(new State("", "STATE1_OF_PARA2", "", "", "PARA2", true, 14));
+        testData.add(new Parameter("", "PARA2", "", 1, "", 14));
+        testData.add(new State("", "STATE1_OF_PARA2", "","PARA2", true, 14));
 
-        testData.add(new State("", "STATE1_OF_PARA1", "", "", "PARA1", true, 15));
-        testData.add(new Parameter("", "PARA1", "", "", 1, "", 15));
-        testData.add(new State("", "STATE2_OF_PARA1", "", "", "PARA1", true, 15));
+        testData.add(new State("", "STATE1_OF_PARA1", "","PARA1", true, 15));
+        testData.add(new Parameter("", "PARA1", "", 1, "", 15));
+        testData.add(new State("", "STATE2_OF_PARA1", "","PARA1", true, 15));
 
-        testData.add(new State("", "STATE1_OF_PARA1", "", "", "PARA1", true, 16));
-        testData.add(new State("", "STATE2_OF_PARA1", "", "", "PARA1", true, 16));
-        testData.add(new Parameter("", "PARA1", "", "", 1, "", 16));
+        testData.add(new State("", "STATE1_OF_PARA1", "","PARA1", true, 16));
+        testData.add(new State("", "STATE2_OF_PARA1", "","PARA1", true, 16));
+        testData.add(new Parameter("", "PARA1", "", 1, "", 16));
 
-        testData.add(new Parameter("", "PARA3", "", "", 1, "", 17));
+        testData.add(new Parameter("", "PARA3", "", 1, "", 17));
 
-        testData.add(new Parameter("", "PARA1", "", "", 1, "", 18));
-        testData.add(new State("", "STATE1_OF_PARA1", "", "", "PARA1", true, 18));
-        testData.add(new State("", "STATE2_OF_PARA1", "", "", "PARA1", true, 18));
+        testData.add(new Parameter("", "PARA1", "", 1, "", 18));
+        testData.add(new State("", "STATE1_OF_PARA1", "","PARA1", true, 18));
+        testData.add(new State("", "STATE2_OF_PARA1", "","PARA1", true, 18));
 
-        testData.add(new Parameter("", "PARA3", "", "", 1, "", 19));
+        testData.add(new Parameter("", "PARA3", "", 1, "", 19));
 
-        testData.add(new Parameter("", "PARA1", "", "", 1, "", 20));
-        testData.add(new State("", "STATE1_OF_PARA1", "", "", "PARA1", true, 20));
-        testData.add(new State("", "STATE2_OF_PARA1", "", "", "PARA1", true, 20));
+        testData.add(new Parameter("", "PARA1", "", 1, "", 20));
+        testData.add(new State("", "STATE1_OF_PARA1", "","PARA1", true, 20));
+        testData.add(new State("", "STATE2_OF_PARA1", "","PARA1", true, 20));
 
         
 		Map<Parameter, List<State>> result = ApiUtility.sortParametersAndState(testData);

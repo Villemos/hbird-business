@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hbird.business.navigation.NavigationUtilities;
+import org.hbird.business.navigation.orekit.NavigationUtilities;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.NativeCommand;
 import org.hbird.exchange.groundstation.RadioDevice;

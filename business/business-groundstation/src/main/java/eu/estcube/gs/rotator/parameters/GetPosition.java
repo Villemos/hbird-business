@@ -60,8 +60,8 @@ public class GetPosition {
             Matcher matcher = pattern.matcher(respond);
 
             if (matcher.find()) {
-                parameters.add(new Parameter(issuedBy, issuedBy + "/azimuth", "Parameter", "The azimuth of the rotator.", Double.parseDouble(matcher.group(1)), "Degree"));
-                parameters.add(new Parameter(issuedBy, issuedBy + "/elevation", "Parameter", "The elevation of the rotator.", Double.parseDouble(matcher.group(2)), "Degree"));
+                parameters.add(new Parameter(issuedBy, issuedBy + "/azimuth", "The azimuth of the rotator.", Double.parseDouble(matcher.group(1)), "Degree"));
+                parameters.add(new Parameter(issuedBy, issuedBy + "/elevation", "The elevation of the rotator.", Double.parseDouble(matcher.group(2)), "Degree"));
             }
         }
         return parameters;

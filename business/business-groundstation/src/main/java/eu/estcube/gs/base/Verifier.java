@@ -167,6 +167,6 @@ public class Verifier {
 
 	protected State createState(String stage, boolean state, String derivedFrom) {
 		LOG.info("Sending state '" + state + "' for stage '" + stage + "' of command '" + derivedFrom + "'");
-		return new State("Rotator", stage, "State", stageDescription.get(stage), derivedFrom, state);
+		return new State("Rotator", stage, stageDescription.get(stage), derivedFrom, state);
 	}
 }

@@ -45,7 +45,6 @@ public class PrepareForInjection implements Processor {
         out.setHeader(ISSUED_BY, named.getIssuedBy());
         out.setHeader(CLASS, named.getClass().getSimpleName());
         out.setHeader(TYPE, named.getType());
-        out.setHeader(DATA_SET_IDENTIFIER, named.getDatasetidentifier());
         out.setHeader(TIMESTAMP, named.getTimestamp());
     }
 }

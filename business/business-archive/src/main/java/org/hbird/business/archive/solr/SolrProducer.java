@@ -32,11 +32,10 @@ import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
-import org.hbird.exchange.businesscard.BusinessCardSender;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.DataSet;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.NamedInstanceIdentifier;
 import org.hbird.exchange.core.Parameter;
@@ -45,7 +44,7 @@ import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.interfaces.IApplicableTo;
-import org.hbird.exchange.interfaces.IDerived;
+import org.hbird.exchange.interfaces.IDerivedFrom;
 import org.hbird.exchange.interfaces.IGenerationTimestamped;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
 import org.hbird.exchange.interfaces.IPart;
@@ -85,7 +84,7 @@ public class SolrProducer extends DefaultProducer {
         try {
             Object body = exchange.getIn().getBody();
 
-            if (body instanceof BusinessCardSender) {
+            if (body instanceof BusinessCard) {
                 return;
             }
 
@@ -101,7 +100,7 @@ public class SolrProducer extends DefaultProducer {
 
                 if (dataRequest.hasArgument(StandardArguments.INITIALIZATION)
                         && dataRequest.getArgumentValue(StandardArguments.INITIALIZATION, Boolean.class)) {
-                    LOG.info("Received Data Request ('{}'). Initializing.", body.getClass().getSimpleName());
+                    LOG.info("Received Data Request ('{}') from '{}'. Initializing.", body.getClass().getSimpleName(), dataRequest.getIssuedBy());
 
                     String request = createRequest((DataRequest) body);
                     LOG.info("Search string = " + request);
@@ -123,9 +122,9 @@ public class SolrProducer extends DefaultProducer {
                     exchange.getOut().setBody(results);
                 }
             }
-            else if (body instanceof DataSet) {
+            else if (body instanceof List) {
                 /** Insert each element. */
-                for (Named entry : ((DataSet) body).getDataset()) {
+                for (Named entry : (List<Named>) body) {
                     insert(entry);
                 }
             }
@@ -165,27 +164,25 @@ public class SolrProducer extends DefaultProducer {
 
         /** Set the type of data we are retrieving. */
         if (body.hasArgumentValue(StandardArguments.TYPE)) {
-            typePart = "type:" + body.getArgumentValue(StandardArguments.TYPE, String.class);
+            typePart = "type:\"" + body.getArgumentValue(StandardArguments.TYPE, String.class) + "\"";
         }
 
         /** Set the Names, if there. */
         if (body.hasArgumentValue(StandardArguments.NAMES)) {
-            String separator = "";
             namePart = "";
             for (String name : (List<String>) body.getArgumentValue(StandardArguments.NAMES, List.class)) {
-                namePart += separator + "name:" + name;
-                separator = " OR ";
+            	namePart = namePart.equals("") ? "name:\"" + name + "\"" : namePart + " OR name:\"" + name + "\"";
 
                 /** Include states if required to */
                 if (body.shallIncludeStates() == true) {
-                    namePart += separator + "isStateOf:" + name;
+                    namePart += "OR isStateOf:\"" + name + "\"";
                 }
             }
         }
 
         /** Set the isStateOf, if there. */
         if (body.hasArgumentValue(StandardArguments.IS_STATE_OF)) {
-            isStateOfPart = "isStateOf:" + body.getArgumentValue(StandardArguments.IS_STATE_OF, String.class);
+            isStateOfPart = "isStateOf:\"" + body.getArgumentValue(StandardArguments.IS_STATE_OF, String.class) + "\"";
         }
 
         if (body.hasArgumentValue(StandardArguments.DERIVED_FROM)) {
@@ -199,11 +196,11 @@ public class SolrProducer extends DefaultProducer {
         }
 
         if (body.hasArgumentValue(StandardArguments.SATELLITE_NAME)) {
-            ofSatellitePart = "ofSatellite:" + body.getArgumentValue(StandardArguments.SATELLITE_NAME, String.class);
+            ofSatellitePart = "ofSatellite:\"" + body.getArgumentValue(StandardArguments.SATELLITE_NAME, String.class) + "\"";
         }
 
         if (body.hasArgumentValue(StandardArguments.GROUND_STATION_NAME)) {
-            locationPart = "ofLocation:" + body.getArgumentValue(StandardArguments.GROUND_STATION_NAME, String.class);
+            locationPart = "ofLocation:\"" + body.getArgumentValue(StandardArguments.GROUND_STATION_NAME, String.class) + "\"";
         }
 
         if (body.hasArgumentValue(StandardArguments.VISIBILITY)) {
@@ -211,7 +208,7 @@ public class SolrProducer extends DefaultProducer {
         }
 
         if (body.hasArgumentValue(StandardArguments.IS_PART_OF)) {
-            isPartOfPart = "isPartOf:" + body.getArgumentValue(StandardArguments.IS_PART_OF, String.class);
+            isPartOfPart = "isPartOf:\"" + body.getArgumentValue(StandardArguments.IS_PART_OF, String.class) + "\"";
         }
 
         if (typePart != null) {
@@ -276,6 +273,10 @@ public class SolrProducer extends DefaultProducer {
         return timePart == null ? "" : " AND " + timePart;
     }
 
+    protected String createIsStateOfElement(String isStateOf) {
+        return isStateOf == null || isStateOf.equals("") ? "" : " AND isStateOf:" + isStateOf;
+    }
+
     private List<Named> doInitializationRequest(DataRequest body, String request) {
 
         SolrQuery query = new SolrQuery(request);
@@ -315,7 +316,14 @@ public class SolrProducer extends DefaultProducer {
                     	LOG.info("Found " + facetfield.getValueCount() + " entries for facet value " + facetfield.getName());
 
                     	for (Count count : facetfield.getValues()) {
-                            SolrQuery sampleQuery = new SolrQuery("name:" + count.getName() + createTimestampElement(body.getFrom(), body.getTo()));
+                    		
+                    		String isStateOf = "";
+                    		if (body.hasArgumentValue(StandardArguments.IS_STATE_OF)) {
+                                isStateOf = body.getArgumentValue(StandardArguments.IS_STATE_OF, String.class);
+                            }
+                    		
+                            SolrQuery sampleQuery = new SolrQuery("name:\"" + count.getName() + "\"" + createTimestampElement(body.getFrom(), body.getTo()) + createIsStateOfElement(isStateOf));
+                            LOG.info("Using sample query '" + sampleQuery + "' to get facet " + count.getName());
                             sampleQuery.setRows(body.getRows());
                             sampleQuery.setSortField(StandardArguments.TIMESTAMP, ORDER.desc);
                             sampleQuery.setQueryType("basic");
@@ -412,13 +420,12 @@ public class SolrProducer extends DefaultProducer {
 
         Named namedIo = io;
 
-        document.setField(StandardArguments.HAS_URI, io.getType() + ":" + io.getName() + ":" + io.getTimestamp());
+        document.setField(StandardArguments.HAS_URI, io.getUuid());
         document.addField(StandardArguments.ISSUED_BY, namedIo.getIssuedBy());
-        document.addField(StandardArguments.NAME, namedIo.getName());
+        document.addField(StandardArguments.NAME, namedIo.getQualifiedName());
         document.addField(StandardArguments.TYPE, namedIo.getType());
         document.addField(StandardArguments.DESCRIPTION, namedIo.getDescription());
         document.addField(StandardArguments.TIMESTAMP, namedIo.getTimestamp());
-        document.addField(StandardArguments.DATA_SET_ID, namedIo.getDatasetidentifier());
 
         document.addField(StandardArguments.CLASS, namedIo.getClass().getSimpleName());
 
@@ -469,10 +476,10 @@ public class SolrProducer extends DefaultProducer {
         if (io instanceof IGroundStationSpecific) {
             document.addField("ofLocation", ((IGroundStationSpecific) io).getGroundStationName());
         }
-        if (io instanceof IDerived) {
-            document.addField("derivedFromName", ((IDerived) io).from().getName());
-            document.addField("derivedFromTimestamp", ((IDerived) io).from().getTimestamp());
-            document.addField("derivedFromType", ((IDerived) io).from().getType());
+        if (io instanceof IDerivedFrom) {
+            document.addField("derivedFromName", ((IDerivedFrom) io).from().getName());
+            document.addField("derivedFromTimestamp", ((IDerivedFrom) io).from().getTimestamp());
+            document.addField("derivedFromType", ((IDerivedFrom) io).from().getType());
         }
         if (io instanceof IPart) {
             document.addField("isPartOf", ((IPart) io).getIsPartOf());

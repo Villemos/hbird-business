@@ -57,19 +57,19 @@ public interface IPublish {
 
 	public Named publish(Named object);
 
-	public Parameter publishParameter(String name, String type, String description, Number value, String unit);
-	public Parameter publishParameter(String name, String type, String description, Number value, String unit, long timestamp);
+	public Parameter publishParameter(String name, String description, Number value, String unit);
+	public Parameter publishParameter(String name, String description, Number value, String unit, long timestamp);
 	
-	public State publishState(String name, String type, String description, String isStateOf, Boolean state);
-	public State publishState(String name, String type, String description, String isStateOf, Boolean state, long timestamp);
+	public State publishState(String name, String description, String isStateOf, Boolean state);
+	public State publishState(String name, String description, String isStateOf, Boolean state, long timestamp);
 	
 	public GroundStation publishGroundStation(String name, D3Vector geoLocation, Rotator rotatorProperties, RadioDevice radioChannels, Modem modems, SoftwareDefinedRadio softwareDefinedRadios);
 	
-	public Satellite publishSatellite(String name, String type, String description);
+	public Satellite publishSatellite(String name, String description);
 	
-	public Label publishLabel(String name, String type, String description, String value);
+	public Label publishLabel(String name, String description, String value);
 
-	public Binary publishBinary(String name, String type, String description, byte[] rawdata);
+	public Binary publishBinary(String name, String description, byte[] rawdata);
 
 	public Command publishCommand(String name, String description, List<CommandArgument> arguments);
 	public Command publishCommandTemplate(String name, String description, List<CommandArgument> arguments);
@@ -85,5 +85,5 @@ public interface IPublish {
 	 */
 	public Metadata publishMetadata(Named subject, String key, String metadata);
 
-	public TleOrbitalParameters publishTleParameters(String satellite, String type, String tle1, String tle2);
+	public TleOrbitalParameters publishTleParameters(String name, String satellite, String tle1, String tle2);
 }

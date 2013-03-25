@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
+import org.hbird.exchange.interfaces.IIssuedBy;
+
 /**
  * The super class of all types being exchanged. Contains the information needed to uniquely identify
  * an object as well as describe it.
@@ -35,7 +37,7 @@ import java.util.UUID;
  * the generation time of the data set, and can thus also be used to identify which data
  * set is the most recent.
  * */
-public abstract class Named implements Serializable, Comparable<Named> {
+public abstract class Named implements IIssuedBy, Serializable, Comparable<Named> {
 
     /** The unique UID of this class. */
     private static final long serialVersionUID = -5803219773253020746L;
@@ -43,6 +45,7 @@ public abstract class Named implements Serializable, Comparable<Named> {
     /** The unique UID of this object. */
     protected String uuid = UUID.randomUUID().toString();
 
+    
     /** The ID / Name of the component that has issued this object. */
     protected String issuedBy = "";
 
@@ -72,7 +75,7 @@ public abstract class Named implements Serializable, Comparable<Named> {
      * of the objects to ensure that the identifier is unique and consistent. A
      * value of 0 means no data series.
      */
-    protected String datasetidentifier = null;
+    // protected String datasetidentifier = null;
 
     /**
      * Constructor of a Named object. The timestamp will be set to the creation time.
@@ -115,7 +118,7 @@ public abstract class Named implements Serializable, Comparable<Named> {
         this.type = type;
         this.description = description;
         this.timestamp = timestamp;
-        this.datasetidentifier = datasetidentifier;
+        // this.datasetidentifier = datasetidentifier;
     }
 
     public Named(String issuedBy) {
@@ -129,6 +132,14 @@ public abstract class Named implements Serializable, Comparable<Named> {
      */
     public String getName() {
         return name;
+    }
+
+    public String getQualifiedName() {
+        return getQualifiedName("/");
+    }
+
+    public String getQualifiedName(String separator) {
+        return separator + name;
     }
 
     /**
@@ -154,9 +165,9 @@ public abstract class Named implements Serializable, Comparable<Named> {
      * 
      * @return The data set identifier, identifying the data set this object is part of.
      * */
-    public String getDatasetidentifier() {
-        return datasetidentifier;
-    }
+//    public String getDatasetidentifier() {
+//        return datasetidentifier;
+//    }
 
     /**
      * In case that an already created Parameter object is reused, i.e. is use to
@@ -190,9 +201,9 @@ public abstract class Named implements Serializable, Comparable<Named> {
         this.description = description;
     }
 
-    public void setDatasetidentifier(String datasetidentifier) {
-        this.datasetidentifier = datasetidentifier;
-    }
+//    public void setDatasetidentifier(String datasetidentifier) {
+//        this.datasetidentifier = datasetidentifier;
+//    }
 
     public String getType() {
         return type;
@@ -218,7 +229,7 @@ public abstract class Named implements Serializable, Comparable<Named> {
     }
 
     public String prettyPrint() {
-        return String.format("%s[name=%s, timestamp=%s]", this.getClass().getSimpleName(), name, timestamp);
+        return String.format("%s[name=%s, issuedby=%s, timestamp=%s]", this.getClass().getSimpleName(), getQualifiedName(), issuedBy, timestamp);
     }
     
 	/* (non-Javadoc)

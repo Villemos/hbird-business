@@ -22,6 +22,8 @@ import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Part;
+import org.hbird.exchange.interfaces.IStartablePart;
 
 public class BusinessCardTester extends SystemTest {
 
@@ -54,10 +56,12 @@ public class BusinessCardTester extends SystemTest {
 
         Thread.sleep(3000);
 
+        IStartablePart archive = (IStartablePart) Part.getAllParts().get(StandardComponents.ARCHIVE);
+        
         synchronized (businessCardListener.elements) {
             Boolean archiveDidArrive = false;
             for (Named obj : businessCardListener.elements) {
-                if (obj.getIssuedBy().equals(StandardComponents.ARCHIVE)) {
+                if (obj.getIssuedBy().equals(archive.getQualifiedName())) {
                     archiveDidArrive = true;
                     break;
                 }
@@ -82,7 +86,7 @@ public class BusinessCardTester extends SystemTest {
         synchronized (businessCardListener.elements) {
             Boolean archiveDidArrive = false;
             for (Named obj : businessCardListener.elements) {
-                if (obj.getIssuedBy().equals(StandardComponents.ARCHIVE)) {
+                if (obj.getIssuedBy().equals(archive.getQualifiedName())) {
                     archiveDidArrive = true;
                     break;
                 }
@@ -91,7 +95,7 @@ public class BusinessCardTester extends SystemTest {
             azzert(!archiveDidArrive, "Business card messages not arriving from Archive");
         }
 
-        this.monitoringArchiveStarted = false;
+        SystemTest.monitoringArchiveStarted = false;
         
         LOG.info("Finished");
     }

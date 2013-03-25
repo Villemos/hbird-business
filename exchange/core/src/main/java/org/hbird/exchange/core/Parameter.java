@@ -19,6 +19,10 @@ package org.hbird.exchange.core;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.hbird.exchange.interfaces.IMonitoringData;
+import org.hbird.exchange.interfaces.IIssuedBy;
+import org.hbird.exchange.interfaces.IPart;
+
 /**
  * A NUMERICAL parameter. The parameter type is at the core of the information model. It
  * is used to describe a name-value pair, attaching the meta-data for description
@@ -28,7 +32,7 @@ import java.math.BigInteger;
  * a new parameter is simply the creation of a Parameter with a new name.
  * 
  */
-public class Parameter extends Named {
+public class Parameter extends Named implements IMonitoringData, IIssuedBy {
 
 	/** The unique UID. */
 	private static final long serialVersionUID = 889400984561961325L;
@@ -36,9 +40,22 @@ public class Parameter extends Named {
 	/** The value of the parameter. May be any type. */
 	protected Number value;
 
-	/** The unit of the argument. */
+	/** The unit of the value. */
 	protected String unit;
 
+	/** The fully qualified name of the part that this parameter describes.
+	 * 
+	 * A value of 'null' indicates that the described part is the same as the üart
+	 * that issued it.
+	 * 
+	 * Notice that 'issuedBy' and 'describedPart' may be the same, indicating that the
+	 * part itself has issued the parameter, but does not have to be the same, for
+	 * example if one part sends data describing other parts for example based on
+	 * aggregation or synthesisation of values.  
+	 *  
+	 *  */
+	protected String describedPart = null;
+	
 	/**
 	 * Creates a Parameter with a timestamp set to 'now'.
 	 * 
@@ -47,8 +64,8 @@ public class Parameter extends Named {
 	 * @param value An object holding the value.
 	 * @param unit The unit of the value.
 	 */
-	public Parameter(String issuedBy, String name, String type, String description, Number value, String unit) {
-		this(issuedBy, name, type, description, unit);
+	public Parameter(String issuedBy, String name, String description, Number value, String unit) {
+		this(issuedBy, name, description, unit);
 		this.value = value;
 	}
 
@@ -60,8 +77,8 @@ public class Parameter extends Named {
 	 * @param value An object holding the value.
 	 * @param unit The unit of the value.
 	 */
-	public Parameter(String issuedBy, String name, String type, String description, Number value, String unit, long timestamp) {
-		this(issuedBy, name, type, description, unit);
+	public Parameter(String issuedBy, String name, String description, Number value, String unit, long timestamp) {
+		this(issuedBy, name, description, unit);
 		this.value = value;
 		this.timestamp = timestamp;
 	}
@@ -74,13 +91,13 @@ public class Parameter extends Named {
 	 * @param value An object holding the value.
 	 * @param unit The unit of the value.
 	 */
-	public Parameter(String issuedBy, String name, String type, String description, String unit) {
-		super(issuedBy, name, type, description);
+	public Parameter(String issuedBy, String name, String description, String unit) {
+		super(issuedBy, name, "Parameter", description);
 		this.unit = unit;
 	}
 
 	public Parameter(Parameter base) {
-		this(base.issuedBy, base.name, base.type, base.description, base.value, base.unit);
+		this(base.issuedBy, base.name, base.description, base.value, base.unit);
 	}
 
 	/**
@@ -179,4 +196,22 @@ public class Parameter extends Named {
 	public String prettyPrint() {
 		return String.format("Parameter[name=%s, value=%s, timestamp=%s]", name, value, timestamp);
 	}
+
+	/* (non-Javadoc)
+	 * @see org.hbird.exchange.interfaces.IDescribesPart#describedPart()
+	 */
+	@Override
+	public String getDescribedPart() {
+		/** If describedPart is null, the it indicates that the object that issued this
+		 * is also the described part. */
+		return describedPart == null ? issuedBy : describedPart;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.hbird.exchange.interfaces.IDescribesPart#setDescribedPart(org.hbird.exchange.interfaces.IPart)
+	 */
+	@Override
+	public void setDescribedPart(IPart part) {
+		this.describedPart = part.getQualifiedName();
+	}	
 }

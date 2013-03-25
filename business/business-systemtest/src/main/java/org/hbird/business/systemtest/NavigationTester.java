@@ -55,8 +55,8 @@ public class NavigationTester extends SystemTest {
 		TleOrbitalParameters parameters = publishTleParameters();
 		
         List<String> locations = new ArrayList<String>();
-        locations.add("ES5EC");
-        locations.add("Aalborg");
+        locations.add(es5ec.getQualifiedName());
+        locations.add(gsAalborg.getQualifiedName());
 		
         /** Send command to commit all changes. */
         forceCommit();
@@ -65,7 +65,7 @@ public class NavigationTester extends SystemTest {
 
         /** Send a TLE request for a satellite and a subset of locations */
         IOrbitPrediction api = ApiFactory.getOrbitPredictionApi("SystemTest");
-        api.requestOrbitPropagationStream("ESTCube-1", locations, 1355385448149l, 1355385448149l + 2 * 60 * 60 * 1000);
+        api.requestOrbitPropagationStream(estcube1.getQualifiedName(), locations, 1355385448149l, 1355385448149l + 2 * 60 * 60 * 1000);
 
         int totalSleep = 0;
         while (totalSleep < 120000 && orbitalStateListener.elements.size() != 121) {
@@ -84,7 +84,7 @@ public class NavigationTester extends SystemTest {
 
         /** Retrieve the next set of TARTU events and check them. */
         IDataAccess dataApi = ApiFactory.getDataAccessApi("SystemTest");
-        List<LocationContactEvent> contactEvents = dataApi.retrieveNextLocationContactEventsFor("ES5EC", 1355385522265l);
+        List<LocationContactEvent> contactEvents = dataApi.retrieveNextLocationContactEventsFor(es5ec.getQualifiedName(), 1355385522265l);
 
         azzert(contactEvents.size() == 2);
         azzert(contactEvents.get(0).getTimestamp() == 1355390676020l);
@@ -94,7 +94,7 @@ public class NavigationTester extends SystemTest {
          * Check the contact events with Aalborg. Notice that there is one LOST contact event first. The retrieval
          * should NOT get this.
          */
-        contactEvents = dataApi.retrieveNextLocationContactEventsFor("Aalborg", 1355385522265l);
+        contactEvents = dataApi.retrieveNextLocationContactEventsFor(gsAalborg.getQualifiedName(), 1355385522265l);
 
         azzert(contactEvents.size() == 2);
         azzert(contactEvents.get(0).getTimestamp() == 1355390809139l);

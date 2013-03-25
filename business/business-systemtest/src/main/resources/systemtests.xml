@@ -41,7 +41,7 @@
 	<bean id="starter" class="org.hbird.business.systemtest.Starter" parent="testerTemplate"/>
 	<bean id="businesscard" class="org.hbird.business.systemtest.BusinessCardTester" parent="testerTemplate"/>
 	<bean id="parameterarchive" class="org.hbird.business.systemtest.ParameterArchivalTester" parent="testerTemplate"/>
-	<bean id="archive" class="org.hbird.business.systemtest.StateArchivalTester" parent="testerTemplate"/>
+	<bean id="statearchive" class="org.hbird.business.systemtest.StateArchivalTester" parent="testerTemplate"/>
 	<bean id="limitcheck" class="org.hbird.business.systemtest.LimitCheckTester" parent="testerTemplate"/>
 	<bean id="scripting" class="org.hbird.business.systemtest.ScriptTester" parent="testerTemplate"/>
 	<bean id="tasking" class="org.hbird.business.systemtest.TaskingTester" parent="testerTemplate"/>
@@ -54,6 +54,7 @@
 	<bean id="websockettester" class="org.hbird.business.systemtest.WebsocketTester" parent="testerTemplate"/>
 	<bean id="groundstationdriver" class="org.hbird.business.systemtest.GroundStationDriverTester" parent="testerTemplate"/>
 	<bean id="endtoendtracking" class="org.hbird.business.systemtest.EndToEndTrackingTester" parent="testerTemplate"/>
+	<bean id="strandtracking" class="org.hbird.business.systemtest.StrandTrackingTester" parent="testerTemplate"/>
 	<bean id="inmemoryscheduler" class="org.hbird.business.systemtest.InMemorySchedulerTester" parent="testerTemplate"/>
 	<bean id="finisher" class="org.hbird.business.systemtest.Finisher" parent="testerTemplate"/>
 						
@@ -74,22 +75,23 @@
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
-				<to uri="bean:businesscard" />
+<!-- 				<to uri="bean:businesscard" /> -->
 <!-- 				<to uri="bean:parameterarchive" /> -->
-<!-- 				<to uri="bean:archive" /> -->
+<!-- 				<to uri="bean:statearchive" /> -->
 <!-- 	 			<to uri="bean:dataaccessapi" /> -->
 <!-- 				<to uri="bean:limitcheck" /> -->
 <!-- 				<to uri="bean:scripting" /> -->
 <!-- 		 		<to uri="bean:tasking" /> -->
 <!-- 	 			<to uri="bean:commanding" /> -->
+<!-- 	 	 		<to uri="bean:websockettester" /> -->
 <!-- 	 			<to uri="bean:navigation" /> -->
 <!-- 	 			<to uri="bean:parsecontroller" /> -->
 <!-- 	 			<to uri="bean:navigationcontroller" /> -->
+<!-- 				<to uri="bean:inmemoryscheduler" /> -->
 <!-- 	 			<to uri="bean:groundstationdriver" /> -->
 <!-- 	 			<to uri="bean:endtoendtracking" /> -->
-<!-- 				<to uri="bean:inmemoryscheduler" /> -->
+	 			<to uri="bean:strandtracking" />
 <!-- 	 			<to uri="bean:jmstester" /> -->
-<!-- 	 	 		<to uri="bean:websockettester" /> -->
 	 			<to uri="bean:finisher" />
 		</route>
 
@@ -98,7 +100,6 @@
 			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
 			<setHeader headerName="issuedBy"><simple>${in.body.issuedBy}</simple></setHeader>
 			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>			
-			<setHeader headerName="datasetidentifier"><simple>${in.body.datasetidentifier}</simple></setHeader>
 			<setHeader headerName="timestamp"><simple>${in.body.timestamp}</simple></setHeader>				
 			<setHeader headerName="class"><simple>${in.body.class.simpleName}</simple></setHeader>
 						

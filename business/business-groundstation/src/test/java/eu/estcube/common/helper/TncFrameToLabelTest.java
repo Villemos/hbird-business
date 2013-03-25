@@ -69,8 +69,6 @@ public class TncFrameToLabelTest {
         assertEquals(NOW.longValue(), label.getTimestamp());
         assertEquals(new DefaultNaming().createAbsoluteName(Base.GROUND_STATION, GROUND_STATION_NAME,
                 TncFrameToLabel.RELATIVE_PARAMETER_NAME), label.getName());
-        assertTrue(label.getDatasetidentifier().startsWith(ISSUED_BY));
-        assertTrue(label.getDatasetidentifier().endsWith(String.valueOf(PORT)));
         assertEquals(TncFrameToLabel.DESCRIPTION, label.getDescription());
         assertEquals("0D 0E 0A 0D 0C 00 0D 0E", label.getValue());
         assertEquals(TncFrame.class.getSimpleName(), label.getType());

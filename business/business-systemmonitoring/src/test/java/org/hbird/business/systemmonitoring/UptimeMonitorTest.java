@@ -2,6 +2,7 @@ package org.hbird.business.systemmonitoring;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.hbird.business.systemmonitoring.bean.UptimeMonitor;
 import org.junit.Before;
 import org.junit.Test;
 

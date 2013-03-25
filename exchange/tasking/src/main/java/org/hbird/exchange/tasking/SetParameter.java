@@ -62,9 +62,9 @@ public class SetParameter extends Task {
 		this(base.issuedBy, base.name, base.description, base.executionTime, base.parameter);
 	}
 
-	public SetParameter(String issuedBy, String name, String description, int executionTime, String paraName, String paraType, String paraDescription, Number value, String unit) {
+	public SetParameter(String issuedBy, String name, String description, int executionTime, String paraName, String paraDescription, Number value, String unit) {
 		super(issuedBy, name, description, executionTime);
-		this.parameter = new Parameter(name, paraName, paraType, paraDescription, value, unit);
+		this.parameter = new Parameter(name, paraName, paraDescription, value, unit);
 	}
 
 	/**

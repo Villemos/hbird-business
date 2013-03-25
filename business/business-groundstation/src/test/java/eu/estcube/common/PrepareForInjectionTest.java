@@ -68,7 +68,6 @@ public class PrepareForInjectionTest {
         when(named.getName()).thenReturn(NAME);
         when(named.getIssuedBy()).thenReturn(ISSUED_BY);
         when(named.getType()).thenReturn(TYPE);
-        when(named.getDatasetidentifier()).thenReturn(DATA_SET_ID);
         when(named.getTimestamp()).thenReturn(NOW);
         prep.process(exchange);
         inOrder.verify(exchange, times(1)).getIn();

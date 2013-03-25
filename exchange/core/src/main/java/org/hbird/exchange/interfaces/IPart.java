@@ -45,7 +45,7 @@ import org.hbird.exchange.core.Command;
  * @author Gert Villemos
  *
  */
-public interface IPart {
+public interface IPart extends INamed {
 	
 	/**
 	 * Method to get the Named object that this object is a part of.
@@ -61,10 +61,6 @@ public interface IPart {
 	 * @param parent The parent object of this object.
 	 */
 	public void setIsPartOf(IPart parent);
-
-	public String getQualifiedName();
-	
-	public String getQualifiedName(String separator);
 	
 	public List<Command> getCommands();
 }

@@ -54,28 +54,28 @@ public class Publish extends HbirdApi implements IPublish {
 		return object;
 	}
 
-	public Parameter publishParameter(String name, String type, String description, Number value, String unit) {
-		return (Parameter) publish(new Parameter(issuedBy, name, type, description, value, unit));
+	public Parameter publishParameter(String name, String description, Number value, String unit) {
+		return (Parameter) publish(new Parameter(issuedBy, name, description, value, unit));
 	}
 
-	public Parameter publishParameter(String name, String type, String description, Number value, String unit, long timestamp) {
-		return (Parameter) publish(new Parameter(issuedBy, name, type, description, value, unit, timestamp));
+	public Parameter publishParameter(String name, String description, Number value, String unit, long timestamp) {
+		return (Parameter) publish(new Parameter(issuedBy, name, description, value, unit, timestamp));
 	}
 
 	
-	public State publishState(String name, String type, String description, String isStateOf, Boolean state) {
-		return (State) publish(new State(issuedBy, name, type, description, isStateOf, state));
+	public State publishState(String name, String description, String isStateOf, Boolean state) {
+		return (State) publish(new State(issuedBy, name, description, isStateOf, state));
 	}
 
-	public State publishState(String name, String type, String description, String isStateOf, Boolean state, long timestamp) {
-		return (State) publish(new State(issuedBy, name, type, description, isStateOf, state, timestamp));
+	public State publishState(String name, String description, String isStateOf, Boolean state, long timestamp) {
+		return (State) publish(new State(issuedBy, name, description, isStateOf, state, timestamp));
 	}
 
 	public GroundStation publishGroundStation(String name, D3Vector geoLocation, Rotator rotator, RadioDevice radioChannel, Modem modems, SoftwareDefinedRadio softwareDefinedRadios) {
 		return (GroundStation) publish(new GroundStation(name, geoLocation, rotator, radioChannel, modems, softwareDefinedRadios));
 	}
 
-	public Satellite publishSatellite(String name, String type, String description) {
+	public Satellite publishSatellite(String name, String description) {
 		return (Satellite) publish(new Satellite(name, description));
 	}
 
@@ -83,12 +83,12 @@ public class Publish extends HbirdApi implements IPublish {
 		// TODO
 	}
 
-	public Label publishLabel(String name, String type, String description, String value) {
-		return (Label) publish(new Label(issuedBy, name, type, description, value));
+	public Label publishLabel(String name, String description, String value) {
+		return (Label) publish(new Label(issuedBy, name, description, value));
 	}
 
-	public Binary publishBinary(String name, String type, String description, byte[] rawdata) {
-		return (Binary) publish(new Binary(issuedBy, name, type, description, rawdata));
+	public Binary publishBinary(String name, String description, byte[] rawdata) {
+		return (Binary) publish(new Binary(issuedBy, name, description, rawdata));
 	}
 
 	public Command publishCommand(String name, String description, List<CommandArgument> arguments) {
@@ -124,8 +124,8 @@ public class Publish extends HbirdApi implements IPublish {
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publishTleParameters(java.lang.String, java.lang.String, java.lang.String)
 	 */
-	public TleOrbitalParameters publishTleParameters(String satellite, String type, String tle1, String tle2) {
-		TleOrbitalParameters obj = new TleOrbitalParameters(issuedBy, type, satellite, tle1, tle2); 
+	public TleOrbitalParameters publishTleParameters(String name, String satellite, String tle1, String tle2) {
+		TleOrbitalParameters obj = new TleOrbitalParameters(issuedBy, name, satellite, tle1, tle2); 
 		template.sendBody(inject, obj);
 		return obj;
 	}

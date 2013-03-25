@@ -39,8 +39,8 @@ public class Binary extends Named {
 	 * @param description A description of the data
 	 * @param rawdata The raw data
 	 */
-	public Binary(String issuedBy, String name, String type, String description, byte[] rawdata) {
-		super(issuedBy, name, type, description);
+	public Binary(String issuedBy, String name, String description, byte[] rawdata) {
+		super(issuedBy, name, "Payload", description);
 		
 		this.rawdata = rawdata;
 	}

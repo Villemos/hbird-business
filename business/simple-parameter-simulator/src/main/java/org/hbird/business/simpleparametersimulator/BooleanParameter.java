@@ -64,6 +64,6 @@ public class BooleanParameter {
 			e.printStackTrace();
 		}
 		
-		return new State(issuedBy, name, "", description, isStateOf, value);
+		return new State(issuedBy, name, description, isStateOf, value);
 	}
 }

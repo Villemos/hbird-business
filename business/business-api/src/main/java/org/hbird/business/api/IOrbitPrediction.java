@@ -18,7 +18,7 @@ package org.hbird.business.api;
 
 import java.util.List;
 
-import org.hbird.exchange.core.DataSet;
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
@@ -49,7 +49,7 @@ public interface IOrbitPrediction {
      * @param satellite The name of the satellite whose orbit shall be propagated.
      * @return A DataSet containing all orbital events.
      */
-    public DataSet requestOrbitPropagation(String satellite);
+    public List<Named> requestOrbitPropagation(String satellite);
 
     /**
      * Propagate the orbit of a satellite <li>From [from].</li> <li>Delta propagation until [to].</li> <li>Calculating
@@ -60,7 +60,7 @@ public interface IOrbitPrediction {
      * @param to The end time of the propagation. Delta propagation = [to] - [from]
      * @return A DataSet containing all orbital events.
      */
-    public DataSet requestOrbitPropagation(String satellite, long from, long to);
+    public List<Named> requestOrbitPropagation(String satellite, long from, long to);
 
     /**
      * Propagate the orbit of a satellite <li>From [from].</li> <li>Delta propagation until [to].</li> <li>Calculating
@@ -72,7 +72,7 @@ public interface IOrbitPrediction {
      * @param to The end time of the propagation. Delta propagation = [to] - [from]
      * @return A DataSet containing all orbital events.
      */
-    public DataSet requestOrbitPropagation(String satellite, String location, long from, long to);
+    public List<Named> requestOrbitPropagation(String satellite, String location, long from, long to);
 
     /**
      * Propagate the orbit of a satellite <li>From [from].</li> <li>Delta propagation until [to].</li> <li>Calculating
@@ -84,7 +84,7 @@ public interface IOrbitPrediction {
      * @param to The end time of the propagation. Delta propagation = [to] - [from]
      * @return A DataSet containing all orbital events.
      */
-    public DataSet requestOrbitPropagation(String satellite, List<String> locations, long from, long to);
+    public List<Named> requestOrbitPropagation(String satellite, List<String> locations, long from, long to);
 
     /**
      * Propagate the orbit of a satellite <li>From NOW using the last available TLE for the satellite.</li> <li>Delta

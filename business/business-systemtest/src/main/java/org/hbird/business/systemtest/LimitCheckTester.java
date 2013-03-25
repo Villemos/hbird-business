@@ -18,8 +18,11 @@ package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.validation.base.LimitCheckComponent;
+import org.hbird.business.validation.LimitCheckComponent;
 import org.hbird.exchange.configurator.StartComponent;
+import org.hbird.exchange.constants.StandardComponents;
+import org.hbird.exchange.core.Part;
+import org.hbird.exchange.interfaces.IStartablePart;
 import org.hbird.exchange.validation.Limit;
 import org.hbird.exchange.validation.Limit.eLimitType;
 
@@ -36,11 +39,16 @@ public class LimitCheckTester extends SystemTest {
 		/** Start a limit checker. */
 		LOG.info("Issuing commands for starting two lower limit limitcheckers.");
 
-		StartComponent request = new StartComponent("SystemTest", new LimitCheckComponent("PARA1_LowerSoftLimit", new Limit(eLimitType.Lower, "PARA1", 2d, "PARA1_LOWER_SOFTLIMIT", "The first lower limit of PARA1")));
+        Part limits = (Part) Part.getAllParts().get("Limits");
+        
+        LimitCheckComponent com = new LimitCheckComponent("PARA1_LowerSoftLimit", new Limit(eLimitType.Lower, estcube1.getQualifiedName() + "/PARA1", 2d, "PARA1_LOWER_SOFTLIMIT", "The first lower limit of PARA1"));
+        com.setIsPartOf(limits);
+        StartComponent request = new StartComponent("SystemTest", com);
 		injection.sendBody(request);
 
-		request = new StartComponent("SystemTest", new LimitCheckComponent("PARA1_LowerSoftLimit", new Limit(eLimitType.Lower, "PARA1", 2d, "PARA1_LOWER_SOFTLIMIT", "The first lower limit of PARA1")));
-		request = new StartComponent("SystemTest", new LimitCheckComponent("PARA1_LowerHardLimit", new Limit(eLimitType.Lower, "PARA1", 0d, "PARA1_LOWER_HARDLIMIT", "The second lower limit of PARA1")));
+		com = new LimitCheckComponent("PARA1_LowerHardLimit", new Limit(eLimitType.Lower, estcube1.getQualifiedName() + "/PARA1", 0d, "PARA1_LOWER_HARDLIMIT", "The second lower limit of PARA1"));
+		com.setIsPartOf(limits);
+		request = new StartComponent("SystemTest", com);
 		injection.sendBody(request);
 
 		Thread.sleep(2000);
@@ -57,11 +65,14 @@ public class LimitCheckTester extends SystemTest {
 		
 		/** Start a limit checker. */
 		LOG.info("Issuing commands for starting two upper limit limitcheckers.");
-
-		request = new StartComponent("SystemTest", new LimitCheckComponent("PARA1_UpperSoftLimit", new Limit(eLimitType.Upper, "PARA1", 10.5d, "PARA1_UPPER_SOFTLIMIT", "The first upper limit of PARA1")));
+		com = new LimitCheckComponent("PARA1_UpperSoftLimit", new Limit(eLimitType.Upper, estcube1.getQualifiedName() + "/PARA1", 10.5d, "PARA1_UPPER_SOFTLIMIT", "The first upper limit of PARA1"));
+		com.setIsPartOf(limits);
+		request = new StartComponent("SystemTest", com);
 		injection.sendBody(request);
 
-		request = new StartComponent("SystemTest", new LimitCheckComponent("PARA1_UpperHardLimit", new Limit(eLimitType.Upper, "PARA1", 15d, "PARA1_UPPER_HARDLIMIT", "The second upper limit of PARA1")));
+		com = new LimitCheckComponent("PARA1_UpperHardLimit", new Limit(eLimitType.Upper, estcube1.getQualifiedName() + "/PARA1", 15d, "PARA1_UPPER_HARDLIMIT", "The second upper limit of PARA1"));
+		com.setIsPartOf(limits);
+		request = new StartComponent("SystemTest", com);
 		injection.sendBody(request);
 
 		Thread.sleep(2000);
@@ -78,7 +89,7 @@ public class LimitCheckTester extends SystemTest {
 
 		/** Disable limit. */
 		LOG.info("Disabling limit 'PARA1_UpperSoftLimit'.");
-		publishApi.publishState("PARA1_UpperSoftLimit_SWITCH", "", "A test description", "PARA1_UpperSoftLimit", false);
+		publishApi.publishState("PARA1_UpperSoftLimit_SWITCH", "A test description", limits.getQualifiedName() + "/PARA1_UpperSoftLimit", false);
 
 		Thread.sleep(2000);		
 		
@@ -95,13 +106,15 @@ public class LimitCheckTester extends SystemTest {
 	
 	protected void send(Double value, String soft, boolean expectedSoft, String hard, boolean expectedHard) throws InterruptedException {
 		LOG.info("Publishing parameters.");
-		publishApi.publishParameter("PARA1", "", "A test description,", value, "Volt");
+		publishApi.publishParameter(estcube1.getQualifiedName() + "/PARA1", "A test description,", value, "Volt");
 
 		/** Give the limit checkers a bit of time. */
 		Thread.sleep(2000);
 		
 		/** Check that the states were calculated and distributed. */
-		azzert(stateListener.states.get(soft).getValue() == expectedSoft);
-		azzert(stateListener.states.get(hard).getValue() == expectedHard);		
+		azzert(stateListener.states.get(soft).getValue() == expectedSoft, "Received soft limit");
+		azzert(stateListener.states.get(hard).getValue() == expectedHard, "Received hard limit");		
+		
+		// stateListener.states.clear();
 	}
 }

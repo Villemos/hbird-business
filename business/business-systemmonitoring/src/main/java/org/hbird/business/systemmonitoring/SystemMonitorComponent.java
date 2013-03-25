@@ -32,6 +32,7 @@
  */
 package org.hbird.business.systemmonitoring;
 
+import org.hbird.business.systemmonitoring.bean.SystemMonitorComponentDriver;
 import org.hbird.exchange.core.StartablePart;
 
 /**

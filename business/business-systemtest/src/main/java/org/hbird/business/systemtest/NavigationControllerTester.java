@@ -29,22 +29,22 @@ public class NavigationControllerTester extends SystemTest {
 		Thread.sleep(1000);
 
 		publishGroundStationsAndSatellites();
-
+		publishTleParameters();
 			
 		List<String> locations = new ArrayList<String>();
-		locations.add("TARTU");
-		locations.add("Darmstadt");
+		locations.add(es5ec.getQualifiedName());
+		locations.add(gsDarmstadt.getQualifiedName());
 		
 
 		/** Send command to commit all changes. */
 		forceCommit();
 		
 		/** Create a controller task and inject it. */
-		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 180 * 1000, "ESTcube", locations);
+		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 180 * 1000, estcube1.getQualifiedName(), locations);
 		task.setRepeat(3);
 		injection.sendBody(task);
 		
-		Thread.sleep(2000);
+		Thread.sleep(20000);
 		
 		LOG.info("Finishing");
 	}

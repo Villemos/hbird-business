@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hbird.business.navigation.NavigationUtilities;
+import org.hbird.business.navigation.orekit.NavigationUtilities;
 import org.hbird.exchange.groundstation.Antenna;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.NativeCommand;
@@ -84,8 +84,6 @@ public class HamlibRotatorPart extends Rotator {
         super(name, thresholdElevation, minAzimuth, maxAzimuth, minElevation, maxElevation, HamlibRotatorDriver.class.getName());
     }
 
-    protected Antenna antenna = null;
-
     protected long preDelta = 10000;
     
     protected long postDelta = 10000;
@@ -112,7 +110,7 @@ public class HamlibRotatorPart extends Rotator {
         /** Generate the pointing information, including azimuth, elevation and doppler. */
         List<PointingData> pointingData = null;
         try {
-            pointingData = NavigationUtilities.calculateContactData(start, end, (GroundStation) antenna.getIsPartOf(), satellite, 500);
+            pointingData = NavigationUtilities.calculateContactData(start, end, (GroundStation) parent.getIsPartOf(), satellite, 500);
         } catch (OrekitException e) {
             e.printStackTrace();
         }

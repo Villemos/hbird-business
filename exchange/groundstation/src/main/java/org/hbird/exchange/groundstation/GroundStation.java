@@ -130,5 +130,10 @@ public class GroundStation extends Part implements IGroundStationSpecific {
 		this.antennas = antennas;
 	}
 
-	
+	/**
+	 * @param antenna
+	 */
+	public void addAntenna(Antenna antenna) {
+		antennas.add(antenna);
+	}
 }

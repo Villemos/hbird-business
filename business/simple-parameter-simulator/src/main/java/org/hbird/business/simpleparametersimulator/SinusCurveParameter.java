@@ -75,8 +75,8 @@ public class SinusCurveParameter extends BaseParameter {
 	 * @param modolus
 	 * @param name
 	 */
-	public SinusCurveParameter(String issuedBy, String name, String type, String description, String unit, double angularFrequency, double amplitude, double phase, double intercept, long modolus) {
-		super(issuedBy, name, type, description);
+	public SinusCurveParameter(String issuedBy, String name, String description, String unit, double angularFrequency, double amplitude, double phase, double intercept, long modolus) {
+		super(issuedBy, name, description);
 		this.angularFrequency = angularFrequency;
 		this.amplitude = amplitude;
 		this.phase = phase;
@@ -102,7 +102,7 @@ public class SinusCurveParameter extends BaseParameter {
 			e.printStackTrace();
 		}
 		
-		return new Parameter(issuedBy, name, type, description, value, unit);
+		return new Parameter(issuedBy, name, description, value, unit);
 	}
 
 	public double getAngularFrequency() {
