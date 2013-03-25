@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.hbird.exchange.interfaces.IPart;
 
 /**
@@ -87,7 +88,12 @@ public class Part extends Named implements IPart {
 	 */
 	@Override
 	public void setIsPartOf(IPart parent) {
-		this.parent = parent;
+		if (parent == null) {
+			Logger.getLogger(Part.class).error("Attempting to set NULL parent for Part '" + this.getName() + "'. Likely a configuration error.");
+		}
+		else {
+			this.parent = parent;
+		}
 	}
 
 	/* (non-Javadoc)

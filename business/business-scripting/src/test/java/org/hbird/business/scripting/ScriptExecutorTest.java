@@ -5,11 +5,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.hbird.business.scripting.bean.ScriptExecutor;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.groundstation.Location;
+import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.scripting.ScriptExecutionRequest;
 import org.junit.Test;
 
@@ -131,8 +132,8 @@ public class ScriptExecutorTest {
 
         ScriptExecutor executor = new ScriptExecutor(request);
 
-        Parameter out = (Parameter) executor.calculate(new Location("test", "Copenhagen", "", "Location A", 49.982314d, 8.811035d, 0d, 140000000d));
-        out = (Parameter) executor.calculate(new Location("test", "Frankfurt", "", "Location B", 55.61683d, 12.601318d, 0d, 140000000d));
+        Parameter out = (Parameter) executor.calculate(new GroundStation("Copenhagen", new Vector3D(49.982314d, 8.811035d, 0d)));
+        out = (Parameter) executor.calculate(new GroundStation("Frankfurt", new Vector3D(55.61683d, 12.601318d, 0d)));
 
         assertTrue(out != null);
         assertTrue(out instanceof Parameter);

@@ -16,19 +16,14 @@
  */
 package org.hbird.business.core;
 
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.businesscard.BusinessCardSender;
-import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.BusinessCard;
-import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.State;
 import org.hbird.exchange.interfaces.IStartablePart;
-import org.hbird.exchange.tasking.Task;
 
 /**
  * Base classs for all software component drivers.
@@ -72,7 +67,7 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
 		}
 
 		if (part != null) {			
-			LOG.info("Startinhg driver for part '" + part.getQualifiedName() + "'.");
+			LOG.info("Starting driver for part '" + part.getQualifiedName() + "'.");
 			
 			/** Setup the component specific services. */
 			doConfigure();
