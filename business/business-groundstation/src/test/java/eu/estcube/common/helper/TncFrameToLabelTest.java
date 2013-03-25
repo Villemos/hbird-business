@@ -5,7 +5,6 @@ package eu.estcube.common.helper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -13,6 +12,7 @@ import static org.mockito.Mockito.when;
 import org.hbird.business.core.naming.Base;
 import org.hbird.business.core.naming.DefaultNaming;
 import org.hbird.exchange.core.Label;
+import org.hbird.exchange.core.Parameter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,9 +71,8 @@ public class TncFrameToLabelTest {
                 TncFrameToLabel.RELATIVE_PARAMETER_NAME), label.getName());
         assertEquals(TncFrameToLabel.DESCRIPTION, label.getDescription());
         assertEquals("0D 0E 0A 0D 0C 00 0D 0E", label.getValue());
-        assertEquals(TncFrame.class.getSimpleName(), label.getType());
+        assertEquals(Parameter.class.getSimpleName(), label.getType());
         inOrder.verify(frame, times(1)).getData();
-        inOrder.verify(frame, times(1)).getTarget();
         inOrder.verifyNoMoreInteractions();
     }
 }
