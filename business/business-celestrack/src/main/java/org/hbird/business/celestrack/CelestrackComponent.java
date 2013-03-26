@@ -17,8 +17,7 @@
 package org.hbird.business.celestrack;
 
 import org.apache.camel.Endpoint;
-
-import com.villemos.ispace.httpcrawler.HttpCrawlerComponent;
+import org.apache.camel.impl.DefaultComponent;
 
 import java.util.Map;
 
@@ -28,9 +27,9 @@ import java.util.Map;
  *
  * @version
  */
-public class CelestrackComponent extends HttpCrawlerComponent {
+public class CelestrackComponent extends DefaultComponent  {
 
-    protected Endpoint createEndpoint(String uri, String remaining, Map parameters) throws Exception {
+    protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
         Endpoint endpoint = new CelestrackEndpoint(uri, this);
         setProperties(endpoint, parameters);
         return endpoint;

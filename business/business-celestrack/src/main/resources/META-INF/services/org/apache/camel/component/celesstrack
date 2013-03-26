@@ -15,4 +15,4 @@
 # limitations under the License.
 #
 
-class=com.villemos.ispace.solr.SolrComponent
+class=org.hbird.business.celestrack.CelestrackComponent

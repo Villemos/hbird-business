@@ -19,10 +19,7 @@ package org.hbird.business.celestrack;
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.villemos.ispace.httpcrawler.HttpCrawlerEndpoint;
+import org.apache.camel.impl.ScheduledPollEndpoint;
 
 /**
  * Represents a direct endpoint that synchronously invokes the consumers of the
@@ -30,12 +27,13 @@ import com.villemos.ispace.httpcrawler.HttpCrawlerEndpoint;
  * 
  * @version 
  */
-public class CelestrackEndpoint extends HttpCrawlerEndpoint {
-
-	private static final Log LOG = LogFactory.getLog(CelestrackEndpoint.class);
+public class CelestrackEndpoint extends ScheduledPollEndpoint {
 
 	boolean allowMultipleConsumers = true;
 
+	protected String proxyHost;
+	protected int proxyPort;
+	
 	public CelestrackEndpoint(String uri, CelestrackComponent component) {
 		super(uri, component);
 	}
@@ -59,4 +57,20 @@ public class CelestrackEndpoint extends HttpCrawlerEndpoint {
 	public boolean isSingleton() {
 		return true;
 	}
+
+	public String getProxyHost() {
+		return proxyHost;
+	}
+
+	public void setProxyHost(String proxyHost) {
+		this.proxyHost = proxyHost;
+	}
+
+	public int getProxyPort() {
+		return proxyPort;
+	}
+
+	public void setProxyPort(int proxyPort) {
+		this.proxyPort = proxyPort;
+	}	
 }
