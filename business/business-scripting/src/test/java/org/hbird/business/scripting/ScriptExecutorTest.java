@@ -1,5 +1,9 @@
 package org.hbird.business.scripting;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
@@ -29,18 +33,18 @@ public class ScriptExecutorTest {
         ScriptExecutor executor = new ScriptExecutor(request);
 
         Object out = executor.calculate(new Parameter("test", "Parameter1", "A parameter", 2d, "Volt"));
-        assertTrue(out == null);
+        assertNull(out);
 
         out = executor.calculate(new Parameter("test", "Parameter1", "A parameter", 3d, "Volt"));
-        assertTrue(out == null);
+        assertNull(out);
 
         out = executor.calculate(new Parameter("test", "Parameter2", "A parameter", 5d, "Volt"));
-        assertTrue(out != null);
+        assertNotNull(out);
         assertTrue(out instanceof Parameter);
-        assertTrue(((Parameter) out).getName().equals("Parameter10"));
-        assertTrue(((Parameter) out).getDescription().equals("A test script parameter."));
-        assertTrue(((Parameter) out).getUnit().equals("Volt"));
-        assertTrue((Double) ((Parameter) out).getValue() == 35d);
+        assertEquals("Parameter10", ((Parameter) out).getName());
+        assertEquals("A test script parameter.", ((Parameter) out).getDescription());
+        assertEquals("Volt", ((Parameter) out).getUnit());
+        assertEquals(35D, (Double) ((Parameter) out).getValue(), 0.0D);
     }
 
     @Test
@@ -56,16 +60,16 @@ public class ScriptExecutorTest {
         ScriptExecutor executor = new ScriptExecutor(request);
 
         State out = (State) executor.calculate(new Parameter("test", "Parameter1", "A parameter", 5d, "Volt"));
-        assertTrue(out != null);
+        assertNotNull(out);
         assertTrue(out instanceof State);
-        assertTrue(out.getIsStateOf().equals("Parameter100"));
-        assertTrue(out.getValue() == false);
+        assertEquals("Parameter100", out.getIsStateOf());
+        assertFalse(out.getValue());
 
         out = (State) executor.calculate(new Parameter("test", "Parameter1", "A parameter", 4d, "Volt"));
-        assertTrue(out != null);
+        assertNotNull(out);
         assertTrue(out instanceof State);
-        assertTrue(out.getIsStateOf().equals("Parameter100"));
-        assertTrue(out.getValue() == true);
+        assertEquals("Parameter100", out.getIsStateOf());
+        assertTrue(out.getValue());
     }
 
     @Test
@@ -79,11 +83,11 @@ public class ScriptExecutorTest {
 
         Parameter out = (Parameter) executor.calculate(new Parameter("test", "Parameter201", "The temperature in FAHRENHEIT.", 200d,
                 "Fahrenheit"));
-        assertTrue(out != null);
+        assertNotNull(out);
         assertTrue(out instanceof Parameter);
-        assertTrue(out.getName().equals("Parameter200"));
-        assertTrue(out.getUnit().equals("Celsius"));
-        assertTrue((Double) out.getValue() == 93.33333333333333);
+        assertEquals("Parameter200", out.getName());
+        assertEquals("Celsius", out.getUnit());
+        assertEquals(93.33333333333333D, (Double) out.getValue(), 0.0D);
 
     }
 
@@ -101,29 +105,28 @@ public class ScriptExecutorTest {
 
         out = (Label) executor.calculate(new Parameter("test", "Parameter300", "Dont know.", 200d, "Volt"));
 
-        assertTrue(out != null);
+        assertNotNull(out);
         assertTrue(out instanceof Label);
-        assertTrue(out.getName().equals("Parameter300"));
-        assertTrue(out.getValue().equals("OFF"));
+        assertEquals("Parameter300", out.getName());
+        assertEquals("OFF", out.getValue());
 
         out = (Label) executor.calculate(new Parameter("test", "Parameter300", "Dont know.", 300d, "Volt"));
 
-        assertTrue(out != null);
+        assertNotNull(out);
         assertTrue(out instanceof Label);
-        assertTrue(out.getName().equals("Parameter300"));
-        assertTrue(out.getValue().equals("ON"));
+        assertEquals("Parameter300", out.getName());
+        assertEquals("ON", out.getValue());
 
         out = (Label) executor.calculate(new Parameter("test", "Parameter300", "Dont know.", 400d, "Volt"));
 
-        assertTrue(out != null);
+        assertNotNull(out);
         assertTrue(out instanceof Label);
-        assertTrue(out.getName().equals("Parameter300"));
-        assertTrue(out.getValue().equals("ON"));
+        assertEquals("Parameter300", out.getName());
+        assertEquals("ON", out.getValue());
     }
 
     @Test
     public void testLibraryGeospartialDistanceScript() {
-        // FIXME - 27.02.2013, kimmell - use GroundStation instead of Location
         Map<String, String> binding = new HashMap<String, String>();
         binding.put("Copenhagen", "location1");
         binding.put("Frankfurt", "location2");
@@ -132,13 +135,16 @@ public class ScriptExecutorTest {
 
         ScriptExecutor executor = new ScriptExecutor(request);
 
-        Parameter out = (Parameter) executor.calculate(new GroundStation("Copenhagen", new D3Vector("", "", "", "", 49.982314d, 8.811035d, 0d)));
-        out = (Parameter) executor.calculate(new GroundStation("Frankfurt", new D3Vector("", "", "", "", 55.61683d, 12.601318d, 0d)));
+        GroundStation gs1 = new GroundStation("Copenhagen", new D3Vector("", "", "", "", 49.982314d, 8.811035d, 0d));
+        GroundStation gs2 = new GroundStation("Frankfurt", new D3Vector("", "", "", "", 55.61683d, 12.601318d, 0d));
 
-        assertTrue(out != null);
+        Parameter out = (Parameter) executor.calculate(gs1);
+        out = (Parameter) executor.calculate(gs2);
+
+        assertNotNull(out);
         assertTrue(out instanceof Parameter);
-        assertTrue(out.getName().equals("DistanceFromAtoB"));
-        assertTrue(out.asDouble() == 626529.5932975922);
+        assertEquals("DistanceFromAtoB", out.getName());
+        assertEquals(626529.5932975922D, out.asDouble(), 0.0D);
     }
 
     @Test
@@ -156,9 +162,9 @@ public class ScriptExecutorTest {
         out = (Parameter) executor.calculate(new Parameter("", "Parameter501", "", 20, "Percentage"));
         out = (Parameter) executor.calculate(new Parameter("", "Parameter502", "", 50, "mAh"));
 
-        assertTrue(out != null);
+        assertNotNull(out);
         assertTrue(out instanceof Parameter);
-        assertTrue(out.getName().equals("Recharge Time"));
-        assertTrue(out.asDouble() == 86400.0);
+        assertEquals("Recharge Time", out.getName());
+        assertEquals(86400.0D, out.asDouble(), 0.0D);
     }
 }
