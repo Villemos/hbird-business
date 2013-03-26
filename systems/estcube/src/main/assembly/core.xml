@@ -1,65 +1,91 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="
-       http://www.springframework.org/schema/beans 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context-2.5.xsd
-       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<import resource="injection.xml"/>
+        <import resource="injection.xml"/>
 
-	<bean id="configurator" class="org.hbird.business.configurator.Configurator"/>
+        <bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponentDriver"/>
 
-	<bean id="systemMonitoring" class="org.hbird.exchange.configurator.StartSystemMonitoringComponent">
-		<constructor-arg index="0" value="Monitoring"/>	
-	</bean>
-	
-	<bean id="archive" class="org.hbird.exchange.configurator.StartArchiveComponent">
-		<constructor-arg index="0" value="Archive"/>	
-	</bean>
-	
-	<bean id="taskExecutor" class="org.hbird.exchange.configurator.StartTaskExecutorComponent">
-		<constructor-arg index="0" value="Task Executor"/>		
-	</bean>
-	
-	<bean id="commandChain" class="org.hbird.exchange.configurator.StartCommandComponent">
-		<constructor-arg index="0" value="Command Chain"/>	
-	</bean>
+        <bean id="monitoring" class="org.hbird.business.systemmonitoring.SystemMonitorComponent">
+                <constructor-arg index="0" value="SystemMonitoring"/>
+        </bean>
+        <bean id="archive" class="org.hbird.business.archive.ArchiveComponent">
+                <constructor-arg index="0" value="Archiver"/>
+        </bean>
 
-	<bean id="orbitPrediction" class="org.hbird.exchange.configurator.StartNavigationComponent">
-		<constructor-arg index="0" value="OrbitPredictor"/>
-	</bean>
+        <bean id="taskExecutor" class="org.hbird.business.taskexecutor.TaskExecutionComponent">
+                <constructor-arg index="0" value="TaskExecutor"/>
+        </bean>
 
-	<bean id="components" class="java.util.ArrayList">
-		<constructor-arg>
-        	<list>
- 	          	<ref bean="systemMonitoring" />
- 	          	<ref bean="archive" />
- 	          	<ref bean="commandChain" />
-  	          	<ref bean="taskExecutor" />
-				<ref bean="orbitPrediction" />
-         	</list>
-	    </constructor-arg>
-	</bean>
+        <bean id="commanding" class="org.hbird.business.commanding.CommandingComponent">
+                <constructor-arg index="0" value="CommandReleaser"/>
+        </bean>
 
-	<bean id="loader" class="org.hbird.business.metadatapublisher.ObjectPublisher">
-		<property name="objects" ref="components" />
-	</bean>
+        <bean id="navigation" class="org.hbird.business.navigation.NavigationComponent">
+                <constructor-arg index="0" value="Navigation"/>
+        </bean>
 
-	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
+        <bean id="startMonitoring" class="org.hbird.exchange.configurator.StartComponent">
+                <constructor-arg index="0" value="CoreSystem"/>
+                <constructor-arg index="1" ref="monitoring"/>
+        </bean>
 
-		<routeContextRef ref="injectionRoutes"/>
+        <bean id="startArchive" class="org.hbird.exchange.configurator.StartComponent">
+                <constructor-arg index="0" value="CoreSystem"/>
+                <constructor-arg index="1" ref="archive"/>
+        </bean>
 
-		<route id="initiator">
-			<from uri="timer:initator?repeatCount=1" />
-			<split>
-				<method bean="loader" />
-				<to uri="direct:injection" />
-			</split>
-		</route>
+        <bean id="startTaskExecutor" class="org.hbird.exchange.configurator.StartComponent">
+                <constructor-arg index="0" value="CoreSystem"/>
+                <constructor-arg index="1" ref="taskExecutor"/>
+        </bean>
 
-	</camelContext>
+        <bean id="startCommanding" class="org.hbird.exchange.configurator.StartComponent">
+                <constructor-arg index="0" value="CoreSystem"/>
+                <constructor-arg index="1" ref="commanding"/>
+        </bean>
+
+        <bean id="startNavigation" class="org.hbird.exchange.configurator.StartComponent">
+                <constructor-arg index="0" value="CoreSystem"/>
+                <constructor-arg index="1" ref="navigation"/>
+        </bean>
+                <bean id="components" class="java.util.ArrayList">
+                <constructor-arg>
+                        <list>
+                                <ref bean="startMonitoring" />
+                                <ref bean="startArchive" />
+                                <ref bean="startCommanding" />
+                                <ref bean="startTaskExecutor" />
+                                <ref bean="startNavigation" />
+                        </list>
+                </constructor-arg>
+        </bean>
+
+
+        <bean id="loader" class="org.hbird.business.metadatapublisher.ObjectPublisher">
+                <property name="objects" ref="components" />
+        </bean>
+
+        <camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
+
+                <routeContextRef ref="injectionRoutes"/>
+
+                <route id="initiator">
+                        <from uri="timer:initator?repeatCount=1" />
+                        <split>
+                                <method bean="loader" />
+                                <to uri="direct:injection" />
+                        </split>
+                </route>
+
+        </camelContext>
 </beans>
+
