@@ -41,10 +41,10 @@ import org.hbird.business.core.InMemoryScheduler;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.core.ConfigurationBase;
 import org.hbird.exchange.interfaces.IStartablePart;
 import org.springframework.beans.factory.annotation.Value;
 
-import eu.estcube.domain.config.ConfigurationBase;
 import eu.estcube.gs.hamlib.HamlibDriverConfiguration;
 import eu.estcube.gs.hamlib.HamlibIO;
 
