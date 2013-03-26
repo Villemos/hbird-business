@@ -6,12 +6,10 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
 import org.jboss.netty.handler.codec.frame.Delimiters;
 
-import eu.estcube.domain.JMSConstants;
-
 class DecoderSplitOnNewline extends DelimiterBasedFrameDecoder {
 
     protected DecoderSplitOnNewline() {
-        super(JMSConstants.GS_MAX_FRAME_LENGTH, false, Delimiters.lineDelimiter());
+        super(HamlibConstants.MAX_FRAME_LENGTH, false, Delimiters.lineDelimiter());
     }
 
     @Override
