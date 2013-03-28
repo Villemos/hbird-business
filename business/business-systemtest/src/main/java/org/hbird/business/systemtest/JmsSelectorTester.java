@@ -71,7 +71,7 @@ public class JmsSelectorTester extends SystemTest {
 		public void configure() throws Exception {
 
 			
-			from("activemq:topic:" + StandardEndpoints.monitoring + "?selector=destination='TestBean' OR (destination='TestBean' AND type='RightType)'").bean(listener);
+			from("activemq:topic:" + StandardEndpoints.MONITORING + "?selector=destination='TestBean' OR (destination='TestBean' AND type='RightType)'").bean(listener);
 			
 		}		
 	}

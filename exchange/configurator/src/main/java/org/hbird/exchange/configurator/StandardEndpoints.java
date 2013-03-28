@@ -16,29 +16,29 @@
  */
 package org.hbird.exchange.configurator;
 
-
 public class StandardEndpoints {
 
-	/** Route managing the injection of data. Will ensure that the right headers are set and that
-	 * things like scheduling is performed. Route is defined in the 'injection.xml' Spring DSL. */
-	public static String injection = "seda:injection";
-	
-	/** Monitoring data. */
-	public static String monitoring = "activemq:topic:hbird.monitoring";
+    /**
+     * Route managing the injection of data. Will ensure that the right headers are set and that
+     * things like scheduling is performed. Route is defined in the 'injection.xml' Spring DSL.
+     */
+    public static final String INJECTION = "seda:injection";
 
-	/** Tasks scheduled for execution. */
-	public static String tasks = "activemq:queue:hbird.tasks";
-	
-	/** Command requests that are scheduled for verification. */
-	public static String requests = "activemq:queue:hbird.requests";	
+    /** Monitoring data. */
+    public static final String MONITORING = "activemq:topic:hbird.monitoring";
 
-	/** Requests which failed verification, i.e. the commands inside were NOT released. */
-	public static String failedRequests = "activemq:topic:hbird.failedRequests";
-	
-	/** Commands which have been verified and released. */
-	public static String commands = "activemq:topic:hbird.commands";
-	
-	/** A topic for everybody monitoring what occurs in the system. */
-	public static String notification = "activemq:topic:hbird.notification";
+    /** Tasks scheduled for execution. */
+    public static final String TASKS = "activemq:queue:hbird.tasks";
 
+    /** Command requests that are scheduled for verification. */
+    public static final String REQUESTS = "activemq:queue:hbird.requests";
+
+    /** Requests which failed verification, i.e. the commands inside were NOT released. */
+    public static final String FAILED_REQUESTS = "activemq:topic:hbird.failedRequests";
+
+    /** Commands which have been verified and released. */
+    public static final String COMMANDS = "activemq:topic:hbird.commands";
+
+    /** Events in the system. */
+    public static final String EVENTS = "activemq:topic:hbird.events";
 }

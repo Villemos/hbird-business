@@ -40,7 +40,7 @@ public class NavigationComponentDriver extends SoftwareComponentDriver {
 		// from("direct:locationstore").to("solr:locationstore");
 		
 		/** Route for commands to this component, requests for predictions. */
-		from(StandardEndpoints.commands + "?" + addClassSelector(TlePropagationRequest.class.getSimpleName()))
+		from(StandardEndpoints.COMMANDS + "?" + addClassSelector(TlePropagationRequest.class.getSimpleName()))
 		.bean(tlePredictor);
 		
 		ProcessorDefinition<?> route = from("direct:navigationinjection");

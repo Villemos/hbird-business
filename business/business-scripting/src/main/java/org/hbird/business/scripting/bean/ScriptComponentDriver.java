@@ -38,7 +38,7 @@ public class ScriptComponentDriver extends SoftwareComponentDriver {
         for (String dependency : executor.getDependencies()) {
 
             /** Create the routes for receiving the data needed by the script. */
-            ProcessorDefinition<?> route = from(StandardEndpoints.monitoring + "?" + addNameSelector(dependency)).bean(executor, "calculate");
+            ProcessorDefinition<?> route = from(StandardEndpoints.MONITORING + "?" + addNameSelector(dependency)).bean(executor, "calculate");
             addInjectionRoute(route);
         }
         

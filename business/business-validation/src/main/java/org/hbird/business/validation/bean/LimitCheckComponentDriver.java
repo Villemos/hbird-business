@@ -70,17 +70,17 @@ public class LimitCheckComponentDriver extends SoftwareComponentDriver {
 	protected void createRoute(String parameter, BaseLimitChecker limit, String componentname, String limitValueName) {
 
 		/** Create the route for limit checking. */
-		ProcessorDefinition<?> route = from(StandardEndpoints.monitoring + "?selector=name='" + parameter + "'")
+		ProcessorDefinition<?> route = from(StandardEndpoints.MONITORING + "?selector=name='" + parameter + "'")
 				.bean(limit, "processParameter");
 		addInjectionRoute(route);
 
 		/** Create the route for enabling/disabling limit checking. */
-		route = from(StandardEndpoints.monitoring + "?selector=isStateOf='" + componentname + "'")
+		route = from(StandardEndpoints.MONITORING + "?selector=isStateOf='" + componentname + "'")
 				.bean(limit, "processEnabled");
 		addInjectionRoute(route);
 
 		/** Create the route for changing the limit value. */
-		route = from(StandardEndpoints.monitoring + "?selector=name='" + limitValueName + "'")
+		route = from(StandardEndpoints.MONITORING + "?selector=name='" + limitValueName + "'")
 				.bean(limit, "processLimit");
 		addInjectionRoute(route);
 	}

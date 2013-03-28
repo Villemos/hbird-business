@@ -9,7 +9,7 @@
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponentDriver"/>
+	<bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponentDriver" init-method="start"/>
 
 	<bean id="monitoring.listener" class="org.hbird.business.systemtest.Listener" />
 	<bean id="commanding.listener" class="org.hbird.business.systemtest.Listener" />
@@ -22,6 +22,7 @@
 	<bean id="orbitallocationevent.listener" class="org.hbird.business.systemtest.Listener" />
 	<bean id="groundstationpart.listener" class="org.hbird.business.systemtest.Listener" />
 	<bean id="inmemorytest.listener" class="org.hbird.business.systemtest.Listener" />
+	<bean id="event.listener" class="org.hbird.business.systemtest.Listener" />
 											
 	<bean id="testerTemplate" abstract="true" class="org.hbird.business.systemtest.Tester">
 		<property name="monitoringListener" ref="monitoring.listener" />
@@ -35,6 +36,7 @@
 		<property name="locationEventListener" ref="orbitallocationevent.listener"/>
 		<property name="groundStationPartListener" ref="groundstationpart.listener"/>
 		<property name="inMemoryTestListener" ref="inmemorytest.listener"/>
+		<property name="eventListener" ref="event.listener"/>
 		<property name="context" ref="basic"/>
 	</bean>
 
@@ -57,6 +59,7 @@
 	<bean id="strandtracking" class="org.hbird.business.systemtest.StrandTrackingTester" parent="testerTemplate"/>
 	<bean id="inmemoryscheduler" class="org.hbird.business.systemtest.InMemorySchedulerTester" parent="testerTemplate"/>
 	<bean id="celestrack" class="org.hbird.business.systemtest.CelestrackTester" parent="testerTemplate"/>
+	<bean id="event" class="org.hbird.business.systemtest.EventTester" parent="testerTemplate"/>
 	<bean id="finisher" class="org.hbird.business.systemtest.Finisher" parent="testerTemplate"/>
 						
 	<bean id="scheduler" class="org.hbird.business.core.Scheduler"/>
@@ -92,7 +95,8 @@
 <!-- 	 			<to uri="bean:groundstationdriver" /> -->
 <!-- 	 			<to uri="bean:endtoendtracking" /> -->
 <!-- 	 			<to uri="bean:strandtracking" /> -->
-	 			<to uri="bean:celestrack" />
+<!-- 	 			<to uri="bean:celestrack" /> -->
+	 			<to uri="bean:event" />
 <!-- 	 			<to uri="bean:jmstester" /> -->
 	 			<to uri="bean:finisher" />
 		</route>
@@ -206,6 +210,11 @@
 		<route id="groundstationSchedule">
 			<from uri="activemq:queue:hbird.antennaschedule.ES5EC.internal" />
 			<to uri="bean:groundstationpart.listener" />
+		</route>
+        
+		<route id="events">
+			<from uri="activemq:topic:hbird.events" />
+			<to uri="bean:event.listener" />
 		</route>
 
 		<route id="inmemorytest">
