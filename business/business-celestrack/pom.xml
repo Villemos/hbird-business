@@ -29,6 +29,15 @@
 			<artifactId>navigation</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.hbird.business</groupId>
+			<artifactId>business-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hbird.business</groupId>
+			<artifactId>business-api</artifactId>
+		</dependency>
 
 	</dependencies>
 	<name>Business - Celestrack Integration</name>

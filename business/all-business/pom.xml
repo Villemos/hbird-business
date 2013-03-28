@@ -87,6 +87,11 @@
 			<artifactId>business-websockets</artifactId>			
 		</dependency>
 
+		<dependency>
+			<groupId>org.hbird.business</groupId>
+			<artifactId>business-celestrack</artifactId>			
+		</dependency>
+
 	</dependencies>
 
 	<name>Business - All Business</name>
