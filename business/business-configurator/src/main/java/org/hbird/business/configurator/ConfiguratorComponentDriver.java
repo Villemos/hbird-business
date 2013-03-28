@@ -26,134 +26,146 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
-import org.apache.log4j.Logger;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.exchange.businesscard.BusinessCardSender;
 import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
+import org.hbird.exchange.constants.StandardMissionEvents;
 import org.hbird.exchange.core.BusinessCard;
+import org.hbird.exchange.core.Event;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** TODO Create route IDs. */
 public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
 
-	private static org.apache.log4j.Logger LOG = Logger.getLogger(ConfiguratorComponentDriver.class);
+    protected static final String ENDPOINT_TO_EVENTS = "direct:toEvents";
 
-	/** A list of components and the routes of the component. */
-	protected Map<String, RoutesDefinition> components = new HashMap<String, RoutesDefinition>();
+    private static final Logger LOG = LoggerFactory.getLogger(ConfiguratorComponentDriver.class);
 
-	/** The name of the Configurator. */
-	protected String name = "Configurator";
+    /** A list of components and the routes of the component. */
+    protected Map<String, RoutesDefinition> components = new HashMap<String, RoutesDefinition>();
 
+    /**
+     * Default constructor.
+     */
+    public ConfiguratorComponentDriver() {
+    }
 
+    /**
+     * Starts the Camel context.
+     * 
+     * @throws Exception
+     */
+    public void start() throws Exception {
+        start(new ConfiguratorComponent(ConfiguratorComponent.DEFAULT_COMPONENT_NAME, this.getClass().getName()));
+    }
 
-	protected CamelContext context = null;
+    public void start(ConfiguratorComponent part) throws Exception {
+        this.part = part;
+        CamelContext context = getContext();
 
-	public ConfiguratorComponentDriver() {
-		this.context = getContext();
-		this.part = new ConfiguratorComponent("Configurator", this.getClass().getName());
+        try {
+            context.addRoutes(this);
+            context.start();
+        }
+        catch (Exception e) {
+            LOG.error("Failed to start ConfiguatorComponentDriver", e);
+        }
+    }
 
-		try {
-			context.addRoutes(this);
-			this.context.start();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+    public synchronized void startComponent(@Body StartComponent request, CamelContext context) throws Exception {
+        String qName = request.getPart().getQualifiedName();
+        String driverName = request.getPart().getDriverName();
+        LOG.info("Received start request for part '{}'. Will use driver '{}'.", qName, driverName);
 
+        if (components.containsKey(qName)) {
+            LOG.error("Received second request for start of the same component - '{}'.", qName);
+        }
+        else {
+            /** Find the component builder and get it to setup and start the component. */
+            if (driverName == null) {
+                LOG.error("Cannot start part '{}'. No driver set.", qName);
+            }
+            else {
+                try {
+                    SoftwareComponentDriver builder = (SoftwareComponentDriver) Class.forName(driverName).newInstance();
+                    builder.setCommand(request);
+                    context.addRoutes(builder);
 
-	}
+                    /** Register component in list of components maintained by this configurator. */
+                    components.put(qName, builder.getRouteCollection());
+                    context.createProducerTemplate().asyncSendBody(ENDPOINT_TO_EVENTS, createStartEvent(qName));
+                }
+                catch (Exception e) {
+                    LOG.error("Failed to start part '{}'", qName, e);
+                }
+            }
+        }
+    }
 
-	public ConfiguratorComponentDriver(String name, CamelContext context) {
-		this.name = name;
-		this.context = context;
-		this.part = new ConfiguratorComponent(name, this.getClass().getName());
+    public synchronized void stopComponent(@Body StopComponent command, CamelContext context) throws Exception {
+        String qName = command.getComponentName(); // same as qualified name in start component method
+        if (components.containsKey(qName)) {
+            LOG.info("Stopping part '{}'", qName);
+            for (RouteDefinition route : components.get(qName).getRoutes()) {
+                String routeId = route.getId();
+                LOG.info("Stopping route '{}' of part '{}'.", routeId, qName);
+                context.stopRoute(routeId);
+            }
 
-		try {
-			context.addRoutes(this);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+            /** Deregister. */
+            components.remove(qName);
+            getContext().createProducerTemplate().asyncSendBody(ENDPOINT_TO_EVENTS, createStopEvent(qName));
+        }
+    }
 
+    public synchronized Map<String, String> reportStatus(@Body ReportStatus request) {
+        Map<String, String> values = new HashMap<String, String>();
+        Iterator<Entry<String, RoutesDefinition>> it = components.entrySet().iterator();
+        while (it.hasNext()) {
+            Entry<String, RoutesDefinition> entry = it.next();
+            values.put(entry.getKey(), entry.getValue().toString());
+        }
+        return values;
+    }
 
-	}
+    @Override
+    public void configure() throws Exception {
 
-	public synchronized void startComponent(@Body StartComponent request, CamelContext context) throws Exception {
-		LOG.info("Received start request for part '" + request.getPart().getQualifiedName() + "'. Will use driver '" + request.getPart().getDriverName() + "'.");
+        /** Setup route to receive commands. */
+        from(StandardEndpoints.COMMANDS + "?" + addDestinationSelector(part.getName()))
+                .choice()
+                .when(body().isInstanceOf(StartComponent.class))
+                .bean(this, "startComponent")
+                .when(body().isInstanceOf(StopComponent.class))
+                .bean(this, "stopComponent")
+                .when(body().isInstanceOf(ReportStatus.class))
+                .bean(this, "reportStatus")
+                .end();
 
-		if (components.containsKey(request.getPart().getQualifiedName())) {
-			LOG.error("Received second request for start of the same component.");
-		}
-		else {
-			/** Find the component builder and get it to setup and start the component. */
-			if (request.getPart().getDriverName() == null) {
-				LOG.error("Cannot start part '" + request.getPart().getQualifiedName() + "'. No driver set.");
-			}
-			else {
-				try {
-					SoftwareComponentDriver builder = (SoftwareComponentDriver) Class.forName(request.getPart().getDriverName()).newInstance();
-					builder.setCommand(request);
-					context.addRoutes(builder);
+        /** Setup the BusinessCard */
+        BusinessCardSender cardSender = new BusinessCardSender(new BusinessCard(part.getQualifiedName(), part.getCommands()), 5000L);
+        ProcessorDefinition<?> route = from(addTimer("businesscard", part.getHeartbeat())).bean(cardSender);
+        addInjectionRoute(route);
 
-					/** Register component in list of components maintained by this configurator. */
-					components.put(request.getPart().getQualifiedName(), builder.getRouteCollection());
-				}
-				catch (Exception e) {
-					LOG.error("Received exception '" + e + "'. Failed to start part '" + request.getPart().getQualifiedName());
-				}
-			}
-		}
-	}
+        ProcessorDefinition<?> toEvents = from(ENDPOINT_TO_EVENTS);
+        addInjectionRoute(toEvents);
 
-	@SuppressWarnings("deprecation")
-	public synchronized void stopComponent(@Body StopComponent command) throws Exception {
-		if (components.containsKey(command.getComponentName())) {
-			LOG.info("Stopping component '" + command.getComponentName() + "'");
-			for (RouteDefinition route : components.get(command.getComponentName()).getRoutes()) {
-				LOG.info("Stopping route '" + route.getId() + "' of component '" + command.getComponentName() + "'.");
-				context.stopRoute(route);
-			}
+    }
 
-			/** Deregister. */
-			components.remove(command.getComponentName());
-		}
-	}
+    @Override
+    protected void doConfigure() {
+        /** Do null */
+    }
 
-	public synchronized Map<String, String> reportStatus(@Body ReportStatus request) {
-		Map<String, String> values = new HashMap<String, String>();
-		Iterator<Entry<String, RoutesDefinition>> it = components.entrySet().iterator();
-		while (it.hasNext()) {
-			Entry<String, RoutesDefinition> entry = it.next();
-			values.put(entry.getKey(), entry.getValue().toString());
-		}
+    Event createStartEvent(String qualifiedName) {
+        return new Event(qualifiedName, StandardMissionEvents.COMPONENT_START);
+    }
 
-		return values;
-	}
-
-	@Override
-	public void configure() throws Exception {
-
-		/** Setup route to receive commands. */
-		from(StandardEndpoints.commands + "?" + addDestinationSelector(name))
-		.choice()
-		.when(body().isInstanceOf(StartComponent.class))
-		.bean(this, "startComponent")
-		.when(body().isInstanceOf(StopComponent.class))
-		.bean(this, "stopComponent")
-		.when(body().isInstanceOf(ReportStatus.class))
-		.bean(this, "reportStatus")
-		.end();
-
-		/** Setup the BusinessCard */
-		BusinessCardSender cardSender = new BusinessCardSender(new BusinessCard(part.getQualifiedName(), part.getCommands()), 5000l);
-		ProcessorDefinition<?> route = from(addTimer("businesscard", part.getHeartbeat())).bean(cardSender);
-		addInjectionRoute(route);
-	}
-
-	@Override
-	protected void doConfigure() {
-		/** Do null */
-	}
+    Event createStopEvent(String qualifiedName) {
+        return new Event(qualifiedName, StandardMissionEvents.COMPONENT_STOP);
+    }
 }

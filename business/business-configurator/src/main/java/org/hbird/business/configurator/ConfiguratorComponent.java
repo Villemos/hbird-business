@@ -36,38 +36,42 @@ import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.StartablePart;
 
-
 /**
  * @author Admin
- *
+ * 
  */
 public class ConfiguratorComponent extends StartablePart {
 
-	/**
+    public static final String DEFAULT_COMPONENT_NAME = "Configurator";
+
+    public static final String DESCRIPTION = "A component for starting other component.";
+
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = 2865072999875952015L;
+    private static final long serialVersionUID = 2865072999875952015L;
 
-	{
-		commands.add(new StartComponent("", null));
-		commands.add(new StopComponent("", ""));
-	}
+    {
+        commands.add(new StartComponent("", null));
+        commands.add(new StopComponent("", ""));
+    }
 
-	/**
-	 * @param name
-	 * @param description
+    /**
+     * @param name
+     * @param description
+     */
+    public ConfiguratorComponent(String name, String driver) {
+        super(name, DESCRIPTION, driver);
+    }
+
+    /**
 	 */
-	public ConfiguratorComponent(String name, String driver) {
-		super(name, "A component for starting other component.", driver);
-	}
+    public ConfiguratorComponent() {
+        this(DEFAULT_COMPONENT_NAME, ConfiguratorComponentDriver.class.getName());
+    }
 
-	/**
-	 */
-	public ConfiguratorComponent() {
-		this("Configurator", ConfiguratorComponentDriver.class.getName());
-	}
-
-	public void init() {
-		new ConfiguratorComponentDriver();
-	}
+    public void init() throws Exception {
+        ConfiguratorComponentDriver driver = new ConfiguratorComponentDriver();
+        driver.start(this);
+    }
 }

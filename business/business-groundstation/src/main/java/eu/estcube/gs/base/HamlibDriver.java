@@ -64,7 +64,7 @@ public abstract class HamlibDriver extends SoftwareComponentDriver {
          * 
          * The NativeCommands are at their execution time read through the EXECUTION below.
          */
-        from(StandardEndpoints.commands + "?selector=name='Track'")
+        from(StandardEndpoints.COMMANDS + "?selector=name='Track'")
                 .log("Received 'Track' command from '" + simple("${body.issuedBy}").getText() + "'. Will generate Hamlib commands for '" + name + "'")
                 .split().method(part, "track")
                 .setHeader("stage", simple("${body.stage}"))
@@ -83,7 +83,7 @@ public abstract class HamlibDriver extends SoftwareComponentDriver {
                 .bean(verifier, "verify")
                 .choice()
                 .when(simple("${in.body} == null")).stop()
-                .otherwise().to(StandardEndpoints.monitoring)
+                .otherwise().to(StandardEndpoints.MONITORING)
                 .end()
                 .routeId(name + ": Verification");
 
@@ -114,7 +114,7 @@ public abstract class HamlibDriver extends SoftwareComponentDriver {
         /** Create route for cleanup of stages. */
         from("timer://cleanup?period=10000")
                 .split().method(verifier, "cleanup")
-                .to(StandardEndpoints.monitoring)
+                .to(StandardEndpoints.MONITORING)
                 .routeId(name + ": Cleanup");
 
         from("direct:parameters" + nameDot)
@@ -128,7 +128,7 @@ public abstract class HamlibDriver extends SoftwareComponentDriver {
                 .setHeader(StandardArguments.TYPE, simple("${in.body.type}"))
                 .setHeader(StandardArguments.DATA_SET_ID, simple("${in.body.datasetidentifier}"))
                 .setHeader("class", simple("${in.body.class.simpleName}"))
-                .to(StandardEndpoints.monitoring);
+                .to(StandardEndpoints.MONITORING);
 
         // @formatter: on
     }

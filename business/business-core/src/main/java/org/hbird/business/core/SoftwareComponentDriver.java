@@ -17,13 +17,14 @@
 package org.hbird.business.core;
 
 import org.apache.camel.model.ProcessorDefinition;
-import org.apache.log4j.Logger;
 import org.hbird.exchange.businesscard.BusinessCardSender;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.interfaces.IStartablePart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base classs for all software component drivers.
@@ -37,114 +38,119 @@ import org.hbird.exchange.interfaces.IStartablePart;
  */
 public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
 
-    private static org.apache.log4j.Logger LOG = Logger.getLogger(SoftwareComponentDriver.class);
+    // TODO - 27.03.2013, kimmell - remove and use BusinessCardSender.DEFAULT_INTERVAL instead?
+    public static final long DEFAULT_HEARTBEAT_INTERVAL = 5000L;
 
-	/** The Start request of the component. */
-	protected StartComponent command = null;
+    private static Logger LOG = LoggerFactory.getLogger(SoftwareComponentDriver.class);
 
-	/** The part that this driver starts. */
-	protected IStartablePart part = null;
+    /** The Start request of the component. */
+    protected StartComponent command = null;
 
-	/**
-	 * Sets the command which this builder use to create the component.
-	 * 
-	 * @param command The command to start a component
-	 */
-	public void setCommand(StartComponent command) {
-		this.command = command;
-	};
+    /** The part that this driver starts. */
+    protected IStartablePart part = null;
 
-	@Override
-	public void configure() throws Exception {
+    /**
+     * Sets the command which this builder use to create the component.
+     * 
+     * @param command The command to start a component
+     */
+    public void setCommand(StartComponent command) {
+        this.command = command;
+    };
 
-		/** Default */
-		long heartbeat = 5000;
-		
-		/** Get the part specification from the start request. */
-		if (command != null) {			
-			part = command.getPart();
-			heartbeat = command.getHeartbeat();
-		}
+    @Override
+    public void configure() throws Exception {
 
-		if (part != null) {			
-			LOG.info("Starting driver for part '" + part.getQualifiedName() + "'.");
-			
-			/** Setup the component specific services. */
-			doConfigure();
+        /** Default */
+        long heartbeat = DEFAULT_HEARTBEAT_INTERVAL;
 
-			/** Setup the BusinessCard */
-			BusinessCardSender cardSender = new BusinessCardSender(new BusinessCard(part.getQualifiedName(), part.getCommands()), heartbeat);
-			ProcessorDefinition<?> route = from(addTimer("businesscard", part.getHeartbeat())).bean(cardSender);
-			addInjectionRoute(route);
-		}
-		else {
-			LOG.error("No part has been defined for this driver. Cannot start nothing...");
-		}
-	}
+        /** Get the part specification from the start request. */
+        if (command != null) {
+            part = command.getPart();
+            heartbeat = command.getHeartbeat();
+        }
 
-	protected void addCommandHandler() {
-		/** Route for commands to this component, i.e. configuration commands. */
-		from(StandardEndpoints.commands + "?" + addDestinationSelector()).bean(new DefaultCommandHandler(), "receiveCommand");
-	}
+        if (part != null) {
+            String qName = part.getQualifiedName();
+            LOG.info("Starting driver for part '{}'.", qName);
 
-	/** The component specific configuration. */
-	protected abstract void doConfigure();
+            /** Setup the component specific services. */
+            doConfigure();
 
-	/**
-	 * Creates a string that can be used as a selector on activemq
-	 * 
-	 * @param name The type of the object to be retrieved
-	 * @return The string to be used as selector
-	 */
-	protected String addTypeSelector(String type) {
-		return "selector=" + StandardArguments.TYPE + "='" + type + "'";
-	}
+            /** Setup the BusinessCard */
+            // TODO - 27.03.2013, kimmell - fix mess with the heart beat intervals
+            BusinessCardSender cardSender = new BusinessCardSender(new BusinessCard(qName, part.getCommands()), heartbeat);
+            ProcessorDefinition<?> route = from(addTimer("businesscard", part.getHeartbeat())).bean(cardSender);
+            addInjectionRoute(route);
+        }
+        else {
+            LOG.error("No part has been defined for this driver. Cannot start nothing...");
+        }
+    }
 
-	protected String addClassSelector(String clazz) {
-		return "selector=" + StandardArguments.CLASS + "='" + clazz + "'";
-	}
+    protected void addCommandHandler() {
+        /** Route for commands to this component, i.e. configuration commands. */
+        from(StandardEndpoints.COMMANDS + "?" + addDestinationSelector()).bean(new DefaultCommandHandler(), "receiveCommand");
+    }
 
-	protected String addTimer(String prefix, long period) {
-		return "timer://" + addUniqueId(prefix) + "?period=" + period;
-	}
+    /** The component specific configuration. */
+    protected abstract void doConfigure();
 
-	protected String addUniqueId(String prefix) {
-		return prefix + part.getQualifiedName(".");
-	}
+    /**
+     * Creates a string that can be used as a selector on activemq
+     * 
+     * @param name The type of the object to be retrieved
+     * @return The string to be used as selector
+     */
+    protected String addTypeSelector(String type) {
+        return "selector=" + StandardArguments.TYPE + "='" + type + "'";
+    }
 
-	protected String addOptions() {
-		return "?";
-	}
+    protected String addClassSelector(String clazz) {
+        return "selector=" + StandardArguments.CLASS + "='" + clazz + "'";
+    }
 
-	/**
-	 * Creates a string that can be used as a selector on activemq
-	 * 
-	 * @param name The destination of the object to be retrieved
-	 * @return The string to be used as selector
-	 */
-	protected String addDestinationSelector(String destination) {
-		return "selector=destination='" + destination + "'";
-	}
+    protected String addTimer(String prefix, long period) {
+        return "timer://" + addUniqueId(prefix) + "?period=" + period;
+    }
 
-	protected String addDestinationSelector() {
-		return "selector=destination='" + part.getQualifiedName(".") + "'";
-	}
+    protected String addUniqueId(String prefix) {
+        return prefix + part.getQualifiedName(".");
+    }
 
-	/**
-	 * Creates a string that can be used as a selector on activemq
-	 * 
-	 * @param name The name of the object to be retrieved
-	 * @return The string to be used as selector
-	 */
-	protected String addNameSelector(String name) {
-		return "selector=name='" + name + "'";
-	}
+    protected String addOptions() {
+        return "?";
+    }
 
-	public IStartablePart getPart() {
-		return part;
-	}
+    /**
+     * Creates a string that can be used as a selector on activemq
+     * 
+     * @param name The destination of the object to be retrieved
+     * @return The string to be used as selector
+     */
+    protected String addDestinationSelector(String destination) {
+        return "selector=destination='" + destination + "'";
+    }
 
-	public void setPart(IStartablePart part) {
-		this.part = part;
-	}
+    protected String addDestinationSelector() {
+        return "selector=destination='" + part.getQualifiedName(".") + "'";
+    }
+
+    /**
+     * Creates a string that can be used as a selector on activemq
+     * 
+     * @param name The name of the object to be retrieved
+     * @return The string to be used as selector
+     */
+    protected String addNameSelector(String name) {
+        return "selector=name='" + name + "'";
+    }
+
+    public IStartablePart getPart() {
+        return part;
+    }
+
+    public void setPart(IStartablePart part) {
+        this.part = part;
+    }
 }

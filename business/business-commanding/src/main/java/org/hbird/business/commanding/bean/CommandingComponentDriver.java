@@ -41,12 +41,12 @@ public class CommandingComponentDriver extends SoftwareComponentDriver {
          * Read from the scheduled queue and release the command. The release consists of the validation
          * that all lock states are valid and the ejection of the command itself.
          * */
-        from(StandardEndpoints.requests)
+        from(StandardEndpoints.REQUESTS)
                 .bean(releaser)
                 .wireTap("seda:reportCommandRequestState")
                 .choice()
                 .when(header("Valid").isEqualTo(true)).to("seda:validCommandRequests")
-                .otherwise().to(StandardEndpoints.failedRequests);
+                .otherwise().to(StandardEndpoints.FAILED_REQUESTS);
 
         /** Extract the tasks from the command request and schedule them. Extract the command and release it. */
         ProcessorDefinition<?> route = from("seda:validCommandRequests")

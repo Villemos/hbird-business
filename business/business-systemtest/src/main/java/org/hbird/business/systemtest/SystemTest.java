@@ -78,132 +78,134 @@ public abstract class SystemTest {
     protected Listener labelListener = null;
 
     protected Listener stateListener = null;
-    
+
     protected Listener groundStationPartListener = null;
 
     protected Listener inMemoryTestListener = null;
 
+    protected Listener eventListener = null;
+
     protected CamelContext context = null;
 
     protected static IPublish publishApi = ApiFactory.getPublishApi("SystemTest");
-    
+
     protected static IDataAccess accessApi = ApiFactory.getDataAccessApi("SystemTest");
-    
+
     protected static ICatalogue catalogueApi = ApiFactory.getCatalogueApi("SystemTest");
-    
-    protected static IPartManager partmanagerApu = ApiFactory.getPartManagerApi("SystemTest");
-    
+
+    protected static IPartManager partmanagerApi = ApiFactory.getPartManagerApi("SystemTest");
+
     protected static Satellite estcube1 = null;
     protected static Satellite dkCube1 = null;
-    protected static Satellite deCube1 = null;    
+    protected static Satellite deCube1 = null;
     protected static Satellite strand = null;
 
     protected static GroundStation es5ec = null;
     protected static GroundStation gsAalborg = null;
     protected static GroundStation gsDarmstadt = null;
     protected static GroundStation gsNewYork = null;
-    
+
     static {
-    	/** Build the system model, starting from 'the mission'*/
-    	Part mission = new Part("ESTCUBE", "The root system. Complete, everything.");
+        /** Build the system model, starting from 'the mission' */
+        Part mission = new Part("ESTCUBE", "The root system. Complete, everything.");
 
-    	/** Define the satellites */
-    	Part satellites = new Satellite("Satellites", "The satellite(s) of the mission");
-    	satellites.setIsPartOf(mission);
-    	
-    	estcube1 = new Satellite("ESTCube-1", "ESTcube, the student satellite from TARTU");
-    	estcube1.setIsPartOf(satellites);
+        /** Define the satellites */
+        Part satellites = new Satellite("Satellites", "The satellite(s) of the mission");
+        satellites.setIsPartOf(mission);
 
-    	
-    	/** Define the ground station*/
-    	Part groundstations = new Part("Ground Station", "The groundstation(s) of the mission");
-    	groundstations.setIsPartOf(mission);
-    	
-        D3Vector geoLocationTartu = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Tartu, Tähe 4", Math.toRadians(58.3000D), Math.toRadians(26.7330D), 59.0D);
-    	es5ec = new GroundStation("ES5EC", "The main control centre", geoLocationTartu);
-    	es5ec.setIsPartOf(groundstations);
- 
+        estcube1 = new Satellite("ESTCube-1", "ESTcube, the student satellite from TARTU");
+        estcube1.setIsPartOf(satellites);
+
+        /** Define the ground station */
+        Part groundstations = new Part("Ground Station", "The groundstation(s) of the mission");
+        groundstations.setIsPartOf(mission);
+
+        D3Vector geoLocationTartu = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Tartu, Tähe 4", Math.toRadians(58.3000D),
+                Math.toRadians(26.7330D), 59.0D);
+        es5ec = new GroundStation("ES5EC", "The main control centre", geoLocationTartu);
+        es5ec.setIsPartOf(groundstations);
+
         Rotator rotator = new HamlibRotatorPart("Rotator", 0, -90, 360, 0, 180, 4533, "localhost");
-        RadioDevice radio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l, 4532, "localhost"); 
-    	Antenna antenna = new Antenna("Antenna1", "The prime antenna", rotator, radio);
-    	es5ec.addAntenna(antenna);
-    	antenna.setIsPartOf(es5ec);
-    	
-    	/** Define the ground segment control*/
-    	Part mof = new Part("Mission Operation Center", "The groundsystem(s) of the mission");
-    	mof.setIsPartOf(mission);
+        RadioDevice radio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l, 4532, "localhost");
+        Antenna antenna = new Antenna("Antenna1", "The prime antenna", rotator, radio);
+        es5ec.addAntenna(antenna);
+        antenna.setIsPartOf(es5ec);
 
-    	Part trackAutomation = new Part("Track Automation", "The component automating the track of ESTCube-1 by ES5EC.");
-    	trackAutomation.setIsPartOf(mof);    	
-    	
-    	ArchiveComponent archive = new ArchiveComponent(StandardComponents.ARCHIVE);
-    	archive.setIsPartOf(mof);
-    	
-    	CommandingComponent comComponent = new CommandingComponent(StandardComponents.COMMANDING_CHAIN);
-    	comComponent.setIsPartOf(mof);
+        /** Define the ground segment control */
+        Part mof = new Part("Mission Operation Center", "The groundsystem(s) of the mission");
+        mof.setIsPartOf(mission);
 
-    	NavigationComponent navComponent = new NavigationComponent(StandardComponents.ORBIT_PREDICTOR);
-    	navComponent.setIsPartOf(mof);
-    	
-    	Part scripts = new Part("Synthetic Parameters", "The synthetic parameters / scripts");
-    	scripts.setIsPartOf(mof);
-    	
-    	SystemMonitorComponent sysMon = new SystemMonitorComponent("System Monitoring");
-    	sysMon.setIsPartOf(mof);
-    	
-    	Part taskComponent = new Part("Task Executor", "");
-    	taskComponent.setIsPartOf(mof);
+        Part trackAutomation = new Part("Track Automation", "The component automating the track of ESTCube-1 by ES5EC.");
+        trackAutomation.setIsPartOf(mof);
 
-    	Part limits = new Part("Limits", "The limit checkers of the system");
-    	limits.setIsPartOf(mof);
+        ArchiveComponent archive = new ArchiveComponent(StandardComponents.ARCHIVE);
+        archive.setIsPartOf(mof);
 
-    	WebsocketInterfaceComponent webComponent = new WebsocketInterfaceComponent(StandardComponents.WEB_SOCKET);
-    	webComponent.setIsPartOf(mof);
+        CommandingComponent comComponent = new CommandingComponent(StandardComponents.COMMANDING_CHAIN);
+        comComponent.setIsPartOf(mof);
 
-    	
-    	
-    	
-    	
-    	/** Setup the external satellites and ground stations. */
-    	Part external = new Part("Externals", "External parts which we are interested in.");
+        NavigationComponent navComponent = new NavigationComponent(StandardComponents.ORBIT_PREDICTOR);
+        navComponent.setIsPartOf(mof);
 
-    	Part eSatellites = new Part("Satellites", "External satellites.");
-    	eSatellites.setIsPartOf(external);
+        Part scripts = new Part("Synthetic Parameters", "The synthetic parameters / scripts");
+        scripts.setIsPartOf(mof);
 
-    	dkCube1 = new Satellite("DKCube-1", "DKcube, the student satellite from AALBORG");
-    	dkCube1.setIsPartOf(eSatellites);
-    	
-    	deCube1 = new Satellite("DECube-1", "DEcube, the student satellite from BERLINE");
-    	deCube1.setIsPartOf(eSatellites);
+        SystemMonitorComponent sysMon = new SystemMonitorComponent("System Monitoring");
+        sysMon.setIsPartOf(mof);
 
-    	strand = new Satellite("STRaND-1", "SSTL Smartphone nanosatellite");
-    	strand.setIsPartOf(eSatellites);
-    	
-    	Part eGs = new Part("GroundStations", "External ground stations.");
-    	eGs.setIsPartOf(external);
+        Part taskComponent = new Part("Task Executor", "");
+        taskComponent.setIsPartOf(mof);
 
-        D3Vector geoLocationAalborg = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Aalborg", Math.toRadians(55.659306D), Math.toRadians(12.587585D), 59.0D);
-    	gsAalborg = new GroundStation("Aalborg", "Supportive antenna from Aalborg university", geoLocationAalborg);
-    	gsAalborg.setIsPartOf(eGs);
-    	gsAalborg.addAntenna(antenna);
+        Part limits = new Part("Limits", "The limit checkers of the system");
+        limits.setIsPartOf(mof);
+
+        WebsocketInterfaceComponent webComponent = new WebsocketInterfaceComponent(StandardComponents.WEB_SOCKET);
+        webComponent.setIsPartOf(mof);
+
+        /** Setup the external satellites and ground stations. */
+        Part external = new Part("Externals", "External parts which we are interested in.");
+
+        Part eSatellites = new Part("Satellites", "External satellites.");
+        eSatellites.setIsPartOf(external);
+
+        dkCube1 = new Satellite("DKCube-1", "DKcube, the student satellite from AALBORG");
+        dkCube1.setIsPartOf(eSatellites);
+
+        deCube1 = new Satellite("DECube-1", "DEcube, the student satellite from BERLINE");
+        deCube1.setIsPartOf(eSatellites);
+
+        strand = new Satellite("STRaND-1", "SSTL Smartphone nanosatellite");
+        strand.setIsPartOf(eSatellites);
+
+        Part eGs = new Part("GroundStations", "External ground stations.");
+        eGs.setIsPartOf(external);
+
+        D3Vector geoLocationAalborg = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Aalborg", Math.toRadians(55.659306D),
+                Math.toRadians(12.587585D), 59.0D);
+        gsAalborg = new GroundStation("Aalborg", "Supportive antenna from Aalborg university", geoLocationAalborg);
+        gsAalborg.setIsPartOf(eGs);
+        gsAalborg.addAntenna(antenna);
 
         Rotator darmstadtRotator = new HamlibRotatorPart("Rotator", 0, -90, 360, 0, 180, 4533, "localhost");
-        RadioDevice darmstadtRadio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l, 4532, "localhost"); 
-    	Antenna darmstadtAntenna = new Antenna("Antenna1", "The prime antenna of DARMSTADT", darmstadtRotator, darmstadtRadio);
-        // D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
-        D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.87D), Math.toRadians(8.64D), 59.0D);
+        RadioDevice darmstadtRadio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l, 4532, "localhost");
+        Antenna darmstadtAntenna = new Antenna("Antenna1", "The prime antenna of DARMSTADT", darmstadtRotator, darmstadtRadio);
+        // D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(),
+        // "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
+        D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.87D),
+                Math.toRadians(8.64D), 59.0D);
         gsDarmstadt = new GroundStation("Darmstadt", "Supportive antenna from Darmstadt university", geoLocationDarmstadt);
-    	darmstadtAntenna.setIsPartOf(gsDarmstadt);   	
+        darmstadtAntenna.setIsPartOf(gsDarmstadt);
         gsDarmstadt.setIsPartOf(eGs);
-    	gsDarmstadt.addAntenna(darmstadtAntenna);
-    	// 49,87 LON:8,64
-    	
-        D3Vector geoLocationNewYork = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "New York", Math.toRadians(40.66564D), Math.toRadians(-74.036865D), 59.0D);
+        gsDarmstadt.addAntenna(darmstadtAntenna);
+        // 49,87 LON:8,64
+
+        D3Vector geoLocationNewYork = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "New York", Math.toRadians(40.66564D),
+                Math.toRadians(-74.036865D), 59.0D);
         gsNewYork = new GroundStation("NewYork", "Supportive antenna from NewYork university", geoLocationNewYork);
         gsNewYork.setIsPartOf(eGs);
         gsNewYork.addAntenna(antenna);
     }
-    
+
     protected void azzert(boolean assertion) {
         if (assertion == false) {
             LOG.error("FAILED.");
@@ -258,7 +260,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a parameter archive.");
 
             IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.ARCHIVE);
-            partmanagerApu.start(part);
+            partmanagerApi.start(part);
 
             /** Give the component time to startup. */
             Thread.sleep(1000);
@@ -282,16 +284,16 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a task executor component '" + name + "'.");
 
             Part parent = Part.getAllParts().get("Task Executor");
-            
+
             TaskExecutionComponent taskPart = new TaskExecutionComponent(name);
             taskPart.setIsPartOf(parent);
-            
+
             /** Publish the knowledge of the part. */
             publishApi.publish(taskPart);
 
             /** Start the part. */
-            partmanagerApu.start(taskPart);
-            
+            partmanagerApi.start(taskPart);
+
             /** Give the component time to startup. */
             Thread.sleep(1000);
 
@@ -308,12 +310,28 @@ public abstract class SystemTest {
 
             /** Create command component. */
             IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.COMMANDING_CHAIN);
-            partmanagerApu.start(part);
+            partmanagerApi.start(part);
 
             Thread.sleep(2000);
-            
+
             commandingChainStarted = true;
         }
+    }
+
+    public void stopCommandingChain() throws InterruptedException {
+
+        if (commandingChainStarted) {
+            LOG.info("Issuing command to stop a commanding chain.");
+
+            /** Create command component. */
+            IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.COMMANDING_CHAIN);
+            partmanagerApi.stop(part.getQualifiedName());
+
+            Thread.sleep(2000);
+
+            commandingChainStarted = false;
+        }
+
     }
 
     protected static boolean orbitPredictorStarted = false;
@@ -325,7 +343,7 @@ public abstract class SystemTest {
 
             /** Create command component. */
             IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.ORBIT_PREDICTOR);
-            partmanagerApu.start(part);
+            partmanagerApi.start(part);
 
             Thread.sleep(2000);
 
@@ -342,7 +360,7 @@ public abstract class SystemTest {
 
             /** Create command component. */
             IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.WEB_SOCKET);
-            partmanagerApu.start(part);
+            partmanagerApi.start(part);
 
             Thread.sleep(2000);
 
@@ -360,10 +378,11 @@ public abstract class SystemTest {
             Part parent = Part.getAllParts().get("Track Automation");
 
             /** Create command component. */
-        	TrackingComponent antennaController = new TrackingComponent("ES5EC -> ESTCUBE", "The component automating the track of ESTCube-1 by ES5EC.", estcube1.getQualifiedName(), es5ec.getQualifiedName());
-        	antennaController.setIsPartOf(parent);            
-            
-            partmanagerApu.start(antennaController);
+            TrackingComponent antennaController = new TrackingComponent("ES5EC -> ESTCUBE", "The component automating the track of ESTCube-1 by ES5EC.",
+                    estcube1.getQualifiedName(), es5ec.getQualifiedName());
+            antennaController.setIsPartOf(parent);
+
+            partmanagerApi.start(antennaController);
 
             Thread.sleep(2000);
 
@@ -379,10 +398,11 @@ public abstract class SystemTest {
             Part parent = Part.getAllParts().get("Track Automation");
 
             /** Create command component. */
-        	TrackingComponent antennaController = new TrackingComponent("Darmstadt -> STRAND", "The component automating the track of Strand-1 by Darmstadt.", strand.getQualifiedName(), gsDarmstadt.getQualifiedName());
-        	antennaController.setIsPartOf(parent);            
-            
-            partmanagerApu.start(antennaController);
+            TrackingComponent antennaController = new TrackingComponent("Darmstadt -> STRAND", "The component automating the track of Strand-1 by Darmstadt.",
+                    strand.getQualifiedName(), gsDarmstadt.getQualifiedName());
+            antennaController.setIsPartOf(parent);
+
+            partmanagerApi.start(antennaController);
 
             Thread.sleep(2000);
 
@@ -390,24 +410,21 @@ public abstract class SystemTest {
         }
     }
 
-
     /**
-     * @throws InterruptedException 
-	 * 
-	 */
-	protected void publishGroundStationsAndSatellites() throws InterruptedException {
-		
-		for (Part part : Part.getAllParts().values()) {
-			if (part instanceof Satellite || part instanceof GroundStation) {
-				publishApi.publish(part);
-			}
-		}
-		
-		forceCommit();
-	}
+     * @throws InterruptedException
+     * 
+     */
+    protected void publishGroundStationsAndSatellites() throws InterruptedException {
 
+        for (Part part : Part.getAllParts().values()) {
+            if (part instanceof Satellite || part instanceof GroundStation) {
+                publishApi.publish(part);
+            }
+        }
 
-    
+        forceCommit();
+    }
+
     public Listener getBusinessCardListener() {
         return businessCardListener;
     }
@@ -456,17 +473,15 @@ public abstract class SystemTest {
         this.stateListener = orbitalListener;
     }
 
-    
-    
     public Listener getGroundStationPartListener() {
-		return groundStationPartListener;
-	}
+        return groundStationPartListener;
+    }
 
-	public void setGroundStationPartListener(Listener groundStationPartListener) {
-		this.groundStationPartListener = groundStationPartListener;
-	}
+    public void setGroundStationPartListener(Listener groundStationPartListener) {
+        this.groundStationPartListener = groundStationPartListener;
+    }
 
-	public CamelContext getContext() {
+    public CamelContext getContext() {
         return context;
     }
 
@@ -481,30 +496,36 @@ public abstract class SystemTest {
     }
 
     protected TleOrbitalParameters publishTleParameters() {
-        /** Store TLE*/
+        /** Store TLE */
         String tleLine1 = "1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478";
         String tleLine2 = "2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935";
-        TleOrbitalParameters parameters = publishApi.publishTleParameters(estcube1.getQualifiedName() + "/TLE", estcube1.getQualifiedName(), tleLine1, tleLine2);
-        
-		publishApi.publishMetadata(parameters, "Author", "This file was approved by Gert Villemos the " + (new Date()).toString());
-		
-		
-		tleLine1 = "1 39090U 13009E   13083.97990177  .00000074  00000-0  42166-4 0   342";
-		tleLine2 = "2 39090  98.6360 274.2877 0009214 187.6058 172.4992 14.34286321  3925";
+        TleOrbitalParameters parameters = publishApi
+                .publishTleParameters(estcube1.getQualifiedName() + "/TLE", estcube1.getQualifiedName(), tleLine1, tleLine2);
+
+        publishApi.publishMetadata(parameters, "Author", "This file was approved by Gert Villemos the " + (new Date()).toString());
+
+        tleLine1 = "1 39090U 13009E   13083.97990177  .00000074  00000-0  42166-4 0   342";
+        tleLine2 = "2 39090  98.6360 274.2877 0009214 187.6058 172.4992 14.34286321  3925";
         parameters = publishApi.publishTleParameters(strand.getQualifiedName() + "/TLE", strand.getQualifiedName(), tleLine1, tleLine2);
-        
-		publishApi.publishMetadata(parameters, "Author", "This file was approved by Gert Villemos the " + (new Date()).toString());
-		
-		return parameters;
+
+        publishApi.publishMetadata(parameters, "Author", "This file was approved by Gert Villemos the " + (new Date()).toString());
+
+        return parameters;
     }
 
-	public Listener getInMemoryTestListener() {
-		return inMemoryTestListener;
-	}
+    public Listener getInMemoryTestListener() {
+        return inMemoryTestListener;
+    }
 
-	public void setInMemoryTestListener(Listener inMemoryTestListener) {
-		this.inMemoryTestListener = inMemoryTestListener;
-	}
-    
-    
+    public void setInMemoryTestListener(Listener inMemoryTestListener) {
+        this.inMemoryTestListener = inMemoryTestListener;
+    }
+
+    public Listener getEventListener() {
+        return eventListener;
+    }
+
+    public void setEventListener(Listener eventListener) {
+        this.eventListener = eventListener;
+    }
 }

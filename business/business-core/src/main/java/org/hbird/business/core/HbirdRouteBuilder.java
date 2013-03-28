@@ -6,11 +6,11 @@ import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.Event;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 import org.hbird.exchange.tasking.Task;
-
 
 public abstract class HbirdRouteBuilder extends RouteBuilder {
 
@@ -37,7 +37,7 @@ public abstract class HbirdRouteBuilder extends RouteBuilder {
                 .setHeader(StandardArguments.ISSUED_BY, simple("${in.body.issuedBy}"))
                 .setHeader(StandardArguments.TYPE, simple("${in.body.type}"))
                 .setHeader(StandardArguments.CLASS, simple("${in.body.class.simpleName}"))
-                
+
                 /** Set object specific headers. */
                 .choice()
                 .when(body().isInstanceOf(State.class))
@@ -55,10 +55,11 @@ public abstract class HbirdRouteBuilder extends RouteBuilder {
 
                 /** Route to the topic / query. */
                 .choice()
-                .when((body().isInstanceOf(Task.class))).to(StandardEndpoints.tasks)
-                .when((body().isInstanceOf(CommandRequest.class))).to(StandardEndpoints.requests)
-                .when((body().isInstanceOf(Command.class))).to(StandardEndpoints.commands)
-                .otherwise().to(StandardEndpoints.monitoring);
+                .when((body().isInstanceOf(Task.class))).to(StandardEndpoints.TASKS)
+                .when((body().isInstanceOf(CommandRequest.class))).to(StandardEndpoints.REQUESTS)
+                .when((body().isInstanceOf(Command.class))).to(StandardEndpoints.COMMANDS)
+                .when((body().isInstanceOf(Event.class))).to(StandardEndpoints.EVENTS)
+                .otherwise().to(StandardEndpoints.MONITORING);
     }
 
 }

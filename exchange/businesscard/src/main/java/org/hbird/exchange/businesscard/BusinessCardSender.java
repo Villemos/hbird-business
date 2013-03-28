@@ -31,50 +31,53 @@ import org.slf4j.LoggerFactory;
  * which commands can be send.
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class BusinessCardSender {
 
-	/** Logger. */
-	private static final Logger LOG = LoggerFactory.getLogger(BusinessCardSender.class);
+    /** Default value for the period. */
+    public static final long DEFAULT_PERIOD = 10000L;
 
-	/** The period between heartbeats. The time to-wait for the next expected beat,*/
-	protected long period = 10000;
+    /** Logger. */
+    private static final Logger LOG = LoggerFactory.getLogger(BusinessCardSender.class);
 
-	protected BusinessCard card = null;
+    /** The period between heartbeats. The time to-wait for the next expected beat, */
+    protected long period = DEFAULT_PERIOD;
 
-	/**
-	 * @param issuedBy The name of the component that issues this BusinessCard
-	 * @param period delay before next BusinessCard is published
-	 */
-	public BusinessCardSender(BusinessCard card, long period) {
-		this.period = period;
-		this.card = card;
-	}
+    protected BusinessCard card = null;
 
-	/**
-	 * Method to add this business card to a route.
-	 * 
-	 * @return The BusinessCard, i.e. this object,
-	 */
-	@Handler
-	public BusinessCard send() {
-		LOG.debug("Issuing business card for '" + card.getIssuedBy() + "'.");
-		card.setTimestamp(System.currentTimeMillis());
-		return card;
-	}
+    /**
+     * @param issuedBy The name of the component that issues this BusinessCard
+     * @param period delay before next BusinessCard is published
+     */
+    public BusinessCardSender(BusinessCard card, long period) {
+        this.period = period;
+        this.card = card;
+    }
 
-	/**
-	 * @return the period
-	 */
-	public long getPeriod() {
-		return period;
-	}
+    /**
+     * Method to add this business card to a route.
+     * 
+     * @return The BusinessCard, i.e. this object,
+     */
+    @Handler
+    public BusinessCard send() {
+        LOG.debug("Issuing business card for '{}'.", card.getIssuedBy());
+        card.setTimestamp(System.currentTimeMillis());
+        return card;
+    }
 
-	/**
-	 * @param period the period to set
-	 */
-	public void setPeriod(long period) {
-		this.period = period;
-	}
+    /**
+     * @return the period
+     */
+    public long getPeriod() {
+        return period;
+    }
+
+    /**
+     * @param period the period to set
+     */
+    public void setPeriod(long period) {
+        this.period = period;
+    }
 }

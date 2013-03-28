@@ -32,7 +32,7 @@ public class TaskExecutorComponentDriver extends SoftwareComponentDriver {
     public void doConfigure() {
 
         String componentname = command.getPart().getQualifiedName();
-        ProcessorDefinition<?> route = from(StandardEndpoints.tasks).split().method(new TaskExecutor(componentname), "receive");
+        ProcessorDefinition<?> route = from(StandardEndpoints.TASKS).split().method(new TaskExecutor(componentname), "receive");
         addInjectionRoute(route);
 
         addCommandHandler();

@@ -28,7 +28,7 @@ public class StartComponent extends Command {
     private static final long serialVersionUID = 3880066748415223278L;
 
     public static final String DESC_STRING = "Request to start a component.";
-    
+
     public StartComponent(String issuedBy, String destination, IStartablePart part) {
         super(issuedBy, destination, "StartComponent", DESC_STRING);
         addPart(part);
@@ -45,7 +45,7 @@ public class StartComponent extends Command {
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
         args.add(new CommandArgument(StandardArguments.PART,
-                "The system part that this command requests the start of.", 
+                "The system part that this command requests the start of.",
                 IStartablePart.class,
                 true));
         args.add(new CommandArgument(StandardArguments.HEART_BEAT, "The period between heartbeat signals (BusinessCards) from this component.", Long.class,
@@ -57,6 +57,7 @@ public class StartComponent extends Command {
         setArgumentValue(StandardArguments.PART, part);
     }
 
+    // TODO - 28.03.2013, kimmell - remove
     protected void addHeartbeat(long period) {
         setArgumentValue(StandardArguments.HEART_BEAT, period);
     }
@@ -68,7 +69,7 @@ public class StartComponent extends Command {
     public long getHeartbeat() {
         return getArgumentValue(StandardArguments.HEART_BEAT, Long.class);
     }
-    
+
     public IStartablePart getPart() {
         return getArgumentValue(StandardArguments.PART, IStartablePart.class);
     }
