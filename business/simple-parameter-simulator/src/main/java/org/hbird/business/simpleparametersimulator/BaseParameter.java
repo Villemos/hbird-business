@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.interfaces.IPart;
 
 /**
  * Base type for all simulated parameters. Holds the name and implements the Camel
@@ -36,33 +37,33 @@ public abstract class BaseParameter {
 	protected String description;
 	protected Number value;
 	protected String unit;
-	
+
 	protected String startTimeFormat = "yyyy-MM-dd HH:mm:ss";
 	protected String startTime = null;
 	protected long lStartTime = 0l;
 	protected long deltaTime = 1000l;
 	protected Map<Long, Long> fixedTimes = null;
 	protected long offset = 0;
-	
+
 	/**
 	 * @param name
 	 * @param description
 	 */
-	public BaseParameter(String issuedBy, String name, String description) {
-		this.issuedBy = issuedBy;
+	public BaseParameter(IPart issuedBy, String name, String description) {
+		this.issuedBy = issuedBy.getQualifiedName();
 		this.name = name;
 		this.description = description;
 	}
 
-	
+
 	/**
 	 * @param name
 	 * @param description
 	 * @param value
 	 * @param unit
 	 */
-	public BaseParameter(String issuedBy, String name, String description, Number value, String unit) {
-		this.issuedBy = issuedBy;
+	public BaseParameter(IPart issuedBy, String name, String description, Number value, String unit) {
+		this.issuedBy = issuedBy.getQualifiedName();
 		this.name = name;
 		this.description = description;
 		this.value = value;
@@ -77,8 +78,8 @@ public abstract class BaseParameter {
 	 * parameter into the exchange, use the ExchangeFormatter class.
 	 */
 	protected abstract Parameter process();	
-	
-	
+
+
 	protected long getTime(long tick) {
 		if (startTime != null) {
 			if (lStartTime == 0) {
@@ -89,13 +90,13 @@ public abstract class BaseParameter {
 					e.printStackTrace();
 				}
 			}
-			
+
 			return lStartTime + deltaTime*tick + offset; 
 		}
 		else if (fixedTimes != null) {
 			return fixedTimes.get(tick) + offset;
 		}
-		
+
 		return (new Date()).getTime() + offset;
 	}
 }

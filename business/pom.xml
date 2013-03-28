@@ -35,7 +35,7 @@
     <module>business-websockets</module>
     <module>business-api</module>    
     <module>business-groundstation</module>
-<!--     <module>business-antenna-connector</module> -->
+    <module>business-celestrack</module>
     
     <module>simple-parameter-simulator</module>
 

@@ -1,8 +1,7 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-        xsi:schemaLocation="
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
        http://www.springframework.org/schema/context
@@ -10,82 +9,63 @@
        http://camel.apache.org/schema/spring
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-        <import resource="injection.xml"/>
+	<import resource="core-parts.xml" />
 
-        <bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponentDriver"/>
-
-        <bean id="monitoring" class="org.hbird.business.systemmonitoring.SystemMonitorComponent">
-                <constructor-arg index="0" value="SystemMonitoring"/>
-        </bean>
-        <bean id="archive" class="org.hbird.business.archive.ArchiveComponent">
-                <constructor-arg index="0" value="Archiver"/>
-        </bean>
-
-        <bean id="taskExecutor" class="org.hbird.business.taskexecutor.TaskExecutionComponent">
-                <constructor-arg index="0" value="TaskExecutor"/>
-        </bean>
-
-        <bean id="commanding" class="org.hbird.business.commanding.CommandingComponent">
-                <constructor-arg index="0" value="CommandReleaser"/>
-        </bean>
-
-        <bean id="navigation" class="org.hbird.business.navigation.NavigationComponent">
-                <constructor-arg index="0" value="Navigation"/>
-        </bean>
-
-        <bean id="startMonitoring" class="org.hbird.exchange.configurator.StartComponent">
-                <constructor-arg index="0" value="CoreSystem"/>
-                <constructor-arg index="1" ref="monitoring"/>
-        </bean>
-
-        <bean id="startArchive" class="org.hbird.exchange.configurator.StartComponent">
-                <constructor-arg index="0" value="CoreSystem"/>
-                <constructor-arg index="1" ref="archive"/>
-        </bean>
-
-        <bean id="startTaskExecutor" class="org.hbird.exchange.configurator.StartComponent">
-                <constructor-arg index="0" value="CoreSystem"/>
-                <constructor-arg index="1" ref="taskExecutor"/>
-        </bean>
-
-        <bean id="startCommanding" class="org.hbird.exchange.configurator.StartComponent">
-                <constructor-arg index="0" value="CoreSystem"/>
-                <constructor-arg index="1" ref="commanding"/>
-        </bean>
-
-        <bean id="startNavigation" class="org.hbird.exchange.configurator.StartComponent">
-                <constructor-arg index="0" value="CoreSystem"/>
-                <constructor-arg index="1" ref="navigation"/>
-        </bean>
-                <bean id="components" class="java.util.ArrayList">
-                <constructor-arg>
-                        <list>
-                                <ref bean="startMonitoring" />
-                                <ref bean="startArchive" />
-                                <ref bean="startCommanding" />
-                                <ref bean="startTaskExecutor" />
-                                <ref bean="startNavigation" />
-                        </list>
-                </constructor-arg>
-        </bean>
+	<!-- Start the configurator. 
+	     The configurator is the component that initializes and starts the drivers of all other components. 
+	     Calling the init method will create a configurator driver, and the routes to receive StartComponent 
+	     requests through ActiveMQ. -->	
+	<bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponent" init-method="init"/>
 
 
-        <bean id="loader" class="org.hbird.business.metadatapublisher.ObjectPublisher">
-                <property name="objects" ref="components" />
-        </bean>
+	<!-- Create the components and assign them to the Mission Operation Centre ('moc') part imported from 'core-parts.xml' -->
+	<bean id="monitoring" class="org.hbird.business.systemmonitoring.SystemMonitorComponent">
+		<constructor-arg value="SystemMonitoring" />
+		<property name="isPartOf" ref="moc" />
+	</bean>
+	
+	<bean id="archive" class="org.hbird.business.archive.ArchiveComponent">
+		<constructor-arg value="Archive" />
+		<property name="isPartOf" ref="moc" />
+	</bean>
 
-        <camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
+	<bean id="taskExecutor" class="org.hbird.business.taskexecutor.TaskExecutionComponent">
+		<constructor-arg value="Task Executor" />
+		<property name="isPartOf" ref="moc" />	
+	</bean>
 
-                <routeContextRef ref="injectionRoutes"/>
+	<bean id="commanding" class="org.hbird.business.commanding.CommandingComponent">
+		<constructor-arg value="Command Releaser" />
+		<property name="isPartOf" ref="moc" />
+	</bean>
 
-                <route id="initiator">
-                        <from uri="timer:initator?repeatCount=1" />
-                        <split>
-                                <method bean="loader" />
-                                <to uri="direct:injection" />
-                        </split>
-                </route>
+	<bean id="navigation" class="org.hbird.business.navigation.NavigationComponent">
+		<constructor-arg value="Orbit Prediction" />
+		<property name="isPartOf" ref="moc" />
+	</bean>
 
-        </camelContext>
+
+	<!-- Create a component to publish the parts we have created. The init-method will trigger the publication to ActiveMQ.
+	
+		 The published will wrap the parts that are 'Startable' in a StartComponent command. Notice that the 'configurator' 
+		 is not part of this list. It has to be started before this component is started. The configurator is the 
+		 destination of the StartComponent commands. -->
+	<bean id="starter" class="org.hbird.business.metadatapublisher.NamedObjectPublisher" init-method="start">
+		<constructor-arg index="0" value="SystemCore"/>
+		<constructor-arg index="1">
+			<list>
+				<ref bean="root" />
+				<ref bean="satellites" />
+				<ref bean="groundstations" />
+				<ref bean="moc" />				
+				<ref bean="monitoring" />
+				<ref bean="archive" />
+				<ref bean="taskExecutor" />
+				<ref bean="commanding" />
+				<ref bean="navigation" />
+			</list>
+		</constructor-arg>
+	</bean>
+
 </beans>
 

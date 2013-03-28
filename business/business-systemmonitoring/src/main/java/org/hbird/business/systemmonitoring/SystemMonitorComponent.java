@@ -53,7 +53,7 @@ public class SystemMonitorComponent extends StartablePart {
 	public SystemMonitorComponent(String name, String driver) {
 		super(name, "Component for monitoring the system resources, such as CPU and memory usages.", driver);
 	}
-	
+
 	public SystemMonitorComponent(String name) {
 		super(name, "Component for monitoring the system resources, such as CPU and memory usages.", SystemMonitorComponentDriver.class.getName());
 	}

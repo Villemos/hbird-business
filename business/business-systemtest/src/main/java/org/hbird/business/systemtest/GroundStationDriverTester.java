@@ -35,7 +35,7 @@ package org.hbird.business.systemtest;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.core.InMemoryScheduler;
+import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.groundstation.Antenna;
@@ -43,9 +43,6 @@ import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 
-import eu.estcube.gs.base.HamlibDriver;
-import eu.estcube.gs.base.Verifier;
-import eu.estcube.gs.hamlib.HamlibDriverConfiguration;
 import eu.estcube.gs.radio.HamlibRadioPart;
 import eu.estcube.gs.rotator.HamlibRotatorPart;
 
@@ -78,25 +75,8 @@ public class GroundStationDriverTester extends SystemTest {
         radio.setIsPartOf(antenna);
         radio.setFailOldRequests(false);
         
-        /** Create a verifier, which we need for the Drivers*/
-        Verifier verifier = new Verifier();
-        
-        /** Add Radio and Rotator drivers. */
-        
-        /** ./rigctld -m 1 -t 4532 */
-        HamlibDriver radioDriver = new HamlibDriver("ES5EC", radio, verifier, new InMemoryScheduler(context.createProducerTemplate(), "direct:injection.radio"));
-        radioDriver.setConfig(new HamlibDriverConfiguration("eu.estcube.gs.radio", "0.0.1-SNAPSHOT", 3000, "ES5EC", "dummy", "RADIO", 4532, "localhost",  60000l, 1000, 2));
-        radioDriver.setContext(context);
-        radioDriver.setFailOnOldCommand(false);
-        radioDriver.init();
-        
-        /** ./rotctld -m 1 -t 4533 */
-        HamlibDriver rotatorDriver = new HamlibDriver("ES5EC", rotator, verifier, new InMemoryScheduler(context.createProducerTemplate(), "direct:injection.rotator"));
-        rotatorDriver.setConfig(new HamlibDriverConfiguration("eu.estcube.gs.rotator", "0.0.1-SNAPSHOT", 3000, "ES5EC", "dummy", "ROTATOR", 4533, "localhost",  60000l, 1000, 2));        
-        rotatorDriver.setContext(context);
-        rotatorDriver.setFailOnOldCommand(false);
-        rotatorDriver.init();
-
+        publishApi.publish(new StartComponent(rotator.getName(), rotator));
+        publishApi.publish(new StartComponent(radio.getName(), radio));
 
         /** Give the driver a second to start. */
         Thread.sleep(5000);

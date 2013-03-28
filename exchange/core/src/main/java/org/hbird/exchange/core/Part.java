@@ -68,11 +68,26 @@ public class Part extends Named implements IPart {
 		Part.parts.put(name, this);
 	}
 
+	public Part(String name, String description, IPart isPartOf) {
+		super("System", name, "Part", description);
+		this.card = new BusinessCard(name, null);
+		Part.parts.put(name, this);
+		parent = isPartOf;
+	}
+
 	public Part(String name, String description, List<Command> commands) {
 		super("System", name, "Part", description);
 		this.commands = commands;
 		this.card = new BusinessCard(name, commands);
 		Part.parts.put(name, this);
+	}
+
+	public Part(String name, String description, IPart isPartOf, List<Command> commands) {
+		super("System", name, "Part", description);
+		this.commands = commands;
+		this.card = new BusinessCard(name, commands);
+		Part.parts.put(name, this);
+		parent = isPartOf;
 	}
 
 	/* (non-Javadoc)

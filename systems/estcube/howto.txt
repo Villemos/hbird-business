@@ -7,3 +7,7 @@ Update the version ID in the following files
 To package:
 Run 'mvn assembly:assembly' from the command line. This will create the zip file.
 
+To Start Hamlib Emulators
+./rigctld -m 1 -t 4532 -vvvv
+./rotctld -m 1 -t 4533 -vvvv
+        

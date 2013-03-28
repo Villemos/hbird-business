@@ -37,7 +37,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.hbird.business.navigation.orekit.NavigationUtilities;
-import org.hbird.exchange.groundstation.Antenna;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.NativeCommand;
 import org.hbird.exchange.groundstation.Rotator;
@@ -80,8 +79,10 @@ public class HamlibRotatorPart extends Rotator {
      * @param minElevation
      * @param maxElevation
      */
-    public HamlibRotatorPart(String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation) {
+    public HamlibRotatorPart(String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation, long port, String host) {
         super(name, thresholdElevation, minAzimuth, maxAzimuth, minElevation, maxElevation, HamlibRotatorDriver.class.getName());
+        this.port = port;
+        this.host = host;
     }
 
     protected long preDelta = 10000;
@@ -91,6 +92,9 @@ public class HamlibRotatorPart extends Rotator {
     protected boolean failOldRequests = true;
 
     protected List<NativeCommand> commands = null;
+
+    protected long port;
+    protected String host;
     
     /* (non-Javadoc)
      * @see org.hbird.exchange.navigation.ICommandableAntennaPart#parse(org.hbird.exchange.navigation.LocationContactEvent, org.hbird.exchange.navigation.LocationContactEvent, java.util.List)
@@ -166,6 +170,20 @@ public class HamlibRotatorPart extends Rotator {
     public void setFailOldRequests(boolean failOldRequests) {
         this.failOldRequests = failOldRequests;
     }
-    
-    
+
+	public long getPort() {
+		return port;
+	}
+
+	public void setPort(long port) {
+		this.port = port;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
 }

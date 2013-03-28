@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<import resource="groundstation-es5ec-parts.xml" />
+	<import resource="satellite-estcube1-parts.xml" />
+	
+	<bean id="tracking" class="org.hbird.business.tracking.TrackingComponent">
+		<constructor-arg index="0" value="ES5EC -> ESTCUBE" />
+		<constructor-arg index="1" value="The component automating the track of ESTCube-1 by ES5EC." />
+		<constructor-arg index="2" ref="estcube" />
+		<constructor-arg index="3" ref="es5ec" />
+		<property name="isPartOf" ref="moc" />
+	</bean>
+	
+	<!-- String issuedBy, String name, String description, long executionDelay, long leadTime, String satellite, List<String> locations -->
+	<bean id="propagationtask" class="org.hbird.business.navigation.controller.OrbitPropagationController">
+		<constructor-arg index="0" value="SysteCore" />
+		<constructor-arg index="1" value="ESTCube-1 Orbit Propagator" />
+		<constructor-arg index="2" value="Propagator of the orbit of ESTCube-1 and the generation of contact events to ES5EC" />
+		<constructor-arg index="3" value="60000" />
+		<constructor-arg index="4" value="3600000" />
+		<constructor-arg index="5" ref="estcube" />
+		<constructor-arg index="6">
+			<list>
+				<ref bean="es5ec" />
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<!-- Publish the parts of the ground station -->
+	<bean id="starter" class="org.hbird.business.metadatapublisher.NamedObjectPublisher" init-method="start">
+		<constructor-arg index="0" value="SystemCore"/>
+		<constructor-arg index="1">
+			<list>
+				<ref bean="tracking" />
+				<ref bean="propagationtask" />
+			</list>
+		</constructor-arg>
+	</bean>
+
+</beans>

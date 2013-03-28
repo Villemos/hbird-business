@@ -21,6 +21,7 @@ import java.util.Date;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.interfaces.IPart;
 
 /**
  * A linearly changing parameter. The value is calculated as
@@ -54,7 +55,7 @@ public class LinearParameter extends BaseParameter {
 	 * @param modolus The delta time at which the value resets.
 	 * @param name The name of the parameter to be generated.
 	 */
-	public LinearParameter(String issuedBy, String name, String description, String unit, double intercept, double deltaFrequency, long modolus) {
+	public LinearParameter(IPart issuedBy, String name, String description, String unit, double intercept, double deltaFrequency, long modolus) {
 		super(issuedBy, name, description);
 		this.intercept = intercept;
 		this.deltaFrequency = deltaFrequency;	

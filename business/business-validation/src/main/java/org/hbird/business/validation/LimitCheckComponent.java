@@ -35,6 +35,7 @@ package org.hbird.business.validation;
 import org.hbird.business.validation.bean.LimitCheckComponentDriver;
 import org.hbird.exchange.core.StartablePart;
 import org.hbird.exchange.validation.Limit;
+import org.hbird.exchange.validation.Limit.eLimitType;
 
 /**
  * @author Admin
@@ -63,6 +64,12 @@ public class LimitCheckComponent extends StartablePart {
 		this.limit = limit;
 	}
 
+	public LimitCheckComponent(String name, String limitName, eLimitType type, String ofParameter, Double value, String stateName, String stateDescription) {
+		super(name, "A limit check component", LimitCheckComponentDriver.class.getName());
+
+		this.limit = new Limit(type, ofParameter, value, stateName, stateDescription);
+	}
+
 	public Limit getLimit() {
 		return limit;
 	}
@@ -70,6 +77,4 @@ public class LimitCheckComponent extends StartablePart {
 	public void setLimit(Limit limit) {
 		this.limit = limit;
 	}
-	
-	
 }

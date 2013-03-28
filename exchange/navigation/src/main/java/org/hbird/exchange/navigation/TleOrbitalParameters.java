@@ -66,6 +66,14 @@ public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 		this.tleLine2 = tleLine2;		
 	}
 
+	public TleOrbitalParameters(String issuedBy, String name, Satellite satellite, String tleLine1, String tleLine2) {
+		super(issuedBy, name, "Config", "The TLE state of the satellite.");
+		
+		this.satellite = satellite.getQualifiedName();
+		this.tleLine1 = tleLine1;
+		this.tleLine2 = tleLine2;		
+	}
+
 	public String getSatelliteName() {
 		return satellite;
 	}

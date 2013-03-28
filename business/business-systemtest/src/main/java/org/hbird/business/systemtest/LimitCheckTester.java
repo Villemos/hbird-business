@@ -20,9 +20,7 @@ import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.business.validation.LimitCheckComponent;
 import org.hbird.exchange.configurator.StartComponent;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Part;
-import org.hbird.exchange.interfaces.IStartablePart;
 import org.hbird.exchange.validation.Limit;
 import org.hbird.exchange.validation.Limit.eLimitType;
 

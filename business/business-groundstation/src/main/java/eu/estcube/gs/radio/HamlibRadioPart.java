@@ -73,8 +73,10 @@ public class HamlibRadioPart extends RadioDevice {
      * @param isDownlink
      * @param gain
      */
-    public HamlibRadioPart(String name, long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain) {
+    public HamlibRadioPart(String name, long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain, long port, String host) {
         super(name, minFrequency, maxFrequency, isUplink, isDownlink, gain, HamlibDriver.class.getName());
+        this.port = port;
+        this.host = host;
     }
 
     protected long preDelta = 10000;
@@ -83,6 +85,9 @@ public class HamlibRadioPart extends RadioDevice {
 
     protected boolean failOldRequests = true;
 
+    protected long port;
+    protected String host;
+    
     /* (non-Javadoc)
      * @see org.hbird.exchange.navigation.ICommandableAntennaPart#parse(org.hbird.exchange.navigation.LocationContactEvent, org.hbird.exchange.navigation.LocationContactEvent, java.util.List)
      */
@@ -154,6 +159,20 @@ public class HamlibRadioPart extends RadioDevice {
     public void setFailOldRequests(boolean failOldRequests) {
         this.failOldRequests = failOldRequests;
     }
-    
-    
+
+	public long getPort() {
+		return port;
+	}
+
+	public void setPort(long port) {
+		this.port = port;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
 }

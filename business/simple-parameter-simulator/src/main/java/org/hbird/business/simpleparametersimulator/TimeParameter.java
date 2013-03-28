@@ -20,10 +20,11 @@ import java.util.Date;
 
 import org.apache.camel.Handler;
 import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.interfaces.IPart;
 
 public class TimeParameter extends BaseParameter {
 
-	public TimeParameter(String issuedBy, String name, String description, String unit) {
+	public TimeParameter(IPart issuedBy, String name, String description, String unit) {
 		super(issuedBy, name, description, 0d, unit);
 	}
 

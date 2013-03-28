@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<import resource="core-parts.xml" />
+
+	<bean id="estcube" class="org.hbird.exchange.navigation.Satellite">
+		<constructor-arg index="0" value="ESTCube-1" />
+		<constructor-arg index="1" value="The mission objectives of the ESTCube-1 mission are: 1. To test the deployment of a 10 meter Hoytether as a part of the development work of the Electric solar wind sail. http://www.electric-sailing.com/, 2. To measure the electric sail force, interacting with the tether, 3. To take a picture of the deployed tether, 4. To take a picture of the Earth as a secondary mission objective." />
+		<property name="isPartOf" ref="satellites"/>
+	</bean>
+
+	<bean id="battery" class="org.hbird.exchange.core.Part">
+		<constructor-arg index="0" value="Battery" />
+		<constructor-arg index="1" value="The battery board" />
+		<property name="isPartOf" ref="estcube"/>
+	</bean>
+
+	<!-- String issuedBy, String name, Satellite satellite, String tleLine1, String tleLine2 -->
+	<bean id="tle" class="org.hbird.exchange.navigation.TleOrbitalParameters">
+		<constructor-arg index="0" value="CoreSystem"/>
+		<constructor-arg index="1" value="Tle Parameters of ESTCube-1"/>			
+		<constructor-arg index="2" ref="estcube"/>
+		<constructor-arg index="3" value="1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478"/>
+		<constructor-arg index="4" value="2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935"/>		
+	</bean>
+
+</beans>

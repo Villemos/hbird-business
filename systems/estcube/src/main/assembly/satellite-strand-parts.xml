@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<import resource="core-parts.xml" />
+
+	<bean id="strand" class="org.hbird.exchange.navigation.Satellite">
+		<constructor-arg index="0" value="Strand" />
+		<constructor-arg index="1" value="SSTL PhoneSat" />
+		<property name="isPartOf" ref="satellites"/>
+	</bean>
+
+	<!-- String issuedBy, String name, Satellite satellite, String tleLine1, String tleLine2 -->
+	<bean id="tle" class="org.hbird.exchange.navigation.TleOrbitalParameters">
+		<constructor-arg index="0" value="CoreSystem"/>
+		<constructor-arg index="1" value="Tle Parameters of Strand"/>			
+		<constructor-arg index="2" ref="strand"/>
+		<constructor-arg index="3" value="1 39090U 13009E   13083.97990177  .00000074  00000-0  42166-4 0   342"/>
+		<constructor-arg index="4" value="2 39090  98.6360 274.2877 0009214 187.6058 172.4992 14.34286321  3925"/>		
+	</bean>
+
+</beans>

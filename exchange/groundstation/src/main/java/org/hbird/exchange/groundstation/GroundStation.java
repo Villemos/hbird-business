@@ -136,4 +136,8 @@ public class GroundStation extends Part implements IGroundStationSpecific {
 	public void addAntenna(Antenna antenna) {
 		antennas.add(antenna);
 	}
+		
+	public void setAntenna(Antenna antenna) {
+		antennas.add(antenna);
+	} 
 }

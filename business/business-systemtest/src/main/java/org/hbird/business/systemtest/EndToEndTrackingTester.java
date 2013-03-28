@@ -37,14 +37,11 @@ import java.util.List;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.core.InMemoryScheduler;
 import org.hbird.business.navigation.controller.OrbitPropagationController;
+import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.groundstation.Antenna;
 
-import eu.estcube.gs.base.HamlibDriver;
-import eu.estcube.gs.base.Verifier;
-import eu.estcube.gs.hamlib.HamlibDriverConfiguration;
 import eu.estcube.gs.radio.HamlibRadioPart;
 import eu.estcube.gs.rotator.HamlibRotatorPart;
 
@@ -90,23 +87,8 @@ public class EndToEndTrackingTester extends SystemTest {
         radio.setIsPartOf(antenna);
         radio.setFailOldRequests(false);
         
-        /** Create a verifier, which we need for the Drivers*/
-        Verifier verifier = new Verifier();
-
-        /** ./rigctld -m 1 -t 4532 */
-        HamlibDriver radioDriver = new HamlibDriver("ES5EC", radio, verifier, new InMemoryScheduler(context.createProducerTemplate(), "direct:injection.radio"));
-        radioDriver.setConfig(new HamlibDriverConfiguration("eu.estcube.gs.radio", "0.0.1-SNAPSHOT", 3000, "ES5EC", "dummy", "RADIO", 4532, "localhost",  60000l, 1000, 2));
-        radioDriver.setContext(context);
-        radioDriver.setFailOnOldCommand(false);
-        radioDriver.init();
-        
-        /** ./rotctld -m 1 -t 4533 */
-        HamlibDriver rotatorDriver = new HamlibDriver("ES5EC", rotator, verifier, new InMemoryScheduler(context.createProducerTemplate(), "direct:injection.rotator"));
-        rotatorDriver.setConfig(new HamlibDriverConfiguration("eu.estcube.gs.rotator", "0.0.1-SNAPSHOT", 3000, "ES5EC", "dummy", "ROTATOR", 4533, "localhost",  60000l, 1000, 2));        
-        rotatorDriver.setContext(context);
-        rotatorDriver.setFailOnOldCommand(false);
-        rotatorDriver.init();
-
+        publishApi.publish(new StartComponent(rotator.getName(), rotator));
+        publishApi.publish(new StartComponent(radio.getName(), radio));
 
         /** Give the driver a second to start. */
         Thread.sleep(5000);
@@ -121,7 +103,7 @@ public class EndToEndTrackingTester extends SystemTest {
 		 *  Lead Time (frequency of check whether orbit needs to be propagated) to 60 minutes.
 		 *  Interval (the time for which orbit data must as a minimum be available) to 6es hours.
 		 * */
-		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 60 * 1000, 6 * 60 * 60 * 1000, es5ec.getQualifiedName(), locations);
+		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 60 * 1000, 6 * 60 * 60 * 1000, estcube1, locations);
 		task.setRepeat(0);
 		injection.sendBody(task);
         

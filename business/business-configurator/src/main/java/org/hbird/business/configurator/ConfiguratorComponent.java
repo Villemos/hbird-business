@@ -60,4 +60,14 @@ public class ConfiguratorComponent extends StartablePart {
 	public ConfiguratorComponent(String name, String driver) {
 		super(name, "A component for starting other component.", driver);
 	}
+
+	/**
+	 */
+	public ConfiguratorComponent() {
+		this("Configurator", ConfiguratorComponentDriver.class.getName());
+	}
+
+	public void init() {
+		new ConfiguratorComponentDriver();
+	}
 }

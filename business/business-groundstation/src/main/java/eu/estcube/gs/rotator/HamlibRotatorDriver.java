@@ -32,13 +32,7 @@
  */
 package eu.estcube.gs.rotator;
 
-import org.hbird.business.core.InMemoryScheduler;
-import org.hbird.exchange.interfaces.IStartablePart;
-
 import eu.estcube.gs.base.HamlibDriver;
-import eu.estcube.gs.base.Verifier;
-import eu.estcube.gs.hamlib.HamlibDriverConfiguration;
-import eu.estcube.gs.hamlib.HamlibIO;
 import eu.estcube.gs.rotator.parameters.GetPosition;
 
 /**
@@ -47,17 +41,6 @@ import eu.estcube.gs.rotator.parameters.GetPosition;
  */
 public class HamlibRotatorDriver extends HamlibDriver {
 
-    /**
-     * @param groundstationId
-     * @param part
-     * @param verifier
-     * @param inMemoryScheduler-
-     */
-    public HamlibRotatorDriver(String groundstationId, IStartablePart part, Verifier verifier, InMemoryScheduler inMemoryScheduler) {
-        super(groundstationId, part, verifier, inMemoryScheduler);
-    }
-
-    
     @Override
     public void doConfigure() {
         super.doConfigure();
@@ -67,9 +50,17 @@ public class HamlibRotatorDriver extends HamlibDriver {
         /** Configure the monitoring routes. */
         from("timer://foo?period=3000")
             .bean(getPosition, "create")
-            .inOut(HamlibIO.getDeviceDriverUrl((HamlibDriverConfiguration) config))
+            .inOut("netty:tcp://" + getAddress())
             .split().method(getPosition, "parse")
                 .to("direct:parameters." + part.getQualifiedName("."));
             
-    }    
+    }
+
+	/* (non-Javadoc)
+	 * @see eu.estcube.gs.base.HamlibDriver#getAddress()
+	 */
+	@Override
+	public String getAddress() {
+		return ((HamlibRotatorPart) part).getHost() + ":" + ((HamlibRotatorPart) part).getPort();
+	}        
 }

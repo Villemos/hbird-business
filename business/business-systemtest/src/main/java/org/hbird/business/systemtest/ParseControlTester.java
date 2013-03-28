@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.jms.InvalidSelectorException;
 import javax.management.MalformedObjectNameException;
@@ -12,10 +11,7 @@ import javax.management.openmbean.OpenDataException;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IQueueManagement;
 import org.hbird.business.navigation.controller.OrbitPropagationController;
-import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.LocationContactEvent;
 
@@ -49,7 +45,7 @@ public class ParseControlTester extends SystemTest {
 		forceCommit();
 
 		/** Create a controller task and inject it. */
-		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000, estcube1.getQualifiedName(), locations);
+		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000, estcube1, locations);
 		injection.sendBody(task);
 
 		Thread.sleep(1000);

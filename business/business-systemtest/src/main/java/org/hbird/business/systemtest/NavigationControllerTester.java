@@ -40,7 +40,7 @@ public class NavigationControllerTester extends SystemTest {
 		forceCommit();
 		
 		/** Create a controller task and inject it. */
-		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 180 * 1000, estcube1.getQualifiedName(), locations);
+		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 180 * 1000, estcube1, locations);
 		task.setRepeat(3);
 		injection.sendBody(task);
 		

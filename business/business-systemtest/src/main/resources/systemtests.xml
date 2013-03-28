@@ -56,6 +56,7 @@
 	<bean id="endtoendtracking" class="org.hbird.business.systemtest.EndToEndTrackingTester" parent="testerTemplate"/>
 	<bean id="strandtracking" class="org.hbird.business.systemtest.StrandTrackingTester" parent="testerTemplate"/>
 	<bean id="inmemoryscheduler" class="org.hbird.business.systemtest.InMemorySchedulerTester" parent="testerTemplate"/>
+	<bean id="celestrack" class="org.hbird.business.systemtest.CelestrackTester" parent="testerTemplate"/>
 	<bean id="finisher" class="org.hbird.business.systemtest.Finisher" parent="testerTemplate"/>
 						
 	<bean id="scheduler" class="org.hbird.business.core.Scheduler"/>
@@ -90,7 +91,8 @@
 <!-- 				<to uri="bean:inmemoryscheduler" /> -->
 <!-- 	 			<to uri="bean:groundstationdriver" /> -->
 <!-- 	 			<to uri="bean:endtoendtracking" /> -->
-	 			<to uri="bean:strandtracking" />
+<!-- 	 			<to uri="bean:strandtracking" /> -->
+	 			<to uri="bean:celestrack" />
 <!-- 	 			<to uri="bean:jmstester" /> -->
 	 			<to uri="bean:finisher" />
 		</route>

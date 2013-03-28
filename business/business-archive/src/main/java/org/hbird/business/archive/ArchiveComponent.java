@@ -42,6 +42,7 @@ import org.hbird.exchange.dataaccess.OrbitalStateRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
+import org.hbird.exchange.interfaces.IPart;
 
 /**
  * @author Admin
@@ -70,7 +71,7 @@ public class ArchiveComponent extends StartablePart {
 	public ArchiveComponent(String name) {
 		super(name, "The archive of data", ArchiveComponentDriver.class.getName());
 	}
-
+	
     {
         commands.add(new CommitRequest("", ""));
         commands.add(new DataRequest("", ""));

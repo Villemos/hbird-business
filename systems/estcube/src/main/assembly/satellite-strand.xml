@@ -9,19 +9,16 @@
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<import resource="groundstation-es5ec-parts.xml" />
-			
-	<!-- Publish the parts of the ground station -->
+	<import resource="satellite-strand-parts.xml" />
+	
 	<bean id="starter" class="org.hbird.business.metadatapublisher.NamedObjectPublisher" init-method="start">
 		<constructor-arg index="0" value="SystemCore"/>
 		<constructor-arg index="1">
-			<list>
-				<ref bean="antenna" />
-				<ref bean="es5ec" />
-				<ref bean="rotator" />
-				<ref bean="radio" />
-			</list>
-		</constructor-arg>
+        	<list>
+ 		       	<ref bean="tle"/>
+            	<ref bean="strand" />
+         	</list>
+	    </constructor-arg>
 	</bean>
-			
+
 </beans>

@@ -19,7 +19,6 @@ package org.hbird.exchange.navigation;
 
 import java.util.Date;
 
-import org.hbird.exchange.core.DerivedNamed;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 

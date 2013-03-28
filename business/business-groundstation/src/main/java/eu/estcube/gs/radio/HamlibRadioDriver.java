@@ -30,56 +30,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.tracking;
+package eu.estcube.gs.radio;
 
-import org.hbird.business.tracking.bean.TrackingComponentDriver;
-import org.hbird.exchange.core.StartablePart;
-import org.hbird.exchange.interfaces.IPart;
-
+import eu.estcube.gs.base.HamlibDriver;
 
 /**
  * @author Admin
  *
  */
-public class TrackingComponent extends StartablePart {
+public class HamlibRadioDriver extends HamlibDriver {
 
-	/**
-	 * 
+    @Override
+    public void doConfigure() {
+        super.doConfigure();
+                    
+    }
+
+	/* (non-Javadoc)
+	 * @see eu.estcube.gs.base.HamlibDriver#getAddress()
 	 */
-	private static final long serialVersionUID = 8231598458372644L;
-
-	protected String satellite;
-	
-	protected String antenna;
-	
-	/**
-	 * @param name
-	 * @param description
-	 * @param commands
-	 */
-	public TrackingComponent(String name, String description, String satellite, String antenna, String driver) {
-		super(name, description, driver);
-		this.satellite = satellite;
-		this.antenna = antenna;
-	}
-
-	public TrackingComponent(String name, String description, String satellite, String antenna) {
-		super(name, description, TrackingComponentDriver.class.getName());
-		this.satellite = satellite;
-		this.antenna = antenna;
-	}
-
-	public TrackingComponent(String name, String description, IPart satellite, IPart antenna) {
-		super(name, description, TrackingComponentDriver.class.getName());
-		this.satellite = satellite.getQualifiedName();
-		this.antenna = antenna.getQualifiedName();
-	}
-
-	public String getSatellite() {
-		return satellite;
-	}
-
-	public String getAntenna() {
-		return antenna;
-	}
+	@Override
+	public String getAddress() {
+		return ((HamlibRadioPart) part).getHost() + ":" + ((HamlibRadioPart) part).getPort();
+	}        
 }

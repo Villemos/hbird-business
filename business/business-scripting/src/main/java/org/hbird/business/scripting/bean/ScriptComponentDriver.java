@@ -20,8 +20,6 @@ import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.scripting.ScriptComponent;
 import org.hbird.exchange.configurator.StandardEndpoints;
-import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.scripting.ScriptExecutionRequest;
 
 /**
  * Component builder to create a script engine component.

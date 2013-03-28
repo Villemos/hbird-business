@@ -25,7 +25,9 @@ import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.navigation.api.OrbitPropagation;
 import org.hbird.exchange.core.Named;
+import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.navigation.OrbitalState;
+import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.tasking.ControllerTask;
 import org.slf4j.Logger;
@@ -87,14 +89,24 @@ public class OrbitPropagationController extends ControllerTask {
 	 * @param satellite The satellite that the controller should predict the orbital data for
 	 * @param locations The locations tof which contact data should be calculated
 	 */
-	public OrbitPropagationController(String issuedBy, String name, String description, long executionDelay, long leadTime, String satellite, List<String> locations) {
+	public OrbitPropagationController(String issuedBy, String name, String description, long executionDelay, long leadTime, Satellite satellite, List<String> locations) {
 		super(issuedBy, name, description, executionDelay);
 		this.leadTime = leadTime;
-		this.satellite = satellite;
+		this.satellite = satellite.getQualifiedName();
 		this.locations = locations;
 	}
 
-	
+	public OrbitPropagationController(String issuedBy, String name, String description, long executionDelay, long leadTime, IPart satellite, List<IPart> locations) {
+		super(issuedBy, name, description, executionDelay);
+		this.leadTime = leadTime;
+		this.satellite = satellite.getQualifiedName();
+
+		this.locations = new ArrayList<String>();
+		for (IPart location : locations) {
+			this.locations.add(location.getQualifiedName());
+		}
+	}
+
 	/** Constructor using the default value of the lead time (6 hours) and using all known locations.
 	 * 
 	 * @param issuedBy The name of the component that started the task
@@ -107,7 +119,7 @@ public class OrbitPropagationController extends ControllerTask {
 		super(issuedBy, name, description, executionDelay);
 		this.satellite = satellite;
 	}
-	
+
 
 	@Override
 	protected List<Named> onFirstExecution() {
@@ -129,7 +141,7 @@ public class OrbitPropagationController extends ControllerTask {
 		/** Create local logger. Dont want to serialize the logger class hierachy when sending around this object... */
 		Logger LOG = LoggerFactory.getLogger(OrbitPropagationController.class);
 		LOG.info("Propagating orbit of satellite '" + satellite + "' (first execution).");
-		
+
 		/** Get the latest TLE */
 		IDataAccess api = ApiFactory.getDataAccessApi(this.name);
 		TleOrbitalParameters tleParameters = api.retrieveTleFor(satellite);
@@ -190,7 +202,7 @@ public class OrbitPropagationController extends ControllerTask {
 			long from = now;
 			long to = now + leadTime + executionDelay;
 			LOG.info("No state. Requesting TLE based from '" + from + "' (NOW) to '" + to + "'");
-			
+
 			doRequest(from, to);
 		}		
 		else if (now + leadTime + executionDelay > state.getTimestamp()) {
@@ -199,13 +211,13 @@ public class OrbitPropagationController extends ControllerTask {
 			long to = state.getTimestamp() + delta;
 
 			LOG.info("No state. Requesting TLE based from '" + from + "' to '" + to + "'");
-			
+
 			doRequest(from, to);
 		}
 
 		return new ArrayList<Named>();
 	}	
-	
+
 	/**
 	 * Helper method to send an orbital propagation request.
 	 * 

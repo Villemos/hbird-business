@@ -123,8 +123,8 @@ public abstract class SystemTest {
     	es5ec = new GroundStation("ES5EC", "The main control centre", geoLocationTartu);
     	es5ec.setIsPartOf(groundstations);
  
-        Rotator rotator = new HamlibRotatorPart("Rotator", 0, -90, 360, 0, 180);
-        RadioDevice radio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l); 
+        Rotator rotator = new HamlibRotatorPart("Rotator", 0, -90, 360, 0, 180, 4533, "localhost");
+        RadioDevice radio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l, 4532, "localhost"); 
     	Antenna antenna = new Antenna("Antenna1", "The prime antenna", rotator, radio);
     	es5ec.addAntenna(antenna);
     	antenna.setIsPartOf(es5ec);
@@ -187,8 +187,8 @@ public abstract class SystemTest {
     	gsAalborg.setIsPartOf(eGs);
     	gsAalborg.addAntenna(antenna);
 
-        Rotator darmstadtRotator = new HamlibRotatorPart("Rotator", 0, -90, 360, 0, 180);
-        RadioDevice darmstadtRadio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l); 
+        Rotator darmstadtRotator = new HamlibRotatorPart("Rotator", 0, -90, 360, 0, 180, 4533, "localhost");
+        RadioDevice darmstadtRadio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l, 4532, "localhost"); 
     	Antenna darmstadtAntenna = new Antenna("Antenna1", "The prime antenna of DARMSTADT", darmstadtRotator, darmstadtRadio);
         // D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
         D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.87D), Math.toRadians(8.64D), 59.0D);

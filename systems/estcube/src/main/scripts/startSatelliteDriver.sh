@@ -1,1 +1,0 @@
-java -jar -Dhbird.assembly=assemblies/satellite-estcube.xml -Dhbird.scriptlibrary=scripts -Dorekit.data.path=resources -Dlog4j.configuration=file:resources/log4j.properties -Dhbird.log=satellite hbird-0.7.0-SNAPSHOT.jar 

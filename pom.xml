@@ -522,6 +522,12 @@
 				<version>${hbird.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>org.hbird.business</groupId>
+				<artifactId>business-celestrack</artifactId>			
+				<version>${hbird.version}</version>
+			</dependency>
+
 
 
 			<dependency>

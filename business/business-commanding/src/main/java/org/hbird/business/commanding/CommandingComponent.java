@@ -34,6 +34,7 @@ package org.hbird.business.commanding;
 
 import org.hbird.business.commanding.bean.CommandingComponentDriver;
 import org.hbird.exchange.core.StartablePart;
+import org.hbird.exchange.interfaces.IPart;
 
 
 /**

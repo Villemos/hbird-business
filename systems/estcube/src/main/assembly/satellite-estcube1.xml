@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<import resource="satellite-estcube1-parts.xml" />
+	
+	<!-- String name, String limitName, eLimitType type, String ofParameter, Number value, String stateName, String stateDescription -->
+	<bean id="limit.LowerRechargeRate" class="org.hbird.business.validation.LimitCheckComponent">
+		<constructor-arg index="0" value="LIM_LOWER_BATTERY_CURRENT"/>
+		<constructor-arg index="1" value="LIM_LOWER_BATTERY_CURRENT"/>
+		<constructor-arg index="2" value="Lower"/>
+		<constructor-arg index="3" value="Battery Charge Rate Current"/>
+		<constructor-arg index="4" value="9.6"/>
+		<constructor-arg index="5" value="To Low Recharge Rate"/>
+		<constructor-arg index="6" value="The lower limit of the Battery Charge Rate Current"/>
+	</bean>
+	
+	<!-- String componentname, String scriptname, String paraName, String paraDescription, String paraUnit, String bindings -->
+	<bean id="syntheticParameter.batteryRechargeTime" class="org.hbird.business.scripting.ScriptComponent">
+		<constructor-arg index="0" value="SCRIPT_BATTERY_RECHARGE_TIME"/>
+		<constructor-arg index="1" value="BatteryRechargeTime"/>
+		<constructor-arg index="2" value="Battery Recharge Time"/>
+		<constructor-arg index="3" value="The time until the battery is fully recharged."/>
+		<constructor-arg index="4" value="Seconds"/>
+		<constructor-arg index="5" value="Battery Capacity=capacity:Charging Efficiency=lostCharge:Battery Charge Rate Current=chargerOutput"/>	
+	</bean>
+		
+	<bean id="starter" class="org.hbird.business.metadatapublisher.NamedObjectPublisher" init-method="start">
+		<constructor-arg index="0" value="SystemCore"/>
+		<constructor-arg index="1">
+        	<list>
+ 		       	<ref bean="tle"/>
+            	<ref bean="estcube" />
+            	<ref bean="battery" />
+            	<ref bean="limit.LowerRechargeRate" />
+            	<ref bean="syntheticParameter.batteryRechargeTime"/>
+         	</list>
+	    </constructor-arg>
+	</bean>
+
+</beans>

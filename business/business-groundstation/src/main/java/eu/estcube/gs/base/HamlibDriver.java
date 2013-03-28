@@ -32,21 +32,11 @@
  */
 package eu.estcube.gs.base;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.camel.CamelContext;
 import org.apache.camel.LoggingLevel;
 import org.hbird.business.core.InMemoryScheduler;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.core.ConfigurationBase;
-import org.hbird.exchange.interfaces.IStartablePart;
-import org.springframework.beans.factory.annotation.Value;
-
-import eu.estcube.gs.hamlib.HamlibDriverConfiguration;
-import eu.estcube.gs.hamlib.HamlibIO;
 
 /**
  * Abstract base class for device drivers.
@@ -54,50 +44,13 @@ import eu.estcube.gs.hamlib.HamlibIO;
  * @author Gert Villemos
  * 
  */
-public class HamlibDriver extends SoftwareComponentDriver {
+public abstract class HamlibDriver extends SoftwareComponentDriver {
 
-    @Value("#{config}")
-    protected ConfigurationBase config;
+    protected Verifier verifier = new Verifier();
 
-    @Value("#{subdrivers}")
-    protected List<HamlibDriver> partDrivers = new ArrayList<HamlibDriver>();
-
-    @Value("#{context}")
-    protected CamelContext context = null;
-
-    protected String groundStationId;
-    protected Verifier verifier = null;
-    protected InMemoryScheduler inMemoryScheduler = null;
+    protected InMemoryScheduler inMemoryScheduler = new InMemoryScheduler(getContext().createProducerTemplate());
 
     protected boolean failOnOldCommand = true;
-
-    public HamlibDriver(String groundstationId, IStartablePart part, Verifier verifier, InMemoryScheduler inMemoryScheduler) {
-        this.groundStationId = groundstationId;
-        this.part = part;
-        this.verifier = verifier;
-        this.inMemoryScheduler = inMemoryScheduler;
-    }
-
-    /**
-     * Initialization method which can be used as part of the bean creation, for example <li><bean id="driver"
-     * class="eu.estcube.gs.GroundStationDriver" init-method="init"/></li>
-     */
-    public void init() {
-        try {
-            /** Add the routes of this driver. */
-            context.addRoutes(this);
-
-            /** Add the routes of any sub drivers. */
-            for (HamlibDriver subdriver : partDrivers) {
-                subdriver.init();
-            }
-
-            context.start();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void doConfigure() {
@@ -112,8 +65,7 @@ public class HamlibDriver extends SoftwareComponentDriver {
          * The NativeCommands are at their execution time read through the EXECUTION below.
          */
         from(StandardEndpoints.commands + "?selector=name='Track'")
-                .log("Received 'Track' command from '" + simple("${body.issuedBy}").getText() + "'with destination '" + groundStationId
-                        + "'. Will generate Hamlib commands for '" + name + "'")
+                .log("Received 'Track' command from '" + simple("${body.issuedBy}").getText() + "'. Will generate Hamlib commands for '" + name + "'")
                 .split().method(part, "track")
                 .setHeader("stage", simple("${body.stage}"))
                 .setHeader("derivedfrom", simple("${body.derivedfrom}"))
@@ -154,7 +106,7 @@ public class HamlibDriver extends SoftwareComponentDriver {
                 .setHeader("executiontime", simple("${body.executionTime}"))
                 .bean(new NativeCommandExtractor())
                 .log(LoggingLevel.INFO, "Sending command '" + simple("${body}").getText() + "' to " + name)
-                .inOut(HamlibIO.getDeviceDriverUrl((HamlibDriverConfiguration) config))
+                .inOut("netty:tcp://" + getAddress())
                 .removeHeader("AMQ_SCHEDULED_DELAY")
                 .to("direct:hbird" + nameDot + ".verification")
                 .routeId(name + ": Command execution");
@@ -181,31 +133,6 @@ public class HamlibDriver extends SoftwareComponentDriver {
         // @formatter: on
     }
 
-    public ConfigurationBase getConfig() {
-        return config;
-    }
-
-    public void setConfig(ConfigurationBase config) {
-        this.config = config;
-    }
-
-    public List<HamlibDriver> getPartDrivers() {
-        return partDrivers;
-    }
-
-    public void setPartDrivers(List<HamlibDriver> partDrivers) {
-        this.partDrivers = partDrivers;
-    }
-
-    public void addDriver(HamlibDriver driver) {
-        this.partDrivers.add(driver);
-    }
-
-    @Override
-    public void setContext(CamelContext context) {
-        this.context = context;
-    }
-
     public boolean isFailOnOldCommand() {
         return failOnOldCommand;
     }
@@ -213,4 +140,6 @@ public class HamlibDriver extends SoftwareComponentDriver {
     public void setFailOnOldCommand(boolean failOnOldCommand) {
         this.failOnOldCommand = failOnOldCommand;
     }
+    
+    public abstract String getAddress();
 }

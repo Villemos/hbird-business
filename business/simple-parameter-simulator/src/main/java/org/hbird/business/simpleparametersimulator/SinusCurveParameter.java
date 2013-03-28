@@ -21,6 +21,7 @@ import java.util.Date;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.interfaces.IPart;
 
 /**
  * Class for generating a parameter developing like a sinus curve. The value
@@ -75,7 +76,7 @@ public class SinusCurveParameter extends BaseParameter {
 	 * @param modolus
 	 * @param name
 	 */
-	public SinusCurveParameter(String issuedBy, String name, String description, String unit, double angularFrequency, double amplitude, double phase, double intercept, long modolus) {
+	public SinusCurveParameter(IPart issuedBy, String name, String description, String unit, double angularFrequency, double amplitude, double phase, double intercept, long modolus) {
 		super(issuedBy, name, description);
 		this.angularFrequency = angularFrequency;
 		this.amplitude = amplitude;
