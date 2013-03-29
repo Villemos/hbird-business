@@ -38,9 +38,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
 
-    // TODO - 27.03.2013, kimmell - remove and use BusinessCardSender.DEFAULT_INTERVAL instead?
-    public static final long DEFAULT_HEARTBEAT_INTERVAL = 5000L;
-
     private static Logger LOG = LoggerFactory.getLogger(SoftwareComponentDriver.class);
 
     /** The Start request of the component. */
@@ -61,26 +58,23 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        /** Default */
-        long heartbeat = DEFAULT_HEARTBEAT_INTERVAL;
-
         /** Get the part specification from the start request. */
         if (command != null) {
             part = command.getPart();
-            heartbeat = command.getHeartbeat();
         }
 
         if (part != null) {
             String qName = part.getQualifiedName();
+            long heartbeat = part.getHeartbeat();
             LOG.info("Starting driver for part '{}'.", qName);
 
             /** Setup the component specific services. */
             doConfigure();
 
             /** Setup the BusinessCard */
-            // TODO - 27.03.2013, kimmell - fix mess with the heart beat intervals
-            BusinessCardSender cardSender = new BusinessCardSender(new BusinessCard(qName, part.getCommands()), heartbeat);
-            ProcessorDefinition<?> route = from(addTimer("businesscard", part.getHeartbeat())).bean(cardSender);
+            BusinessCard card = new BusinessCard(qName, part.getCommands(), heartbeat);
+            BusinessCardSender cardSender = new BusinessCardSender(card);
+            ProcessorDefinition<?> route = from(addTimer("businesscard", heartbeat)).bean(cardSender);
             addInjectionRoute(route);
         }
         else {

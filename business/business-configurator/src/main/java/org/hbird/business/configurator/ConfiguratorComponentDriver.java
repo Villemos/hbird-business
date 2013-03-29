@@ -32,6 +32,7 @@ import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.constants.StandardMissionEvents;
 import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.core.Event;
@@ -60,7 +61,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
      * @throws Exception
      */
     public void start() throws Exception {
-        start(new ConfiguratorComponent(ConfiguratorComponent.DEFAULT_COMPONENT_NAME, this.getClass().getName()));
+        start(new ConfiguratorComponent(StandardComponents.CONFIGURATOR, this.getClass().getName()));
     }
 
     public void start(ConfiguratorComponent part) throws Exception {
@@ -147,8 +148,11 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
                 .end();
 
         /** Setup the BusinessCard */
-        BusinessCardSender cardSender = new BusinessCardSender(new BusinessCard(part.getQualifiedName(), part.getCommands()), 5000L);
-        ProcessorDefinition<?> route = from(addTimer("businesscard", part.getHeartbeat())).bean(cardSender);
+        long heartbeat = part.getHeartbeat();
+
+        BusinessCard card = new BusinessCard(part.getQualifiedName(), part.getCommands(), heartbeat);
+        BusinessCardSender cardSender = new BusinessCardSender(card);
+        ProcessorDefinition<?> route = from(addTimer("businesscard", heartbeat)).bean(cardSender);
         addInjectionRoute(route);
 
         ProcessorDefinition<?> toEvents = from(ENDPOINT_TO_EVENTS);

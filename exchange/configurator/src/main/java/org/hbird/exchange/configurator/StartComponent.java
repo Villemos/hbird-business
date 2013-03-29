@@ -19,23 +19,26 @@ package org.hbird.exchange.configurator;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 public class StartComponent extends Command {
 
-    private static final long serialVersionUID = 3880066748415223278L;
+    private static final long serialVersionUID = -8017279911954733945L;
 
     public static final String DESC_STRING = "Request to start a component.";
 
+    public static final String ARGUMENT_DESCRIPTION_PART = "The system part that this command requests the start of.";
+
     public StartComponent(String issuedBy, String destination, IStartablePart part) {
-        super(issuedBy, destination, "StartComponent", DESC_STRING);
+        super(issuedBy, destination, StartComponent.class.getSimpleName(), DESC_STRING);
         addPart(part);
     }
 
     public StartComponent(String issuedBy, IStartablePart part) {
-        super(issuedBy, "Configurator", "StartComponent", DESC_STRING);
+        super(issuedBy, StandardComponents.CONFIGURATOR, StartComponent.class.getSimpleName(), DESC_STRING);
         addPart(part);
     }
 
@@ -44,30 +47,12 @@ public class StartComponent extends Command {
      */
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
-        args.add(new CommandArgument(StandardArguments.PART,
-                "The system part that this command requests the start of.",
-                IStartablePart.class,
-                true));
-        args.add(new CommandArgument(StandardArguments.HEART_BEAT, "The period between heartbeat signals (BusinessCards) from this component.", Long.class,
-                "Milliseconds", 5000L, true));
+        args.add(new CommandArgument(StandardArguments.PART, ARGUMENT_DESCRIPTION_PART, IStartablePart.class, true));
         return args;
     }
 
     protected void addPart(IStartablePart part) {
         setArgumentValue(StandardArguments.PART, part);
-    }
-
-    // TODO - 28.03.2013, kimmell - remove
-    protected void addHeartbeat(long period) {
-        setArgumentValue(StandardArguments.HEART_BEAT, period);
-    }
-
-    public void setHeartbeat(long period) {
-        addHeartbeat(period);
-    }
-
-    public long getHeartbeat() {
-        return getArgumentValue(StandardArguments.HEART_BEAT, Long.class);
     }
 
     public IStartablePart getPart() {

@@ -35,11 +35,11 @@ public class TaskingTester extends SystemTest {
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
 
-        Part limits = (Part) Part.getAllParts().get("Limits");
+        Part limits = parts.get("Limits");
         String parameterName = limits.getQualifiedName() + "/PARA1_LowerHardLimit/LIMIT";
-        
-        Part taskExecutor = (Part) Part.getAllParts().get("Task Executor");
-        		
+
+        Part taskExecutor = parts.get("Task Executor");
+
         /** Start two task executors. */
         startTaskComponent("TaskExecutor1");
         startTaskComponent("TaskExecutor2");
@@ -47,14 +47,16 @@ public class TaskingTester extends SystemTest {
         Thread.sleep(2000);
 
         /** Create simple task that sets a parameter. Is executed immediatly. */
-        injection.sendBody(new SetParameter("SystemTest", "SET_PARA1", "A test parameter set by a task", 0, parameterName, "A test parameter more", 9d, "Bananas"));
+        injection.sendBody(new SetParameter("SystemTest", "SET_PARA1", "A test parameter set by a task", 0, parameterName, "A test parameter more", 9d,
+                "Bananas"));
 
         Thread.sleep(2000);
 
         azzert(parameterListener.lastReceived.getName().equals(parameterName), "The 'Set' parameter was received,");
         Parameter out1 = (Parameter) parameterListener.lastReceived;
         azzert(out1.getValue().doubleValue() == 9.0d, "Value was 9 as expected.");
-        azzert(out1.getIssuedBy().equals(taskExecutor.getQualifiedName() + "/TaskExecutor1") || out1.getIssuedBy().equals(taskExecutor.getQualifiedName() + "/TaskExecutor2"), "It was issued by one of the two task executors.");
+        azzert(out1.getIssuedBy().equals(taskExecutor.getQualifiedName() + "/TaskExecutor1")
+                || out1.getIssuedBy().equals(taskExecutor.getQualifiedName() + "/TaskExecutor2"), "It was issued by one of the two task executors.");
 
         parameterListener.elements.clear();
 

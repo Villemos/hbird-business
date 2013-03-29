@@ -33,109 +33,85 @@
 package org.hbird.exchange.core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.interfaces.IPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A part is something that is 'part' of something else (... most likely).
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class Part extends Named implements IPart {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 577393462361927408L;
+    private static final long serialVersionUID = 4961124159238983376L;
 
-	protected IPart parent = null;
-	
-	protected BusinessCard card = null;
+    private static final Logger LOG = LoggerFactory.getLogger(Part.class);
 
-	protected List<Command> commands = new ArrayList<Command>();
-	
-	/** A list of all parts. */
-	protected static Map<String, Part> parts = new HashMap<String, Part>();
-		
-	public Part(String name, String description) {
-		super("System", name, "Part", description);
-		this.card = new BusinessCard(name, null);
-		Part.parts.put(name, this);
-	}
+    /** Parent of this {@link Part}. */
+    protected IPart parent;
 
-	public Part(String name, String description, IPart isPartOf) {
-		super("System", name, "Part", description);
-		this.card = new BusinessCard(name, null);
-		Part.parts.put(name, this);
-		parent = isPartOf;
-	}
+    /** Commands accepted by this {@link Part}. */
+    protected List<Command> commands = new ArrayList<Command>(0);
 
-	public Part(String name, String description, List<Command> commands) {
-		super("System", name, "Part", description);
-		this.commands = commands;
-		this.card = new BusinessCard(name, commands);
-		Part.parts.put(name, this);
-	}
+    public Part(String name, String description) {
+        this(name, description, (IPart) null);
+    }
 
-	public Part(String name, String description, IPart isPartOf, List<Command> commands) {
-		super("System", name, "Part", description);
-		this.commands = commands;
-		this.card = new BusinessCard(name, commands);
-		Part.parts.put(name, this);
-		parent = isPartOf;
-	}
+    public Part(String name, String description, IPart isPartOf) {
+        this(name, description, isPartOf, new ArrayList<Command>(0));
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IPartOf#getIsPartOf()
-	 */
-	@Override
-	public IPart getIsPartOf() {
-		return parent;
-	}
+    public Part(String name, String description, List<Command> commands) {
+        this(name, description, null, commands);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IPartOf#setIsPartOf(org.hbird.exchange.core.Named)
-	 */
-	@Override
-	public void setIsPartOf(IPart parent) {
-		if (parent == null) {
-			Logger.getLogger(Part.class).error("Attempting to set NULL parent for Part '" + this.getName() + "'. Likely a configuration error.");
-		}
-		else {
-			this.parent = parent;
-		}
-	}
+    public Part(String name, String description, IPart isPartOf, List<Command> commands) {
+        super(StandardComponents.SYSTEM, name, Part.class.getSimpleName(), description);
+        this.commands = commands;
+        this.parent = isPartOf;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IPart#getPartName()
-	 */
-	@Override
-	public String getQualifiedName() {
-		return getQualifiedName("/");
-	}
+    /**
+     * @see org.hbird.exchange.interfaces.IPartOf#getIsPartOf()
+     */
+    @Override
+    public IPart getIsPartOf() {
+        return parent;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IPart#getPartName()
-	 */
-	@Override
-	public String getQualifiedName(String separator) {
-		return parent == null ? separator + name : parent.getQualifiedName(separator) + separator + name;
-	}
+    /**
+     * @see org.hbird.exchange.interfaces.IPartOf#setIsPartOf(org.hbird.exchange.core.Named)
+     */
+    @Override
+    public void setIsPartOf(IPart parent) {
+        if (parent == null) {
+            // TODO - 29.03.2013, kimmell - throw IllegalArgumentException or RuntimeException here?
+            LOG.error("Attempting to set NULL parent for Part '{}'. Likely a configuration error.", this.getName());
+        }
+        else {
+            this.parent = parent;
+        }
+    }
 
-	public List<Command> getCommands() {
-		return commands;
-	}
+    /**
+     * @see org.hbird.exchange.interfaces.IPart#getPartName()
+     */
+    @Override
+    public String getQualifiedName(String separator) {
+        return parent == null ? separator + name : parent.getQualifiedName(separator) + separator + name;
+    }
 
-	public void setCommands(List<Command> commands) {
-		this.commands = commands;
-	}
+    @Override
+    public List<Command> getCommands() {
+        return commands;
+    }
 
-	public static Map<String, Part> getAllParts() {
-		return parts;
-	}
+    public void setCommands(List<Command> commands) {
+        this.commands = commands;
+    }
 }

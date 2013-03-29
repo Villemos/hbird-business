@@ -16,42 +16,39 @@
  */
 package org.hbird.exchange.core;
 
-
 /**
  * Class holding binary data.
  * 
  * @author Admin
- *
+ * 
  */
 public class Binary extends Named {
 
-	private static final long serialVersionUID = -5513523616365151215L;
+    private static final long serialVersionUID = -6631068705173628757L;
 
-	/** The raw binary data */
-	protected byte[] rawdata = null;
+    /** The raw binary data */
+    protected byte[] rawData = null;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param issuedBy The name of the system element that issued this binary data
-	 * @param name Name of this binary data
-	 * @param type The type of the data
-	 * @param description A description of the data
-	 * @param rawdata The raw data
-	 */
-	public Binary(String issuedBy, String name, String description, byte[] rawdata) {
-		super(issuedBy, name, "Payload", description);
-		
-		this.rawdata = rawdata;
-	}
+    /**
+     * Constructor
+     * 
+     * @param issuedBy The name of the system element that issued this binary data
+     * @param name Name of this binary data
+     * @param type The type of the data
+     * @param description A description of the data
+     * @param rawData The raw data
+     */
+    public Binary(String issuedBy, String name, String description, byte[] rawData) {
+        super(issuedBy, name, Binary.class.getSimpleName(), description);
 
-	public byte[] getRawdata() {
-		return rawdata;
-	}
+        this.rawData = rawData;
+    }
 
-	public void setRawdata(byte[] rawdata) {
-		this.rawdata = rawdata;
-	}
-	
-	
+    public byte[] getRawData() {
+        return rawData;
+    }
+
+    public void setRawData(byte[] rawData) {
+        this.rawData = rawData;
+    }
 }

@@ -19,17 +19,19 @@ package org.hbird.exchange.configurator;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 
 public class StopComponent extends Command {
 
     public static final String DESCRIPTION = "A command to stop a component in the configurator.";
+    public static final String ARGUMENT_DESCRIPTION_COMPONENT_NAME = "The name of the component to be stopped.";
 
-    private static final long serialVersionUID = 2311720104274270225L;
+    private static final long serialVersionUID = -2447358927849450763L;
 
     public StopComponent(String issuedBy, String componentToStop) {
-        super(issuedBy, "Configurator", StopComponent.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, StandardComponents.CONFIGURATOR, StopComponent.class.getSimpleName(), DESCRIPTION);
         setComponent(componentToStop);
     }
 
@@ -38,7 +40,7 @@ public class StopComponent extends Command {
      */
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
-        args.add(new CommandArgument(StandardArguments.COMPONENT_NAME, "The name of the component to be stopped.", String.class, true));
+        args.add(new CommandArgument(StandardArguments.COMPONENT_NAME, ARGUMENT_DESCRIPTION_COMPONENT_NAME, String.class, true));
         return args;
     }
 

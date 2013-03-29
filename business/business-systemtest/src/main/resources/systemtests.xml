@@ -79,7 +79,7 @@
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
-<!-- 				<to uri="bean:businesscard" /> -->
+ 				<to uri="bean:businesscard" /> 
 <!-- 				<to uri="bean:parameterarchive" /> -->
 <!-- 				<to uri="bean:statearchive" /> -->
 <!-- 	 			<to uri="bean:dataaccessapi" /> -->
@@ -96,7 +96,7 @@
 <!-- 	 			<to uri="bean:endtoendtracking" /> -->
 <!-- 	 			<to uri="bean:strandtracking" /> -->
 <!-- 	 			<to uri="bean:celestrack" /> -->
-	 			<to uri="bean:event" />
+<!--                <to uri="bean:event" /> -->
 <!-- 	 			<to uri="bean:jmstester" /> -->
 	 			<to uri="bean:finisher" />
 		</route>

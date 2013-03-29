@@ -19,10 +19,8 @@ package org.hbird.business.systemtest;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.configurator.ReportStatus;
-import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Named;
-import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 public class BusinessCardTester extends SystemTest {
@@ -41,6 +39,7 @@ public class BusinessCardTester extends SystemTest {
         synchronized (businessCardListener.elements) {
             Boolean didArrive = false;
             for (Named obj : businessCardListener.elements) {
+                LOG.info(obj);
                 /** Notice that the name given to the configurator in the assembly is 'Main Configurator' */
                 if (obj.getIssuedBy().equals("/Configurator")) {
                     didArrive = true;
@@ -52,22 +51,23 @@ public class BusinessCardTester extends SystemTest {
             businessCardListener.elements.clear();
         }
 
-        startMonitoringArchive();
+        startCommandingChain();
 
         Thread.sleep(3000);
 
-        IStartablePart archive = (IStartablePart) Part.getAllParts().get(StandardComponents.ARCHIVE);
-        
+        IStartablePart commanding = (IStartablePart) parts.get(StandardComponents.COMMANDING_CHAIN);
+
         synchronized (businessCardListener.elements) {
-            Boolean archiveDidArrive = false;
+            Boolean commandingDidArrive = false;
             for (Named obj : businessCardListener.elements) {
-                if (obj.getIssuedBy().equals(archive.getQualifiedName())) {
-                    archiveDidArrive = true;
+                LOG.info(obj);
+                if (obj.getIssuedBy().equals(commanding.getQualifiedName())) {
+                    commandingDidArrive = true;
                     break;
                 }
             }
 
-            azzert(archiveDidArrive, "Business card messages arrive from Archive");
+            azzert(commandingDidArrive, "Business card messages arrive from CommandingChain");
             businessCardListener.elements.clear();
         }
 
@@ -76,27 +76,26 @@ public class BusinessCardTester extends SystemTest {
         Object data = injection.requestBody(new ReportStatus("SystemTest", "Configurator"));
         azzert(data != null, "Status received from Configurator.");
 
-        /** Stop the archive and check that it is actually stopped. */
-        injection.sendBody(new StopComponent("SystemTest", StandardComponents.ARCHIVE));
+        /** Stop the CommandingChain and check that it is actually stopped. */
+        stopCommandingChain();
 
         businessCardListener.elements.clear();
 
         Thread.sleep(3000);
 
         synchronized (businessCardListener.elements) {
-            Boolean archiveDidArrive = false;
+            Boolean commandingDidArrive = false;
             for (Named obj : businessCardListener.elements) {
-                if (obj.getIssuedBy().equals(archive.getQualifiedName())) {
-                    archiveDidArrive = true;
+                LOG.info(obj);
+                if (obj.getIssuedBy().equals(commanding.getQualifiedName())) {
+                    commandingDidArrive = true;
                     break;
                 }
             }
 
-            azzert(!archiveDidArrive, "Business card messages not arriving from Archive");
+            azzert(!commandingDidArrive, "Business card messages not arriving from CommandingChain");
         }
 
-        SystemTest.monitoringArchiveStarted = false;
-        
         LOG.info("Finished");
     }
 }

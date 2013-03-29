@@ -34,6 +34,7 @@ package org.hbird.business.configurator;
 
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.StartablePart;
 
 /**
@@ -41,8 +42,6 @@ import org.hbird.exchange.core.StartablePart;
  * 
  */
 public class ConfiguratorComponent extends StartablePart {
-
-    public static final String DEFAULT_COMPONENT_NAME = "Configurator";
 
     public static final String DESCRIPTION = "A component for starting other component.";
 
@@ -67,7 +66,7 @@ public class ConfiguratorComponent extends StartablePart {
     /**
 	 */
     public ConfiguratorComponent() {
-        this(DEFAULT_COMPONENT_NAME, ConfiguratorComponentDriver.class.getName());
+        this(StandardComponents.CONFIGURATOR, ConfiguratorComponentDriver.class.getName());
     }
 
     public void init() throws Exception {

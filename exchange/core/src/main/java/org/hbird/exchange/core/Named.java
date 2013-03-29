@@ -17,7 +17,6 @@
 package org.hbird.exchange.core;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.UUID;
 
 import org.hbird.exchange.interfaces.IIssuedBy;
@@ -39,13 +38,15 @@ import org.hbird.exchange.interfaces.IIssuedBy;
  * */
 public abstract class Named implements IIssuedBy, Serializable, Comparable<Named> {
 
+    /** Default separator for the qualified name. */
+    public static final String DEFAULT_QUALIFIED_NAME_SEPARATOR = "/";
+
     /** The unique UID of this class. */
     private static final long serialVersionUID = -5803219773253020746L;
 
     /** The unique UID of this object. */
     protected String uuid = UUID.randomUUID().toString();
 
-    
     /** The ID / Name of the component that has issued this object. */
     protected String issuedBy = "";
 
@@ -53,7 +54,7 @@ public abstract class Named implements IIssuedBy, Serializable, Comparable<Named
      * The time at which this object represented a valid state of the system. Default value is the
      * time of creation.
      */
-    protected long timestamp = (new Date()).getTime();
+    protected long timestamp = System.currentTimeMillis();
 
     /** The name of the object. */
     protected String name;
@@ -135,7 +136,7 @@ public abstract class Named implements IIssuedBy, Serializable, Comparable<Named
     }
 
     public String getQualifiedName() {
-        return getQualifiedName("/");
+        return getQualifiedName(DEFAULT_QUALIFIED_NAME_SEPARATOR);
     }
 
     public String getQualifiedName(String separator) {
@@ -165,9 +166,9 @@ public abstract class Named implements IIssuedBy, Serializable, Comparable<Named
      * 
      * @return The data set identifier, identifying the data set this object is part of.
      * */
-//    public String getDatasetidentifier() {
-//        return datasetidentifier;
-//    }
+    // public String getDatasetidentifier() {
+    // return datasetidentifier;
+    // }
 
     /**
      * In case that an already created Parameter object is reused, i.e. is use to
@@ -178,13 +179,14 @@ public abstract class Named implements IIssuedBy, Serializable, Comparable<Named
      * value and the timestamp set to 'now'.
      */
     public void newInstance() {
-        timestamp = (new Date()).getTime();
+        timestamp = System.currentTimeMillis();
     }
 
     public long getTimestamp() {
         return timestamp;
     }
 
+    @Override
     public String getIssuedBy() {
         return issuedBy;
     }
@@ -201,9 +203,9 @@ public abstract class Named implements IIssuedBy, Serializable, Comparable<Named
         this.description = description;
     }
 
-//    public void setDatasetidentifier(String datasetidentifier) {
-//        this.datasetidentifier = datasetidentifier;
-//    }
+    // public void setDatasetidentifier(String datasetidentifier) {
+    // this.datasetidentifier = datasetidentifier;
+    // }
 
     public String getType() {
         return type;
@@ -223,7 +225,7 @@ public abstract class Named implements IIssuedBy, Serializable, Comparable<Named
 
     public Named instance() {
         uuid = UUID.randomUUID().toString();
-        timestamp = (new Date()).getTime();
+        timestamp = System.currentTimeMillis();
 
         return this;
     }
@@ -231,16 +233,18 @@ public abstract class Named implements IIssuedBy, Serializable, Comparable<Named
     public String prettyPrint() {
         return String.format("%s[name=%s, issuedby=%s, timestamp=%s]", this.getClass().getSimpleName(), getQualifiedName(), issuedBy, timestamp);
     }
-    
-	/* (non-Javadoc)
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-	@Override
-	public int compareTo(Named o) {
-		if (this == o) {
-			return 0;
-		}
-		
-		return 1;
-	}
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(Named o) {
+        if (this == o) {
+            return 0;
+        }
+
+        return 1;
+    }
 }

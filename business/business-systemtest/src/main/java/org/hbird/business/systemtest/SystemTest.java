@@ -18,7 +18,9 @@ package org.hbird.business.systemtest;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Produce;
@@ -105,95 +107,128 @@ public abstract class SystemTest {
     protected static GroundStation gsDarmstadt = null;
     protected static GroundStation gsNewYork = null;
 
+    protected static Map<String, Part> parts = new HashMap<String, Part>();
+
     static {
         /** Build the system model, starting from 'the mission' */
         Part mission = new Part("ESTCUBE", "The root system. Complete, everything.");
+        registerPart(mission);
 
         /** Define the satellites */
         Part satellites = new Satellite("Satellites", "The satellite(s) of the mission");
+        registerPart(satellites);
         satellites.setIsPartOf(mission);
 
         estcube1 = new Satellite("ESTCube-1", "ESTcube, the student satellite from TARTU");
+        registerPart(estcube1);
         estcube1.setIsPartOf(satellites);
 
         /** Define the ground station */
         Part groundstations = new Part("Ground Station", "The groundstation(s) of the mission");
+        registerPart(groundstations);
         groundstations.setIsPartOf(mission);
 
         D3Vector geoLocationTartu = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Tartu, Tähe 4", Math.toRadians(58.3000D),
                 Math.toRadians(26.7330D), 59.0D);
         es5ec = new GroundStation("ES5EC", "The main control centre", geoLocationTartu);
+        registerPart(es5ec);
         es5ec.setIsPartOf(groundstations);
 
         Rotator rotator = new HamlibRotatorPart("Rotator", 0, -90, 360, 0, 180, 4533, "localhost");
+        registerPart(rotator);
+
         RadioDevice radio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l, 4532, "localhost");
+        registerPart(radio);
+
         Antenna antenna = new Antenna("Antenna1", "The prime antenna", rotator, radio);
+        registerPart(antenna);
         es5ec.addAntenna(antenna);
         antenna.setIsPartOf(es5ec);
 
         /** Define the ground segment control */
         Part mof = new Part("Mission Operation Center", "The groundsystem(s) of the mission");
+        registerPart(mof);
         mof.setIsPartOf(mission);
 
         Part trackAutomation = new Part("Track Automation", "The component automating the track of ESTCube-1 by ES5EC.");
+        registerPart(trackAutomation);
         trackAutomation.setIsPartOf(mof);
 
         ArchiveComponent archive = new ArchiveComponent(StandardComponents.ARCHIVE);
+        registerPart(archive);
         archive.setIsPartOf(mof);
 
         CommandingComponent comComponent = new CommandingComponent(StandardComponents.COMMANDING_CHAIN);
+        registerPart(comComponent);
         comComponent.setIsPartOf(mof);
 
         NavigationComponent navComponent = new NavigationComponent(StandardComponents.ORBIT_PREDICTOR);
+        registerPart(navComponent);
         navComponent.setIsPartOf(mof);
 
         Part scripts = new Part("Synthetic Parameters", "The synthetic parameters / scripts");
+        registerPart(scripts);
         scripts.setIsPartOf(mof);
 
         SystemMonitorComponent sysMon = new SystemMonitorComponent("System Monitoring");
+        registerPart(sysMon);
         sysMon.setIsPartOf(mof);
 
         Part taskComponent = new Part("Task Executor", "");
+        registerPart(taskComponent);
         taskComponent.setIsPartOf(mof);
 
         Part limits = new Part("Limits", "The limit checkers of the system");
+        registerPart(limits);
         limits.setIsPartOf(mof);
 
         WebsocketInterfaceComponent webComponent = new WebsocketInterfaceComponent(StandardComponents.WEB_SOCKET);
+        registerPart(webComponent);
         webComponent.setIsPartOf(mof);
 
         /** Setup the external satellites and ground stations. */
         Part external = new Part("Externals", "External parts which we are interested in.");
+        registerPart(external);
 
         Part eSatellites = new Part("Satellites", "External satellites.");
+        registerPart(eSatellites);
         eSatellites.setIsPartOf(external);
 
         dkCube1 = new Satellite("DKCube-1", "DKcube, the student satellite from AALBORG");
+        registerPart(dkCube1);
         dkCube1.setIsPartOf(eSatellites);
 
         deCube1 = new Satellite("DECube-1", "DEcube, the student satellite from BERLINE");
+        registerPart(deCube1);
         deCube1.setIsPartOf(eSatellites);
 
         strand = new Satellite("STRaND-1", "SSTL Smartphone nanosatellite");
+        registerPart(strand);
         strand.setIsPartOf(eSatellites);
 
         Part eGs = new Part("GroundStations", "External ground stations.");
+        registerPart(eGs);
         eGs.setIsPartOf(external);
 
         D3Vector geoLocationAalborg = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Aalborg", Math.toRadians(55.659306D),
                 Math.toRadians(12.587585D), 59.0D);
         gsAalborg = new GroundStation("Aalborg", "Supportive antenna from Aalborg university", geoLocationAalborg);
+        registerPart(gsAalborg);
         gsAalborg.setIsPartOf(eGs);
         gsAalborg.addAntenna(antenna);
 
         Rotator darmstadtRotator = new HamlibRotatorPart("Rotator", 0, -90, 360, 0, 180, 4533, "localhost");
+        registerPart(darmstadtRotator);
         RadioDevice darmstadtRadio = new HamlibRadioPart("Radio", 136920000l, 136920000l, true, true, 20l, 4532, "localhost");
+        registerPart(darmstadtRadio);
         Antenna darmstadtAntenna = new Antenna("Antenna1", "The prime antenna of DARMSTADT", darmstadtRotator, darmstadtRadio);
+        registerPart(darmstadtAntenna);
         // D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(),
         // "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
         D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.87D),
                 Math.toRadians(8.64D), 59.0D);
         gsDarmstadt = new GroundStation("Darmstadt", "Supportive antenna from Darmstadt university", geoLocationDarmstadt);
+        registerPart(gsDarmstadt);
         darmstadtAntenna.setIsPartOf(gsDarmstadt);
         gsDarmstadt.setIsPartOf(eGs);
         gsDarmstadt.addAntenna(darmstadtAntenna);
@@ -202,8 +237,13 @@ public abstract class SystemTest {
         D3Vector geoLocationNewYork = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "New York", Math.toRadians(40.66564D),
                 Math.toRadians(-74.036865D), 59.0D);
         gsNewYork = new GroundStation("NewYork", "Supportive antenna from NewYork university", geoLocationNewYork);
+        registerPart(gsNewYork);
         gsNewYork.setIsPartOf(eGs);
         gsNewYork.addAntenna(antenna);
+    }
+
+    protected static void registerPart(Part part) {
+        parts.put(part.getName(), part);
     }
 
     protected void azzert(boolean assertion) {
@@ -259,7 +299,7 @@ public abstract class SystemTest {
         if (monitoringArchiveStarted == false) {
             LOG.info("Issuing command for start of a parameter archive.");
 
-            IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.ARCHIVE);
+            IStartablePart part = (IStartablePart) parts.get(StandardComponents.ARCHIVE);
             partmanagerApi.start(part);
 
             /** Give the component time to startup. */
@@ -283,7 +323,7 @@ public abstract class SystemTest {
         if (startedTaskComponents.contains(name) == false) {
             LOG.info("Issuing command for start of a task executor component '" + name + "'.");
 
-            Part parent = Part.getAllParts().get("Task Executor");
+            Part parent = parts.get("Task Executor");
 
             TaskExecutionComponent taskPart = new TaskExecutionComponent(name);
             taskPart.setIsPartOf(parent);
@@ -309,7 +349,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a commanding chain.");
 
             /** Create command component. */
-            IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.COMMANDING_CHAIN);
+            IStartablePart part = (IStartablePart) parts.get(StandardComponents.COMMANDING_CHAIN);
             partmanagerApi.start(part);
 
             Thread.sleep(2000);
@@ -324,7 +364,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command to stop a commanding chain.");
 
             /** Create command component. */
-            IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.COMMANDING_CHAIN);
+            IStartablePart part = (IStartablePart) parts.get(StandardComponents.COMMANDING_CHAIN);
             partmanagerApi.stop(part.getQualifiedName());
 
             Thread.sleep(2000);
@@ -342,7 +382,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a orbital predictor.");
 
             /** Create command component. */
-            IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.ORBIT_PREDICTOR);
+            IStartablePart part = (IStartablePart) parts.get(StandardComponents.ORBIT_PREDICTOR);
             partmanagerApi.start(part);
 
             Thread.sleep(2000);
@@ -359,7 +399,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a orbital predictor.");
 
             /** Create command component. */
-            IStartablePart part = (IStartablePart) Part.getAllParts().get(StandardComponents.WEB_SOCKET);
+            IStartablePart part = (IStartablePart) parts.get(StandardComponents.WEB_SOCKET);
             partmanagerApi.start(part);
 
             Thread.sleep(2000);
@@ -375,7 +415,7 @@ public abstract class SystemTest {
         if (antennaControllerStarter == false) {
             LOG.info("Issuing command for start of an antenna controller.");
 
-            Part parent = Part.getAllParts().get("Track Automation");
+            Part parent = parts.get("Track Automation");
 
             /** Create command component. */
             TrackingComponent antennaController = new TrackingComponent("ES5EC -> ESTCUBE", "The component automating the track of ESTCube-1 by ES5EC.",
@@ -395,7 +435,7 @@ public abstract class SystemTest {
         if (antennaControllerStarter == false) {
             LOG.info("Issuing command for start of an Strand -> Darmstadt antenna controller.");
 
-            Part parent = Part.getAllParts().get("Track Automation");
+            Part parent = parts.get("Track Automation");
 
             /** Create command component. */
             TrackingComponent antennaController = new TrackingComponent("Darmstadt -> STRAND", "The component automating the track of Strand-1 by Darmstadt.",
@@ -416,7 +456,7 @@ public abstract class SystemTest {
      */
     protected void publishGroundStationsAndSatellites() throws InterruptedException {
 
-        for (Part part : Part.getAllParts().values()) {
+        for (Part part : parts.values()) {
             if (part instanceof Satellite || part instanceof GroundStation) {
                 publishApi.publish(part);
             }
