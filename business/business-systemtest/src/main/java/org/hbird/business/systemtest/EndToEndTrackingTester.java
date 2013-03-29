@@ -39,7 +39,6 @@ import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.business.navigation.controller.OrbitPropagationController;
 import org.hbird.exchange.configurator.StartComponent;
-import org.hbird.exchange.core.Part;
 import org.hbird.exchange.groundstation.Antenna;
 
 import eu.estcube.gs.radio.HamlibRadioPart;
@@ -47,7 +46,7 @@ import eu.estcube.gs.rotator.HamlibRotatorPart;
 
 /**
  * @author Admin
- *
+ * 
  */
 public class EndToEndTrackingTester extends SystemTest {
 
@@ -63,59 +62,63 @@ public class EndToEndTrackingTester extends SystemTest {
         startOrbitPredictor();
         startTaskComponent("TaskExecutor");
         startCommandingChain();
-        
-    	/** Issue request to start the websockets. */;
-    	startWebSockets();
-        
-		/** Create an antenna controller task and inject it. */
-    	startAntennaController();
 
-		publishTleParameters();
-		publishGroundStationsAndSatellites();
+        /** Issue request to start the websockets. */
+        ;
+        startWebSockets();
 
-        forceCommit();        
+        /** Create an antenna controller task and inject it. */
+        startAntennaController();
 
-        Antenna antenna = (Antenna) Part.getAllParts().get("Antenna1");
+        publishTleParameters();
+        publishGroundStationsAndSatellites();
 
-    	/** Get the drivers (part of the system model)*/
-        HamlibRotatorPart rotator = (HamlibRotatorPart) Part.getAllParts().get("Rotator");
+        forceCommit();
+
+        Antenna antenna = (Antenna) parts.get("Antenna1");
+
+        /** Get the drivers (part of the system model) */
+        HamlibRotatorPart rotator = (HamlibRotatorPart) parts.get("Rotator");
         rotator.setIsPartOf(antenna);
         rotator.setFailOldRequests(false);
-        
-        HamlibRadioPart radio = (HamlibRadioPart) Part.getAllParts().get("Radio");
-        
+
+        HamlibRadioPart radio = (HamlibRadioPart) parts.get("Radio");
+
         radio.setIsPartOf(antenna);
         radio.setFailOldRequests(false);
-        
+
         publishApi.publish(new StartComponent(rotator.getName(), rotator));
         publishApi.publish(new StartComponent(radio.getName(), radio));
 
         /** Give the driver a second to start. */
         Thread.sleep(5000);
-            
+
         List<String> locations = new ArrayList<String>();
         locations.add(es5ec.getName());
         // locations.add(gsAalborg.getName());
 
-		/** Create a controller task and inject it. 
-		 * 
-		 * We set
-		 *  Lead Time (frequency of check whether orbit needs to be propagated) to 60 minutes.
-		 *  Interval (the time for which orbit data must as a minimum be available) to 6es hours.
-		 * */
-		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 60 * 1000, 6 * 60 * 60 * 1000, estcube1, locations);
-		task.setRepeat(0);
-		injection.sendBody(task);
-        
+        /**
+         * Create a controller task and inject it.
+         * 
+         * We set
+         * Lead Time (frequency of check whether orbit needs to be propagated) to 60 minutes.
+         * Interval (the time for which orbit data must as a minimum be available) to 6es hours.
+         * */
+        OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 60 * 1000, 6 * 60 * 60 * 1000, estcube1,
+                locations);
+        task.setRepeat(0);
+        injection.sendBody(task);
+
         /** Send a TLE request for a satellite and a subset of locations */
         // IOrbitPrediction api = ApiFactory.getOrbitPredictionApi("SystemTest");
-        // api.requestOrbitPropagationStream("ESTCube-1", locations, 1355385448149l, 1355385448149l + 2 * 60 * 60 * 1000);
+        // api.requestOrbitPropagationStream("ESTCube-1", locations, 1355385448149l, 1355385448149l + 2 * 60 * 60 *
+        // 1000);
 
         boolean cont = true;
         while (cont) {
-        	Thread.sleep(2000);
+            Thread.sleep(2000);
         }
-        
-		LOG.info("Finished");
+
+        LOG.info("Finished");
     }
 }

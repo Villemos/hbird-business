@@ -23,7 +23,6 @@ import org.apache.camel.Handler;
 import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.constants.StandardMissionEvents;
 import org.hbird.exchange.core.Event;
-import org.hbird.exchange.core.Part;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +45,7 @@ public class EventTester extends SystemTest {
         azzert(eventListener.elements.size() == 1, "There should be 1 event published");
         Event event = (Event) eventListener.elements.get(0);
         azzert(StandardMissionEvents.COMPONENT_START.getName().equals(event.getName()), "startEvent.getName()");
-        azzert(Part.getAllParts().get(StandardComponents.COMMANDING_CHAIN).getQualifiedName().equals(event.getIssuedBy()), "startEvent.getIssuedBy()");
+        azzert(parts.get(StandardComponents.COMMANDING_CHAIN).getQualifiedName().equals(event.getIssuedBy()), "startEvent.getIssuedBy()");
         long diff = System.currentTimeMillis() - event.getTimestamp();
         azzert(diff >= 0L && diff <= 30000L, "startEvent.getTimestamp()");
         azzert(StandardMissionEvents.COMPONENT_START.getQualifiedName().equals(event.getQualifiedName()), "startEvent.getQualifiedName()");
@@ -59,7 +58,7 @@ public class EventTester extends SystemTest {
         azzert(eventListener.elements.size() == 2, "There should be 2 events published");
         event = (Event) eventListener.elements.get(1);
         azzert(StandardMissionEvents.COMPONENT_STOP.getName().equals(event.getName()), "stopEvent.getName()");
-        azzert(Part.getAllParts().get(StandardComponents.COMMANDING_CHAIN).getQualifiedName().equals(event.getIssuedBy()), "stopEvent.getIssuedBy()");
+        azzert(parts.get(StandardComponents.COMMANDING_CHAIN).getQualifiedName().equals(event.getIssuedBy()), "stopEvent.getIssuedBy()");
         diff = System.currentTimeMillis() - event.getTimestamp();
         azzert(diff >= 0L && diff <= 30000L, "stopEvent.getTimestamp()");
         azzert(StandardMissionEvents.COMPONENT_STOP.getQualifiedName().equals(event.getQualifiedName()), "stopEvent.getQualifiedName()");

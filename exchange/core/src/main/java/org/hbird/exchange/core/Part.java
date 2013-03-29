@@ -32,89 +32,75 @@
  */
 package org.hbird.exchange.core;
 
-import java.util.HashMap;
-import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.interfaces.IPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A part is something that is 'part' of something else (... most likely).
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class Part extends Named implements IPart {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 577393462361927408L;
-
+    private static final long serialVersionUID = 4961124159238983376L;
 	/** The Part that this part is part of. */
-	protected IPart parent = null;
-	
+
 	/** Unique ID of this part. The ID should be unique accross instantiations of the Part, i.e. be set as
 	 * part of the construction of the Part. */
 	protected String ID = "";
-	
-	/** A list of all parts. */
-	protected static Map<String, Part> parts = new HashMap<String, Part>();
-		
+    protected IPart parent;
+
+    /** Commands accepted by this {@link Part}. */
+    protected List<Command> commands = new ArrayList<Command>(0);
+
 	public Part(String ID, String name, String description) {
 		super(name, description);
 		this.ID = ID;
 		
-		Part.parts.put(name, this);
-	}
+    }
 
 	public Part(String ID, String name, String description, IPart isPartOf) {
 		super(name, description);
 		this.ID = ID;
 		parent = isPartOf;
 		
-		Part.parts.put(name, this);
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IPartOf#getIsPartOf()
-	 */
-	@Override
-	public IPart getIsPartOf() {
-		return parent;
-	}
+    /**
+     * @see org.hbird.exchange.interfaces.IPartOf#getIsPartOf()
+     */
+    @Override
+    public IPart getIsPartOf() {
+        return parent;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IPartOf#setIsPartOf(org.hbird.exchange.core.Named)
-	 */
-	@Override
-	public void setIsPartOf(IPart parent) {
-		if (parent == null) {
-			Logger.getLogger(Part.class).error("Attempting to set NULL parent for Part '" + this.getName() + "'. Likely a configuration error.");
-		}
-		else {
-			this.parent = parent;
-		}
-	}
+    /**
+     * @see org.hbird.exchange.interfaces.IPartOf#setIsPartOf(org.hbird.exchange.core.Named)
+     */
+    @Override
+    public void setIsPartOf(IPart parent) {
+        if (parent == null) {
+            // TODO - 29.03.2013, kimmell - throw IllegalArgumentException or RuntimeException here?
+            LOG.error("Attempting to set NULL parent for Part '{}'. Likely a configuration error.", this.getName());
+        }
+        else {
+            this.parent = parent;
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IPart#getPartName()
-	 */
-	@Override
-	public String getQualifiedName() {
-		return getQualifiedName("/");
-	}
+    /**
+     * @see org.hbird.exchange.interfaces.IPart#getPartName()
+     */
+    @Override
+    public String getQualifiedName(String separator) {
+        return parent == null ? separator + name : parent.getQualifiedName(separator) + separator + name;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IPart#getPartName()
-	 */
-	@Override
-	public String getQualifiedName(String separator) {
-		return parent == null ? separator + name : parent.getQualifiedName(separator) + separator + name;
-	}
-
-	public static Map<String, Part> getAllParts() {
-		return parts;
+    @Override
 	}
 
 	/* (non-Javadoc)
@@ -123,5 +109,4 @@ public class Part extends Named implements IPart {
 	@Override
 	public String getID() {
 		return ID;
-	}
 }

@@ -28,6 +28,9 @@ import org.hbird.exchange.interfaces.INamed;
  * */
 public abstract class Named implements INamed, Serializable, Comparable<Named> {
 
+    /** Default separator for the qualified name. */
+    public static final String DEFAULT_QUALIFIED_NAME_SEPARATOR = "/";
+
     /** The unique UID of this class. */
     private static final long serialVersionUID = -5803219773253020746L;
 
@@ -58,7 +61,7 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
     }
 
     public String getQualifiedName() {
-        return getQualifiedName("/");
+        return getQualifiedName(DEFAULT_QUALIFIED_NAME_SEPARATOR);
     }
 
     public String getQualifiedName(String separator) {
@@ -74,6 +77,7 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
         return description;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -89,16 +93,18 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
     public String prettyPrint() {
         return String.format("%s[name=%s]", this.getClass().getSimpleName(), getQualifiedName());
     }
-    
-	/* (non-Javadoc)
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-	@Override
-	public int compareTo(Named o) {
-		if (this == o) {
-			return 0;
-		}
-		
-		return 1;
-	}
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(Named o) {
+        if (this == o) {
+            return 0;
+        }
+
+        return 1;
+    }
 }

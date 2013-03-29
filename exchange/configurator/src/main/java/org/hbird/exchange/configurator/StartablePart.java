@@ -44,22 +44,25 @@ import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
  * @author Admin
- *
+ * 
  */
 public class StartablePart extends Part implements IStartablePart {
 
-	/**
+    /** Default heart beat interval in millis. */
+    public static final long DEFAULT_HEARTBEAT = 5000L;
+
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = 8396148214309147407L;
+    private static final long serialVersionUID = 8396148214309147407L;
 
-	/** The class name of the driver that can 'execute' this part. */
-	protected String driverName = null;
-	
-	/** The location (name of a Configurator) where the component should be started. */
-	protected String configurator = null;
-	
-	protected long heartbeat = 5000;
+    /** The class name of the driver that can 'execute' this part. */
+    protected String driverName = null;
+
+    /** The location (name of a Configurator) where the component should be started. */
+    protected String configurator = null;
+
+    protected long heartbeat = DEFAULT_HEARTBEAT;
 		
 	protected BusinessCard card = null;
 
@@ -79,38 +82,44 @@ public class StartablePart extends Part implements IStartablePart {
 	}
 	
 	
-	/**
-	 * @param name
-	 * @param description
-	 */
+    /**
+     * @param name
+     * @param description
+     */
 	public StartablePart(String ID, String name, String description, String driverName) {
 		super(ID, name, description);
-		this.driverName = driverName;
-	}
+        this.driverName = driverName;
+    }
 
-	public String getDriverName() {
-		return driverName;
-	}
+    @Override
+    public String getDriverName() {
+        return driverName;
+    }
 
-	public void setDriverName(String driverName) {
-		this.driverName = driverName;
-	}
+    @Override
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
+    }
 
-	public String getConfigurator() {
-		return configurator;
-	}
+    @Override
+    public String getConfigurator() {
+        return configurator;
+    }
 
-	public void setConfigurator(String configurator) {
-		this.configurator = configurator;
-	}
+    @Override
+    public void setConfigurator(String configurator) {
+        this.configurator = configurator;
+    }
 
-	public long getHeartbeat() {
-		return heartbeat;
-	}
+    @Override
+    public long getHeartbeat() {
+        return heartbeat;
+    }
 
-	public void setHeartbeat(long heartbeat) {
-		this.heartbeat = heartbeat;
-	}
+    @Override
+    public void setHeartbeat(long heartbeat) {
+        this.heartbeat = heartbeat;
+    }
 
 	public List<Command> getCommandsIn() {
 		return commandsIn;

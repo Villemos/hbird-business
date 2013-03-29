@@ -32,64 +32,83 @@
  */
 package org.hbird.exchange.core;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.List;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hbird.exchange.util.LocalHostNameResolver;
+import org.hbird.exchange.util.NamedHelper;
 
 /**
  * @author Admin
- *
+ * 
  */
 public class BusinessCard extends Issued {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4845057459222972255L;
+    private static final long serialVersionUID = -4619331399009932893L;
 
-	/** The host name on which this component is running */
-	protected String host;
-	{
-		try {
-			host = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			//
-		}		
-	}
-		
-	/** The list of commands that the component that sends this BusinessCard supports */
-	protected List<Command> commands = null;
+    public static final String DESCRIPTION = "A businesscard from a startable component.";
 
-	public BusinessCard(String issuedBy, List<Command> commands) {
-		super(issuedBy, issuedBy, "A businesscard from a startable component.");
-		this.commands = commands;
-		this.issuedBy = issuedBy;
-	}
+    /** The host name on which this component is running. */
+    protected String host;
 
-	/**
-	 * @param hostName
-	 * @param commands2
-	 */
-	public BusinessCard(String issuedBy, String hostName, List<Command> commands) {
-		super(issuedBy, issuedBy, "A businesscard from a startable component.");
-		this.host = hostName;
-		this.commands = commands;
-		this.issuedBy = issuedBy;
-	}
+    /** Interval between heart beats. */
+    protected long period = -1L;
 
-	public String getHost() {
-		return host;
-	}
+    /** The list of commands that the component that sends this BusinessCard supports */
+    protected List<Command> commands = null;
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+    public BusinessCard(String issuedBy, List<Command> commands, long period) {
+        this(issuedBy, LocalHostNameResolver.getLocalHostName(), commands, period);
+    }
 
-	public List<Command> getCommands() {
-		return commands;
-	}
+    /**
+     * @param hostName
+     * @param commands2
+     */
+    public BusinessCard(String issuedBy, String hostName, List<Command> commands, long period) {
+        super(issuedBy, issuedBy, BusinessCard.class.getSimpleName(), DESCRIPTION);
+        this.host = hostName;
+        this.commands = commands;
+        this.period = period;
+    }
 
-	public void setCommands(List<Command> commands) {
-		this.commands = commands;
-	}
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public List<Command> getCommands() {
+        return commands;
+    }
+
+    public void setCommands(List<Command> commands) {
+        this.commands = commands;
+    }
+
+    public long getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(long period) {
+        this.period = period;
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("issuedBy", issuedBy)
+                .append("host", host)
+                .append("timestamp", timestamp)
+                .append("period", period)
+                .append("type", type)
+                .append("commands", NamedHelper.toString(commands))
+                .toString();
+    }
 }

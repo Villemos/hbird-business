@@ -35,23 +35,15 @@ import org.slf4j.LoggerFactory;
  */
 public class BusinessCardSender {
 
-    /** Default value for the period. */
-    public static final long DEFAULT_PERIOD = 10000L;
-
     /** Logger. */
     private static final Logger LOG = LoggerFactory.getLogger(BusinessCardSender.class);
-
-    /** The period between heartbeats. The time to-wait for the next expected beat, */
-    protected long period = DEFAULT_PERIOD;
 
     protected BusinessCard card = null;
 
     /**
      * @param issuedBy The name of the component that issues this BusinessCard
-     * @param period delay before next BusinessCard is published
      */
-    public BusinessCardSender(BusinessCard card, long period) {
-        this.period = period;
+    public BusinessCardSender(BusinessCard card) {
         this.card = card;
     }
 
@@ -63,21 +55,9 @@ public class BusinessCardSender {
     @Handler
     public BusinessCard send() {
         LOG.debug("Issuing business card for '{}'.", card.getIssuedBy());
+        // XXX - 29.03.2013, kimmell - same BusinessCard object is sent every time - the UUID is always the same. Only
+        // time stamp is updated.
         card.setTimestamp(System.currentTimeMillis());
         return card;
-    }
-
-    /**
-     * @return the period
-     */
-    public long getPeriod() {
-        return period;
-    }
-
-    /**
-     * @param period the period to set
-     */
-    public void setPeriod(long period) {
-        this.period = period;
     }
 }

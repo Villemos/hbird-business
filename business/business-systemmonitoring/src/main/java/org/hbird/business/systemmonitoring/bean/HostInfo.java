@@ -7,12 +7,12 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 import java.util.UUID;
 
+import org.hbird.exchange.util.LocalHostNameResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HostInfo {
 
-	
     private static final Logger LOG = LoggerFactory.getLogger(HostInfo.class);
 
     private static final String FALLBACK_HOST_IDENTIFIER = UUID.randomUUID().toString();
@@ -23,13 +23,13 @@ public class HostInfo {
 
     public static String getHostName() {
         if (hostName == null) {
-            try {
-                hostName = getHostNameFromInetAddress();
-            } catch (UnknownHostException uhe) {
+            hostName = LocalHostNameResolver.getLocalHostName();
+            if (LocalHostNameResolver.DEFAULT_LOCAL_HOST_NAME.equals(hostName)) {
                 LOG.warn("Host name not available from InetAddress; falling back to native \"hostname\" command");
                 try {
                     hostName = getHostNameFromSystem();
-                } catch (IOException ioe) {
+                }
+                catch (IOException ioe) {
                     LOG.error("Failed to execute native \"hostname\" command; falling back to random UUID: {}",
                             FALLBACK_HOST_IDENTIFIER);
                     hostName = FALLBACK_HOST_IDENTIFIER;
@@ -51,11 +51,13 @@ public class HostInfo {
             is = p.getInputStream();
             Scanner scanner = new Scanner(is);
             result = scanner.nextLine();
-        } finally {
+        }
+        finally {
             if (is != null) {
                 try {
                     is.close();
-                } catch (IOException ignore) {
+                }
+                catch (IOException ignore) {
                 }
             }
         }
