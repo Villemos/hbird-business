@@ -33,7 +33,7 @@
 package org.hbird.business.websockets;
 
 import org.hbird.business.websockets.bean.WebsocketInterfaceComponentDriver;
-import org.hbird.exchange.core.StartablePart;
+import org.hbird.exchange.configurator.StartablePart;
 
 /**
  * @author Admin
@@ -46,14 +46,11 @@ public class WebsocketInterfaceComponent extends StartablePart {
 	 */
 	private static final long serialVersionUID = -7161138730926653382L;
 
-	/**
-	 * @param name
-	 */
-	public WebsocketInterfaceComponent(String name, String driver) {
-		super(name, "Component which will publish data on websockets", driver);
-	}
-	
-	public WebsocketInterfaceComponent(String name) {
-		super(name, "Component which will publish data on websockets", WebsocketInterfaceComponentDriver.class.getName());
+	public static final String DEFAULT_NAME = "WebsocketInterface";
+	public static final String DEFAULT_DESCRIPTION = "Component which will publish data on websockets";
+	public static final String DEFAULT_DRIVER = WebsocketInterfaceComponentDriver.class.getName();
+
+	public WebsocketInterfaceComponent() {
+		super(DEFAULT_NAME, DEFAULT_NAME, DEFAULT_DESCRIPTION, DEFAULT_DRIVER);
 	}
 }

@@ -79,8 +79,8 @@ public class HamlibRotatorPart extends Rotator {
      * @param minElevation
      * @param maxElevation
      */
-    public HamlibRotatorPart(String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation, long port, String host) {
-        super(name, thresholdElevation, minAzimuth, maxAzimuth, minElevation, maxElevation, HamlibRotatorDriver.class.getName());
+    public HamlibRotatorPart(String ID, String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation, long port, String host) {
+        super(ID, name, thresholdElevation, minAzimuth, maxAzimuth, minElevation, maxElevation, HamlibRotatorDriver.class.getName());
         this.port = port;
         this.host = host;
     }
@@ -121,17 +121,17 @@ public class HamlibRotatorPart extends Rotator {
 
         /** Pre tracking preparation. */
         LOG.info("First nativecommand for part 'Radio' derived from 'Track' command will execute at '" + (start.getTimestamp() - preDelta) + " (" + (new Date(start.getTimestamp() - preDelta)).toLocaleString() + ")'.");
-        commands.add(new HamlibNativeCommand(Reset.createMessageString(1).toString(), start.getTimestamp() - preDelta, command.getUuid(), "PreTracking"));
+        commands.add(new HamlibNativeCommand(Reset.createMessageString(1).toString(), start.getTimestamp() - preDelta, command.getID(), "PreTracking"));
         // commands.add(new NativeCommand(SetConfig.createMessageString("Test", 1l).toString(), start.getTimestamp() - preDelta + 1, command.getUuid(), "PreTracking"));
-        commands.add(new HamlibNativeCommand(SetPosition.createMessageString(pointingData.get(0).getAzimuth(), pointingData.get(0).getElevation()).toString(), start.getTimestamp() - preDelta + 2, command.getUuid(), "PreTracking"));
+        commands.add(new HamlibNativeCommand(SetPosition.createMessageString(pointingData.get(0).getAzimuth(), pointingData.get(0).getElevation()).toString(), start.getTimestamp() - preDelta + 2, command.getID(), "PreTracking"));
 
         /** For each point, except the first which has been set in the preParse function, create a native pointing command. */
         for (int index = 1; index < pointingData.size(); index++) {
-            commands.add(new HamlibNativeCommand(SetPosition.createMessageString(pointingData.get(index).getAzimuth(), pointingData.get(index).getElevation()).toString(), pointingData.get(index).getTimestamp(), command.getUuid(), "Tracking"));
+            commands.add(new HamlibNativeCommand(SetPosition.createMessageString(pointingData.get(index).getAzimuth(), pointingData.get(index).getElevation()).toString(), pointingData.get(index).getTimestamp(), command.getID(), "Tracking"));
         }
         
         /** Park the antenna. */
-        commands.add(new HamlibNativeCommand(Park.createMessageString().toString(), start.getTimestamp() + postDelta, command.getUuid(), "PostTracking"));        
+        commands.add(new HamlibNativeCommand(Park.createMessageString().toString(), start.getTimestamp() + postDelta, command.getID(), "PostTracking"));        
 
         return commands;
     }

@@ -22,13 +22,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 
 public class ApiUtility {
 
-	public static Map<Parameter, List<State>> sortParametersAndState(List<Named> elements) {
+	public static Map<Parameter, List<State>> sortParametersAndState(List<Issued> elements) {
 
 		/** The elements are sorted on timestamp. The state instances will have the same timestamp as
 		 * the parameter instance they are the state of. The elements will be ordered as;
@@ -55,8 +55,8 @@ public class ApiUtility {
 		List<State> states = new ArrayList<State>();
 		Parameter parameter = null;
 		
-		for(Iterator<Named> it = elements.iterator(); it.hasNext();) {
-			Named element = it.next();
+		for(Iterator<Issued> it = elements.iterator(); it.hasNext();) {
+			Issued element = it.next();
 
 			/** If this is a new time then put and reset. */
 			if (lastTimestamp != element.getTimestamp()) {

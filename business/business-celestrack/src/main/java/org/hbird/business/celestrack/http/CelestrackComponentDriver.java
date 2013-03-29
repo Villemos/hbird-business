@@ -30,51 +30,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.celestrack;
+package org.hbird.business.celestrack.http;
 
-import org.hbird.exchange.core.StartablePart;
+import org.hbird.business.celestrack.CelestrackComponent;
+import org.hbird.business.core.SoftwareComponentDriver;
 
 /**
- * @author Admin
+ * @author Gert Villemos
  *
  */
-public class CelestrackPart extends StartablePart {
+public class CelestrackComponentDriver extends SoftwareComponentDriver {
 
-	/**
-	 * 
+	/* (non-Javadoc)
+	 * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
 	 */
-	private static final long serialVersionUID = 6670616270121780868L;
-
-	protected String elements = "cubesat";
-	
-	protected long period = 60 * 60 * 1000;
-
-	protected String proxyHost = null;
-
-	protected int proxyPort = 0;
-
-	public CelestrackPart() {
-		super("Celestrack", "Component for loading ", CelestrackPartDriver.class.getName());
-	}
-
-	public CelestrackPart(String name, String elements) {
-		super(name, "Component for loading ", CelestrackPartDriver.class.getName());
-		this.elements = elements;
-	}
-
-	public String getElements() {
-		return elements;
-	}
-
-	public void setElements(String elements) {
-		this.elements = elements;
-	}
-
-	public long getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(long period) {
-		this.period = period;
+	@Override
+	protected void doConfigure() {
+        from("timer://foo?fixedRate=true&period=" + ((CelestrackComponent)part).getPeriod()).bean(new CelestrackReader(), "read");
 	}
 }

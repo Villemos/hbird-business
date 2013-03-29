@@ -60,7 +60,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
      * @throws Exception
      */
     public void start() throws Exception {
-        start(new ConfiguratorComponent(ConfiguratorComponent.DEFAULT_COMPONENT_NAME, this.getClass().getName()));
+        start(new ConfiguratorComponent());
     }
 
     public void start(ConfiguratorComponent part) throws Exception {
@@ -147,7 +147,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
                 .end();
 
         /** Setup the BusinessCard */
-        BusinessCardSender cardSender = new BusinessCardSender(new BusinessCard(part.getQualifiedName(), part.getCommands()), 5000L);
+        BusinessCardSender cardSender = new BusinessCardSender(new BusinessCard(part.getQualifiedName(), part.getCommandsIn()), 5000L);
         ProcessorDefinition<?> route = from(addTimer("businesscard", part.getHeartbeat())).bean(cardSender);
         addInjectionRoute(route);
 

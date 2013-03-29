@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.constants.StandardComponents;
-import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 
 public class StateRequest extends DataRequest {

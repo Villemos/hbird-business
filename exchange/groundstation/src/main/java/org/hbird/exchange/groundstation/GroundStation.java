@@ -55,8 +55,8 @@ public class GroundStation extends Part implements IGroundStationSpecific {
     /**
      * 
      */
-    public GroundStation(String name) {
-        super(name, DESCRIPTION);
+    public GroundStation(String ID, String name) {
+        super(ID, name, DESCRIPTION);
     }
 
     /**
@@ -65,8 +65,8 @@ public class GroundStation extends Part implements IGroundStationSpecific {
      * @param geoLocation
      * @param antennas
      */
-    public GroundStation(String name, String description, D3Vector geoLocation) {
-        super(name, DESCRIPTION);
+    public GroundStation(String ID, String name, String description, D3Vector geoLocation) {
+        super(ID, name, DESCRIPTION);
         this.geoLocation = geoLocation;
     }
     
@@ -76,27 +76,10 @@ public class GroundStation extends Part implements IGroundStationSpecific {
      * @param geoLocation
      * @param antennas
      */
-    public GroundStation(String name, D3Vector geoLocation) {
-        super(name, DESCRIPTION);
+    public GroundStation(String ID, String name, D3Vector geoLocation) {
+        super(ID, name, DESCRIPTION);
         this.geoLocation = geoLocation;
     }
-
-    /**
-	 * @param name
-	 * @param geoLocation2
-	 * @param rotator
-	 * @param radioChannel
-	 * @param modems
-	 * @param softwareDefinedRadios
-	 */
-	public GroundStation(String name, D3Vector geoLocation, Rotator rotator, RadioDevice radioChannel, Modem modems, SoftwareDefinedRadio softwareDefinedRadios) {
-		super(name, DESCRIPTION);
-		
-		this.geoLocation = geoLocation;
-
-		Antenna antenna = new Antenna(name, DESCRIPTION, rotator, radioChannel, modems, softwareDefinedRadios);
-		antenna.setIsPartOf(this);
-	}
 
 	/**
      * @see org.hbird.exchange.interfaces.IGroundStationSpecific#getGroundStationName()

@@ -108,7 +108,7 @@ public class ScriptTester extends SystemTest {
         new HashMap<String, String>();
         binding.put(estcube1.getQualifiedName() + "/PARA6", "in1");
 
-        com = new ScriptComponent("ScriptComponent3", "Fahrenheit2CelsiusConvertion", new Parameter("ScriptComponent3", estcube1.getQualifiedName() + "/SYN2", "Temperature in CELCIUS.", new Double(0), "Celsius"), binding);
+        com = new ScriptComponent("ScriptComponent3", "ScriptComponent3", "Fahrenheit2CelsiusConvertion", new Parameter("ScriptComponent3", estcube1.getQualifiedName() + "/SYN2", "Temperature in CELCIUS.", new Double(0), "Celsius"), binding);
         com.setIsPartOf(scripts);
         injection.sendBody(new StartComponent("SystemTest", com));
 
@@ -128,7 +128,7 @@ public class ScriptTester extends SystemTest {
         binding.put(estcube1.getQualifiedName() + "/PARA8", "in1");
         binding.put(estcube1.getQualifiedName() + "/PARA7", "threshold");
 
-        com = new ScriptComponent("ScriptComponent4", "OnOffSpline", new Label("ScriptEngine", estcube1.getQualifiedName() + "/SYN3", "Whether the battery is ON or OFF", "ON"), binding);
+        com = new ScriptComponent("ScriptComponent4", "ScriptComponent4", "OnOffSpline", new Label("ScriptEngine", estcube1.getQualifiedName() + "/SYN3", "Whether the battery is ON or OFF", "ON"), binding);
         com.setIsPartOf(scripts);
         injection.sendBody(new StartComponent("SystemTest", com));
 

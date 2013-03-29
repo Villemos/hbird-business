@@ -33,12 +33,12 @@
 package org.hbird.business.navigation;
 
 import org.hbird.business.navigation.orekit.NavigationComponentDriver;
-import org.hbird.exchange.core.StartablePart;
+import org.hbird.exchange.configurator.StartablePart;
 import org.hbird.exchange.dataaccess.OrbitPredictionRequest;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
 
 /**
- * @author Admin
+ * @author Gert Villemos
  *
  */
 public class NavigationComponent extends StartablePart {
@@ -48,21 +48,16 @@ public class NavigationComponent extends StartablePart {
 	 */
 	private static final long serialVersionUID = -148692363129164616L;
 
+	public static final String DEFAULT_NAME = "OrbitPropagator";
+	public static final String DEFAULT_DESCRIPTION = "Component for performing TLE based orbit prediction, including contact events and orbital states.";
+	public static final String DEFAULT_DRIVER = NavigationComponentDriver.class.getName();
+	
+	public NavigationComponent() {
+		super(DEFAULT_NAME, DEFAULT_NAME, DEFAULT_DESCRIPTION, DEFAULT_DRIVER);
+	}
+	
 	{
-		commands.add(new TlePropagationRequest("", ""));
-		commands.add(new OrbitPredictionRequest("", "", "", ""));
+		commandsIn.add(new TlePropagationRequest("", ""));
+		commandsIn.add(new OrbitPredictionRequest("", "", "", ""));
 	}
-
-	/**
-	 * @param name
-	 * @param description
-	 */
-	public NavigationComponent(String name, String driver) {
-		super(name, "Component for performing TLE based orbit prediction, including contact events and orbital states.", driver);
-	}
-
-	public NavigationComponent(String name) {
-		super(name, "Component for performing TLE based orbit prediction, including contact events and orbital states.", NavigationComponentDriver.class.getName());
-	}
-
 }

@@ -23,7 +23,7 @@ package org.hbird.exchange.core;
  *         calibrated value describing something as 'ON' or 'OFF'.
  * 
  */
-public class Label extends Named {
+public class Label extends Issued {
 
     private static final long serialVersionUID = -6613944008898640558L;
 
@@ -40,7 +40,7 @@ public class Label extends Named {
      * @param value An object holding the value of the label.
      */
     public Label(String issuedBy, String name, String description, String value) {
-        super(issuedBy, name, "Parameter", description);
+        super(issuedBy, name, description);
         this.value = value;
     }
 

@@ -2,7 +2,7 @@ package org.hbird.exchange.tasking;
 
 import java.util.List;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Issued;
 
 /**
  * A controller task is a task that is used to control something. It is thus typically a 
@@ -28,9 +28,9 @@ public abstract class ControllerTask extends Task {
 	}
 
 	@Override
-	public List<Named> execute() {
+	public List<Issued> execute() {
 		
-		List<Named> elements = null;
+		List<Issued> elements = null;
 		if (count == 0) {
 			elements = onFirstExecution();			
 		}
@@ -50,10 +50,10 @@ public abstract class ControllerTask extends Task {
 	 * This method should be used to perform any necesarry initialization, startup, consistency check,
 	 * clean up, etc needed prior to scheduling the controlled task for repeated execution. 
 	 */
-	abstract protected List<Named> onFirstExecution();
+	abstract protected List<Issued> onFirstExecution();
 		
 	/**
 	 * Method to be called on all following executions of this task.
 	 */
-	abstract protected List<Named> onExecution();
+	abstract protected List<Issued> onExecution();
 }

@@ -34,7 +34,7 @@ package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.celestrack.CelestrackPart;
+import org.hbird.business.celestrack.CelestrackComponent;
 import org.hbird.exchange.configurator.StartComponent;
 
 /**
@@ -51,7 +51,7 @@ public class CelestrackTester extends SystemTest {
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
 
-        publishApi.publish(new StartComponent("Celestrack", new CelestrackPart()));
+        publishApi.publish(new StartComponent("Celestrack", new CelestrackComponent()));
         
         Thread.sleep(500000);
         

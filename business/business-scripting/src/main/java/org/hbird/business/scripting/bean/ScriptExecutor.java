@@ -24,6 +24,7 @@ import javax.script.*;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.scripting.ScriptExecutionRequest;
 
@@ -86,9 +87,9 @@ public class ScriptExecutor {
 	 */
 	public Named calculate(Named in) {
 
-		LOG.debug("Script '" + request.name + "': received dependent object '" + in.getName() + "' with timestamp '" + in.getTimestamp() + "'.");
+		LOG.debug("Script '" + request.name + "': received dependent object '" + in.getName() + "' with timestamp '.");
 
-		Named returnValue = null;
+		Issued returnValue = null;
 
 		try {
 			/** Bind the parameter to the script. */
@@ -105,8 +106,8 @@ public class ScriptExecutor {
 
 					/** The request output object has been bound to the engine. The script can
 					 * thus update it directly. Only the timestamp and uuid should also be set. */
-					returnValue = request.output.instance();
-					returnValue.setTimestamp(in.getTimestamp());
+					returnValue = request.output;
+					returnValue.setTimestamp(System.currentTimeMillis());
 				}
 			}
 		} catch (Exception e) {

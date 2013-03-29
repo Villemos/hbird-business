@@ -24,6 +24,7 @@ import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.navigation.api.OrbitPropagation;
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.navigation.OrbitalState;
@@ -122,7 +123,7 @@ public class OrbitPropagationController extends ControllerTask {
 
 
 	@Override
-	protected List<Named> onFirstExecution() {
+	protected List<Issued> onFirstExecution() {
 
 		/** Propagate the orbit from NOW to 'NOW + leadTime + executionDelay. This ensures that
 		 * there will always be as a minimum 'leadTime' orbit prediction available and as a 
@@ -178,11 +179,11 @@ public class OrbitPropagationController extends ControllerTask {
 			doRequest(from, to);
 		}
 
-		return new ArrayList<Named>();
+		return new ArrayList<Issued>();
 	}
 
 	@Override
-	protected List<Named> onExecution() {
+	protected List<Issued> onExecution() {
 		/** Check the last orbital state in the system. */
 		/** Get the latest orbital state */
 
@@ -215,7 +216,7 @@ public class OrbitPropagationController extends ControllerTask {
 			doRequest(from, to);
 		}
 
-		return new ArrayList<Named>();
+		return new ArrayList<Issued>();
 	}	
 
 	/**

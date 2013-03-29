@@ -18,7 +18,7 @@
 
 		<dependency>
 			<groupId>org.hbird.exchange</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>configurator</artifactId>
 		</dependency>
 
 	</dependencies>

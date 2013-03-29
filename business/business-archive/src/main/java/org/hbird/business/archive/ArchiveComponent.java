@@ -33,7 +33,7 @@
 package org.hbird.business.archive;
 
 import org.hbird.business.archive.solr.ArchiveComponentDriver;
-import org.hbird.exchange.core.StartablePart;
+import org.hbird.exchange.configurator.StartablePart;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
@@ -42,7 +42,6 @@ import org.hbird.exchange.dataaccess.OrbitalStateRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * @author Admin
@@ -55,31 +54,26 @@ public class ArchiveComponent extends StartablePart {
 	 */
 	private static final long serialVersionUID = 2145124224125316877L;
 
+	public static final String DEFAULT_NAME = "Archive";
+	public static final String DEFAULT_DESCRIPTION = "The archive of data";
+	public static final String DEFAULT_DRIVER = ArchiveComponentDriver.class.getName();
 	
 	/**
 	 * @param name
 	 * @param description
 	 */
-	public ArchiveComponent(String name, String driver) {
-		super(name, "The archive of data", driver);
+	public ArchiveComponent() {
+		super(DEFAULT_NAME, DEFAULT_NAME, DEFAULT_DESCRIPTION, DEFAULT_DRIVER);
 	}
 
-	/**
-	 * @param name
-	 * @param description
-	 */
-	public ArchiveComponent(String name) {
-		super(name, "The archive of data", ArchiveComponentDriver.class.getName());
-	}
-	
-    {
-        commands.add(new CommitRequest("", ""));
-        commands.add(new DataRequest("", ""));
-        commands.add(new DeletionRequest("", "", ""));
-        commands.add(new GroundStationRequest("", ""));
-        commands.add(new OrbitalStateRequest(""));
-        commands.add(new ParameterRequest("", 0));
-        commands.add(new StateRequest("", ""));
-        commands.add(new TleRequest("", ""));
+	{
+        commandsIn.add(new CommitRequest("", ""));
+        commandsIn.add(new DataRequest("", ""));
+        commandsIn.add(new DeletionRequest("", "", ""));
+        commandsIn.add(new GroundStationRequest("", ""));
+        commandsIn.add(new OrbitalStateRequest(""));
+        commandsIn.add(new ParameterRequest("", 0));
+        commandsIn.add(new StateRequest("", ""));
+        commandsIn.add(new TleRequest("", ""));
     }
 }

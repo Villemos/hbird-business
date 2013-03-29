@@ -32,8 +32,14 @@
  */
 package org.hbird.exchange.interfaces;
 
+import java.util.List;
+
+import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.Event;
+import org.hbird.exchange.core.Parameter;
+
 /**
- * @author Admin
+ * @author Gert Villemos
  *
  */
 public interface IStartablePart extends IPart {
@@ -49,4 +55,28 @@ public interface IStartablePart extends IPart {
 	public long getHeartbeat();
 	
 	public void setHeartbeat(long heartbeat);
+	
+	public List<Command> getCommandsIn();
+
+	public void setCommandsIn(List<Command> commandsIn);
+
+	public List<Command> getCommandsOut();
+
+	public void setCommandsOut(List<Command> commandsOut);
+
+	public List<Event> getEventsIn();
+
+	public void setEventsIn(List<Event> eventsIn);
+
+	public List<Event> getEventsOut();
+
+	public void setEventsOut(List<Event> eventsOut);
+
+	public List<Parameter> getParametersIn();
+	
+	public void setParametersIn(List<Parameter> parametersIn);
+
+	public List<Parameter> getParametersOut();
+
+	public void setParametersOut(List<Parameter> parametersOut);
 }

@@ -19,7 +19,7 @@ package org.hbird.exchange.tasking;
 import java.util.Date;
 import java.util.List;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.interfaces.IScheduled;
 
 
@@ -29,7 +29,7 @@ import org.hbird.exchange.interfaces.IScheduled;
 /**
  * An abstract implementation of a task. Contains only the execution time.
  */
-public abstract class Task extends Named implements IScheduled {
+public abstract class Task extends Issued implements IScheduled {
 
 	/** The unique UID */
 	private static final long serialVersionUID = 6287812296391672915L;
@@ -57,11 +57,11 @@ public abstract class Task extends Named implements IScheduled {
 	 * @param executionTime The java time (ms) when the task should be executed. 0 is immediately.
 	 */
 	public Task(String issuedBy, String name, String description, long executionDelay) {
-		super(issuedBy, name, "Task", description);
+		super(issuedBy, name, description);
 		this.executionDelay = executionDelay;
 	}
 	
-	public abstract List<Named> execute();
+	public abstract List<Issued> execute();
 	
 	/* (non-Javadoc)
 	 * @see org.hbird.exchange.commanding.Task#getExecutionDelay()

@@ -30,21 +30,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.celestrack;
-
-import org.hbird.business.core.SoftwareComponentDriver;
+package org.hbird.exchange.interfaces;
 
 /**
  * @author Admin
  *
  */
-public class CelestrackPartDriver extends SoftwareComponentDriver {
+public interface IIssued extends INamed {
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
-	 */
-	@Override
-	protected void doConfigure() {
-        from("timer://foo?fixedRate=true&period=" + ((CelestrackPart)part).getPeriod()).bean(new CelestrackReader(), "read");
-	}
+	public long getTimestamp();
+	
+	public String getIssuedBy();	
 }

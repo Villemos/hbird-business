@@ -19,22 +19,24 @@ package org.hbird.exchange.core;
 import org.hbird.exchange.interfaces.IState;
 
 /**
- * A boolean state parameter.
+ * The state of an .
+ * 
  * Any other type may have a (set of) states associated. The association is
  * not through direct dependency, but through the states 'isstateOff' field.
  * 
- * A state parameter is a parameter with the following constrains;
- * - Type must be 'Boolean'.
- * - The field 'isStateOff' must provide the name of the object its a state of.
+ * @author Gert Villemos
  */
-public class State extends Named implements IState {
+public class State extends Issued implements IState {
 
     /** The unique UID. */
     private static final long serialVersionUID = 6234660528925795242L;
 
-    /** The ID of the object that this state parameter is a state of. */
+    /** The ID of the Issued object that this state parameter is the state of. 
+     * 
+     * The attribute has the format; [issuedBy]:[name]. */
     protected String isStateOf;
 
+    /** The value of the state. */
     protected Boolean state = true;
 
     /**
@@ -45,8 +47,8 @@ public class State extends Named implements IState {
      * @param isStateOff The object that this state is a state off.
      * @param state The current state.
      */
-    public State(String issuedBy, String stateName, String description, String isStateOff, boolean state) {
-        super(issuedBy, stateName, "State", description);
+    public State(String issuedBy, String name, String description, String isStateOff, boolean state) {
+        super(issuedBy, name, description);
         this.isStateOf = isStateOff;
         this.state = state;
     }
@@ -61,8 +63,8 @@ public class State extends Named implements IState {
      * @param isStateOff The object that this state is a state off.
      * @param state The current state.
      */
-    public State(String issuedBy, String stateName, String description, String isStateOff, boolean state, long timestamp) {
-        this(issuedBy, stateName, description, isStateOff, state);
+    public State(String issuedBy, String name, String description, String isStateOff, boolean state, long timestamp) {
+        this(issuedBy, name, description, isStateOff, state);
         setTimestamp(timestamp);
     }
 

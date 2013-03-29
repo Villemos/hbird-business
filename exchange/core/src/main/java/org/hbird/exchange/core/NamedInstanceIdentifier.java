@@ -27,18 +27,18 @@ public class NamedInstanceIdentifier implements Serializable {
 
     private final String name;
     private final long timestamp;
-    private final String type;
+    private final String issuedBy;
 
-    public NamedInstanceIdentifier(String name, long timestamp, String type) {
+    public NamedInstanceIdentifier(String issuedBy, String name, long timestamp) {
         this.name = name;
         this.timestamp = timestamp;
-        this.type = type;
+        this.issuedBy = issuedBy;
     }
 
-    public NamedInstanceIdentifier(Named parent) {
-        this.name = parent.getName();
-        this.timestamp = parent.getTimestamp();
-        this.type = parent.getType();
+    public NamedInstanceIdentifier(Issued issuedBy) {
+    	this.issuedBy = issuedBy.getIssuedBy();
+    	this.name = issuedBy.getName();
+        this.timestamp = issuedBy.getTimestamp();
     }
 
     /**
@@ -55,10 +55,7 @@ public class NamedInstanceIdentifier implements Serializable {
         return timestamp;
     }
 
-    /**
-     * @return the type
-     */
-    public String getType() {
-        return type;
-    }
+	public String getIssuedBy() {
+		return issuedBy;
+	}
 }

@@ -24,7 +24,6 @@ import java.util.List;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.navigation.OrbitalState;
 
 public class OrbitalStateRequest extends DataRequest {
 
@@ -36,7 +35,6 @@ public class OrbitalStateRequest extends DataRequest {
         // TODO - 27.02.2013, kimmell - set issuedBy!
         super("", StandardComponents.ARCHIVE, OrbitalStateRequest.class.getSimpleName(), DESCRIPTION);
         setSatelliteName(satellite);
-        setType(OrbitalState.class.getSimpleName());
         setIsInitialization(true);
         setRows(1);
         setSort(StandardArguments.TIMESTAMP);
@@ -47,7 +45,6 @@ public class OrbitalStateRequest extends DataRequest {
         // TODO - 27.02.2013, kimmell - set issuedBy!
         super("", StandardComponents.ARCHIVE, OrbitalStateRequest.class.getSimpleName(), DESCRIPTION);
         setSatelliteName(satellite);
-        setType(OrbitalState.class.getSimpleName());
         setFromTime(from);
         setToTime(to);
     }

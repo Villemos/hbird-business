@@ -34,20 +34,20 @@ package org.hbird.exchange.groundstation;
 
 import java.util.Date;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.interfaces.IScheduled;
 
 /**
  * @author Admin
  *
  */
-public abstract class NativeCommand extends Named implements IScheduled {
+public abstract class NativeCommand extends Issued implements IScheduled {
 
     /**
 	 * @param issuedBy
 	 */
-	public NativeCommand(String issuedBy) {
-		super(issuedBy);
+	public NativeCommand(String issuedBy, String name, String description) {
+		super(issuedBy, name, description);
 	}
 
 	/**

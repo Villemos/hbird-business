@@ -23,7 +23,7 @@ package org.hbird.exchange.core;
  * @author Admin
  *
  */
-public class Binary extends Named {
+public class Binary extends Issued {
 
 	private static final long serialVersionUID = -5513523616365151215L;
 
@@ -40,7 +40,7 @@ public class Binary extends Named {
 	 * @param rawdata The raw data
 	 */
 	public Binary(String issuedBy, String name, String description, byte[] rawdata) {
-		super(issuedBy, name, "Payload", description);
+		super(issuedBy, name, description);
 		
 		this.rawdata = rawdata;
 	}

@@ -63,7 +63,7 @@ import org.hbird.exchange.interfaces.IScheduled;
  * @CATEGORY Information Type
  * @END
  */
-public class Command extends Named implements IScheduled {
+public class Command extends Issued implements IScheduled {
 
 	private static final long serialVersionUID = 1L;
 
@@ -95,7 +95,7 @@ public class Command extends Named implements IScheduled {
 	 * @param description The description of the command
 	 */
 	public Command(String issuedBy, String destination, String name, String description) {
-		super(issuedBy, name, Command.class.getSimpleName(), description);
+		super(issuedBy, name, description);
 		this.destination = destination;
 		this.arguments = createArgumentMap(getArgumentDefinitions(new ArrayList<CommandArgument>()));
 	}
@@ -111,7 +111,7 @@ public class Command extends Named implements IScheduled {
 	 * @param arguments The arguments to be used
 	 */
 	public Command(String issuedBy, String destination, String name, String description, List<CommandArgument> arguments) {
-		super(issuedBy, name, Command.class.getSimpleName(), description);
+		super(issuedBy, name, description);
 		this.destination = destination;
 		this.arguments = createArgumentMap(arguments);
 	}

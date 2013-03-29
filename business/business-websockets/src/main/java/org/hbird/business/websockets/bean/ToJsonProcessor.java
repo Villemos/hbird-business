@@ -21,7 +21,6 @@ public class ToJsonProcessor {
     protected Gson gson = builder.create();
 
     public ToJsonProcessor() {
-//        builder.registerTypeAdapter(Date.class, new JsonDateSerializer());
         builder.serializeSpecialFloatingPointValues();
     }
     
@@ -65,14 +64,12 @@ public class ToJsonProcessor {
     		this.timestamp = event.getTimestamp();
     		this.description = event.getDescription();
     		this.issuedBy = event.getIssuedBy();
-    		this.type = event.getType();
     	}
 
     	public String id = UUID.randomUUID().toString();
     	public String name;
     	public long timestamp;
     	public String issuedBy;
-    	public String type;
     	public String description;
     }
 
@@ -83,7 +80,6 @@ public class ToJsonProcessor {
     		this.timestamp = state.getTimestamp();
     		this.description = state.getDescription();
     		this.issuedBy = state.getIssuedBy();
-    		this.type = state.getType();
     		this.value = state.getValue().toString();
     		this.isStateOf = state.getIsStateOf();
     	}
@@ -92,7 +88,6 @@ public class ToJsonProcessor {
     	public String name;
     	public long timestamp;
     	public String issuedBy;
-    	public String type;
     	public String value;
     	public String isStateOf;
     	public String description;

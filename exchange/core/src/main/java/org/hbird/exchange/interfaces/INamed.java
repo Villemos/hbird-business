@@ -42,13 +42,11 @@ public interface INamed {
 
 	public String getName();
 
+	public String getDescription();
+	
 	public String getQualifiedName();
 	
 	public String getQualifiedName(String separator);
 
-	public String getDescription();
-	
-	public long getTimestamp();
-	
-    public String getUuid();
+	public String getID();
 }

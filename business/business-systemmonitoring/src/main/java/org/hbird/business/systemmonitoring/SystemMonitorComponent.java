@@ -33,10 +33,10 @@
 package org.hbird.business.systemmonitoring;
 
 import org.hbird.business.systemmonitoring.bean.SystemMonitorComponentDriver;
-import org.hbird.exchange.core.StartablePart;
+import org.hbird.exchange.configurator.StartablePart;
 
 /**
- * @author Admin
+ * @author Gert Villemos
  *
  */
 public class SystemMonitorComponent extends StartablePart {
@@ -46,15 +46,11 @@ public class SystemMonitorComponent extends StartablePart {
 	 */
 	private static final long serialVersionUID = -3066458562440110882L;
 
-	/**
-	 * @param name
-	 * @param description
-	 */
-	public SystemMonitorComponent(String name, String driver) {
-		super(name, "Component for monitoring the system resources, such as CPU and memory usages.", driver);
-	}
-
-	public SystemMonitorComponent(String name) {
-		super(name, "Component for monitoring the system resources, such as CPU and memory usages.", SystemMonitorComponentDriver.class.getName());
+	public static final String DEFAULT_NAME = "SystemMonitor";
+	public static final String DEFAULT_DESCRIPTION = "Component for monitoring the system resources, such as CPU and memory usages.";
+	public static final String DEFAULT_DRIVER = SystemMonitorComponentDriver.class.getName();
+	
+	public SystemMonitorComponent() {
+		super(DEFAULT_NAME, DEFAULT_NAME, DEFAULT_DESCRIPTION, DEFAULT_DRIVER);
 	}
 }

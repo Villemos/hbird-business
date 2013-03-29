@@ -45,66 +45,53 @@ import org.hbird.exchange.core.Event;
  */
 public class StandardMissionEvents {
 
-    public static final String OCCURED_EVENT = "OccuredEvent";
-    public static final String PREDICTED_EVENT = "PredictedEvent";
-
     public static final Event LAUNCH = new Event("",
             "Launch",
-            OCCURED_EVENT,
             "The launch of the satellite.",
             0L);
 
     public static final Event PREDICTED_GROUND_STATION_CONTACT_ESTABLISH = new Event("",
             "PredictedGroundStationContact",
-            PREDICTED_EVENT,
             "Prediction that contact with a specific satellite, ground station and antenna will occur at this time.",
             0L);
 
     public static final Event GROUND_STATION_CONTACT_ESTABLISHED = new Event("",
             "GroundStationContactEstablished",
-            OCCURED_EVENT,
             "Registration that contact with a specific satellite, ground station and antenna occured at this time.",
             0L);
 
     public static final Event PREDICTED_GROUND_STATION_CONTACT_LOST = new Event("",
             "PredictedGroundStationContactLost",
-            PREDICTED_EVENT,
             "Prediction that a contact with a specific satellite, ground station and antenna will occur at this time.",
             0L);
 
     public static final Event GROUND_STATION_CONTACT_LOST = new Event("",
             "GroundStationContactLost",
-            OCCURED_EVENT,
             "Registration that contact with a specific satellite, ground station and antenna occured at this time.",
             0L);
 
     public static final Event SINGLE_UPSET_EVENT = new Event("",
             "SingleUpsetEvent",
-            OCCURED_EVENT,
             "Registration that a Single Upset Event (SUE) occured.",
             0L);
 
     public static final Event CONTROL_REESTABLISHED = new Event("",
             "ControlReestablished",
-            OCCURED_EVENT,
             "Registration that control of the satellite was reestablished after a SUE.",
             0L);
 
     public static final Event DECOMMISIONING = new Event("",
             "Decommisioning",
-            OCCURED_EVENT,
             "Decommisioning of the satellite.",
             0L);
 
     public static final Event COMPONENT_START = new Event("",
             "ComponentStart",
-            OCCURED_EVENT,
             "Component started",
             0L);
 
     public static final Event COMPONENT_STOP = new Event("",
             "ComponentStop",
-            OCCURED_EVENT,
             "Component sopping",
             0L);
 

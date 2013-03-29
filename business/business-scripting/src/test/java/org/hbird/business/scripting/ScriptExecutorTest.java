@@ -135,8 +135,8 @@ public class ScriptExecutorTest {
 
         ScriptExecutor executor = new ScriptExecutor(request);
 
-        GroundStation gs1 = new GroundStation("Copenhagen", new D3Vector("", "", "", "", 49.982314d, 8.811035d, 0d));
-        GroundStation gs2 = new GroundStation("Frankfurt", new D3Vector("", "", "", "", 55.61683d, 12.601318d, 0d));
+        GroundStation gs1 = new GroundStation("Copenhagen", "Copenhagen", new D3Vector("", "", "", "", 49.982314d, 8.811035d, 0d));
+        GroundStation gs2 = new GroundStation("Frankfurt", "Frankfurt", new D3Vector("", "", "", "", 55.61683d, 12.601318d, 0d));
 
         Parameter out = (Parameter) executor.calculate(gs1);
         out = (Parameter) executor.calculate(gs2);

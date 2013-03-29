@@ -40,7 +40,7 @@ import java.util.List;
  * @author Admin
  *
  */
-public class BusinessCard extends Named {
+public class BusinessCard extends Issued {
 
 	/**
 	 * 
@@ -61,7 +61,7 @@ public class BusinessCard extends Named {
 	protected List<Command> commands = null;
 
 	public BusinessCard(String issuedBy, List<Command> commands) {
-		super(issuedBy, issuedBy, "BusinessCard", "A businesscard from a startable component.");
+		super(issuedBy, issuedBy, "A businesscard from a startable component.");
 		this.commands = commands;
 		this.issuedBy = issuedBy;
 	}
@@ -71,7 +71,7 @@ public class BusinessCard extends Named {
 	 * @param commands2
 	 */
 	public BusinessCard(String issuedBy, String hostName, List<Command> commands) {
-		super(issuedBy, issuedBy, "BusinessCard", "A businesscard from a startable component.");
+		super(issuedBy, issuedBy, "A businesscard from a startable component.");
 		this.host = hostName;
 		this.commands = commands;
 		this.issuedBy = issuedBy;

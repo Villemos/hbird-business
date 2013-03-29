@@ -36,7 +36,7 @@ public class D3Vector extends Named {
 	 * @param p3 The third element. The parameter instance can describe the element in detail.
 	 */
 	public D3Vector(String issuedBy, String name, String type, String description, Double p1, Double p2, Double p3) {
-		super(issuedBy, name, type, description);
+		super(name, description);
 		this.p1 = p1;
 		this.p2 = p2;
 		this.p3 = p3;

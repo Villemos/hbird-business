@@ -63,7 +63,7 @@ public class HamlibNativeCommand extends NativeCommand {
     protected String stage = "";
     
 	public HamlibNativeCommand(String commandToExecute, long executionTime, String derivedFrom, String stage) {
-		super("");
+		super("", "NativeCommand", "A nativecommand");
 		this.commandToExecute = commandToExecute;
 		this.executionTime = executionTime;
 		this.derivedfrom = derivedFrom;

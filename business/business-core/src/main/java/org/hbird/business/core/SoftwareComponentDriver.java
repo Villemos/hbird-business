@@ -71,7 +71,7 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
         }
 
         if (part != null) {
-            String qName = part.getQualifiedName();
+            String qName = part.getID();
             LOG.info("Starting driver for part '{}'.", qName);
 
             /** Setup the component specific services. */
@@ -79,6 +79,7 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
 
             /** Setup the BusinessCard */
             // TODO - 27.03.2013, kimmell - fix mess with the heart beat intervals
+            // TODO - 29.03.2013, kimmell (... but raised by villemosg :) ) - fix the Business Card to take the commands, parameter, event IN/OUT of the parts
             BusinessCardSender cardSender = new BusinessCardSender(new BusinessCard(qName, part.getCommands()), heartbeat);
             ProcessorDefinition<?> route = from(addTimer("businesscard", part.getHeartbeat())).bean(cardSender);
             addInjectionRoute(route);

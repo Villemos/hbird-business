@@ -27,7 +27,6 @@ import static org.hbird.exchange.dataaccess.Arguments.ROWS;
 import static org.hbird.exchange.dataaccess.Arguments.SORT;
 import static org.hbird.exchange.dataaccess.Arguments.SORT_ORDER;
 import static org.hbird.exchange.dataaccess.Arguments.TO;
-import static org.hbird.exchange.dataaccess.Arguments.TYPE;
 import static org.hbird.exchange.dataaccess.Arguments.create;
 
 import java.util.ArrayList;
@@ -59,7 +58,6 @@ public class DataRequest extends Command {
 	 */
 	@Override
 	protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
-		args.add(create(TYPE));
 		args.add(create(CLASS));
 		args.add(create(FROM));
 		args.add(create(TO));
@@ -76,11 +74,6 @@ public class DataRequest extends Command {
 
 	public void setRows(int rows) {
 		setArgumentValue(StandardArguments.ROWS, rows);
-	}
-
-	@Override
-	public void setType(String type) {
-		setArgumentValue(StandardArguments.TYPE, type);
 	}
 
 	public void setClass(String clazz) {
@@ -166,8 +159,8 @@ public class DataRequest extends Command {
 		return getArgumentValue(StandardArguments.TO, Long.class);
 	}
 
-	public void setDerivedFrom(String name, long timestamp, String type) {
-		setArgumentValue(StandardArguments.DERIVED_FROM, new NamedInstanceIdentifier(name, timestamp, type));
+	public void setDerivedFrom(String issuedBy, String name, long timestamp) {
+		setArgumentValue(StandardArguments.DERIVED_FROM, new NamedInstanceIdentifier(issuedBy, name, timestamp));
 	}
 
 	public void setDerivedFrom(NamedInstanceIdentifier identifier) {

@@ -57,7 +57,7 @@ public class WebsocketTester extends SystemTest {
         LOG.info("Starting");
 
     	/** Issue request to start the websockets. */
-    	injection.sendBody(new StartComponent("SystemTest", new WebsocketInterfaceComponent("websockets")));
+    	injection.sendBody(new StartComponent("SystemTest", new WebsocketInterfaceComponent()));
     	
     	boolean state = true;
     	
@@ -72,7 +72,7 @@ public class WebsocketTester extends SystemTest {
     		LOG.warn("A warning");
     		LOG.error("An error");
     		
-    		publishApi.publish(new Event("SystemTest", "Event1", "TestEvent", "A test event", (new Date()).getTime()));
+    		publishApi.publish(new Event("SystemTest", "Event1", "A test event", (new Date()).getTime()));
 
     		publishApi.publish(new State("SystemTest", "State2", "The lower limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", true));
     		publishApi.publish(new State("SystemTest", "State1", "The upper limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", state));

@@ -32,9 +32,7 @@
  */
 package org.hbird.exchange.core;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -53,41 +51,29 @@ public class Part extends Named implements IPart {
 	 */
 	private static final long serialVersionUID = 577393462361927408L;
 
+	/** The Part that this part is part of. */
 	protected IPart parent = null;
 	
-	protected BusinessCard card = null;
-
-	protected List<Command> commands = new ArrayList<Command>();
+	/** Unique ID of this part. The ID should be unique accross instantiations of the Part, i.e. be set as
+	 * part of the construction of the Part. */
+	protected String ID = "";
 	
 	/** A list of all parts. */
 	protected static Map<String, Part> parts = new HashMap<String, Part>();
 		
-	public Part(String name, String description) {
-		super("System", name, "Part", description);
-		this.card = new BusinessCard(name, null);
+	public Part(String ID, String name, String description) {
+		super(name, description);
+		this.ID = ID;
+		
 		Part.parts.put(name, this);
 	}
 
-	public Part(String name, String description, IPart isPartOf) {
-		super("System", name, "Part", description);
-		this.card = new BusinessCard(name, null);
-		Part.parts.put(name, this);
+	public Part(String ID, String name, String description, IPart isPartOf) {
+		super(name, description);
+		this.ID = ID;
 		parent = isPartOf;
-	}
-
-	public Part(String name, String description, List<Command> commands) {
-		super("System", name, "Part", description);
-		this.commands = commands;
-		this.card = new BusinessCard(name, commands);
+		
 		Part.parts.put(name, this);
-	}
-
-	public Part(String name, String description, IPart isPartOf, List<Command> commands) {
-		super("System", name, "Part", description);
-		this.commands = commands;
-		this.card = new BusinessCard(name, commands);
-		Part.parts.put(name, this);
-		parent = isPartOf;
 	}
 
 	/* (non-Javadoc)
@@ -127,15 +113,15 @@ public class Part extends Named implements IPart {
 		return parent == null ? separator + name : parent.getQualifiedName(separator) + separator + name;
 	}
 
-	public List<Command> getCommands() {
-		return commands;
-	}
-
-	public void setCommands(List<Command> commands) {
-		this.commands = commands;
-	}
-
 	public static Map<String, Part> getAllParts() {
 		return parts;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.hbird.exchange.interfaces.IIDed#getID()
+	 */
+	@Override
+	public String getID() {
+		return ID;
 	}
 }

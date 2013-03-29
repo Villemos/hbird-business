@@ -22,18 +22,12 @@ import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Binary;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.core.D3Vector;
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.groundstation.GroundStation;
-import org.hbird.exchange.groundstation.Modem;
-import org.hbird.exchange.groundstation.RadioDevice;
-import org.hbird.exchange.groundstation.Rotator;
-import org.hbird.exchange.groundstation.SoftwareDefinedRadio;
-import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.tasking.Task;
 
@@ -56,16 +50,13 @@ public interface IPublish {
 	public void commit();
 
 	public Named publish(Named object);
-
+	public Issued publish(Issued object);
+	
 	public Parameter publishParameter(String name, String description, Number value, String unit);
 	public Parameter publishParameter(String name, String description, Number value, String unit, long timestamp);
 	
 	public State publishState(String name, String description, String isStateOf, Boolean state);
 	public State publishState(String name, String description, String isStateOf, Boolean state, long timestamp);
-	
-	public GroundStation publishGroundStation(String name, D3Vector geoLocation, Rotator rotatorProperties, RadioDevice radioChannels, Modem modems, SoftwareDefinedRadio softwareDefinedRadios);
-	
-	public Satellite publishSatellite(String name, String description);
 	
 	public Label publishLabel(String name, String description, String value);
 
@@ -83,7 +74,7 @@ public interface IPublish {
 	 * @param key The key of the metadata.
 	 * @param metadata The value of the metadata
 	 */
-	public Metadata publishMetadata(Named subject, String key, String metadata);
+	public Metadata publishMetadata(Issued subject, String key, String metadata);
 
 	public TleOrbitalParameters publishTleParameters(String name, String satellite, String tle1, String tle2);
 }

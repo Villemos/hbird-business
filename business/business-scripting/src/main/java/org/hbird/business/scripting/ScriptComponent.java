@@ -36,9 +36,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hbird.business.scripting.bean.ScriptComponentDriver;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.configurator.StartablePart;
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.core.StartablePart;
 import org.hbird.exchange.scripting.ScriptExecutionRequest;
 
 /**
@@ -52,6 +52,7 @@ public class ScriptComponent extends StartablePart {
 	 */
 	private static final long serialVersionUID = -78671649806617847L;
 
+	
 	public static final String DESC_STRING = "Component executing a script.";
 	
 	protected ScriptExecutionRequest request = null;
@@ -72,8 +73,8 @@ public class ScriptComponent extends StartablePart {
      * @param bindings A Map defining the bindings between monitoring parameters of the system and the parameters in the
      *            script.
      */
-    public ScriptComponent(String componentname, String scriptname, Named output, Map<String, String> bindings) {
-        super(componentname, DESC_STRING, ScriptComponentDriver.class.getName());
+    public ScriptComponent(String ID, String componentname, String scriptname, Issued output, Map<String, String> bindings) {
+        super(ID, componentname, DESC_STRING, ScriptComponentDriver.class.getName());
         request = new ScriptExecutionRequest(scriptname, "", "javascript", output, bindings);
     }
 
@@ -93,8 +94,8 @@ public class ScriptComponent extends StartablePart {
      * @param bindings A Map defining the bindings between monitoring parameters of the system and the parameters in the
      *            script.
      */
-    public ScriptComponent(String componentname, String scriptName, String script, Named output, Map<String, String> bindings) {
-        super(componentname, DESC_STRING, ScriptComponentDriver.class.getName());
+    public ScriptComponent(String ID, String componentname, String scriptName, String script, Issued output, Map<String, String> bindings) {
+        super(ID, componentname, DESC_STRING, ScriptComponentDriver.class.getName());
 
         request = new ScriptExecutionRequest(scriptName, script, "JavaScript", output, bindings);
     }
@@ -122,9 +123,9 @@ public class ScriptComponent extends StartablePart {
      * @param bindings A String defining the mapping from runtime parameters to script parameters. Must be in the format
      *            '[def 1]:[def 2]:...' with [def] being '[runtime name]=[script name]'.
      */
-    public ScriptComponent(String componentname, String scriptname, String paraName, String paraDescription, String paraUnit,
+    public ScriptComponent(String ID, String componentname, String scriptname, String paraName, String paraDescription, String paraUnit,
             String bindings) {
-        super(componentname, DESC_STRING, ScriptComponentDriver.class.getName());
+        super(ID, componentname, DESC_STRING, ScriptComponentDriver.class.getName());
 
         Parameter output = new Parameter("", paraName, paraDescription, 0d, paraUnit);
 
@@ -162,9 +163,9 @@ public class ScriptComponent extends StartablePart {
      * @param bindings A String defining the mapping from runtime parameters to script parameters. Must be in the format
      *            '[def 1]:[def 2]:...' with [def] being '[runtime name]=[script name]'.
      */
-    public ScriptComponent(String componentname, String scriptName, String script, String format, String paraName, 
+    public ScriptComponent(String ID, String componentname, String scriptName, String script, String format, String paraName, 
             String paraDescription, String paraUnit, String bindings) {
-        super(componentname, DESC_STRING, ScriptComponentDriver.class.getName());
+        super(ID, componentname, DESC_STRING, ScriptComponentDriver.class.getName());
 
         Parameter output = new Parameter("", paraName, paraDescription, 0d, paraUnit);
 

@@ -33,12 +33,12 @@
 package org.hbird.business.tracking;
 
 import org.hbird.business.tracking.bean.TrackingComponentDriver;
-import org.hbird.exchange.core.StartablePart;
+import org.hbird.exchange.configurator.StartablePart;
 import org.hbird.exchange.interfaces.IPart;
 
 
 /**
- * @author Admin
+ * @author Gert Villemos
  *
  */
 public class TrackingComponent extends StartablePart {
@@ -48,6 +48,10 @@ public class TrackingComponent extends StartablePart {
 	 */
 	private static final long serialVersionUID = 8231598458372644L;
 
+	public static final String DEFAULT_NAME = "TrackingAutomation";
+	public static final String DEFAULT_DESCRIPTION = "Component for automating tracking of a satellite from a specific ground station.";
+	public static final String DEFAULT_DRIVER = TrackingComponentDriver.class.getName();
+	
 	protected String satellite;
 	
 	protected String antenna;
@@ -57,20 +61,20 @@ public class TrackingComponent extends StartablePart {
 	 * @param description
 	 * @param commands
 	 */
-	public TrackingComponent(String name, String description, String satellite, String antenna, String driver) {
-		super(name, description, driver);
+	public TrackingComponent(String ID, String name, String description, String satellite, String antenna, String driver) {
+		super(ID, name, description, driver);
 		this.satellite = satellite;
 		this.antenna = antenna;
 	}
 
-	public TrackingComponent(String name, String description, String satellite, String antenna) {
-		super(name, description, TrackingComponentDriver.class.getName());
+	public TrackingComponent(String ID, String name, String description, String satellite, String antenna) {
+		super(ID, name, description, TrackingComponentDriver.class.getName());
 		this.satellite = satellite;
 		this.antenna = antenna;
 	}
 
-	public TrackingComponent(String name, String description, IPart satellite, IPart antenna) {
-		super(name, description, TrackingComponentDriver.class.getName());
+	public TrackingComponent(String ID, String name, String description, IPart satellite, IPart antenna) {
+		super(ID, name, description, TrackingComponentDriver.class.getName());
 		this.satellite = satellite.getQualifiedName();
 		this.antenna = antenna.getQualifiedName();
 	}

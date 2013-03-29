@@ -52,7 +52,7 @@ public class NavigationUtilities {
         return new PVCoordinates(position, velocity);
     }
 
-    public static OrbitalState toOrbitalState(SpacecraftState state, String satellite, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
+    public static OrbitalState toOrbitalState(SpacecraftState state, String satellite) {
 
         /** Create position vector. */
         D3Vector position = new D3Vector("", "Position", "Position", "The orbital position of the satellite at the given time.",
@@ -72,9 +72,9 @@ public class NavigationUtilities {
                 state.getOrbit().getPVCoordinates().getMomentum().getY(),
                 state.getOrbit().getPVCoordinates().getMomentum().getZ());
 
-        return new OrbitalState(StandardComponents.ORBIT_PREDICTOR, "OrbitalState", "Predicted", "Orbital state of satellite", state.getDate().toDate(scale).getTime(),
+        return new OrbitalState(StandardComponents.ORBIT_PREDICTOR, "OrbitalState", "Orbital state of satellite", state.getDate().toDate(scale).getTime(),
                 satellite, position,
-                velocity, momentum, derivedFromName, derivedFromTimestamp, derivedFromType);
+                velocity, momentum);
     }
 
     public static List<PointingData> calculateContactData(LocationContactEvent startContactEvent, LocationContactEvent endContactEvent,

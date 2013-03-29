@@ -95,12 +95,12 @@ public class GroundStationDriverTester extends SystemTest {
         long now = System.currentTimeMillis();
         long delta = 1363571566678l - 1363571275302l;
 
-        OrbitalState startState = new OrbitalState("OrbitPredictor", "OrbitalState", "Predicted", "", now + 20000, "ESTCube-1", startPos, startVel, startMom, "", 0l, "");
-        OrbitalState endState = new OrbitalState("OrbitPredictor", "OrbitalState", "Predicted", "", now + delta + 20000, "ESTCube-1", endPos, endVel, endMom, "", 0l, "");        
+        OrbitalState startState = new OrbitalState("OrbitPredictor", "OrbitalState", "", now + 20000, "ESTCube-1", startPos, startVel, startMom);
+        OrbitalState endState = new OrbitalState("OrbitPredictor", "OrbitalState", "", now + delta + 20000, "ESTCube-1", endPos, endVel, endMom);        
         
-        LocationContactEvent start = new LocationContactEvent("OrbitPredictor", "Predicted", now + 20000, "ES5EC", "", "ESTCube-1", true, startState, "", 0l, "");
+        LocationContactEvent start = new LocationContactEvent("OrbitPredictor", now + 20000, "ES5EC", "", "ESTCube-1", true, startState);
         start.setVisible(true);
-        LocationContactEvent end = new LocationContactEvent("OrbitPredictor", "Predicted", now + delta + 20000, "ES5EC", "", "ESTCube-1", false, endState, "", 0l, "");
+        LocationContactEvent end = new LocationContactEvent("OrbitPredictor", now + delta + 20000, "ES5EC", "", "ESTCube-1", false, endState);
         end.setVisible(false);
         
         estcube1.setFrequency(10000D);

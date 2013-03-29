@@ -73,8 +73,8 @@ public class HamlibRadioPart extends RadioDevice {
      * @param isDownlink
      * @param gain
      */
-    public HamlibRadioPart(String name, long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain, long port, String host) {
-        super(name, minFrequency, maxFrequency, isUplink, isDownlink, gain, HamlibDriver.class.getName());
+    public HamlibRadioPart(String ID, String name, long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain, long port, String host) {
+        super(ID, name, minFrequency, maxFrequency, isUplink, isDownlink, gain, HamlibDriver.class.getName());
         this.port = port;
         this.host = host;
     }
@@ -113,11 +113,11 @@ public class HamlibRadioPart extends RadioDevice {
         
         /** Set initial frequency. */       
         LOG.info("First nativecommand for part 'Radio' derived from 'Track' command will execute at '" + (start.getTimestamp() - preDelta) + " (" + (new Date(start.getTimestamp() - preDelta)).toLocaleString() + ")'.");
-        commands.add(new HamlibNativeCommand(SetFrequency.createMessageString(satellite.getFrequency() * pointingData.get(0).getDoppler()).toString(), start.getTimestamp() - preDelta, command.getUuid(), "PreTracking"));
+        commands.add(new HamlibNativeCommand(SetFrequency.createMessageString(satellite.getFrequency() * pointingData.get(0).getDoppler()).toString(), start.getTimestamp() - preDelta, command.getID(), "PreTracking"));
 
         /** For each point, except the first which has been set in the preParse function, create a native pointing command. */
         for (int index = 1; index < pointingData.size(); index++) {
-            commands.add(new HamlibNativeCommand(SetFrequency.createMessageString(satellite.getFrequency() * pointingData.get(index).getDoppler()).toString(), pointingData.get(index).getTimestamp(), command.getUuid(), "Tracking"));
+            commands.add(new HamlibNativeCommand(SetFrequency.createMessageString(satellite.getFrequency() * pointingData.get(index).getDoppler()).toString(), pointingData.get(index).getTimestamp(), command.getID(), "Tracking"));
         }
         
         return commands;

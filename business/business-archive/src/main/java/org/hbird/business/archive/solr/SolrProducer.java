@@ -44,9 +44,9 @@ import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.interfaces.IApplicableTo;
-import org.hbird.exchange.interfaces.IDerivedFrom;
 import org.hbird.exchange.interfaces.IGenerationTimestamped;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
+import org.hbird.exchange.interfaces.IIssued;
 import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 import org.hbird.exchange.navigation.LocationContactEvent;
@@ -187,12 +187,12 @@ public class SolrProducer extends DefaultProducer {
 
         if (body.hasArgumentValue(StandardArguments.DERIVED_FROM)) {
             NamedInstanceIdentifier id = body.getArgumentValue(StandardArguments.DERIVED_FROM, NamedInstanceIdentifier.class);
-            derivedFromPart = "derivedFromName:" + id.getName() + " AND derivedFromTimestamp:" + id.getTimestamp() + " AND derivedFromType:" + id.getType();
+            derivedFromPart = "derivedFromName:" + id.getName() + " AND derivedFromTimestamp:" + id.getTimestamp() + " AND derivedFromIssuedBy:" + id.getIssuedBy();
         }
 
         if (body.hasArgumentValue(StandardArguments.APPLICABLE_TO)) {
             NamedInstanceIdentifier id = body.getArgumentValue(StandardArguments.APPLICABLE_TO, NamedInstanceIdentifier.class);
-            applicableToPart = "applicableToName:" + id.getName() + " AND applicableToTimestamp:" + id.getTimestamp() + " AND applicableToType:" + id.getType();
+            applicableToPart = "applicableToName:" + id.getName() + " AND applicableToTimestamp:" + id.getTimestamp() + " AND derivedFromIssuedBy:" + id.getIssuedBy();
         }
 
         if (body.hasArgumentValue(StandardArguments.SATELLITE_NAME)) {
@@ -330,7 +330,7 @@ public class SolrProducer extends DefaultProducer {
 
                             for (Named newObj : retrieve(sampleQuery)) {
                                 results.add(newObj);
-                                LOG.info("Added object '" + newObj.getName() + "' with timestamp '" + newObj.getTimestamp() + "'");
+                                LOG.info("Added object '" + newObj.getName() + "'");
                             }
                         }
                     }
@@ -418,16 +418,15 @@ public class SolrProducer extends DefaultProducer {
         /** The document we will be storing. */
         SolrInputDocument document = new SolrInputDocument();
 
-        Named namedIo = io;
-
-        document.setField(StandardArguments.HAS_URI, io.getUuid());
-        document.addField(StandardArguments.ISSUED_BY, namedIo.getIssuedBy());
-        document.addField(StandardArguments.NAME, namedIo.getQualifiedName());
-        document.addField(StandardArguments.TYPE, namedIo.getType());
-        document.addField(StandardArguments.DESCRIPTION, namedIo.getDescription());
-        document.addField(StandardArguments.TIMESTAMP, namedIo.getTimestamp());
-
-        document.addField(StandardArguments.CLASS, namedIo.getClass().getSimpleName());
+    	document.addField(StandardArguments.NAME, io.getName());
+    	document.addField(StandardArguments.DESCRIPTION, io.getDescription());
+        document.addField(StandardArguments.CLASS, io.getClass().getSimpleName());
+        document.setField(StandardArguments.HAS_URI, io.getID());
+        
+        if (io instanceof IIssued) {
+        	document.addField(StandardArguments.ISSUED_BY, ((IIssued) io).getIssuedBy());
+            document.addField(StandardArguments.TIMESTAMP, ((IIssued) io).getTimestamp());
+        }
 
         if (io instanceof Parameter) {
             Parameter parameter = (Parameter) io;
@@ -442,7 +441,7 @@ public class SolrProducer extends DefaultProducer {
         else if (io instanceof CommandRequest) {
             CommandRequest commandrequest = (CommandRequest) io;
             insert(commandrequest.getCommand());
-            document.addField("carryingCommand", commandrequest.getUuid());
+            document.addField("carryingCommand", commandrequest.getID());
 
             for (String lockState : commandrequest.getLockStates()) {
                 document.addField("withLockState", lockState);
@@ -450,7 +449,7 @@ public class SolrProducer extends DefaultProducer {
 
             for (Task task : commandrequest.getTasks()) {
                 insert(task);
-                document.addField("withTask", task.getUuid());
+                document.addField("withTask", task.getID());
             }
         }
         else if (io instanceof Command) {
@@ -476,18 +475,13 @@ public class SolrProducer extends DefaultProducer {
         if (io instanceof IGroundStationSpecific) {
             document.addField("ofLocation", ((IGroundStationSpecific) io).getGroundStationName());
         }
-        if (io instanceof IDerivedFrom) {
-            document.addField("derivedFromName", ((IDerivedFrom) io).from().getName());
-            document.addField("derivedFromTimestamp", ((IDerivedFrom) io).from().getTimestamp());
-            document.addField("derivedFromType", ((IDerivedFrom) io).from().getType());
-        }
         if (io instanceof IPart) {
             document.addField("isPartOf", ((IPart) io).getIsPartOf());
         }
         if (io instanceof IApplicableTo) {
             document.addField("applicableToName", ((IApplicableTo) io).applicableTo().getName());
             document.addField("applicableToTimestamp", ((IApplicableTo) io).applicableTo().getTimestamp());
-            document.addField("applicableToType", ((IApplicableTo) io).applicableTo().getType());
+            document.addField("derivedFromIssuedBy", ((IApplicableTo) io).applicableTo().getIssuedBy());
         }
 
         /** Insert the serialization. */

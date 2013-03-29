@@ -32,10 +32,6 @@
  */
 package org.hbird.exchange.interfaces;
 
-import java.util.List;
-
-import org.hbird.exchange.core.Command;
-
 /**
  * Indicates that this object is 'part of' a whole.
  * 
@@ -61,6 +57,4 @@ public interface IPart extends INamed {
 	 * @param parent The parent object of this object.
 	 */
 	public void setIsPartOf(IPart parent);
-	
-	public List<Command> getCommands();
 }

@@ -42,8 +42,8 @@ public class Antenna extends Part {
 	 */
 	protected List<ICommandableAntennaPart> parts = new ArrayList<ICommandableAntennaPart>();
 
-	public Antenna(String name, String description, Rotator rotator, RadioDevice radioDevice) {
-		super(name, description);
+	public Antenna(String ID, String name, String description, Rotator rotator, RadioDevice radioDevice) {
+		super(ID, name, description);
 
 		parts.add(rotator);
 		parts.add(radioDevice);
@@ -52,8 +52,8 @@ public class Antenna extends Part {
 		radioDevice.setIsPartOf(this);
 	}
 	
-	public Antenna(String name, String description, Rotator rotator, RadioDevice radioDevice, Modem modemDevice, SoftwareDefinedRadio softwareDefinedRadio) {
-		super(name, description);
+	public Antenna(String ID, String name, String description, Rotator rotator, RadioDevice radioDevice, Modem modemDevice, SoftwareDefinedRadio softwareDefinedRadio) {
+		super(ID, name, description);
 
 		parts.add(rotator);
 		parts.add(radioDevice);

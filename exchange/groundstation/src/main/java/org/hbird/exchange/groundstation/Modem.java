@@ -49,7 +49,7 @@ public abstract class Modem extends Part implements ICommandableAntennaPart {
 	 * @param name
 	 * @param description
 	 */
-	public Modem(String name, String description) {
-		super(name, description);
+	public Modem(String ID, String name, String description) {
+		super(ID, name, description);
 	}
 }

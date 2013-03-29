@@ -22,6 +22,7 @@ import org.apache.camel.Body;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.tasking.Task;
 
@@ -65,11 +66,11 @@ public class TaskExecutor {
 	 * @throws InterruptedException 
 	 */
 	@Handler
-	public List<Named> receive(@Body Task body) throws InterruptedException {
+	public List<Issued> receive(@Body Task body) throws InterruptedException {
 
 		LOG.debug("Received task '" + body.getName() + "'");
 		
-		List<Named> objects = body.execute();
+		List<Issued> objects = body.execute();
 		
 		if (body.isRepeat()) {
 			body.reschedule();
@@ -78,7 +79,7 @@ public class TaskExecutor {
 		}
 		
 		/** Mark each object as having been issued by this component. */
-		for (Named obj : objects) {
+		for (Issued obj : objects) {
 			obj.setIssuedBy(this.name);
 		}
 		

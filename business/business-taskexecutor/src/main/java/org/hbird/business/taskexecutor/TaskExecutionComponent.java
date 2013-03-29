@@ -33,10 +33,10 @@
 package org.hbird.business.taskexecutor;
 
 import org.hbird.business.taskexecutor.bean.TaskExecutorComponentDriver;
-import org.hbird.exchange.core.StartablePart;
+import org.hbird.exchange.configurator.StartablePart;
 
 /**
- * @author Admin
+ * @author Gert Villemos
  *
  */
 public class TaskExecutionComponent extends StartablePart {
@@ -46,15 +46,11 @@ public class TaskExecutionComponent extends StartablePart {
 	 */
 	private static final long serialVersionUID = -5044693580832513816L;
 
-	/**
-	 * @param name
-	 * @param description
-	 */
-	public TaskExecutionComponent(String name, String driver) {
-		super(name, "Component for executing scheduled tasks.", driver);
-	}
+	public static final String DEFAULT_NAME = "TaskExecutor";
+	public static final String DEFAULT_DESCRIPTION = "Component for executing scheduled tasks.";
+	public static final String DEFAULT_DRIVER = TaskExecutorComponentDriver.class.getName();
 	
-	public TaskExecutionComponent(String name) {
-		super(name, "Component for executing scheduled tasks.", TaskExecutorComponentDriver.class.getName());
+	public TaskExecutionComponent() {
+		super(DEFAULT_NAME, DEFAULT_NAME, DEFAULT_DESCRIPTION, DEFAULT_DRIVER);
 	}
 }

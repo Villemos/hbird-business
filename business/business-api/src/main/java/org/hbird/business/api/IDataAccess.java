@@ -19,6 +19,7 @@ package org.hbird.business.api;
 import java.util.List;
 import java.util.Map;
 
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
@@ -495,7 +496,7 @@ public interface IDataAccess {
 	 * @param derivedFromTleNamed The name of the TleParameters object the state must be derived from
 	 * @param derivedFromTleTimestamped The timestamp of the TleParameter object that the state must be derived from
 	 */
-	public OrbitalState retrieveOrbitalStateFor(String satellite, String derivedFromTleNamed, long derivedFromTleTimestamped);
+	public OrbitalState retrieveOrbitalStateFor(String satellite, String derivedIssuedBy, String derivedFromTleNamed, long derivedFromTleTimestamped);
 
 	/**
 	 * Method to retrieve the last orbital state of a satellite as derived from the last TLE. The method will return
@@ -533,7 +534,7 @@ public interface IDataAccess {
 	 * @param derivedTimestamp  The timestamp of the TLE parameters object that this must have been derived from
 	 * @return A list of all orbital states applicable to the satellites
 	 */
-	public List<OrbitalState> retrieveOrbitalStatesFor(String satellite, long from, long to, String derivedFromName, long derivedFromTimestamp);
+	public List<OrbitalState> retrieveOrbitalStatesFor(String satellite, long from, long to, String derivedIssuedBy, String derivedFromName, long derivedFromTimestamp);
 
 	/**
 	 * Method to retrieve the TLE of a satellite, identified throughs its name. The method will return
@@ -645,5 +646,5 @@ public interface IDataAccess {
 	 * @param subject The Named object that the metadata must be applicable to.
 	 * @return A list with zero or more metadata objects applicable to the subject
 	 */
-	public List<Named> getMetadata(Named subject);
+	public List<Named> getMetadata(Issued subject);
 }

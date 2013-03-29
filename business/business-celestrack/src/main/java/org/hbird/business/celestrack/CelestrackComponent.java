@@ -30,17 +30,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.exchange.interfaces;
+package org.hbird.business.celestrack;
+
+import org.hbird.business.celestrack.http.CelestrackComponentDriver;
+import org.hbird.exchange.configurator.StartablePart;
 
 /**
- * This object is monitoring data describing a part.
- * 
  * @author Gert Villemos
  *
  */
-public interface IMonitoringData extends INamed {
+public class CelestrackComponent extends StartablePart {
 
-	public String getDescribedPart();	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6670616270121780868L;
+
+	protected String elements = "cubesat";
 	
-	public void setDescribedPart(IPart part);
+	protected long period = 60 * 60 * 1000;
+
+	protected String proxyHost = null;
+
+	protected int proxyPort = 0;
+
+	public static final String DEFAULT_NAME = "CelestrackReader";
+	public static final String DEFAULT_DESCRIPTION = "Component to automatically read satellte TLEs from NOAAs celestrack";
+	public static final String DEFAULT_DRIVER = CelestrackComponentDriver.class.getName();
+
+	public CelestrackComponent() {
+		super(DEFAULT_NAME, DEFAULT_NAME, DEFAULT_DESCRIPTION, DEFAULT_DRIVER);
+	}
+
+	public String getElements() {
+		return elements;
+	}
+
+	public void setElements(String elements) {
+		this.elements = elements;
+	}
+
+	public long getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(long period) {
+		this.period = period;
+	}
 }

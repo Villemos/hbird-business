@@ -55,7 +55,7 @@ public class JmsSelectorTester extends SystemTest {
 		private static final long serialVersionUID = 3717720044878741166L;
 		
 		public TestType(String name, String type, String destination) {
-			super("SystemTest", name, type, "");
+			super(name, "");
 			setDescription(destination);
 		}
 	}

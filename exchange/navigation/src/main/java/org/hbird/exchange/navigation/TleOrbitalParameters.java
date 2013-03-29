@@ -17,7 +17,7 @@
 * under the License. */
 package org.hbird.exchange.navigation;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
 /**
@@ -26,7 +26,7 @@ import org.hbird.exchange.interfaces.ISatelliteSpecific;
  * @author Gert Villemos
  *
  */
-public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
+public class TleOrbitalParameters extends Issued implements ISatelliteSpecific {
 
 	/**
 	 * 
@@ -43,7 +43,7 @@ public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 	protected String tleLine2;
 	
 	public TleOrbitalParameters(String issuedBy, String name, String description, long timestamp, String datasetidentifier, String satellite, String tleLine1, String tleLine2) {
-		super(issuedBy, name, "Config", description, timestamp, datasetidentifier);
+		super(issuedBy, name, description, timestamp);
 		
 		this.satellite = satellite;
 		this.tleLine1 = tleLine1;
@@ -51,7 +51,7 @@ public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 	}
 	
 	public TleOrbitalParameters(String issuedBy, String name, String description, String satellite, String tleLine1, String tleLine2) {
-		super(issuedBy, name, "Config", description);
+		super(issuedBy, name, description);
 		
 		this.satellite = satellite;
 		this.tleLine1 = tleLine1;
@@ -59,7 +59,7 @@ public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 	}
 
 	public TleOrbitalParameters(String issuedBy, String name, String satellite, String tleLine1, String tleLine2) {
-		super(issuedBy, name, "Config", "The TLE state of the satellite.");
+		super(issuedBy, name, "The TLE state of the satellite.");
 		
 		this.satellite = satellite;
 		this.tleLine1 = tleLine1;
@@ -67,7 +67,7 @@ public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 	}
 
 	public TleOrbitalParameters(String issuedBy, String name, Satellite satellite, String tleLine1, String tleLine2) {
-		super(issuedBy, name, "Config", "The TLE state of the satellite.");
+		super(issuedBy, name, "The TLE state of the satellite.");
 		
 		this.satellite = satellite.getQualifiedName();
 		this.tleLine1 = tleLine1;

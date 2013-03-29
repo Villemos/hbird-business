@@ -50,10 +50,6 @@ public class WebsocketInterfaceComponentDriver extends SoftwareComponentDriver {
 
 	protected ToJsonProcessor toJson = new ToJsonProcessor();
 
-	protected final NamedCache parameterCache = new NamedCache();
-
-	protected final NamedCache systemCache = new NamedCache();
-
 	/* (non-Javadoc)
 	 * @see org.hbird.business.configurator.ComponentBuilder#doConfigure()
 	 */

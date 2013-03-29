@@ -26,19 +26,13 @@ import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Binary;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.core.D3Vector;
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
-import org.hbird.exchange.groundstation.GroundStation;
-import org.hbird.exchange.groundstation.Modem;
-import org.hbird.exchange.groundstation.RadioDevice;
-import org.hbird.exchange.groundstation.Rotator;
-import org.hbird.exchange.groundstation.SoftwareDefinedRadio;
-import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.tasking.Task;
 
@@ -49,6 +43,11 @@ public class Publish extends HbirdApi implements IPublish {
 	}
 
 	public Named publish(Named object) {
+		template.sendBody(inject, object);
+		return object;
+	}
+
+	public Issued publish(Issued object) {
 		object.setIssuedBy(issuedBy);
 		template.sendBody(inject, object);
 		return object;
@@ -71,18 +70,6 @@ public class Publish extends HbirdApi implements IPublish {
 		return (State) publish(new State(issuedBy, name, description, isStateOf, state, timestamp));
 	}
 
-	public GroundStation publishGroundStation(String name, D3Vector geoLocation, Rotator rotator, RadioDevice radioChannel, Modem modems, SoftwareDefinedRadio softwareDefinedRadios) {
-		return (GroundStation) publish(new GroundStation(name, geoLocation, rotator, radioChannel, modems, softwareDefinedRadios));
-	}
-
-	public Satellite publishSatellite(String name, String description) {
-		return (Satellite) publish(new Satellite(name, description));
-	}
-
-	public void publishMeasuredOrbitalState(String name, String description, long timestamp, long generationTime, String satellite, double px, double py, double pz, double vx, double vy, double vz, double mx, double my, double mz, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
-		// TODO
-	}
-
 	public Label publishLabel(String name, String description, String value) {
 		return (Label) publish(new Label(issuedBy, name, description, value));
 	}
@@ -100,11 +87,11 @@ public class Publish extends HbirdApi implements IPublish {
 	}
 
 	public CommandRequest publishCommandRequest(String name, String description, Command command) {
-		return (CommandRequest) publish(new CommandRequest(issuedBy, name, "Command", description, null, null, command));
+		return (CommandRequest) publish(new CommandRequest(issuedBy, name, description, null, null, command));
 	}
 
 	public CommandRequest publishCommandRequest(String name, String description, Command command, List<String> lockStates, List<Task> tasks) {
-		return (CommandRequest) publish(new CommandRequest(issuedBy, name, "CommandRequest", description, lockStates, tasks, command));
+		return (CommandRequest) publish(new CommandRequest(issuedBy, name, description, lockStates, tasks, command));
 	}
 
 	public void commit() {
@@ -114,11 +101,11 @@ public class Publish extends HbirdApi implements IPublish {
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publichMetadata(org.hbird.exchange.core.Named, java.lang.String, java.lang.String)
 	 */
-	public Metadata publishMetadata(Named subject, String key, String value) {
+	public Metadata publishMetadata(Issued subject, String key, String value) {
 		Map<String, Object> metadata = new HashMap<String, Object>();
 		metadata.put(key, value);
 		
-		return (Metadata) publish(new Metadata(issuedBy, "Metadata", subject, metadata));
+		return (Metadata) publish(new Metadata(issuedBy, key, subject, metadata));
 	}
 
 	/* (non-Javadoc)

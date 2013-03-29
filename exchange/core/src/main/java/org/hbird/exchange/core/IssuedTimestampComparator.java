@@ -14,17 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.exchange.interfaces;
+package org.hbird.exchange.core;
 
-import org.hbird.exchange.core.NamedInstanceIdentifier;
+import java.util.Comparator;
 
 
-public interface IDerivedFrom {
+public class IssuedTimestampComparator implements Comparator<Issued> {
 
-	/**
-	 * Method to retrieve the identifier of the Named object that this Named object is retrieved from.
-	 * 
-	 * @return
-	 */
-	public NamedInstanceIdentifier from(); 
+	public int compare(Issued lhs, Issued rhs) {
+		
+		if (lhs.getTimestamp() < rhs.getTimestamp()) {
+			return -1;
+		}
+		else if (lhs.getTimestamp() > rhs.getTimestamp()) {
+			return 1;
+		}
+		
+		return 0;
+	}
 }

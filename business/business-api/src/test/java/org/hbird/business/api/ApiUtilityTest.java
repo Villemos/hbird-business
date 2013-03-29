@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class ApiUtilityTest {
 	public void testSortParametersAndState() {
 		
 		/** Create the test data*/
-		List<Named> testData = new ArrayList<Named>();
+		List<Issued> testData = new ArrayList<Issued>();
 		
         testData.add(new Parameter("", "PARA1", "", 1, "", 1));
         testData.add(new State("", "STATE1_OF_PARA1", "","PARA1", true, 1));

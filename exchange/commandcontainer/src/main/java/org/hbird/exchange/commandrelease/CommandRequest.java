@@ -23,11 +23,11 @@ import java.util.Map;
 
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.interfaces.IScheduled;
 import org.hbird.exchange.tasking.Task;
 
-public class CommandRequest extends Named implements IScheduled {
+public class CommandRequest extends Issued implements IScheduled {
 
 	private static final long serialVersionUID = 5923007317348738778L;
 
@@ -45,7 +45,7 @@ public class CommandRequest extends Named implements IScheduled {
 	protected List<Task> tasks = new ArrayList<Task>();
 	
 	public CommandRequest(String issuedBy, String name, String description) {
-		super(issuedBy, name, "ComponentRequest", description);
+		super(issuedBy, name, description);
 	}
 	
 	/**
@@ -58,16 +58,16 @@ public class CommandRequest extends Named implements IScheduled {
 	 * @param transferTime The time at which the command should be released by the MCS for transfer to the satellite.
 	 * @param executionTime The time at which the command should be executed onboard.
 	 */
-	public CommandRequest(String issuedBy, String name, String type, String description, List<String> lockStates, List<Task> tasks, Command command) {
-		super(issuedBy, "CommandContainer" + name, type, "Command container holding lock states and tasks for the command '" + name + "'.");
+	public CommandRequest(String issuedBy, String name, String description, List<String> lockStates, List<Task> tasks, Command command) {
+		super(issuedBy, name, description);
 		this.command = command;
 		this.lockStates = lockStates;
 		this.tasks = tasks;
 	}
 	
 
-	public CommandRequest(String issuedBy, String name, String type, String description, List<String> lockStates, List<Task> tasks, Command command, long releaseTime) {
-		super(issuedBy, "CommandContainer" + name, type, "Command container holding lock states and tasks for the command '" + name + "'.");
+	public CommandRequest(String issuedBy, String name, String description, List<String> lockStates, List<Task> tasks, Command command, long releaseTime) {
+		super(issuedBy, name, description);
 		this.command = command;
 		this.lockStates = lockStates;
 		this.tasks = tasks;

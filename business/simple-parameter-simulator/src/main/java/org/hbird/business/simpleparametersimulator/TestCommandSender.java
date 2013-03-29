@@ -42,6 +42,6 @@ public class TestCommandSender {
         List<Task> tasks = new ArrayList<Task>();
         tasks.add(new SetParameter("", "TestTask", "Task for testing", 0, new Parameter("", "Parameter90", "Parameter set by task", 9d, "Volt")));
 
-        return new CommandRequest("Simulator", "TestCommandContainer", "", "A container for the test command used for validation", lockstates, tasks, command);
+        return new CommandRequest("Simulator", "TestCommandContainer", "A container for the test command used for validation", lockstates, tasks, command);
     }
 }

@@ -17,9 +17,7 @@
 package org.hbird.exchange.navigation;
 
 import org.hbird.exchange.core.Event;
-import org.hbird.exchange.core.NamedInstanceIdentifier;
 import org.hbird.exchange.interfaces.IAntennaSpecific;
-import org.hbird.exchange.interfaces.IDerivedFrom;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
 
@@ -41,8 +39,9 @@ import org.hbird.exchange.interfaces.ISatelliteSpecific;
  * The location event is typically calculated by a prediction module or could be reported
  * by a station or satellite.
  * 
+ * @author Gert Villemos
  */
-public class LocationContactEvent extends Event implements IAntennaSpecific, ISatelliteSpecific, IDerivedFrom {
+public class LocationContactEvent extends Event implements IAntennaSpecific, ISatelliteSpecific {
 
 	private static final long serialVersionUID = 6129893135305263533L; 
 
@@ -64,8 +63,6 @@ public class LocationContactEvent extends Event implements IAntennaSpecific, ISa
 	/** Flag indicating whether the visibility (contact) is now established or lost. */
 	protected boolean isVisible = true;
 	
-	protected NamedInstanceIdentifier from = null;
-	
 	/**
 	 * Constructor of a location contact event.
 	 * 
@@ -76,14 +73,13 @@ public class LocationContactEvent extends Event implements IAntennaSpecific, ISa
 	 * @param location The location to which contact has been established / lost.
 	 * @param satellite The satellite to which contact has been established / lost. 
 	 */
-	public LocationContactEvent(String issuedBy, String type, long timestamp, String location, String antenna, String satellite, boolean isVisible, OrbitalState satelliteState, String derivedFromName, long derivedFromTimestamp, String derivedFromType) {
-		super(issuedBy, "ContactEvent", "Event", "A contact event between a satellite and a location", timestamp);
+	public LocationContactEvent(String issuedBy, long timestamp, String location, String antenna, String satellite, boolean isVisible, OrbitalState satelliteState) {
+		super(issuedBy, "ContactEvent", "A contact event between a satellite and a location", timestamp);
 		this.location = location;
 		this.antenna = antenna;
 		this.satellite = satellite;
 		this.isVisible = isVisible;
 		this.satelliteState = satelliteState;
-		this.from = new NamedInstanceIdentifier(derivedFromName, derivedFromTimestamp, derivedFromType);
 	}
 
 	public String getGroundStationName() {
@@ -128,13 +124,5 @@ public class LocationContactEvent extends Event implements IAntennaSpecific, ISa
 
 	public void setSatelliteState(OrbitalState satelliteState) {
 		this.satelliteState = satelliteState;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IDerived#from()
-	 */
-	@Override
-	public NamedInstanceIdentifier from() {
-		return from;
 	}
 }
