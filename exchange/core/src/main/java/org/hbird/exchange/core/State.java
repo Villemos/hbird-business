@@ -29,11 +29,13 @@ import org.hbird.exchange.interfaces.IState;
 public class State extends Issued implements IState {
 
     /** The unique UID. */
-    private static final long serialVersionUID = 6234660528925795242L;
+    private static final long serialVersionUID = 3658873252806807331L;
 
-    /** The ID of the Issued object that this state parameter is the state of. 
+    /**
+     * The ID of the Issued object that this state parameter is the state of.
      * 
-     * The attribute has the format; [issuedBy]:[name]. */
+     * The attribute has the format; [issuedBy]:[name].
+     */
     protected String isStateOf;
 
     /** The value of the state. */
@@ -68,6 +70,7 @@ public class State extends Issued implements IState {
         setTimestamp(timestamp);
     }
 
+    @Override
     public String getIsStateOf() {
         return isStateOf;
     }
@@ -82,14 +85,17 @@ public class State extends Issued implements IState {
      * 
      * @return The Parameter value cast to a Boolean.
      */
+    @Override
     public Boolean getValue() {
         return state;
     }
 
+    @Override
     public void setValid() {
         state = true;
     }
 
+    @Override
     public void setInvalid() {
         state = false;
     }
@@ -110,15 +116,18 @@ public class State extends Issued implements IState {
         return String.format("State {name=%s, state=%s, isStateOf=%s, timestamp=%s}", name, state, isStateOf, timestamp);
     }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IIsStateOf#setIsStateOf(org.hbird.exchange.core.Named)
-	 */
-	@Override
-	public void setIsStateOf(Named isStateOf) {
-		this.isStateOf = isStateOf.getQualifiedName();
-	}
-	
-	public String getQualifiedName(String separator) {
-		return isStateOf + separator + name;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.exchange.interfaces.IIsStateOf#setIsStateOf(org.hbird.exchange.core.Named)
+     */
+    @Override
+    public void setIsStateOf(Named isStateOf) {
+        this.isStateOf = isStateOf == null ? null : isStateOf.getQualifiedName();
+    }
+
+    @Override
+    public String getQualifiedName(String separator) {
+        return isStateOf + separator + name;
+    }
 }

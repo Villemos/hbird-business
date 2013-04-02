@@ -24,9 +24,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hbird.exchange.util.LocalHostNameResolver;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +36,6 @@ public class BusinessCardTest {
     private static final String ISSUED_BY = "issuer";
     private static final String HOST = "host";
     private static final long PERIOD = 12345L;
-    private static final List<Command> COMMANDS = new ArrayList<Command>();
 
     private BusinessCard card;
 

@@ -25,7 +25,7 @@ package org.hbird.exchange.core;
  */
 public class Label extends Issued {
 
-    private static final long serialVersionUID = -6613944008898640558L;
+    private static final long serialVersionUID = 6064865233847879877L;
 
     /** The label value. */
     protected String value = "";
@@ -45,7 +45,7 @@ public class Label extends Issued {
     }
 
     public Label(Label base) {
-        this(base.issuedBy, base.name, base.description, base.value);
+        this(base.getIssuedBy(), base.getName(), base.getDescription(), base.getValue());
     }
 
     public String getValue() {
