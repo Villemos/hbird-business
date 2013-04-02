@@ -39,13 +39,13 @@ public class LimitCheckTester extends SystemTest {
 
         Part limits = parts.get("Limits");
 
-        LimitCheckComponent com = new LimitCheckComponent("PARA1_LowerSoftLimit", new Limit(eLimitType.Lower, estcube1.getQualifiedName() + "/PARA1", 2d,
+        LimitCheckComponent com = new LimitCheckComponent("PARA1_LowerSoftLimit", "PARA1_LowerSoftLimit", new Limit(eLimitType.Lower, estcube1.getQualifiedName() + "/PARA1", 2d,
                 "PARA1_LOWER_SOFTLIMIT", "The first lower limit of PARA1"));
         com.setIsPartOf(limits);
         StartComponent request = new StartComponent("SystemTest", com);
         injection.sendBody(request);
 
-        com = new LimitCheckComponent("PARA1_LowerHardLimit", new Limit(eLimitType.Lower, estcube1.getQualifiedName() + "/PARA1", 0d, "PARA1_LOWER_HARDLIMIT",
+        com = new LimitCheckComponent("PARA1_LowerHardLimit", "PARA1_LowerHardLimit", new Limit(eLimitType.Lower, estcube1.getQualifiedName() + "/PARA1", 0d, "PARA1_LOWER_HARDLIMIT",
                 "The second lower limit of PARA1"));
         com.setIsPartOf(limits);
         request = new StartComponent("SystemTest", com);
@@ -65,13 +65,13 @@ public class LimitCheckTester extends SystemTest {
 
         /** Start a limit checker. */
         LOG.info("Issuing commands for starting two upper limit limitcheckers.");
-        com = new LimitCheckComponent("PARA1_UpperSoftLimit", new Limit(eLimitType.Upper, estcube1.getQualifiedName() + "/PARA1", 10.5d,
+        com = new LimitCheckComponent("PARA1_UpperSoftLimit", "PARA1_UpperSoftLimit", new Limit(eLimitType.Upper, estcube1.getQualifiedName() + "/PARA1", 10.5d,
                 "PARA1_UPPER_SOFTLIMIT", "The first upper limit of PARA1"));
         com.setIsPartOf(limits);
         request = new StartComponent("SystemTest", com);
         injection.sendBody(request);
 
-        com = new LimitCheckComponent("PARA1_UpperHardLimit", new Limit(eLimitType.Upper, estcube1.getQualifiedName() + "/PARA1", 15d, "PARA1_UPPER_HARDLIMIT",
+        com = new LimitCheckComponent("PARA1_UpperHardLimit", "PARA1_UpperHardLimit", new Limit(eLimitType.Upper, estcube1.getQualifiedName() + "/PARA1", 15d, "PARA1_UPPER_HARDLIMIT",
                 "The second upper limit of PARA1"));
         com.setIsPartOf(limits);
         request = new StartComponent("SystemTest", com);

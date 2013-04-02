@@ -79,7 +79,7 @@
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
- 				<to uri="bean:businesscard" /> 
+<!--  				<to uri="bean:businesscard" />  -->
 <!-- 				<to uri="bean:parameterarchive" /> -->
 <!-- 				<to uri="bean:statearchive" /> -->
 <!-- 	 			<to uri="bean:dataaccessapi" /> -->
@@ -88,15 +88,15 @@
 <!-- 		 		<to uri="bean:tasking" /> -->
 <!-- 	 			<to uri="bean:commanding" /> -->
 <!-- 	 	 		<to uri="bean:websockettester" /> -->
-<!-- 	 			<to uri="bean:navigation" /> -->
-<!-- 	 			<to uri="bean:parsecontroller" /> -->
-<!-- 	 			<to uri="bean:navigationcontroller" /> -->
-<!-- 				<to uri="bean:inmemoryscheduler" /> -->
-<!-- 	 			<to uri="bean:groundstationdriver" /> -->
-<!-- 	 			<to uri="bean:endtoendtracking" /> -->
-<!-- 	 			<to uri="bean:strandtracking" /> -->
-<!-- 	 			<to uri="bean:celestrack" /> -->
-<!--                <to uri="bean:event" /> -->
+	 			<to uri="bean:navigation" />
+	 			<to uri="bean:parsecontroller" />
+	 			<to uri="bean:navigationcontroller" />
+				<to uri="bean:inmemoryscheduler" />
+	 			<to uri="bean:groundstationdriver" />
+	 			<to uri="bean:endtoendtracking" />
+	 			<to uri="bean:strandtracking" />
+	 			<to uri="bean:celestrack" />
+               <to uri="bean:event" />
 <!-- 	 			<to uri="bean:jmstester" /> -->
 	 			<to uri="bean:finisher" />
 		</route>
@@ -104,10 +104,17 @@
 		<route id="injection">
 			<from uri="direct:injection" />
 			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
-			<setHeader headerName="issuedBy"><simple>${in.body.issuedBy}</simple></setHeader>
-			<setHeader headerName="type"><simple>${in.body.type}</simple></setHeader>			
-			<setHeader headerName="timestamp"><simple>${in.body.timestamp}</simple></setHeader>				
 			<setHeader headerName="class"><simple>${in.body.class.simpleName}</simple></setHeader>
+
+
+			<choice>
+				<when>
+	                <simple>${in.body} is 'org.hbird.exchange.interfaces.IIssued'</simple>
+					<setHeader headerName="issuedBy"><simple>${in.body.issuedBy}</simple></setHeader>
+					<setHeader headerName="timestamp"><simple>${in.body.timestamp}</simple></setHeader>				
+				</when>
+			</choice>
+
 						
 			<to uri="bean:scheduler"/>
 			
@@ -203,7 +210,7 @@
 		</route>
 		
 		<route id="orbitalLocationEvent">
-			<from uri="activemq:topic:hbird.monitoring?selector=class='LocationContactEvent'" />
+			<from uri="activemq:topic:hbird.events?selector=class='LocationContactEvent'" />
 			<to uri="bean:orbitallocationevent.listener" />
 		</route>
 

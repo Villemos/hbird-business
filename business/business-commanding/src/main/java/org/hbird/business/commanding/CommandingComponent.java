@@ -33,7 +33,8 @@
 package org.hbird.business.commanding;
 
 import org.hbird.business.commanding.bean.CommandingComponentDriver;
-import org.hbird.exchange.configurator.StartablePart;
+import org.hbird.business.core.StartablePart;
+import org.hbird.exchange.constants.StandardComponents;
 
 
 /**
@@ -47,11 +48,9 @@ public class CommandingComponent extends StartablePart {
 	 */
 	private static final long serialVersionUID = -2735008464467737242L;
 
-	public static final String DEFAULT_NAME = "CommandReleaser";
-	public static final String DEFAULT_DESCRIPTION = "A component for managing the release of commands.";
 	public static final String DEFAULT_DRIVER = CommandingComponentDriver.class.getName();
 	
 	public CommandingComponent() {
-		super(DEFAULT_NAME, DEFAULT_NAME, DEFAULT_DESCRIPTION, DEFAULT_DRIVER);
+		super(StandardComponents.COMMAND_RELEASER_NAME, StandardComponents.COMMAND_RELEASER_NAME, StandardComponents.COMMAND_RELEASER_DESC, DEFAULT_DRIVER);
 	}
 }

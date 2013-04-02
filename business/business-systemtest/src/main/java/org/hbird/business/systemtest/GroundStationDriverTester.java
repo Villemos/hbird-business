@@ -97,14 +97,10 @@ public class GroundStationDriverTester extends SystemTest {
 
         OrbitalState startState = new OrbitalState("OrbitPredictor", "OrbitalState", "", now + 20000, "ESTCube-1", startPos, startVel, startMom);
         OrbitalState endState = new OrbitalState("OrbitPredictor", "OrbitalState", "", now + delta + 20000, "ESTCube-1", endPos, endVel, endMom);        
-        OrbitalState endState = new OrbitalState("OrbitPredictor", "OrbitalState", "Predicted", "", now + delta + 20000, "ESTCube-1", endPos, endVel, endMom,
-                "", 0l, "");
 
         LocationContactEvent start = new LocationContactEvent("OrbitPredictor", now + 20000, "ES5EC", "", "ESTCube-1", true, startState);
-                "");
         start.setVisible(true);
         LocationContactEvent end = new LocationContactEvent("OrbitPredictor", now + delta + 20000, "ES5EC", "", "ESTCube-1", false, endState);
-                0l, "");
         end.setVisible(false);
 
         estcube1.setFrequency(10000D);

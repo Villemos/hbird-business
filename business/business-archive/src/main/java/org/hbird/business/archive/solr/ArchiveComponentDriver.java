@@ -28,7 +28,8 @@ public class ArchiveComponentDriver extends SoftwareComponentDriver {
 
     @Override
     protected void doConfigure() {    	
-        from(StandardEndpoints.MONITORING).to("solr:" + addUniqueId("archive.monitoring."));
-        from(StandardEndpoints.COMMANDS).to("solr:" + addUniqueId("archive.commanding."));
+        from(StandardEndpoints.MONITORING).to("solr:" + addUniqueId("monitoring."));
+        from(StandardEndpoints.EVENTS).to("solr:" + addUniqueId("events."));
+        from(StandardEndpoints.COMMANDS).to("solr:" + addUniqueId("commanding."));
     };
 }

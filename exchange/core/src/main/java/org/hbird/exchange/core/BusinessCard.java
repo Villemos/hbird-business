@@ -32,12 +32,12 @@
  */
 package org.hbird.exchange.core;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hbird.exchange.util.LocalHostNameResolver;
-import org.hbird.exchange.util.NamedHelper;
 
 /**
  * @author Admin
@@ -55,38 +55,29 @@ public class BusinessCard extends Issued {
     /** Interval between heart beats. */
     protected long period = -1L;
 
-    /** The list of commands that the component that sends this BusinessCard supports */
-    protected List<Command> commands = null;
+    /** Commands accepted by this {@link Part}. */
+    public Map<String, Command> commandsIn = new HashMap<String, Command>();    
+    public Map<String, Command> commandsOut = new HashMap<String, Command>();
 
-    public BusinessCard(String issuedBy, List<Command> commands, long period) {
-        this(issuedBy, LocalHostNameResolver.getLocalHostName(), commands, period);
-    }
+    public Map<String, Event> eventsIn = new HashMap<String, Event>();
+    public Map<String, Event> eventsOut = new HashMap<String, Event>();
+    
+    public Map<String, Issued> dataIn = new HashMap<String, Issued>();
+    public Map<String, Issued> dataOut = new HashMap<String, Issued>();
 
-    /**
-     * @param hostName
-     * @param commands2
-     */
-    public BusinessCard(String issuedBy, String hostName, List<Command> commands, long period) {
-        super(issuedBy, issuedBy, BusinessCard.class.getSimpleName(), DESCRIPTION);
-        this.host = hostName;
-        this.commands = commands;
+
+    public BusinessCard(String issuedBy, long period) {
+        super(issuedBy, issuedBy, DESCRIPTION);
         this.period = period;
+        this.host = LocalHostNameResolver.getLocalHostName();
     }
 
-    public String getHost() {
+	public String getHost() {
         return host;
     }
 
     public void setHost(String host) {
         this.host = host;
-    }
-
-    public List<Command> getCommands() {
-        return commands;
-    }
-
-    public void setCommands(List<Command> commands) {
-        this.commands = commands;
     }
 
     public long getPeriod() {
@@ -107,8 +98,14 @@ public class BusinessCard extends Issued {
                 .append("host", host)
                 .append("timestamp", timestamp)
                 .append("period", period)
-                .append("type", type)
-                .append("commands", NamedHelper.toString(commands))
                 .toString();
     }
+
+	/**
+	 * @return
+	 */
+	public BusinessCard touch() {
+		timestamp = System.currentTimeMillis();
+		return this;
+	}
 }

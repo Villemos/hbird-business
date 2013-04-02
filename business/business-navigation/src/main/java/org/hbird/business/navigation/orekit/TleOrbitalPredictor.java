@@ -41,7 +41,7 @@ public class TleOrbitalPredictor {
 
     protected KeplianOrbitPredictor keplianOrbitPredictor = null;
 
-    public String name = StandardComponents.ORBIT_PREDICTOR;
+    public String name = StandardComponents.ORBIT_PROPAGATOR_NAME;
 
     /**
      * Method used to receive a TLE and generate a propagation request based on the TLE.

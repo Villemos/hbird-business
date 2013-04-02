@@ -31,9 +31,8 @@ public class OrbitalStateRequest extends DataRequest {
 
     private static final long serialVersionUID = -5920513650830048315L;
 
-    public OrbitalStateRequest(String satellite) {
-        // TODO - 27.02.2013, kimmell - set issuedBy!
-        super("", StandardComponents.ARCHIVE, OrbitalStateRequest.class.getSimpleName(), DESCRIPTION);
+    public OrbitalStateRequest(String issuedBy, String satellite) {
+        super(issuedBy, StandardComponents.ARCHIVE_NAME, OrbitalStateRequest.class.getSimpleName(), DESCRIPTION);
         setSatelliteName(satellite);
         setIsInitialization(true);
         setRows(1);
@@ -41,9 +40,8 @@ public class OrbitalStateRequest extends DataRequest {
         setSortOrder("DESC");
     }
 
-    public OrbitalStateRequest(String satellite, Long from, Long to) {
-        // TODO - 27.02.2013, kimmell - set issuedBy!
-        super("", StandardComponents.ARCHIVE, OrbitalStateRequest.class.getSimpleName(), DESCRIPTION);
+    public OrbitalStateRequest(String issuedBy, String satellite, Long from, Long to) {
+        super(issuedBy, StandardComponents.ARCHIVE_NAME, OrbitalStateRequest.class.getSimpleName(), DESCRIPTION);
         setSatelliteName(satellite);
         setFromTime(from);
         setToTime(to);

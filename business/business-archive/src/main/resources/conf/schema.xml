@@ -153,7 +153,7 @@
    <!-- 'Named' class fields. -->
    <field name="issuedBy" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
    <field name="name" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
-   <field name="type" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
+   <field name="qualifiedname" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
    <field name="class" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
    <field name="description" type="text" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
    <field name="timestamp" type="slong" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>

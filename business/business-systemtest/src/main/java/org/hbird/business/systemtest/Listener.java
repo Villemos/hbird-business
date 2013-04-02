@@ -27,13 +27,13 @@ import org.hbird.exchange.core.State;
 
 public class Listener {
 
-	public List<Issued> elements = new ArrayList<Issued>();
+	public List<Named> elements = new ArrayList<Named>();
 
 	public Named lastReceived = null;
 
 	public Map<String, State> states = new HashMap<String, State>();
 
-	public void process(Issued named) {
+	public void process(Named named) {
 		synchronized (elements) {
 
 			elements.add(named);

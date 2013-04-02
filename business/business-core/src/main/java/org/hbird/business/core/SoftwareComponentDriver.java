@@ -17,11 +17,9 @@
 package org.hbird.business.core;
 
 import org.apache.camel.model.ProcessorDefinition;
-import org.hbird.exchange.businesscard.BusinessCardSender;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.interfaces.IStartablePart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,9 +70,7 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
             doConfigure();
 
             /** Setup the BusinessCard */
-            BusinessCard card = new BusinessCard(qName, part.getCommands(), heartbeat);
-            BusinessCardSender cardSender = new BusinessCardSender(card);
-            ProcessorDefinition<?> route = from(addTimer("businesscard", heartbeat)).bean(cardSender);
+            ProcessorDefinition<?> route = from(addTimer("businesscard", heartbeat)).bean(part, "getBusinessCard");
             addInjectionRoute(route);
         }
         else {

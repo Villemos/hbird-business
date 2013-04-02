@@ -33,7 +33,7 @@
 package org.hbird.business.celestrack;
 
 import org.hbird.business.celestrack.http.CelestrackComponentDriver;
-import org.hbird.exchange.configurator.StartablePart;
+import org.hbird.business.core.StartablePart;
 
 /**
  * @author Gert Villemos

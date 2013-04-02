@@ -29,18 +29,18 @@ public class StateRequest extends DataRequest {
     private static final long serialVersionUID = -6214262098953498288L;
 
     public StateRequest(String issuedBy, String isStateOf) {
-        this(issuedBy, StandardComponents.ANY, isStateOf);
+        this(issuedBy, StandardComponents.ARCHIVE_NAME, isStateOf);
     }
 
     public StateRequest(String issuedBy, String isStateOf, long from, long to) {
-        this(issuedBy, StandardComponents.ANY, isStateOf);
+        this(issuedBy, StandardComponents.ARCHIVE_NAME, isStateOf);
         setFrom(from);
         setTo(to);
     }
 
     public StateRequest(String issuedBy, String isStateOf, List<String> names) {
-        this(issuedBy, StandardComponents.ANY, isStateOf);
-        addName(names);
+        this(issuedBy, StandardComponents.ARCHIVE_NAME, isStateOf);
+        addNames(names);
     }
 
     public StateRequest(String issuedBy, String destination, String isStateOf) {
@@ -50,8 +50,8 @@ public class StateRequest extends DataRequest {
         setArgumentValue(StandardArguments.IS_STATE_OF, isStateOf);
     }
     
-    public StateRequest() {
-        super(StandardComponents.ASSEMBLY, StandardComponents.PARAMETER_ARCHIVE, StateRequest.class.getSimpleName(), DESCRIPTION);
+    public StateRequest(String issuedBy) {
+        super(issuedBy, StandardComponents.ARCHIVE_NAME, StateRequest.class.getSimpleName(), DESCRIPTION);
         setClass(State.class.getSimpleName());
     }
 

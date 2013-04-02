@@ -19,83 +19,93 @@ package org.hbird.business.systemtest;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.configurator.ReportStatus;
+import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.constants.StandardComponents;
+import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 public class BusinessCardTester extends SystemTest {
 
-    private static org.apache.log4j.Logger LOG = Logger.getLogger(BusinessCardTester.class);
+	private static org.apache.log4j.Logger LOG = Logger.getLogger(BusinessCardTester.class);
 
-    @Handler
-    public void process() throws InterruptedException {
+	@Handler
+	public void process() throws InterruptedException {
 
-        LOG.info("------------------------------------------------------------------------------------------------------------");
-        LOG.info("Starting");
+		LOG.info("------------------------------------------------------------------------------------------------------------");
+		LOG.info("Starting");
 
-        /** See if we have the businesscards of the Configurator. */
-        Thread.sleep(8000);
+		/** See if we have the businesscards of the Configurator. */
+		Thread.sleep(8000);
 
-        synchronized (businessCardListener.elements) {
-            Boolean didArrive = false;
-            for (Named obj : businessCardListener.elements) {
-                LOG.info(obj);
-                /** Notice that the name given to the configurator in the assembly is 'Main Configurator' */
-                if (obj.getIssuedBy().equals("/Configurator")) {
-                    didArrive = true;
-                    break;
-                }
-            }
+		synchronized (businessCardListener.elements) {
+			Boolean didArrive = false;
+			for (Named obj : businessCardListener.elements) {
+				LOG.info(obj);
+				if (obj instanceof Issued) {
+					/** Notice that the name given to the configurator in the assembly is 'Main Configurator' */
+					if (((Issued)obj).getIssuedBy().equals(StandardComponents.CONFIGURATOR_NAME)) {
+						didArrive = true;
+						break;
+					}
+				}
+			}
 
-            azzert(didArrive, "Business card messages arrive from Configurator");
-            businessCardListener.elements.clear();
-        }
+			azzert(didArrive, "Business card messages arrive from Configurator");
+			businessCardListener.elements.clear();
+		}
 
-        startCommandingChain();
+		startCommandingChain();
 
-        Thread.sleep(3000);
+		Thread.sleep(3000);
 
-        IStartablePart commanding = (IStartablePart) parts.get(StandardComponents.COMMANDING_CHAIN);
+		IStartablePart commanding = (IStartablePart) parts.get(StandardComponents.COMMAND_RELEASER_NAME);
 
-        synchronized (businessCardListener.elements) {
-            Boolean commandingDidArrive = false;
-            for (Named obj : businessCardListener.elements) {
-                LOG.info(obj);
-                if (obj.getIssuedBy().equals(commanding.getQualifiedName())) {
-                    commandingDidArrive = true;
-                    break;
-                }
-            }
+		synchronized (businessCardListener.elements) {
+			Boolean commandingDidArrive = false;
+			for (Named obj : businessCardListener.elements) {
+				LOG.info(obj);
+				if (obj instanceof Issued) {
 
-            azzert(commandingDidArrive, "Business card messages arrive from CommandingChain");
-            businessCardListener.elements.clear();
-        }
+					if (((Issued)obj).getIssuedBy().equals(StandardComponents.COMMAND_RELEASER_NAME)) {
+						commandingDidArrive = true;
+						break;
+					}
+				}
+			}
 
-        Thread.sleep(3000);
+			azzert(commandingDidArrive, "Business card messages arrive from CommandingChain");
+			businessCardListener.elements.clear();
+		}
 
-        Object data = injection.requestBody(new ReportStatus("SystemTest", "Configurator"));
-        azzert(data != null, "Status received from Configurator.");
+		Thread.sleep(3000);
 
-        /** Stop the CommandingChain and check that it is actually stopped. */
-        stopCommandingChain();
+		Object data = injection.requestBody(new ReportStatus("SystemTest", "Configurator"));
+		azzert(data != null, "Status received from Configurator.");
 
-        businessCardListener.elements.clear();
+		/** Stop the CommandingChain and check that it is actually stopped. */
+		stopCommandingChain();
 
-        Thread.sleep(3000);
+		businessCardListener.elements.clear();
 
-        synchronized (businessCardListener.elements) {
-            Boolean commandingDidArrive = false;
-            for (Named obj : businessCardListener.elements) {
-                LOG.info(obj);
-                if (obj.getIssuedBy().equals(commanding.getQualifiedName())) {
-                    commandingDidArrive = true;
-                    break;
-                }
-            }
+		Thread.sleep(3000);
 
-            azzert(!commandingDidArrive, "Business card messages not arriving from CommandingChain");
-        }
+		synchronized (businessCardListener.elements) {
+			Boolean commandingDidArrive = false;
+			for (Named obj : businessCardListener.elements) {
+				LOG.info(obj);
+				if (obj instanceof Issued) {
 
-        LOG.info("Finished");
-    }
+					if (((Issued)obj).getIssuedBy().equals(commanding.getQualifiedName())) {
+						commandingDidArrive = true;
+						break;
+					}
+				}
+			}
+
+			azzert(!commandingDidArrive, "Business card messages not arriving from CommandingChain");
+		}
+
+		LOG.info("Finished");
+	}
 }

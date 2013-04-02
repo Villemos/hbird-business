@@ -141,7 +141,7 @@ public class SolrProducer extends DefaultProducer {
         String request = "";
 
         String classPart = null;
-        String typePart = null;
+        String sourcePart = null;
         String namePart = null;
         String isStateOfPart = null;
         String ofSatellitePart = null;
@@ -163,15 +163,15 @@ public class SolrProducer extends DefaultProducer {
          }
 
         /** Set the type of data we are retrieving. */
-        if (body.hasArgumentValue(StandardArguments.TYPE)) {
-            typePart = "type:\"" + body.getArgumentValue(StandardArguments.TYPE, String.class) + "\"";
+        if (body.hasArgumentValue(StandardArguments.ISSUED_BY)) {
+            sourcePart = "issuedBy:\"" + body.getArgumentValue(StandardArguments.ISSUED_BY, String.class) + "\"";
         }
 
         /** Set the Names, if there. */
         if (body.hasArgumentValue(StandardArguments.NAMES)) {
             namePart = "";
             for (String name : (List<String>) body.getArgumentValue(StandardArguments.NAMES, List.class)) {
-            	namePart = namePart.equals("") ? "name:\"" + name + "\"" : namePart + " OR name:\"" + name + "\"";
+            	namePart = namePart.equals("") ? "qualifiedname:\"" + name + "\"" : namePart + " OR qualifiedname:\"" + name + "\"";
 
                 /** Include states if required to */
                 if (body.shallIncludeStates() == true) {
@@ -211,8 +211,8 @@ public class SolrProducer extends DefaultProducer {
             isPartOfPart = "isPartOf:\"" + body.getArgumentValue(StandardArguments.IS_PART_OF, String.class) + "\"";
         }
 
-        if (typePart != null) {
-            request += request.equals("") ? typePart : " AND " + typePart;
+        if (sourcePart != null) {
+            request += request.equals("") ? sourcePart : " AND " + sourcePart;
         }
 
         if (classPart != null) {
@@ -293,7 +293,7 @@ public class SolrProducer extends DefaultProducer {
         query.setFacetMissing(false);
         query.setFacetMinCount(1);
 
-        query.addFacetField(StandardArguments.NAME);
+        query.addFacetField(StandardArguments.QUALIFIED_NAME);
 
         query.setQueryType("basic");
 
@@ -322,7 +322,7 @@ public class SolrProducer extends DefaultProducer {
                                 isStateOf = body.getArgumentValue(StandardArguments.IS_STATE_OF, String.class);
                             }
                     		
-                            SolrQuery sampleQuery = new SolrQuery("name:\"" + count.getName() + "\"" + createTimestampElement(body.getFrom(), body.getTo()) + createIsStateOfElement(isStateOf));
+                            SolrQuery sampleQuery = new SolrQuery("qualifiedname:\"" + count.getName() + "\"" + createTimestampElement(body.getFrom(), body.getTo()) + createIsStateOfElement(isStateOf));
                             LOG.info("Using sample query '" + sampleQuery + "' to get facet " + count.getName());
                             sampleQuery.setRows(body.getRows());
                             sampleQuery.setSortField(StandardArguments.TIMESTAMP, ORDER.desc);
@@ -330,7 +330,7 @@ public class SolrProducer extends DefaultProducer {
 
                             for (Named newObj : retrieve(sampleQuery)) {
                                 results.add(newObj);
-                                LOG.info("Added object '" + newObj.getName() + "'");
+                                LOG.info("Added object '" + newObj.getQualifiedName() + "'");
                             }
                         }
                     }
@@ -419,8 +419,10 @@ public class SolrProducer extends DefaultProducer {
         SolrInputDocument document = new SolrInputDocument();
 
     	document.addField(StandardArguments.NAME, io.getName());
-    	document.addField(StandardArguments.DESCRIPTION, io.getDescription());
+    	document.addField(StandardArguments.QUALIFIED_NAME, io.getQualifiedName());
         document.addField(StandardArguments.CLASS, io.getClass().getSimpleName());
+    	document.addField(StandardArguments.DESCRIPTION, io.getDescription());
+
         document.setField(StandardArguments.HAS_URI, io.getID());
         
         if (io instanceof IIssued) {

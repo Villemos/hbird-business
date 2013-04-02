@@ -30,20 +30,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.exchange.configurator;
+package org.hbird.business.core;
 
-import java.util.ArrayList;
-import java.util.List;
 
+import org.hbird.business.api.ApiFactory;
+import org.hbird.exchange.configurator.StartComponent;
+import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.BusinessCard;
-import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.Event;
-import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
- * @author Admin
+ * @author Gert Villemos
  * 
  */
 public class StartablePart extends Part implements IStartablePart {
@@ -66,19 +64,10 @@ public class StartablePart extends Part implements IStartablePart {
 		
 	protected BusinessCard card = null;
 
-	
-	protected List<Command> commandsIn = new ArrayList<Command>();
-	protected List<Command> commandsOut = new ArrayList<Command>();
-
-	protected List<Event> eventsIn = new ArrayList<Event>();
-	protected List<Event> eventsOut = new ArrayList<Event>();
-
-	protected List<Parameter> parametersIn = new ArrayList<Parameter>();
-	protected List<Parameter> parametersOut = new ArrayList<Parameter>();
-
 	{
-		commandsIn.add(new StartComponent("", null));
-		commandsIn.add(new StopComponent("", ""));
+		card = new BusinessCard(name, heartbeat);
+		card.commandsIn.put("", new StartComponent("", null));
+		card.commandsIn.put("", new StopComponent("", ""));
 	}
 	
 	
@@ -91,6 +80,11 @@ public class StartablePart extends Part implements IStartablePart {
         this.driverName = driverName;
     }
 
+    public BusinessCard getBusinessCard() {
+        return card.touch();
+    }
+
+	
     @Override
     public String getDriverName() {
         return driverName;
@@ -121,51 +115,19 @@ public class StartablePart extends Part implements IStartablePart {
         this.heartbeat = heartbeat;
     }
 
-	public List<Command> getCommandsIn() {
-		return commandsIn;
+	/* (non-Javadoc)
+	 * @see org.hbird.exchange.interfaces.IStartablePart#Start()
+	 */
+	@Override
+	public void Start(String requestedBy) {
+		ApiFactory.getPublishApi(requestedBy).publish(new StartComponent(requestedBy, this));		
 	}
 
-	public void setCommandsIn(List<Command> commandsIn) {
-		this.commandsIn = commandsIn;
-	}
-
-	public List<Command> getCommandsOut() {
-		return commandsOut;
-	}
-
-	public void setCommandsOut(List<Command> commandsOut) {
-		this.commandsOut = commandsOut;
-	}
-
-	public List<Event> getEventsIn() {
-		return eventsIn;
-	}
-
-	public void setEventsIn(List<Event> eventsIn) {
-		this.eventsIn = eventsIn;
-	}
-
-	public List<Event> getEventsOut() {
-		return eventsOut;
-	}
-
-	public void setEventsOut(List<Event> eventsOut) {
-		this.eventsOut = eventsOut;
-	}
-
-	public List<Parameter> getParametersIn() {
-		return parametersIn;
-	}
-
-	public void setParametersIn(List<Parameter> parametersIn) {
-		this.parametersIn = parametersIn;
-	}
-
-	public List<Parameter> getParametersOut() {
-		return parametersOut;
-	}
-
-	public void setParametersOut(List<Parameter> parametersOut) {
-		this.parametersOut = parametersOut;
+	/* (non-Javadoc)
+	 * @see org.hbird.exchange.interfaces.IStartablePart#stop()
+	 */
+	@Override
+	public void stop(String requestedBy) {
+		ApiFactory.getPublishApi(requestedBy).publish(new StopComponent(requestedBy, name));
 	}
 }

@@ -17,9 +17,10 @@
 /**
  * 
  */
-package org.hbird.exchange.groundstation;
+package eu.estcube.gs.base;
 
-import org.hbird.exchange.configurator.StartablePart;
+import org.hbird.business.core.StartablePart;
+import org.hbird.exchange.groundstation.ICommandableAntennaPart;
 
 
 /**

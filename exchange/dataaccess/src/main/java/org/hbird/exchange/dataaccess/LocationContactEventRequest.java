@@ -17,7 +17,7 @@ public class LocationContactEventRequest extends DataRequest {
     private static final long serialVersionUID = -5990938785008117581L;
 
     public LocationContactEventRequest(String issuedBy, String location) {
-        super(issuedBy, StandardComponents.ARCHIVE);
+        super(issuedBy, StandardComponents.ARCHIVE_NAME);
         setClass(LocationContactEvent.class.getSimpleName());
         setArgumentValue(StandardArguments.GROUND_STATION_NAME, location);
     }

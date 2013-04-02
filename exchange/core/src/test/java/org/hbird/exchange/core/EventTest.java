@@ -43,13 +43,12 @@ public class EventTest {
      */
     @Test
     public void testEventStringStringStringStringLong() {
-        Event event = new Event(ISSUER1, NAME, TYPE, DESCRIPTION, NOW);
+        Event event = new Event(ISSUER1, NAME, DESCRIPTION, NOW);
         assertEquals(ISSUER1, event.getIssuedBy());
         assertEquals(NAME, event.getName());
         assertEquals(DESCRIPTION, event.getDescription());
-        assertEquals(TYPE, event.getType());
         assertEquals(NOW.longValue(), event.getTimestamp());
-        assertNotNull(event.getUuid());
+        assertNotNull(event.getID());
         assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, event.getQualifiedName());
     }
 
@@ -59,23 +58,21 @@ public class EventTest {
      */
     @Test
     public void testEventStringEventLong() {
-        Event template = new Event(ISSUER1, NAME, TYPE, DESCRIPTION, NOW);
+        Event template = new Event(ISSUER1, NAME, DESCRIPTION, NOW);
         assertEquals(ISSUER1, template.getIssuedBy());
         assertEquals(NAME, template.getName());
         assertEquals(DESCRIPTION, template.getDescription());
-        assertEquals(TYPE, template.getType());
         assertEquals(NOW.longValue(), template.getTimestamp());
-        assertNotNull(template.getUuid());
+        assertNotNull(template.getID());
         assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, template.getQualifiedName());
 
         Event event = new Event(ISSUER2, template, NOW_PLUS_ONE);
         assertEquals(ISSUER2, event.getIssuedBy());
         assertEquals(NAME, event.getName());
         assertEquals(DESCRIPTION, event.getDescription());
-        assertEquals(TYPE, event.getType());
         assertEquals(NOW_PLUS_ONE.longValue(), event.getTimestamp());
-        assertNotNull(event.getUuid());
-        assertNotSame(template.getUuid(), event.getUuid());
+        assertNotNull(event.getID());
+        assertNotSame(template.getID(), event.getID());
         assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, event.getQualifiedName());
     }
 
@@ -84,23 +81,21 @@ public class EventTest {
      */
     @Test
     public void testEventStringEvent() {
-        Event template = new Event(ISSUER1, NAME, TYPE, DESCRIPTION, NOW);
+        Event template = new Event(ISSUER1, NAME, DESCRIPTION, NOW);
         assertEquals(ISSUER1, template.getIssuedBy());
         assertEquals(NAME, template.getName());
         assertEquals(DESCRIPTION, template.getDescription());
-        assertEquals(TYPE, template.getType());
         assertEquals(NOW.longValue(), template.getTimestamp());
-        assertNotNull(template.getUuid());
+        assertNotNull(template.getID());
         assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, template.getQualifiedName());
 
         Event event = new Event(ISSUER2, template);
         assertEquals(ISSUER2, event.getIssuedBy());
         assertEquals(NAME, event.getName());
         assertEquals(DESCRIPTION, event.getDescription());
-        assertEquals(TYPE, event.getType());
         assertTrue(event.getTimestamp() >= NOW);
-        assertNotNull(event.getUuid());
-        assertNotSame(template.getUuid(), event.getUuid());
+        assertNotNull(event.getID());
+        assertNotSame(template.getID(), event.getID());
         assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, event.getQualifiedName());
     }
 }

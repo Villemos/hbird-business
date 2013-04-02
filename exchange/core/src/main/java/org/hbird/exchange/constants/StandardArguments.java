@@ -132,4 +132,8 @@ public class StandardArguments {
     public static final String IS_PART_OF = "ispartof";
 
 	public static final String PART = "part";
+
+	public static final String FROM_SOURCE = "source";
+
+	public static final String QUALIFIED_NAME = "qualifiedname";
 }

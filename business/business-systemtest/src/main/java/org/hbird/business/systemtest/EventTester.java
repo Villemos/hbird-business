@@ -45,12 +45,11 @@ public class EventTester extends SystemTest {
         azzert(eventListener.elements.size() == 1, "There should be 1 event published");
         Event event = (Event) eventListener.elements.get(0);
         azzert(StandardMissionEvents.COMPONENT_START.getName().equals(event.getName()), "startEvent.getName()");
-        azzert(parts.get(StandardComponents.COMMANDING_CHAIN).getQualifiedName().equals(event.getIssuedBy()), "startEvent.getIssuedBy()");
+        azzert(parts.get(StandardComponents.COMMAND_RELEASER_NAME).getQualifiedName().equals(event.getIssuedBy()), "startEvent.getIssuedBy()");
         long diff = System.currentTimeMillis() - event.getTimestamp();
         azzert(diff >= 0L && diff <= 30000L, "startEvent.getTimestamp()");
         azzert(StandardMissionEvents.COMPONENT_START.getQualifiedName().equals(event.getQualifiedName()), "startEvent.getQualifiedName()");
-        azzert(StandardMissionEvents.OCCURED_EVENT.equals(event.getType()), "startEvent.getType()");
-        azzert(event.getUuid() != null, "startEvent.getUuid()");
+        azzert(event.getID() != null, "startEvent.getID()");
         azzert(StandardMissionEvents.COMPONENT_START.getDescription().equals(event.getDescription()), "startEvent.getDescription()");
 
         stopCommandingChain();
@@ -58,12 +57,11 @@ public class EventTester extends SystemTest {
         azzert(eventListener.elements.size() == 2, "There should be 2 events published");
         event = (Event) eventListener.elements.get(1);
         azzert(StandardMissionEvents.COMPONENT_STOP.getName().equals(event.getName()), "stopEvent.getName()");
-        azzert(parts.get(StandardComponents.COMMANDING_CHAIN).getQualifiedName().equals(event.getIssuedBy()), "stopEvent.getIssuedBy()");
+        azzert(parts.get(StandardComponents.COMMAND_RELEASER_NAME).getQualifiedName().equals(event.getIssuedBy()), "stopEvent.getIssuedBy()");
         diff = System.currentTimeMillis() - event.getTimestamp();
         azzert(diff >= 0L && diff <= 30000L, "stopEvent.getTimestamp()");
         azzert(StandardMissionEvents.COMPONENT_STOP.getQualifiedName().equals(event.getQualifiedName()), "stopEvent.getQualifiedName()");
-        azzert(StandardMissionEvents.OCCURED_EVENT.equals(event.getType()), "stopEvent.getType()");
-        azzert(event.getUuid() != null, "stopEvent.getUuid()");
+        azzert(event.getID() != null, "stopEvent.getUuid()");
         azzert(StandardMissionEvents.COMPONENT_STOP.getDescription().equals(event.getDescription()), "stopEvent.getDescription()");
 
         LOG.info("Finished");

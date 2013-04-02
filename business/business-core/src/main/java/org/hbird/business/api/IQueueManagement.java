@@ -16,14 +16,8 @@
  */
 package org.hbird.business.api;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
-
-import javax.jms.InvalidSelectorException;
-import javax.management.MalformedObjectNameException;
-import javax.management.openmbean.OpenDataException;
 
 /**
  * API for managing the topics and queues of the system.
@@ -45,7 +39,7 @@ public interface IQueueManagement {
 	 * @throws NullPointerException
 	 * @throws IOException
 	 */
-	public List<String> listQueues() throws MalformedObjectNameException, MalformedURLException, NullPointerException, IOException;
+	public List<String> listQueues() throws Exception;
 	
 	
 	/**
@@ -60,7 +54,7 @@ public interface IQueueManagement {
 	 * @throws NullPointerException
 	 * @throws IOException
 	 */
-	public Map<String, String> viewQueue(String queueName) throws InvalidSelectorException, OpenDataException, MalformedObjectNameException, MalformedURLException, NullPointerException, IOException;
+	public Map<String, String> viewQueue(String queueName) throws Exception;
 	
 	
 	/**
@@ -93,7 +87,7 @@ public interface IQueueManagement {
 	 * @throws NullPointerException
 	 * @throws IOException
 	 */
-	public List<String> listTopics() throws MalformedObjectNameException, MalformedURLException, NullPointerException, IOException;
+	public List<String> listTopics() throws Exception;
 	
 	/**
 	 * Method to clear a topic. All messages on the topic will be removed.

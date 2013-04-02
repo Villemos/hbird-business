@@ -32,8 +32,8 @@
  */
 package org.hbird.business.tracking;
 
+import org.hbird.business.core.StartablePart;
 import org.hbird.business.tracking.bean.TrackingComponentDriver;
-import org.hbird.exchange.configurator.StartablePart;
 import org.hbird.exchange.interfaces.IPart;
 
 

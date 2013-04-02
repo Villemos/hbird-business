@@ -40,13 +40,52 @@ package org.hbird.exchange.interfaces;
  */
 public interface INamed {
 
+	public void setName(String name);
+	
+	public String getDescription();
+
+	
+	/**
+	 * Method to return the name of the object. The name of the object is a logical
+	 * label of the object. 
+	 * 
+	 * The name is not (necessarily) unique within the complete system.
+	 * 
+	 * @return
+	 */
 	public String getName();
 
-	public String getDescription();
-	
+	/**
+	 * The qualified name is a unique name of the object within the system. It has 
+	 * the format 
+	 * <li>[qualifier]/[name]</li>
+	 * 
+	 * The [qualifier] ensures that Name is put into a context that makes it unique.
+	 * 
+	 * As examples of qualifiers are
+	 * <li>Parameter: A parameter is 'issuedBy' a Part. The Part is unique. The qualifier of a 
+	 * Parameter is the name of the Part. The fully qualified name of a Parameter is thus [Part name]/[Parameter name]</li>
+	 * 
+	 * The qualifier depends on the type of the object, but is is guaranteed to uniquely
+	 * identifying the element.
+	 * 
+	 * @return
+	 */
 	public String getQualifiedName();
 	
 	public String getQualifiedName(String separator);
 
+	/**
+	 * The ID is a unique string for each instance of an object.
+	 * 
+	 * A Parameter can be uniquely identified through the Qualified Name. A parameter will have multiple 
+	 * instances; values measured at specific points in time. Each of these will have the same 
+	 * Qualified Name, but the ID will be unique.
+	 * 
+	 * The ID has the format
+	 * <li>[Qualified name]/[timestamp]</li>
+	 * 
+	 * @return
+	 */
 	public String getID();
 }

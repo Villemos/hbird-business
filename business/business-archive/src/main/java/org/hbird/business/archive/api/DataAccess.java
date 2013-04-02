@@ -60,32 +60,60 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return template.requestBody(inject, request, List.class);
     }
 
+    
+    
     /** INITIALIZATION */
     @Override
     public Parameter getParameter(String name) {
-        List<Parameter> parameter = getParameter(name, 1);
+        List<Parameter> parameter = getParameterAt(null, name, (new Date()).getTime(), 1);
+        return parameter.isEmpty() ? null : parameter.get(0);
+    }
+
+    @Override
+    public Parameter getParameter(String source, String name) {
+        List<Parameter> parameter = getParameterAt(source, name, (new Date()).getTime(), 1);
         return parameter.isEmpty() ? null : parameter.get(0);
     }
 
     @Override
     public Parameter getParameterAt(String name, long at) {
-        List<Parameter> parameter = getParameterAt(name, at, 1);
+        List<Parameter> parameter = getParameterAt(null, name, at, 1);
         return parameter.isEmpty() ? null : parameter.get(0);
     }
 
     @Override
+    public Parameter getParameterAt(String source, String name, long at) {
+        List<Parameter> parameter = getParameterAt(source, name, at, 1);
+        return parameter.isEmpty() ? null : parameter.get(0);
+    }
+
+    
+    @Override
     public List<Parameter> getParameter(String name, int rows) {
-        return getParameterAt(name, (new Date()).getTime(), rows);
+        return getParameterAt(null, name, (new Date()).getTime(), rows);
+    }
+
+    @Override
+    public List<Parameter> getParameter(String source, String name, int rows) {
+        return getParameterAt(source, name, (new Date()).getTime(), rows);
     }
 
     @Override
     public List<Parameter> getParameterAt(String name, long at, int rows) {
-        ParameterRequest request = new ParameterRequest(name, rows);
+        return getParameterAt(null, name, at, rows);
+    }
+
+    @Override
+    public List<Parameter> getParameterAt(String source, String name, long at, int rows) {
+        ParameterRequest request = new ParameterRequest(issuedBy, name, rows);
         request.setIsInitialization(true);
         request.setTo(at);
         return getParameterWithoutState(request);
     }
 
+    
+    
+        
     @Override
     public List<Parameter> getParameters(List<String> names) {
         return getParametersAt(names, (new Date()).getTime(), 1);
@@ -103,7 +131,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 
     @Override
     public List<Parameter> getParametersAt(List<String> name, long at, int rows) {
-        ParameterRequest request = new ParameterRequest(name, rows);
+        ParameterRequest request = new ParameterRequest(issuedBy, name, rows);
         request.setIsInitialization(true);
         request.setTo(at);
         return getParameterWithoutState(request);
@@ -127,7 +155,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 
     @Override
     public Map<Parameter, List<State>> getParameterAndStatesAt(String name, long at, int rows) {
-        ParameterRequest request = new ParameterRequest(name, rows);
+        ParameterRequest request = new ParameterRequest(issuedBy, name, rows);
         request.setIsInitialization(true);
         request.setTo(at);
         return getParameterWithState(request);
@@ -150,7 +178,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 
     @Override
     public Map<Parameter, List<State>> getParametersAndStateAt(List<String> names, long at, int rows) {
-        ParameterRequest request = new ParameterRequest(names, 1);
+        ParameterRequest request = new ParameterRequest(issuedBy, names, 1);
         request.setIsInitialization(true);
         request.setTo(at);
         return getParameterWithState(request);
@@ -160,52 +188,56 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 
     @Override
     public List<Parameter> retrieveParameter(String name, long from, long to) {
-        ParameterRequest request = new ParameterRequest(name, from, to);
+        ParameterRequest request = new ParameterRequest(issuedBy, name, from, to);
         return getParameterWithoutState(request);
     }
 
     @Override
     public List<Parameter> retrieveParameter(String name, long from, long to, int rows) {
-        ParameterRequest request = new ParameterRequest(name, from, to, rows);
+        ParameterRequest request = new ParameterRequest(issuedBy, name, from, to, rows);
         return getParameterWithoutState(request);
     }
 
     @Override
     public List<Parameter> retrieveParameters(List<String> names, long from, long to) {
-        ParameterRequest request = new ParameterRequest(names, from, to);
+        ParameterRequest request = new ParameterRequest(issuedBy, names, from, to);
         return getParameterWithoutState(request);
     }
 
     @Override
     public List<Parameter> retrieveParameters(List<String> names, long from, long to, int rows) {
-        ParameterRequest request = new ParameterRequest(names, from, to, rows);
+        ParameterRequest request = new ParameterRequest(issuedBy, names, from, to, rows);
         return getParameterWithoutState(request);
     }
 
     @Override
     public Map<Parameter, List<State>> retrieveParameterAndStates(String name, long from, long to) {
-        ParameterRequest request = new ParameterRequest(name, from, to);
+        ParameterRequest request = new ParameterRequest(issuedBy, name, from, to);
         return getParameterWithState(request);
     }
 
     @Override
     public Map<Parameter, List<State>> retrieveParameterAndStates(String name, long from, long to, int rows) {
-        ParameterRequest request = new ParameterRequest(name, from, to, rows);
+        ParameterRequest request = new ParameterRequest(issuedBy, name, from, to, rows);
         return getParameterWithState(request);
     }
 
     @Override
     public Map<Parameter, List<State>> retrieveParametersAndStates(List<String> names, long from, long to) {
-        ParameterRequest request = new ParameterRequest(names, from, to);
+        ParameterRequest request = new ParameterRequest(issuedBy, names, from, to);
         return getParameterWithState(request);
     }
 
     @Override
     public Map<Parameter, List<State>> retrieveParametersAndStates(List<String> names, long from, long to, int rows) {
-        ParameterRequest request = new ParameterRequest(names, from, to, rows);
+        ParameterRequest request = new ParameterRequest(issuedBy, names, from, to, rows);
         return getParameterWithState(request);
     }
 
+    
+    
+    
+    
     @Override
     public List<State> retrieveState(String isStateOf) {
         StateRequest request = new StateRequest(issuedBy, isStateOf);
@@ -228,20 +260,20 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 
     @Override
     public List<OrbitalState> retrieveOrbitalStatesFor(String satellite, long from, long to) {
-        OrbitalStateRequest request = new OrbitalStateRequest(satellite, from, to);
+        OrbitalStateRequest request = new OrbitalStateRequest(issuedBy, satellite, from, to);
         return orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));
     }
 
     @Override
     public List<OrbitalState> retrieveOrbitalStatesFor(String satellite, long from, long to, String issuedBy, String derivedFromName, long derivedFromTimestamp) {
-        OrbitalStateRequest request = new OrbitalStateRequest(satellite, from, to);
+        OrbitalStateRequest request = new OrbitalStateRequest(issuedBy, satellite, from, to);
         request.setDerivedFrom(issuedBy, derivedFromName, derivedFromTimestamp);
         return orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));
     }
 
     @Override
     public OrbitalState retrieveOrbitalStateFor(String satellite, String derivedIssuedBy, String derivedFromName, long derivedFromTimestamp) {
-        OrbitalStateRequest request = new OrbitalStateRequest(satellite);
+        OrbitalStateRequest request = new OrbitalStateRequest(issuedBy, satellite);
         request.setIsInitialization(true);
         request.setDerivedFrom(derivedIssuedBy, derivedFromName, derivedFromTimestamp);
         List<OrbitalState> states = orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));

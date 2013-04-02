@@ -35,8 +35,8 @@ package org.hbird.business.scripting;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hbird.business.core.StartablePart;
 import org.hbird.business.scripting.bean.ScriptComponentDriver;
-import org.hbird.exchange.configurator.StartablePart;
 import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.scripting.ScriptExecutionRequest;

@@ -177,6 +177,6 @@ public class Parameter extends Issued {
 
 	@Override
 	public String prettyPrint() {
-		return String.format("Parameter[name=%s, value=%s, timestamp=%s]", name, value, timestamp);
+		return String.format("Parameter[ID=%s, issuedBy=%s, name=%s, value=%s, timestamp=%s]", getID(), issuedBy, name, value, timestamp);
 	}
 }

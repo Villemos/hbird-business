@@ -43,14 +43,14 @@ public class CommandingTester extends SystemTest {
         Thread.sleep(2000);
 
         /** The command object. Destination is an unknown object. */
-        Command command = new Command("SystemTest", "GroundStation1", estcube1.getQualifiedName() + "/COM2", "A test command");
+        Command command = new Command(estcube1.getID(), "GroundStation1", "COM2", "A test command");
 
         /** Send a simple command request. */
         publishApi.publishCommandRequest("COMREQ1", "A simple command request container with no lock states and no tasks.", command, null, null);
 
         Thread.sleep(2000);
 
-        azzert(commandingListener.lastReceived.getName().equals(estcube1.getQualifiedName() + "/COM2"),
+        azzert(commandingListener.lastReceived.getQualifiedName().equals(estcube1.getID() + "/COM2"),
                 "Command request was executed, command 'COM2' was issued.");
 
         /** Create a command with a release time. */
@@ -71,17 +71,17 @@ public class CommandingTester extends SystemTest {
                 "A test parameter more", 1d, "Bananas"));
 
         List<String> states = new ArrayList<String>();
-        states.add("STATE1");
-        states.add("STATE2");
-        states.add("STATE3");
-        states.add("STATE4");
+        states.add(estcube1.getID() + "/COM2/STATE1");
+        states.add(estcube1.getID() + "/COM2/STATE2");
+        states.add(estcube1.getID() + "/COM2/STATE3");
+        states.add(estcube1.getID() + "/COM2/STATE4");
 
         /** Set the values of the states. */
 
-        publishApi.publishState("STATE1", "A test description,", estcube1.getQualifiedName() + "/COM2", true);
-        publishApi.publishState("STATE2", "A test description,", estcube1.getQualifiedName() + "/COM2", true);
-        publishApi.publishState("STATE3", "A test description,", estcube1.getQualifiedName() + "/COM2", false);
-        publishApi.publishState("STATE4", "A test description,", estcube1.getQualifiedName() + "/COM2", true);
+        publishApi.publishState("STATE1", "A test description,", estcube1.getID() + "/COM2", true);
+        publishApi.publishState("STATE2", "A test description,", estcube1.getID() + "/COM2", true);
+        publishApi.publishState("STATE3", "A test description,", estcube1.getID() + "/COM2", false);
+        publishApi.publishState("STATE4", "A test description,", estcube1.getID() + "/COM2", true);
 
         /** Send command to commit all changes. */
         forceCommit();
@@ -91,11 +91,11 @@ public class CommandingTester extends SystemTest {
 
         Thread.sleep(2000);
 
-        azzert(failedCommandRequestListener.lastReceived.getName().equals("CommandContainerCOMREQ1"));
+        azzert(failedCommandRequestListener.lastReceived.getName().equals("COMREQ1"));
         failedCommandRequestListener.lastReceived = null;
 
         /** Update state to make the command succeed. */
-        publishApi.publishState("STATE3", "A test description,", estcube1.getQualifiedName() + "/COM2", true);
+        publishApi.publishState("STATE3", "A test description,", estcube1.getID() + "/COM2", true);
 
         /** Send command to commit all changes. */
         forceCommit();
@@ -105,13 +105,13 @@ public class CommandingTester extends SystemTest {
 
         Thread.sleep(2000);
 
-        azzert(failedCommandRequestListener.lastReceived.getName().equals("CommandContainerCOMREQ1"));
+        azzert(failedCommandRequestListener.lastReceived.getName().equals("COMREQ1"));
 
         /**
          * Add a state that is not inserted in the command, but which is a state of the command. See if the command
          * fails.
          */
-        publishApi.publishState("STATE_OTHER", "A test description", estcube1.getQualifiedName() + "/COM2", false);
+        publishApi.publishState("STATE_OTHER", "A test description", estcube1.getID() + "/COM2", false);
 
         /** Send command to commit all changes. */
         forceCommit();
@@ -121,7 +121,7 @@ public class CommandingTester extends SystemTest {
 
         Thread.sleep(2000);
 
-        azzert(failedCommandRequestListener.lastReceived.getName().equals("CommandContainerCOMREQ1"));
+        azzert(failedCommandRequestListener.lastReceived.getName().equals("COMREQ1"));
 
         LOG.info("Finished");
     }

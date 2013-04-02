@@ -30,26 +30,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.exchange.groundstation;
+package eu.estcube.gs.base;
 
 import org.hbird.exchange.core.Part;
+import org.hbird.exchange.groundstation.ICommandableAntennaPart;
 
 /**
  * @author Gert Villemos
  *
  */
-public abstract class SoftwareDefinedRadio extends Part implements ICommandableAntennaPart {
-	
+public abstract class Modem extends Part implements ICommandableAntennaPart {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8655280177800912775L;
+	private static final long serialVersionUID = 9193833357866705171L;
 
 	/**
 	 * @param name
 	 * @param description
 	 */
-	public SoftwareDefinedRadio(String ID, String name, String description) {
+	public Modem(String ID, String name, String description) {
 		super(ID, name, description);
-	}	
+	}
 }

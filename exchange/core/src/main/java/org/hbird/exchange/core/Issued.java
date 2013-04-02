@@ -37,8 +37,13 @@ import java.util.Date;
 import org.hbird.exchange.interfaces.IIssued;
 
 /**
- * An issued object is an object that represents an instance. It is issued by a Part 
- * of the system and have a timestamp.
+ * 'Issued' is a data object issued by a Part of the system. Data issued by parts fall in three categories
+ * <li>Monitoring. Values such as Parameters, reporting the values of the part.</li>
+ * <li>Commands. Commands send by the Part (to other parts).</li>
+ * <li>Events. Events issued by the part to report the occurrence of a mission event.</li>
+ * 
+ * There might be zero or more recipients of Issued data. The Part issuing the data does not know and
+ * do not not need to know.
  * 
  * Each Issued object is described through;
  * <li>name (from Named). The name of the object. </li>
@@ -106,10 +111,14 @@ public abstract class Issued extends Named implements IIssued {
 	}
 
 	public String prettyPrint() {
-        return String.format("%s[name=%s, issuedBy=%s, timestamp=%s]", this.getClass().getSimpleName(), getQualifiedName(), timestamp);
+        return String.format("%s[issuedBy=%s, name=%s, timestamp=%s]", this.getClass().getSimpleName(), issuedBy, name, timestamp);
     }
 	
 	public String getID() {
-		return issuedBy + ":" + name + ":" + timestamp;
+		return issuedBy + "/" + name + "/" + timestamp;
+	}
+	
+	public String getQualifiedName(String separator) {
+		return issuedBy + separator + name;
 	}
 }

@@ -27,14 +27,11 @@ import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.hbird.business.core.SoftwareComponentDriver;
-import org.hbird.exchange.businesscard.BusinessCardSender;
 import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.constants.StandardMissionEvents;
-import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.core.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,9 +147,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
         /** Setup the BusinessCard */
         long heartbeat = part.getHeartbeat();
 
-        BusinessCard card = new BusinessCard(part.getQualifiedName(), part.getCommands(), heartbeat);
-        BusinessCardSender cardSender = new BusinessCardSender(card);
-        ProcessorDefinition<?> route = from(addTimer("businesscard", heartbeat)).bean(cardSender);
+        ProcessorDefinition<?> route = from(addTimer("businesscard", heartbeat)).bean(part, "getBusinessCard");
         addInjectionRoute(route);
 
         ProcessorDefinition<?> toEvents = from(ENDPOINT_TO_EVENTS);

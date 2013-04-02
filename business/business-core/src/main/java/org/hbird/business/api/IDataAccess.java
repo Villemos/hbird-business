@@ -132,6 +132,15 @@ public interface IDataAccess {
 	 */
 	public Parameter getParameter(String name);
 
+	/**
+	 * Method to retrieve the last sample of a single parameter. The method will return
+	 * <li>One parameter sample</li>
+	 * <li>With the highest possible timestamp</li>
+	 * 
+	 * @param name The name of the parameter
+	 * @return The parameter sample. May be 'null' if no parameter sample was found.
+	 */
+	public Parameter getParameter(String source, String name);
 
 	/**
 	 * Method to retrieve the last samples of a single parameter. The method will return
@@ -144,6 +153,18 @@ public interface IDataAccess {
 	 * @return List of parameter samples
 	 */
 	public List<Parameter> getParameter(String name, int rows);
+
+	/**
+	 * Method to retrieve the last samples of a single parameter. The method will return
+	 * <li>A maximum of 'rows' entries</li>
+	 * <li>Starting from the last received sample of the parameter</li>
+	 * <li>and sorted on timestamp in DECENDING order</li>
+	 * 
+	 * @param name The name of the parameter
+	 * @param rows The maximum number of entries to be retrieved
+	 * @return List of parameter samples
+	 */
+	public List<Parameter> getParameter(String source, String name, int rows);
 
 	/**
 	 * Method to retrieve the samples of a single parameter. The method will return
@@ -159,6 +180,19 @@ public interface IDataAccess {
 	 */
 	public Parameter getParameterAt(String name, long at);
 
+	/**
+	 * Method to retrieve the samples of a single parameter. The method will return
+	 * <li>One parameter sample</li>
+	 * <li>With time T < 'at', being the sample closest to the time 'at'</li>
+	 * 
+	 * Parameter samples are received at time intervals. The sample applicable at a given
+	 * time is the next sample with a time less than the given time.
+	 * 
+	 * @param name The name of the parameter
+	 * @param at Java time which the sample value must be less than
+	 * @return The parameter sample. May be 'null' if no parameter sample was found.
+	 */
+	public Parameter getParameterAt(String source, String name, long at);
 
 	/**
 	 * Method to retrieve a set of samples of a single parameter. The retrieval will be
@@ -173,6 +207,20 @@ public interface IDataAccess {
 	 */
 	public List<Parameter> getParameterAt(String name, long at, int rows);
 
+	/**
+	 * Method to retrieve a set of samples of a single parameter. The retrieval will be
+	 * <li>A maximum of 'rows' entries</li>
+	 * <li>Starting from the 'at' time</li>
+	 * <li>and sorted on timestamp in DECENDING order</li>
+	 * 
+	 * @param name The name of the parameter
+	 * @param at Java time which the sample value must be less than
+	 * @param rows The maximum number of entries to be retrieved
+	 * @return List of parameter samples
+	 */
+	public List<Parameter> getParameterAt(String source, String name, long at, int rows);
+
+	
 	/**
 	 * Method to retrieve the last sample of a single parameter. The method will return
 	 * <li>One parameter sample</li>

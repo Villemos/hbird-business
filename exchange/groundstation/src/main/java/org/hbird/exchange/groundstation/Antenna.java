@@ -19,9 +19,6 @@
  */
 package org.hbird.exchange.groundstation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hbird.exchange.core.Part;
 
 /**
@@ -37,45 +34,17 @@ public class Antenna extends Part {
 
 	private static final long serialVersionUID = -8558418536858999621L;
 
-	/**
-	 * A list of commandable antenna parts.
-	 */
-	protected List<ICommandableAntennaPart> parts = new ArrayList<ICommandableAntennaPart>();
-
-	public Antenna(String ID, String name, String description, Rotator rotator, RadioDevice radioDevice) {
-		super(ID, name, description);
-
-		parts.add(rotator);
-		parts.add(radioDevice);
-		
-		rotator.setIsPartOf(this);
-		radioDevice.setIsPartOf(this);
-	}
+    protected int thresholdElevation = 0;
 	
-	public Antenna(String ID, String name, String description, Rotator rotator, RadioDevice radioDevice, Modem modemDevice, SoftwareDefinedRadio softwareDefinedRadio) {
+	public Antenna(String ID, String name, String description) {
 		super(ID, name, description);
-
-		parts.add(rotator);
-		parts.add(radioDevice);
-		parts.add(modemDevice);
-		parts.add(softwareDefinedRadio);
 	}
 
-	public List<ICommandableAntennaPart> getParts() {
-		return parts;
+	public int getThresholdElevation() {
+		return thresholdElevation;
 	}
 
-	public void setParts(List<ICommandableAntennaPart> parts) {
-		this.parts = parts;
-	}
-
-	public Rotator getRotator() {
-		for (ICommandableAntennaPart part : parts) {
-			if (part instanceof Rotator) {
-				return (Rotator) part;
-			}
-		}
-
-		return null;
-	}
+	public void setThresholdElevation(int thresholdElevation) {
+		this.thresholdElevation = thresholdElevation;
+	}	
 }

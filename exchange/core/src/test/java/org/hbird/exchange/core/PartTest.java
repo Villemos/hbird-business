@@ -57,12 +57,12 @@ public class PartTest {
      */
     @Before
     public void setUp() throws Exception {
-        root1 = new Part(ROOT_1, DESCRIPTION);
-        root2 = new Part(ROOT_2, DESCRIPTION);
-        root1Child1 = new Part(CHILD_1, DESCRIPTION, root1);
-        root1Child2 = new Part(CHILD_2, DESCRIPTION, root1);
-        root2Child1 = new Part(CHILD_1, DESCRIPTION, root2);
-        root2Child2 = new Part(CHILD_2, DESCRIPTION, root2);
+        root1 = new Part(ROOT_1, ROOT_1, DESCRIPTION);
+        root2 = new Part(ROOT_2, ROOT_2, DESCRIPTION);
+        root1Child1 = new Part(CHILD_1, CHILD_1, DESCRIPTION, root1);
+        root1Child2 = new Part(CHILD_2, CHILD_2, DESCRIPTION, root1);
+        root2Child1 = new Part(CHILD_1, CHILD_1, DESCRIPTION, root2);
+        root2Child2 = new Part(CHILD_2, CHILD_2, DESCRIPTION, root2);
         COMMANDS.clear();
     }
 
@@ -97,18 +97,13 @@ public class PartTest {
      */
     @Test
     public void testPartStringString() {
-        Part part = new Part(ROOT_1, DESCRIPTION);
+        Part part = new Part(ROOT_1, ROOT_1, DESCRIPTION);
         assertEquals(ROOT_1, part.getName());
         assertEquals(DESCRIPTION, part.getDescription());
-        assertNotNull(part.getCommands());
-        assertEquals(0, part.getCommands().size());
         assertNull(part.getIsPartOf());
-        assertEquals(StandardComponents.SYSTEM, part.getIssuedBy());
         assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ROOT_1, part.getQualifiedName());
         assertEquals(SEPARATOR + ROOT_1, part.getQualifiedName(SEPARATOR));
-        assertTrue(part.getTimestamp() <= System.currentTimeMillis() && part.getTimestamp() > System.currentTimeMillis() - 3 * 1000L);
-        assertEquals(Part.class.getSimpleName(), part.getType());
-        assertNotNull(part.getUuid());
+        assertNotNull(part.getID());
     }
 
     /**
@@ -120,15 +115,10 @@ public class PartTest {
     public void testPartStringStringIPart() {
         assertEquals(CHILD_1, root1Child1.getName());
         assertEquals(DESCRIPTION, root1Child1.getDescription());
-        assertNotNull(root1Child1.getCommands());
-        assertEquals(0, root1Child1.getCommands().size());
         assertEquals(root1, root1Child1.getIsPartOf());
-        assertEquals(StandardComponents.SYSTEM, root1Child1.getIssuedBy());
         assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ROOT_1 + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + CHILD_1, root1Child1.getQualifiedName());
         assertEquals(SEPARATOR + ROOT_1 + SEPARATOR + CHILD_1, root1Child1.getQualifiedName(SEPARATOR));
-        assertTrue(root1Child1.getTimestamp() <= System.currentTimeMillis() && root1Child1.getTimestamp() > System.currentTimeMillis() - 3 * 1000L);
-        assertEquals(Part.class.getSimpleName(), root1Child1.getType());
-        assertNotNull(root1Child1.getUuid());
+        assertNotNull(root1Child1.getID());
     }
 
     /**
@@ -136,17 +126,13 @@ public class PartTest {
      */
     @Test
     public void testPartStringStringListOfCommand() {
-        Part part = new Part(ROOT_1, DESCRIPTION, COMMANDS);
+        Part part = new Part(ROOT_1, ROOT_1, DESCRIPTION);
         assertEquals(ROOT_1, part.getName());
         assertEquals(DESCRIPTION, part.getDescription());
-        assertEquals(COMMANDS, part.getCommands());
         assertNull(part.getIsPartOf());
-        assertEquals(StandardComponents.SYSTEM, part.getIssuedBy());
         assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ROOT_1, part.getQualifiedName());
         assertEquals(SEPARATOR + ROOT_1, part.getQualifiedName(SEPARATOR));
-        assertTrue(part.getTimestamp() <= System.currentTimeMillis() && part.getTimestamp() > System.currentTimeMillis() - 3 * 1000L);
-        assertEquals(Part.class.getSimpleName(), part.getType());
-        assertNotNull(part.getUuid());
+        assertNotNull(part.getID());
     }
 
     /**
@@ -156,17 +142,13 @@ public class PartTest {
      */
     @Test
     public void testPartStringStringIPartListOfCommand() {
-        Part part = new Part(CHILD_1, DESCRIPTION, root1, COMMANDS);
+        Part part = new Part(CHILD_1, CHILD_1, DESCRIPTION, root1);
         assertEquals(CHILD_1, part.getName());
         assertEquals(DESCRIPTION, part.getDescription());
-        assertEquals(COMMANDS, part.getCommands());
         assertEquals(root1, part.getIsPartOf());
-        assertEquals(StandardComponents.SYSTEM, part.getIssuedBy());
         assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ROOT_1 + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + CHILD_1, part.getQualifiedName());
         assertEquals(SEPARATOR + ROOT_1 + SEPARATOR + CHILD_1, part.getQualifiedName(SEPARATOR));
-        assertTrue(part.getTimestamp() <= System.currentTimeMillis() && part.getTimestamp() > System.currentTimeMillis() - 3 * 1000L);
-        assertEquals(Part.class.getSimpleName(), part.getType());
-        assertNotNull(part.getUuid());
+        assertNotNull(part.getID());
     }
 
     /**
@@ -194,29 +176,4 @@ public class PartTest {
         assertEquals(root2, root1Child1.getIsPartOf());
     }
 
-    /**
-     * Test method for {@link org.hbird.exchange.core.Part#getCommands()}.
-     */
-    @Test
-    public void testGetCommands() {
-        testSetCommands();
-    }
-
-    /**
-     * Test method for {@link org.hbird.exchange.core.Part#setCommands(java.util.List)}.
-     */
-    @Test
-    public void testSetCommands() {
-        assertNotNull(root1.getCommands());
-        assertEquals(0, root1.getCommands().size());
-        assertNotSame(COMMANDS, root1.getCommands());
-        root1.setCommands(null);
-        assertNull(root1.getCommands());
-        root1.setCommands(COMMANDS);
-        assertEquals(COMMANDS, root1.getCommands());
-        Command c = new Command("test", "/dev/null", "dummy", "Just 4 test");
-        COMMANDS.add(c);
-        assertEquals(1, root1.getCommands().size());
-        assertEquals(c, root1.getCommands().get(0));
-    }
 }

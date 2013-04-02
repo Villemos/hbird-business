@@ -28,56 +28,56 @@ public class ParameterRequest extends DataRequest {
 
     private static final long serialVersionUID = -210475353836504189L;
 
-    public ParameterRequest(String parameter) {
-        super(StandardComponents.ASSEMBLY, StandardComponents.PARAMETER_ARCHIVE, ParameterRequest.class.getSimpleName(), DESCRIPTION);
+    public ParameterRequest(String issuedBy, String parameter) {
+        super(issuedBy, StandardComponents.ARCHIVE_NAME, ParameterRequest.class.getSimpleName(), DESCRIPTION);
         setClass(Parameter.class.getSimpleName());
         addName(parameter);
     }
 
-    public ParameterRequest() {
-        super(StandardComponents.ASSEMBLY, StandardComponents.PARAMETER_ARCHIVE, ParameterRequest.class.getSimpleName(), DESCRIPTION);
+    public ParameterRequest(String issuedBy) {
+        super(issuedBy, StandardComponents.ARCHIVE_NAME, ParameterRequest.class.getSimpleName(), DESCRIPTION);
         setClass(Parameter.class.getSimpleName());
     }
 
-    public ParameterRequest(List<String> parameter) {
-        super(StandardComponents.ASSEMBLY, StandardComponents.PARAMETER_ARCHIVE, ParameterRequest.class.getSimpleName(), DESCRIPTION);
+    public ParameterRequest(String issuedBy, List<String> parameter) {
+        super(issuedBy, StandardComponents.ARCHIVE_NAME, ParameterRequest.class.getSimpleName(), DESCRIPTION);
         setClass(Parameter.class.getSimpleName());
-        addName(parameter);
+        addNames(parameter);
     }
 
-    public ParameterRequest(String parameter, int rows) {
-        this(parameter);
+    public ParameterRequest(String issuedBy, String parameter, int rows) {
+        this(issuedBy, parameter);
         setSort(StandardArguments.TIMESTAMP);
         setSortOrder("DESC");
         setRows(rows);
     }
 
-    public ParameterRequest(String parameter, Long from, Long to) {
-        this(parameter);
+    public ParameterRequest(String issuedBy, String parameter, Long from, Long to) {
+        this(issuedBy, parameter);
         setFrom(from);
         setTo(to);
     }
 
-    public ParameterRequest(String parameter, Long from, Long to, int rows) {
-        this(parameter);
+    public ParameterRequest(String issuedBy, String parameter, Long from, Long to, int rows) {
+        this(issuedBy, parameter);
         setFrom(from);
         setTo(to);
         setRows(rows);
     }
 
-    public ParameterRequest(List<String> parameters, int rows) {
-        this(parameters);
+    public ParameterRequest(String issuedBy, List<String> parameters, int rows) {
+        this(issuedBy, parameters);
         setRows(rows);
     }
 
-    public ParameterRequest(List<String> parameters, Long from, Long to) {
-        this(parameters);
+    public ParameterRequest(String issuedBy, List<String> parameters, Long from, Long to) {
+        this(issuedBy, parameters);
         setFrom(from);
         setTo(to);
     }
 
-    public ParameterRequest(List<String> parameters, Long from, Long to, int rows) {
-        this(parameters);
+    public ParameterRequest(String issuedBy, List<String> parameters, Long from, Long to, int rows) {
+        this(issuedBy, parameters);
         setFrom(from);
         setTo(to);
         setRows(rows);

@@ -26,7 +26,7 @@ public class CommitRequest extends Command {
     private static final long serialVersionUID = 3068998173204822616L;
 
     public CommitRequest(String issuedBy) {
-        this(issuedBy, StandardComponents.ARCHIVE);
+        this(issuedBy, StandardComponents.ARCHIVE_NAME);
     }
 
     public CommitRequest(String issuedBy, String destination) {

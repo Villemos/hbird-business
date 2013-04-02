@@ -16,7 +16,7 @@ public class SatelliteRequest extends DataRequest {
 	 * 
 	 */
     public SatelliteRequest(String issuedBy) {
-        super(issuedBy, StandardComponents.ARCHIVE, SatelliteRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, StandardComponents.ARCHIVE_NAME, SatelliteRequest.class.getSimpleName(), DESCRIPTION);
         setClass(Satellite.class.getSimpleName());
         setIsInitialization(true);
     }

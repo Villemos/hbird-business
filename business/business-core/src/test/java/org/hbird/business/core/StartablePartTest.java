@@ -17,11 +17,12 @@
 /**
  * 
  */
-package org.hbird.exchange.core;
+package org.hbird.business.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import org.hbird.business.core.StartablePart;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,12 +43,12 @@ public class StartablePartTest {
      */
     @Before
     public void setUp() throws Exception {
-        part = new StartablePart(NAME, DESCRIPTION, DRIVER_NAME);
+        part = new StartablePart(NAME, NAME, DESCRIPTION, DRIVER_NAME);
     }
 
     /**
      * Test method for
-     * {@link org.hbird.exchange.core.StartablePart#StartablePart(java.lang.String, java.lang.String, java.lang.String)}
+     * {@link org.hbird.business.core.StartablePart#StartablePart(java.lang.String, java.lang.String, java.lang.String)}
      * .
      */
     @Test
@@ -60,7 +61,7 @@ public class StartablePartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.StartablePart#getDriverName()}.
+     * Test method for {@link org.hbird.business.core.StartablePart#getDriverName()}.
      */
     @Test
     public void testGetDriverName() {
@@ -68,7 +69,7 @@ public class StartablePartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.StartablePart#setDriverName(java.lang.String)}.
+     * Test method for {@link org.hbird.business.core.StartablePart#setDriverName(java.lang.String)}.
      */
     @Test
     public void testSetDriverName() {
@@ -80,7 +81,7 @@ public class StartablePartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.StartablePart#getConfigurator()}.
+     * Test method for {@link org.hbird.business.core.StartablePart#getConfigurator()}.
      */
     @Test
     public void testGetConfigurator() {
@@ -88,7 +89,7 @@ public class StartablePartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.StartablePart#setConfigurator(java.lang.String)}.
+     * Test method for {@link org.hbird.business.core.StartablePart#setConfigurator(java.lang.String)}.
      */
     @Test
     public void testSetConfigurator() {
@@ -98,7 +99,7 @@ public class StartablePartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.StartablePart#getHeartbeat()}.
+     * Test method for {@link org.hbird.business.core.StartablePart#getHeartbeat()}.
      */
     @Test
     public void testGetHeartbeat() {
@@ -106,7 +107,7 @@ public class StartablePartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.StartablePart#setHeartbeat(long)}.
+     * Test method for {@link org.hbird.business.core.StartablePart#setHeartbeat(long)}.
      */
     @Test
     public void testSetHeartbeat() {

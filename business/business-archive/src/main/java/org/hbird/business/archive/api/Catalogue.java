@@ -120,7 +120,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
      * @return
      */
     protected ParameterRequest createParameterRequest() {
-        ParameterRequest request = new ParameterRequest();
+        ParameterRequest request = new ParameterRequest(issuedBy);
         request.setIsInitialization(true);
         request.setRows(1);
         return request;
@@ -130,7 +130,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
      * @return
      */
     protected StateRequest createStateRequest() {
-        StateRequest request = new StateRequest();
+        StateRequest request = new StateRequest(issuedBy);
         request.setIsInitialization(true);
         request.setRows(1);
         return request;

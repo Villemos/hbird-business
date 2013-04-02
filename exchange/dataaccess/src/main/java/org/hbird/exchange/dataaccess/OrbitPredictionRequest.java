@@ -108,20 +108,20 @@ public class OrbitPredictionRequest extends Command {
      * @param satellite The satellite for which the prediction is done.
      */
     public OrbitPredictionRequest(String issuedBy, String satellite) {
-        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, OrbitPredictionRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, StandardComponents.ORBIT_PROPAGATOR_NAME, OrbitPredictionRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, System.currentTimeMillis());
     }
 
     public OrbitPredictionRequest(String issuedBy, String satellite, long from, long to) {
-        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, OrbitPredictionRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, StandardComponents.ORBIT_PROPAGATOR_NAME, OrbitPredictionRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, from);
         setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);
     }
 
     public OrbitPredictionRequest(String issuedBy, String satellite, String location, long from, long to) {
-        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, OrbitPredictionRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, StandardComponents.ORBIT_PROPAGATOR_NAME, OrbitPredictionRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, ((new Date()).getTime()));
         setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);
@@ -129,7 +129,7 @@ public class OrbitPredictionRequest extends Command {
     }
 
     public OrbitPredictionRequest(String issuedBy, String satellite, List<String> locations, long from, long to) {
-        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, OrbitPredictionRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, StandardComponents.ORBIT_PROPAGATOR_NAME, OrbitPredictionRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, System.currentTimeMillis());
         setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);

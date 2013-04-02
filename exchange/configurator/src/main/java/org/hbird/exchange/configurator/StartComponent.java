@@ -38,7 +38,7 @@ public class StartComponent extends Command {
     }
 
     public StartComponent(String issuedBy, IStartablePart part) {
-        super(issuedBy, StandardComponents.CONFIGURATOR, StartComponent.class.getSimpleName(), DESC_STRING);
+        super(issuedBy, StandardComponents.CONFIGURATOR_NAME, StartComponent.class.getSimpleName(), DESC_STRING);
         addPart(part);
     }
 

@@ -39,7 +39,6 @@ import java.util.List;
 import org.hbird.business.navigation.orekit.NavigationUtilities;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.NativeCommand;
-import org.hbird.exchange.groundstation.Rotator;
 import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
@@ -49,6 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.estcube.gs.base.HamlibNativeCommand;
+import eu.estcube.gs.base.Rotator;
 import eu.estcube.gs.rotator.nativecommands.Park;
 import eu.estcube.gs.rotator.nativecommands.Reset;
 import eu.estcube.gs.rotator.nativecommands.SetPosition;

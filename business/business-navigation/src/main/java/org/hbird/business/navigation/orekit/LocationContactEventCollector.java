@@ -101,7 +101,7 @@ public class LocationContactEventCollector extends ElevationDetector {
     public int eventOccurred(final SpacecraftState state, final boolean increasing) throws OrekitException {
 
     	long atTime = state.getDate().toDate(TimeScalesFactory.getUTC()).getTime();
-        LocationContactEvent event = new LocationContactEvent(StandardComponents.ORBIT_PREDICTOR, atTime, groundStation, antenna, satellite, increasing, NavigationUtilities.toOrbitalState(state, satellite)); 
+        LocationContactEvent event = new LocationContactEvent(StandardComponents.ORBIT_PROPAGATOR_NAME, atTime, groundStation, antenna, satellite, increasing, NavigationUtilities.toOrbitalState(state, satellite)); 
         events.add(event);
 
         /** If stream mode, then deliver the data as a stream. */

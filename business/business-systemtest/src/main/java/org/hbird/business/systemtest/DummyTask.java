@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.exchange.core.Issued;
-import org.hbird.exchange.core.Named;
 import org.hbird.exchange.tasking.Task;
 
 /**

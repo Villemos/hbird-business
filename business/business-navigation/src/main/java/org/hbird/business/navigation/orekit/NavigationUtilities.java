@@ -72,7 +72,7 @@ public class NavigationUtilities {
                 state.getOrbit().getPVCoordinates().getMomentum().getY(),
                 state.getOrbit().getPVCoordinates().getMomentum().getZ());
 
-        return new OrbitalState(StandardComponents.ORBIT_PREDICTOR, "OrbitalState", "Orbital state of satellite", state.getDate().toDate(scale).getTime(),
+        return new OrbitalState(StandardComponents.ORBIT_PROPAGATOR_NAME, "OrbitalState", "Orbital state of satellite", state.getDate().toDate(scale).getTime(),
                 satellite, position,
                 velocity, momentum);
     }

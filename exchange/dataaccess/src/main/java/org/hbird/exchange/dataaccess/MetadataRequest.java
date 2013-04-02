@@ -16,7 +16,7 @@ public class MetadataRequest extends DataRequest {
     private static final long serialVersionUID = -7231902449829794969L;
 
     public MetadataRequest(String issuedBy, Issued applicableTo) {
-        super(issuedBy, StandardComponents.ARCHIVE);
+        super(issuedBy, StandardComponents.ARCHIVE_NAME);
 
         this.setArgumentValue(StandardArguments.APPLICABLE_TO,
                 new NamedInstanceIdentifier(applicableTo.getIssuedBy(), applicableTo.getName(), applicableTo.getTimestamp()));

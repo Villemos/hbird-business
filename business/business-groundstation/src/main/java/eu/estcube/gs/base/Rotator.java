@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.exchange.groundstation;
+package eu.estcube.gs.base;
 
-import org.hbird.exchange.configurator.StartablePart;
+import org.hbird.business.core.StartablePart;
+import org.hbird.exchange.groundstation.ICommandableAntennaPart;
 
 
 public abstract class Rotator extends StartablePart implements ICommandableAntennaPart {
@@ -112,5 +113,4 @@ public abstract class Rotator extends StartablePart implements ICommandableAnten
     public void setMaxElevation(int maxElevation) {
         this.maxElevation = maxElevation;
     }
-
 }

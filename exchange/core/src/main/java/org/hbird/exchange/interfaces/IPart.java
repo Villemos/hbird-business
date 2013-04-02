@@ -57,4 +57,10 @@ public interface IPart extends INamed {
 	 * @param parent The parent object of this object.
 	 */
 	public void setIsPartOf(IPart parent);
+
+	/**
+	 * Method to get the full path of the Part.
+	 * 
+	 * */
+	public String getAbsoluteName();
 }

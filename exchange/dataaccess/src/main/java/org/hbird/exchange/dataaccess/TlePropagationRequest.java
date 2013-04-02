@@ -60,7 +60,7 @@ public class TlePropagationRequest extends Command {
     }
 
     public TlePropagationRequest(String issuedBy, String satellite) {
-        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, StandardComponents.ORBIT_PROPAGATOR_NAME, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, System.currentTimeMillis());
     }
@@ -77,7 +77,7 @@ public class TlePropagationRequest extends Command {
      *            calculated and issued.
      */
     public TlePropagationRequest(String issuedBy, String satellite, String tleLine1, String tleLine2, Long starttime, List<String> locations) {
-        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, StandardComponents.ORBIT_PROPAGATOR_NAME, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, starttime);
         setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
@@ -93,7 +93,7 @@ public class TlePropagationRequest extends Command {
      * @param locations List of locations for which contact events shall be generated.
      */
     public TlePropagationRequest(String issuedBy, String satellite, TleOrbitalParameters state, List<String> locations) {
-        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, StandardComponents.ORBIT_PROPAGATOR_NAME, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, (new Date()).getTime());
         setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
@@ -101,14 +101,14 @@ public class TlePropagationRequest extends Command {
     }
 
     public TlePropagationRequest(String issuedBy, String satellite, long from, long to) {
-        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, StandardComponents.ORBIT_PROPAGATOR_NAME, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, from);
         setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);
     }
 
     public TlePropagationRequest(String issuedBy, String satellite, String location, long from, long to) {
-        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, StandardComponents.ORBIT_PROPAGATOR_NAME, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, from);
         setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);
@@ -117,7 +117,7 @@ public class TlePropagationRequest extends Command {
     }
 
     public TlePropagationRequest(String issuedBy, String satellite, List<String> locations, long from, long to) {
-        super(issuedBy, StandardComponents.ORBIT_PREDICTOR, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, StandardComponents.ORBIT_PROPAGATOR_NAME, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, from);
         setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);

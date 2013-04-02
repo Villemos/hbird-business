@@ -32,8 +32,8 @@
  */
 package org.hbird.business.validation;
 
+import org.hbird.business.core.StartablePart;
 import org.hbird.business.validation.bean.LimitCheckComponentDriver;
-import org.hbird.exchange.configurator.StartablePart;
 import org.hbird.exchange.validation.Limit;
 import org.hbird.exchange.validation.Limit.eLimitType;
 

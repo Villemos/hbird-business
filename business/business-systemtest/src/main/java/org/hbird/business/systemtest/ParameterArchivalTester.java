@@ -23,6 +23,8 @@ import java.util.List;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
+import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.IPublish;
 import org.hbird.exchange.core.Parameter;
 
 public class ParameterArchivalTester extends SystemTest {
@@ -39,9 +41,9 @@ public class ParameterArchivalTester extends SystemTest {
 		
 		Thread.sleep(2000);
 
-		String para1Name = estcube1.getQualifiedName() + "/" + "PARA1";
-		String para2Name = estcube1.getQualifiedName() + "/" + "PARA2";
-		String para3Name = estcube1.getQualifiedName() + "/" + "PARA3";
+		String para1Name = "PARA1";
+		String para2Name = "PARA2";
+		String para3Name = "PARA3";
 		
 		/** Publish parameters. */
 		LOG.info("Publishing parameters.");
@@ -98,7 +100,7 @@ public class ParameterArchivalTester extends SystemTest {
 		try {
 			LOG.info("Retrieveing last value of PARA1");
 
-			Parameter respond = accessApi.getParameter(para1Name);
+			Parameter respond = accessApi.getParameter("SystemTest/" + para1Name);
 			azzert(respond != null, "Received a response.");
 			
 			azzert(respond.asDouble() == 2.6d, "Last value should be 2.6. Received " + respond.asDouble());			
@@ -109,7 +111,7 @@ public class ParameterArchivalTester extends SystemTest {
 		
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			List<Parameter> respond = accessApi.retrieveParameter(para2Name, start.getTime(), (new Date()).getTime());
+			List<Parameter> respond = accessApi.retrieveParameter("SystemTest/" + para2Name, start.getTime(), (new Date()).getTime());
 			azzert(respond != null, "Received a response.");			
 			azzert(respond.size() == 3, "Expect 3 entries. Received " + respond.size());			
 		}
@@ -119,7 +121,7 @@ public class ParameterArchivalTester extends SystemTest {
 
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			List<Parameter> respond = accessApi.retrieveParameter(para2Name, start.getTime(), end.getTime());
+			List<Parameter> respond = accessApi.retrieveParameter("SystemTest/" + para2Name, start.getTime(), end.getTime());
 			azzert(respond != null, "Received a response.");			
 			azzert(respond.size() == 2, "Expect 2 entries. Received " + respond.size());			
 		}
@@ -129,13 +131,57 @@ public class ParameterArchivalTester extends SystemTest {
 
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			List<Parameter> respond = accessApi.retrieveParameters(Arrays.asList(para1Name, para2Name, para3Name), start.getTime(), end.getTime());
+			List<Parameter> respond = accessApi.retrieveParameters(Arrays.asList("SystemTest/" + para1Name, "SystemTest/" + para2Name, "SystemTest/" + para3Name), start.getTime(), end.getTime());
 			azzert(respond != null, "Received a response.");			
 			azzert(respond.size() == 5, "Expect 5 entries. Received " + respond.size());			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
+		
+		/** Store data from another source (different issued by). Ensure that the data is stored separartly. */
+		IPublish api = ApiFactory.getPublishApi("AlternativeSource");
+		api.publishParameter(para1Name,  "A test description,", 2d, "Volt");
+		Thread.sleep(1);
+		api.publishParameter(para1Name,  "A test description,", 2.1d, "Volt");
+		Thread.sleep(1);
+		api.publishParameter(para2Name,  "A test description,", 3l, "Meter");
+		Thread.sleep(1);
+		api.publishParameter(para2Name,  "A test description,", 4l, "Meter");
+		Thread.sleep(1);
+		api.publishParameter(para3Name,  "A test description,", 10f, "Seconds");
+		Thread.sleep(1);
+		api.publishParameter(para3Name,  "A test description,", 15f, "Seconds");
+		Thread.sleep(1);
+		api.publishParameter(para3Name,  "A test description,", 20f, "Seconds");
+		Thread.sleep(1);
+		api.publishParameter(para2Name,  "A test description,", 5l, "Meter");
+		Thread.sleep(1);
+		api.publishParameter(para3Name,  "A test description,", 35f, "Seconds");
+
+        Thread.sleep(2000);
+		
+		/** Send command to commit all changes. */
+		forceCommit();
+		
+		// Test retrieval of only the last value of a parameter.
+		try {
+			LOG.info("Retrieveing last value of PARA1 from two sources");
+
+			Parameter respond = accessApi.getParameter("AlternativeSource/" + para1Name);
+			azzert(respond != null, "Received a response.");			
+			azzert(respond.asDouble() == 2.1d, "Last value should be 2.1. Received " + respond.asDouble());			
+			
+			respond = accessApi.getParameter("SystemTest/" + para1Name);
+			azzert(respond != null, "Received a response.");			
+			azzert(respond.asDouble() == 2.6d, "Last value should be 2.6. Received " + respond.asDouble());			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		
 		LOG.info("Finished");
 	}

@@ -50,6 +50,9 @@ public class Arguments {
     public static final CommandArgument DERIVED_FROM = new CommandArgument(StandardArguments.DERIVED_FROM,
             "Identifier of the named object of which an object must be derived from.", NamedInstanceIdentifier.class, false);
 
+    public static final CommandArgument ISSUED_BY = new CommandArgument(StandardArguments.ISSUED_BY,
+            "The source from which the data was 'issuedBy'", String.class, false);
+
     public static final CommandArgument FROM = new CommandArgument(StandardArguments.FROM, "The start of a range search on timestamp. Default to '*'.",
             Long.class, "Seconds", null, false);
 

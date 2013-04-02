@@ -45,12 +45,12 @@ import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.groundstation.Antenna;
 import org.hbird.exchange.groundstation.GroundStation;
-import org.hbird.exchange.groundstation.RadioDevice;
-import org.hbird.exchange.groundstation.Rotator;
 import org.hbird.exchange.interfaces.IStartablePart;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
+import eu.estcube.gs.base.RadioDevice;
+import eu.estcube.gs.base.Rotator;
 import eu.estcube.gs.radio.HamlibRadioPart;
 import eu.estcube.gs.rotator.HamlibRotatorPart;
 
@@ -97,6 +97,13 @@ public abstract class SystemTest {
 
     protected static IPartManager partmanagerApi = ApiFactory.getPartManagerApi("SystemTest");
 
+    protected static ArchiveComponent archive = null;    
+    protected static CommandingComponent comComponent = null;
+    protected static NavigationComponent navComponent = null;
+    protected static SystemMonitorComponent sysMon = null;
+    protected static WebsocketInterfaceComponent webComponent = null;
+
+    
     protected static Satellite estcube1 = null;
     protected static Satellite dkCube1 = null;
     protected static Satellite deCube1 = null;
@@ -136,9 +143,11 @@ public abstract class SystemTest {
 
         Rotator rotator = new HamlibRotatorPart("Rotator_ES5EC", "Rotator", 0, -90, 360, 0, 180, 4533, "localhost");
         RadioDevice radio = new HamlibRadioPart("Radio_ES5EC", "Radio", 136920000l, 136920000l, true, true, 20l, 4532, "localhost");
-        Antenna antenna = new Antenna("Antenna1_ES5EC", "Antenna1", "The prime antenna", rotator, radio);
+        Antenna antenna = new Antenna("Antenna1_ES5EC", "Antenna1", "The prime antenna");
         registerPart(radio);
-
+        rotator.setIsPartOf(antenna);
+        radio.setIsPartOf(antenna);
+        
         registerPart(antenna);
         es5ec.addAntenna(antenna);
         antenna.setIsPartOf(es5ec);
@@ -152,23 +161,26 @@ public abstract class SystemTest {
         registerPart(trackAutomation);
         trackAutomation.setIsPartOf(mof);
 
-        ArchiveComponent archive = new ArchiveComponent();
+        
+        
+        archive = new ArchiveComponent();
         registerPart(archive);
         archive.setIsPartOf(mof);
 
-        CommandingComponent comComponent = new CommandingComponent();
+        comComponent = new CommandingComponent();
         registerPart(comComponent);
         comComponent.setIsPartOf(mof);
 
-        NavigationComponent navComponent = new NavigationComponent();
+        navComponent = new NavigationComponent();
         registerPart(navComponent);
         navComponent.setIsPartOf(mof);
 
+        
         Part scripts = new Part("Synthetic Parameters", "Synthetic Parameters", "The synthetic parameters / scripts");
         registerPart(scripts);
         scripts.setIsPartOf(mof);
 
-        SystemMonitorComponent sysMon = new SystemMonitorComponent();
+        sysMon = new SystemMonitorComponent();
         registerPart(sysMon);
         sysMon.setIsPartOf(mof);
 
@@ -180,7 +192,7 @@ public abstract class SystemTest {
         registerPart(limits);
         limits.setIsPartOf(mof);
 
-        WebsocketInterfaceComponent webComponent = new WebsocketInterfaceComponent();
+        webComponent = new WebsocketInterfaceComponent();
         registerPart(webComponent);
         webComponent.setIsPartOf(mof);
 
@@ -217,9 +229,12 @@ public abstract class SystemTest {
 
         Rotator darmstadtRotator = new HamlibRotatorPart("Rotator_DAR", "Rotator", 0, -90, 360, 0, 180, 4533, "localhost");
         RadioDevice darmstadtRadio = new HamlibRadioPart("Radio_DAR", "Radio", 136920000l, 136920000l, true, true, 20l, 4532, "localhost");
-        Antenna darmstadtAntenna = new Antenna("Antenna1_DAR", "Antenna1", "The prime antenna of DARMSTADT", darmstadtRotator, darmstadtRadio);
+        Antenna darmstadtAntenna = new Antenna("Antenna1_DAR", "Antenna1", "The prime antenna of DARMSTADT");
         registerPart(darmstadtRadio);
-        registerPart(darmstadtAntenna);
+        registerPart(darmstadtRotator);
+        darmstadtRotator.setIsPartOf(darmstadtAntenna);
+        darmstadtRadio.setIsPartOf(darmstadtAntenna);
+        
         // D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(),
         // "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
         D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.87D),
@@ -296,20 +311,21 @@ public abstract class SystemTest {
         if (monitoringArchiveStarted == false) {
             LOG.info("Issuing command for start of a parameter archive.");
 
-            IStartablePart part = (IStartablePart) parts.get(StandardComponents.ARCHIVE);
-            partmanagerApi.start(part);
+            partmanagerApi.start(archive);
 
             /** Give the component time to startup. */
-            Thread.sleep(1000);
+            Thread.sleep(3000);
 
             monitoringArchiveStarted = true;
         }
 
         /** TODO Send command to the archive to delete all data. */
-        injection.sendBody(new DeletionRequest("SystemTest", StandardComponents.ARCHIVE, "*:*"));
+        injection.sendBody(new DeletionRequest("SystemTest", StandardComponents.ARCHIVE_NAME, "*:*"));
 
+        Thread.sleep(2000);
+        
         /** Send command to commit all changes. */
-        injection.sendBody(new CommitRequest("SystemTest", StandardComponents.ARCHIVE));
+        injection.sendBody(new CommitRequest("SystemTest", StandardComponents.ARCHIVE_NAME));
 
     }
 
@@ -347,8 +363,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a commanding chain.");
 
             /** Create command component. */
-            IStartablePart part = (IStartablePart) parts.get(StandardComponents.COMMANDING_CHAIN);
-            partmanagerApi.start(part);
+            partmanagerApi.start(comComponent);
 
             Thread.sleep(2000);
 
@@ -362,8 +377,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command to stop a commanding chain.");
 
             /** Create command component. */
-            IStartablePart part = (IStartablePart) parts.get(StandardComponents.COMMANDING_CHAIN);
-            partmanagerApi.stop(part.getQualifiedName());
+            partmanagerApi.stop(comComponent.getQualifiedName());
 
             Thread.sleep(2000);
 
@@ -380,8 +394,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a orbital predictor.");
 
             /** Create command component. */
-            IStartablePart part = (IStartablePart) parts.get(StandardComponents.ORBIT_PREDICTOR);
-            partmanagerApi.start(part);
+            partmanagerApi.start(navComponent);
 
             Thread.sleep(2000);
 
@@ -397,8 +410,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a orbital predictor.");
 
             /** Create command component. */
-            IStartablePart part = (IStartablePart) parts.get(StandardComponents.WEB_SOCKET);
-            partmanagerApi.start(part);
+            partmanagerApi.start(webComponent);
 
             Thread.sleep(2000);
 
@@ -529,7 +541,7 @@ public abstract class SystemTest {
 
     protected void forceCommit() throws InterruptedException {
         /** Send command to commit all changes. */
-        injection.sendBody(new CommitRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE));
+        injection.sendBody(new CommitRequest("SystemTest", StandardComponents.ARCHIVE_NAME));
         Thread.sleep(2000);
     }
 

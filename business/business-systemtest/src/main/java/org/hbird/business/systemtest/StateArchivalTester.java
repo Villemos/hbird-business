@@ -42,37 +42,37 @@ public class StateArchivalTester extends SystemTest {
 		Thread.sleep(2000);
 
     	/** Store states. */
-        publishApi.publishState("STATE1", "A test description", estcube1.getQualifiedName() + "/COMMAND1", true);
+        publishApi.publishState("STATE1", "A test description", estcube1.getID() + "/COMMAND1", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE2", "A test description", estcube1.getQualifiedName() + "/COMMAND1", true);
+        publishApi.publishState("STATE2", "A test description", estcube1.getID() + "/COMMAND1", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE3", "A test description", estcube1.getQualifiedName() + "/COMMAND1", false);
+        publishApi.publishState("STATE3", "A test description", estcube1.getID() + "/COMMAND1", false);
 		Thread.sleep(1);
-        publishApi.publishState("STATE4", "A test description", estcube1.getQualifiedName() + "/COMMAND1", true);
+        publishApi.publishState("STATE4", "A test description", estcube1.getID() + "/COMMAND1", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE5", "A test description", estcube1.getQualifiedName() + "/COMMAND1", true);
+        publishApi.publishState("STATE5", "A test description", estcube1.getID() + "/COMMAND1", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE6", "A test description", estcube1.getQualifiedName() + "/COMMAND1", false);
+        publishApi.publishState("STATE6", "A test description", estcube1.getID() + "/COMMAND1", false);
 		Thread.sleep(1);
-        publishApi.publishState("STATE7", "A test description", estcube1.getQualifiedName() + "/COMMAND1", true);
+        publishApi.publishState("STATE7", "A test description", estcube1.getID() + "/COMMAND1", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE1", "A test description", estcube1.getQualifiedName() + "/COMMAND2", true);
+        publishApi.publishState("STATE1", "A test description", estcube1.getID() + "/COMMAND2", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE2", "A test description", estcube1.getQualifiedName() + "/COMMAND2", true);
+        publishApi.publishState("STATE2", "A test description", estcube1.getID() + "/COMMAND2", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE3", "A test description", estcube1.getQualifiedName() + "/COMMAND2", false);
+        publishApi.publishState("STATE3", "A test description", estcube1.getID() + "/COMMAND2", false);
 		Thread.sleep(1);
-        publishApi.publishState("STATE4", "A test description", estcube1.getQualifiedName() + "/COMMAND2", true);
+        publishApi.publishState("STATE4", "A test description", estcube1.getID() + "/COMMAND2", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE5", "A test description", estcube1.getQualifiedName() + "/COMMAND2", true);
+        publishApi.publishState("STATE5", "A test description", estcube1.getID() + "/COMMAND2", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE1", "A test description", estcube1.getQualifiedName() + "/COMMAND3", true);
+        publishApi.publishState("STATE1", "A test description", estcube1.getID() + "/COMMAND3", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE2", "A test description", estcube1.getQualifiedName() + "/COMMAND3", true);
+        publishApi.publishState("STATE2", "A test description", estcube1.getID() + "/COMMAND3", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE3", "A test description", estcube1.getQualifiedName() + "/COMMAND3", true);
+        publishApi.publishState("STATE3", "A test description", estcube1.getID() + "/COMMAND3", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE4", "A test description", estcube1.getQualifiedName() + "/COMMAND3", true);
+        publishApi.publishState("STATE4", "A test description", estcube1.getID() + "/COMMAND3", true);
 
         Thread.sleep(2000);
         
@@ -80,7 +80,7 @@ public class StateArchivalTester extends SystemTest {
 		
         /** Test retrieval. */
 		//Object respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE, "COMMAND1"));
-		Object respond = api.retrieveState(estcube1.getQualifiedName() + "/COMMAND1");
+		Object respond = api.retrieveState(estcube1.getID() + "/COMMAND1");
 		azzert(respond != null, "Received a response.");
         
         Map<String, State> states = new HashMap<String, State>();
@@ -97,11 +97,11 @@ public class StateArchivalTester extends SystemTest {
         azzert(states.get("STATE7").getValue() == true, "STATE7 should be 'true'");
 
     	/** Store a new set of states. Notice that STATE1 and STATE3 doesnt change. */
-        publishApi.publishState("STATE2", "A test description", estcube1.getQualifiedName() + "/COMMAND1", true);
-        publishApi.publishState("STATE4", "A test description", estcube1.getQualifiedName() + "/COMMAND1", true);
-        publishApi.publishState("STATE5", "A test description", estcube1.getQualifiedName() + "/COMMAND1", false);
-        publishApi.publishState("STATE6", "A test description", estcube1.getQualifiedName() + "/COMMAND1", true);
-        publishApi.publishState("STATE7", "A test description", estcube1.getQualifiedName() + "/COMMAND1", true);
+        publishApi.publishState("STATE2", "A test description", estcube1.getID() + "/COMMAND1", true);
+        publishApi.publishState("STATE4", "A test description", estcube1.getID() + "/COMMAND1", true);
+        publishApi.publishState("STATE5", "A test description", estcube1.getID() + "/COMMAND1", false);
+        publishApi.publishState("STATE6", "A test description", estcube1.getID() + "/COMMAND1", true);
+        publishApi.publishState("STATE7", "A test description", estcube1.getID() + "/COMMAND1", true);
 
         Thread.sleep(2000);
         
@@ -110,7 +110,7 @@ public class StateArchivalTester extends SystemTest {
 		
         /** Test retrieval. */
 		// respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE, "COMMAND1"));
-		respond = api.retrieveState(estcube1.getQualifiedName() + "/COMMAND1");
+		respond = api.retrieveState(estcube1.getID() + "/COMMAND1");
 		azzert(respond != null, "Received a response.");
 
         states = new HashMap<String, State>();

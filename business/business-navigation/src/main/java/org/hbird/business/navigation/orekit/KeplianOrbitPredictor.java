@@ -77,7 +77,7 @@ public class KeplianOrbitPredictor {
 			for (Antenna antenna : groundStation.getAntennas()) {
 
 				/** Register the injector that will send the detected events, for this location and antenna, to the propagator. */
-				EventDetector sta1Visi = new LocationContactEventCollector(antenna.getRotator().getThresholdElevation(), sta1Frame, satellite, groundStation.getQualifiedName(), antenna.getName(), parameters, publish);
+				EventDetector sta1Visi = new LocationContactEventCollector(antenna.getThresholdElevation(), sta1Frame, satellite, groundStation.getQualifiedName(), antenna.getName(), parameters, publish);
 				propagator.addEventDetector(sta1Visi);
 			}
 		}

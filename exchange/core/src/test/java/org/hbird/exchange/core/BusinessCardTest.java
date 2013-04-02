@@ -48,7 +48,7 @@ public class BusinessCardTest {
      */
     @Before
     public void setUp() throws Exception {
-        card = new BusinessCard(ISSUED_BY, HOST, COMMANDS, PERIOD);
+        card = new BusinessCard(ISSUED_BY, PERIOD);
     }
 
     /**
@@ -57,15 +57,13 @@ public class BusinessCardTest {
      */
     @Test
     public void testBusinessCardStringListOfCommandLong() {
-        card = new BusinessCard(ISSUED_BY, COMMANDS, PERIOD);
+        card = new BusinessCard(ISSUED_BY, PERIOD);
         assertEquals(ISSUED_BY, card.getIssuedBy());
         assertEquals(ISSUED_BY, card.getName());
-        assertEquals(BusinessCard.class.getSimpleName(), card.getType());
         assertTrue(card.getTimestamp() <= System.currentTimeMillis() && card.getTimestamp() > System.currentTimeMillis() - 3 * 1000L);
         assertEquals(BusinessCard.DESCRIPTION, card.getDescription());
         assertEquals(PERIOD, card.getPeriod());
-        assertEquals(COMMANDS, card.getCommands());
-        assertNotNull(card.getUuid());
+        assertNotNull(card.getID());
         assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ISSUED_BY, card.getQualifiedName());
         assertEquals(LocalHostNameResolver.getLocalHostName(), card.getHost());
     }
@@ -77,15 +75,13 @@ public class BusinessCardTest {
      */
     @Test
     public void testBusinessCardStringStringListOfCommandLong() {
-        card = new BusinessCard(ISSUED_BY, HOST, COMMANDS, PERIOD);
+        card = new BusinessCard(ISSUED_BY, PERIOD);
         assertEquals(ISSUED_BY, card.getIssuedBy());
         assertEquals(ISSUED_BY, card.getName());
-        assertEquals(BusinessCard.class.getSimpleName(), card.getType());
         assertTrue(card.getTimestamp() <= System.currentTimeMillis() && card.getTimestamp() > System.currentTimeMillis() - 3 * 1000L);
         assertEquals(BusinessCard.DESCRIPTION, card.getDescription());
         assertEquals(PERIOD, card.getPeriod());
-        assertEquals(COMMANDS, card.getCommands());
-        assertNotNull(card.getUuid());
+        assertNotNull(card.getID());
         assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ISSUED_BY, card.getQualifiedName());
         assertEquals(HOST, card.getHost());
     }
@@ -108,27 +104,6 @@ public class BusinessCardTest {
         assertNull(card.getHost());
         card.setHost(HOST + HOST);
         assertEquals(HOST + HOST, card.getHost());
-    }
-
-    /**
-     * Test method for {@link org.hbird.exchange.core.BusinessCard#getCommands()}.
-     */
-    @Test
-    public void testGetCommands() {
-        testSetCommands();
-    }
-
-    /**
-     * Test method for {@link org.hbird.exchange.core.BusinessCard#setCommands(java.util.List)}.
-     */
-    @Test
-    public void testSetCommands() {
-        assertEquals(COMMANDS, card.getCommands());
-        card.setCommands(null);
-        assertNull(card.getCommands());
-        List<Command> list = new ArrayList<Command>();
-        card.setCommands(list);
-        assertEquals(list, card.getCommands());
     }
 
     /**

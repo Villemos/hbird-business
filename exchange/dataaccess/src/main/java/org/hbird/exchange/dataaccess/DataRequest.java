@@ -28,9 +28,12 @@ import static org.hbird.exchange.dataaccess.Arguments.SORT;
 import static org.hbird.exchange.dataaccess.Arguments.SORT_ORDER;
 import static org.hbird.exchange.dataaccess.Arguments.TO;
 import static org.hbird.exchange.dataaccess.Arguments.create;
+import static org.hbird.exchange.dataaccess.Arguments.ISSUED_BY;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
@@ -69,6 +72,7 @@ public class DataRequest extends Command {
 		args.add(create(ROWS));
 		args.add(create(INITIALIZATION));
 		args.add(create(DERIVED_FROM));
+		args.add(create(ISSUED_BY));
 		return args;
 	}
 
@@ -100,9 +104,11 @@ public class DataRequest extends Command {
 		setArgumentValue(StandardArguments.INITIALIZATION, isInitialization);
 	}
 
-	public void addName(List<String> names) {
-		for (String name : names) {
-			addName(name);
+	public void addNames(List<String> names) {
+		if (names != null) {
+			for (String name : names) {
+				addName(name);
+			}
 		}
 	}
 
@@ -112,15 +118,8 @@ public class DataRequest extends Command {
 				setArgumentValue(StandardArguments.NAMES, new ArrayList<String>());
 			}
 			List<String> names = getArgumentValue(StandardArguments.NAMES, List.class);
-			names.add(name);
-		}
-	}
 
-	public void addNames(List<String> names) {
-		if (names != null) {
-			for (String name : names) {
-				addName(name);
-			}
+			names.add(name);
 		}
 	}
 
@@ -173,6 +172,10 @@ public class DataRequest extends Command {
 
 	public void setSort(String sortBy) {
 		setArgumentValue(StandardArguments.SORT, sortBy);
+	}
+
+	public void setSource(String source) {
+		setArgumentValue(StandardArguments.ISSUED_BY, source);
 	}
 
 	public void setSortOrder(String order) {
