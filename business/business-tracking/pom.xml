@@ -22,7 +22,7 @@
 
 		<dependency>
 			<groupId>org.hbird.business</groupId>
-			<artifactId>business-api</artifactId>
+			<artifactId>business-core</artifactId>
 		</dependency>
 
 		<dependency>

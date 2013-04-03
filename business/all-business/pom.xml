@@ -9,6 +9,7 @@
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>all-business</artifactId>
+    <name>Business - All Business</name>
 
 	<dependencies>
 
@@ -89,5 +90,4 @@
 
 	</dependencies>
 
-	<name>Business - All Business</name>
 </project>

@@ -499,12 +499,6 @@
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
-                <artifactId>business-api</artifactId>
-                <version>${hbird.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.hbird.business</groupId>
                 <artifactId>business-groundstation</artifactId>
                 <version>${hbird.version}</version>
             </dependency>
