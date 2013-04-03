@@ -2,7 +2,6 @@ package org.hbird.business.systemtest;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.jms.InvalidSelectorException;
@@ -11,7 +10,6 @@ import javax.management.openmbean.OpenDataException;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.navigation.controller.OrbitPropagationController;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.LocationContactEvent;
 
@@ -37,17 +35,15 @@ public class ParseControlTester extends SystemTest {
 		publishTleParameters();
 		publishGroundStationsAndSatellites();
 
-		List<String> locations = new ArrayList<String>();
-		locations.add(es5ec.getQualifiedName());
-		locations.add(gsDarmstadt.getQualifiedName());
-
 		/** Send command to commit all changes. */
 		forceCommit();
 
-		/** Create a controller task and inject it. */
-		OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000, estcube1, locations);
-		injection.sendBody(task);
+		Thread.sleep(1000);
 
+		startEstcubeOrbitPropagator();
+		
+		/** Create a controller task and inject it. */
+		
 		Thread.sleep(1000);
 
 		/** Now start the antenna controller. */
@@ -97,15 +93,22 @@ public class ParseControlTester extends SystemTest {
 			}
 		}
 
+		/** Give the parse controller a bit of time to react. */
+		totalDelay = 0;
 		boolean found = false;
-		for (Named command : commandingListener.elements) {
-			if (command.getName().equals("Track")) {
-				found = true;
+		while (totalDelay < 80000 && found == false) {
+			Thread.sleep(5000);
+			totalDelay += 5000;
+
+			for (Named command : commandingListener.elements) {
+				if (command.getName().equals("Track")) {
+					found = true;
+				}
 			}
 		}
-			
+
 		azzert(found, "Received 'Track' command");
-			
+
 		LOG.info("Finished");
 	}
 }

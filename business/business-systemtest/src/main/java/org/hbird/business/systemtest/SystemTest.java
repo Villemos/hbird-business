@@ -34,6 +34,7 @@ import org.hbird.business.api.IPublish;
 import org.hbird.business.archive.ArchiveComponent;
 import org.hbird.business.commanding.CommandingComponent;
 import org.hbird.business.navigation.NavigationComponent;
+import org.hbird.business.navigation.OrbitPropagationComponent;
 import org.hbird.business.systemmonitoring.SystemMonitorComponent;
 import org.hbird.business.taskexecutor.TaskExecutionComponent;
 import org.hbird.business.tracking.TrackingComponent;
@@ -102,7 +103,7 @@ public abstract class SystemTest {
     protected static NavigationComponent navComponent = null;
     protected static SystemMonitorComponent sysMon = null;
     protected static WebsocketInterfaceComponent webComponent = null;
-
+    protected static OrbitPropagationComponent estcubePropagationComponent  = null;
     
     protected static Satellite estcube1 = null;
     protected static Satellite dkCube1 = null;
@@ -137,7 +138,7 @@ public abstract class SystemTest {
 
         D3Vector geoLocationTartu = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Tartu, Tähe 4", Math.toRadians(58.3000D),
                 Math.toRadians(26.7330D), 59.0D);
-        es5ec = new GroundStation("ES5EC", "The main control centre", geoLocationTartu);
+        es5ec = new GroundStation("ES5EC", "ES5EC", "The main control centre", geoLocationTartu);
         registerPart(es5ec);
         es5ec.setIsPartOf(groundstations);
 
@@ -157,10 +158,18 @@ public abstract class SystemTest {
         registerPart(mof);
         mof.setIsPartOf(mission);
 
+        Part orbitPropagationAutomation = new Part("OrbitPropagationAutomation", "Orbit Propagation Automation", "The component automating the propagation of the ESTCube-1 orbit.");
+        registerPart(orbitPropagationAutomation);
+        orbitPropagationAutomation.setIsPartOf(mof);
+        
         Part trackAutomation = new Part("Track Automation", "Track Automation", "The component automating the track of ESTCube-1 by ES5EC.");
         registerPart(trackAutomation);
         trackAutomation.setIsPartOf(mof);
 
+        
+        // OrbitPropagationComponent strandOrbitPropagator = new OrbitPropagationComponent("SystemTest", "ESTcubeNavigation", "", 60 * 60 * 1000, 6 * 60 * 60 * 1000, strand, locations);
+
+        
         
         
         archive = new ArchiveComponent();
@@ -222,7 +231,7 @@ public abstract class SystemTest {
 
         D3Vector geoLocationAalborg = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Aalborg", Math.toRadians(55.659306D),
                 Math.toRadians(12.587585D), 59.0D);
-        gsAalborg = new GroundStation("Aalborg", "Supportive antenna from Aalborg university", geoLocationAalborg);
+        gsAalborg = new GroundStation("Aalborg", "Aalborg", "Supportive antenna from Aalborg university", geoLocationAalborg);
         registerPart(gsAalborg);
         gsAalborg.setIsPartOf(eGs);
         gsAalborg.addAntenna(antenna);
@@ -239,7 +248,7 @@ public abstract class SystemTest {
         // "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
         D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.87D),
                 Math.toRadians(8.64D), 59.0D);
-        gsDarmstadt = new GroundStation("Darmstadt", "Supportive antenna from Darmstadt university", geoLocationDarmstadt);
+        gsDarmstadt = new GroundStation("Darmstadt", "Darmstadt", "Supportive antenna from Darmstadt university", geoLocationDarmstadt);
         registerPart(gsDarmstadt);
         darmstadtAntenna.setIsPartOf(gsDarmstadt);
         gsDarmstadt.setIsPartOf(eGs);
@@ -248,10 +257,20 @@ public abstract class SystemTest {
 
         D3Vector geoLocationNewYork = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "New York", Math.toRadians(40.66564D),
                 Math.toRadians(-74.036865D), 59.0D);
-        gsNewYork = new GroundStation("NewYork", "Supportive antenna from NewYork university", geoLocationNewYork);
+        gsNewYork = new GroundStation("NewYork", "NewYork", "Supportive antenna from NewYork university", geoLocationNewYork);
         registerPart(gsNewYork);
         gsNewYork.setIsPartOf(eGs);
         gsNewYork.addAntenna(antenna);
+        
+        
+        
+		List<String> locations = new ArrayList<String>();
+		locations.add(es5ec.getQualifiedName());
+		locations.add(gsDarmstadt.getQualifiedName());
+		estcubePropagationComponent = new OrbitPropagationComponent("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000, estcube1, locations);
+		registerPart(estcubePropagationComponent);
+        estcubePropagationComponent.setIsPartOf(orbitPropagationAutomation);
+
     }
 
     protected static void registerPart(Part part) {
@@ -340,6 +359,7 @@ public abstract class SystemTest {
 
             TaskExecutionComponent taskPart = new TaskExecutionComponent();
             taskPart.setName(name);
+            taskPart.setID(name);
             taskPart.setIsPartOf(parent);
 
             /** Publish the knowledge of the part. */
@@ -440,6 +460,27 @@ public abstract class SystemTest {
         }
     }
 
+    
+    
+    
+    protected static boolean estcube1OrbitPropagatorStarted = false;
+
+    public void startEstcubeOrbitPropagator() throws InterruptedException {
+
+        if (estcube1OrbitPropagatorStarted == false) {
+            LOG.info("Issuing command for start of an ESTCube-1 orbit propagation.");
+
+            /** Create command component. */
+            partmanagerApi.start(estcubePropagationComponent);
+
+            Thread.sleep(2000);
+
+            estcube1OrbitPropagatorStarted = true;
+        }
+    }
+
+    
+    
     public void startStrandAntennaController() throws InterruptedException {
 
         if (antennaControllerStarter == false) {

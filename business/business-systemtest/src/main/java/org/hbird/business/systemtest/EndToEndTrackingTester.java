@@ -37,7 +37,6 @@ import java.util.List;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.navigation.controller.OrbitPropagationController;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.groundstation.Antenna;
 
@@ -104,10 +103,7 @@ public class EndToEndTrackingTester extends SystemTest {
          * Lead Time (frequency of check whether orbit needs to be propagated) to 60 minutes.
          * Interval (the time for which orbit data must as a minimum be available) to 6es hours.
          * */
-        OrbitPropagationController task = new OrbitPropagationController("SystemTest", "ESTcubeNavigation", "", 60 * 60 * 1000, 6 * 60 * 60 * 1000, estcube1,
-                locations);
-        task.setRepeat(0);
-        injection.sendBody(task);
+        startEstcubeOrbitPropagator();
 
         /** Send a TLE request for a satellite and a subset of locations */
         // IOrbitPrediction api = ApiFactory.getOrbitPredictionApi("SystemTest");

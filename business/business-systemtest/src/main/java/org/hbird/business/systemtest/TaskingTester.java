@@ -55,8 +55,8 @@ public class TaskingTester extends SystemTest {
         azzert(parameterListener.lastReceived.getName().equals(parameterName), "The 'Set' parameter was received,");
         Parameter out1 = (Parameter) parameterListener.lastReceived;
         azzert(out1.getValue().doubleValue() == 9.0d, "Value was 9 as expected.");
-        azzert(out1.getIssuedBy().equals(taskExecutor.getQualifiedName() + "/TaskExecutor1")
-                || out1.getIssuedBy().equals(taskExecutor.getQualifiedName() + "/TaskExecutor2"), "It was issued by one of the two task executors.");
+        azzert(out1.getIssuedBy().equals("TaskExecutor1")
+                || out1.getIssuedBy().equals("TaskExecutor2"), "It was issued by one of the two task executors.");
 
         parameterListener.elements.clear();
 

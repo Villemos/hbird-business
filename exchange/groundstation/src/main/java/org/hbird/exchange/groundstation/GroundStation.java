@@ -45,7 +45,7 @@ public class GroundStation extends Part implements IGroundStationSpecific {
     private static final long serialVersionUID = -8558418536858999621L;
 
 	/** Default description */
-    public static final String DESCRIPTION = "An antenna.";
+    public static final String DESCRIPTION = "A groundstation.";
     
     /** The geo location of the ground station. */
     protected D3Vector geoLocation;
@@ -66,7 +66,7 @@ public class GroundStation extends Part implements IGroundStationSpecific {
      * @param antennas
      */
     public GroundStation(String ID, String name, String description, D3Vector geoLocation) {
-        super(ID, name, DESCRIPTION);
+        super(ID, name, description);
         this.geoLocation = geoLocation;
     }
     

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.navigation.controller;
+package org.hbird.business.navigation;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,14 +23,13 @@ import java.util.List;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IOrbitPrediction;
+import org.hbird.business.core.StartablePart;
 import org.hbird.business.navigation.api.OrbitPropagation;
-import org.hbird.exchange.core.Issued;
-import org.hbird.exchange.core.Named;
+import org.hbird.business.navigation.controller.OrbitPropagationComponentDriver;
 import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
-import org.hbird.exchange.tasking.ControllerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,13 +52,16 @@ import org.slf4j.LoggerFactory;
  * The delta time to propagate the leadTime when executed is the 'executionDelay'. Default is 1 hour.
  * Means that the task will execute every hour and will propagate the orbit.
  */
-public class OrbitPropagationController extends ControllerTask {
+public class OrbitPropagationComponent extends StartablePart {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2033213698026151689L;
 
+	protected static final Logger LOG = LoggerFactory.getLogger(OrbitPropagationComponent.class);
+
+	
 	/**
 	 * The interval (ms) for which propagation should be available. The controller will ensure that there
 	 * is always orbital data available for the period
@@ -79,6 +81,10 @@ public class OrbitPropagationController extends ControllerTask {
 	 */
 	protected List<String> locations = null;
 
+	protected long executionDelay = 1 * 60 * 1000;
+
+	protected int count = 0;
+
 	/**
 	 * Constructor
 	 * 
@@ -88,17 +94,19 @@ public class OrbitPropagationController extends ControllerTask {
 	 * @param executionDelay The delay between checks that the required orbital states are available.
 	 * @param leadTime The minimum time from NOW that orbital states should be available at all times
 	 * @param satellite The satellite that the controller should predict the orbital data for
-	 * @param locations The locations tof which contact data should be calculated
+	 * @param locations The locations to which contact data should be calculated
 	 */
-	public OrbitPropagationController(String issuedBy, String name, String description, long executionDelay, long leadTime, Satellite satellite, List<String> locations) {
-		super(issuedBy, name, description, executionDelay);
+	public OrbitPropagationComponent(String ID, String name, String description, long executionDelay, long leadTime, Satellite satellite, List<String> locations) {
+		super(ID, name, description, OrbitPropagationComponentDriver.class.getName());
+		this.executionDelay = executionDelay;
 		this.leadTime = leadTime;
 		this.satellite = satellite.getQualifiedName();
 		this.locations = locations;
 	}
 
-	public OrbitPropagationController(String issuedBy, String name, String description, long executionDelay, long leadTime, IPart satellite, List<IPart> locations) {
-		super(issuedBy, name, description, executionDelay);
+	public OrbitPropagationComponent(String ID, String name, String description, long executionDelay, long leadTime, IPart satellite, List<IPart> locations) {
+		super(ID, name, description, OrbitPropagationComponentDriver.class.getName());
+		this.executionDelay = executionDelay;
 		this.leadTime = leadTime;
 		this.satellite = satellite.getQualifiedName();
 
@@ -116,14 +124,25 @@ public class OrbitPropagationController extends ControllerTask {
 	 * @param executionDelay The delay between checks that the required orbital states are available.
 	 * @param satellite The satellite that the controller should predict the orbital data for
 	 */
-	public OrbitPropagationController(String issuedBy, String name, String description, long executionDelay, String satellite) {
-		super(issuedBy, name, description, executionDelay);
+	public OrbitPropagationComponent(String ID, String name, String description, long executionDelay, String satellite) {
+		super(ID, name, description, OrbitPropagationComponentDriver.class.getName());
+		this.executionDelay = executionDelay;
 		this.satellite = satellite;
 	}
 
+	
+	public void execute() {
+		
+		if (count == 0) {
+			onFirstExecution();			
+		}
+		else {
+			onExecution();
+		}
+	}
 
-	@Override
-	protected List<Issued> onFirstExecution() {
+
+	protected void onFirstExecution() {
 
 		/** Propagate the orbit from NOW to 'NOW + leadTime + executionDelay. This ensures that
 		 * there will always be as a minimum 'leadTime' orbit prediction available and as a 
@@ -140,7 +159,6 @@ public class OrbitPropagationController extends ControllerTask {
 		 * */
 
 		/** Create local logger. Dont want to serialize the logger class hierachy when sending around this object... */
-		Logger LOG = LoggerFactory.getLogger(OrbitPropagationController.class);
 		LOG.info("Propagating orbit of satellite '" + satellite + "' (first execution).");
 
 		/** Get the latest TLE */
@@ -178,17 +196,16 @@ public class OrbitPropagationController extends ControllerTask {
 			 * is published directly by the propegator to the system. */
 			doRequest(from, to);
 		}
-
-		return new ArrayList<Issued>();
 	}
 
-	@Override
-	protected List<Issued> onExecution() {
+	
+	
+	protected void onExecution() {
 		/** Check the last orbital state in the system. */
 		/** Get the latest orbital state */
 
 		/** Create local logger. Dont want to serialize the logger class hierachy when sending around this object... */
-		Logger LOG = LoggerFactory.getLogger(OrbitPropagationController.class);
+		Logger LOG = LoggerFactory.getLogger(OrbitPropagationComponent.class);
 		LOG.info("Propagating orbit of satellite '" + satellite + "' (propagation #" + count + ").");
 
 		IDataAccess api = ApiFactory.getDataAccessApi(this.name);
@@ -215,8 +232,6 @@ public class OrbitPropagationController extends ControllerTask {
 
 			doRequest(from, to);
 		}
-
-		return new ArrayList<Issued>();
 	}	
 
 	/**
@@ -231,6 +246,42 @@ public class OrbitPropagationController extends ControllerTask {
 		/** Request a propagation of the orbit. We use the 'stream' version of the method which means the result
 		 * is published directly by the propegator to the system. */
 		predictionApi.requestOrbitPropagationStream(satellite, locations, from, to);		
+	}
+
+	public long getLeadTime() {
+		return leadTime;
+	}
+
+	public void setLeadTime(long leadTime) {
+		this.leadTime = leadTime;
+	}
+
+	public String getSatellite() {
+		return satellite;
+	}
+
+	public void setSatellite(String satellite) {
+		this.satellite = satellite;
+	}
+
+	public List<String> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(List<String> locations) {
+		this.locations = locations;
+	}
+
+	public long getExecutionDelay() {
+		return executionDelay;
+	}
+
+	public void setExecutionDelay(long executionDelay) {
+		this.executionDelay = executionDelay;
+	}
+
+	public int getCount() {
+		return count;
 	}
 }
 

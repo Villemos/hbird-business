@@ -90,7 +90,7 @@ public class LimitCheckTester extends SystemTest {
 
         /** Disable limit. */
         LOG.info("Disabling limit 'PARA1_UpperSoftLimit'.");
-        publishApi.publishState("PARA1_UpperSoftLimit_SWITCH", "A test description", limits.getQualifiedName() + "/PARA1_UpperSoftLimit", false);
+        publishApi.publishState("PARA1_UpperSoftLimit_SWITCH", "A test description", "PARA1_UpperSoftLimit", false);
 
         Thread.sleep(2000);
 
