@@ -56,23 +56,23 @@ public class BusinessCard extends Issued {
     protected long period = -1L;
 
     /** Commands accepted by this {@link Part}. */
-    public Map<String, Command> commandsIn = new HashMap<String, Command>();    
+    public Map<String, Command> commandsIn = new HashMap<String, Command>();
     public Map<String, Command> commandsOut = new HashMap<String, Command>();
 
     public Map<String, Event> eventsIn = new HashMap<String, Event>();
     public Map<String, Event> eventsOut = new HashMap<String, Event>();
-    
+
     public Map<String, Issued> dataIn = new HashMap<String, Issued>();
     public Map<String, Issued> dataOut = new HashMap<String, Issued>();
 
-
     public BusinessCard(String issuedBy, long period) {
+        // XXX - 03.04.2013, kimmell - name and issuedBy are set to same value here
         super(issuedBy, issuedBy, DESCRIPTION);
         this.period = period;
         this.host = LocalHostNameResolver.getLocalHostName();
     }
 
-	public String getHost() {
+    public String getHost() {
         return host;
     }
 
@@ -101,11 +101,11 @@ public class BusinessCard extends Issued {
                 .toString();
     }
 
-	/**
-	 * @return
-	 */
-	public BusinessCard touch() {
-		timestamp = System.currentTimeMillis();
-		return this;
-	}
+    /**
+     * @return
+     */
+    public BusinessCard touch() {
+        timestamp = System.currentTimeMillis();
+        return this;
+    }
 }

@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <parent>
-    <artifactId>hummingbird</artifactId>
-    <groupId>org.hbird</groupId>
-    <version>0.7.0-SNAPSHOT</version>
-  </parent>
+    <parent>
+        <artifactId>hummingbird</artifactId>
+        <groupId>org.hbird</groupId>
+        <version>0.7.0-SNAPSHOT</version>
+    </parent>
 
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>hummingbird-exchange</artifactId>
-  <packaging>pom</packaging>
-  <name>Hummingbird Exchange Tier</name>
-  <description>This module contains the data types and helper classes used to communicate within Hummingbird, in effect it defines the Hummingbird specific protocol stack.
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>hummingbird-exchange</artifactId>
+    <packaging>pom</packaging>
+    <name>Hummingbird Exchange Tier</name>
+    <description>This module contains the data types and helper classes used to communicate within Hummingbird, in effect it defines the Hummingbird specific protocol stack.
 
 The protocol tier will convert the protocol messages (such as CCSDS packets) into types as defined in the exchange layer and parse them to the business tier. The business tier will internally communicate using only the exchange layer types (custom components may of cause use any type they like).
 
 The transfer between the presentation tier and the business tier likewise use the exchange layer.
   </description>
-  <url>http://hbird.de</url>
-  <modules>
-    <module>core</module>
+    <url>http://hbird.de</url>
+    <modules>
+        <module>core</module>
 
-    <module>cfdp</module>
-    <module>businesscard</module>
-    <module>commandqueuemanagement</module>
-    <module>commandcontainer</module>
-    <module>configurator</module>
-    <module>movementcontrol</module>
-    <module>navigation</module>
-    <module>dataaccess</module>
-    <module>rangecheck</module>
-    <module>scripting</module>
-    <module>tasking</module>
-    <module>validation</module>
+        <module>cfdp</module>
+        <module>commandqueuemanagement</module>
+        <module>commandcontainer</module>
+        <module>configurator</module>
+        <module>movementcontrol</module>
+        <module>navigation</module>
+        <module>dataaccess</module>
+        <module>rangecheck</module>
+        <module>scripting</module>
+        <module>tasking</module>
+        <module>validation</module>
 
-    <module>all</module>
-    <module>groundstation</module>
-  </modules>
+        <module>all</module>
+        <module>groundstation</module>
+    </modules>
 
-  <groupId>org.hbird.exchange</groupId>
+    <groupId>org.hbird.exchange</groupId>
 </project>

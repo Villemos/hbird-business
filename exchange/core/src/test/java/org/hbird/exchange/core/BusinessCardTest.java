@@ -60,7 +60,7 @@ public class BusinessCardTest {
         assertEquals(BusinessCard.DESCRIPTION, card.getDescription());
         assertEquals(PERIOD, card.getPeriod());
         assertNotNull(card.getID());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ISSUED_BY, card.getQualifiedName());
+        assertEquals(ISSUED_BY + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ISSUED_BY, card.getQualifiedName());
         assertEquals(LocalHostNameResolver.getLocalHostName(), card.getHost());
     }
 
@@ -78,8 +78,8 @@ public class BusinessCardTest {
         assertEquals(BusinessCard.DESCRIPTION, card.getDescription());
         assertEquals(PERIOD, card.getPeriod());
         assertNotNull(card.getID());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ISSUED_BY, card.getQualifiedName());
-        assertEquals(HOST, card.getHost());
+        assertEquals(ISSUED_BY + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ISSUED_BY, card.getQualifiedName());
+        assertEquals(LocalHostNameResolver.getLocalHostName(), card.getHost());
     }
 
     /**
@@ -95,11 +95,11 @@ public class BusinessCardTest {
      */
     @Test
     public void testSetHost() {
-        assertEquals(HOST, card.getHost());
+        assertEquals(LocalHostNameResolver.getLocalHostName(), card.getHost());
         card.setHost(null);
         assertNull(card.getHost());
-        card.setHost(HOST + HOST);
-        assertEquals(HOST + HOST, card.getHost());
+        card.setHost(HOST);
+        assertEquals(HOST, card.getHost());
     }
 
     /**

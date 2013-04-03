@@ -1,793 +1,786 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.hbird</groupId>
-	<artifactId>hummingbird</artifactId>
-	<packaging>pom</packaging>
-	<version>0.7.0-SNAPSHOT</version>
-
-	<name>Hummingbird Root</name>
-	<description>The Hummingbird root project is a container for all Hummingbird components, each created in a separate maven module. By building this project, the complete system can be built.</description>
-	<url>http://hbird.de</url>
-
-	<modules>
-		<module>exchange</module>
-		<module>business</module>
-		<module>systems</module>
-		<module>development</module>
-	</modules>
-
-	<licenses>
-		<license>
-			<name>Apache V2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-			<distribution>manual</distribution>
-			<comments>(c) Hummingbird Community, all rights reserved.</comments>
-		</license>
-	</licenses>
-
-	<organization>
-		<name>Villemos Solutions</name>
-		<url>http://www.villemos.com</url>
-	</organization>
-
-	<repositories>
-
-		<!-- Repository dependency for Jxl. -->
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>mvnrepository</id>
-			<name>mvnrepository</name>
-			<url>http://mvnrepository.com/</url>
-		</repository>
-
-		<!-- Repository dependency for pomstrap. -->
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>fluidrepository</id>
-			<name>fluidrepository</name>
-			<url>http://download.gna.org/fluid/repository/release/</url>
-		</repository>
-
-
-		<!-- Repository dependency for Sonatype Snapshots repository (for hbird 
-			transport) -->
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>sonatyperepository</id>
-			<name>sonatyperepository</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-		</repository>
-
-	</repositories>
-
-	<!-- Properties can be overridden in ~/.m2/settings.xml to configure environment 
-		specific values. -->
-	<properties>
-		<hbird.version>0.7.0-SNAPSHOT</hbird.version>
-
-		<distribution.url.snapshots>http://www.villemos.com:8080/artifactory/libs-snapshot-local</distribution.url.snapshots>
-		<distribution.url.releases>http://www.villemos.com:8080/artifactory/libs-release-local</distribution.url.releases>
-
-		<version.java>1.6</version.java> <!-- Not using java.version here; it will override system property java.version 
-			referencing running JVM version. -->
-		<rxtx.version>2.1.7</rxtx.version>
-		<log4j.version>1.2.17</log4j.version>
-		<spring.version>3.0.7.RELEASE</spring.version>
-		<junit.version>4.10</junit.version>
-		<castor.version>1.3.2</castor.version>
-		<camel.version>2.10.2</camel.version>
-		<activemq.version>5.7.0</activemq.version>
-		<mysqlconnector.version>5.1.10</mysqlconnector.version>
-		<jencks.version>2.2</jencks.version>
-		<slf4j.version>1.6.6</slf4j.version>
-		<docgenerator.version>0.0.7</docgenerator.version>
-		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<h2.version>1.2.147</h2.version>
-		<surefire-plugin.version>2.7.1</surefire-plugin.version>
-		<commons-io.version>2.0.1</commons-io.version>
-		<commons-dbcp.version>1.4</commons-dbcp.version>
-		<solrj.version>3.5.0</solrj.version>
-		<mockito.version>1.9.0</mockito.version>
-		<netty.version>3.2.7.Final</netty.version>
-		<xbean.version>3.11.1</xbean.version>
-		<commons-lang3.version>3.1</commons-lang3.version>
-		<commons.collections.version>3.2.1</commons.collections.version>
-		<commons-codec.version>1.7</commons-codec.version>
-		<gson.version>1.7.2</gson.version><!-- TODO - waiting for update; hbird 
-			is not working with newer gson -->
-
-
-
-
-
-
-
-		<version.java>1.6</version.java>
-		<version.junit>4.10</version.junit>
-		<version.surefire-junit47>2.12</version.surefire-junit47>
-		<version.selenium>2.9.0</version.selenium>
-		<version.camel>2.10.0</version.camel>
-		<version.camel-mina2>2.10.3</version.camel-mina2>
-		<version.activemq>5.8.0</version.activemq>
-
-		<version.slf4j>1.6.6</version.slf4j>
-		<version.log4j>1.2.17</version.log4j>
-		<version.clover>3.1.7</version.clover>
-
-		<version.spring>3.0.6.RELEASE</version.spring>
-		<version.mockito>1.9.0</version.mockito>
-		<version.mvn-resources-plugin>2.6</version.mvn-resources-plugin>
-		<version.h2>1.3.168</version.h2>
-		<version.dbunit>2.4.8</version.dbunit>
-		<version.appassembler>1.3</version.appassembler>
-		<version.commons-io>2.4</version.commons-io>
-		<version.replacer>1.4.1</version.replacer>
-		<version.surefire>2.11</version.surefire>
-		<version.hbird>0.5-SNAPSHOT</version.hbird>
-		<version.jdom>2.0.1</version.jdom>
-		<version.maven-compiler-plugin>2.5.1</version.maven-compiler-plugin>
-		<version.maven-dependency-plugin>2.5.1</version.maven-dependency-plugin>
-		<version.jetty>7.1.4.v20100610</version.jetty>
-		<version.xfire>1.2.6</version.xfire>
-		<version.crowd>2.2.2</version.crowd>
-		<version.commons-net>3.0.1</version.commons-net>
-		<version.rxtx>2.1.7</version.rxtx>
-		<version.mina>2.0.7</version.mina>
-	</properties>
-
-
-	<distributionManagement>
-		<repository>
-			<id>hbird.repository</id>
-			<name>Hummingbird Exchange and Business Tier releases</name>
-			<url>${distribution.url.releases}</url>
-		</repository>
-		<snapshotRepository>
-			<id>hbird.repository</id>
-			<name>Hummingbird Exchange and Business Tier snapshots</name>
-			<url>${distribution.url.snapshots}</url>
-		</snapshotRepository>
-	</distributionManagement>
-
-	<scm>
-		<connection>scm:git:git@github.com:Villemos/hbird-business.git</connection>
-		<developerConnection>scm:git:git@github.com:Villemos/hbird-business.git</developerConnection>
-		<url>git@github.com:Villemos/hbird-business.git</url>
-	</scm>
-
-	<inceptionYear>2011</inceptionYear>
-	<developers>
-		<developer>
-			<id>0</id>
-			<name>Johannes Klug</name>
-			<email>johannes.klug@logica.com</email>
-			<roles>
-				<role>Team member</role>
-				<role>Superior of the Inquisition</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-
-		<developer>
-			<id>1</id>
-			<name>Gert Villemos</name>
-			<email>gert.villemos@logica.com</email>
-			<roles>
-				<role>Team member</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-
-		<developer>
-			<id>2</id>
-			<name>Mark Doyle</name>
-			<email>mark.doyle@logica.com</email>
-			<roles>
-				<role>Team member</role>
-				<role>Imperator</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-
-		<developer>
-			<id>3</id>
-			<name>Lauri Kimmel</name>
-			<email>lauri.kimmel@logica.com</email>
-			<roles>
-				<role>Team member</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-
-	</developers>
-
-	<dependencies>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-
-
-	</dependencies>
-
-	<dependencyManagement>
-		<dependencies>
-
-			<dependency>
-				<groupId>com.google.code.gson</groupId>
-				<artifactId>gson</artifactId>
-				<version>${gson.version}</version>
-				<scope>compile</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>${commons-codec.version}</version>
-			</dependency>
-
-
-			<dependency>
-				<groupId>org.jboss.netty</groupId>
-				<artifactId>netty</artifactId>
-				<version>${netty.version}</version>
-				<scope>compile</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-netty</artifactId>
-				<version>${camel.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>${slf4j.version}</version>
-				<type>jar</type>
-			</dependency>
-
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-				<type>jar</type>
-			</dependency>
-
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
-				<type>jar</type>
-				<scope>test</scope>
-			</dependency>
-
-
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
-				<type>jar</type>
-				<scope>test</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.drivers</groupId>
-				<artifactId>all-driver</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>all-exchange</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>core</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>validation</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>cfdp</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>businesscard</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>queuemanagement</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>commandrelease</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>configurator</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>movementcontrol</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>groundstation</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>navigation</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>dataaccess</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>rangecheck</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>scripting</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.exchange</groupId>
-				<artifactId>tasking</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-
-			<dependency>
-				<artifactId>all-business</artifactId>
-				<groupId>org.hbird.business</groupId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-core</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-metadatapublisher</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-navigation</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-parameter-storage</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-scripting</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-systemmonitoring</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-taskexecutor</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-time-correlation</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-validation</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-commanding</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-cfdp</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>simple-parameter-simulator</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-importer</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-archive</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-configurator</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-queuemanagement</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-tracking</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-api</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-groundstation</artifactId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<artifactId>business-websockets</artifactId>
-				<groupId>org.hbird.business</groupId>
-				<version>${hbird.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hbird.business</groupId>
-				<artifactId>business-celestrack</artifactId>			
-				<version>${hbird.version}</version>
-			</dependency>
-
-
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-core</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-beans</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context-support</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-aop</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-web</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-jms</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-jdbc</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-test</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.activemq</groupId>
-				<artifactId>activemq-camel</artifactId>
-				<version>${activemq.version}</version>
-			</dependency>
-
-
-			<dependency>
-				<groupId>org.apache.activemq</groupId>
-				<artifactId>activemq-pool</artifactId>
-				<version>${activemq.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>mysql</groupId>
-				<artifactId>mysql-connector-java</artifactId>
-				<version>${mysqlconnector.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-core</artifactId>
-				<version>${camel.version}</version>
-			</dependency>
-
-			<!-- <dependency> -->
-			<!-- <groupId>org.apache.camel</groupId> -->
-			<!-- <artifactId>camel-activemq</artifactId> -->
-			<!-- <version>${camel.version}</version> -->
-			<!-- </dependency> -->
-
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-xstream</artifactId>
-				<version>${camel.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-stream</artifactId>
-				<version>${camel.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-spring</artifactId>
-				<version>${camel.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-jms</artifactId>
-				<version>${camel.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-http</artifactId>
-				<version>${camel.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-jetty</artifactId>
-				<version>${camel.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-ibatis</artifactId>
-				<version>${camel.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-test</artifactId>
-				<version>${camel.version}</version>
-				<scope>test</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-websocket</artifactId>
-				<version>${camel.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-jackson</artifactId>
-				<version>${camel.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.jencks</groupId>
-				<artifactId>jencks-amqpool</artifactId>
-				<version>${jencks.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.codehaus.castor</groupId>
-				<artifactId>castor-core</artifactId>
-				<version>${castor.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.codehaus.castor</groupId>
-				<artifactId>castor-xml</artifactId>
-				<version>${castor.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>${log4j.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.solr</groupId>
-				<artifactId>solr-solrj</artifactId>
-				<version>${solrj.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-all</artifactId>
-				<version>${mockito.version}</version>
-				<scope>test</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.xbean</groupId>
-				<artifactId>xbean-spring</artifactId>
-				<version>${xbean.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-all</artifactId>
-				<version>${mockito.version}</version>
-				<scope>test</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-lang3</artifactId>
-				<version>${commons-lang3.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-collections</groupId>
-				<artifactId>commons-collections</artifactId>
-				<version>${commons.collections.version}</version>
-			</dependency>
-
-
-		</dependencies>
-	</dependencyManagement>
-
-	<build>
-		<plugins>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<target>${version.java}</target>
-					<source>${version.java}</source>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<aggregate>true</aggregate>
-				</configuration>
-
-			</plugin>
-
-		</plugins>
-
-	</build>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.hbird</groupId>
+    <artifactId>hummingbird</artifactId>
+    <packaging>pom</packaging>
+    <version>0.7.0-SNAPSHOT</version>
+
+    <name>Hummingbird Root</name>
+    <description>The Hummingbird root project is a container for all Hummingbird components, each created in a separate maven module. By building this project, the complete system can be built.</description>
+    <url>http://hbird.de</url>
+
+    <modules>
+        <module>exchange</module>
+        <module>business</module>
+        <module>systems</module>
+        <module>development</module>
+    </modules>
+
+    <licenses>
+        <license>
+            <name>Apache V2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+            <distribution>manual</distribution>
+            <comments>(c) Hummingbird Community, all rights reserved.</comments>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>Villemos Solutions</name>
+        <url>http://www.villemos.com</url>
+    </organization>
+
+    <repositories>
+
+        <!-- Repository dependency for Jxl. -->
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>mvnrepository</id>
+            <name>mvnrepository</name>
+            <url>http://mvnrepository.com/</url>
+        </repository>
+
+        <!-- Repository dependency for pomstrap. -->
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>fluidrepository</id>
+            <name>fluidrepository</name>
+            <url>http://download.gna.org/fluid/repository/release/</url>
+        </repository>
+
+
+        <!-- Repository dependency for Sonatype Snapshots repository (for hbird transport) -->
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>sonatyperepository</id>
+            <name>sonatyperepository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+
+    </repositories>
+
+    <!-- Properties can be overridden in ~/.m2/settings.xml to configure environment 
+        specific values. -->
+    <properties>
+        <hbird.version>0.7.0-SNAPSHOT</hbird.version>
+
+        <distribution.url.snapshots>http://www.villemos.com:8080/artifactory/libs-snapshot-local</distribution.url.snapshots>
+        <distribution.url.releases>http://www.villemos.com:8080/artifactory/libs-release-local</distribution.url.releases>
+
+        <version.java>1.6</version.java> <!-- Not using java.version here; it will override system property java.version referencing 
+            running JVM version. -->
+        <rxtx.version>2.1.7</rxtx.version>
+        <log4j.version>1.2.17</log4j.version>
+        <spring.version>3.0.7.RELEASE</spring.version>
+        <junit.version>4.10</junit.version>
+        <castor.version>1.3.2</castor.version>
+        <camel.version>2.10.2</camel.version>
+        <activemq.version>5.7.0</activemq.version>
+        <mysqlconnector.version>5.1.10</mysqlconnector.version>
+        <jencks.version>2.2</jencks.version>
+        <slf4j.version>1.6.6</slf4j.version>
+        <docgenerator.version>0.0.7</docgenerator.version>
+        <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <h2.version>1.2.147</h2.version>
+        <surefire-plugin.version>2.7.1</surefire-plugin.version>
+        <commons-io.version>2.0.1</commons-io.version>
+        <commons-dbcp.version>1.4</commons-dbcp.version>
+        <solrj.version>3.5.0</solrj.version>
+        <mockito.version>1.9.0</mockito.version>
+        <netty.version>3.2.7.Final</netty.version>
+        <xbean.version>3.11.1</xbean.version>
+        <commons-lang3.version>3.1</commons-lang3.version>
+        <commons.collections.version>3.2.1</commons.collections.version>
+        <commons-codec.version>1.7</commons-codec.version>
+        <gson.version>1.7.2</gson.version><!-- TODO - waiting for update; hbird is 
+            not working with newer gson -->
+
+
+
+
+
+
+
+        <version.java>1.6</version.java>
+        <version.junit>4.10</version.junit>
+        <version.surefire-junit47>2.12</version.surefire-junit47>
+        <version.selenium>2.9.0</version.selenium>
+        <version.camel>2.10.0</version.camel>
+        <version.camel-mina2>2.10.3</version.camel-mina2>
+        <version.activemq>5.8.0</version.activemq>
+
+        <version.slf4j>1.6.6</version.slf4j>
+        <version.log4j>1.2.17</version.log4j>
+        <version.clover>3.1.7</version.clover>
+
+        <version.spring>3.0.6.RELEASE</version.spring>
+        <version.mockito>1.9.0</version.mockito>
+        <version.mvn-resources-plugin>2.6</version.mvn-resources-plugin>
+        <version.h2>1.3.168</version.h2>
+        <version.dbunit>2.4.8</version.dbunit>
+        <version.appassembler>1.3</version.appassembler>
+        <version.commons-io>2.4</version.commons-io>
+        <version.replacer>1.4.1</version.replacer>
+        <version.surefire>2.11</version.surefire>
+        <version.hbird>0.5-SNAPSHOT</version.hbird>
+        <version.jdom>2.0.1</version.jdom>
+        <version.maven-compiler-plugin>2.5.1</version.maven-compiler-plugin>
+        <version.maven-dependency-plugin>2.5.1</version.maven-dependency-plugin>
+        <version.jetty>7.1.4.v20100610</version.jetty>
+        <version.xfire>1.2.6</version.xfire>
+        <version.crowd>2.2.2</version.crowd>
+        <version.commons-net>3.0.1</version.commons-net>
+        <version.rxtx>2.1.7</version.rxtx>
+        <version.mina>2.0.7</version.mina>
+    </properties>
+
+
+    <distributionManagement>
+        <repository>
+            <id>hbird.repository</id>
+            <name>Hummingbird Exchange and Business Tier releases</name>
+            <url>${distribution.url.releases}</url>
+        </repository>
+        <snapshotRepository>
+            <id>hbird.repository</id>
+            <name>Hummingbird Exchange and Business Tier snapshots</name>
+            <url>${distribution.url.snapshots}</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <scm>
+        <connection>scm:git:git@github.com:Villemos/hbird-business.git</connection>
+        <developerConnection>scm:git:git@github.com:Villemos/hbird-business.git</developerConnection>
+        <url>git@github.com:Villemos/hbird-business.git</url>
+    </scm>
+
+    <inceptionYear>2011</inceptionYear>
+    <developers>
+        <developer>
+            <id>0</id>
+            <name>Johannes Klug</name>
+            <email>johannes.klug@logica.com</email>
+            <roles>
+                <role>Team member</role>
+                <role>Superior of the Inquisition</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+
+        <developer>
+            <id>1</id>
+            <name>Gert Villemos</name>
+            <email>gert.villemos@logica.com</email>
+            <roles>
+                <role>Team member</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+
+        <developer>
+            <id>2</id>
+            <name>Mark Doyle</name>
+            <email>mark.doyle@logica.com</email>
+            <roles>
+                <role>Team member</role>
+                <role>Imperator</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+
+        <developer>
+            <id>3</id>
+            <name>Lauri Kimmel</name>
+            <email>lauri.kimmel@logica.com</email>
+            <roles>
+                <role>Team member</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+
+    </developers>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+
+
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.jboss.netty</groupId>
+                <artifactId>netty</artifactId>
+                <version>${netty.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-netty</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+                <type>jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+                <type>jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <type>jar</type>
+                <scope>test</scope>
+            </dependency>
+
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <type>jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.drivers</groupId>
+                <artifactId>all-driver</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>all-exchange</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>core</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>validation</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>cfdp</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>queuemanagement</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>commandrelease</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>configurator</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>movementcontrol</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>groundstation</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>navigation</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>dataaccess</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>rangecheck</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>scripting</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.exchange</groupId>
+                <artifactId>tasking</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <artifactId>all-business</artifactId>
+                <groupId>org.hbird.business</groupId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-core</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-metadatapublisher</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-navigation</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-parameter-storage</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-scripting</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-systemmonitoring</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-taskexecutor</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-time-correlation</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-validation</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-commanding</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-cfdp</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>simple-parameter-simulator</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-importer</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-archive</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-configurator</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-queuemanagement</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-tracking</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-api</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-groundstation</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <artifactId>business-websockets</artifactId>
+                <groupId>org.hbird.business</groupId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-celestrack</artifactId>
+                <version>${hbird.version}</version>
+            </dependency>
+
+
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jms</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-camel</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-pool</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysqlconnector.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-core</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <!-- <dependency> -->
+            <!-- <groupId>org.apache.camel</groupId> -->
+            <!-- <artifactId>camel-activemq</artifactId> -->
+            <!-- <version>${camel.version}</version> -->
+            <!-- </dependency> -->
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-xstream</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-stream</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-spring</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-jms</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-http</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-jetty</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-ibatis</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-test</artifactId>
+                <version>${camel.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-websocket</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-jackson</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jencks</groupId>
+                <artifactId>jencks-amqpool</artifactId>
+                <version>${jencks.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.castor</groupId>
+                <artifactId>castor-core</artifactId>
+                <version>${castor.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.castor</groupId>
+                <artifactId>castor-xml</artifactId>
+                <version>${castor.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.solr</groupId>
+                <artifactId>solr-solrj</artifactId>
+                <version>${solrj.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.xbean</groupId>
+                <artifactId>xbean-spring</artifactId>
+                <version>${xbean.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons.collections.version}</version>
+            </dependency>
+
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <target>${version.java}</target>
+                    <source>${version.java}</source>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+
+            </plugin>
+
+        </plugins>
+
+    </build>
 </project>

@@ -49,7 +49,6 @@ public class DataRequestTest {
      */
     @Test
     public void testArguments() {
-        assertTrue(dataRequest.hasArgument(StandardArguments.TYPE));
         assertTrue(dataRequest.hasArgument(StandardArguments.CLASS));
         assertTrue(dataRequest.hasArgument(StandardArguments.FROM));
         assertTrue(dataRequest.hasArgument(StandardArguments.TO));

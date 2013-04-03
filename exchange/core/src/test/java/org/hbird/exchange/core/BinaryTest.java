@@ -55,7 +55,7 @@ public class BinaryTest {
         assertEquals(ISSUER, binary.getIssuedBy());
         assertEquals(NAME, binary.getName());
         assertEquals(DESCRIPTION, binary.getDescription());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, binary.getQualifiedName());
+        assertEquals(ISSUER + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, binary.getQualifiedName());
         assertTrue(Arrays.equals(DATA, binary.getRawData()));
         assertTrue(binary.getTimestamp() <= System.currentTimeMillis() && binary.getTimestamp() > System.currentTimeMillis() - 3 * 1000L);
         assertNotNull(binary.getID());

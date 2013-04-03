@@ -77,7 +77,7 @@ public class LabelTest {
         assertEquals(NAME, label.getName());
         assertEquals(DESCRIPTION, label.getDescription());
         assertEquals(VALUE, label.getValue());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, label.getQualifiedName());
+        assertEquals(ISSUED_BY + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, label.getQualifiedName());
         long diff = System.currentTimeMillis() - label.getTimestamp();
         assertTrue("diff=" + diff, diff >= 0 && diff < 1000L * 30);
         assertNotNull(label.getID());
@@ -103,7 +103,7 @@ public class LabelTest {
         assertEquals(NAME, label.getName());
         assertEquals(DESCRIPTION, label.getDescription());
         assertEquals(VALUE, label.getValue());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, label.getQualifiedName());
+        assertEquals(ISSUED_BY + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, label.getQualifiedName());
         long diff = System.currentTimeMillis() - label.getTimestamp();
         assertTrue("diff=" + diff, diff >= 0 && diff < 1000L * 30);
         assertNotNull(label.getID());

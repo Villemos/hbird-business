@@ -48,7 +48,7 @@ public class EventTest {
         assertEquals(DESCRIPTION, event.getDescription());
         assertEquals(NOW.longValue(), event.getTimestamp());
         assertNotNull(event.getID());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, event.getQualifiedName());
+        assertEquals(ISSUER1 + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, event.getQualifiedName());
     }
 
     /**
@@ -63,7 +63,7 @@ public class EventTest {
         assertEquals(DESCRIPTION, template.getDescription());
         assertEquals(NOW.longValue(), template.getTimestamp());
         assertNotNull(template.getID());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, template.getQualifiedName());
+        assertEquals(ISSUER1 + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, template.getQualifiedName());
 
         Event event = new Event(ISSUER2, template, NOW_PLUS_ONE);
         assertEquals(ISSUER2, event.getIssuedBy());
@@ -72,7 +72,7 @@ public class EventTest {
         assertEquals(NOW_PLUS_ONE.longValue(), event.getTimestamp());
         assertNotNull(event.getID());
         assertNotSame(template.getID(), event.getID());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, event.getQualifiedName());
+        assertEquals(ISSUER2 + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, event.getQualifiedName());
     }
 
     /**
@@ -86,7 +86,7 @@ public class EventTest {
         assertEquals(DESCRIPTION, template.getDescription());
         assertEquals(NOW.longValue(), template.getTimestamp());
         assertNotNull(template.getID());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, template.getQualifiedName());
+        assertEquals(ISSUER1 + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, template.getQualifiedName());
 
         Event event = new Event(ISSUER2, template);
         assertEquals(ISSUER2, event.getIssuedBy());
@@ -95,6 +95,6 @@ public class EventTest {
         assertTrue(event.getTimestamp() >= NOW);
         assertNotNull(event.getID());
         assertNotSame(template.getID(), event.getID());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, event.getQualifiedName());
+        assertEquals(ISSUER2 + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, event.getQualifiedName());
     }
 }

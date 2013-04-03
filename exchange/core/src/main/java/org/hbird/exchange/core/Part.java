@@ -16,7 +16,6 @@
  */
 package org.hbird.exchange.core;
 
-
 import org.hbird.exchange.interfaces.IPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,27 +29,29 @@ import org.slf4j.LoggerFactory;
 public class Part extends Named implements IPart {
 
     private static final long serialVersionUID = 4961124159238983376L;
-	/** The Part that this part is part of. */
+    /** The Part that this part is part of. */
 
     private static final Logger LOG = LoggerFactory.getLogger(Part.class);
-    
-	/** Unique ID of this part. The ID should be unique accross instantiations of the Part, i.e. be set as
-	 * part of the construction of the Part. */
-	protected String ID = "";
 
-	protected IPart parent;
-    
-	public Part(String ID, String name, String description) {
-		super(name, description);
-		this.ID = ID;
-		
+    /**
+     * Unique ID of this part. The ID should be unique accross instantiations of the Part, i.e. be set as
+     * part of the construction of the Part.
+     */
+    protected String ID = "";
+
+    protected IPart parent;
+
+    public Part(String ID, String name, String description) {
+        super(name, description);
+        this.ID = ID;
+
     }
 
-	public Part(String ID, String name, String description, IPart isPartOf) {
-		super(name, description);
-		this.ID = ID;
-		parent = isPartOf;
-		
+    public Part(String ID, String name, String description, IPart isPartOf) {
+        super(name, description);
+        this.ID = ID;
+        parent = isPartOf;
+
     }
 
     /**
@@ -75,31 +76,36 @@ public class Part extends Named implements IPart {
         }
     }
 
+    @Override
     public String getQualifiedName(String separator) {
-    	return ID;
+        // XXX - 03.04.2013, kimmell - overriding Named logic in here?
+        return ID;
     }
-    
+
+    @Override
     public String getAbsoluteName() {
         return parent == null ? "/" + name : parent.getAbsoluteName() + "/" + name;
     }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IIDed#getID()
-	 */
-	@Override
-	public String getID() {
-		return ID;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.exchange.interfaces.IIDed#getID()
+     */
+    @Override
+    public String getID() {
+        return ID;
+    }
 
-	public IPart getParent() {
-		return parent;
-	}
+    public IPart getParent() {
+        return parent;
+    }
 
-	public void setParent(IPart parent) {
-		this.parent = parent;
-	}
+    public void setParent(IPart parent) {
+        this.parent = parent;
+    }
 
-	public void setID(String iD) {
-		ID = iD;
-	}
+    public void setID(String iD) {
+        ID = iD;
+    }
 }
