@@ -55,7 +55,7 @@ public class CommandingTester extends SystemTest {
 
         /** Create a command with a release time. */
         Date now = new Date();
-        command.setReleaseTime(now.getTime() + 2000);
+        command.setTransferTime(now.getTime() + 2000);
 
         publishApi.publishCommandRequest("COMREQ1", "A simple command request container with no lock states and no tasks.", command, null, null);
 

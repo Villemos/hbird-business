@@ -20,7 +20,6 @@ import org.hbird.exchange.core.Event;
 import org.hbird.exchange.interfaces.IAntennaSpecific;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
-
 /**
  * The ground station control will, based on the mission timeline, orchestra the ground station.
  * 
@@ -29,7 +28,8 @@ import org.hbird.exchange.interfaces.ISatelliteSpecific;
  * 
  * The ground station will
  * - Retrieve the mission timeline, in particular the assigned contact events.
- * - Constraint Propagation. Apply rules and constraints, such as that a specific request must be send to drive X, Y seconds prior to/after contact.
+ * - Constraint Propagation. Apply rules and constraints, such as that a specific request must be send to drive X, Y
+ * seconds prior to/after contact.
  * - Execute activities.
  * 
  * An event, signalising the establishment or loss of contact between a satellite and
@@ -43,86 +43,96 @@ import org.hbird.exchange.interfaces.ISatelliteSpecific;
  */
 public class LocationContactEvent extends Event implements IAntennaSpecific, ISatelliteSpecific {
 
-	private static final long serialVersionUID = 6129893135305263533L; 
+    private static final long serialVersionUID = 6129893135305263533L;
 
-	protected long generationTime = 0;
+    protected long generationTime = 0;
 
-	/** The location that contact has been established /lost with. */
-	protected String location = null;
-	
-	/** The antenna at the location. The same location may have multiple antennas. This event if for a specific
-	 * groundstation / antenna pair.*/
-	protected String antenna = null;
-	
-	/** The satellite that contact has been established /lost with. */
-	protected String satellite = null;
+    /** The location that contact has been established /lost with. */
+    protected String location = null;
 
-	/** The state of the satellite as the event occurs. */
-	protected OrbitalState satelliteState = null;
-	
-	/** Flag indicating whether the visibility (contact) is now established or lost. */
-	protected boolean isVisible = true;
-	
-	/**
-	 * Constructor of a location contact event.
-	 * 
-	 * @param name The name of the location event.
-	 * @param description A description of the event.
-	 * @param timestamp The time that this event occured or is predicted to occure.
-	 * @param datasetidentifier An identifier of the data set that this is part of. Should be set to 0 if this event is not part of a data series.
-	 * @param location The location to which contact has been established / lost.
-	 * @param satellite The satellite to which contact has been established / lost. 
-	 */
-	public LocationContactEvent(String issuedBy, long timestamp, String location, String antenna, String satellite, boolean isVisible, OrbitalState satelliteState) {
-		super(issuedBy, "ContactEvent", "A contact event between a satellite and a location", timestamp);
-		this.location = location;
-		this.antenna = antenna;
-		this.satellite = satellite;
-		this.isVisible = isVisible;
-		this.satelliteState = satelliteState;
-	}
+    /**
+     * The antenna at the location. The same location may have multiple antennas. This event if for a specific
+     * groundstation / antenna pair.
+     */
+    protected String antenna = null;
 
-	public String getGroundStationName() {
-		return location;
-	}
+    /** The satellite that contact has been established /lost with. */
+    protected String satellite = null;
 
-	public void setGroundStationName(String location) {
-		this.location = location;
-	}
+    /** The state of the satellite as the event occurs. */
+    protected OrbitalState satelliteState = null;
 
-	public String getSatelliteName() {
-		return satellite;
-	}
+    /** Flag indicating whether the visibility (contact) is now established or lost. */
+    protected boolean isVisible = true;
 
-	public void setSatelliteName(String satellite) {
-		this.satellite = satellite;
-	}
+    /**
+     * Constructor of a location contact event.
+     * 
+     * @param name The name of the location event.
+     * @param description A description of the event.
+     * @param timestamp The time that this event occured or is predicted to occure.
+     * @param location The location to which contact has been established / lost.
+     * @param satellite The satellite to which contact has been established / lost.
+     */
+    public LocationContactEvent(String issuedBy, long timestamp, String location, String antenna, String satellite, boolean isVisible,
+            OrbitalState satelliteState) {
+        super(issuedBy, "ContactEvent", "A contact event between a satellite and a location", timestamp);
+        this.location = location;
+        this.antenna = antenna;
+        this.satellite = satellite;
+        this.isVisible = isVisible;
+        this.satelliteState = satelliteState;
+    }
 
-	public boolean isVisible() {
-		return isVisible;
-	}
+    @Override
+    public String getGroundStationName() {
+        return location;
+    }
 
-	public void setVisible(boolean isVisible) {
-		this.isVisible = isVisible;
-	}
-	
-	public String prettyPrint() {
-		return this.getClass().getSimpleName() + "[name=" + name + ", timestamp=" + timestamp + ", location=" + getGroundStationName() + ", satellite=" + satellite + ", visibility=" + isVisible + "]";
-	}
+    @Override
+    public void setGroundStationName(String location) {
+        this.location = location;
+    }
 
-	public String getAntennaName() {
-		return antenna;
-	}
+    @Override
+    public String getSatelliteName() {
+        return satellite;
+    }
 
-	public void setAntennaName(String antenna) {
-		this.antenna = antenna;
-	}
+    @Override
+    public void setSatelliteName(String satellite) {
+        this.satellite = satellite;
+    }
 
-	public OrbitalState getSatelliteState() {
-		return satelliteState;
-	}
+    public boolean isVisible() {
+        return isVisible;
+    }
 
-	public void setSatelliteState(OrbitalState satelliteState) {
-		this.satelliteState = satelliteState;
-	}
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
+    }
+
+    @Override
+    public String prettyPrint() {
+        return this.getClass().getSimpleName() + "[name=" + name + ", timestamp=" + timestamp + ", location=" + getGroundStationName() + ", satellite="
+                + satellite + ", visibility=" + isVisible + "]";
+    }
+
+    @Override
+    public String getAntennaName() {
+        return antenna;
+    }
+
+    @Override
+    public void setAntennaName(String antenna) {
+        this.antenna = antenna;
+    }
+
+    public OrbitalState getSatelliteState() {
+        return satelliteState;
+    }
+
+    public void setSatelliteState(OrbitalState satelliteState) {
+        this.satelliteState = satelliteState;
+    }
 }

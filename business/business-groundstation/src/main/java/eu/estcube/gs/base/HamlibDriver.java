@@ -126,8 +126,7 @@ public abstract class HamlibDriver extends SoftwareComponentDriver {
                 .setHeader(StandardArguments.NAME, simple("${in.body.name}"))
                 .setHeader(StandardArguments.ISSUED_BY, simple("${in.body.issuedBy}"))
                 .setHeader(StandardArguments.TYPE, simple("${in.body.type}"))
-                .setHeader(StandardArguments.DATA_SET_ID, simple("${in.body.datasetidentifier}"))
-                .setHeader("class", simple("${in.body.class.simpleName}"))
+                .setHeader(StandardArguments.CLASS, simple("${in.body.class.simpleName}"))
                 .to(StandardEndpoints.MONITORING);
 
         // @formatter: on
@@ -140,6 +139,6 @@ public abstract class HamlibDriver extends SoftwareComponentDriver {
     public void setFailOnOldCommand(boolean failOnOldCommand) {
         this.failOnOldCommand = failOnOldCommand;
     }
-    
+
     public abstract String getAddress();
 }

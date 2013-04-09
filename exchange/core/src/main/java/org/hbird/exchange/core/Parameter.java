@@ -30,153 +30,161 @@ import java.math.BigInteger;
  */
 public class Parameter extends Issued {
 
-	/** The unique UID. */
-	private static final long serialVersionUID = 889400984561961325L;
+    /** The unique UID. */
+    private static final long serialVersionUID = 889400984561961325L;
 
-	/** The value of the parameter. May be any type. */
-	protected Number value;
+    /** The value of the parameter. May be any type. */
+    protected Number value;
 
-	/** The unit of the value. */
-	protected String unit;
+    /** The unit of the value. */
+    protected String unit;
 
-	/**
-	 * Creates a Parameter with a timestamp set to 'now'.
-	 * 
-	 * @param name The name of the parameter
-	 * @param description A description of the parameter.
-	 * @param value An object holding the value.
-	 * @param unit The unit of the value.
-	 */
-	public Parameter(String issuedBy, String name, String description, Number value, String unit) {
-		this(issuedBy, name, description, unit);
-		this.value = value;
-	}
+    /**
+     * Creates a Parameter with a timestamp set to 'now'.
+     * 
+     * @param name The name of the parameter
+     * @param description A description of the parameter.
+     * @param value An object holding the value.
+     * @param unit The unit of the value.
+     */
+    public Parameter(String issuedBy, String name, String description, Number value, String unit) {
+        this(issuedBy, name, description, unit);
+        this.value = value;
+    }
 
-	/**
-	 * Creates a Parameter with a timestamp set to 'now'.
-	 * 
-	 * @param name The name of the parameter
-	 * @param description A description of the parameter.
-	 * @param value An object holding the value.
-	 * @param unit The unit of the value.
-	 */
-	public Parameter(String issuedBy, String name, String description, Number value, String unit, long timestamp) {
-		this(issuedBy, name, description, unit);
-		this.value = value;
-		this.timestamp = timestamp;
-	}
+    /**
+     * Creates a Parameter with a timestamp set to 'now'.
+     * 
+     * @param name The name of the parameter
+     * @param description A description of the parameter.
+     * @param value An object holding the value.
+     * @param unit The unit of the value.
+     */
+    public Parameter(String issuedBy, String name, String description, Number value, String unit, long timestamp) {
+        this(issuedBy, name, description, unit);
+        this.value = value;
+        this.timestamp = timestamp;
+    }
 
-	/**
-	 * Creates a Parameter with a timestamp set to 'now'.
-	 * 
-	 * @param name The name of the parameter
-	 * @param description A description of the parameter.
-	 * @param value An object holding the value.
-	 * @param unit The unit of the value.
-	 */
-	public Parameter(String issuedBy, String name, String description, String unit) {
-		super(issuedBy, name, description);
-		this.unit = unit;
-	}
+    /**
+     * Creates a Parameter with a timestamp set to 'now'.
+     * 
+     * @param name The name of the parameter
+     * @param description A description of the parameter.
+     * @param value An object holding the value.
+     * @param unit The unit of the value.
+     */
+    public Parameter(String issuedBy, String name, String description, String unit) {
+        super(issuedBy, name, description);
+        this.unit = unit;
+    }
 
-	public Parameter(Parameter base) {
-		this(base.issuedBy, base.name, base.description, base.value, base.unit);
-	}
+    public Parameter(Parameter base) {
+        this(base.issuedBy, base.name, base.description, base.value, base.unit);
+    }
 
-	/**
-	 * Returns the value of the Parameter as an Object.
-	 * 
-	 * @return An Object holding the value. The class type can of cause be found using
-	 *         reflection, or through the 'clazz' attribute.
-	 */
-	public Number getValue() {
-		return value;
-	}
+    /**
+     * Returns the value of the Parameter as an Object.
+     * 
+     * @return An Object holding the value. The class type can of cause be found using
+     *         reflection, or through the 'clazz' attribute.
+     */
+    public Number getValue() {
+        return value;
+    }
 
-	public double asDouble() {
-		return value.doubleValue();
-	}
+    public double asDouble() {
+        return value.doubleValue();
+    }
 
-	public int asInt() {
-		return value.intValue();
-	}
+    public int asInt() {
+        return value.intValue();
+    }
 
-	/**
-	 * Setter for the value. Will also set the 'clazz' attribute to the Java name of the
-	 * class set as value.
-	 * 
-	 * @param value The value to be set.
-	 */
-	public void setValue(Number value) {
-		this.value = value;
-	}
+    /**
+     * Setter for the value. Will also set the 'clazz' attribute to the Java name of the
+     * class set as value.
+     * 
+     * @param value The value to be set.
+     */
+    public void setValue(Number value) {
+        this.value = value;
+    }
 
-	/**
-	 * Returns the string representing the unit of this parameter.
-	 * 
-	 * @return STring representing the unit.
-	 */
-	public String getUnit() {
-		return unit;
-	}
+    /**
+     * Returns the string representing the unit of this parameter.
+     * 
+     * @return STring representing the unit.
+     */
+    public String getUnit() {
+        return unit;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 * 
-	 * Notice that the method has extra been implemented to allow comparison of types that are
-	 * not the same, i.e. Integer and Double.
-	 */
-	public int compareTo(Named cTo) {
+    /**
+     * @param unit the unit to set
+     */
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
 
-		if (cTo instanceof Parameter) {
-			Parameter rhs = (Parameter) cTo;
-			if (this.value instanceof Short && rhs.value instanceof Short)
-			{
-				return ((Short) this.value).compareTo((Short) rhs.value);
-			}
-			else if (this.value instanceof Long && rhs.value instanceof Long)
-			{
-				return ((Long) this.value).compareTo((Long) rhs.value);
-			}
-			else if (this.value instanceof Integer && rhs.value instanceof Integer)
-			{
-				return ((Integer) this.value).compareTo((Integer) rhs.value);
-			}
-			else if (this.value instanceof Float && rhs.value instanceof Float)
-			{
-				return ((Float) this.value).compareTo((Float) rhs.value);
-			}
-			else if (this.value instanceof Double && rhs.value instanceof Double)
-			{
-				return ((Double) this.value).compareTo((Double) rhs.value);
-			}
-			else if (this.value instanceof Byte && rhs.value instanceof Byte)
-			{
-				return ((Byte) this.value).compareTo((Byte) rhs.value);
-			}
-			else if (this.value instanceof BigInteger && rhs.value instanceof BigInteger)
-			{
-				return ((BigInteger) this.value).compareTo((BigInteger) rhs.value);
-			}
-			else if (this.value instanceof BigDecimal && rhs.value instanceof BigDecimal)
-			{
-				return ((BigDecimal) this.value).compareTo((BigDecimal) rhs.value);
-			}
-			else
-			{
-				String message = String.format("Failed to compare values of %s and %s; value types are %s and %s", this.prettyPrint(), rhs.prettyPrint(),
-				this.value != null ? this.value.getClass() : "null", rhs.value != null ? rhs.value.getClass() : "null");
-				throw new RuntimeException(message);
-			}
-		}
-		
-		return -1;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     * 
+     * Notice that the method has extra been implemented to allow comparison of types that are
+     * not the same, i.e. Integer and Double.
+     */
+    @Override
+    public int compareTo(Named cTo) {
 
-	@Override
-	public String prettyPrint() {
-		return String.format("Parameter[ID=%s, issuedBy=%s, name=%s, value=%s, timestamp=%s]", getID(), issuedBy, name, value, timestamp);
-	}
+        if (cTo instanceof Parameter) {
+            Parameter rhs = (Parameter) cTo;
+            if (this.value instanceof Short && rhs.value instanceof Short)
+            {
+                return ((Short) this.value).compareTo((Short) rhs.value);
+            }
+            else if (this.value instanceof Long && rhs.value instanceof Long)
+            {
+                return ((Long) this.value).compareTo((Long) rhs.value);
+            }
+            else if (this.value instanceof Integer && rhs.value instanceof Integer)
+            {
+                return ((Integer) this.value).compareTo((Integer) rhs.value);
+            }
+            else if (this.value instanceof Float && rhs.value instanceof Float)
+            {
+                return ((Float) this.value).compareTo((Float) rhs.value);
+            }
+            else if (this.value instanceof Double && rhs.value instanceof Double)
+            {
+                return ((Double) this.value).compareTo((Double) rhs.value);
+            }
+            else if (this.value instanceof Byte && rhs.value instanceof Byte)
+            {
+                return ((Byte) this.value).compareTo((Byte) rhs.value);
+            }
+            else if (this.value instanceof BigInteger && rhs.value instanceof BigInteger)
+            {
+                return ((BigInteger) this.value).compareTo((BigInteger) rhs.value);
+            }
+            else if (this.value instanceof BigDecimal && rhs.value instanceof BigDecimal)
+            {
+                return ((BigDecimal) this.value).compareTo((BigDecimal) rhs.value);
+            }
+            else
+            {
+                String message = String.format("Failed to compare values of %s and %s; value types are %s and %s", this.prettyPrint(), rhs.prettyPrint(),
+                        this.value != null ? this.value.getClass() : "null", rhs.value != null ? rhs.value.getClass() : "null");
+                throw new RuntimeException(message);
+            }
+        }
+
+        return -1;
+    }
+
+    @Override
+    public String prettyPrint() {
+        return String.format("Parameter[ID=%s, issuedBy=%s, name=%s, value=%s, timestamp=%s]", getID(), issuedBy, name, value, timestamp);
+    }
 }

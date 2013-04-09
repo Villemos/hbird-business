@@ -62,7 +62,7 @@
 	<bean id="event" class="org.hbird.business.systemtest.EventTester" parent="testerTemplate"/>
 	<bean id="finisher" class="org.hbird.business.systemtest.Finisher" parent="testerTemplate"/>
 						
-	<bean id="scheduler" class="org.hbird.business.core.Scheduler"/>
+	<bean id="transferScheduler" class="org.hbird.business.core.TransferScheduler"/>
 
 	<!-- Beans for the driver routes. -->
     <bean id="decoderSplitOnNewline" class="eu.estcube.gs.hamlib.DecoderSplitOnNewline" />
@@ -119,7 +119,7 @@
 			</choice>
 
 						
-			<to uri="bean:scheduler"/>
+			<to uri="bean:transferScheduler"/>
 			
 			<choice>
 	            <when>

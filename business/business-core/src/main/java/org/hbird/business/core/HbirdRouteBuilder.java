@@ -23,48 +23,56 @@ public abstract class HbirdRouteBuilder extends RouteBuilder {
      * @param route
      */
     protected void addInjectionRoute(ProcessorDefinition<?> route) {
-        Scheduler scheduler = new Scheduler();
+        TransferScheduler trasferScehduler = new TransferScheduler();
 
+        // @formatter:off
         route
-
-                /** Dont route messages with a NULL body. */
-                .choice()
+            /* Dont route messages with a NULL body. */
+            .choice()
                 .when(simple("${in.body} == null"))
                 .stop()
-                .end()
+            .end()
 
-                /** Set standard headers. */
-                .setHeader(StandardArguments.NAME, simple("${in.body.name}"))
-                .setHeader(StandardArguments.CLASS, simple("${in.body.class.simpleName}"))
+            /* Set standard headers. */
+            .setHeader(StandardArguments.NAME, simple("${in.body.name}"))
+            .setHeader(StandardArguments.CLASS, simple("${in.body.class.simpleName}"))
 
-                .choice()
-                	.when(body().isInstanceOf(Issued.class))
-                		.setHeader(StandardArguments.ISSUED_BY, simple("${in.body.issuedBy}"))
-                		.setHeader(StandardArguments.TIMESTAMP, simple("${in.body.timestamp}"))
-                .end()
-                
-                /** Set object specific headers. */
-                .choice()
+            .choice()
+                .when(body().isInstanceOf(Issued.class))
+                    .setHeader(StandardArguments.ISSUED_BY, simple("${in.body.issuedBy}"))
+                    .setHeader(StandardArguments.TIMESTAMP, simple("${in.body.timestamp}"))
+            .end()
+
+            /* Set object specific headers. */
+            .choice()
                 .when(body().isInstanceOf(State.class))
-                .setHeader(StandardArguments.IS_STATE_OF, simple("${in.body.isStateOf}"))
+                    .setHeader(StandardArguments.IS_STATE_OF, simple("${in.body.isStateOf}"))
                 .when(body().isInstanceOf(Command.class))
-                .setHeader(StandardArguments.DESTINATION, simple("${in.body.destination}"))
+                    .setHeader(StandardArguments.DESTINATION, simple("${in.body.destination}"))
                 .when(body().isInstanceOf(IGroundStationSpecific.class))
-                .setHeader(StandardArguments.LOCATION, simple("${in.body.groundStationName}"))
+                    .setHeader(StandardArguments.LOCATION, simple("${in.body.groundStationName}"))
                 .when(body().isInstanceOf(ISatelliteSpecific.class))
-                .setHeader(StandardArguments.SATELLITE_NAME, simple("${in.body.satelliteName}"))
-                .end()
+                    .setHeader(StandardArguments.SATELLITE_NAME, simple("${in.body.satelliteName}"))
+            .end()
 
-                /** Schedule the release, if this object implements IScheduled. */
-                .bean(scheduler)
+            /* Schedule the release, if this object implements ITransferable. */
+            .bean(trasferScehduler)
 
-                /** Route to the topic / query. */
-                .choice()
-                .when((body().isInstanceOf(Task.class))).to(StandardEndpoints.TASKS)
-                .when((body().isInstanceOf(CommandRequest.class))).to(StandardEndpoints.REQUESTS)
-                .when((body().isInstanceOf(Command.class))).to(StandardEndpoints.COMMANDS)
-                .when((body().isInstanceOf(Event.class))).to(StandardEndpoints.EVENTS)
-                .otherwise().to(StandardEndpoints.MONITORING);
+            /* Route to the topic / query. */
+            .choice()
+                .when((body().isInstanceOf(Task.class)))
+                    .to(StandardEndpoints.TASKS)
+                .when((body().isInstanceOf(CommandRequest.class)))
+                    .to(StandardEndpoints.REQUESTS)
+                .when((body().isInstanceOf(Command.class)))
+                    .to(StandardEndpoints.COMMANDS)
+                .when((body().isInstanceOf(Event.class)))
+                    .to(StandardEndpoints.EVENTS)
+                .otherwise()
+                    .to(StandardEndpoints.MONITORING);
+
+        // @formatter:on
+
     }
 
 }

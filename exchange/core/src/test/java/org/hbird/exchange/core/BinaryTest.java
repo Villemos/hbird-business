@@ -35,6 +35,7 @@ public class BinaryTest {
     private static final String ISSUER = "issuer";
     private static final String DESCRIPTION = "description";
     private static final byte[] DATA = new byte[] { 0x0D, 0x00, 0x0B, 0x0E };
+    private static final String FORMAT = "raw";
 
     private Binary binary;
 
@@ -80,5 +81,26 @@ public class BinaryTest {
         byte[] bytes = new byte[] { 0x42 };
         binary.setRawData(bytes);
         assertTrue(Arrays.equals(bytes, binary.getRawData()));
+    }
+
+    /**
+     * Test method for {@link org.hbird.exchange.core.Binary#getFormat()}.
+     */
+    @Test
+    public void testGetFormat() {
+        assertNull(binary.getFormat());
+    }
+
+    /**
+     * Test method for {@link org.hbird.exchange.core.Binary#getFormat()}.
+     */
+    @Test
+    public void testSetFormat() {
+        binary = new Binary(ISSUER, NAME, DESCRIPTION, DATA, FORMAT);
+        assertEquals(FORMAT, binary.getFormat());
+        binary.setFormat(null);
+        assertNull(binary.getFormat());
+        binary.setFormat(FORMAT + FORMAT);
+        assertEquals(FORMAT + FORMAT, binary.getFormat());
     }
 }

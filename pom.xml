@@ -103,14 +103,8 @@
         <commons-lang3.version>3.1</commons-lang3.version>
         <commons.collections.version>3.2.1</commons.collections.version>
         <commons-codec.version>1.7</commons-codec.version>
-        <gson.version>1.7.2</gson.version><!-- TODO - waiting for update; hbird is 
-            not working with newer gson -->
-
-
-
-
-
-
+        <gson.version>2.2.2</gson.version>
+        <guava.version>14.0.1</guava.version>
 
         <version.java>1.6</version.java>
         <version.junit>4.10</version.junit>

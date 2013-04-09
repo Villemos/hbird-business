@@ -29,6 +29,9 @@ public class Binary extends Issued {
     /** The raw binary data */
     protected byte[] rawData = null;
 
+    /** String to describe the binary format. */
+    protected String format;
+
     /**
      * Constructor
      * 
@@ -39,9 +42,23 @@ public class Binary extends Issued {
      * @param rawData The raw data
      */
     public Binary(String issuedBy, String name, String description, byte[] rawData) {
-		super(issuedBy, name, description);
+        this(issuedBy, name, description, rawData, null);
+    }
 
+    /**
+     * Constructor
+     * 
+     * @param issuedBy The name of the system element that issued this binary data
+     * @param name Name of this binary data
+     * @param type The type of the data
+     * @param description A description of the data
+     * @param rawData The raw data
+     * @param format format of the raw data
+     */
+    public Binary(String issuedBy, String name, String description, byte[] rawData, String format) {
+        super(issuedBy, name, description);
         this.rawData = rawData;
+        this.format = format;
     }
 
     public byte[] getRawData() {
@@ -50,5 +67,13 @@ public class Binary extends Issued {
 
     public void setRawData(byte[] rawData) {
         this.rawData = rawData;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public String getFormat() {
+        return format;
     }
 }

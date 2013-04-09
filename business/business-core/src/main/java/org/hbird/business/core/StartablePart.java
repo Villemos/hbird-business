@@ -32,8 +32,6 @@
  */
 package org.hbird.business.core;
 
-
-import org.hbird.business.api.ApiFactory;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.BusinessCard;
@@ -61,30 +59,29 @@ public class StartablePart extends Part implements IStartablePart {
     protected String configurator = null;
 
     protected long heartbeat = DEFAULT_HEARTBEAT;
-		
-	protected BusinessCard card = null;
 
-	{
-		card = new BusinessCard(name, heartbeat);
-		card.commandsIn.put("", new StartComponent("", null));
-		card.commandsIn.put("", new StopComponent("", ""));
-	}
-	
-	
+    protected BusinessCard card = null;
+
+    {
+        card = new BusinessCard(name, heartbeat);
+        card.commandsIn.put("", new StartComponent("", null));
+        card.commandsIn.put("", new StopComponent("", ""));
+    }
+
     /**
      * @param name
      * @param description
      */
-	public StartablePart(String ID, String name, String description, String driverName) {
-		super(ID, name, description);
+    public StartablePart(String ID, String name, String description, String driverName) {
+        super(ID, name, description);
         this.driverName = driverName;
     }
 
+    @Override
     public BusinessCard getBusinessCard() {
         return card.touch();
     }
 
-	
     @Override
     public String getDriverName() {
         return driverName;
@@ -114,20 +111,4 @@ public class StartablePart extends Part implements IStartablePart {
     public void setHeartbeat(long heartbeat) {
         this.heartbeat = heartbeat;
     }
-
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IStartablePart#Start()
-	 */
-	@Override
-	public void Start(String requestedBy) {
-		ApiFactory.getPublishApi(requestedBy).publish(new StartComponent(requestedBy, this));		
-	}
-
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IStartablePart#stop()
-	 */
-	@Override
-	public void stop(String requestedBy) {
-		ApiFactory.getPublishApi(requestedBy).publish(new StopComponent(requestedBy, name));
-	}
 }

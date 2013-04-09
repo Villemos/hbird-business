@@ -48,97 +48,98 @@ import com.google.common.collect.TreeMultimap;
  * 
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class InMemoryScheduler implements Runnable {
 
-	/** The complete queue of Named objects. Is a multimap because multiple entries can have the same execution time. */
-	protected TreeMultimap<Long, Named> queue = TreeMultimap.create(Ordering.<Long>natural(), Ordering.natural());
+    /** The complete queue of Named objects. Is a multimap because multiple entries can have the same execution time. */
+    protected TreeMultimap<Long, Named> queue = TreeMultimap.create(Ordering.<Long> natural(), Ordering.natural());
 
-	/** The timestamp of the next object to be send. */
-	protected long currentlyScheduled = 0;
+    /** The timestamp of the next object to be send. */
+    protected long currentlyScheduled = 0;
 
-	/** The threadpool. */
-	protected ScheduledThreadPoolExecutor executor = null;
+    /** The threadpool. */
+    protected ScheduledThreadPoolExecutor executor = null;
 
-	/** The next scheduled task. */
-	protected ScheduledFuture<?> pending = null;
+    /** The next scheduled task. */
+    protected ScheduledFuture<?> pending = null;
 
-	/** The route into which we inject the objects when they timeout. */
-	protected ProducerTemplate inject = null;
-	protected String injectUrl = "direct:injection";
-	
-	public InMemoryScheduler(ProducerTemplate inject) {
-		executor = new ScheduledThreadPoolExecutor(1);
-		this.inject = inject;
-	}
+    /** The route into which we inject the objects when they timeout. */
+    protected ProducerTemplate inject = null;
+    protected String injectUrl = "direct:injection";
 
-	public InMemoryScheduler(ProducerTemplate inject, String injectUrl) {
-		executor = new ScheduledThreadPoolExecutor(1);
-		this.inject = inject;
-		this.injectUrl = injectUrl;
-	}
+    public InMemoryScheduler(ProducerTemplate inject) {
+        executor = new ScheduledThreadPoolExecutor(1);
+        this.inject = inject;
+    }
 
-	/**
-	 * Adds a single object to the queue. May result in a rescheduling.
-	 * 
-	 * @param entry The object to be added.
-	 */
-	public synchronized void add(IScheduled entry) {		
-		queue.put(entry.getDeliveryTime(), (Named) entry);
+    public InMemoryScheduler(ProducerTemplate inject, String injectUrl) {
+        executor = new ScheduledThreadPoolExecutor(1);
+        this.inject = inject;
+        this.injectUrl = injectUrl;
+    }
 
-		if (currentlyScheduled == 0 || entry.getDeliveryTime() < currentlyScheduled ) {
-			run();
-		}
-	}
+    /**
+     * Adds a single object to the queue. May result in a rescheduling.
+     * 
+     * @param entry The object to be added.
+     */
+    public synchronized void add(IScheduled entry) {
+        queue.put(entry.getExecutionTime(), (Named) entry);
 
-	public synchronized void clear() {
-		queue.clear();
-		stopCurrent();
-	}
+        if (currentlyScheduled == 0 || entry.getExecutionTime() < currentlyScheduled) {
+            run();
+        }
+    }
 
-	protected void stopCurrent() {
-		if (pending != null) {
-			pending.cancel(false);
-			pending = null;
-		}			
-		currentlyScheduled = 0;
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
-	@Override
-	public synchronized void run() {
-		stopCurrent();
-		
-		while (queue.isEmpty() == false) {
-			Long next = queue.keySet().first(); 
-			long delay = next - System.currentTimeMillis();
+    public synchronized void clear() {
+        queue.clear();
+        stopCurrent();
+    }
 
-			/** If delay less than 0, then send immediatly. */
-			if (delay <= 0) {
-				send(queue.get(next));
-				queue.removeAll(next);
-			}
-			/** Schedule next run and then break. */
-			else {
-				currentlyScheduled = next;
-				pending = executor.schedule(this, delay, TimeUnit.MILLISECONDS);
-				break;
-			}
-		}
-	}	
-	
-	protected void send(SortedSet<Named> toSend) {
-		for (Named entry : toSend) {
-			inject.sendBody(injectUrl, entry);
-		}
-	}
+    protected void stopCurrent() {
+        if (pending != null) {
+            pending.cancel(false);
+            pending = null;
+        }
+        currentlyScheduled = 0;
+    }
 
-	public String getInjectUrl() {
-		return injectUrl;
-	}
-	
-	
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Runnable#run()
+     */
+    @Override
+    public synchronized void run() {
+        stopCurrent();
+
+        while (queue.isEmpty() == false) {
+            Long next = queue.keySet().first();
+            long delay = next - System.currentTimeMillis();
+
+            /** If delay less than 0, then send immediatly. */
+            if (delay <= 0) {
+                send(queue.get(next));
+                queue.removeAll(next);
+            }
+            /** Schedule next run and then break. */
+            else {
+                currentlyScheduled = next;
+                pending = executor.schedule(this, delay, TimeUnit.MILLISECONDS);
+                break;
+            }
+        }
+    }
+
+    protected void send(SortedSet<Named> toSend) {
+        for (Named entry : toSend) {
+            inject.sendBody(injectUrl, entry);
+        }
+    }
+
+    public String getInjectUrl() {
+        return injectUrl;
+    }
+
 }

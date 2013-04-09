@@ -24,7 +24,6 @@ package org.hbird.exchange.constants;
  */
 public class StandardArguments {
 
-	
     public static final String ANGLE = "Angle";
 
     public static final String APPLICABLE_TO = "applicableto";
@@ -38,8 +37,6 @@ public class StandardArguments {
     public static final String CONTACT_DATA_STEP_SIZE = "contactDataStepSize";
 
     public static final String COUNT = "count";
-
-    public static final String DATA_SET_ID = "datasetidentifier";
 
     public static final String DELETION_QUERY = "deletionquery";
 
@@ -71,6 +68,8 @@ public class StandardArguments {
 
     public static final String HEART_BEAT = "heartbeat";
 
+    public static final String ID = "ID";
+
     public static final String INCLUDE_STATES = "includeStates";
 
     public static final String INITIAL_STATE = "initialstate";
@@ -86,7 +85,7 @@ public class StandardArguments {
     public static final String LIMIT_VALUE = "limitvalue";
 
     public static final String LOCATION = "location";
-    
+
     public static final String NAME = "name";
 
     public static final String NAMES = "names";
@@ -128,12 +127,12 @@ public class StandardArguments {
     public static final String VALUE_PARAMETER = "valueparameter";
 
     public static final String VISIBILITY = "visibility";
-    
+
     public static final String IS_PART_OF = "ispartof";
 
-	public static final String PART = "part";
+    public static final String PART = "part";
 
-	public static final String FROM_SOURCE = "source";
+    public static final String FROM_SOURCE = "source";
 
-	public static final String QUALIFIED_NAME = "qualifiedname";
+    public static final String QUALIFIED_NAME = "qualifiedname";
 }

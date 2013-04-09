@@ -18,7 +18,15 @@ package org.hbird.exchange.interfaces;
 
 public interface IScheduled {
 
-	public long getDelay();
+    /** Constant value indicating immediate execution. */
+    public static final long IMMEDIATE = 0L;
 
-	public long getDeliveryTime();
+    /**
+     * Returns execution time of {@link IScheduled}.
+     * 
+     * Java time stamp in milliseconds.
+     * 
+     * @return execution time
+     */
+    public long getExecutionTime();
 }

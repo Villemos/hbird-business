@@ -22,27 +22,38 @@ import org.apache.camel.Body;
 import org.apache.camel.Handler;
 import org.apache.camel.Headers;
 import org.hbird.exchange.interfaces.IScheduled;
+import org.hbird.exchange.interfaces.ITransferable;
 
 /**
  * The scheduler set the activemq AMQ_SCHEDULED_DELAY flag on all object which implements the Scheduled interface.
  * 
  * @author Gert Villemos
- *
+ * 
  */
-public class Scheduler {
+public class TransferScheduler {
 
-	/**
-	 * Method to set the JMS header, if this object is a scheduled object.
-	 * 
-	 * @param body The object which might need to be scheduled
-	 * @param headers The JMS headers in which the delay is set
-	 */
-	@Handler
-	public void schedule(@Body Object body, @Headers Map<String, Object> headers) {
-		
-		if (body instanceof IScheduled) {
-			headers.put("AMQ_SCHEDULED_DELAY", ((IScheduled) body).getDelay());
-			headers.put("deliverytime", ((IScheduled) body).getDeliveryTime());
-		}
-	}
+    /**
+     * Method to set the JMS header, if this object is a scheduled object.
+     * 
+     * @param body The object which might need to be scheduled
+     * @param headers The JMS headers in which the delay is set
+     */
+    @Handler
+    public void schedule(@Body Object body, @Headers Map<String, Object> headers) {
+
+        if (body instanceof ITransferable) {
+
+            // current moment
+            long now = System.currentTimeMillis();
+            // transfer time
+            long transferTime = ((ITransferable) body).getTransferTime();
+            // calculate delay for AMQ
+            long delay = now > transferTime ? IScheduled.IMMEDIATE : transferTime - now;
+
+            // set headers
+            // TODO - 09.04.2013, kimmell - extract constants
+            headers.put("AMQ_SCHEDULED_DELAY", delay);
+            headers.put("deliverytime", transferTime);
+        }
+    }
 }

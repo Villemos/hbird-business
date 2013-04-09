@@ -16,7 +16,7 @@
  */
 package org.hbird.business.core;
 
-import org.apache.camel.Main;
+import org.apache.camel.main.Main;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
@@ -28,48 +28,47 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  * 'hbird.assembly' system property or by putting a 'main.xml' in the classpath.
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class Starter {
 
-	/** Class logger */
-	private static org.apache.log4j.Logger LOG = Logger.getLogger("main");
+    /** Class logger */
+    private static org.apache.log4j.Logger LOG = Logger.getLogger("main");
 
-	
-	/**
-	 * The main method
-	 * 
-	 * @param args Arguments are NOT used
-	 * @throws Exception
-	 */
-	public static void main(String[] args) throws Exception {
-		Starter starter = new Starter();
-		starter.boot();
-	}
-	
-	/**
-	 * Method to read the XML assembly file and run the main
-	 * 
-	 * @throws Exception
-	 */
-	protected void boot() throws Exception {
-		LOG.info("Starting Hummingbird based system.");
-	
-		Main main = new Main();
-		main.enableHangupSupport();
-		
-		/** Read the configuration file as the first argument. If not set, then we try the default name. */
-		String assemblyFile = System.getProperty("hbird.assembly") == null ? "classpath:main.xml" : System.getProperty("hbird.assembly");
+    /**
+     * The main method
+     * 
+     * @param args Arguments are NOT used
+     * @throws Exception
+     */
+    public static void main(String[] args) throws Exception {
+        Starter starter = new Starter();
+        starter.boot();
+    }
 
-		LOG.info("Reading assembly file '" + assemblyFile + "'");
-		new FileSystemXmlApplicationContext(assemblyFile);
+    /**
+     * Method to read the XML assembly file and run the main
+     * 
+     * @throws Exception
+     */
+    protected void boot() throws Exception {
+        LOG.info("Starting Hummingbird based system.");
 
-		/** Configure log4j to allow dynamic changes to the log4j file. */
-		String log4jFile = System.getProperty("log4j.configuration");
-		if (log4jFile != null) {
-			org.apache.log4j.PropertyConfigurator.configureAndWatch(log4jFile, 5000);
-		}
-		
-		main.run();
-	}	
+        Main main = new Main();
+        main.enableHangupSupport();
+
+        /** Read the configuration file as the first argument. If not set, then we try the default name. */
+        String assemblyFile = System.getProperty("hbird.assembly") == null ? "classpath:main.xml" : System.getProperty("hbird.assembly");
+
+        LOG.info("Reading assembly file '" + assemblyFile + "'");
+        new FileSystemXmlApplicationContext(assemblyFile);
+
+        /** Configure log4j to allow dynamic changes to the log4j file. */
+        String log4jFile = System.getProperty("log4j.configuration");
+        if (log4jFile != null) {
+            org.apache.log4j.PropertyConfigurator.configureAndWatch(log4jFile, 5000);
+        }
+
+        main.run();
+    }
 }

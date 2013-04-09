@@ -21,102 +21,112 @@ import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.interfaces.IGenerationTimestamped;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
-
-/** Class describing a specific orbital state at a give point in time. 
- *  The state is defined through
- *    position. A vector defining the location of the body. 
- *    velocity. A vector defining the velocity of the body. 
- *    momentum. A vector defining the momentum of the body.
- *    timestamp. The time the body have this state. May be in the future. */
+/**
+ * Class describing a specific orbital state at a give point in time.
+ * The state is defined through
+ * position. A vector defining the location of the body.
+ * velocity. A vector defining the velocity of the body.
+ * momentum. A vector defining the momentum of the body.
+ * timestamp. The time the body have this state. May be in the future.
+ */
 public class OrbitalState extends Issued implements IGenerationTimestamped, ISatelliteSpecific {
 
-	/** The unique UID. */
-	private static final long serialVersionUID = -8112421610188582037L;
+    /** The unique UID. */
+    private static final long serialVersionUID = -8112421610188582037L;
 
-	/** The time at which this value was generated. Can be the same as the timstamp for 'live' values. Will be different from the
-	 * timestamp for simulated / predicted values. */
-	public long generationTime = 0;
-	
-	/** The name of the satellite that this orbital state is applicable to. */
-	public String satellite = null;
+    /**
+     * The time at which this value was generated. Can be the same as the timstamp for 'live' values. Will be different
+     * from the
+     * timestamp for simulated / predicted values.
+     */
+    public long generationTime = 0;
 
-	/** Position measured in TODO */
-	public D3Vector position;
+    /** The name of the satellite that this orbital state is applicable to. */
+    public String satellite = null;
 
-	/** Velocity measured in meters / second. */
-	public D3Vector velocity;
+    /** Position measured in TODO */
+    public D3Vector position;
 
-	/** Momentum measured in TODO */	
-	public D3Vector momentum;
+    /** Velocity measured in meters / second. */
+    public D3Vector velocity;
 
-	/**
-	 * Constructor of an orbital state.
-	 * 
-	 * @param name The name of the orbital state. 
-	 * @param description A description of the state.
-	 * @param timestamp The timestamp at which the orbital state is relevant.
-	 * @param datasetidentifier
-	 * @param satellite 
-	 * @param position The position of the orbit. 
-	 * @param velocity The velocity of the orbit.
-	 */
-	public OrbitalState(String issuedBy, String name, String description, long timestamp, long generationTime, String datasetidentifier, String satellite, D3Vector position, D3Vector velocity, D3Vector momentum) {
-		super(issuedBy, name, description, timestamp);
-		this.satellite = satellite;
-		this.position = position;
-		this.velocity = velocity;
-		this.momentum = momentum;
-		this.generationTime = generationTime;
-	}
-	
-	public OrbitalState(String issuedBy, String name, String description, long timestamp, String satellite, D3Vector position, D3Vector velocity, D3Vector momentum) {
-		super(issuedBy, name, description, timestamp);
-		this.satellite = satellite;
-		this.position = position;
-		this.velocity = velocity;
-		this.momentum = momentum;
-	}
+    /** Momentum measured in TODO */
+    public D3Vector momentum;
 
-	public D3Vector getPosition() {
-		return position;
-	}
+    /**
+     * Constructor of an orbital state.
+     * 
+     * @param name The name of the orbital state.
+     * @param description A description of the state.
+     * @param timestamp The timestamp at which the orbital state is relevant.
+     * @param satellite
+     * @param position The position of the orbit.
+     * @param velocity The velocity of the orbit.
+     */
+    public OrbitalState(String issuedBy, String name, String description, long timestamp, long generationTime, String satellite, D3Vector position,
+            D3Vector velocity, D3Vector momentum) {
+        super(issuedBy, name, description, timestamp);
+        this.satellite = satellite;
+        this.position = position;
+        this.velocity = velocity;
+        this.momentum = momentum;
+        this.generationTime = generationTime;
+    }
 
-	public void setPosition(D3Vector position) {
-		this.position = position;
-	}
+    public OrbitalState(String issuedBy, String name, String description, long timestamp, String satellite, D3Vector position, D3Vector velocity,
+            D3Vector momentum) {
+        super(issuedBy, name, description, timestamp);
+        this.satellite = satellite;
+        this.position = position;
+        this.velocity = velocity;
+        this.momentum = momentum;
+    }
 
-	public D3Vector getVelocity() {
-		return velocity;
-	}
+    public D3Vector getPosition() {
+        return position;
+    }
 
-	public void setVelocity(D3Vector velocity) {
-		this.velocity = velocity;
-	}
+    public void setPosition(D3Vector position) {
+        this.position = position;
+    }
 
-	public String getSatelliteName() {
-		return satellite;
-	}
+    public D3Vector getVelocity() {
+        return velocity;
+    }
 
-	public void setSatelliteName(String satellite) {
-		this.satellite = satellite;
-	}
+    public void setVelocity(D3Vector velocity) {
+        this.velocity = velocity;
+    }
 
-	public D3Vector getMomentum() {
-		return momentum;
-	}
+    @Override
+    public String getSatelliteName() {
+        return satellite;
+    }
 
-	public void setMomentum(D3Vector momentum) {
-		this.momentum = momentum;
-	}
+    @Override
+    public void setSatelliteName(String satellite) {
+        this.satellite = satellite;
+    }
 
-	public long getGenerationTime() {
-		return generationTime;
-	}
+    public D3Vector getMomentum() {
+        return momentum;
+    }
 
-	public void setGenerationTime(long generationTime) {
-		this.generationTime = generationTime;
-	}	
-	
+    public void setMomentum(D3Vector momentum) {
+        this.momentum = momentum;
+    }
+
+    @Override
+    public long getGenerationTime() {
+        return generationTime;
+    }
+
+    @Override
+    public void setGenerationTime(long generationTime) {
+        this.generationTime = generationTime;
+    }
+
+    @Override
     public String prettyPrint() {
         return String.format("%s[name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getQualifiedName(), timestamp, satellite);
     }

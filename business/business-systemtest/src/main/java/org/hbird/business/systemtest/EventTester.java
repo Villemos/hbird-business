@@ -48,7 +48,8 @@ public class EventTester extends SystemTest {
         azzert(parts.get(StandardComponents.COMMAND_RELEASER_NAME).getQualifiedName().equals(event.getIssuedBy()), "startEvent.getIssuedBy()");
         long diff = System.currentTimeMillis() - event.getTimestamp();
         azzert(diff >= 0L && diff <= 30000L, "startEvent.getTimestamp()");
-        azzert(StandardMissionEvents.COMPONENT_START.getQualifiedName().equals(event.getQualifiedName()), "startEvent.getQualifiedName()");
+        azzert(event.getQualifiedName().equals(StandardComponents.COMMAND_RELEASER_NAME + StandardMissionEvents.COMPONENT_START.getQualifiedName()),
+                "startEvent.getQualifiedName()");
         azzert(event.getID() != null, "startEvent.getID()");
         azzert(StandardMissionEvents.COMPONENT_START.getDescription().equals(event.getDescription()), "startEvent.getDescription()");
 
@@ -60,7 +61,8 @@ public class EventTester extends SystemTest {
         azzert(parts.get(StandardComponents.COMMAND_RELEASER_NAME).getQualifiedName().equals(event.getIssuedBy()), "stopEvent.getIssuedBy()");
         diff = System.currentTimeMillis() - event.getTimestamp();
         azzert(diff >= 0L && diff <= 30000L, "stopEvent.getTimestamp()");
-        azzert(StandardMissionEvents.COMPONENT_STOP.getQualifiedName().equals(event.getQualifiedName()), "stopEvent.getQualifiedName()");
+        azzert(event.getQualifiedName().equals(StandardComponents.COMMAND_RELEASER_NAME + StandardMissionEvents.COMPONENT_STOP.getQualifiedName()),
+                "stopEvent.getQualifiedName()");
         azzert(event.getID() != null, "stopEvent.getUuid()");
         azzert(StandardMissionEvents.COMPONENT_STOP.getDescription().equals(event.getDescription()), "stopEvent.getDescription()");
 

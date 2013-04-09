@@ -16,30 +16,29 @@
  */
 package org.hbird.exchange.interfaces;
 
-import org.hbird.exchange.core.BusinessCard;
+import java.awt.datatransfer.Transferable;
 
 /**
- * @author Gert Villemos
+ * Interface for transferable objects.
+ * 
+ * For example Commands have to transfered to destination at certain time.
  * 
  */
-public interface IStartablePart extends IPart {
-
-    public String getDriverName();
-
-    public void setDriverName(String driverName);
-
-    public String getConfigurator();
-
-    public void setConfigurator(String configurator);
-
-    public long getHeartbeat();
-
-    public void setHeartbeat(long heartbeat);
+public interface ITransferable {
 
     /**
-     * Returns {@link BusinessCard} describing the {@link IStartablePart}.
+     * Returns name of destination of the {@link ITransferable}.
      * 
-     * @return {@link BusinessCard} describing the {@link IStartablePart}
+     * @return name of destination
      */
-    public BusinessCard getBusinessCard();
+    public String getDestination();
+
+    /**
+     * Transfer time of {@link Transferable}.
+     * Java time stamp in milliseconds.
+     * 
+     * @return transfer time
+     * @see IScheduled#IMMEDIATE
+     */
+    public long getTransferTime();
 }

@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hbird.exchange.interfaces.IScheduled;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -107,8 +108,8 @@ public class CommandTest {
         assertEquals(DESTINATION, c.getDestination());
         assertEquals(NAME, c.getName());
         assertEquals(DESCRIPTION, c.getDescription());
-        assertEquals(0L, c.getReleaseDelay());
-        assertEquals(0L, c.getExecutionTime());
+        assertEquals(IScheduled.IMMEDIATE, c.getTransferTime());
+        assertEquals(IScheduled.IMMEDIATE, c.getExecutionTime());
     }
 
     /**
@@ -122,7 +123,7 @@ public class CommandTest {
         assertEquals(DESTINATION, command.getDestination());
         assertEquals(NAME, command.getName());
         assertEquals(DESCRIPTION, command.getDescription());
-        assertEquals(RELEASE_TIME.longValue(), command.getReleaseTime());
+        assertEquals(RELEASE_TIME.longValue(), command.getTransferTime());
         assertEquals(EXEC_TIME.longValue(), command.getExecutionTime());
     }
 
@@ -184,11 +185,11 @@ public class CommandTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.Command#getReleaseTime()}.
+     * Test method for {@link org.hbird.exchange.core.Command#getTransferTime()}.
      */
     @Test
-    public void testGetReleaseTime() {
-        assertEquals(RELEASE_TIME.longValue(), command.getReleaseTime());
+    public void testGetTransferTime() {
+        assertEquals(RELEASE_TIME.longValue(), command.getTransferTime());
     }
 
     /**
@@ -200,20 +201,12 @@ public class CommandTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.Command#getReleaseDelay()}.
+     * Test method for {@link org.hbird.exchange.core.Command#setTransferTime(long)}.
      */
     @Test
-    public void testGetReleaseDelay() {
-        assertTrue(command.getReleaseDelay() < DELAY);
-    }
-
-    /**
-     * Test method for {@link org.hbird.exchange.core.Command#setReleaseTime(long)}.
-     */
-    @Test
-    public void testSetReleaseTime() {
-        command.setReleaseTime(NOW);
-        assertEquals(NOW, command.getReleaseTime());
+    public void testSetTransferTime() {
+        command.setTransferTime(NOW);
+        assertEquals(NOW, command.getTransferTime());
     }
 
     /**
@@ -442,20 +435,10 @@ public class CommandTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.Command#getDelay()}.
+     * Test method for {@link org.hbird.exchange.core.Command#getTransferTime()}.
      */
     @Test
-    public void testGetDelay() {
-        assertTrue(command.getDelay() < 0);
-        command.setReleaseTime(NOW - DELAY);
-        assertEquals(0, command.getDelay());
-    }
-
-    /**
-     * Test method for {@link org.hbird.exchange.core.Command#getDeliveryTime()}.
-     */
-    @Test
-    public void testGetDeliveryTime() {
-        assertEquals(RELEASE_TIME.longValue(), command.getDeliveryTime());
+    public void testGetTrancferTime() {
+        assertEquals(RELEASE_TIME.longValue(), command.getTransferTime());
     }
 }

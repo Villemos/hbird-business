@@ -21,6 +21,7 @@ package org.hbird.exchange.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -132,5 +133,17 @@ public class BusinessCardTest {
         assertTrue(str.contains(HOST));
         assertTrue(str.contains(ISSUED_BY));
         assertTrue(str.contains(String.valueOf(PERIOD)));
+    }
+
+    /**
+     * Test method for {@link org.hbird.exchange.core.BusinessCard#touch()}.
+     */
+    @Test
+    public void testTouch() {
+        long timestamp1 = card.getTimestamp();
+        BusinessCard touched = card.touch();
+        long timestamp2 = touched.getTimestamp();
+        assertEquals(card, touched);
+        assertNotSame(timestamp1, timestamp2);
     }
 }

@@ -32,54 +32,22 @@
  */
 package org.hbird.exchange.groundstation;
 
-import java.util.Date;
-
-import org.hbird.exchange.core.Issued;
-import org.hbird.exchange.interfaces.IScheduled;
+import org.hbird.exchange.core.CommandBase;
 
 /**
  * @author Admin
- *
+ * 
+ * @deprecated use {@link CommandBase} instead
  */
-public abstract class NativeCommand extends Issued implements IScheduled {
+@Deprecated
+public abstract class NativeCommand extends CommandBase {
+
+    private static final long serialVersionUID = -6561727843336219856L;
 
     /**
-	 * @param issuedBy
-	 */
-	public NativeCommand(String issuedBy, String name, String description) {
-		super(issuedBy, name, description);
-	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -734384324427713527L;
-	
-	protected long executionTime = 0;
-
-	/* (non-Javadoc)
-	 * 
-	 * @see org.hbird.exchange.interfaces.IScheduled#getDelay()
-	 */
-	@Override
-	public long getDelay() {
-		long now = (new Date()).getTime();
-		return now < executionTime ? executionTime - now : 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IScheduled#getDeliveryTime()
-	 */
-	@Override
-	public long getDeliveryTime() {
-		return executionTime;
-	}
-
-	public long getExecutionTime() {
-		return executionTime;
-	}
-
-	public void setExecutionTime(long executionTime) {
-		this.executionTime = executionTime;
-	}    
+     * @param issuedBy
+     */
+    public NativeCommand(String issuedBy, String name, String description) {
+        super(issuedBy, name, description);
+    }
 }

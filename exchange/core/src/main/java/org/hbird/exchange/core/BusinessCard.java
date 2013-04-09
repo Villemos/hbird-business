@@ -35,6 +35,7 @@ package org.hbird.exchange.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.camel.Handler;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hbird.exchange.util.LocalHostNameResolver;
@@ -102,8 +103,11 @@ public class BusinessCard extends Issued {
     }
 
     /**
-     * @return
+     * Returns this {@link BusinessCard} with updated timestamp.
+     * 
+     * @return this {@link BusinessCard} with updated timestamp
      */
+    @Handler
     public BusinessCard touch() {
         timestamp = System.currentTimeMillis();
         return this;
