@@ -24,7 +24,7 @@ public class CommandArgument implements Serializable {
 
     private final String name;
     private final String description;
-    private final Class<?> type;
+    private Class<?> type = Integer.class;
     private final String unit;
     private Object value;
     private final Boolean mandatory;
@@ -40,6 +40,10 @@ public class CommandArgument implements Serializable {
 
     public CommandArgument(String name, String description, Class<?> type, Boolean mandatory) {
         this(name, description, type, null, null, mandatory);
+    }
+
+    public CommandArgument(String name, String description) {
+        this(name, description, null, null, null, true);
     }
 
     public CommandArgument(CommandArgument copyFrom) {
@@ -93,5 +97,22 @@ public class CommandArgument implements Serializable {
      */
     public void setValue(Object value) {
         this.value = value;
+        this.type = value.getClass();
+    }
+    
+    public void setIntValue(Integer value) {
+    	setValue(value);
+    }
+
+    public void setLongValue(Long value) {
+    	setValue(value);
+    }
+
+    public void setDoubleValue(Double value) {
+    	setValue(value);
+    }
+
+    public void setStringValue(String value) {
+    	setValue(value);
     }
 }

@@ -21,45 +21,49 @@
 		<constructor-arg index="5" value="58.3708465" />
 		<constructor-arg index="6" value="0d" />
 	</bean>	
-	
-	<!-- String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation, long port, String host -->
-	<bean id="rotator" class="eu.estcube.gs.rotator.HamlibRotatorPart">
-		<constructor-arg index="0" value="Rotator"/>
-		<constructor-arg index="1" value="0"/>
-		<constructor-arg index="2" value="0"/>				
-		<constructor-arg index="3" value="180"/>
-		<constructor-arg index="4" value="0"/>
-		<constructor-arg index="5" value="180"/>
-		<constructor-arg index="6" value="4533" />
-		<constructor-arg index="7" value="localhost" />
-	</bean>
-
-	<!-- long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain -->
-	<bean id="radio" class="eu.estcube.gs.radio.HamlibRadioPart">
-		<constructor-arg index="0" value="Radio"/>
-		<constructor-arg index="1" value="0"/>
-		<constructor-arg index="2" value="1000000"/>				
-		<constructor-arg index="3" value="true"/>
-		<constructor-arg index="4" value="true"/>
-		<constructor-arg index="5" value="100"/>
-		<constructor-arg index="6" value="4532" />
-		<constructor-arg index="7" value="localhost" />
-	</bean>
-
-	<!-- String issuedBy, String name, String type, String description, Rotator rotator, RadioDevice radioDevice -->	
-	<bean id="antenna" class="org.hbird.exchange.groundstation.Antenna">
-		<constructor-arg index="0" value="CoreSystem" />
-		<constructor-arg index="1" value="Antenna 1" />
-		<constructor-arg index="2" ref="rotator" />
-		<constructor-arg index="3" ref="radio" />
-	</bean>
 
 	<!-- D3Vector geoLocation, Antenna antenna -->
 	<bean id="es5ec" class="org.hbird.exchange.groundstation.GroundStation">
 		<constructor-arg index="0" value="ES5EC" />
-		<constructor-arg index="1" ref="location" />
-		<property name="antenna" ref="antenna"/>
-		<property name="isPartOf" ref= "groundstations"/>
+		<constructor-arg index="1" value="ES5EC" />
+		<constructor-arg index="2" value="The ES5EC groundstation." />
+		<constructor-arg index="3" ref="location" />
 	</bean>
+
+	<bean id="antenna" class="org.hbird.exchange.groundstation.Antenna">
+		<constructor-arg index="0" value="ES5EC_Antenna_1" />
+		<constructor-arg index="1" value="Antenna" />
+		<constructor-arg index="2" value="Antenna of the ES5EC groundstation" />
+		<property name="isPartOf" ref= "es5ec"/>
+	</bean>
+	
+	<!-- String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation, long port, String host -->
+	<bean id="rotator" class="eu.estcube.gs.rotator.HamlibRotatorPart">
+		<constructor-arg index="0" value="ES5EC_Rotator"/>
+		<constructor-arg index="1" value="Rotator"/>
+		<constructor-arg index="2" value="0"/>
+		<constructor-arg index="3" value="0"/>				
+		<constructor-arg index="4" value="180"/>
+		<constructor-arg index="5" value="0"/>
+		<constructor-arg index="6" value="180"/>
+		<constructor-arg index="7" value="4533" />
+		<constructor-arg index="8" value="localhost" />
+		<property name="isPartOf" ref= "antenna"/>
+	</bean>
+
+	<!-- long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain -->
+	<bean id="radio" class="eu.estcube.gs.radio.HamlibRadioPart">
+		<constructor-arg index="0" value="ES5EC_Radio"/>
+		<constructor-arg index="1" value="Radio"/>
+		<constructor-arg index="2" value="0"/>
+		<constructor-arg index="3" value="1000000"/>				
+		<constructor-arg index="4" value="true"/>
+		<constructor-arg index="5" value="true"/>
+		<constructor-arg index="6" value="100"/>
+		<constructor-arg index="7" value="4532" />
+		<constructor-arg index="8" value="localhost" />
+		<property name="isPartOf" ref= "antenna"/>
+	</bean>
+
 			
 </beans>

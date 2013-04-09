@@ -33,6 +33,7 @@
 package org.hbird.exchange.core;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.Handler;
@@ -73,7 +74,19 @@ public class BusinessCard extends Issued {
         this.host = LocalHostNameResolver.getLocalHostName();
     }
 
-    public String getHost() {
+    /**
+	 * @param name
+	 * @param heartbeat
+	 * @param commands
+	 */
+	public BusinessCard(String name, long heartbeat, List<Command> commands) {
+		this(name, heartbeat);
+		for (Command command : commands) {
+			this.commandsIn.put(command.getName(), command);
+		}
+	}
+
+	public String getHost() {
         return host;
     }
 

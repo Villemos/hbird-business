@@ -13,23 +13,16 @@
 
 	<!-- Create the components and assign them to the Mission Operation Centre ('moc') part imported from 'core-parts.xml' -->
 	<bean id="websocket" class="org.hbird.business.websockets.WebsocketInterfaceComponent">
-		<constructor-arg value="Websocket Interface" />
 		<property name="isPartOf" ref="moc" />
 	</bean>
 	
-	<!-- Create the component that will create StartComponent requests for each part. Calling the
-	     initialization method 'start' will result in a StartComponent command to the configurator 
-	     being created for each part and send to ActiveMQ.	
-
-	     Notice that the 'configurator' is not part of this list; it is the component that will start 
-	     these components. -->
-	<bean id="starter" class="org.hbird.business.configurator.PartStarter" init-method="start">
+	<bean id="starter" class="org.hbird.business.metadatapublisher.NamedObjectPublisher" init-method="start">
 		<constructor-arg index="0" value="SystemCore"/>
 		<constructor-arg index="1">
 			<list>
 				<ref bean="websocket" />
 			</list>
 		</constructor-arg>
-	</bean>	
+	</bean>
 	
 </beans>

@@ -24,19 +24,18 @@
 	<bean id="satellites" class="org.hbird.exchange.core.Part">
 		<constructor-arg index="0" value="Satellites" />
 		<constructor-arg index="1" value="The satellite(s) of the mission" />
-		<constructor-arg index="2" ref="root" />
+		<property name="isPartOf" ref="root" />
 	</bean>
 
 	<bean id="groundstations" class="org.hbird.exchange.core.Part">
 		<constructor-arg index="0" value="Ground Stations" />
 		<constructor-arg index="1" value="The groundstation(s) of the mission" />
-		<constructor-arg index="2" ref="root" />
-	</bean>
+		<property name="isPartOf" ref="root" />	</bean>
 
 	<bean id="moc" class="org.hbird.exchange.core.Part">
 		<constructor-arg index="0" value="Mission Operation Center" />
 		<constructor-arg index="1" value="The groundsystem(s) of the mission" />
-		<constructor-arg index="2" ref="root" />
+		<property name="isPartOf" ref="root" />
 	</bean>
 
 </beans>

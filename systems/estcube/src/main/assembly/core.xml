@@ -20,27 +20,22 @@
 
 	<!-- Create the components and assign them to the Mission Operation Centre ('moc') part imported from 'core-parts.xml' -->
 	<bean id="monitoring" class="org.hbird.business.systemmonitoring.SystemMonitorComponent">
-		<constructor-arg value="SystemMonitoring" />
 		<property name="isPartOf" ref="moc" />
 	</bean>
 	
 	<bean id="archive" class="org.hbird.business.archive.ArchiveComponent">
-		<constructor-arg value="Archive" />
 		<property name="isPartOf" ref="moc" />
 	</bean>
 
 	<bean id="taskExecutor" class="org.hbird.business.taskexecutor.TaskExecutionComponent">
-		<constructor-arg value="Task Executor" />
 		<property name="isPartOf" ref="moc" />	
 	</bean>
 
 	<bean id="commanding" class="org.hbird.business.commanding.CommandingComponent">
-		<constructor-arg value="Command Releaser" />
 		<property name="isPartOf" ref="moc" />
 	</bean>
 
 	<bean id="navigation" class="org.hbird.business.navigation.NavigationComponent">
-		<constructor-arg value="Orbit Prediction" />
 		<property name="isPartOf" ref="moc" />
 	</bean>
 

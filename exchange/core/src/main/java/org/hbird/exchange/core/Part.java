@@ -41,10 +41,21 @@ public class Part extends Named implements IPart {
 
     protected IPart parent;
 
+    /**
+     * Constructor that will set the ID = name. Should only be used for Parts that are unique, i.e. the name
+     * can be used as the unique identifier.
+     * 
+     * @param name
+     * @param description
+     */
+    public Part(String name, String description) {
+        super(name, description);
+        this.ID = name;
+    }
+
     public Part(String ID, String name, String description) {
         super(name, description);
         this.ID = ID;
-
     }
 
     public Part(String ID, String name, String description, IPart isPartOf) {

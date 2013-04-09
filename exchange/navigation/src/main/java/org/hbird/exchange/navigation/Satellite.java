@@ -44,6 +44,10 @@ public class Satellite extends Part implements ISatelliteSpecific {
         super(ID, name, description);
     }
 
+    public Satellite(String ID, String description) {
+        super(ID, ID, description);
+    }
+
     public String getDesignator() {
         return designator;
     }

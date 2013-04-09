@@ -13,6 +13,7 @@
 	<import resource="satellite-strand-parts.xml" />
 	
 	<bean id="tracking" class="org.hbird.business.tracking.TrackingComponent">
+		<constructor-arg index="0" value="Tracking_Darmstadt_Strand" />
 		<constructor-arg index="0" value="Darmstadt -> Strand" />
 		<constructor-arg index="1" value="The component automating the track of Strand by Darmstadt." />
 		<constructor-arg index="2" ref="strand" />

@@ -42,7 +42,7 @@ import org.hbird.exchange.interfaces.IStartablePart;
  * @author Gert Villemos
  * 
  */
-public class StartablePart extends Part implements IStartablePart {
+public class StartablePart extends CommandablePart implements IStartablePart {
 
     /** Default heart beat interval in millis. */
     public static final long DEFAULT_HEARTBEAT = 5000L;
@@ -61,11 +61,11 @@ public class StartablePart extends Part implements IStartablePart {
     protected long heartbeat = DEFAULT_HEARTBEAT;
 
     protected BusinessCard card = null;
-
     {
-        card = new BusinessCard(name, heartbeat);
-        card.commandsIn.put("", new StartComponent("", null));
-        card.commandsIn.put("", new StopComponent("", ""));
+    	this.commands.add(new StartComponent("", null));
+    	this.commands.add(new StopComponent("", ""));
+
+    	card = new BusinessCard(name, heartbeat, commands);
     }
 
     /**

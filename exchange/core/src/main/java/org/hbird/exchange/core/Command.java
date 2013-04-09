@@ -80,6 +80,17 @@ public class Command extends CommandBase {
         this(issuedBy, destination, name, description, IScheduled.IMMEDIATE, IScheduled.IMMEDIATE);
     }
 
+    
+    /**
+     * Constructor for a command template, i.e. a command that has yet to get a destination and an issuedBy.
+     * 
+     * @param name
+     * @param description
+     */
+    public Command(String name, String description) {
+        this("", "", name, description, IScheduled.IMMEDIATE, IScheduled.IMMEDIATE);
+    }
+
     /**
      * Constructor to create a command with a custom set of arguments. The provided
      * set of arguments override the arguments defined by the {@link #getArgumentDefinitions()} method.
@@ -258,5 +269,15 @@ public class Command extends CommandBase {
         }
 
         return missingArguments;
+    }
+    
+    public void setArgumentList(List<CommandArgument> arguments) {
+    	for (CommandArgument argument : arguments) {
+    		this.arguments.put(argument.getName(), argument);
+    	}
+    }
+    
+    public List<CommandArgument> getArgumentList() {
+    	return new ArrayList<CommandArgument>(arguments.values());
     }
 }

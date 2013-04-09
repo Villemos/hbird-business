@@ -13,16 +13,17 @@
 	<import resource="satellite-estcube1-parts.xml" />
 	
 	<bean id="tracking" class="org.hbird.business.tracking.TrackingComponent">
-		<constructor-arg index="0" value="ES5EC -> ESTCUBE" />
-		<constructor-arg index="1" value="The component automating the track of ESTCube-1 by ES5EC." />
-		<constructor-arg index="2" ref="estcube" />
-		<constructor-arg index="3" ref="es5ec" />
+		<constructor-arg index="0" value="Tracking_ES5EC_ESTCUBE" />
+		<constructor-arg index="1" value="ES5EC -> ESTCUBE" />
+		<constructor-arg index="2" value="The component automating the track of ESTCube-1 by ES5EC." />
+		<constructor-arg index="3" ref="estcube" />
+		<constructor-arg index="4" ref="es5ec" />
 		<property name="isPartOf" ref="moc" />
 	</bean>
 	
 	<!-- String issuedBy, String name, String description, long executionDelay, long leadTime, String satellite, List<String> locations -->
-	<bean id="propagationtask" class="org.hbird.business.navigation.controller.OrbitPropagationController">
-		<constructor-arg index="0" value="SysteCore" />
+	<bean id="propagationtask" class="org.hbird.business.navigation.OrbitPropagationComponent">
+		<constructor-arg index="0" value="Propagator_ESTCube_Orbit" />
 		<constructor-arg index="1" value="ESTCube-1 Orbit Propagator" />
 		<constructor-arg index="2" value="Propagator of the orbit of ESTCube-1 and the generation of contact events to ES5EC" />
 		<constructor-arg index="3" value="60000" />
