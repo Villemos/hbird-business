@@ -4,7 +4,7 @@
   <parent>
     <artifactId>hummingbird</artifactId>
     <groupId>org.hbird</groupId>
-    <version>0.7.0-SNAPSHOT</version>
+    <version>0.7.1-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -31,11 +31,11 @@
     <module>business-archive</module>
     <module>business-configurator</module>
     <module>business-queuemanagement</module>
-    <module>business-tracking</module>    
+    <module>business-tracking</module>
     <module>business-websockets</module>
     <module>business-groundstation</module>
     <module>business-celestrack</module>
-    
+
     <module>simple-parameter-simulator</module>
 
     <module>all-business</module>

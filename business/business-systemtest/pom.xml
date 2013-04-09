@@ -1,69 +1,69 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>hummingbird-business</artifactId>
-		<groupId>org.hbird.business</groupId>
-		<version>0.7.0-SNAPSHOT</version>
-		<relativePath>..</relativePath>
-	</parent>
-	<artifactId>business-systemtest</artifactId>
-	<name>Business - System Tests</name>
-	<description>This project contains all test cases that can only be run within a working system setup; ActiveMQ and SOLR must be available.</description>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>hummingbird-business</artifactId>
+        <groupId>org.hbird.business</groupId>
+        <version>0.7.1-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+    <artifactId>business-systemtest</artifactId>
+    <name>Business - System Tests</name>
+    <description>This project contains all test cases that can only be run within a working system setup; ActiveMQ and SOLR must be available.</description>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>all-business</artifactId>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>all-business</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-configurator</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-configurator</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>all-exchange</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>all-exchange</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-camel</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-camel</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 </project>

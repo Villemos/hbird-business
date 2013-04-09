@@ -3,17 +3,17 @@
   <parent>
     <artifactId>hummingbird-exchange</artifactId>
     <groupId>org.hbird.exchange</groupId>
-    <version>0.7.0-SNAPSHOT</version>
+    <version>0.7.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>queuemanagement</artifactId>
-  
+
     <dependencies>
-  	<dependency>
-  		<groupId>org.hbird.exchange</groupId>
-  		<artifactId>core</artifactId>
- 	 </dependency>
-  </dependencies>  
-  
+      <dependency>
+          <groupId>org.hbird.exchange</groupId>
+          <artifactId>core</artifactId>
+      </dependency>
+  </dependencies>
+
     <name>Exchange - Command Queue Management Service</name>
 </project>

@@ -1,23 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>hummingbird</artifactId>
-		<groupId>org.hbird</groupId>
-		<version>0.7.0-SNAPSHOT</version>
-		<relativePath>..</relativePath>
-	</parent>
-	<artifactId>systems</artifactId>
-	<packaging>pom</packaging>
-	<name>Hummingbird System Tier</name>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>hummingbird</artifactId>
+        <groupId>org.hbird</groupId>
+        <version>0.7.1-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+    <artifactId>systems</artifactId>
+    <packaging>pom</packaging>
+    <name>Hummingbird System Tier</name>
 
 
-	<modules>
-		<module>estcube</module>
-		<module>thunderbird</module>
-	</modules>
+    <modules>
+        <module>estcube</module>
+        <module>thunderbird</module>
+    </modules>
 
-	<url>http://hbird.de</url>
-	<description>Group of all public systems based on Hummingbird. Notice that additional systems may be available in separate repositories.</description>
+    <url>http://hbird.de</url>
+    <description>Group of all public systems based on Hummingbird. Notice that additional systems may be available in separate repositories.</description>
 
 </project>

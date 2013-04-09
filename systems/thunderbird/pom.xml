@@ -3,49 +3,49 @@
   <parent>
     <artifactId>systems</artifactId>
     <groupId>org.hbird</groupId>
-    <version>0.7.0-SNAPSHOT</version>
+    <version>0.7.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>thunderbird</artifactId>
-  
+
   <dependencies>
-  
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>all-business</artifactId>
-		</dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>simple-parameter-simulator</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>all-business</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>all-exchange</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>simple-parameter-simulator</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-configurator</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>all-exchange</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-camel</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-configurator</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-websocket</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-camel</artifactId>
+        </dependency>
 
-		<dependency>
-		  <groupId>org.apache.camel</groupId>
-		  <artifactId>camel-jackson</artifactId>
-		</dependency>
-  
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-websocket</artifactId>
+        </dependency>
+
+        <dependency>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-jackson</artifactId>
+        </dependency>
+
   </dependencies>
-  
+
   <name>System - Thunderbird</name>
 </project>

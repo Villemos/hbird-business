@@ -1,74 +1,74 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>all-exchange</artifactId>
-	<name>Exchange - All Exchange</name>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>all-exchange</artifactId>
+    <name>Exchange - All Exchange</name>
 
-	<parent>
-		<artifactId>hummingbird-exchange</artifactId>
-		<groupId>org.hbird.exchange</groupId>
-		<version>0.7.0-SNAPSHOT</version>
-		<relativePath>..</relativePath>
-	</parent>
+    <parent>
+        <artifactId>hummingbird-exchange</artifactId>
+        <groupId>org.hbird.exchange</groupId>
+        <version>0.7.1-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
 
-	<dependencies>
+    <dependencies>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>commandrelease</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>commandrelease</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>queuemanagement</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>queuemanagement</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>configurator</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>configurator</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>movementcontrol</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>movementcontrol</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>navigation</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>navigation</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>groundstation</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>groundstation</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>commandrelease</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>commandrelease</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>validation</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>validation</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>scripting</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>scripting</artifactId>
+        </dependency>
 
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>tasking</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>tasking</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>dataaccess</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>dataaccess</artifactId>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 </project>

@@ -4,15 +4,15 @@
   <parent>
     <artifactId>hummingbird-business</artifactId>
     <groupId>org.hbird.business</groupId>
-    <version>0.7.0-SNAPSHOT</version>
+    <version>0.7.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>business-systemmonitoring</artifactId>
   <name>Business - System Monitoring</name>
   <description>Module containing beans for generating system monitoring parameters such as memory usage and thread usage.</description>
-    
+
   <dependencies>
-	
+
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test</artifactId>
@@ -47,5 +47,5 @@
     </dependency>
 
   </dependencies>
-  
+
 </project>

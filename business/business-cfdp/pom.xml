@@ -7,17 +7,17 @@
   <parent>
     <artifactId>hummingbird-business</artifactId>
     <groupId>org.hbird.business</groupId>
-    <version>0.7.0-SNAPSHOT</version>
+    <version>0.7.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
-  
+
   <dependencies>
-  
+
   	<dependency>
       <groupId>org.hbird.exchange</groupId>
       <artifactId>cfdp</artifactId>
     </dependency>
-    
+
   	<dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
@@ -40,13 +40,13 @@
     <artifactId>spring-test</artifactId>
     <scope>test</scope>
   </dependency>
-    
+
     <dependency>
     <groupId>org.apache.camel</groupId>
     <artifactId>camel-mina</artifactId>
     <version>2.8.3</version>
 </dependency>
-    
+
   </dependencies>
 
 </project>

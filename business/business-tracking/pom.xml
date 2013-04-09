@@ -1,46 +1,46 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>hummingbird-business</artifactId>
-		<groupId>org.hbird.business</groupId>
-		<version>0.7.0-SNAPSHOT</version>
-		<relativePath>..</relativePath>
-	</parent>
-	<artifactId>business-tracking</artifactId>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>hummingbird-business</artifactId>
+        <groupId>org.hbird.business</groupId>
+        <version>0.7.1-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+    <artifactId>business-tracking</artifactId>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>dataaccess</artifactId>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>dataaccess</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-navigation</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-navigation</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-core</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-core</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>core</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.exchange</groupId>
-			<artifactId>queuemanagement</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>queuemanagement</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-core</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-core</artifactId>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
-	<name>Business - Antenna Control</name>
+    <name>Business - Antenna Control</name>
 </project>

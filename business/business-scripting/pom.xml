@@ -3,9 +3,9 @@
   <parent>
     <artifactId>hummingbird-business</artifactId>
     <groupId>org.hbird.business</groupId>
-    <version>0.7.0-SNAPSHOT</version>
+    <version>0.7.1-SNAPSHOT</version>
   </parent>
-	  
+
   <modelVersion>4.0.0</modelVersion>
   <artifactId>business-scripting</artifactId>
   <name>Business - Scripting Module</name>
@@ -14,7 +14,7 @@
   <url>https://github.com/JohannesKlug/hummingbird/wiki</url>
 
   <dependencies>
-  
+
     <dependency>
       <groupId>org.hbird.business</groupId>
       <artifactId>business-core</artifactId>
@@ -30,7 +30,7 @@
       <artifactId>camel-test</artifactId>
       <scope>test</scope>
     </dependency>
-		
+
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
@@ -47,12 +47,12 @@
       <artifactId>commons-io</artifactId>
       <version>2.4</version>
     </dependency>
-		
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <scope>test</scope>
     </dependency>
-    
+
   </dependencies>
 </project>
