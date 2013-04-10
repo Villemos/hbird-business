@@ -26,8 +26,8 @@
 		<constructor-arg index="0" value="Propagator_ESTCube_Orbit" />
 		<constructor-arg index="1" value="ESTCube-1 Orbit Propagator" />
 		<constructor-arg index="2" value="Propagator of the orbit of ESTCube-1 and the generation of contact events to ES5EC" />
-		<constructor-arg index="3" value="60000" />
-		<constructor-arg index="4" value="3600000" />
+		<constructor-arg index="3" value="3600000" />
+		<constructor-arg index="4" value="43200000" />
 		<constructor-arg index="5" ref="estcube" />
 		<constructor-arg index="6">
 			<list>
