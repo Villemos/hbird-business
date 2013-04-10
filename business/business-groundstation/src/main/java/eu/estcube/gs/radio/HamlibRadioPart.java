@@ -58,7 +58,7 @@ public class HamlibRadioPart extends RadioDevice {
      * @param gain
      */
     public HamlibRadioPart(String ID, String name, long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain, long port, String host) {
-        super(ID, name, minFrequency, maxFrequency, isUplink, isDownlink, gain, HamlibDriver.class.getName());
+        super(ID, name, minFrequency, maxFrequency, isUplink, isDownlink, gain, HamlibRadioDriver.class.getName());
         this.port = port;
         this.host = host;
     }

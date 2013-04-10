@@ -137,6 +137,10 @@ public class InMemoryScheduler implements Runnable {
             inject.sendBody(injectUrl, entry);
         }
     }
+    
+    public void setInjectUrl(String url) {
+    	this.injectUrl = url;
+    }
 
     public String getInjectUrl() {
         return injectUrl;
