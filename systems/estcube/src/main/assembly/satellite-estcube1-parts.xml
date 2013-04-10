@@ -11,317 +11,6 @@
 
 	<import resource="core-parts.xml" />
 
-	<!-- The COMMANDS -->
-	<bean id="timestamp" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="timestamp"/>
-		<constructor-arg index="1" value="Time when ping was sent."/>			
-		<property name="intValue" value="0" />
-	</bean>
-	
-	<bean id="ping" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="ping"/>
-		<constructor-arg index="1" value="A command to verify ICP connections and determine the latency."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="timestamp"/>
-			</list>
-		</property>	
-	</bean>
-
-
-	<bean id="address" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="address"/>
-		<constructor-arg index="1" value="Address, from where to start reading."/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="length" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="length"/>
-		<constructor-arg index="1" value="Length of the block to be read."/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="type" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="type"/>
-		<constructor-arg index="1" value="Device type, one of the following:
-					0 - Internal RAM
-					1 - Internal Flash
-					2 - External Flash
-					3 - External FRAM
-					4 - External SPI FRAM
-					5 - External I2C FRAM"/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="device" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="device"/>
-		<constructor-arg index="1" value="Device or flash bank index."/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="getrawmem" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="getrawmem"/>
-		<constructor-arg index="1" value=">Gets a copy of raw memory data."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="address"/>
-				<ref bean="length"/>
-				<ref bean="type"/>				
-				<ref bean="device"/>
-			</list>
-		</property>	
-	</bean>
-
-	<bean id="data" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="data"/>
-		<constructor-arg index="1" value="Data to be written."/>			
-		<property name="stringValue" value="" />
-	</bean>
-
-	<bean id="setrawmem" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="setrawmem"/>
-		<constructor-arg index="1" value=">Sets raw memory data."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="address"/>
-				<ref bean="length"/>
-				<ref bean="type"/>				
-				<ref bean="device"/>
-				<ref bean="data"/>
-			</list>
-		</property>	
-	</bean>
-
-	<bean id="fs_type" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="fs_type"/>
-		<constructor-arg index="1" value="Filesystem type, one of the following:
-					0 - External FRAM
-					1 - External Flash"/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="fs_id" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="fs_id"/>
-		<constructor-arg index="1" value="Filesystem index"/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="fname" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="fname"/>
-		<constructor-arg index="1" value="Filename."/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="readfile" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="readfile"/>
-		<constructor-arg index="1" value="Reads from a file."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="fs_type"/>
-				<ref bean="fs_id"/>
-				<ref bean="fname"/>
-				<ref bean="address"/>
-				<ref bean="length"/>
-			</list>
-		</property>	
-	</bean>
-
-	<bean id="flags" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="flags"/>
-		<constructor-arg index="1" value="Flags, one of the following:
-					0 - Write at specific address
-					1 - Append at the end of file"/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="writefile" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="writefile"/>
-		<constructor-arg index="1" value="Writes to a file."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="fs_type"/>
-				<ref bean="fs_id"/>
-				<ref bean="fname"/>
-				<ref bean="flags"/>
-				<ref bean="address"/>
-				<ref bean="length"/>
-				<ref bean="data"/>
-			</list>
-		</property>	
-	</bean>
-
-	<bean id="fileinfo" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="fileinfo"/>
-		<constructor-arg index="1" value="Info on a file."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="fs_type"/>
-				<ref bean="fs_id"/>
-				<ref bean="fname"/>
-			</list>
-		</property>	
-	</bean>
-
-	<bean id="getbeacon" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="getbeacon"/>
-		<constructor-arg index="1" value="Gets Beacon data."/>		
-	</bean>
-
-	<bean id="gettime" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="gettime"/>
-		<constructor-arg index="1" value="Gets satellite time."/>		
-	</bean>
-
-	<bean id="geterrors" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="geterrors"/>
-		<constructor-arg index="1" value="Gets a list of last errors."/>		
-	</bean>
-
-	<bean id="getheap" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="getheap"/>
-		<constructor-arg index="1" value="Gets the amount of free heap."/>		
-	</bean>
-
-	<bean id="getfreq" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="getfreq"/>
-		<constructor-arg index="1" value="Gets peripheral frequencies."/>		
-	</bean>
-
-	<bean id="gettemps" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="gettemps"/>
-		<constructor-arg index="1" value="Gets temperatures."/>		
-	</bean>
-
-	<bean id="mode" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="mode"/>
-		<constructor-arg index="1" value="Execution mode."/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="setxmode" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="setxmode"/>
-		<constructor-arg index="1" value="Sets command execution mode."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="mode"/>
-			</list>
-		</property>	
-	</bean>
-
-	<bean id="getxmode" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="gettemps"/>
-		<constructor-arg index="1" value="Gets command execution mode."/>		
-	</bean>
-
-	<bean id="speed" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="speed"/>
-		<constructor-arg index="1" value="Reeling direction and speed."/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="setreel" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="setxmode"/>
-		<constructor-arg index="1" value="Sets reeling configuration."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="speed"/>
-			</list>
-		</property>	
-	</bean>
-
-	<bean id="himode" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="mode"/>
-		<constructor-arg index="1" value="Hi-Voltage mode."/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="sethv" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="setxmode"/>
-		<constructor-arg index="1" value="Sets Hi-Voltage configuration."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="himode"/>
-			</list>
-		</property>	
-	</bean>
-
-	<bean id="sel" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="mode"/>
-		<constructor-arg index="1" value="E-gun selection."/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="setgun" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="setxmode"/>
-		<constructor-arg index="1" value="Sets E-gun selection."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="sel"/>
-			</list>
-		</property>	
-	</bean>
-
-	<bean id="plstate" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="plstate"/>
-		<constructor-arg index="1" value="Gets current PL state."/>		
-	</bean>
-
-	<bean id="time" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="time"/>
-		<constructor-arg index="1" value=">Time to reel for (in ticks)."/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="reel" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="reel"/>
-		<constructor-arg index="1" value="Reels the tether for a given amount of ticks."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="time"/>
-			</list>
-		</property>	
-	</bean>
-
-	<bean id="reellength" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="reellength"/>
-		<constructor-arg index="1" value="Length to reel."/>			
-		<property name="intValue" value="0" />
-	</bean>
-
-	<bean id="reellen" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="reel"/>
-		<constructor-arg index="1" value="Reels the tether by a given length."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="reellength"/>
-			</list>
-		</property>	
-	</bean>
-
-	<bean id="gettm1" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="gettm1"/>
-		<constructor-arg index="1" value="Gets telemetry packet 1."/>		
-	</bean>
-
-	<bean id="command" class="org.hbird.exchange.core.CommandArgument">
-		<constructor-arg index="0" value="command"/>
-		<constructor-arg index="1" value=">EPS command."/>			
-		<property name="stringValue" value="" />
-	</bean>
-
-	<bean id="sendeps" class="org.hbird.exchange.core.Command">
-		<constructor-arg index="0" value="sendeps"/>
-		<constructor-arg index="1" value="Sends EPS a command through CDHS."/>		
-		<property name="argumentList">
-			<list>
-				<ref bean="command"/>
-			</list>
-		</property>	
-	</bean>
-
-
-
-
 	<bean id="estcube" class="org.hbird.exchange.navigation.Satellite">
 		<constructor-arg index="0" value="ESTCube-1" />
 		<constructor-arg index="1" value="The mission objectives of the ESTCube-1 mission are: 1. To test the deployment of a 10 meter Hoytether as a part of the development work of the Electric solar wind sail. http://www.electric-sailing.com/, 2. To measure the electric sail force, interacting with the tether, 3. To take a picture of the deployed tether, 4. To take a picture of the Earth as a secondary mission objective." />
@@ -332,42 +21,12 @@
 		<constructor-arg index="0" value="CDHS" />
 		<constructor-arg index="1" value="Command and Data Handling System (On board flight computer)" />
 		<property name="isPartOf" ref="estcube"/>
-		<property name="commands">
-			<list>
-				<ref bean="ping"/>
-				<ref bean="getrawmem"/>
-				<ref bean="setrawmem"/>
-				<ref bean="readfile"/>
-				<ref bean="writefile"/>
-				<ref bean="fileinfo"/>
-				<ref bean="getbeacon"/>
-				<ref bean="gettime"/>
-				<ref bean="geterrors"/>
-				<ref bean="getheap"/>
-				<ref bean="getfreq"/>
-				<ref bean="gettemps"/>
-				<ref bean="getxmode"/>
-				<ref bean="setxmode"/>
-				<ref bean="setreel"/>
-				<ref bean="sethv"/>
-				<ref bean="setgun"/>
-				<ref bean="plstate"/>
-				<ref bean="reel"/>
-				<ref bean="reellen"/>
-				<ref bean="gettm1"/>
-				<ref bean="sendeps"/>
-			</list>
-		</property>
 	</bean>
 
 	<bean id="pl" class="org.hbird.business.core.CommandablePart">
 		<constructor-arg index="0" value="PL" />
 		<constructor-arg index="1" value="Payload (electrical solar sail)" />
 		<property name="isPartOf" ref="estcube"/>
-		<property name="commands">
-			<list>
-			</list>
-		</property>
 	</bean>
 
 	<bean id="adcs" class="org.hbird.business.core.CommandablePart">
@@ -386,29 +45,12 @@
 		<constructor-arg index="0" value="EPS" />
 		<constructor-arg index="1" value="Electrical Power System" />
 		<property name="isPartOf" ref="estcube"/>
-		<property name="commands">
-			<list>
-				<ref bean="ping"/>
-			</list>
-		</property>
 	</bean>
 
 	<bean id="cam" class="org.hbird.business.core.CommandablePart">
 		<constructor-arg index="0" value="CAM" />
 		<constructor-arg index="1" value="Onboard Camera" />
 		<property name="isPartOf" ref="estcube"/>
-		<property name="commands">
-			<list>
-				<ref bean="ping"/>
-				<ref bean="getrawmem"/>
-				<ref bean="setrawmem"/>
-				<ref bean="gettime"/>
-				<ref bean="geterrors"/>
-				<ref bean="getheap"/>
-				<ref bean="getfreq"/>
-				<ref bean="gettemps"/>
-			</list>
-		</property>
 	</bean>
 
 	<bean id="ths" class="org.hbird.business.core.CommandablePart">
@@ -421,74 +63,21 @@
 		<constructor-arg index="0" value="COM" />
 		<constructor-arg index="1" value="The communication system" />
 		<property name="isPartOf" ref="estcube"/>
-		<property name="commands">
-			<list>
-				<ref bean="ping"/>
-			</list>
-		</property>
 	</bean>
 
-	<!-- String issuedBy, String name, Satellite satellite, String tleLine1, String tleLine2 -->
-	<bean id="tle" class="org.hbird.exchange.navigation.TleOrbitalParameters">
-		<constructor-arg index="0" value="CoreSystem"/>
-		<constructor-arg index="1" value="Tle Parameters of ESTCube-1"/>			
-		<constructor-arg index="2" ref="estcube"/>
-		<constructor-arg index="3" value="1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478"/>
-		<constructor-arg index="4" value="2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935"/>		
+	<bean id="parser" class="org.hbird.estcube.mibreader.Parser" init-method="parse">
+		<property name="parts">
+        	<list>
+ 		       	<ref bean="cdhs"/>
+ 		       	<ref bean="pl"/>
+ 		       	<ref bean="sys"/>
+ 		       	<ref bean="adcs"/>        	
+ 		       	<ref bean="eps"/>
+            	<ref bean="cam" />
+            	<ref bean="ths" />
+            	<ref bean="com"/>
+         	</list>
+	    </property>
 	</bean>
 
-	
-<!-- 	<bean id="" class="org.hbird.exchange.core.Command"> -->
-<!-- 		<constructor-arg index="0" value=""/> -->
-<!-- 		<constructor-arg index="1" value=""/>			 -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="" class="org.hbird.exchange.core.Command"> -->
-<!-- 		<constructor-arg index="0" value=""/> -->
-<!-- 		<constructor-arg index="1" value=""/>			 -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="" class="org.hbird.exchange.core.Command"> -->
-<!-- 		<constructor-arg index="0" value=""/> -->
-<!-- 		<constructor-arg index="1" value=""/>			 -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="" class="org.hbird.exchange.core.Command"> -->
-<!-- 		<constructor-arg index="0" value=""/> -->
-<!-- 		<constructor-arg index="1" value=""/>			 -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="" class="org.hbird.exchange.core.Command"> -->
-<!-- 		<constructor-arg index="0" value=""/> -->
-<!-- 		<constructor-arg index="1" value=""/>			 -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="" class="org.hbird.exchange.core.Command"> -->
-<!-- 		<constructor-arg index="0" value=""/> -->
-<!-- 		<constructor-arg index="1" value=""/>			 -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="" class="org.hbird.exchange.core.Command"> -->
-<!-- 		<constructor-arg index="0" value=""/> -->
-<!-- 		<constructor-arg index="1" value=""/>			 -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="" class="org.hbird.exchange.core.Command"> -->
-<!-- 		<constructor-arg index="0" value=""/> -->
-<!-- 		<constructor-arg index="1" value=""/>			 -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="" class="org.hbird.exchange.core.Command"> -->
-<!-- 		<constructor-arg index="0" value=""/> -->
-<!-- 		<constructor-arg index="1" value=""/>			 -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="" class="org.hbird.exchange.core.Command"> -->
-<!-- 		<constructor-arg index="0" value=""/> -->
-<!-- 		<constructor-arg index="1" value=""/>			 -->
-<!-- 	</bean> -->
-
-	
-	
-	
 </beans>

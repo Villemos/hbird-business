@@ -34,6 +34,16 @@
 		<constructor-arg index="5" value="Seconds"/>
 		<constructor-arg index="6" value="Battery Capacity=capacity:Charging Efficiency=lostCharge:Battery Charge Rate Current=chargerOutput"/>	
 	</bean>
+
+		<!-- String issuedBy, String name, Satellite satellite, String tleLine1, String tleLine2 -->
+	<bean id="tle" class="org.hbird.exchange.navigation.TleOrbitalParameters">
+		<constructor-arg index="0" value="CoreSystem"/>
+		<constructor-arg index="1" value="Tle Parameters of ESTCube-1"/>			
+		<constructor-arg index="2" ref="estcube"/>
+		<constructor-arg index="3" value="1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478"/>
+		<constructor-arg index="4" value="2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935"/>		
+	</bean>
+
 		
 	<bean id="starter" class="org.hbird.business.metadatapublisher.NamedObjectPublisher" init-method="start">
 		<constructor-arg index="0" value="SystemCore"/>
@@ -46,5 +56,5 @@
          	</list>
 	    </constructor-arg>
 	</bean>
-
+	
 </beans>

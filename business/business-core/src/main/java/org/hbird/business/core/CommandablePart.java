@@ -80,4 +80,8 @@ public class CommandablePart extends Part implements ICommandablePart {
 	public List<Command> getCommands() {
 		return commands;
 	}
+	
+	public void addCommand(Command command) {
+		this.commands.add(command);
+	}
 }

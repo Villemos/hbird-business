@@ -280,4 +280,8 @@ public class Command extends CommandBase {
     public List<CommandArgument> getArgumentList() {
     	return new ArrayList<CommandArgument>(arguments.values());
     }
+    
+    public void addArgument(CommandArgument argument) {
+    	this.arguments.put(argument.getName(), argument);
+    }
 }
