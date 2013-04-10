@@ -79,6 +79,7 @@
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
+                <to uri="bean:event" />
  				<to uri="bean:businesscard" /> 
 				<to uri="bean:parameterarchive" />
 				<to uri="bean:statearchive" />
@@ -93,7 +94,6 @@
 	 			<to uri="bean:automaticorbitpropagation" />
 				<to uri="bean:inmemoryscheduler" />
 	 			<to uri="bean:celestrack" />
-                <to uri="bean:event" />
 	 			<to uri="bean:finisher" />
 
 

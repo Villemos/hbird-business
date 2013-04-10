@@ -51,9 +51,19 @@ public class CelestrackTester extends SystemTest {
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
 
+        startMonitoringArchive();
+        
+        azzert(accessApi.retrieveTleFor("DTUSAT") == null, "No TLE for DTUSAT");
+        azzert(accessApi.retrieveTleFor("CUTE-1 (CO-55)") == null, "No TLE for CUTE-1");
+        azzert(accessApi.retrieveTleFor("QUAKESAT") == null, "No TLE for QUAKESAT");
+        
         publishApi.publish(new StartComponent("Celestrack", new CelestrackComponent()));
         
-        Thread.sleep(500000);
+        Thread.sleep(10000);
+        
+        azzert(accessApi.retrieveTleFor("DTUSAT") != null, "Have TLE for DTUSAT");
+        azzert(accessApi.retrieveTleFor("CUTE-1 (CO-55)") != null, "Have TLE for CUTE-1");
+        azzert(accessApi.retrieveTleFor("QUAKESAT") != null, "Have TLE for QUAKESAT");
         
 		LOG.info("Finished");
     }	

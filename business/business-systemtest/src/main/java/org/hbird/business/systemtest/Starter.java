@@ -4,6 +4,9 @@ import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IQueueManagement;
+import org.hbird.exchange.constants.StandardComponents;
+import org.hbird.exchange.dataaccess.CommitRequest;
+import org.hbird.exchange.dataaccess.DeletionRequest;
 
 public class Starter extends SystemTest {
 
@@ -17,7 +20,6 @@ public class Starter extends SystemTest {
 	
 		LOG.info("Purging all activemq topics and queues.");
 		
-		/** Check that the antenna schedule has been filled. */
 		IQueueManagement api = ApiFactory.getQueueManagementApi("SystemTest");
 
 		for (String queueName : api.listQueues()) {
