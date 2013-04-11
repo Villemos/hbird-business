@@ -220,33 +220,33 @@ public class DataAccessApiTester extends SystemTest {
         /** STEPPING */
 
         /** Test the API for single parameter, no state. */
-        parameters = api.retrieveParameter(estcube1.getID() + "/PARA1", 2, 13);
+        parameters = api.getParameter(estcube1.getID() + "/PARA1", 2, 13);
         azzert(parameters.size() == 6, "Expect 6 parameter samples");
 
-        parameters = api.retrieveParameter(estcube1.getID() + "/PARA1", 2, 13, 4);
+        parameters = api.getParameter(estcube1.getID() + "/PARA1", 2, 13, 4);
         azzert(parameters.size() == 4, "Expect 4 parameter samples");
 
         /** Test the API for single parameter, including state. */
-        parameterAndStates = api.retrieveParameterAndStates(estcube1.getID() + "/PARA1", 3, 15);
+        parameterAndStates = api.getParameterAndStates(estcube1.getID() + "/PARA1", 3, 15);
         azzert(parameterAndStates.size() == 6, "Expect to receive 6 values. Received " + parameterAndStates.size());
 
         // NOTE: This will retrieve 3 ENTRIES. This will be: PARA1, STATE, STATE. The result mapped on parameters will
         // thus be 1, and not 3.
-        parameterAndStates = api.retrieveParameterAndStates(estcube1.getID() + "/PARA1", 3, 15, 3);
+        parameterAndStates = api.getParameterAndStates(estcube1.getID() + "/PARA1", 3, 15, 3);
         azzert(parameterAndStates.size() == 1, "Expect to receive 1 values. Received " + parameterAndStates.size());
 
         /** Test the API for multiple parameter, no state */
-        parameters = api.retrieveParameters(names, 3, 15);
+        parameters = api.getParameters(names, 3, 15);
         azzert(parameters.size() == 10, "Expect to receive 10 values. Received " + parameters.size());
 
-        parameters = api.retrieveParameters(names, 3, 15, 3);
+        parameters = api.getParameters(names, 3, 15, 3);
         azzert(parameters.size() == 3, "Expect to receive 3 values. Received " + parameters.size());
 
         /** Test the API for multiple parameters, including state */
-        parameterAndStates = api.retrieveParametersAndStates(names, 3, 15);
+        parameterAndStates = api.getParametersAndStates(names, 3, 15);
         azzert(parameterAndStates.size() == 10, "Expect to receive 10 values. Received " + parameterAndStates.size());
 
-        parameterAndStates = api.retrieveParametersAndStates(names, 3, 15, 5);
+        parameterAndStates = api.getParametersAndStates(names, 3, 15, 5);
         azzert(parameterAndStates.size() == 2, "Expect to receive 2 values. Received " + parameterAndStates.size());
 
         LOG.info("Finished");

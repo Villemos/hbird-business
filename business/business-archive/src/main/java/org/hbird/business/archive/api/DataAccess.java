@@ -56,7 +56,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     @Override
-    public List<Named> retrieveData(DataRequest request) {
+    public List<Named> getData(DataRequest request) {
         return template.requestBody(inject, request, List.class);
     }
 
@@ -187,49 +187,49 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     /** STEPPING */
 
     @Override
-    public List<Parameter> retrieveParameter(String name, long from, long to) {
+    public List<Parameter> getParameter(String name, long from, long to) {
         ParameterRequest request = new ParameterRequest(issuedBy, name, from, to);
         return getParameterWithoutState(request);
     }
 
     @Override
-    public List<Parameter> retrieveParameter(String name, long from, long to, int rows) {
+    public List<Parameter> getParameter(String name, long from, long to, int rows) {
         ParameterRequest request = new ParameterRequest(issuedBy, name, from, to, rows);
         return getParameterWithoutState(request);
     }
 
     @Override
-    public List<Parameter> retrieveParameters(List<String> names, long from, long to) {
+    public List<Parameter> getParameters(List<String> names, long from, long to) {
         ParameterRequest request = new ParameterRequest(issuedBy, names, from, to);
         return getParameterWithoutState(request);
     }
 
     @Override
-    public List<Parameter> retrieveParameters(List<String> names, long from, long to, int rows) {
+    public List<Parameter> getParameters(List<String> names, long from, long to, int rows) {
         ParameterRequest request = new ParameterRequest(issuedBy, names, from, to, rows);
         return getParameterWithoutState(request);
     }
 
     @Override
-    public Map<Parameter, List<State>> retrieveParameterAndStates(String name, long from, long to) {
+    public Map<Parameter, List<State>> getParameterAndStates(String name, long from, long to) {
         ParameterRequest request = new ParameterRequest(issuedBy, name, from, to);
         return getParameterWithState(request);
     }
 
     @Override
-    public Map<Parameter, List<State>> retrieveParameterAndStates(String name, long from, long to, int rows) {
+    public Map<Parameter, List<State>> getParameterAndStates(String name, long from, long to, int rows) {
         ParameterRequest request = new ParameterRequest(issuedBy, name, from, to, rows);
         return getParameterWithState(request);
     }
 
     @Override
-    public Map<Parameter, List<State>> retrieveParametersAndStates(List<String> names, long from, long to) {
+    public Map<Parameter, List<State>> getParametersAndStates(List<String> names, long from, long to) {
         ParameterRequest request = new ParameterRequest(issuedBy, names, from, to);
         return getParameterWithState(request);
     }
 
     @Override
-    public Map<Parameter, List<State>> retrieveParametersAndStates(List<String> names, long from, long to, int rows) {
+    public Map<Parameter, List<State>> getParametersAndStates(List<String> names, long from, long to, int rows) {
         ParameterRequest request = new ParameterRequest(issuedBy, names, from, to, rows);
         return getParameterWithState(request);
     }
@@ -239,7 +239,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     
     
     @Override
-    public List<State> retrieveState(String isStateOf) {
+    public List<State> getState(String isStateOf) {
         StateRequest request = new StateRequest(issuedBy, isStateOf);
         request.setIsInitialization(true);
         request.setRows(1);
@@ -247,32 +247,32 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     @Override
-    public List<State> retrieveState(String isStateOf, long from, long to) {
+    public List<State> getState(String isStateOf, long from, long to) {
         StateRequest request = new StateRequest(issuedBy, isStateOf, from, to);
         return stateFilter.getObjects(template.requestBody(inject, request, List.class));
     }
 
     @Override
-    public List<State> retrieveStates(List<String> states) {
+    public List<State> getStates(List<String> states) {
         StateRequest request = new StateRequest(issuedBy, null, states);
         return stateFilter.getObjects(template.requestBody(inject, request, List.class));
     }
 
     @Override
-    public List<OrbitalState> retrieveOrbitalStatesFor(String satellite, long from, long to) {
+    public List<OrbitalState> getOrbitalStatesFor(String satellite, long from, long to) {
         OrbitalStateRequest request = new OrbitalStateRequest(issuedBy, satellite, from, to);
         return orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));
     }
 
     @Override
-    public List<OrbitalState> retrieveOrbitalStatesFor(String satellite, long from, long to, String issuedBy, String derivedFromName, long derivedFromTimestamp) {
+    public List<OrbitalState> getOrbitalStatesFor(String satellite, long from, long to, String issuedBy, String derivedFromName, long derivedFromTimestamp) {
         OrbitalStateRequest request = new OrbitalStateRequest(issuedBy, satellite, from, to);
         request.setDerivedFrom(issuedBy, derivedFromName, derivedFromTimestamp);
         return orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));
     }
 
     @Override
-    public OrbitalState retrieveOrbitalStateFor(String satellite, String derivedIssuedBy, String derivedFromName, long derivedFromTimestamp) {
+    public OrbitalState getOrbitalStateFor(String satellite, String derivedIssuedBy, String derivedFromName, long derivedFromTimestamp) {
         OrbitalStateRequest request = new OrbitalStateRequest(issuedBy, satellite);
         request.setIsInitialization(true);
         request.setDerivedFrom(derivedIssuedBy, derivedFromName, derivedFromTimestamp);
@@ -281,20 +281,20 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     @Override
-    public OrbitalState retrieveOrbitalStateFor(String satellite) {
-        TleOrbitalParameters parameter = retrieveTleFor(satellite);
+    public OrbitalState getOrbitalStateFor(String satellite) {
+        TleOrbitalParameters parameter = getTleFor(satellite);
 
-        return parameter == null ? null : retrieveOrbitalStateFor(satellite, parameter.getIssuedBy(), parameter.getName(), parameter.getTimestamp());
+        return parameter == null ? null : getOrbitalStateFor(satellite, parameter.getIssuedBy(), parameter.getName(), parameter.getTimestamp());
     }
 
     @Override
-    public List<TleOrbitalParameters> retrieveTleFor(String satellite, long from, long to) {
+    public List<TleOrbitalParameters> getTleFor(String satellite, long from, long to) {
         TleRequest request = new TleRequest(issuedBy, satellite, from, to);
         return tleOrbitalParameterFilter.getObjects(template.requestBody(inject, request, List.class));
     }
 
     @Override
-    public TleOrbitalParameters retrieveTleFor(String satellite) {
+    public TleOrbitalParameters getTleFor(String satellite) {
         TleRequest request = new TleRequest(issuedBy, satellite);
         request.setIsInitialization(true);
         List<TleOrbitalParameters> parameters = tleOrbitalParameterFilter.getObjects(template.requestBody(inject, request, List.class));
@@ -333,8 +333,8 @@ public class DataAccess extends HbirdApi implements IDataAccess {
      * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
-    public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location) {
-        return retrieveNextLocationContactEventsFor(location, null, (new Date()).getTime());
+    public List<LocationContactEvent> getNextLocationContactEventsFor(String location) {
+        return getNextLocationContactEventsFor(location, null, (new Date()).getTime());
     }
 
     /*
@@ -343,8 +343,8 @@ public class DataAccess extends HbirdApi implements IDataAccess {
      * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
-    public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, long from) {
-        return retrieveNextLocationContactEventsFor(location, null, from);
+    public List<LocationContactEvent> getNextLocationContactEventsFor(String location, long from) {
+        return getNextLocationContactEventsFor(location, null, from);
     }
 
     /*
@@ -353,8 +353,8 @@ public class DataAccess extends HbirdApi implements IDataAccess {
      * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
-    public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, String satellite) {
-        return retrieveNextLocationContactEventsFor(location, satellite, (new Date()).getTime());
+    public List<LocationContactEvent> getNextLocationContactEventsFor(String location, String satellite) {
+        return getNextLocationContactEventsFor(location, satellite, (new Date()).getTime());
     }
 
     /*
@@ -363,7 +363,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
      * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
-    public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, String satellite, long from) {
+    public List<LocationContactEvent> getNextLocationContactEventsFor(String location, String satellite, long from) {
 
         List<LocationContactEvent> events = new ArrayList<LocationContactEvent>();
 
@@ -396,23 +396,23 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     @Override
-    public List<PointingData> retrieveNextLocationPointingDataFor(String location) {
-        return retrieveNextLocationPointingDataFor(location, null);
+    public List<PointingData> getNextLocationPointingDataFor(String location) {
+        return getNextLocationPointingDataFor(location, null);
     }
 
     @Override
-    public List<PointingData> retrieveNextLocationPointingDataFor(String location, String satellite) {
-        List<LocationContactEvent> events = retrieveNextLocationContactEventsFor(location);
+    public List<PointingData> getNextLocationPointingDataFor(String location, String satellite) {
+        List<LocationContactEvent> events = getNextLocationContactEventsFor(location);
 
         if (events.isEmpty() == false) {
-            return retrieveLocationPointingDataFor(location, events.get(0).getTimestamp(), events.get(1).getTimestamp());
+            return getLocationPointingDataFor(location, events.get(0).getTimestamp(), events.get(1).getTimestamp());
         }
 
         return new ArrayList<PointingData>();
     }
 
     @Override
-    public List<PointingData> retrieveLocationPointingDataFor(String location, long from, long to) {
+    public List<PointingData> getLocationPointingDataFor(String location, long from, long to) {
         // TODO Auto-generated method stub
         return null;
     }

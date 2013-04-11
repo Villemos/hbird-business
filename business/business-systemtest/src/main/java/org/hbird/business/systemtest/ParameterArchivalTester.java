@@ -111,7 +111,7 @@ public class ParameterArchivalTester extends SystemTest {
 		
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			List<Parameter> respond = accessApi.retrieveParameter("SystemTest/" + para2Name, start.getTime(), (new Date()).getTime());
+			List<Parameter> respond = accessApi.getParameter("SystemTest/" + para2Name, start.getTime(), (new Date()).getTime());
 			azzert(respond != null, "Received a response.");			
 			azzert(respond.size() == 3, "Expect 3 entries. Received " + respond.size());			
 		}
@@ -121,7 +121,7 @@ public class ParameterArchivalTester extends SystemTest {
 
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			List<Parameter> respond = accessApi.retrieveParameter("SystemTest/" + para2Name, start.getTime(), end.getTime());
+			List<Parameter> respond = accessApi.getParameter("SystemTest/" + para2Name, start.getTime(), end.getTime());
 			azzert(respond != null, "Received a response.");			
 			azzert(respond.size() == 2, "Expect 2 entries. Received " + respond.size());			
 		}
@@ -131,7 +131,7 @@ public class ParameterArchivalTester extends SystemTest {
 
 		// Test retrieval of a lower bound time range for one parameter.
 		try {
-			List<Parameter> respond = accessApi.retrieveParameters(Arrays.asList("SystemTest/" + para1Name, "SystemTest/" + para2Name, "SystemTest/" + para3Name), start.getTime(), end.getTime());
+			List<Parameter> respond = accessApi.getParameters(Arrays.asList("SystemTest/" + para1Name, "SystemTest/" + para2Name, "SystemTest/" + para3Name), start.getTime(), end.getTime());
 			azzert(respond != null, "Received a response.");			
 			azzert(respond.size() == 5, "Expect 5 entries. Received " + respond.size());			
 		}

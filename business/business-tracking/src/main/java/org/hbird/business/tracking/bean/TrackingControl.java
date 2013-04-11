@@ -106,7 +106,7 @@ public class TrackingControl {
 		Command command = null;
 
 		/** Retrieve the next set of contact events (start-end) for this station. */
-		List<LocationContactEvent> contactEvents = api.retrieveNextLocationContactEventsFor(groundStationName, satelliteName);
+		List<LocationContactEvent> contactEvents = api.getNextLocationContactEventsFor(groundStationName, satelliteName);
 
 		/** If there are contact events. */
 		if (contactEvents.size() == 2) {

@@ -163,7 +163,7 @@ public class OrbitPropagationComponent extends StartablePart {
 
 		/** Get the latest TLE */
 		IDataAccess api = ApiFactory.getDataAccessApi(this.name);
-		TleOrbitalParameters tleParameters = api.retrieveTleFor(satellite);
+		TleOrbitalParameters tleParameters = api.getTleFor(satellite);
 
 		if (tleParameters == null) {
 			/** If there are no TLE parameters, then we cant*/
@@ -171,7 +171,7 @@ public class OrbitPropagationComponent extends StartablePart {
 		}
 
 		/** Get the latest orbital state */
-		OrbitalState state = api.retrieveOrbitalStateFor(satellite);
+		OrbitalState state = api.getOrbitalStateFor(satellite);
 
 		long from = 0;
 		long to = 0;
@@ -209,7 +209,7 @@ public class OrbitPropagationComponent extends StartablePart {
 		LOG.info("Propagating orbit of satellite '" + satellite + "' (propagation #" + count + ").");
 
 		IDataAccess api = ApiFactory.getDataAccessApi(this.name);
-		OrbitalState state = api.retrieveOrbitalStateFor(satellite);
+		OrbitalState state = api.getOrbitalStateFor(satellite);
 
 		/** If we for some reason do not have a state, then initialize. Should have been done automatically already. But someone
 		 * could have deleted part of the DB or similar. */

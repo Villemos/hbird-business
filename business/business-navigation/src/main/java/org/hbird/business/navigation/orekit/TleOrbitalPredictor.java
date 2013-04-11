@@ -108,7 +108,7 @@ public class TleOrbitalPredictor {
     }
 
     private TleOrbitalParameters getTleParameters(String satellite) {    	
-    	return ApiFactory.getDataAccessApi(name).retrieveTleFor(satellite);
+    	return ApiFactory.getDataAccessApi(name).getTleFor(satellite);
     }
 
     private List<GroundStation> getLocations(List<String> list) {

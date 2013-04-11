@@ -120,7 +120,7 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
  */
 public interface IDataAccess {
 
-	public List<Named> retrieveData(DataRequest request);
+	public List<Named> getData(DataRequest request);
 
 	/**
 	 * Method to retrieve the last sample of a single parameter. The method will return
@@ -387,7 +387,7 @@ public interface IDataAccess {
 	 * @param to The latest time (Java time)
 	 * @return List<Parameter> of Parameter samples. May be empty if no samples matching the criterions were found.
 	 */
-	public List<Parameter> retrieveParameter(String name, long from, long to);
+	public List<Parameter> getParameter(String name, long from, long to);
 
 
 	/**
@@ -405,7 +405,7 @@ public interface IDataAccess {
 	 * @param to The latest time (Java time)
 	 * @return List<Parameter> of Parameter samples. May be empty if no samples matching the criterions were found.
 	 */
-	public List<Parameter> retrieveParameter(String name, long from, long to, int rows);
+	public List<Parameter> getParameter(String name, long from, long to, int rows);
 
 	/**
 	 * Method to retrieve the samples of a set of parameters. The retrieval will be
@@ -418,7 +418,7 @@ public interface IDataAccess {
 	 * @param to The latest time (Java time)
 	 * @return List<Parameter> of Parameter samples. May be empty if no samples matching the criterions were found.
 	 */
-	public List<Parameter> retrieveParameters(List<String> names, long from, long to);
+	public List<Parameter> getParameters(List<String> names, long from, long to);
 
 	/**
 	 * Method to retrieve the samples of a set of parameters. The retrieval will be
@@ -435,7 +435,7 @@ public interface IDataAccess {
 	 * @param to The latest time (Java time)
 	 * @return List<Parameter> of Parameter samples. May be empty if no samples matching the criterions were found.
 	 */
-	public List<Parameter> retrieveParameters(List<String> names, long from, long to, int rows);
+	public List<Parameter> getParameters(List<String> names, long from, long to, int rows);
 
 	/**
 	 * Method to retrieve the samples of a single parameter and all states applicable to each sample. The method will return
@@ -448,7 +448,7 @@ public interface IDataAccess {
 	 * @param to The latest time (Java time)
 	 * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific sample.
 	 */
-	public Map<Parameter, List<State>> retrieveParameterAndStates(String name, long from, long to);
+	public Map<Parameter, List<State>> getParameterAndStates(String name, long from, long to);
 
 	/**
 	 * Method to retrieve the samples of a single parameter and all states applicable to each sample. The method will return
@@ -465,7 +465,7 @@ public interface IDataAccess {
 	 * @param rows The maximum number of entries to be returned
 	 * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific sample.
 	 */
-	public Map<Parameter, List<State>> retrieveParameterAndStates(String name, long from, long to, int rows);
+	public Map<Parameter, List<State>> getParameterAndStates(String name, long from, long to, int rows);
 
 	/**
 	 * Method to retrieve the samples of a set of parameters and all states applicable to each sample. The method will return
@@ -478,7 +478,7 @@ public interface IDataAccess {
 	 * @param to The latest time (Java time)
 	 * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific sample.
 	 */
-	public Map<Parameter, List<State>> retrieveParametersAndStates(List<String> names, long from, long to);
+	public Map<Parameter, List<State>> getParametersAndStates(List<String> names, long from, long to);
 
 	/**
 	 * Method to retrieve the samples of a set of parameters and all states applicable to each sample. The method will return
@@ -495,7 +495,7 @@ public interface IDataAccess {
 	 * @param rows The maximum number of entries to be returned
 	 * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific sample.
 	 */
-	public Map<Parameter, List<State>> retrieveParametersAndStates(List<String> names, long from, long to, int rows);
+	public Map<Parameter, List<State>> getParametersAndStates(List<String> names, long from, long to, int rows);
 
 
 	/**
@@ -507,7 +507,7 @@ public interface IDataAccess {
 	 * @param isStateOf The name of the Named object that the state must be a state of
 	 * @return A list of all states applicable to the named object
 	 */
-	public List<State> retrieveState(String isStateOf);
+	public List<State> getState(String isStateOf);
 
 	/**
 	 * Method to retrieve all states applicable to a Named object (such as a Parameter).
@@ -520,7 +520,7 @@ public interface IDataAccess {
 	 * @param to The latest time (Java time)
 	 * @return A list of all states applicable to the Named object
 	 */
-	public List<State> retrieveState(String isStateOf, long from, long to);
+	public List<State> getState(String isStateOf, long from, long to);
 
 	/**
 	 * Method to retrieve the current value of a set of states.
@@ -533,7 +533,7 @@ public interface IDataAccess {
 	 * @param to The latest time (Java time)
 	 * @return A list of all states applicable to the Named object
 	 */
-	public List<State> retrieveStates(List<String> states);
+	public List<State> getStates(List<String> states);
 
 
 	/**
@@ -544,7 +544,7 @@ public interface IDataAccess {
 	 * @param derivedFromTleNamed The name of the TleParameters object the state must be derived from
 	 * @param derivedFromTleTimestamped The timestamp of the TleParameter object that the state must be derived from
 	 */
-	public OrbitalState retrieveOrbitalStateFor(String satellite, String derivedIssuedBy, String derivedFromTleNamed, long derivedFromTleTimestamped);
+	public OrbitalState getOrbitalStateFor(String satellite, String derivedIssuedBy, String derivedFromTleNamed, long derivedFromTleTimestamped);
 
 	/**
 	 * Method to retrieve the last orbital state of a satellite as derived from the last TLE. The method will return
@@ -552,7 +552,7 @@ public interface IDataAccess {
 	 * 
 	 * @param satellite The name of the satellite
 	 */
-	public OrbitalState retrieveOrbitalStateFor(String satellite);
+	public OrbitalState getOrbitalStateFor(String satellite);
 
 
 	/**
@@ -567,7 +567,7 @@ public interface IDataAccess {
 	 * @param to The latest time (Java time)
 	 * @return A list of all orbital states applicable to the satellites
 	 */
-	public List<OrbitalState> retrieveOrbitalStatesFor(String satellite, long from, long to);
+	public List<OrbitalState> getOrbitalStatesFor(String satellite, long from, long to);
 
 	/**
 	 * Method to retrieve the orbital state of a satellite, identified throughs its name, within
@@ -582,7 +582,7 @@ public interface IDataAccess {
 	 * @param derivedTimestamp  The timestamp of the TLE parameters object that this must have been derived from
 	 * @return A list of all orbital states applicable to the satellites
 	 */
-	public List<OrbitalState> retrieveOrbitalStatesFor(String satellite, long from, long to, String derivedIssuedBy, String derivedFromName, long derivedFromTimestamp);
+	public List<OrbitalState> getOrbitalStatesFor(String satellite, long from, long to, String derivedIssuedBy, String derivedFromName, long derivedFromTimestamp);
 
 	/**
 	 * Method to retrieve the TLE of a satellite, identified throughs its name. The method will return
@@ -592,7 +592,7 @@ public interface IDataAccess {
 	 * @param satellite Unique name of the satellite
 	 * @return A list of all orbital states applicable to the satellites
 	 */
-	public TleOrbitalParameters retrieveTleFor(String satellite);
+	public TleOrbitalParameters getTleFor(String satellite);
 
 	/**
 	 * Method to retrieve the orbital state of a satellite, identified throughs its name, within
@@ -606,7 +606,7 @@ public interface IDataAccess {
 	 * @param to The latest time (Java time)
 	 * @return A list of all orbital states applicable to the satellites
 	 */
-	public List<TleOrbitalParameters> retrieveTleFor(String satellite, long from, long to);
+	public List<TleOrbitalParameters> getTleFor(String satellite, long from, long to);
 
 
 	/**
@@ -616,7 +616,7 @@ public interface IDataAccess {
 	 * @param location
 	 * @return
 	 */
-	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location);
+	public List<LocationContactEvent> getNextLocationContactEventsFor(String location);
 
 	/**
 	 * Method to retrieve the next contact start/end event pair. The method will return
@@ -625,7 +625,7 @@ public interface IDataAccess {
 	 * @param location
 	 * @return
 	 */
-	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, long from);
+	public List<LocationContactEvent> getNextLocationContactEventsFor(String location, long from);
 
 	/**
 	 * Method to retrieve the next contact start/end event pair. The method will return
@@ -634,7 +634,7 @@ public interface IDataAccess {
 	 * @param location
 	 * @return
 	 */
-	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, String satellite);
+	public List<LocationContactEvent> getNextLocationContactEventsFor(String location, String satellite);
 
 	/**
 	 * Method to retrieve the next contact start/end event pair. The method will return
@@ -643,7 +643,7 @@ public interface IDataAccess {
 	 * @param location
 	 * @return
 	 */
-	public List<LocationContactEvent> retrieveNextLocationContactEventsFor(String location, String satellite, long from);
+	public List<LocationContactEvent> getNextLocationContactEventsFor(String location, String satellite, long from);
 
 	/**
 	 * Method to retrieve the next pointing data to a specific satellite. The method will return
@@ -656,7 +656,7 @@ public interface IDataAccess {
 	 * 
 	 * @return List containing the next set of contact data
 	 */
-	public List<PointingData> retrieveNextLocationPointingDataFor(String location);
+	public List<PointingData> getNextLocationPointingDataFor(String location);
 
 	/**
 	 * Method to retrieve the next pointing data to a specific satellite. The method will return
@@ -670,7 +670,7 @@ public interface IDataAccess {
 	 * 
 	 * @return List containing the next set of contact data
 	 */
-	public List<PointingData> retrieveNextLocationPointingDataFor(String location, String satellite);
+	public List<PointingData> getNextLocationPointingDataFor(String location, String satellite);
 
 	/**
 	 * Method to retrieve the next pointing data to a specific satellite. The method will return
@@ -685,7 +685,7 @@ public interface IDataAccess {
 	 * 
 	 * @return List containing the next set of contact data
 	 */	
-	public List<PointingData> retrieveLocationPointingDataFor(String location, long from, long to);
+	public List<PointingData> getLocationPointingDataFor(String location, long from, long to);
 
 	
 	/**

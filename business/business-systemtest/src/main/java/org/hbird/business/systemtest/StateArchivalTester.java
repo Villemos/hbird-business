@@ -80,7 +80,7 @@ public class StateArchivalTester extends SystemTest {
 		
         /** Test retrieval. */
 		//Object respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE, "COMMAND1"));
-		Object respond = api.retrieveState(estcube1.getID() + "/COMMAND1");
+		Object respond = api.getState(estcube1.getID() + "/COMMAND1");
 		azzert(respond != null, "Received a response.");
         
         Map<String, State> states = new HashMap<String, State>();
@@ -110,7 +110,7 @@ public class StateArchivalTester extends SystemTest {
 		
         /** Test retrieval. */
 		// respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE, "COMMAND1"));
-		respond = api.retrieveState(estcube1.getID() + "/COMMAND1");
+		respond = api.getState(estcube1.getID() + "/COMMAND1");
 		azzert(respond != null, "Received a response.");
 
         states = new HashMap<String, State>();

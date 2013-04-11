@@ -82,9 +82,9 @@ public class CommandReleaser {
 
 		/** Request all states that are lock states of this command. */
 		
-		List<State> states = api.retrieveState(command.getCommand().getName());
+		List<State> states = api.getState(command.getCommand().getName());
 		if (command.getLockStates() != null) { 
-			states.addAll(api.retrieveStates(command.getLockStates()));
+			states.addAll(api.getStates(command.getLockStates()));
 		}
 		
 		/** See if any of the states have the value FALSE*/
