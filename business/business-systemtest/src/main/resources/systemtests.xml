@@ -50,6 +50,7 @@
 	<bean id="commanding" class="org.hbird.business.systemtest.CommandingTester" parent="testerTemplate"/>
 	<bean id="navigation" class="org.hbird.business.systemtest.NavigationTester" parent="testerTemplate"/>
 	<bean id="dataaccessapi" class="org.hbird.business.systemtest.DataAccessApiTester" parent="testerTemplate"/>
+	<bean id="catalogueapi" class="org.hbird.business.systemtest.CatalogueApiTester" parent="testerTemplate"/>
 	<bean id="automaticorbitpropagation" class="org.hbird.business.systemtest.AutomaticOrbitPropagationTester" parent="testerTemplate"/>
 	<bean id="parsecontroller" class="org.hbird.business.systemtest.ParseControlTester" parent="testerTemplate"/>
 	<bean id="jmstester" class="org.hbird.business.systemtest.JmsSelectorTester" parent="testerTemplate"/>
@@ -79,6 +80,7 @@
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
+				<to uri="bean:catalogueapi" />
                 <to uri="bean:event" />
  				<to uri="bean:businesscard" /> 
 				<to uri="bean:parameterarchive" />

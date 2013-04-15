@@ -19,6 +19,7 @@ package org.hbird.business.api;
 import java.util.List;
 import java.util.Map;
 
+import org.hbird.exchange.core.Event;
 import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
@@ -616,7 +617,7 @@ public interface IDataAccess {
 	 * @param location
 	 * @return
 	 */
-	public List<LocationContactEvent> getNextLocationContactEventsFor(String location);
+	public List<LocationContactEvent> getNextLocationContactEventsForLocation(String location);
 
 	/**
 	 * Method to retrieve the next contact start/end event pair. The method will return
@@ -625,7 +626,7 @@ public interface IDataAccess {
 	 * @param location
 	 * @return
 	 */
-	public List<LocationContactEvent> getNextLocationContactEventsFor(String location, long from);
+	public List<LocationContactEvent> getNextLocationContactEventsForLocation(String location, long from);
 
 	/**
 	 * Method to retrieve the next contact start/end event pair. The method will return
@@ -656,7 +657,13 @@ public interface IDataAccess {
 	 * 
 	 * @return List containing the next set of contact data
 	 */
-	public List<PointingData> getNextLocationPointingDataFor(String location);
+	public List<PointingData> getNextLocationPointingDataForLocation(String location);
+
+	/**
+	 * @param satellite
+	 * @return
+	 */
+	public List<PointingData> getNextLocationPointingDataForSatellite(String satellite);
 
 	/**
 	 * Method to retrieve the next pointing data to a specific satellite. The method will return
@@ -695,4 +702,15 @@ public interface IDataAccess {
 	 * @return A list with zero or more metadata objects applicable to the subject
 	 */
 	public List<Named> getMetadata(Issued subject);
+
+	
+	
+	/**
+	 * Retrieve all events from the given period.
+	 * 
+	 * @param from Start time of request (null means 'no lower bound')
+	 * @param to End time of request (null means 'no upper bound')
+	 * @return
+	 */
+	public List<Event> getEvents(Long from, Long to);
 }

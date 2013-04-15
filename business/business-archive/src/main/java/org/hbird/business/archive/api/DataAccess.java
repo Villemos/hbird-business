@@ -26,11 +26,13 @@ import org.hbird.business.api.ApiUtility;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.TypeFilter;
+import org.hbird.exchange.core.Event;
 import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.DataRequest;
+import org.hbird.exchange.dataaccess.EventRequest;
 import org.hbird.exchange.dataaccess.GroundStationRequest;
 import org.hbird.exchange.dataaccess.LocationContactEventRequest;
 import org.hbird.exchange.dataaccess.MetadataRequest;
@@ -333,7 +335,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
      * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
-    public List<LocationContactEvent> getNextLocationContactEventsFor(String location) {
+    public List<LocationContactEvent> getNextLocationContactEventsForLocation(String location) {
         return getNextLocationContactEventsFor(location, null, (new Date()).getTime());
     }
 
@@ -343,7 +345,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
      * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
-    public List<LocationContactEvent> getNextLocationContactEventsFor(String location, long from) {
+    public List<LocationContactEvent> getNextLocationContactEventsForLocation(String location, long from) {
         return getNextLocationContactEventsFor(location, null, from);
     }
 
@@ -396,13 +398,18 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     @Override
-    public List<PointingData> getNextLocationPointingDataFor(String location) {
+    public List<PointingData> getNextLocationPointingDataForLocation(String location) {
         return getNextLocationPointingDataFor(location, null);
     }
 
     @Override
+    public List<PointingData> getNextLocationPointingDataForSatellite(String satellite) {
+        return getNextLocationPointingDataFor(null, satellite);
+    }
+
+    @Override
     public List<PointingData> getNextLocationPointingDataFor(String location, String satellite) {
-        List<LocationContactEvent> events = getNextLocationContactEventsFor(location);
+        List<LocationContactEvent> events = getNextLocationContactEventsForLocation(location);
 
         if (events.isEmpty() == false) {
             return getLocationPointingDataFor(location, events.get(0).getTimestamp(), events.get(1).getTimestamp());
@@ -424,4 +431,13 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         List<Named> respond = template.requestBody(inject, request, List.class);
         return respond;
     }
+
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IDataAccess#getEvents(long, long)
+	 */
+	@Override
+	public List<Event> getEvents(Long from, Long to) {
+        EventRequest request = new EventRequest(issuedBy, from, to);
+        return executeRequest(request);
+	}
 }

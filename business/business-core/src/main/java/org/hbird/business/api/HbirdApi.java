@@ -60,9 +60,9 @@ public abstract class HbirdApi extends HbirdRouteBuilder {
      * @param request
      * @return
      */
-    protected <T> List<T> executeRequest(TypeFilter<T> filter, DataRequest request) {
+    protected <T> List<T> executeRequest(DataRequest request) {
         @SuppressWarnings("unchecked")
-        List<T> list = filter.getObjects(template.requestBody(inject, request, List.class));
+        List<T> list = template.requestBody(inject, request, List.class);
         return list;
     }
 

@@ -19,6 +19,8 @@
  */
 package org.hbird.business.systemtest;
 
+import java.util.List;
+
 import org.apache.camel.Handler;
 import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.constants.StandardMissionEvents;
@@ -40,10 +42,11 @@ public class EventTester extends SystemTest {
         LOG.info("Starting");
 
         azzert(eventListener.elements.size() == 0, "There should be no events published");
+        startMonitoringArchive();
         startCommandingChain();
 
-        azzert(eventListener.elements.size() == 1, "There should be 1 event published");
-        Event event = (Event) eventListener.elements.get(0);
+        azzert(eventListener.elements.size() == 2, "There should be 2 events published");
+        Event event = (Event) eventListener.elements.get(1);
         azzert(StandardMissionEvents.COMPONENT_START.getName().equals(event.getName()), "startEvent.getName()");
         azzert(parts.get(StandardComponents.COMMAND_RELEASER_NAME).getQualifiedName().equals(event.getIssuedBy()), "startEvent.getIssuedBy()");
         long diff = System.currentTimeMillis() - event.getTimestamp();
@@ -55,8 +58,8 @@ public class EventTester extends SystemTest {
 
         stopCommandingChain();
 
-        azzert(eventListener.elements.size() == 2, "There should be 2 events published");
-        event = (Event) eventListener.elements.get(1);
+        azzert(eventListener.elements.size() == 3, "There should be 3 events published");
+        event = (Event) eventListener.elements.get(2);
         azzert(StandardMissionEvents.COMPONENT_STOP.getName().equals(event.getName()), "stopEvent.getName()");
         azzert(parts.get(StandardComponents.COMMAND_RELEASER_NAME).getQualifiedName().equals(event.getIssuedBy()), "stopEvent.getIssuedBy()");
         diff = System.currentTimeMillis() - event.getTimestamp();
@@ -66,6 +69,11 @@ public class EventTester extends SystemTest {
         azzert(event.getID() != null, "stopEvent.getUuid()");
         azzert(StandardMissionEvents.COMPONENT_STOP.getDescription().equals(event.getDescription()), "stopEvent.getDescription()");
 
+        forceCommit();
+        
+        List<Event> events = accessApi.getEvents(null, null);
+        azzert(events.size() == 2, "Expected to receive 2 events.");
+        
         LOG.info("Finished");
     }
 

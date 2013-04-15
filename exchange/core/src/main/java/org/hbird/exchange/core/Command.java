@@ -106,6 +106,11 @@ public class Command extends CommandBase {
         this.arguments = createArgumentMap(arguments);
     }
 
+    public Command(Command template) {
+        super(template.issuedBy, template.name, template.description, IScheduled.IMMEDIATE, template.destination, IScheduled.IMMEDIATE);
+        this.arguments = createArgumentMap(new ArrayList<CommandArgument>(template.arguments.values()));
+    }
+    
     /**
      * Basic constructor
      * 

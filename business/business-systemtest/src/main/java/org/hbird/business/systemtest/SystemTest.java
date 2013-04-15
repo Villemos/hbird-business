@@ -385,7 +385,7 @@ public abstract class SystemTest {
             /** Create command component. */
             partmanagerApi.start(comComponent);
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             commandingChainStarted = true;
         }
@@ -399,7 +399,7 @@ public abstract class SystemTest {
             /** Create command component. */
             partmanagerApi.stop(comComponent.getQualifiedName());
 
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             commandingChainStarted = false;
         }

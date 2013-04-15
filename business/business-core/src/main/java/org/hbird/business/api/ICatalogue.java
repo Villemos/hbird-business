@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.core.Part;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.Satellite;
@@ -51,13 +52,6 @@ public interface ICatalogue {
      * @return List containing one sample of each parameter in the archive.
      */
     public List<State> getStates();
-
-    /**
-     * Method to retrieve a definition of each command supported by the system.
-     * 
-     * @return List of commands supported by the system.
-     */
-    public List<Command> getCommands();
 
     /**
      * Method to retrieve all {@link GroundStation} stored in the archive.
@@ -93,5 +87,15 @@ public interface ICatalogue {
 	 * @param names
 	 * @return
 	 */
-	List<GroundStation> getGroundStationsByName(List<String> names);
+	public List<GroundStation> getGroundStationsByName(List<String> names);
+	
+	public List<Part> getParts();
+	
+	public Part getPart(String name);
+	
+	/**
+	 * @param parentName
+	 * @return
+	 */
+	public List<Part> getPartChildren(String parentName);
 }

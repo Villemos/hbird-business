@@ -92,7 +92,7 @@ public class StandardMissionEvents {
 
     public static final Event COMPONENT_STOP = new Event("",
             "ComponentStop",
-            "Component sopping",
+            "Component stopping",
             0L);
 
 }

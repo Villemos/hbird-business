@@ -113,7 +113,7 @@ public class Arguments {
             "Whether the contact event is a start of contact (true) or end of contact (false).", Boolean.class, "", Boolean.TRUE, true);
 
     public static final CommandArgument IS_PART_OF = new CommandArgument(StandardArguments.IS_PART_OF,
-            "The name of the object that the found objects must be defined as being a part of.", String.class, "", "", true);
+            "The name of the object that the found objects must be defined as being a part of.", String.class, "", null, true);
 
     public static CommandArgument create(CommandArgument template) {
         return new CommandArgument(template);

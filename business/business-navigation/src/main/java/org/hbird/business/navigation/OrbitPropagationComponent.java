@@ -165,6 +165,8 @@ public class OrbitPropagationComponent extends StartablePart {
 		IDataAccess api = ApiFactory.getDataAccessApi(this.name);
 		TleOrbitalParameters tleParameters = api.getTleFor(satellite);
 
+		/** TODO If the TLE has changed, then we should clear the orbital states and recalculate them. */
+		
 		if (tleParameters == null) {
 			/** If there are no TLE parameters, then we cant*/
 			// TODO

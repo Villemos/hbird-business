@@ -119,4 +119,9 @@ public class Part extends Named implements IPart {
     public void setID(String iD) {
         ID = iD;
     }
+    
+    public String prettyPrint() {
+        return String.format("%s[name=%s, isPartOf=%s]", this.getClass().getSimpleName(), getQualifiedName(), getIsPartOf() != null ? getIsPartOf().getName() : "");
+    }
+
 }
