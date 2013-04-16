@@ -32,6 +32,7 @@
  */
 package org.hbird.business.api;
 
+import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
@@ -43,4 +44,6 @@ public interface IPartManager {
 	public void start(IStartablePart part);
 	
 	public void stop(String name);
+
+	public IPart resolveParent(IPart child);
 }

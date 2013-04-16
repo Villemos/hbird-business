@@ -45,7 +45,7 @@ import org.hbird.exchange.util.LocalHostNameResolver;
  * @author Admin
  * 
  */
-public class BusinessCard extends Issued {
+public class BusinessCard extends Named {
 
     private static final long serialVersionUID = -4619331399009932893L;
 
@@ -64,8 +64,8 @@ public class BusinessCard extends Issued {
     public Map<String, Event> eventsIn = new HashMap<String, Event>();
     public Map<String, Event> eventsOut = new HashMap<String, Event>();
 
-    public Map<String, Issued> dataIn = new HashMap<String, Issued>();
-    public Map<String, Issued> dataOut = new HashMap<String, Issued>();
+    public Map<String, Named> dataIn = new HashMap<String, Named>();
+    public Map<String, Named> dataOut = new HashMap<String, Named>();
 
     public BusinessCard(String issuedBy, long period) {
         // XXX - 03.04.2013, kimmell - name and issuedBy are set to same value here

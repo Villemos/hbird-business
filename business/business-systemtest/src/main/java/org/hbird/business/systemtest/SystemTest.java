@@ -359,7 +359,6 @@ public abstract class SystemTest {
 
             TaskExecutionComponent taskPart = new TaskExecutionComponent();
             taskPart.setName(name);
-            taskPart.setID(name);
             taskPart.setIsPartOf(parent);
 
             /** Publish the knowledge of the part. */

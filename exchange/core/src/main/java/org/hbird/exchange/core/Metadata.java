@@ -19,7 +19,7 @@ package org.hbird.exchange.core;
 import java.util.Map;
 
 import org.hbird.exchange.interfaces.IApplicableTo;
-import org.hbird.exchange.interfaces.IIssued;
+import org.hbird.exchange.interfaces.INamed;
 
 /**
  * Class for metadata to another Named object. The object 'points' to the subject through the
@@ -28,7 +28,7 @@ import org.hbird.exchange.interfaces.IIssued;
  * @author Gert Villemos
  * 
  */
-public class Metadata extends Issued implements IApplicableTo {
+public class Metadata extends Named implements IApplicableTo {
 
     public static final String DESCRIPTION = "Metadata applicable to another Named object.";
 
@@ -48,7 +48,7 @@ public class Metadata extends Issued implements IApplicableTo {
      * @param toSubject A Named object that this metadata is applicable to.
      * @param metadata The metadata. Map keyed on a string ID and hold an object.
      */
-    public Metadata(String issuedBy, String name, IIssued toSubject, Map<String, Object> metadata) {
+    public Metadata(String issuedBy, String name, INamed toSubject, Map<String, Object> metadata) {
         super(issuedBy, name, DESCRIPTION);
         this.subject = new NamedInstanceIdentifier(toSubject.getIssuedBy(), toSubject.getName(), toSubject.getTimestamp());
         this.metadata = metadata;
@@ -57,4 +57,34 @@ public class Metadata extends Issued implements IApplicableTo {
     public NamedInstanceIdentifier applicableTo() {
         return subject;
     }
+
+	/**
+	 * @return the subject
+	 */
+	public NamedInstanceIdentifier getSubject() {
+		return subject;
+	}
+
+	/**
+	 * @param subject the subject to set
+	 */
+	public void setSubject(NamedInstanceIdentifier subject) {
+		this.subject = subject;
+	}
+
+	/**
+	 * @return the metadata
+	 */
+	public Map<String, Object> getMetadata() {
+		return metadata;
+	}
+
+	/**
+	 * @param metadata the metadata to set
+	 */
+	public void setMetadata(Map<String, Object> metadata) {
+		this.metadata = metadata;
+	}
+    
+    
 }

@@ -22,12 +22,12 @@ import java.util.Map;
 
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.core.Issued;
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.interfaces.IScheduled;
 import org.hbird.exchange.interfaces.ITransferable;
 import org.hbird.exchange.tasking.Task;
 
-public class CommandRequest extends Issued implements ITransferable {
+public class CommandRequest extends Named implements ITransferable {
 
     private static final long serialVersionUID = 5432372329519676996L;
 

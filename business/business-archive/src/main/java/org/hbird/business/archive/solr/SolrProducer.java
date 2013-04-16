@@ -46,7 +46,7 @@ import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.interfaces.IApplicableTo;
 import org.hbird.exchange.interfaces.IGenerationTimestamped;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
-import org.hbird.exchange.interfaces.IIssued;
+import org.hbird.exchange.interfaces.INamed;
 import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 import org.hbird.exchange.navigation.LocationContactEvent;
@@ -433,9 +433,9 @@ public class SolrProducer extends DefaultProducer {
 		
 		document.setField(StandardArguments.HAS_URI, io.getID());
 
-		if (io instanceof IIssued) {
-			document.addField(StandardArguments.ISSUED_BY, ((IIssued) io).getIssuedBy());
-			document.addField(StandardArguments.TIMESTAMP, ((IIssued) io).getTimestamp());
+		if (io instanceof INamed) {
+			document.addField(StandardArguments.ISSUED_BY, ((INamed) io).getIssuedBy());
+			document.addField(StandardArguments.TIMESTAMP, ((INamed) io).getTimestamp());
 		}
 
 		if (io instanceof Parameter) {
@@ -487,7 +487,7 @@ public class SolrProducer extends DefaultProducer {
 		}
 		if (io instanceof IPart) {
 			if (((IPart) io).getIsPartOf() != null) {
-				document.addField("isPartOf", ((IPart) io).getIsPartOf().getName());
+				document.addField("isPartOf", ((IPart) io).getIsPartOf());
 			}
 		}
 		if (io instanceof IApplicableTo) {

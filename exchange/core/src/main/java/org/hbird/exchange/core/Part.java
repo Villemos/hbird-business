@@ -29,18 +29,14 @@ import org.slf4j.LoggerFactory;
 public class Part extends Named implements IPart {
 
     private static final long serialVersionUID = 4961124159238983376L;
-    /** The Part that this part is part of. */
 
     private static final Logger LOG = LoggerFactory.getLogger(Part.class);
 
-    /**
-     * Unique ID of this part. The ID should be unique accross instantiations of the Part, i.e. be set as
-     * part of the construction of the Part.
-     */
-    protected String ID = "";
-
-    protected IPart parent;
-
+    protected static final String DEFAULT_ISSUED_BY = "SystemAssembly";
+    
+    /** The full ID of the parent. */
+    protected String isPartOf = null;
+    
     /**
      * Constructor that will set the ID = name. Should only be used for Parts that are unique, i.e. the name
      * can be used as the unique identifier.
@@ -49,28 +45,29 @@ public class Part extends Named implements IPart {
      * @param description
      */
     public Part(String name, String description) {
-        super(name, description);
-        this.ID = name;
+        super(DEFAULT_ISSUED_BY, name, description);
     }
 
-    public Part(String ID, String name, String description) {
-        super(name, description);
-        this.ID = ID;
+    public Part(String name, String description, IPart isPartOf) {
+        super(DEFAULT_ISSUED_BY, name, description);
+        this.isPartOf = isPartOf.getID();
+    }
+    
+    public Part(String issuedBy, String name, String description) {
+        super(issuedBy, name, description);
     }
 
-    public Part(String ID, String name, String description, IPart isPartOf) {
-        super(name, description);
-        this.ID = ID;
-        parent = isPartOf;
-
+    public Part(String issuedBy, String name, String description, IPart isPartOf) {
+        super(issuedBy, name, description);
+        this.isPartOf = isPartOf.getID();
     }
 
     /**
      * @see org.hbird.exchange.interfaces.IPartOf#getIsPartOf()
      */
     @Override
-    public IPart getIsPartOf() {
-        return parent;
+    public String getIsPartOf() {
+        return isPartOf;
     }
 
     /**
@@ -83,45 +80,15 @@ public class Part extends Named implements IPart {
             LOG.error("Attempting to set NULL parent for Part '{}'. Likely a configuration error.", this.getName());
         }
         else {
-            this.parent = parent;
+            this.isPartOf = parent.getID();
         }
     }
 
-    @Override
-    public String getQualifiedName(String separator) {
-        // XXX - 03.04.2013, kimmell - overriding Named logic in here?
-        return ID;
-    }
-
-    @Override
-    public String getAbsoluteName() {
-        return parent == null ? "/" + name : parent.getAbsoluteName() + "/" + name;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.hbird.exchange.interfaces.IIDed#getID()
-     */
-    @Override
-    public String getID() {
-        return ID;
-    }
-
-    public IPart getParent() {
-        return parent;
-    }
-
-    public void setParent(IPart parent) {
-        this.parent = parent;
-    }
-
-    public void setID(String iD) {
-        ID = iD;
+    public void setIsPartOf(String parentId) {
+    	this.isPartOf = parentId;
     }
     
     public String prettyPrint() {
-        return String.format("%s[name=%s, isPartOf=%s]", this.getClass().getSimpleName(), getQualifiedName(), getIsPartOf() != null ? getIsPartOf().getName() : "");
+        return String.format("%s[name=%s, isPartOf=%s]", this.getClass().getSimpleName(), getQualifiedName(), getIsPartOf());
     }
-
 }

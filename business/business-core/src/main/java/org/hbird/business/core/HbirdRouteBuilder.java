@@ -7,7 +7,7 @@ import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Event;
-import org.hbird.exchange.core.Issued;
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
@@ -38,7 +38,7 @@ public abstract class HbirdRouteBuilder extends RouteBuilder {
             .setHeader(StandardArguments.CLASS, simple("${in.body.class.simpleName}"))
 
             .choice()
-                .when(body().isInstanceOf(Issued.class))
+                .when(body().isInstanceOf(Named.class))
                     .setHeader(StandardArguments.ISSUED_BY, simple("${in.body.issuedBy}"))
                     .setHeader(StandardArguments.TIMESTAMP, simple("${in.body.timestamp}"))
             .end()

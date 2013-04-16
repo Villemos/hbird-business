@@ -56,14 +56,17 @@ public class CommandablePart extends Part implements ICommandablePart {
 	 * @param name
 	 * @param description
 	 */
+	public CommandablePart(String issuedBy, String name, String description) {
+		super(issuedBy, name, description);
+	}
+
+	/**
+	 * @param name
+	 * @param description
+	 */
 	public CommandablePart(String name, String description) {
 		super(name, description);
 	}
-	
-    public CommandablePart(String ID, String name, String description) {
-        super(ID, name, description);
-    }
-
 
 	/* (non-Javadoc)
 	 * @see org.hbird.exchange.interfaces.ICommandablePart#setCommands(java.util.List)

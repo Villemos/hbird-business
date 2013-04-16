@@ -22,12 +22,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.model.RouteDefinition;
+import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ApiUtility;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.TypeFilter;
+import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Event;
-import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
@@ -38,6 +39,7 @@ import org.hbird.exchange.dataaccess.LocationContactEventRequest;
 import org.hbird.exchange.dataaccess.MetadataRequest;
 import org.hbird.exchange.dataaccess.OrbitalStateRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
+import org.hbird.exchange.dataaccess.PartRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
 import org.hbird.exchange.groundstation.GroundStation;
@@ -320,7 +322,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 
     protected Map<Parameter, List<State>> getParameterWithState(ParameterRequest request) {
         request.setIncludeStates(true);
-        List<Issued> respond = template.requestBody(inject, request, List.class);
+        List<Named> respond = template.requestBody(inject, request, List.class);
         return ApiUtility.sortParametersAndState(respond);
     }
 
@@ -425,7 +427,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     @Override
-    public List<Named> getMetadata(Issued subject) {
+    public List<Named> getMetadata(Named subject) {
         /** Get next start event. */
         MetadataRequest request = new MetadataRequest(issuedBy, subject);
         List<Named> respond = template.requestBody(inject, request, List.class);
@@ -439,5 +441,17 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 	public List<Event> getEvents(Long from, Long to) {
         EventRequest request = new EventRequest(issuedBy, from, to);
         return executeRequest(request);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IDataAccess#resolveNamed(java.lang.String)
+	 */
+	@Override
+	public Named resolveNamed(String ID) {
+		DataRequest request = new DataRequest(issuedBy, StandardComponents.ARCHIVE_NAME);
+		request.setID(ID);
+		List<Named> results = executeRequest(request);
+
+		return results.isEmpty() ? null : results.get(0);
 	}
 }

@@ -17,7 +17,7 @@
 package org.hbird.exchange.navigation;
 
 import org.hbird.exchange.core.D3Vector;
-import org.hbird.exchange.core.Issued;
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.interfaces.IGenerationTimestamped;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
@@ -29,7 +29,7 @@ import org.hbird.exchange.interfaces.ISatelliteSpecific;
  * momentum. A vector defining the momentum of the body.
  * timestamp. The time the body have this state. May be in the future.
  */
-public class OrbitalState extends Issued implements IGenerationTimestamped, ISatelliteSpecific {
+public class OrbitalState extends Named implements IGenerationTimestamped, ISatelliteSpecific {
 
     /** The unique UID. */
     private static final long serialVersionUID = -8112421610188582037L;
@@ -65,21 +65,23 @@ public class OrbitalState extends Issued implements IGenerationTimestamped, ISat
      */
     public OrbitalState(String issuedBy, String name, String description, long timestamp, long generationTime, String satellite, D3Vector position,
             D3Vector velocity, D3Vector momentum) {
-        super(issuedBy, name, description, timestamp);
+        super(issuedBy, name, description);
         this.satellite = satellite;
         this.position = position;
         this.velocity = velocity;
         this.momentum = momentum;
         this.generationTime = generationTime;
+        this.timestamp = timestamp;
     }
 
     public OrbitalState(String issuedBy, String name, String description, long timestamp, String satellite, D3Vector position, D3Vector velocity,
             D3Vector momentum) {
-        super(issuedBy, name, description, timestamp);
+        super(issuedBy, name, description);
         this.satellite = satellite;
         this.position = position;
         this.velocity = velocity;
         this.momentum = momentum;
+        this.timestamp = timestamp;
     }
 
     public D3Vector getPosition() {

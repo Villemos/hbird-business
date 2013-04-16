@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.hbird.exchange.core.Event;
-import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
@@ -122,6 +121,8 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
 public interface IDataAccess {
 
 	public List<Named> getData(DataRequest request);
+
+	public Named resolveNamed(String ID);
 
 	/**
 	 * Method to retrieve the last sample of a single parameter. The method will return
@@ -701,7 +702,7 @@ public interface IDataAccess {
 	 * @param subject The Named object that the metadata must be applicable to.
 	 * @return A list with zero or more metadata objects applicable to the subject
 	 */
-	public List<Named> getMetadata(Issued subject);
+	public List<Named> getMetadata(Named subject);
 
 	
 	

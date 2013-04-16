@@ -44,6 +44,9 @@ public interface INamed {
 	
 	public String getDescription();
 
+	public long getTimestamp();
+	
+	public String getIssuedBy();	
 	
 	/**
 	 * Method to return the name of the object. The name of the object is a logical

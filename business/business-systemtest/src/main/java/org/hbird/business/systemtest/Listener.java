@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.State;
 

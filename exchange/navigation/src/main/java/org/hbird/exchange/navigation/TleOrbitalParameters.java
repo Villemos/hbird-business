@@ -17,7 +17,7 @@
  * under the License. */
 package org.hbird.exchange.navigation;
 
-import org.hbird.exchange.core.Issued;
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
 /**
@@ -26,7 +26,7 @@ import org.hbird.exchange.interfaces.ISatelliteSpecific;
  * @author Gert Villemos
  * 
  */
-public class TleOrbitalParameters extends Issued implements ISatelliteSpecific {
+public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 
     public static final String DESCRIPTION = "The TLE state of the satellite.";
 
@@ -42,11 +42,12 @@ public class TleOrbitalParameters extends Issued implements ISatelliteSpecific {
     protected String tleLine2;
 
     public TleOrbitalParameters(String issuedBy, String name, String description, long timestamp, String satellite, String tleLine1, String tleLine2) {
-        super(issuedBy, name, description, timestamp);
+        super(issuedBy, name, description);
 
         this.satellite = satellite;
         this.tleLine1 = tleLine1;
         this.tleLine2 = tleLine2;
+        this.timestamp = timestamp;
     }
 
     public TleOrbitalParameters(String issuedBy, String name, String description, String satellite, String tleLine1, String tleLine2) {

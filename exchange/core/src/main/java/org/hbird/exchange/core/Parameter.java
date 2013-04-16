@@ -28,7 +28,7 @@ import java.math.BigInteger;
  * a new parameter is simply the creation of a Parameter with a new name.
  * 
  */
-public class Parameter extends Issued {
+public class Parameter extends Named {
 
     /** The unique UID. */
     private static final long serialVersionUID = 889400984561961325L;

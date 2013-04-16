@@ -26,7 +26,7 @@ import org.hbird.exchange.interfaces.IState;
  * 
  * @author Gert Villemos
  */
-public class State extends Issued implements IState {
+public class State extends Named implements IState {
 
     /** The unique UID. */
     private static final long serialVersionUID = 3658873252806807331L;

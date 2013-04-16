@@ -18,7 +18,6 @@ package org.hbird.business.api;
 
 import java.util.List;
 
-import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.core.State;

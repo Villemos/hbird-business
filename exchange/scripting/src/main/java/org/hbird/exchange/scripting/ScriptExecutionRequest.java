@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hbird.exchange.core.Issued;
+import org.hbird.exchange.core.Named;
 
 
 /**
@@ -39,7 +39,7 @@ public class ScriptExecutionRequest implements Serializable {
 	private static final long serialVersionUID = 1638200113394259171L;
 
 	/** Definition of the return type. The binding to the type is based on convention. */
-	public Issued output = null;
+	public Named output = null;
 	
 	/** List of the parameter that the script needs as input. */
 	public Map<String, String> inputBinding = new HashMap<String, String>();
@@ -63,7 +63,7 @@ public class ScriptExecutionRequest implements Serializable {
 	 * @param script The actual script.
 	 * @param format The name of the script format, such as 'JavaScript'
 	 */
-	public ScriptExecutionRequest(String name, String script, String format, Issued output, Map<String, String> inputBinding) {
+	public ScriptExecutionRequest(String name, String script, String format, Named output, Map<String, String> inputBinding) {
 		this.name = name;
 		this.script = script;
 		this.format = format;
@@ -71,7 +71,7 @@ public class ScriptExecutionRequest implements Serializable {
 		this.inputBinding = inputBinding;
 	}	
 
-	public ScriptExecutionRequest(String name, String script, String format, Issued output, String input, String binding) {
+	public ScriptExecutionRequest(String name, String script, String format, Named output, String input, String binding) {
 		this.name = name;
 		this.script = script;
 		this.format = format;

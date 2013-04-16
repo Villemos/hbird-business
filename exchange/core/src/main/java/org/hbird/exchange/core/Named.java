@@ -40,13 +40,22 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
     /** A description of the object. */
     protected String description;
 
+	/** The ID (not Name) of the Part that has issued this object. */
+    protected String issuedBy;
+
+    /**
+     * The time at which this object represented a valid state of the system. Default value is the
+     * time of creation.
+     */
+    protected long timestamp = System.currentTimeMillis();
+
     /**
      * Constructor of a Named object. The timestamp will be set to the creation time.
      * 
      * @param name The name of the object.
      * @param description The description of the object.
      */
-    public Named(String name, String description) {
+    public Named(String issuedBy, String name, String description) {
         this.name = name;
         this.description = description;
     }
@@ -87,10 +96,38 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
     }
 
     public String getID() {
-    	return name;
+    	return name + ":" + this.getClass().getSimpleName() + ":" + timestamp;
     }
     
-    public String prettyPrint() {
+    /**
+	 * @return the issuedBy
+	 */
+	public String getIssuedBy() {
+		return issuedBy;
+	}
+
+	/**
+	 * @param issuedBy the issuedBy to set
+	 */
+	public void setIssuedBy(String issuedBy) {
+		this.issuedBy = issuedBy;
+	}
+
+	/**
+	 * @return the timestamp
+	 */
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	/**
+	 * @param timestamp the timestamp to set
+	 */
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String prettyPrint() {
         return String.format("%s[name=%s]", this.getClass().getSimpleName(), getQualifiedName());
     }
 

@@ -90,7 +90,7 @@ public class HamlibRadioPart extends RadioDevice {
         /** Generate the pointing information, including azimuth, elevation and doppler. */
         List<PointingData> pointingData = null;
         try {
-            pointingData = NavigationUtilities.calculateContactData(start, end, (GroundStation) parent.getIsPartOf(), satellite, 500);
+            pointingData = NavigationUtilities.calculateContactData(start, end, (GroundStation) parent, satellite, 500);
         } catch (OrekitException e) {
             e.printStackTrace();
         }

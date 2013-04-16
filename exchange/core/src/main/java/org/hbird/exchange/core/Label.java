@@ -23,7 +23,7 @@ package org.hbird.exchange.core;
  *         calibrated value describing something as 'ON' or 'OFF'.
  * 
  */
-public class Label extends Issued {
+public class Label extends Named {
 
     private static final long serialVersionUID = 6064865233847879877L;
 

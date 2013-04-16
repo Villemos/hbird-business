@@ -45,7 +45,7 @@ package org.hbird.exchange.core;
  * @author Gert Villemos
  * 
  */
-public class Event extends Issued {
+public class Event extends Named {
 
     /**
 	 * 
@@ -53,7 +53,8 @@ public class Event extends Issued {
     private static final long serialVersionUID = 8958078334517112743L;
 
     public Event(String issuedBy, String name, String description, long timestamp) {
-        super(issuedBy, name, description, timestamp);
+        super(issuedBy, name, description);
+        this.timestamp = timestamp;
     }
 
     public Event(String issuedBy, Event eventTemplate, long timestamp) {

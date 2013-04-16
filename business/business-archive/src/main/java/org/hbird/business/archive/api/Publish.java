@@ -26,7 +26,6 @@ import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Binary;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Named;
@@ -43,11 +42,6 @@ public class Publish extends HbirdApi implements IPublish {
 	}
 
 	public Named publish(Named object) {
-		template.sendBody(inject, object);
-		return object;
-	}
-
-	public Issued publish(Issued object) {
 		object.setIssuedBy(issuedBy);
 		template.sendBody(inject, object);
 		return object;
@@ -101,7 +95,7 @@ public class Publish extends HbirdApi implements IPublish {
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publichMetadata(org.hbird.exchange.core.Named, java.lang.String, java.lang.String)
 	 */
-	public Metadata publishMetadata(Issued subject, String key, String value) {
+	public Metadata publishMetadata(Named subject, String key, String value) {
 		Map<String, Object> metadata = new HashMap<String, Object>();
 		metadata.put(key, value);
 		

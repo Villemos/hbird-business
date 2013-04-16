@@ -19,9 +19,9 @@ package org.hbird.exchange.core;
 import java.util.Comparator;
 
 
-public class IssuedTimestampComparator implements Comparator<Issued> {
+public class IssuedTimestampComparator implements Comparator<Named> {
 
-	public int compare(Issued lhs, Issued rhs) {
+	public int compare(Named lhs, Named rhs) {
 		
 		if (lhs.getTimestamp() < rhs.getTimestamp()) {
 			return -1;

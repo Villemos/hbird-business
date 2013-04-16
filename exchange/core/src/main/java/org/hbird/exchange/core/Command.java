@@ -64,7 +64,12 @@ import org.hbird.exchange.interfaces.IScheduled;
  */
 public class Command extends CommandBase {
 
-    /** List of arguments. The value is embedded in the header of the exchange. */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8080345987907627652L;
+	
+	/** List of arguments. The value is embedded in the header of the exchange. */
     private final Map<String, CommandArgument> arguments;
 
     /**

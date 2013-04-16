@@ -48,7 +48,7 @@ public interface IPart extends INamed {
 	 * 
 	 * @return The parent object of which this is a part.
 	 */
-	public IPart getIsPartOf();
+	public String getIsPartOf();
 	
 	
 	/**
@@ -58,9 +58,6 @@ public interface IPart extends INamed {
 	 */
 	public void setIsPartOf(IPart parent);
 
-	/**
-	 * Method to get the full path of the Part.
-	 * 
-	 * */
-	public String getAbsoluteName();
+	
+	public void setIsPartOf(String parent);	
 }

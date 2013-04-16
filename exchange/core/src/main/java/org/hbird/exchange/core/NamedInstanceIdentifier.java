@@ -35,7 +35,7 @@ public class NamedInstanceIdentifier implements Serializable {
         this.issuedBy = issuedBy;
     }
 
-    public NamedInstanceIdentifier(Issued issuedBy) {
+    public NamedInstanceIdentifier(Named issuedBy) {
     	this.issuedBy = issuedBy.getIssuedBy();
     	this.name = issuedBy.getName();
         this.timestamp = issuedBy.getTimestamp();

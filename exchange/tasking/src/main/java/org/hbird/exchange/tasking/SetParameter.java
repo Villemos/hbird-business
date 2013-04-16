@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import org.hbird.exchange.core.Issued;
+import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 
@@ -73,11 +73,11 @@ public class SetParameter extends Task {
 	 * 
 	 * @param arg0 The exchange to be send.
 	 */
-	public List<Issued> execute() {
+	public List<Named> execute() {
 		LOG.info("Setting parameter '" + parameter.getName() + "' to value '" + parameter.getValue().toString() + "'.");
 		
 		/** Send the preconfigured parameter. */
-		List<Issued> results = new ArrayList<Issued>();
+		List<Named> results = new ArrayList<Named>();
 		results.add(parameter);
 		
 		return results;

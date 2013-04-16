@@ -48,7 +48,7 @@ public class ScriptTester extends SystemTest {
         binding.put(estcube1.getQualifiedName() + "/PARA3", "in1");
         binding.put(estcube1.getQualifiedName() + "/PARA4", "in2");
 
-        ScriptComponent com = new ScriptComponent("ScriptComponent_SYN1", "ScriptComponent_SYN1", "SYN1", script, new Parameter("ScriptEngine", estcube1.getQualifiedName() + "/SYN1",
+        ScriptComponent com = new ScriptComponent("ScriptComponent_SYN1", "SYN1", script, new Parameter("ScriptEngine", estcube1.getQualifiedName() + "/SYN1",
                 "A test script parameter.", new Double(0), "Volt"), binding);
         com.setIsPartOf(scripts);
 
@@ -80,7 +80,7 @@ public class ScriptTester extends SystemTest {
         binding = new HashMap<String, String>();
         binding.put(estcube1.getQualifiedName() + "/PARA5", "in1");
 
-        com = new ScriptComponent("ScriptComponent_SYN_STATE1", "ScriptComponent_SYN_STATE1", "SYN_STATE1", script, new State("ScriptEngine", "SYN_STATE1", "", "PARA2", true), binding);
+        com = new ScriptComponent("ScriptComponent_SYN_STATE1", "SYN_STATE1", script, new State("ScriptEngine", "SYN_STATE1", "", "PARA2", true), binding);
         com.setIsPartOf(scripts);
         injection.sendBody(new StartComponent("SystemTest", com));
 

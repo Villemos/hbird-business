@@ -32,12 +32,18 @@
  */
 package org.hbird.business.archive.api;
 
+import java.util.List;
+
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.HbirdApi;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPartManager;
 import org.hbird.business.api.IPublish;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
+import org.hbird.exchange.core.Named;
+import org.hbird.exchange.dataaccess.PartRequest;
+import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
@@ -69,5 +75,16 @@ public class PartManager extends HbirdApi implements IPartManager {
 	public void stop(String partName) {
 		IPublish api = ApiFactory.getPublishApi(issuedBy);
 		api.publish(new StopComponent(issuedBy, partName));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IPartManager#resolveParent(org.hbird.exchange.interfaces.IPart)
+	 */
+	@Override
+	public IPart resolveParent(IPart child) {
+		IDataAccess api = ApiFactory.getDataAccessApi(issuedBy);
+		Named resolution = api.resolveNamed(child.getIsPartOf());
+		
+		return resolution == null ? null : (IPart) resolution;
 	}
 }

@@ -28,7 +28,6 @@ import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IOrbitPrediction;
-import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
@@ -109,17 +108,17 @@ public class NavigationTester extends SystemTest {
 
 	protected void print(List<Named> elements) {
 
-		TreeMap<Long, Issued> sorted = new TreeMap<Long, Issued>();
+		TreeMap<Long, Named> sorted = new TreeMap<Long, Named>();
 
 		for (Named element : elements) {
-			if (element instanceof Issued) {
-				sorted.put(((Issued)element).getTimestamp(), (Issued)element);
+			if (element instanceof Named) {
+				sorted.put(((Named)element).getTimestamp(), (Named)element);
 			}
 		}
 
-		Iterator<Entry<Long, Issued>> it = sorted.entrySet().iterator();
+		Iterator<Entry<Long, Named>> it = sorted.entrySet().iterator();
 		while (it.hasNext()) {
-			Issued element = it.next().getValue();
+			Named element = it.next().getValue();
 
 			if (element instanceof TleOrbitalParameters) {
 				continue;

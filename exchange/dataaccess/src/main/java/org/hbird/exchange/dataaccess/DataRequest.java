@@ -189,4 +189,13 @@ public class DataRequest extends Command {
 	public String getSortOrder() {
 		return getArgumentValue(StandardArguments.SORT_ORDER, String.class);
 	}
+
+	public void setID(String ID) {
+		if (ID != null) {
+			String[] elements = ID.split(":");
+			addName(elements[0]);
+			setClass(elements[1]);
+			setTimestamp(Long.parseLong(elements[2]));
+		}
+	}
 }

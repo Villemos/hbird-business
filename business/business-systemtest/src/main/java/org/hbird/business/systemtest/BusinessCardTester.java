@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.constants.StandardComponents;
-import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.interfaces.IStartablePart;
 
@@ -42,9 +41,9 @@ public class BusinessCardTester extends SystemTest {
 			Boolean didArrive = false;
 			for (Named obj : businessCardListener.elements) {
 				LOG.info(obj);
-				if (obj instanceof Issued) {
+				if (obj instanceof Named) {
 					/** Notice that the name given to the configurator in the assembly is 'Main Configurator' */
-					if (((Issued)obj).getIssuedBy().equals(StandardComponents.CONFIGURATOR_NAME)) {
+					if (((Named)obj).getIssuedBy().equals(StandardComponents.CONFIGURATOR_NAME)) {
 						didArrive = true;
 						break;
 					}
@@ -65,9 +64,9 @@ public class BusinessCardTester extends SystemTest {
 			Boolean commandingDidArrive = false;
 			for (Named obj : businessCardListener.elements) {
 				LOG.info(obj);
-				if (obj instanceof Issued) {
+				if (obj instanceof Named) {
 
-					if (((Issued)obj).getIssuedBy().equals(StandardComponents.COMMAND_RELEASER_NAME)) {
+					if (((Named)obj).getIssuedBy().equals(StandardComponents.COMMAND_RELEASER_NAME)) {
 						commandingDidArrive = true;
 						break;
 					}
@@ -94,9 +93,9 @@ public class BusinessCardTester extends SystemTest {
 			Boolean commandingDidArrive = false;
 			for (Named obj : businessCardListener.elements) {
 				LOG.info(obj);
-				if (obj instanceof Issued) {
+				if (obj instanceof Named) {
 
-					if (((Issued)obj).getIssuedBy().equals(commanding.getQualifiedName())) {
+					if (((Named)obj).getIssuedBy().equals(commanding.getQualifiedName())) {
 						commandingDidArrive = true;
 						break;
 					}

@@ -77,19 +77,6 @@ public class PartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.Part#getQualifiedName()}.
-     */
-    @Test
-    public void testAbsoluteName() {
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ROOT_1, root1.getAbsoluteName());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ROOT_2, root2.getAbsoluteName());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ROOT_1 + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + CHILD_1, root1Child1.getAbsoluteName());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ROOT_1 + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + CHILD_2, root1Child2.getAbsoluteName());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ROOT_2 + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + CHILD_1, root2Child1.getAbsoluteName());
-        assertEquals(Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ROOT_2 + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + CHILD_2, root2Child2.getAbsoluteName());
-    }
-
-    /**
      * Test method for {@link org.hbird.exchange.core.Part#getQualifiedName(java.lang.String)}.
      */
     @Test
@@ -180,7 +167,7 @@ public class PartTest {
     @Test
     public void testSetIsPartOf() {
         assertEquals(root1, root1Child1.getIsPartOf());
-        root1Child1.setIsPartOf(null);
+        root1Child1.setIsPartOf("");
         assertEquals(root1, root1Child1.getIsPartOf());
         root1Child1.setIsPartOf(root2);
         assertEquals(root2, root1Child1.getIsPartOf());

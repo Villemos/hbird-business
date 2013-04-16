@@ -24,7 +24,6 @@ import javax.script.*;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.scripting.ScriptExecutionRequest;
 
@@ -89,7 +88,7 @@ public class ScriptExecutor {
 
 		LOG.debug("Script '" + request.name + "': received dependent object '" + in.getName() + "' with timestamp '.");
 
-		Issued returnValue = null;
+		Named returnValue = null;
 
 		try {
 			/** Bind the parameter to the script. */

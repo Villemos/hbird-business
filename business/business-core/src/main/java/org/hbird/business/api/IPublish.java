@@ -22,7 +22,6 @@ import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Binary;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.core.Issued;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Named;
@@ -50,7 +49,6 @@ public interface IPublish {
 	public void commit();
 
 	public Named publish(Named object);
-	public Issued publish(Issued object);
 	
 	public Parameter publishParameter(String name, String description, Number value, String unit);
 	public Parameter publishParameter(String name, String description, Number value, String unit, long timestamp);
@@ -74,7 +72,7 @@ public interface IPublish {
 	 * @param key The key of the metadata.
 	 * @param metadata The value of the metadata
 	 */
-	public Metadata publishMetadata(Issued subject, String key, String metadata);
+	public Metadata publishMetadata(Named subject, String key, String metadata);
 
 	public TleOrbitalParameters publishTleParameters(String name, String satellite, String tle1, String tle2);
 }
