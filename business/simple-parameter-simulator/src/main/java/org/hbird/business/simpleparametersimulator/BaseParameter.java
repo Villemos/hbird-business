@@ -50,7 +50,7 @@ public abstract class BaseParameter {
 	 * @param description
 	 */
 	public BaseParameter(IPart issuedBy, String name, String description) {
-		this.issuedBy = issuedBy.getQualifiedName();
+		this.issuedBy = issuedBy.getName();
 		this.name = name;
 		this.description = description;
 	}
@@ -63,7 +63,7 @@ public abstract class BaseParameter {
 	 * @param unit
 	 */
 	public BaseParameter(IPart issuedBy, String name, String description, Number value, String unit) {
-		this.issuedBy = issuedBy.getQualifiedName();
+		this.issuedBy = issuedBy.getName();
 		this.name = name;
 		this.description = description;
 		this.value = value;

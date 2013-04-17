@@ -81,7 +81,7 @@
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
 				<to uri="bean:catalogueapi" />
-                <to uri="bean:event" />
+               <to uri="bean:event" />
  				<to uri="bean:businesscard" /> 
 				<to uri="bean:parameterarchive" />
 				<to uri="bean:statearchive" />
@@ -92,8 +92,8 @@
 	 			<to uri="bean:commanding" />
 	 	 		<to uri="bean:websockettester" />
 	 			<to uri="bean:navigation" />
-	 			<to uri="bean:parsecontroller" />
 	 			<to uri="bean:automaticorbitpropagation" />
+	 			<to uri="bean:parsecontroller" />
 				<to uri="bean:inmemoryscheduler" />
 	 			<to uri="bean:celestrack" />
 	 			<to uri="bean:finisher" />
@@ -110,15 +110,8 @@
 			<from uri="direct:injection" />
 			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
 			<setHeader headerName="class"><simple>${in.body.class.simpleName}</simple></setHeader>
-
-
-			<choice>
-				<when>
-	                <simple>${in.body} is 'org.hbird.exchange.interfaces.IIssued'</simple>
-					<setHeader headerName="issuedBy"><simple>${in.body.issuedBy}</simple></setHeader>
-					<setHeader headerName="timestamp"><simple>${in.body.timestamp}</simple></setHeader>				
-				</when>
-			</choice>
+			<setHeader headerName="issuedBy"><simple>${in.body.issuedBy}</simple></setHeader>
+			<setHeader headerName="timestamp"><simple>${in.body.timestamp}</simple></setHeader>				
 
 						
 			<to uri="bean:transferScheduler"/>
@@ -137,7 +130,7 @@
 			<choice>
 				<when>
 		            <simple>${in.body} is 'org.hbird.exchange.interfaces.IGroundStationSpecific'</simple>
-		            <setHeader headerName="location"><simple>${in.body.groundStationName}</simple></setHeader>
+		            <setHeader headerName="location"><simple>${in.body.groundStationId}</simple></setHeader>
 				</when>
 			</choice>
 
@@ -151,7 +144,7 @@
 			<choice>
 				<when>
 		            <simple>${in.body} is 'org.hbird.exchange.interfaces.ISatelliteSpecific'</simple>
-		            <setHeader headerName="satellite"><simple>${in.body.satelliteName}</simple></setHeader>
+		            <setHeader headerName="satellite"><simple>${in.body.satelliteId}</simple></setHeader>
 				</when>
 			</choice>
 	        

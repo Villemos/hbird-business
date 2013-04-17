@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.core.NamedInstanceIdentifier;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
@@ -33,7 +32,7 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
 public class Arguments {
 
     public static final CommandArgument APPLICABLE_TO = new CommandArgument(StandardArguments.APPLICABLE_TO,
-            "The Named object the metadata must be appliable to.", NamedInstanceIdentifier.class, false);
+            "The Named object the metadata must be appliable to.", String.class, false);
 
     public static final CommandArgument CLASS = new CommandArgument(StandardArguments.CLASS, "The class of the Named object.", String.class, false);
 
@@ -41,14 +40,14 @@ public class Arguments {
             "The propagation step size when calculating Contact Data between a location and a satellite between which visibility exist.", Long.class,
             "Milliseconds", 500L, true);
 
-    public static final CommandArgument DELETION_QUERY = new CommandArgument(StandardArguments.DELETION_QUERY,
-            "The query based on which data will be deleted.", String.class, true);
+    public static final CommandArgument DELETE_ALL = new CommandArgument(StandardArguments.DELETE_ALL,
+            "Flag indicating that the complete archive should be deleted.", Boolean.class, false);
 
     public static final CommandArgument DELTA_PROPAGATION = new CommandArgument(StandardArguments.DELTA_PROPAGATION,
             "The delta propagation from the starttime.", Long.class, "Seconds", 2 * 60 * 60d, true);
 
     public static final CommandArgument DERIVED_FROM = new CommandArgument(StandardArguments.DERIVED_FROM,
-            "Identifier of the named object of which an object must be derived from.", NamedInstanceIdentifier.class, false);
+            "Identifier of the named object of which an object must be derived from.", String.class, false);
 
     public static final CommandArgument ISSUED_BY = new CommandArgument(StandardArguments.ISSUED_BY,
             "The source from which the data was 'issuedBy'", String.class, false);
@@ -106,8 +105,6 @@ public class Arguments {
 
     public static final CommandArgument TO = new CommandArgument(StandardArguments.TO, "The end of a range search on timestamp. Default to '*'.", Long.class,
             "Seconds", null, false);
-
-    public static final CommandArgument TYPE = new CommandArgument(StandardArguments.TYPE, "The type of the Named object.", String.class, false);
 
     public static final CommandArgument VISIBILITY = new CommandArgument(StandardArguments.VISIBILITY,
             "Whether the contact event is a start of contact (true) or end of contact (false).", Boolean.class, "", Boolean.TRUE, true);

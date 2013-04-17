@@ -82,19 +82,11 @@ public class GroundStation extends Part implements IGroundStationSpecific {
     }
 
 	/**
-     * @see org.hbird.exchange.interfaces.IGroundStationSpecific#getGroundStationName()
+     * @see org.hbird.exchange.interfaces.IGroundStationSpecific#getGroundStationId()
      */
     @Override
-    public String getGroundStationName() {
-        return name;
-    }
-
-    /**
-     * @see org.hbird.exchange.interfaces.IGroundStationSpecific#setGroundStationName(java.lang.String)
-     */
-    @Override
-    public void setGroundStationName(String groundStationName) {
-        this.name = groundStationName;
+    public String getGroundStationId() {
+        return getID();
     }
 
 	public D3Vector getGeoLocation() {

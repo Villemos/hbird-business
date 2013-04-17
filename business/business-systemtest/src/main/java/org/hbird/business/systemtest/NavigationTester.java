@@ -54,8 +54,8 @@ public class NavigationTester extends SystemTest {
 		TleOrbitalParameters parameters = publishTleParameters();
 
 		List<String> locations = new ArrayList<String>();
-		locations.add(es5ec.getID());
-		locations.add(gsAalborg.getID());
+		locations.add(es5ec.getName());
+		locations.add(gsAalborg.getName());
 
 		/** Send command to commit all changes. */
 		forceCommit();
@@ -83,7 +83,7 @@ public class NavigationTester extends SystemTest {
 
 		/** Retrieve the next set of TARTU events and check them. */
 		IDataAccess dataApi = ApiFactory.getDataAccessApi("SystemTest");
-		List<LocationContactEvent> contactEvents = dataApi.getNextLocationContactEventsForLocation(es5ec.getQualifiedName(), 1355385522265l);
+		List<LocationContactEvent> contactEvents = dataApi.getNextLocationContactEventsForLocation(es5ec.getID(), 1355385522265l);
 
 		azzert(contactEvents.size() == 2);
 		azzert(contactEvents.get(0).getTimestamp() == 1355390676020l);
@@ -93,7 +93,7 @@ public class NavigationTester extends SystemTest {
 		 * Check the contact events with Aalborg. Notice that there is one LOST contact event first. The retrieval
 		 * should NOT get this.
 		 */
-		contactEvents = dataApi.getNextLocationContactEventsForLocation(gsAalborg.getQualifiedName(), 1355385522265l);
+		contactEvents = dataApi.getNextLocationContactEventsForLocation(gsAalborg.getID(), 1355385522265l);
 
 		azzert(contactEvents.size() == 2);
 		azzert(contactEvents.get(0).getTimestamp() == 1355390809139l);
@@ -131,12 +131,12 @@ public class NavigationTester extends SystemTest {
 			else if (element instanceof LocationContactEvent) {
 				LocationContactEvent event = (LocationContactEvent) element;
 				if (event.isVisible() == true) {
-					System.out.println(new Date(element.getTimestamp()) + " Location Event: " + event.getTimestamp() + " " + event.getGroundStationName()
-							+ " got contact to " + event.getSatelliteName());
+					System.out.println(new Date(element.getTimestamp()) + " Location Event: " + event.getTimestamp() + " " + event.getGroundStationId()
+							+ " got contact to " + event.getSatelliteId());
 				}
 				else {
-					System.out.println(new Date(element.getTimestamp()) + " Location Event: " + event.getTimestamp() + " " + event.getGroundStationName()
-							+ " lost contact to " + event.getSatelliteName());
+					System.out.println(new Date(element.getTimestamp()) + " Location Event: " + event.getTimestamp() + " " + event.getGroundStationId()
+							+ " lost contact to " + event.getSatelliteId());
 				}
 			}
 		}

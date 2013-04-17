@@ -28,8 +28,8 @@ public class AutomaticOrbitPropagationTester extends SystemTest {
 		publishTleParameters();
 			
 		List<String> locations = new ArrayList<String>();
-		locations.add(es5ec.getQualifiedName());
-		locations.add(gsDarmstadt.getQualifiedName());
+		locations.add(es5ec.getID());
+		locations.add(gsDarmstadt.getID());
 		
 
 		/** Send command to commit all changes. */

@@ -50,7 +50,7 @@ public class CommandingTester extends SystemTest {
 
         Thread.sleep(2000);
 
-        azzert(commandingListener.lastReceived.getQualifiedName().equals(estcube1.getID() + "/COM2"),
+        azzert(commandingListener.lastReceived.getName().equals("COM2"),
                 "Command request was executed, command 'COM2' was issued.");
 
         /** Create a command with a release time. */
@@ -65,23 +65,23 @@ public class CommandingTester extends SystemTest {
 
         /** Add tasks to be done and lock states. */
         List<Task> tasks = new ArrayList<Task>();
-        tasks.add(new SetParameter("SystemTest", "TASK_SET_PARA10", "A test parameter set by a task", 0, limits.getQualifiedName() + "/PARA10",
+        tasks.add(new SetParameter("SystemTest", "TASK_SET_PARA10", "A test parameter set by a task", 0, "PARA10",
                 "A test parameter more", 9d, "Bananas"));
-        tasks.add(new SetParameter("SystemTest", "TASK_SET_PARA11", "A test parameter set by a task", 0, limits.getQualifiedName() + "/PARA11",
+        tasks.add(new SetParameter("SystemTest", "TASK_SET_PARA11", "A test parameter set by a task", 0, "PARA11",
                 "A test parameter more", 1d, "Bananas"));
 
         List<String> states = new ArrayList<String>();
-        states.add(estcube1.getID() + "/COM2/STATE1");
-        states.add(estcube1.getID() + "/COM2/STATE2");
-        states.add(estcube1.getID() + "/COM2/STATE3");
-        states.add(estcube1.getID() + "/COM2/STATE4");
+        states.add("COM2/STATE1");
+        states.add("COM2/STATE2");
+        states.add("COM2/STATE3");
+        states.add("COM2/STATE4");
 
         /** Set the values of the states. */
 
-        publishApi.publishState("STATE1", "A test description,", estcube1.getID() + "/COM2", true);
-        publishApi.publishState("STATE2", "A test description,", estcube1.getID() + "/COM2", true);
-        publishApi.publishState("STATE3", "A test description,", estcube1.getID() + "/COM2", false);
-        publishApi.publishState("STATE4", "A test description,", estcube1.getID() + "/COM2", true);
+        publishApi.publishState("COM2/STATE1", "A test description,", "COM2:Command:*", true);
+        publishApi.publishState("COM2/STATE2", "A test description,", "COM2:Command:*", true);
+        publishApi.publishState("COM2/STATE3", "A test description,", "COM2:Command:*", false);
+        publishApi.publishState("COM2/STATE4", "A test description,", "COM2:Command:*", true);
 
         /** Send command to commit all changes. */
         forceCommit();
@@ -95,7 +95,7 @@ public class CommandingTester extends SystemTest {
         failedCommandRequestListener.lastReceived = null;
 
         /** Update state to make the command succeed. */
-        publishApi.publishState("STATE3", "A test description,", estcube1.getID() + "/COM2", true);
+        publishApi.publishState("COM2/STATE3", "A test description,", "COM2:Command:*", true);
 
         /** Send command to commit all changes. */
         forceCommit();
@@ -111,7 +111,7 @@ public class CommandingTester extends SystemTest {
          * Add a state that is not inserted in the command, but which is a state of the command. See if the command
          * fails.
          */
-        publishApi.publishState("STATE_OTHER", "A test description", estcube1.getID() + "/COM2", false);
+        publishApi.publishState("STATE_OTHER", "A test description", "COM2:Command:*", false);
 
         /** Send command to commit all changes. */
         forceCommit();

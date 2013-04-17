@@ -55,8 +55,7 @@ public abstract class HamlibDriver extends SoftwareComponentDriver {
     @Override
     public void doConfigure() {
 
-        String name = part.getQualifiedName();
-        String nameDot = part.getQualifiedName(".");
+        String name = part.getName();
 
         inMemoryScheduler.setInjectUrl("direct://inject." + this.getPart().getName());
         
@@ -81,7 +80,7 @@ public abstract class HamlibDriver extends SoftwareComponentDriver {
          * Setup route for the PART to receive the verifications. The part will verify the respond and if
          * it fails, or the verification stage is complete, issue a State.
          */
-        from("direct:hbird" + nameDot + ".verification")
+        from("direct:hbird" + name + ".verification")
                 .bean(verifier, "verify")
                 .choice()
                 .when(simple("${in.body} == null")).stop()
@@ -110,7 +109,7 @@ public abstract class HamlibDriver extends SoftwareComponentDriver {
                 .log(LoggingLevel.INFO, "Sending command '" + simple("${body}").getText() + "' to " + name)
                 .inOut("netty:tcp://" + getAddress())
                 .removeHeader("AMQ_SCHEDULED_DELAY")
-                .to("direct:hbird" + nameDot + ".verification")
+                .to("direct:hbird" + name + ".verification")
                 .routeId(name + ": Command execution");
 
         /** Create route for cleanup of stages. */
@@ -119,7 +118,7 @@ public abstract class HamlibDriver extends SoftwareComponentDriver {
                 .to(StandardEndpoints.MONITORING)
                 .routeId(name + ": Cleanup");
 
-        from("direct:parameters" + nameDot)
+        from("direct:parameters" + name)
                 .bean(new OnChange())
                 .choice()
                 .when(header("hbird.haschanged").isEqualTo(false))

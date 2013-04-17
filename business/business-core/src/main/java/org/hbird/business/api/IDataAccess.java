@@ -539,16 +539,6 @@ public interface IDataAccess {
 
 
 	/**
-	 * Method to retrieve the last orbital state of a satellite as derived from a specific TLE. The method will return
-	 * <li>The last orbital state sample applicable to the satellite</li>
-	 * 
-	 * @param satellite The name of the satellite
-	 * @param derivedFromTleNamed The name of the TleParameters object the state must be derived from
-	 * @param derivedFromTleTimestamped The timestamp of the TleParameter object that the state must be derived from
-	 */
-	public OrbitalState getOrbitalStateFor(String satellite, String derivedIssuedBy, String derivedFromTleNamed, long derivedFromTleTimestamped);
-
-	/**
 	 * Method to retrieve the last orbital state of a satellite as derived from the last TLE. The method will return
 	 * <li>The last orbital state sample applicable to the satellite, derived from the last TLE parameters.</li>
 	 * 
@@ -570,21 +560,6 @@ public interface IDataAccess {
 	 * @return A list of all orbital states applicable to the satellites
 	 */
 	public List<OrbitalState> getOrbitalStatesFor(String satellite, long from, long to);
-
-	/**
-	 * Method to retrieve the orbital state of a satellite, identified throughs its name, within
-	 * a given interval. The method will return
-	 * <li>All orbital state samples applicable to the satellite</li>
-	 * <li>With a sample timestamp between 'from' and 'to'</li>
-	 * <li>and sorted on timestamp in ASCENDING order</li>
-	 * 
-	 * @param satellite Unique name of the satellite
-	 * @param from The earliest time (Java time).
-	 * @param to The latest time (Java time)
-	 * @param derivedTimestamp  The timestamp of the TLE parameters object that this must have been derived from
-	 * @return A list of all orbital states applicable to the satellites
-	 */
-	public List<OrbitalState> getOrbitalStatesFor(String satellite, long from, long to, String derivedIssuedBy, String derivedFromName, long derivedFromTimestamp);
 
 	/**
 	 * Method to retrieve the TLE of a satellite, identified throughs its name. The method will return

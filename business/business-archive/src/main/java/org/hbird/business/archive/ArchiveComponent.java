@@ -29,8 +29,9 @@ import org.hbird.exchange.dataaccess.StateRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
 
 /**
+ * StartablePart for storage of data.
+ * 
  * @author Gert Villemos
- *
  */
 public class ArchiveComponent extends StartablePart {
 
@@ -39,20 +40,20 @@ public class ArchiveComponent extends StartablePart {
 	 */
 	private static final long serialVersionUID = 2145124224125316877L;
 
+	/** Default driver name (SOLR) */
 	public static final String DEFAULT_DRIVER = ArchiveComponentDriver.class.getName();
 	
 	/**
-	 * @param name
-	 * @param description
+	 * Default constructor. 
 	 */
 	public ArchiveComponent() {
-		super(StandardComponents.ARCHIVE_NAME, StandardComponents.ARCHIVE_NAME, StandardComponents.ARCHIVE_DESC, DEFAULT_DRIVER);
+		super(StandardComponents.ASSEMBLY, StandardComponents.ARCHIVE_NAME, StandardComponents.ARCHIVE_DESC, DEFAULT_DRIVER);
 	}
 
 	{
 		card.commandsIn.put(CommitRequest.class.getName(), new CommitRequest("", ""));
 		card.commandsIn.put(DataRequest.class.getName(), new DataRequest("", ""));
-		card.commandsIn.put(DeletionRequest.class.getName(), new DeletionRequest("", "", ""));
+		card.commandsIn.put(DeletionRequest.class.getName(), new DeletionRequest(""));
 		card.commandsIn.put(GroundStationRequest.class.getName(), new GroundStationRequest("", ""));
 		card.commandsIn.put(OrbitalStateRequest.class.getName(), new OrbitalStateRequest("", ""));
 		card.commandsIn.put(ParameterRequest.class.getName(), new ParameterRequest("", "", 0));

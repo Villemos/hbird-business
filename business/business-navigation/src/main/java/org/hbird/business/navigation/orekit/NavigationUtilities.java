@@ -13,6 +13,7 @@ import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Satellite;
+import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
 import org.orekit.frames.LocalOrbitalFrame;
@@ -52,7 +53,7 @@ public class NavigationUtilities {
         return new PVCoordinates(position, velocity);
     }
 
-    public static OrbitalState toOrbitalState(SpacecraftState state, String satellite) {
+    public static OrbitalState toOrbitalState(SpacecraftState state, TleOrbitalParameters parameters) {
 
         /** Create position vector. */
         D3Vector position = new D3Vector("", "Position", "Position", "The orbital position of the satellite at the given time.",
@@ -73,8 +74,8 @@ public class NavigationUtilities {
                 state.getOrbit().getPVCoordinates().getMomentum().getZ());
 
         return new OrbitalState(StandardComponents.ORBIT_PROPAGATOR_NAME, "OrbitalState", "Orbital state of satellite", state.getDate().toDate(scale).getTime(),
-                satellite, position,
-                velocity, momentum);
+                parameters.getSatelliteId(), position,
+                velocity, momentum, parameters);
     }
 
     public static List<PointingData> calculateContactData(LocationContactEvent startContactEvent, LocationContactEvent endContactEvent,
@@ -100,7 +101,7 @@ public class NavigationUtilities {
         double doppler = calculateDoppler(coord, locationOnEarth, date);
         double dopplerShift = calculateDopplerShift(doppler, satellite.getFrequency());
 
-        PointingData entry = new PointingData(startTime, azimuth, elevation, doppler, dopplerShift, startContactEvent.getSatelliteName(), location.getName());
+        PointingData entry = new PointingData(startTime, azimuth, elevation, doppler, dopplerShift, startContactEvent.getSatelliteId(), location.getName());
 
         LOG.debug(entry.prettyPrint());
         data.add(entry);
@@ -120,7 +121,7 @@ public class NavigationUtilities {
 
             long time = startTime + contactDataStepSize * i;
             
-            entry = new PointingData(time, azimuth, elevation, doppler, dopplerShift, startContactEvent.getSatelliteName(), location.getName());
+            entry = new PointingData(time, azimuth, elevation, doppler, dopplerShift, startContactEvent.getSatelliteId(), location.getName());
 
             LOG.debug(entry.prettyPrint());
             data.add(entry);            

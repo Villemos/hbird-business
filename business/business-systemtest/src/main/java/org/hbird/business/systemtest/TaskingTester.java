@@ -36,7 +36,7 @@ public class TaskingTester extends SystemTest {
         LOG.info("Starting");
 
         Part limits = parts.get("Limits");
-        String parameterName = limits.getQualifiedName() + "/PARA1_LowerHardLimit/LIMIT";
+        String parameterName = limits.getName() + "/PARA1_LowerHardLimit/LIMIT";
 
         Part taskExecutor = parts.get("Task Executor");
 
@@ -71,8 +71,8 @@ public class TaskingTester extends SystemTest {
         azzert(parameterListener.elements.size() == 5, "Received 5 repetitions.");
 
         /** Create a task for issuing a command. */
-        String commandName = estcube1.getQualifiedName() + "/COM1";
-        String task2Name = taskExecutor.getQualifiedName() + "/SEND_COM1";
+        String commandName = estcube1.getName() + "/COM1";
+        String task2Name = taskExecutor.getName() + "/SEND_COM1";
         Command command = new Command("SystemTest", "Any", commandName, "A test command used to test SendCommand task.", 0, 0);
         injection.sendBody(new SendCommand("SystemTest", task2Name, "A test parameter set by a task", 0, command));
 

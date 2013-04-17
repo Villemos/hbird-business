@@ -95,7 +95,7 @@ public class BusinessCardTester extends SystemTest {
 				LOG.info(obj);
 				if (obj instanceof Named) {
 
-					if (((Named)obj).getIssuedBy().equals(commanding.getQualifiedName())) {
+					if (((Named)obj).getIssuedBy().equals(commanding.getName())) {
 						commandingDidArrive = true;
 						break;
 					}

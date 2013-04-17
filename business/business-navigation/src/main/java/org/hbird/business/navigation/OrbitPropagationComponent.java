@@ -24,7 +24,6 @@ import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.core.StartablePart;
-import org.hbird.business.navigation.api.OrbitPropagation;
 import org.hbird.business.navigation.controller.OrbitPropagationComponentDriver;
 import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.navigation.OrbitalState;
@@ -100,7 +99,7 @@ public class OrbitPropagationComponent extends StartablePart {
 		super(ID, name, description, OrbitPropagationComponentDriver.class.getName());
 		this.executionDelay = executionDelay;
 		this.leadTime = leadTime;
-		this.satellite = satellite.getQualifiedName();
+		this.satellite = satellite.getID();
 		this.locations = locations;
 	}
 
@@ -108,11 +107,11 @@ public class OrbitPropagationComponent extends StartablePart {
 		super(ID, name, description, OrbitPropagationComponentDriver.class.getName());
 		this.executionDelay = executionDelay;
 		this.leadTime = leadTime;
-		this.satellite = satellite.getQualifiedName();
+		this.satellite = satellite.getID();
 
 		this.locations = new ArrayList<String>();
 		for (IPart location : locations) {
-			this.locations.add(location.getQualifiedName());
+			this.locations.add(location.getID());
 		}
 	}
 
@@ -131,18 +130,7 @@ public class OrbitPropagationComponent extends StartablePart {
 	}
 
 	
-	public void execute() {
-		
-		if (count == 0) {
-			onFirstExecution();			
-		}
-		else {
-			onExecution();
-		}
-	}
-
-
-	protected void onFirstExecution() {
+	public synchronized void execute() {
 
 		/** Propagate the orbit from NOW to 'NOW + leadTime + executionDelay. This ensures that
 		 * there will always be as a minimum 'leadTime' orbit prediction available and as a 
@@ -158,22 +146,28 @@ public class OrbitPropagationComponent extends StartablePart {
 		 * 
 		 * */
 
-		/** Create local logger. Dont want to serialize the logger class hierachy when sending around this object... */
-		LOG.info("Propagating orbit of satellite '" + satellite + "' (first execution).");
+		LOG.info("Propagating orbit of satellite '" + satellite + "'.");
 
 		/** Get the latest TLE */
 		IDataAccess api = ApiFactory.getDataAccessApi(this.name);
 		TleOrbitalParameters tleParameters = api.getTleFor(satellite);
 
-		/** TODO If the TLE has changed, then we should clear the orbital states and recalculate them. */
-		
 		if (tleParameters == null) {
-			/** If there are no TLE parameters, then we cant*/
-			// TODO
+			/** If there are no TLE parameters, then we cant do anything*/
+			LOG.error("Failed to find TLE for satellite '" + satellite + "'. Cannot propagate orbital state, sorry.");
+			return;
 		}
 
 		/** Get the latest orbital state */
 		OrbitalState state = api.getOrbitalStateFor(satellite);
+
+		/** If the TLE has changed, then we should clear the orbital states and recalculate them. */
+		if (state != null && tleParameters.getID().equals(state.getDerivedFrom()) == false) {
+			/** Clear all states of this satellite */
+			LOG.info("Latest orbital state based on TLE '" + state.getDerivedFrom() + "'. Latest TLE in archive is '" + tleParameters.getID() + "'. Deleting stored orbital states.");
+			ApiFactory.getArchiveManagerApi(this.name).deleteOrbitalStates(satellite);
+			state = null;
+		}
 
 		long from = 0;
 		long to = 0;
@@ -196,58 +190,12 @@ public class OrbitPropagationComponent extends StartablePart {
 		if (from != 0 && to != 0) {
 			/** Request a propagation of the orbit. We use the 'stream' version of the method which means the result
 			 * is published directly by the propegator to the system. */
-			doRequest(from, to);
+			IOrbitPrediction predictionApi = ApiFactory.getOrbitPredictionApi(this.getName());
+
+			/** Request a propagation of the orbit. We use the 'stream' version of the method which means the result
+			 * is published directly by the propegator to the system. */
+			predictionApi.requestOrbitPropagationStream(satellite, locations, from, to);		
 		}
-	}
-
-	
-	
-	protected void onExecution() {
-		/** Check the last orbital state in the system. */
-		/** Get the latest orbital state */
-
-		/** Create local logger. Dont want to serialize the logger class hierachy when sending around this object... */
-		Logger LOG = LoggerFactory.getLogger(OrbitPropagationComponent.class);
-		LOG.info("Propagating orbit of satellite '" + satellite + "' (propagation #" + count + ").");
-
-		IDataAccess api = ApiFactory.getDataAccessApi(this.name);
-		OrbitalState state = api.getOrbitalStateFor(satellite);
-
-		/** If we for some reason do not have a state, then initialize. Should have been done automatically already. But someone
-		 * could have deleted part of the DB or similar. */
-
-		long now = (new Date()).getTime();
-
-		if (state == null) {
-			long from = now;
-			long to = now + leadTime + executionDelay;
-			LOG.info("No state. Requesting TLE based from '" + from + "' (NOW) to '" + to + "'");
-
-			doRequest(from, to);
-		}		
-		else if (now + leadTime + executionDelay > state.getTimestamp()) {
-			long delta = now + leadTime + executionDelay - state.getTimestamp();
-			long from = state.getTimestamp();
-			long to = state.getTimestamp() + delta;
-
-			LOG.info("No state. Requesting TLE based from '" + from + "' to '" + to + "'");
-
-			doRequest(from, to);
-		}
-	}	
-
-	/**
-	 * Helper method to send an orbital propagation request.
-	 * 
-	 * @param from The start time of the request
-	 * @param to The end time of the request
-	 */
-	protected void doRequest(long from, long to) {
-		IOrbitPrediction predictionApi = new OrbitPropagation(this.getName());
-
-		/** Request a propagation of the orbit. We use the 'stream' version of the method which means the result
-		 * is published directly by the propegator to the system. */
-		predictionApi.requestOrbitPropagationStream(satellite, locations, from, to);		
 	}
 
 	public long getLeadTime() {

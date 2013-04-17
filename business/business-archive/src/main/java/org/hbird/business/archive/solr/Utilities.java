@@ -31,8 +31,6 @@ import com.thoughtworks.xstream.XStream;
 
 public class Utilities {
 	
-	private static final transient Logger LOG = LoggerFactory.getLogger(Utilities.class);
-
 	protected static XStream xstream = new XStream();
 	
 	public static synchronized ResultSet getResultSet(QueryResponse response, int rows) {

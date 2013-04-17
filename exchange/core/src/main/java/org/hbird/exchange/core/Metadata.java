@@ -35,7 +35,7 @@ public class Metadata extends Named implements IApplicableTo {
     private static final long serialVersionUID = 2804335094757225970L;
 
     /** The identifier of the object that this is applicable too. */
-    protected NamedInstanceIdentifier subject = null;
+    protected String subject = null;
 
     /** The metadata itself. Can be any type, keyed on string. */
     protected Map<String, Object> metadata = null;
@@ -50,25 +50,25 @@ public class Metadata extends Named implements IApplicableTo {
      */
     public Metadata(String issuedBy, String name, INamed toSubject, Map<String, Object> metadata) {
         super(issuedBy, name, DESCRIPTION);
-        this.subject = new NamedInstanceIdentifier(toSubject.getIssuedBy(), toSubject.getName(), toSubject.getTimestamp());
+        this.subject = toSubject.getID();
         this.metadata = metadata;
     }
 
-    public NamedInstanceIdentifier applicableTo() {
+    public String applicableTo() {
         return subject;
     }
 
 	/**
 	 * @return the subject
 	 */
-	public NamedInstanceIdentifier getSubject() {
+	public String getSubject() {
 		return subject;
 	}
 
 	/**
 	 * @param subject the subject to set
 	 */
-	public void setSubject(NamedInstanceIdentifier subject) {
+	public void setSubject(String subject) {
 		this.subject = subject;
 	}
 

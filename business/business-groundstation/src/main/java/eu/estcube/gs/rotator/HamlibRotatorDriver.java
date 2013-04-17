@@ -52,7 +52,7 @@ public class HamlibRotatorDriver extends HamlibDriver {
             .bean(getPosition, "create")
             .inOut("netty:tcp://" + getAddress())
             .split().method(getPosition, "parse")
-                .to("direct:parameters." + part.getQualifiedName("."));
+                .to("direct:parameters." + part.getName());
             
     }
 

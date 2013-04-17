@@ -64,29 +64,29 @@ public class PartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.Part#getQualifiedName()}.
+     * Test method for {@link org.hbird.exchange.core.Part#getName()}.
      */
     @Test
-    public void testGetQualifiedName() {
-        assertEquals(ROOT_1, root1.getQualifiedName());
-        assertEquals(ROOT_2, root2.getQualifiedName());
-        assertEquals(CHILD_1, root1Child1.getQualifiedName());
-        assertEquals(CHILD_2, root1Child2.getQualifiedName());
-        assertEquals(CHILD_1, root2Child1.getQualifiedName());
-        assertEquals(CHILD_2, root2Child2.getQualifiedName());
+    public void testgetName() {
+        assertEquals(ROOT_1, root1.getName());
+        assertEquals(ROOT_2, root2.getName());
+        assertEquals(CHILD_1, root1Child1.getName());
+        assertEquals(CHILD_2, root1Child2.getName());
+        assertEquals(CHILD_1, root2Child1.getName());
+        assertEquals(CHILD_2, root2Child2.getName());
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.Part#getQualifiedName(java.lang.String)}.
+     * Test method for {@link org.hbird.exchange.core.Part#getName(java.lang.String)}.
      */
     @Test
-    public void testGetQualifiedNameString() {
-        assertEquals(ROOT_1, root1.getQualifiedName(SEPARATOR));
-        assertEquals(ROOT_2, root2.getQualifiedName(SEPARATOR));
-        assertEquals(CHILD_1, root1Child1.getQualifiedName(SEPARATOR));
-        assertEquals(CHILD_2, root1Child2.getQualifiedName(SEPARATOR));
-        assertEquals(CHILD_1, root2Child1.getQualifiedName(SEPARATOR));
-        assertEquals(CHILD_2, root2Child2.getQualifiedName(SEPARATOR));
+    public void testgetNameString() {
+        assertEquals(ROOT_1, root1.getName());
+        assertEquals(ROOT_2, root2.getName());
+        assertEquals(CHILD_1, root1Child1.getName());
+        assertEquals(CHILD_2, root1Child2.getName());
+        assertEquals(CHILD_1, root2Child1.getName());
+        assertEquals(CHILD_2, root2Child2.getName());
     }
 
     /**
@@ -98,8 +98,8 @@ public class PartTest {
         assertEquals(ROOT_1, part.getName());
         assertEquals(DESCRIPTION, part.getDescription());
         assertNull(part.getIsPartOf());
-        assertEquals(ROOT_1, part.getQualifiedName());
-        assertEquals(ROOT_1, part.getQualifiedName(SEPARATOR));
+        assertEquals(ROOT_1, part.getName());
+        assertEquals(ROOT_1, part.getName());
         assertNotNull(part.getID());
     }
 
@@ -112,9 +112,9 @@ public class PartTest {
     public void testPartStringStringIPart() {
         assertEquals(CHILD_1, root1Child1.getName());
         assertEquals(DESCRIPTION, root1Child1.getDescription());
-        assertEquals(root1, root1Child1.getIsPartOf());
-        assertEquals(CHILD_1, root1Child1.getQualifiedName());
-        assertEquals(CHILD_1, root1Child1.getQualifiedName(SEPARATOR));
+        assertEquals(root1.getID(), root1Child1.getIsPartOf());
+        assertEquals(CHILD_1, root1Child1.getName());
+        assertEquals(CHILD_2, root1Child2.getName());
         assertNotNull(root1Child1.getID());
     }
 
@@ -127,8 +127,8 @@ public class PartTest {
         assertEquals(ROOT_1, part.getName());
         assertEquals(DESCRIPTION, part.getDescription());
         assertNull(part.getIsPartOf());
-        assertEquals(ROOT_1, part.getQualifiedName());
-        assertEquals(ROOT_1, part.getQualifiedName(SEPARATOR));
+        assertEquals(ROOT_1, part.getName());
+        assertEquals(ROOT_1, part.getName());
         assertNotNull(part.getID());
     }
 
@@ -142,9 +142,8 @@ public class PartTest {
         Part part = new Part(CHILD_1, CHILD_1, DESCRIPTION, root1);
         assertEquals(CHILD_1, part.getName());
         assertEquals(DESCRIPTION, part.getDescription());
-        assertEquals(root1, part.getIsPartOf());
-        assertEquals(CHILD_1, part.getQualifiedName());
-        assertEquals(CHILD_1, part.getQualifiedName(SEPARATOR));
+        assertEquals(root1.getID(), part.getIsPartOf());
+        assertEquals(CHILD_1, part.getName());
         assertNotNull(part.getID());
     }
 
@@ -155,10 +154,10 @@ public class PartTest {
     public void testGetIsPartOf() {
         assertNull(root1.getIsPartOf());
         assertNull(root2.getIsPartOf());
-        assertEquals(root1, root1Child1.getIsPartOf());
-        assertEquals(root1, root1Child2.getIsPartOf());
-        assertEquals(root2, root2Child1.getIsPartOf());
-        assertEquals(root2, root2Child2.getIsPartOf());
+        assertEquals(root1.getID(), root1Child1.getIsPartOf());
+        assertEquals(root1.getID(), root1Child2.getIsPartOf());
+        assertEquals(root2.getID(), root2Child1.getIsPartOf());
+        assertEquals(root2.getID(), root2Child2.getIsPartOf());
     }
 
     /**
@@ -166,11 +165,11 @@ public class PartTest {
      */
     @Test
     public void testSetIsPartOf() {
-        assertEquals(root1, root1Child1.getIsPartOf());
-        root1Child1.setIsPartOf("");
-        assertEquals(root1, root1Child1.getIsPartOf());
+        assertEquals(root1.getID(), root1Child1.getIsPartOf());
+        root1Child1.setIsPartOf("name:type:timestamp");
+        assertEquals("name:type:timestamp", root1Child1.getIsPartOf());
         root1Child1.setIsPartOf(root2);
-        assertEquals(root2, root1Child1.getIsPartOf());
+        assertEquals(root2.getID(), root1Child1.getIsPartOf());
     }
 
 }

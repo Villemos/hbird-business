@@ -44,7 +44,7 @@ public class BooleanParameter {
 	 * @param name The name of the parameter to be generated.
 	 */
 	public BooleanParameter(IPart issuedBy, String name, String description, Boolean value, String isStateOf) {
-		this.issuedBy = issuedBy.getQualifiedName();
+		this.issuedBy = issuedBy.getName();
 		this.name = name;
 		this.description = description;
 		this.value = value;

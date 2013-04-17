@@ -9,7 +9,6 @@ import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.Named;
-import org.hbird.exchange.core.NamedInstanceIdentifier;
 
 public class MetadataRequest extends DataRequest {
 
@@ -18,8 +17,7 @@ public class MetadataRequest extends DataRequest {
     public MetadataRequest(String issuedBy, Named applicableTo) {
         super(issuedBy, StandardComponents.ARCHIVE_NAME);
 
-        this.setArgumentValue(StandardArguments.APPLICABLE_TO,
-                new NamedInstanceIdentifier(applicableTo.getIssuedBy(), applicableTo.getName(), applicableTo.getTimestamp()));
+        this.setArgumentValue(StandardArguments.APPLICABLE_TO, applicableTo.getID());
     }
 
     /**

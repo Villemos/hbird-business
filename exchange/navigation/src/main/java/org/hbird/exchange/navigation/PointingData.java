@@ -101,27 +101,15 @@ public class PointingData implements ISatelliteSpecific, IGroundStationSpecific 
     }
 
     @Override
-    public String getSatelliteName() {
+    public String getSatelliteId() {
         return satelliteName;
     }
 
     @Override
-    public void setSatelliteName(String satellite) {
-        this.satelliteName = satellite;
-    }
-
-    @Override
-    public String getGroundStationName() {
+    public String getGroundStationId() {
         return groundStationName;
     }
 
-    @Override
-    public void setGroundStationName(String location) {
-        this.groundStationName = location;
-    }
-    
-    
-    
     public Double getDopplerShift() {
 		return dopplerShift;
 	}

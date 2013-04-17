@@ -67,7 +67,7 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 	 */
 	public void handleStep(SpacecraftState currentState, boolean isLast) throws PropagationException {
 
-		OrbitalState state = NavigationUtilities.toOrbitalState(currentState, satellite);
+		OrbitalState state = NavigationUtilities.toOrbitalState(currentState, parameters);
 		states.add(state);
 
 		/** If stream mode, then deliver the data as a stream. */

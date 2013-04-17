@@ -75,7 +75,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
     }
 
     public synchronized void startComponent(@Body StartComponent request, CamelContext context) throws Exception {
-        String qName = request.getPart().getQualifiedName();
+        String qName = request.getPart().getName();
         String driverName = request.getPart().getDriverName();
         LOG.info("Received start request for part '{}'. Will use driver '{}'.", qName, driverName);
 

@@ -32,22 +32,25 @@
  */
 package org.hbird.business.archive.api;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.HbirdApi;
+import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPartManager;
 import org.hbird.business.api.IPublish;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.Named;
-import org.hbird.exchange.dataaccess.PartRequest;
+import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
- * @author Admin
+ * @author Gert Villemos
  *
  */
 public class PartManager extends HbirdApi implements IPartManager {
@@ -86,5 +89,30 @@ public class PartManager extends HbirdApi implements IPartManager {
 		Named resolution = api.resolveNamed(child.getIsPartOf());
 		
 		return resolution == null ? null : (IPart) resolution;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IPartManager#getQualifiedName(org.hbird.exchange.interfaces.IPart)
+	 */
+	@Override
+	public String getQualifiedName(IPart part) {		
+		return getQualifiedName(part, "/");
+	}
+
+	/* (non-Javadoc)
+	 * @see org.hbird.business.api.IPartManager#getQualifiedName(org.hbird.exchange.interfaces.IPart, java.lang.String)
+	 */
+	@Override
+	public String getQualifiedName(IPart part, String separator) {
+		ICatalogue api = ApiFactory.getCatalogueApi(issuedBy);
+		List<Part> parts = api.getParts();
+		Map<String, Part> partMap = new HashMap<String, Part>();
+		for (Part aPart : parts) {
+			partMap.put(aPart.getID(), aPart);
+		}
+		
+		/** TODO */
+		
+		return null;
 	}
 }

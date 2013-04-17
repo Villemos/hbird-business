@@ -38,8 +38,8 @@ public class StandardArguments {
 
     public static final String COUNT = "count";
 
-    public static final String DELETION_QUERY = "deletionquery";
-
+    public static final String DELETE_ALL = "deleteAll";
+    
     public static final String DELTA_PROPAGATION = "deltaPropagation";
 
     public static final String DERIVED_FROM = "derivedfrom";
@@ -134,5 +134,5 @@ public class StandardArguments {
 
     public static final String FROM_SOURCE = "source";
 
-    public static final String QUALIFIED_NAME = "qualifiedname";
+    // public static final String QUALIFIED_NAME = "qualifiedname";
 }

@@ -40,6 +40,7 @@ public class StateTest {
 
     private static final String ISSUED_BY = "issuer";
     private static final String NAME = "name";
+    private static final String ID = "name:type:timestamp";
     private static final String DESCRIPTION = "description";
     private static final String STATE_OF = "zoe";
     private static final boolean STATE = true;
@@ -62,14 +63,14 @@ public class StateTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.State#getQualifiedName(java.lang.String)}.
+     * Test method for {@link org.hbird.exchange.core.State#getName(java.lang.String)}.
      */
     @Test
-    public void testGetQualifiedNameString() {
-        assertEquals(STATE_OF + "/" + NAME, state.getQualifiedName("/"));
+    public void testgetNameString() {
+        assertEquals(NAME, state.getName());
     }
 
-    /**
+    /**-
      * Test method for {@link org.hbird.exchange.core.State#prettyPrint()}.
      */
     @Test
@@ -88,7 +89,7 @@ public class StateTest {
         assertEquals(NAME, state.getName());
         assertEquals(DESCRIPTION, state.getDescription());
         assertEquals(STATE_OF, state.getIsStateOf());
-        assertEquals(STATE_OF + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, state.getQualifiedName());
+        assertEquals(NAME, state.getName());
         long diff = System.currentTimeMillis() - state.getTimestamp();
         assertTrue("diff=" + diff, diff >= 0 && diff < 1000L * 30);
         assertNotNull(state.getID());
@@ -107,7 +108,7 @@ public class StateTest {
         assertEquals(NAME, state.getName());
         assertEquals(DESCRIPTION, state.getDescription());
         assertEquals(STATE_OF, state.getIsStateOf());
-        assertEquals(STATE_OF + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + NAME, state.getQualifiedName());
+        assertEquals(NAME, state.getName());
         assertEquals(NOW, state.getTimestamp());
         assertNotNull(state.getID());
         assertEquals(STATE, state.getValue());
@@ -180,10 +181,10 @@ public class StateTest {
      */
     @Test
     public void testSetIsStateOfNamed() {
-        when(isStateOf.getQualifiedName()).thenReturn(NAME);
+        when(isStateOf.getID()).thenReturn(ID);
         state.setIsStateOf(isStateOf);
-        assertEquals(NAME, state.isStateOf);
-        inOrder.verify(isStateOf, times(1)).getQualifiedName();
+        assertEquals(ID, state.getIsStateOf());
+        inOrder.verify(isStateOf, times(1)).getID();
         inOrder.verifyNoMoreInteractions();
     }
 

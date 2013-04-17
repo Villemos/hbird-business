@@ -8,6 +8,7 @@ public class ApiFactory {
 	static protected String orbitPredictionClass = System.getProperty("hbird.orbitprediction.class", "org.hbird.business.navigation.api.OrbitPropagation");
 	static protected String queueManagementClass = System.getProperty("hbird.queuemanagement.class", "org.hbird.business.queuemanagement.api.QueueManagerApi");
 	static protected String partmanagerClass = System.getProperty("hbird.partmanager.class", "org.hbird.business.archive.api.PartManager");
+	static protected String archiveManagerClass = System.getProperty("hbird.partmanager.class", "org.hbird.business.archive.api.ArchiveManager");
 	
 	static public synchronized IDataAccess getDataAccessApi(String issuedBy) {
 		return (IDataAccess) createInstance(dataAccessClass, issuedBy);
@@ -31,6 +32,10 @@ public class ApiFactory {
 
 	static public synchronized IPartManager getPartManagerApi(String issuedBy) {
 		return (IPartManager) createInstance(partmanagerClass, issuedBy);
+	}
+
+	static public synchronized IArchiveManagement getArchiveManagerApi(String issuedBy) {
+		return (IArchiveManagement) createInstance(archiveManagerClass, issuedBy);
 	}
 
 	static protected synchronized Object createInstance(String clazz, String issuedBy) {

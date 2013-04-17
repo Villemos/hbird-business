@@ -56,7 +56,8 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
      * @param description The description of the object.
      */
     public Named(String issuedBy, String name, String description) {
-        this.name = name;
+    	this.issuedBy = issuedBy;
+    	this.name = name;
         this.description = description;
     }
 
@@ -67,14 +68,6 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
      */
     public String getName() {
         return name;
-    }
-
-    public String getQualifiedName() {
-        return getQualifiedName(DEFAULT_QUALIFIED_NAME_SEPARATOR);
-    }
-
-    public String getQualifiedName(String separator) {
-        return separator + name;
     }
 
     /**
@@ -128,7 +121,7 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
 	}
 
 	public String prettyPrint() {
-        return String.format("%s[name=%s]", this.getClass().getSimpleName(), getQualifiedName());
+        return String.format("%s[name=%s]", this.getClass().getSimpleName(), getName());
     }
 
     /*

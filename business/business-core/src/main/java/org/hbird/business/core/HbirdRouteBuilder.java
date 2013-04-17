@@ -50,9 +50,9 @@ public abstract class HbirdRouteBuilder extends RouteBuilder {
                 .when(body().isInstanceOf(Command.class))
                     .setHeader(StandardArguments.DESTINATION, simple("${in.body.destination}"))
                 .when(body().isInstanceOf(IGroundStationSpecific.class))
-                    .setHeader(StandardArguments.LOCATION, simple("${in.body.groundStationName}"))
+                    .setHeader(StandardArguments.LOCATION, simple("${in.body.groundStationId}"))
                 .when(body().isInstanceOf(ISatelliteSpecific.class))
-                    .setHeader(StandardArguments.SATELLITE_NAME, simple("${in.body.satelliteName}"))
+                    .setHeader(StandardArguments.SATELLITE_NAME, simple("${in.body.satelliteId}"))
             .end()
 
             /* Schedule the release, if this object implements ITransferable. */

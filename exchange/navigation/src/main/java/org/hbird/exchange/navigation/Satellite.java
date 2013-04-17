@@ -65,13 +65,8 @@ public class Satellite extends Part implements ISatelliteSpecific {
     }
 
     @Override
-    public String getSatelliteName() {
+    public String getSatelliteId() {
         return name;
-    }
-
-    @Override
-    public void setSatelliteName(String satellite) {
-        this.name = satellite;
     }
 
 	public Double getFrequency() {

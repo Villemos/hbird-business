@@ -115,6 +115,8 @@ public abstract class SystemTest {
     protected static GroundStation gsDarmstadt = null;
     protected static GroundStation gsNewYork = null;
 
+    protected static Part mof = null;
+    
     protected static Map<String, Part> parts = new HashMap<String, Part>();
 
     static {
@@ -154,7 +156,7 @@ public abstract class SystemTest {
         antenna.setIsPartOf(es5ec);
 
         /** Define the ground segment control */
-        Part mof = new Part("MOC", "Mission Operation Center", "The groundsystem(s) of the mission");
+        mof = new Part("MOC", "Mission Operation Center", "The groundsystem(s) of the mission");
         registerPart(mof);
         mof.setIsPartOf(mission);
 
@@ -265,8 +267,8 @@ public abstract class SystemTest {
         
         
 		List<String> locations = new ArrayList<String>();
-		locations.add(es5ec.getQualifiedName());
-		locations.add(gsDarmstadt.getQualifiedName());
+		locations.add(es5ec.getName());
+		locations.add(gsDarmstadt.getName());
 		estcubePropagationComponent = new OrbitPropagationComponent("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000, estcube1, locations);
 		registerPart(estcubePropagationComponent);
         estcubePropagationComponent.setIsPartOf(orbitPropagationAutomation);
@@ -339,7 +341,7 @@ public abstract class SystemTest {
         }
 
         /** TODO Send command to the archive to delete all data. */
-        injection.sendBody(new DeletionRequest("SystemTest", StandardComponents.ARCHIVE_NAME, "*:*"));
+        injection.sendBody(new DeletionRequest("SystemTest", true));
 
         Thread.sleep(2000);
         
@@ -396,7 +398,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command to stop a commanding chain.");
 
             /** Create command component. */
-            partmanagerApi.stop(comComponent.getQualifiedName());
+            partmanagerApi.stop(comComponent.getName());
 
             Thread.sleep(4000);
 
@@ -448,7 +450,7 @@ public abstract class SystemTest {
 
             /** Create command component. */
             TrackingComponent antennaController = new TrackingComponent("ES5EC_ESTCUBE1", "ES5EC -> ESTCUBE", "The component automating the track of ESTCube-1 by ES5EC.",
-                    estcube1.getQualifiedName(), es5ec.getQualifiedName());
+                    estcube1.getID(), es5ec.getID());
             antennaController.setIsPartOf(parent);
 
             partmanagerApi.start(antennaController);
@@ -489,7 +491,7 @@ public abstract class SystemTest {
 
             /** Create command component. */
             TrackingComponent antennaController = new TrackingComponent("DARMSTADT_STRAND", "Darmstadt -> STRAND", "The component automating the track of Strand-1 by Darmstadt.",
-                    strand.getQualifiedName(), gsDarmstadt.getQualifiedName());
+                    strand.getName(), gsDarmstadt.getName());
             antennaController.setIsPartOf(parent);
 
             partmanagerApi.start(antennaController);
@@ -590,13 +592,13 @@ public abstract class SystemTest {
         String tleLine1 = "1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478";
         String tleLine2 = "2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935";
         TleOrbitalParameters parameters = publishApi
-                .publishTleParameters(estcube1.getQualifiedName() + "/TLE", estcube1.getQualifiedName(), tleLine1, tleLine2);
+                .publishTleParameters(estcube1.getName() + "/TLE", estcube1.getID(), tleLine1, tleLine2);
 
         publishApi.publishMetadata(parameters, "Author", "This file was approved by Gert Villemos the " + (new Date()).toString());
 
         tleLine1 = "1 39090U 13009E   13083.97990177  .00000074  00000-0  42166-4 0   342";
         tleLine2 = "2 39090  98.6360 274.2877 0009214 187.6058 172.4992 14.34286321  3925";
-        parameters = publishApi.publishTleParameters(strand.getQualifiedName() + "/TLE", strand.getQualifiedName(), tleLine1, tleLine2);
+        parameters = publishApi.publishTleParameters(strand.getName() + "/TLE", strand.getID(), tleLine1, tleLine2);
 
         publishApi.publishMetadata(parameters, "Author", "This file was approved by Gert Villemos the " + (new Date()).toString());
 

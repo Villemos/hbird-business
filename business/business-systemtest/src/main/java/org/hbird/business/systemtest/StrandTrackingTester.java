@@ -93,7 +93,7 @@ public class StrandTrackingTester extends SystemTest {
         Thread.sleep(5000);
 
         List<String> locations = new ArrayList<String>();
-        locations.add(gsDarmstadt.getQualifiedName());
+        locations.add(gsDarmstadt.getName());
 
         /**
          * Create a controller task and inject it.

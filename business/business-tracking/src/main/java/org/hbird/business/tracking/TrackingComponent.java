@@ -52,8 +52,10 @@ public class TrackingComponent extends StartablePart {
 	public static final String DEFAULT_DESCRIPTION = "Component for automating tracking of a satellite from a specific ground station.";
 	public static final String DEFAULT_DRIVER = TrackingComponentDriver.class.getName();
 	
+	/** The ID of the satellite. */
 	protected String satellite;
 	
+	/** The ID of the antenna. */
 	protected String antenna;
 	
 	/**
@@ -75,8 +77,10 @@ public class TrackingComponent extends StartablePart {
 
 	public TrackingComponent(String ID, String name, String description, IPart satellite, IPart antenna) {
 		super(ID, name, description, TrackingComponentDriver.class.getName());
-		this.satellite = satellite.getQualifiedName();
-		this.antenna = antenna.getQualifiedName();
+
+		// TODO Gert; Should getID() be used here?
+		this.satellite = satellite.getID();
+		this.antenna = antenna.getID();
 	}
 
 	public String getSatellite() {

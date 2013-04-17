@@ -61,7 +61,7 @@ public class BusinessCardTest {
         assertEquals(BusinessCard.DESCRIPTION, card.getDescription());
         assertEquals(PERIOD, card.getPeriod());
         assertNotNull(card.getID());
-        assertEquals(ISSUED_BY + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ISSUED_BY, card.getQualifiedName());
+        assertEquals(ISSUED_BY, card.getName());
         assertEquals(LocalHostNameResolver.getLocalHostName(), card.getHost());
     }
 
@@ -79,7 +79,7 @@ public class BusinessCardTest {
         assertEquals(BusinessCard.DESCRIPTION, card.getDescription());
         assertEquals(PERIOD, card.getPeriod());
         assertNotNull(card.getID());
-        assertEquals(ISSUED_BY + Named.DEFAULT_QUALIFIED_NAME_SEPARATOR + ISSUED_BY, card.getQualifiedName());
+        assertEquals(ISSUED_BY, card.getName());
         assertEquals(LocalHostNameResolver.getLocalHostName(), card.getHost());
     }
 

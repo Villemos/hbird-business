@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hbird.business.api.ApiFactory;
 import org.hbird.business.navigation.orekit.NavigationUtilities;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.NativeCommand;
@@ -90,7 +91,8 @@ public class HamlibRadioPart extends RadioDevice {
         /** Generate the pointing information, including azimuth, elevation and doppler. */
         List<PointingData> pointingData = null;
         try {
-            pointingData = NavigationUtilities.calculateContactData(start, end, (GroundStation) parent, satellite, 500);
+        	GroundStation groundStation = (GroundStation) ApiFactory.getDataAccessApi(this.name).resolveNamed(this.isPartOf);        	
+            pointingData = NavigationUtilities.calculateContactData(start, end, groundStation, satellite, 500);
         } catch (OrekitException e) {
             e.printStackTrace();
         }

@@ -27,6 +27,8 @@ public class StandardComponents {
     public static final String ARCHIVE_NAME = "Archive";
     public static final String ARCHIVE_DESC = "The archive of data";
     
+    public static final String ASSEMBLY = "SystemAssemmbly";
+    
     public static final String COMMAND_RELEASER_NAME = "CommandReleaser";
     public static final String COMMAND_RELEASER_DESC = "A component for managing the release of commands.";
 

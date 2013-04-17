@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.model.RouteDefinition;
-import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ApiUtility;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IDataAccess;
@@ -39,7 +38,6 @@ import org.hbird.exchange.dataaccess.LocationContactEventRequest;
 import org.hbird.exchange.dataaccess.MetadataRequest;
 import org.hbird.exchange.dataaccess.OrbitalStateRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
-import org.hbird.exchange.dataaccess.PartRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
 import org.hbird.exchange.groundstation.GroundStation;
@@ -66,7 +64,6 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 
     
     
-    /** INITIALIZATION */
     @Override
     public Parameter getParameter(String name) {
         List<Parameter> parameter = getParameterAt(null, name, (new Date()).getTime(), 1);
@@ -269,26 +266,11 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     @Override
-    public List<OrbitalState> getOrbitalStatesFor(String satellite, long from, long to, String issuedBy, String derivedFromName, long derivedFromTimestamp) {
-        OrbitalStateRequest request = new OrbitalStateRequest(issuedBy, satellite, from, to);
-        request.setDerivedFrom(issuedBy, derivedFromName, derivedFromTimestamp);
-        return orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));
-    }
-
-    @Override
-    public OrbitalState getOrbitalStateFor(String satellite, String derivedIssuedBy, String derivedFromName, long derivedFromTimestamp) {
+    public OrbitalState getOrbitalStateFor(String satellite) {
         OrbitalStateRequest request = new OrbitalStateRequest(issuedBy, satellite);
         request.setIsInitialization(true);
-        request.setDerivedFrom(derivedIssuedBy, derivedFromName, derivedFromTimestamp);
         List<OrbitalState> states = orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));
         return states.isEmpty() == true ? null : states.get(0);
-    }
-
-    @Override
-    public OrbitalState getOrbitalStateFor(String satellite) {
-        TleOrbitalParameters parameter = getTleFor(satellite);
-
-        return parameter == null ? null : getOrbitalStateFor(satellite, parameter.getIssuedBy(), parameter.getName(), parameter.getTimestamp());
     }
 
     @Override
@@ -385,8 +367,8 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 
             request = new LocationContactEventRequest(issuedBy, location, false);
             request.setRows(1);
-            request.setSatelliteName(startEvent.getSatelliteName());
-            request.setLocation(startEvent.getGroundStationName());
+            request.setSatelliteName(startEvent.getSatelliteId());
+            request.setLocation(startEvent.getGroundStationId());
             request.setFrom(startEvent.getTimestamp());
             List<Named> end = template.requestBody(inject, request, List.class);
 

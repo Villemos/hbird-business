@@ -18,7 +18,5 @@ package org.hbird.exchange.interfaces;
 
 public interface IGroundStationSpecific {
 
-    public String getGroundStationName();
-
-    public void setGroundStationName(String groundStationName);
+    public String getGroundStationId();
 }

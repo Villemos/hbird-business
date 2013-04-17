@@ -41,31 +41,30 @@ public class EventTester extends SystemTest {
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
 
+        eventListener.elements.clear();
         azzert(eventListener.elements.size() == 0, "There should be no events published");
         startMonitoringArchive();
         startCommandingChain();
 
-        azzert(eventListener.elements.size() == 2, "There should be 2 events published");
-        Event event = (Event) eventListener.elements.get(1);
+        azzert(eventListener.elements.size() == 1, "There should be 1 events published");
+        Event event = (Event) eventListener.elements.get(0);
         azzert(StandardMissionEvents.COMPONENT_START.getName().equals(event.getName()), "startEvent.getName()");
-        azzert(parts.get(StandardComponents.COMMAND_RELEASER_NAME).getQualifiedName().equals(event.getIssuedBy()), "startEvent.getIssuedBy()");
+        azzert(parts.get(StandardComponents.COMMAND_RELEASER_NAME).getName().equals(event.getIssuedBy()), "startEvent.getIssuedBy()");
         long diff = System.currentTimeMillis() - event.getTimestamp();
         azzert(diff >= 0L && diff <= 30000L, "startEvent.getTimestamp()");
-        azzert(event.getQualifiedName().equals(StandardComponents.COMMAND_RELEASER_NAME + StandardMissionEvents.COMPONENT_START.getQualifiedName()),
-                "startEvent.getQualifiedName()");
+        azzert(event.getIssuedBy().equals(StandardComponents.COMMAND_RELEASER_NAME), "startEvent.getName()");
         azzert(event.getID() != null, "startEvent.getID()");
         azzert(StandardMissionEvents.COMPONENT_START.getDescription().equals(event.getDescription()), "startEvent.getDescription()");
 
         stopCommandingChain();
 
-        azzert(eventListener.elements.size() == 3, "There should be 3 events published");
-        event = (Event) eventListener.elements.get(2);
+        azzert(eventListener.elements.size() == 2, "There should be 2 events published");
+        event = (Event) eventListener.elements.get(1);
         azzert(StandardMissionEvents.COMPONENT_STOP.getName().equals(event.getName()), "stopEvent.getName()");
-        azzert(parts.get(StandardComponents.COMMAND_RELEASER_NAME).getQualifiedName().equals(event.getIssuedBy()), "stopEvent.getIssuedBy()");
+        azzert(parts.get(StandardComponents.COMMAND_RELEASER_NAME).getName().equals(event.getIssuedBy()), "stopEvent.getIssuedBy()");
         diff = System.currentTimeMillis() - event.getTimestamp();
         azzert(diff >= 0L && diff <= 30000L, "stopEvent.getTimestamp()");
-        azzert(event.getQualifiedName().equals(StandardComponents.COMMAND_RELEASER_NAME + StandardMissionEvents.COMPONENT_STOP.getQualifiedName()),
-                "stopEvent.getQualifiedName()");
+        azzert(event.getIssuedBy().equals(StandardComponents.COMMAND_RELEASER_NAME), "stopEvent.getName()");
         azzert(event.getID() != null, "stopEvent.getUuid()");
         azzert(StandardMissionEvents.COMPONENT_STOP.getDescription().equals(event.getDescription()), "stopEvent.getDescription()");
 

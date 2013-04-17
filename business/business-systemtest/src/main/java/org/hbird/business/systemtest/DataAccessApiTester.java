@@ -34,39 +34,39 @@ public class DataAccessApiTester extends SystemTest {
         /** Publish parameters. */
         LOG.info("Publishing parameters.");
 
-        IPublish estcubeApi = ApiFactory.getPublishApi(estcube1.getID());
+        IPublish estcubeApi = ApiFactory.getPublishApi(estcube1.getName());
         
         estcubeApi.publishParameter("PARA1", "",1, "", 1);
-        estcubeApi.publishState("STATE1_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 1);
-        estcubeApi.publishState("STATE2_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 1);
+        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 1);
+        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 1);
 
         estcubeApi.publishParameter("PARA1", "",1, "", 2);
-        estcubeApi.publishState("STATE1_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 2);
-        estcubeApi.publishState("STATE2_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 2);
+        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 2);
+        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 2);
 
         estcubeApi.publishParameter("PARA2", "",2, "", 3);
-        estcubeApi.publishState("STATE1_OF_PARA2", "",estcube1.getID() + "/PARA2", true, 3);
+        estcubeApi.publishState("STATE1_OF_PARA2", "","PARA2", true, 3);
 
         estcubeApi.publishParameter("PARA1", "",1, "", 4);
-        estcubeApi.publishState("STATE1_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 4);
-        estcubeApi.publishState("STATE2_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 4);
+        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 4);
+        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 4);
 
         estcubeApi.publishParameter("PARA1", "",1, "", 5);
-        estcubeApi.publishState("STATE1_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 5);
-        estcubeApi.publishState("STATE2_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 5);
+        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 5);
+        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 5);
 
         estcubeApi.publishParameter("PARA2", "",1, "", 6);
-        estcubeApi.publishState("STATE1_OF_PARA2", "",estcube1.getID() + "/PARA2", true, 6);
+        estcubeApi.publishState("STATE1_OF_PARA2", "","PARA2", true, 6);
 
         estcubeApi.publishParameter("PARA3", "",1, "", 7);
 
         estcubeApi.publishParameter("PARA1", "",1, "", 8);
-        estcubeApi.publishState("STATE1_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 8);
-        estcubeApi.publishState("STATE2_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 8);
+        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 8);
+        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 8);
 
         estcubeApi.publishParameter("PARA1", "",1, "", 9);
-        estcubeApi.publishState("STATE1_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 9);
-        estcubeApi.publishState("STATE2_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 9);
+        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 9);
+        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 9);
 
         estcubeApi.publishParameter("PARA4", "",1, "", 10);
         estcubeApi.publishState("STATE1_OF_PARA4", "",estcube1.getID() + "/PARA4", true, 10);
@@ -74,34 +74,34 @@ public class DataAccessApiTester extends SystemTest {
         estcubeApi.publishParameter("PARA5", "",1, "", 11);
 
         estcubeApi.publishParameter("PARA1", "",1, "", 12);
-        estcubeApi.publishState("STATE1_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 12);
-        estcubeApi.publishState("STATE2_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 12);
+        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 12);
+        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 12);
 
         estcubeApi.publishParameter("PARA2", "",1, "", 13);
-        estcubeApi.publishState("STATE1_OF_PARA2", "",estcube1.getID() + "/PARA2", true, 13);
+        estcubeApi.publishState("STATE1_OF_PARA2", "","PARA2", true, 13);
 
         estcubeApi.publishParameter("PARA2", "",1, "", 14);
-        estcubeApi.publishState("STATE1_OF_PARA2", "",estcube1.getID() + "/PARA2", true, 14);
+        estcubeApi.publishState("STATE1_OF_PARA2", "","PARA2", true, 14);
 
-        estcubeApi.publishState("STATE1_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 15);
+        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 15);
         estcubeApi.publishParameter("PARA1", "",1, "", 15);
-        estcubeApi.publishState("STATE2_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 15);
+        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 15);
 
-        estcubeApi.publishState("STATE1_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 16);
-        estcubeApi.publishState("STATE2_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 16);
+        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 16);
+        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 16);
         estcubeApi.publishParameter("PARA1", "",1, "", 16);
 
         estcubeApi.publishParameter("PARA3", "",1, "", 17);
 
         estcubeApi.publishParameter("PARA1", "",1, "", 18);
-        estcubeApi.publishState("STATE1_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 18);
-        estcubeApi.publishState("STATE2_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 18);
+        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 18);
+        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 18);
 
         estcubeApi.publishParameter("PARA3", "",1, "", 19);
 
         estcubeApi.publishParameter("PARA1", "",1, "", 20);
-        estcubeApi.publishState("STATE1_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 20);
-        estcubeApi.publishState("STATE2_OF_PARA1", "",estcube1.getID() + "/PARA1", true, 20);
+        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 20);
+        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 20);
 
         estcubeApi.publish(es5ec);
         estcubeApi.publish(gsAalborg);
@@ -126,8 +126,8 @@ public class DataAccessApiTester extends SystemTest {
         List<Parameter> parameters = null;
 
         List<String> names = new ArrayList<String>();
-        names.add(estcube1.getID() + "/PARA1");
-        names.add(estcube1.getID() + "/PARA2");
+        names.add("PARA1");
+        names.add("PARA2");
 
         Iterator<Entry<Parameter, List<State>>> it = null;
         Entry<Parameter, List<State>> entry = null;
@@ -148,26 +148,26 @@ public class DataAccessApiTester extends SystemTest {
         /** Test the initialization API. */
 
         /** Single parameter, without state. */
-        parameter = api.getParameter(estcube1.getID() + "/PARA1");
+        parameter = api.getParameter("PARA1");
         azzert(parameter != null, "Expect to receive 1 value.");
         azzert(parameter.getTimestamp() == 20, "Expect to receive timestamp 20.");
 
-        parameters = api.getParameter(estcube1.getID() + "/PARA1", 4);
+        parameters = api.getParameter("PARA1", 4);
         azzert(parameters.size() == 4, "Expect to receive 4 values. Received " + parameters.size());
 
-        parameter = api.getParameterAt(estcube1.getID() + "/PARA1", 19);
+        parameter = api.getParameterAt("PARA1", 19);
         azzert(parameter != null, "Expect to receive 1 value.");
-        azzert(parameter.getQualifiedName().equals(estcube1.getID() + "/PARA1"));
+        azzert(parameter.getName().equals("PARA1"));
         azzert(parameter.getTimestamp() == 18);
 
-        parameters = api.getParameterAt(estcube1.getID() + "/PARA1", 19, 3);
+        parameters = api.getParameterAt("PARA1", 19, 3);
         azzert(parameters.size() == 3, "Expect to receive 3 values.");
         azzert(parameters.get(0).getTimestamp() == 18);
         azzert(parameters.get(1).getTimestamp() == 16);
         azzert(parameters.get(2).getTimestamp() == 15);
 
         /** Single parameter, with state. */
-        parameterAndStates = api.getParameterAndStates(estcube1.getID() + "/PARA1");
+        parameterAndStates = api.getParameterAndStates("PARA1");
         azzert(parameterAndStates.size() == 1, "Expect to receive 1 parameter sample.");
 
         it = parameterAndStates.entrySet().iterator();
@@ -175,7 +175,7 @@ public class DataAccessApiTester extends SystemTest {
         azzert(entry.getKey().getTimestamp() == 20, "Expect to receive timestamp 20.");
         azzert(entry.getValue().size() == 2, "Expect to receive 2 states.");
 
-        parameterAndStates = api.getParameterAndStatesAt(estcube1.getID() + "/PARA1", 19);
+        parameterAndStates = api.getParameterAndStatesAt("PARA1", 19);
         azzert(parameterAndStates.size() == 1, "Expect to receive 1 parameter sample.");
 
         it = parameterAndStates.entrySet().iterator();
@@ -189,9 +189,9 @@ public class DataAccessApiTester extends SystemTest {
 
         parameters = api.getParametersAt(names, 19);
         azzert(parameters.size() == 2, "Expect to receive 2 value.");
-        azzert(parameters.get(0).getQualifiedName().equals(estcube1.getID() + "/PARA1"), "First parameter PARA1");
+        azzert(parameters.get(0).getName().equals("PARA1"), "First parameter PARA1");
         azzert(parameters.get(0).getTimestamp() == 18, "With timestamp 18");
-        azzert(parameters.get(1).getQualifiedName().equals(estcube1.getID() + "/PARA2"), "Second parameter PARA2");
+        azzert(parameters.get(1).getName().equals("PARA2"), "Second parameter PARA2");
         azzert(parameters.get(1).getTimestamp() == 14, "With timestamp 14");
 
         /** Multiple parameters, with state. */
@@ -200,39 +200,39 @@ public class DataAccessApiTester extends SystemTest {
 
         it = parameterAndStates.entrySet().iterator();
         entry = it.next();
-        azzert(entry.getKey().getQualifiedName().equals(estcube1.getID() + "/PARA1"), "First parameter PARA1");
+        azzert(entry.getKey().getName().equals("PARA1"), "First parameter PARA1");
         azzert(entry.getKey().getTimestamp() == 20, "With timestamp 20");
         azzert(entry.getValue().size() == 2, "And 2 states");
 
         entry = it.next();
-        azzert(entry.getKey().getQualifiedName().equals(estcube1.getID() + "/PARA2"), "Second parameter PARA2");
+        azzert(entry.getKey().getName().equals("PARA2"), "Second parameter PARA2");
         azzert(entry.getKey().getTimestamp() == 14, "With timestamp 14");
         azzert(entry.getValue().size() == 1, "And 1 state");
 
         parameters = api.getParametersAt(names, 19);
 
-        azzert(parameters.get(0).getQualifiedName().equals(estcube1.getID() + "/PARA1"), "Parameter PARA1");
+        azzert(parameters.get(0).getName().equals("PARA1"), "Parameter PARA1");
         azzert(parameters.get(0).getTimestamp() == 18, "With timestamp 18");
 
-        azzert(parameters.get(1).getQualifiedName().equals(estcube1.getID() + "/PARA2"), "Parameter PARA2");
+        azzert(parameters.get(1).getName().equals("PARA2"), "Parameter PARA2");
         azzert(parameters.get(1).getTimestamp() == 14, "With timestamp 14");
 
         /** STEPPING */
 
         /** Test the API for single parameter, no state. */
-        parameters = api.getParameter(estcube1.getID() + "/PARA1", 2, 13);
+        parameters = api.getParameter("PARA1", 2, 13);
         azzert(parameters.size() == 6, "Expect 6 parameter samples");
 
-        parameters = api.getParameter(estcube1.getID() + "/PARA1", 2, 13, 4);
+        parameters = api.getParameter("PARA1", 2, 13, 4);
         azzert(parameters.size() == 4, "Expect 4 parameter samples");
 
         /** Test the API for single parameter, including state. */
-        parameterAndStates = api.getParameterAndStates(estcube1.getID() + "/PARA1", 3, 15);
+        parameterAndStates = api.getParameterAndStates("PARA1", 3, 15);
         azzert(parameterAndStates.size() == 6, "Expect to receive 6 values. Received " + parameterAndStates.size());
 
         // NOTE: This will retrieve 3 ENTRIES. This will be: PARA1, STATE, STATE. The result mapped on parameters will
         // thus be 1, and not 3.
-        parameterAndStates = api.getParameterAndStates(estcube1.getID() + "/PARA1", 3, 15, 3);
+        parameterAndStates = api.getParameterAndStates("PARA1", 3, 15, 3);
         azzert(parameterAndStates.size() == 1, "Expect to receive 1 values. Received " + parameterAndStates.size());
 
         /** Test the API for multiple parameter, no state */

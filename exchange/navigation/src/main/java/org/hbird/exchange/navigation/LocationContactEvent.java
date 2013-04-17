@@ -85,23 +85,13 @@ public class LocationContactEvent extends Event implements IAntennaSpecific, ISa
     }
 
     @Override
-    public String getGroundStationName() {
+    public String getGroundStationId() {
         return location;
     }
 
     @Override
-    public void setGroundStationName(String location) {
-        this.location = location;
-    }
-
-    @Override
-    public String getSatelliteName() {
+    public String getSatelliteId() {
         return satellite;
-    }
-
-    @Override
-    public void setSatelliteName(String satellite) {
-        this.satellite = satellite;
     }
 
     public boolean isVisible() {
@@ -114,7 +104,7 @@ public class LocationContactEvent extends Event implements IAntennaSpecific, ISa
 
     @Override
     public String prettyPrint() {
-        return this.getClass().getSimpleName() + "[name=" + name + ", timestamp=" + timestamp + ", location=" + getGroundStationName() + ", satellite="
+        return this.getClass().getSimpleName() + "[name=" + name + ", timestamp=" + timestamp + ", location=" + getGroundStationId() + ", satellite="
                 + satellite + ", visibility=" + isVisible + "]";
     }
 

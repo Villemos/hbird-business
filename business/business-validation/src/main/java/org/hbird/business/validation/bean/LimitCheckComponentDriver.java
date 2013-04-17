@@ -38,7 +38,7 @@ public class LimitCheckComponentDriver extends SoftwareComponentDriver {
 		LimitCheckComponent request = (LimitCheckComponent) part;
 		Limit limit = request.getLimit();
 
-		String componentName = request.getQualifiedName();
+		String componentName = request.getName();
 		String limitValueName = componentName + "/" + "LimitValue";
 		
 		if (limit.type == eLimitType.Lower) {
@@ -52,7 +52,7 @@ public class LimitCheckComponentDriver extends SoftwareComponentDriver {
 		}
 		else if (limit.type == eLimitType.Differential) {
 			DifferentialLimitChecker checker = new DifferentialLimitChecker(limit);
-			checker.setApi(ApiFactory.getDataAccessApi(part.getQualifiedName()));
+			checker.setApi(ApiFactory.getDataAccessApi(part.getName()));
 			createRoute(limit.limitOfParameter, checker, componentName, limitValueName);
 		}
 

@@ -61,11 +61,11 @@ public class NamedObjectPublisher {
 		
 		for (Named object : objects) {
 			if (object instanceof IStartablePart) {
-				LOG.info("Creating StartComponent command for part '" + object.getQualifiedName() + "'.");
+				LOG.info("Creating StartComponent command for part '" + object.getID() + "'.");
 				api.publish(new StartComponent(object.getName(), (IStartablePart) object));
 			}
 			else {
-				LOG.info("Publishing Named object '" + object.getQualifiedName() + "'.");
+				LOG.info("Publishing Named object '" + object.getID() + "'.");
 				api.publish(object);
 			}
 		}

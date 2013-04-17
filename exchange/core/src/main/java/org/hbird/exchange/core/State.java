@@ -32,9 +32,9 @@ public class State extends Named implements IState {
     private static final long serialVersionUID = 3658873252806807331L;
 
     /**
-     * The ID of the Issued object that this state parameter is the state of.
+     * The ID of the Named object that this state parameter is the state of.
      * 
-     * The attribute has the format; [issuedBy]:[name].
+     * The attribute has the format; [name]:[type]:[timestamp].
      */
     protected String isStateOf;
 
@@ -123,11 +123,6 @@ public class State extends Named implements IState {
      */
     @Override
     public void setIsStateOf(Named isStateOf) {
-        this.isStateOf = isStateOf == null ? null : isStateOf.getQualifiedName();
-    }
-
-    @Override
-    public String getQualifiedName(String separator) {
-        return isStateOf + separator + name;
+        this.isStateOf = isStateOf == null ? null : isStateOf.getID();
     }
 }

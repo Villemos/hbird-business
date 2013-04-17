@@ -69,19 +69,14 @@ public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
     public TleOrbitalParameters(String issuedBy, String name, Satellite satellite, String tleLine1, String tleLine2) {
         super(issuedBy, name, DESCRIPTION);
 
-        this.satellite = satellite.getQualifiedName();
+        this.satellite = satellite.getID();
         this.tleLine1 = tleLine1;
         this.tleLine2 = tleLine2;
     }
 
     @Override
-    public String getSatelliteName() {
+    public String getSatelliteId() {
         return satellite;
-    }
-
-    @Override
-    public void setSatelliteName(String satellite) {
-        this.satellite = satellite;
     }
 
     public String getTleLine1() {
@@ -98,5 +93,10 @@ public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
 
     public void setTleLine2(String tleLine2) {
         this.tleLine2 = tleLine2;
+    }
+    
+    @Override
+    public String prettyPrint() {
+        return String.format("%s[name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getName(), timestamp, satellite);
     }
 }

@@ -14,27 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.taskexecutor.bean;
-
-import org.apache.camel.model.ProcessorDefinition;
-import org.hbird.business.core.SoftwareComponentDriver;
-import org.hbird.exchange.configurator.StandardEndpoints;
+package org.hbird.exchange.interfaces;
 
 /**
- * Component builder to create a Task Executor component
- * 
- * @author Gert Villemos
- * 
+ * @author Admin
+ *
  */
-public class TaskExecutorComponentDriver extends SoftwareComponentDriver {
+public interface IDerivedFrom {
 
-    @Override
-    public void doConfigure() {
-
-        String componentname = command.getPart().getName();
-        ProcessorDefinition<?> route = from(StandardEndpoints.TASKS).split().method(new TaskExecutor(componentname), "receive");
-        addInjectionRoute(route);
-
-        addCommandHandler();
-    }
+	public String getDerivedFrom();
 }

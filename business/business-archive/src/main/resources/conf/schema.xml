@@ -154,7 +154,7 @@
    <field name="issuedBy" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
    <field name="name" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
    <field name="qualifiedname" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
-   <field name="class" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
+   <field name="class" type="string" indexed="true" stored="true" multiValued="true" required="false" omitNorms="true"/>
    <field name="description" type="text" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
    <field name="timestamp" type="slong" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
    <field name="datasetidentifier" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
@@ -205,14 +205,10 @@
    <field name="ofLocation" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>   
 
    <!-- Additional 'IDerived' class fields. -->
-   <field name="derivedFromName" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>      
-   <field name="derivedFromTimestamp" type="slong" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>   
-   <field name="derivedFromIssuedBy" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>  
+   <field name="derivedFrom" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>      
 	
    <!-- Additional 'IApplicableTo' class fields. -->
-   <field name="applicableToName" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>      
-   <field name="applicableToTimestamp" type="slong" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>   
-   <field name="applicableToType" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>  
+   <field name="applicableTo" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>      
 
 	
 	<!-- Additional 'LocationContactEvent' class fields. -->

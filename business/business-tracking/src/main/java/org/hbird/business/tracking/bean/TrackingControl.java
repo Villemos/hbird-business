@@ -20,9 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
-import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.IQueueManagement;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.Track;
@@ -56,10 +55,10 @@ public class TrackingControl {
 	private static final Logger LOG = LoggerFactory.getLogger(TrackingControl.class);
 
 	/** The definition of {@link GroundStation}. */
-	protected final String groundStationName;
+	protected final String groundStationId;
 
 	/** The definition of the {@link Satellite} to track. */
-	protected final String satelliteName;
+	protected final String satelliteId;
 	protected Satellite satellite = null;
 
 	/** The name of this component. */
@@ -67,12 +66,6 @@ public class TrackingControl {
 
 	/** API for retrieving contact data. */
 	protected IDataAccess api = null;
-
-	/** API to manage the antenna schedule queue. */
-	protected IQueueManagement queueApi = null;
-
-	/** API for retrieving Satellite and GroundStation objects. */
-	protected ICatalogue catalogueApi = null;
 
 	/** The last retrieved contact events for the location / satellite. */
 	protected List<LocationContactEvent> nextContactEvents = new ArrayList<LocationContactEvent>();
@@ -87,8 +80,8 @@ public class TrackingControl {
 	 */
 	public TrackingControl(String name, String groundStationName, String satelliteName) {
 		this.name = name;
-		this.groundStationName = groundStationName;
-		this.satelliteName = satelliteName;
+		this.groundStationId = groundStationName;
+		this.satelliteId = satelliteName;
 	}
 
 	/**
@@ -105,8 +98,12 @@ public class TrackingControl {
 	public Command process(CamelContext context) throws OrekitException {
 		Command command = null;
 
+		if (api == null) {
+			api = ApiFactory.getDataAccessApi(this.name);
+		}
+		
 		/** Retrieve the next set of contact events (start-end) for this station. */
-		List<LocationContactEvent> contactEvents = api.getNextLocationContactEventsFor(groundStationName, satelliteName);
+		List<LocationContactEvent> contactEvents = api.getNextLocationContactEventsFor(groundStationId, satelliteId);
 
 		/** If there are contact events. */
 		if (contactEvents.size() == 2) {
@@ -114,25 +111,28 @@ public class TrackingControl {
 			/** Check if we already have events. If yes; see if they are different. */
 			if (nextContactEvents.isEmpty() || nextContactEvents.get(0).getTimestamp() != contactEvents.get(0).getTimestamp()) {
 
-				LOG.info("Found start/stop location contact events for location / satellite " + groundStationName + " / " + satelliteName + ". Will generate 'Track' command.");
+				LOG.info("Found start/stop location contact events for location / satellite " + groundStationId + " / " + satelliteId + ". Will generate 'Track' command.");
 
 				nextContactEvents = contactEvents;
 
 				/** Get the definition of the satellite. */
 				if (satellite == null) {
-					satellite = catalogueApi.getSatelliteByName(satelliteName);
-					if (satellite == null) {
-						LOG.error("No Satellite available for the name {}", satelliteName);
+					Object named = (Satellite) ApiFactory.getDataAccessApi(this.name).resolveNamed(satelliteId);
+					if (named == null) {
+						LOG.error("No Satellite available for the name {}", satelliteId);
 						return command;
+					}
+					else {
+						satellite = (Satellite) named;
 					}
 				}
 
 				/** Schedule the tracking. */
-				command = new Track(name, groundStationName, satellite, nextContactEvents.get(0), nextContactEvents.get(1));                
+				command = new Track(name, groundStationId, satellite, nextContactEvents.get(0), nextContactEvents.get(1));                
 			}
 		}
 		else {
-			LOG.info("Did not find start/stop location contact events for groundstation '" + groundStationName + "' and satellite '" + satelliteName + "'.");
+			LOG.info("Did not find start/stop location contact events for groundstation '" + groundStationId + "' and satellite '" + satelliteId + "'.");
 		}
 
 		/** Return command for scheduling. */
@@ -142,29 +142,5 @@ public class TrackingControl {
 	double getFrequency(GroundStation groundStation, Satellite satellite) {
 		// TODO - 05.03.2013, kimmell - implement
 		return -1.0D;
-	}
-
-	public IDataAccess getApi() {
-		return api;
-	}
-
-	public void setApi(IDataAccess api) {
-		this.api = api;
-	}
-
-	public IQueueManagement getQueueApi() {
-		return queueApi;
-	}
-
-	public void setQueueApi(IQueueManagement queueApi) {
-		this.queueApi = queueApi;
-	}
-
-	public void setCatalogueApi(ICatalogue catalogueApi) {
-		this.catalogueApi = catalogueApi;
-	}
-
-	public ICatalogue getCatalogueApi() {
-		return catalogueApi;
 	}
 }

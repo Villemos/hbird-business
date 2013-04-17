@@ -16,31 +16,17 @@
  */
 package org.hbird.exchange.dataaccess;
 
-import static org.hbird.exchange.dataaccess.Arguments.CLASS;
-import static org.hbird.exchange.dataaccess.Arguments.DERIVED_FROM;
-import static org.hbird.exchange.dataaccess.Arguments.FROM;
-import static org.hbird.exchange.dataaccess.Arguments.INCLUDE_STATES;
-import static org.hbird.exchange.dataaccess.Arguments.INITIALIZATION;
-import static org.hbird.exchange.dataaccess.Arguments.IS_STATE_OF;
-import static org.hbird.exchange.dataaccess.Arguments.NAMES;
-import static org.hbird.exchange.dataaccess.Arguments.ROWS;
-import static org.hbird.exchange.dataaccess.Arguments.SORT;
-import static org.hbird.exchange.dataaccess.Arguments.SORT_ORDER;
-import static org.hbird.exchange.dataaccess.Arguments.TO;
-import static org.hbird.exchange.dataaccess.Arguments.create;
-import static org.hbird.exchange.dataaccess.Arguments.ISSUED_BY;
+import static org.hbird.exchange.dataaccess.Arguments.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.core.NamedInstanceIdentifier;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
+import org.hbird.exchange.interfaces.INamed;
 
 public class DataRequest extends Command {
 
@@ -158,16 +144,16 @@ public class DataRequest extends Command {
 		return getArgumentValue(StandardArguments.TO, Long.class);
 	}
 
-	public void setDerivedFrom(String issuedBy, String name, long timestamp) {
-		setArgumentValue(StandardArguments.DERIVED_FROM, new NamedInstanceIdentifier(issuedBy, name, timestamp));
+	public void setDerivedFrom(INamed source) {
+		setArgumentValue(StandardArguments.DERIVED_FROM, source.getID());
 	}
 
-	public void setDerivedFrom(NamedInstanceIdentifier identifier) {
+	public void setDerivedFrom(String identifier) {
 		setArgumentValue(StandardArguments.DERIVED_FROM, identifier);
 	}
 
-	public NamedInstanceIdentifier getDerivedFrom() {
-		return getArgumentValue(StandardArguments.DERIVED_FROM, NamedInstanceIdentifier.class);
+	public String getDerivedFrom() {
+		return getArgumentValue(StandardArguments.DERIVED_FROM, String.class);
 	}
 
 	public void setSort(String sortBy) {

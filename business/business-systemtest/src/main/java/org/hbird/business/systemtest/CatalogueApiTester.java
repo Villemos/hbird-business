@@ -44,6 +44,7 @@ public class CatalogueApiTester extends SystemTest {
 			publishApi.publish(part);
 		}
 		
+		Thread.sleep(3000);	
 		forceCommit();
 		
 		/** Test retrieve all parts. */
@@ -51,7 +52,7 @@ public class CatalogueApiTester extends SystemTest {
 		azzert(results.size() == parts.values().size() , "Expected to receive " + parts.values().size() + " entries.");
 		
 		/** Retrieve all children of a part. */
-		results = catalogueApi.getPartChildren("Mission Operation Center");
+		results = catalogueApi.getPartChildren(mof.getID());
 		azzert(results.size() == 10, "Expected to receive 5 children of MOC.");
 		
 		LOG.info("Finished");
