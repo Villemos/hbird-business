@@ -34,12 +34,8 @@ public class DataRequest extends Command {
 
 	private static final long serialVersionUID = 344371026722929043L;
 
-	public DataRequest(String issuedBy, String destination) {
-		super(issuedBy, destination, DataRequest.class.getSimpleName(), DESCRIPTION);
-	}
-
-	public DataRequest(String issuedBy, String destination, String name, String description) {
-		super(issuedBy, destination, name, description);
+	public DataRequest(String issuedBy) {
+		super(issuedBy, DESCRIPTION);
 	}
 
 	/**

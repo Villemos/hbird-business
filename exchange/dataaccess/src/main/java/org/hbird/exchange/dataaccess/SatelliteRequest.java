@@ -3,7 +3,6 @@ package org.hbird.exchange.dataaccess;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.navigation.Satellite;
 
 public class SatelliteRequest extends DataRequest {
@@ -16,7 +15,7 @@ public class SatelliteRequest extends DataRequest {
 	 * 
 	 */
     public SatelliteRequest(String issuedBy) {
-        super(issuedBy, StandardComponents.ARCHIVE_NAME, SatelliteRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy);
         setClass(Satellite.class.getSimpleName());
         setIsInitialization(true);
     }

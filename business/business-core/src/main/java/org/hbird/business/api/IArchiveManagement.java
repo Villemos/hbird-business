@@ -20,8 +20,7 @@ package org.hbird.business.api;
  * @author Admin
  *
  */
-public interface IArchiveManagement {
+public interface IArchiveManagement extends IHbirdApi {
 
 	public void deleteOrbitalStates(String satellite);
-	
 }

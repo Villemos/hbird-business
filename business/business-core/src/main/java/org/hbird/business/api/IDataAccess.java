@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hbird.exchange.core.Event;
+import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
@@ -118,7 +119,7 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
  * @author Gert Villemos
  *
  */
-public interface IDataAccess {
+public interface IDataAccess extends IHbirdApi {
 
 	public List<Named> getData(DataRequest request);
 
@@ -677,7 +678,7 @@ public interface IDataAccess {
 	 * @param subject The Named object that the metadata must be applicable to.
 	 * @return A list with zero or more metadata objects applicable to the subject
 	 */
-	public List<Named> getMetadata(Named subject);
+	public List<Metadata> getMetadata(Named subject);
 
 	
 	

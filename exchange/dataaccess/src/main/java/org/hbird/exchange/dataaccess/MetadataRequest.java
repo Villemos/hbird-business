@@ -6,7 +6,6 @@ import static org.hbird.exchange.dataaccess.Arguments.create;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.Named;
 
@@ -14,8 +13,10 @@ public class MetadataRequest extends DataRequest {
 
     private static final long serialVersionUID = -7231902449829794969L;
 
+    public static final String DESCRIPTION = "A request to retrieve metadata related to a Named object.";
+    
     public MetadataRequest(String issuedBy, Named applicableTo) {
-        super(issuedBy, StandardComponents.ARCHIVE_NAME);
+        super(issuedBy);
 
         this.setArgumentValue(StandardArguments.APPLICABLE_TO, applicableTo.getID());
     }

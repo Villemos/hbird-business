@@ -117,7 +117,7 @@ public class TrackingControl {
 
 				/** Get the definition of the satellite. */
 				if (satellite == null) {
-					Object named = (Satellite) ApiFactory.getDataAccessApi(this.name).resolveNamed(satelliteId);
+					Object named = ApiFactory.getDataAccessApi(this.name).resolveNamed(satelliteId);
 					if (named == null) {
 						LOG.error("No Satellite available for the name {}", satelliteId);
 						return command;

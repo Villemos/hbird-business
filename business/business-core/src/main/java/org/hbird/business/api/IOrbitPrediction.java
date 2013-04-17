@@ -39,7 +39,7 @@ import org.hbird.exchange.navigation.Satellite;
  * @author Gert Villemos
  * 
  */
-public interface IOrbitPrediction {
+public interface IOrbitPrediction extends IHbirdApi {
 
     /**
      * Propagate the orbit of a satellite <li>From NOW using the last available TLE for the satellite.</li> <li>Delta

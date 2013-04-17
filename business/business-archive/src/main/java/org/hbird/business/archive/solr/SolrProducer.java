@@ -59,6 +59,8 @@ import com.thoughtworks.xstream.XStream;
 
 /**
  * The Solr producer.
+ * 
+ * @author Gert Villemos
  */
 public class SolrProducer extends DefaultProducer {
 
@@ -69,7 +71,7 @@ public class SolrProducer extends DefaultProducer {
 
 	protected XStream xstream = new XStream();
 
-	/**
+	/*
 	 * Constructor
 	 * 
 	 * @param endpoint The endpoint.
@@ -118,7 +120,7 @@ public class SolrProducer extends DefaultProducer {
 					exchange.getOut().setBody(results);
 				}
 				else {
-					LOG.info("Received Data Request ('{}'). Retrieving.", body.getClass().getSimpleName());
+					LOG.info("Received Data Request ('{}') from '{}'. Retrieving.", body.getClass().getSimpleName(), dataRequest.getIssuedBy());
 
 					String request = createRequest((DataRequest) body);
 					LOG.info("Search string = {}.", request);
@@ -297,7 +299,6 @@ public class SolrProducer extends DefaultProducer {
 		query.setQuery(request);
 		query.setFacetSort(StandardArguments.COUNT);
 		query.setFacetLimit(-1);
-		query.setFacetPrefix(endpoint.getFacetprefix());
 		query.setFacetMissing(false);
 		query.setFacetMinCount(1);
 
@@ -375,12 +376,6 @@ public class SolrProducer extends DefaultProducer {
 			}
 
 			query.setSortField(body.getArgumentValue(StandardArguments.SORT, String.class), sortOrder);
-		}
-
-		/** If we are asked for facets, then add the facets. */
-		if (endpoint.getFacets()) {
-			query.setFacet(true);
-			query.addFacetField(endpoint.getFacetField());
 		}
 
 		return query;
@@ -580,7 +575,6 @@ public class SolrProducer extends DefaultProducer {
 			LOG.error("Failed to handle query; query: '{}'.", query.toString(), e);
 		}
 
-		ResultSet results = Utilities.getResultSet(response, query.getRows());
-		return results.getResults();
+		return Utilities.getResultSet(response, query.getRows());
 	}
 }

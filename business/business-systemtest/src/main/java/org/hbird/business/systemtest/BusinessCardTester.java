@@ -18,9 +18,10 @@ package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
+import org.hbird.business.commanding.CommandingComponent;
+import org.hbird.business.configurator.ConfiguratorComponent;
 import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.configurator.StandardEndpoints;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.interfaces.IStartablePart;
 
@@ -43,7 +44,7 @@ public class BusinessCardTester extends SystemTest {
 				LOG.info(obj);
 				if (obj instanceof Named) {
 					/** Notice that the name given to the configurator in the assembly is 'Main Configurator' */
-					if (((Named)obj).getIssuedBy().equals(StandardComponents.CONFIGURATOR_NAME)) {
+					if (((Named)obj).getIssuedBy().equals(ConfiguratorComponent.CONFIGURATOR_NAME)) {
 						didArrive = true;
 						break;
 					}
@@ -58,7 +59,7 @@ public class BusinessCardTester extends SystemTest {
 
 		Thread.sleep(3000);
 
-		IStartablePart commanding = (IStartablePart) parts.get(StandardComponents.COMMAND_RELEASER_NAME);
+		IStartablePart commanding = (IStartablePart) parts.get(CommandingComponent.COMMAND_RELEASER_NAME);
 
 		synchronized (businessCardListener.elements) {
 			Boolean commandingDidArrive = false;
@@ -66,7 +67,7 @@ public class BusinessCardTester extends SystemTest {
 				LOG.info(obj);
 				if (obj instanceof Named) {
 
-					if (((Named)obj).getIssuedBy().equals(StandardComponents.COMMAND_RELEASER_NAME)) {
+					if (((Named)obj).getIssuedBy().equals(CommandingComponent.COMMAND_RELEASER_NAME)) {
 						commandingDidArrive = true;
 						break;
 					}

@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.ICatalogue;
+import org.hbird.business.archive.ArchiveComponent;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.core.State;
@@ -47,7 +48,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
 	 * @param issuedBy The name/ID of the component that is using the API to send requests.
 	 */
     public Catalogue(String issuedBy) {
-        super(issuedBy);
+        super(issuedBy, ArchiveComponent.ARCHIVE_NAME);
     }
 
     /**
@@ -56,7 +57,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     @Override
     public List<GroundStation> getGroundStations() {
         GroundStationRequest request = createGroundStationRequest(null);
-        return executeRequest(request);
+        return executeRequestRespond(request);
     }
 
     /**
@@ -67,7 +68,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     	List<String> names = new ArrayList<String>();
 		names.add(name);
     	GroundStationRequest request = createGroundStationRequest(names);
-        List<GroundStation> stations = executeRequest(request);
+        List<GroundStation> stations = executeRequestRespond(request);
         return getFirst(stations);
     }
 
@@ -77,7 +78,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     @Override
     public List<GroundStation> getGroundStationsByName(List<String> names) {
         GroundStationRequest request = createGroundStationRequest(names);
-        return executeRequest(request);
+        return executeRequestRespond(request);
     }
 
     /**
@@ -86,7 +87,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     @Override
     public List<Satellite> getSatellites() {
         SatelliteRequest request = createSatelliteRequest(issuedBy);
-        return executeRequest(request);
+        return executeRequestRespond(request);
     }
 
     /**
@@ -96,7 +97,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     public Satellite getSatelliteByName(String name) {
         SatelliteRequest request = createSatelliteRequest(issuedBy);
         request.addName(name);
-        List<Satellite> satellites = executeRequest(request);
+        List<Satellite> satellites = executeRequestRespond(request);
         return getFirst(satellites);
     }
 
@@ -106,7 +107,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     @Override
     public List<Parameter> getParameters() {
         ParameterRequest request = createParameterRequest(); 
-        return executeRequest(request);
+        return executeRequestRespond(request);
     }
 
     /**
@@ -115,7 +116,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     @Override
     public List<State> getStates() {
         StateRequest request = createStateRequest(); 
-        return executeRequest(request);
+        return executeRequestRespond(request);
     }
 
     protected void configureInit(DataRequest request, Class<?> clazz) {
@@ -166,7 +167,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
 	@Override
 	public List<Part> getParts() {
 		PartRequest request = new PartRequest(issuedBy);		
-		return executeRequest(request);
+		return executeRequestRespond(request);
 	}
 
 	/* (non-Javadoc)
@@ -176,7 +177,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
 	public Part getPart(String name) {
 		PartRequest request = new PartRequest(issuedBy);
 		request.addName(name);
-		List<Object> results = executeRequest(request);
+		List<Object> results = executeRequestRespond(request);
 		return results.isEmpty() ? null : (Part) results.get(0);
 	}
 
@@ -187,6 +188,6 @@ public class Catalogue extends HbirdApi implements ICatalogue {
 	public List<Part> getPartChildren(String parentName) {
 		PartRequest request = new PartRequest(issuedBy);
 		request.setIsPartOf(parentName);
-		return executeRequest(request);
+		return executeRequestRespond(request);
 	}
 }

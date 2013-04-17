@@ -21,7 +21,6 @@ import static org.hbird.exchange.dataaccess.Arguments.*;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.CommandArgument;
 
 public class DeletionRequest extends DataRequest {
@@ -31,11 +30,11 @@ public class DeletionRequest extends DataRequest {
     private static final long serialVersionUID = -811265458963306125L;
 
     public DeletionRequest(String issuedBy) {
-        super(issuedBy, StandardComponents.ARCHIVE_NAME);
+        super(issuedBy);
     }
 
     public DeletionRequest(String issuedBy, boolean deleteAll) {
-        super(issuedBy, StandardComponents.ARCHIVE_NAME);
+        super(issuedBy);
         setArgumentValue(StandardArguments.DELETE_ALL, deleteAll);
     }
 

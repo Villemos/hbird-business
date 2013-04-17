@@ -57,7 +57,7 @@ public class QueueManagerApi extends HbirdApi implements IQueueManagement {
     protected MBeanServerConnection conn = null;
 
     public QueueManagerApi(String issuedBy) {
-        super(issuedBy);
+        super(issuedBy, "");
     }
 
     /**

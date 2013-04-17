@@ -30,8 +30,8 @@ public abstract class Rotator extends StartablePart implements ICommandableAnten
     private int minElevation;
     private int maxElevation;
 
-    public Rotator(String ID, String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation, String driver) {
-		super(ID, name, "A rotator of an antenna.", driver);
+    public Rotator(String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation, String driver) {
+		super(name, "A rotator of an antenna.", driver);
 		this.thresholdElevation = thresholdElevation;
 		this.minAzimuth = minAzimuth;
 		this.maxAzimuth = maxAzimuth;

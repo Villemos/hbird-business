@@ -1,5 +1,30 @@
+/**
+ * Licensed to the Hummingbird Foundation (HF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The HF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.hbird.business.api;
 
+
+/**
+ * Factory class for creating API implementations. 
+ * 
+ * Different implementations may exist, depending on the underlying technologies used.
+ * 
+ * @author Gert Villemos
+ *
+ */
 public class ApiFactory {
 
 	static protected String dataAccessClass = System.getProperty("hbird.dataaccess.class", "org.hbird.business.archive.api.DataAccess");
@@ -8,7 +33,7 @@ public class ApiFactory {
 	static protected String orbitPredictionClass = System.getProperty("hbird.orbitprediction.class", "org.hbird.business.navigation.api.OrbitPropagation");
 	static protected String queueManagementClass = System.getProperty("hbird.queuemanagement.class", "org.hbird.business.queuemanagement.api.QueueManagerApi");
 	static protected String partmanagerClass = System.getProperty("hbird.partmanager.class", "org.hbird.business.archive.api.PartManager");
-	static protected String archiveManagerClass = System.getProperty("hbird.partmanager.class", "org.hbird.business.archive.api.ArchiveManager");
+	static protected String archiveManagerClass = System.getProperty("hbird.archivemanager.class", "org.hbird.business.archive.api.ArchiveManagement");
 	
 	static public synchronized IDataAccess getDataAccessApi(String issuedBy) {
 		return (IDataAccess) createInstance(dataAccessClass, issuedBy);

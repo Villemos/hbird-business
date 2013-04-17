@@ -8,7 +8,6 @@ import static org.hbird.exchange.dataaccess.Arguments.create;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.navigation.LocationContactEvent;
 
@@ -16,8 +15,11 @@ public class LocationContactEventRequest extends DataRequest {
 
     private static final long serialVersionUID = -5990938785008117581L;
 
+
+    public static final String DESCRIPTION = "A request to retrieve location contact events of a satellite / ground station.";
+
     public LocationContactEventRequest(String issuedBy, String location) {
-        super(issuedBy, StandardComponents.ARCHIVE_NAME);
+        super(issuedBy);
         setClass(LocationContactEvent.class.getSimpleName());
         setArgumentValue(StandardArguments.GROUND_STATION_NAME, location);
     }

@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IPublish;
-import org.hbird.exchange.constants.StandardComponents;
+import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -101,7 +101,7 @@ public class LocationContactEventCollector extends ElevationDetector {
     public int eventOccurred(final SpacecraftState state, final boolean increasing) throws OrekitException {
 
     	long atTime = state.getDate().toDate(TimeScalesFactory.getUTC()).getTime();
-        LocationContactEvent event = new LocationContactEvent(StandardComponents.ORBIT_PROPAGATOR_NAME, atTime, groundStation, antenna, satellite, increasing, NavigationUtilities.toOrbitalState(state, parameters)); 
+        LocationContactEvent event = new LocationContactEvent(NavigationComponent.ORBIT_PROPAGATOR_NAME, atTime, groundStation, antenna, satellite, increasing, NavigationUtilities.toOrbitalState(state, parameters)); 
         events.add(event);
 
         /** If stream mode, then deliver the data as a stream. */

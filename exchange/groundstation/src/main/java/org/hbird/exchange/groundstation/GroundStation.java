@@ -55,8 +55,8 @@ public class GroundStation extends Part implements IGroundStationSpecific {
     /**
      * 
      */
-    public GroundStation(String ID, String name) {
-        super(ID, name, DESCRIPTION);
+    public GroundStation(String name) {
+        super(name, DESCRIPTION);
     }
 
     /**
@@ -65,8 +65,8 @@ public class GroundStation extends Part implements IGroundStationSpecific {
      * @param geoLocation
      * @param antennas
      */
-    public GroundStation(String ID, String name, String description, D3Vector geoLocation) {
-        super(ID, name, description);
+    public GroundStation(String name, String description, D3Vector geoLocation) {
+        super(name, description);
         this.geoLocation = geoLocation;
     }
     
@@ -76,8 +76,8 @@ public class GroundStation extends Part implements IGroundStationSpecific {
      * @param geoLocation
      * @param antennas
      */
-    public GroundStation(String ID, String name, D3Vector geoLocation) {
-        super(ID, name, DESCRIPTION);
+    public GroundStation(String name, D3Vector geoLocation) {
+        super(name, DESCRIPTION);
         this.geoLocation = geoLocation;
     }
 

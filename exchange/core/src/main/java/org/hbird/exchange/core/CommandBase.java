@@ -27,7 +27,7 @@ public class CommandBase extends Named implements IScheduled, ITransferable {
     private static final long serialVersionUID = -5289428765905258384L;
 
     /** The name of the component to which this command is destined. */
-    protected String destination;
+    protected String destination = null;
 
     /**
      * The time at which this command should be transfered to its destination. A value of

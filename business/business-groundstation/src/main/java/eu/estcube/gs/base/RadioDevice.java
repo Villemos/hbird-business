@@ -39,8 +39,8 @@ public abstract class RadioDevice extends StartablePart implements ICommandableA
     private boolean isDownlink;
     private long gain;
 
-    public RadioDevice(String ID, String name, long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain, String driver) {
-		super(ID, name, "A Radio Device.", driver);
+    public RadioDevice(String name, long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain, String driver) {
+		super(name, "A Radio Device.", driver);
 		this.minFrequency = minFrequency;
 		this.maxFrequency = maxFrequency;
 		this.isUplink = isUplink;

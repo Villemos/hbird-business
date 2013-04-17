@@ -22,6 +22,8 @@ import java.util.List;
 
 import org.apache.camel.Converter;
 import org.apache.log4j.Logger;
+import org.hbird.core.spacesystemmodel.tmtc.CommandGroup;
+import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Parameter;
 
 
@@ -38,6 +40,13 @@ public class TransportToBusinessTypeConverter {
 	/** Da' logger. */
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(TransportToBusinessTypeConverter.class);
 
+	
+	/** TODO */
+//	public static CommandGroup convertToCommand(Command bCommand) {
+//		CommandGroup tCommand = new TmTcGroup();
+//		
+//		return tCommand; 
+//	}
 	
 	/**
 	 * Method to convert a Transport Tier parameter group to a List of Business Tier parameters.

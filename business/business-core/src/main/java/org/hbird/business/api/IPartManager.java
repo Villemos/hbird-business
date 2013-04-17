@@ -39,7 +39,7 @@ import org.hbird.exchange.interfaces.IStartablePart;
  * @author Admin
  *
  */
-public interface IPartManager {
+public interface IPartManager extends IHbirdApi {
 
 	public void start(IStartablePart part);
 	

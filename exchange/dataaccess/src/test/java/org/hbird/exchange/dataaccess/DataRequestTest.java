@@ -42,7 +42,7 @@ public class DataRequestTest {
      */
     @Before
     public void setUp() throws Exception {
-        dataRequest = new DataRequest(ISSUER, DESTINATION);
+        dataRequest = new DataRequest(ISSUER);
     }
 
     /**

@@ -36,7 +36,13 @@ import org.hbird.exchange.core.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** TODO Create route IDs. */
+/**
+ * Driver of the configurator component. Creates a configurator bean and the routes needed to receive
+ * configuration requests.
+ * 
+ * @author Gert Villemos
+ *
+ */
 public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
 
     protected static final String ENDPOINT_TO_EVENTS = "direct:toEvents";
@@ -61,6 +67,12 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
         start(new ConfiguratorComponent());
     }
 
+    /**
+     * Method to start the configurator part.
+     * 
+     * @param part The configurator component to be started
+     * @throws Exception
+     */
     public void start(ConfiguratorComponent part) throws Exception {
         this.part = part;
         CamelContext context = getContext();
@@ -74,9 +86,16 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
         }
     }
 
-    public synchronized void startComponent(@Body StartComponent request, CamelContext context) throws Exception {
-        String qName = request.getPart().getName();
-        String driverName = request.getPart().getDriverName();
+    /**
+     * Request to start a component.
+     * 
+     * @param command The start component request
+     * @param context The camel context in which the component is running.
+     * @throws Exception
+     */
+    public synchronized void startComponent(@Body StartComponent command, CamelContext context) throws Exception {
+        String qName = command.getPart().getName();
+        String driverName = command.getPart().getDriverName();
         LOG.info("Received start request for part '{}'. Will use driver '{}'.", qName, driverName);
 
         if (components.containsKey(qName)) {
@@ -90,7 +109,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
             else {
                 try {
                     SoftwareComponentDriver builder = (SoftwareComponentDriver) Class.forName(driverName).newInstance();
-                    builder.setCommand(request);
+                    builder.setCommand(command);
                     context.addRoutes(builder);
 
                     /** Register component in list of components maintained by this configurator. */
@@ -104,6 +123,13 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
         }
     }
 
+    /**
+     * A request to stop a component.
+     * 
+     * @param command The request to stop a component
+     * @param context The camel context in which the component is running.
+     * @throws Exception
+     */
     public synchronized void stopComponent(@Body StopComponent command, CamelContext context) throws Exception {
         String qName = command.getComponentName(); // same as qualified name in start component method
         if (components.containsKey(qName)) {
@@ -130,6 +156,9 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
         return values;
     }
 
+    /* (non-Javadoc)
+     * @see org.hbird.business.core.SoftwareComponentDriver#configure()
+     */
     @Override
     public void configure() throws Exception {
 
@@ -155,16 +184,27 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
 
     }
 
+    /* (non-Javadoc)
+     * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
+     */
     @Override
     protected void doConfigure() {
         /** Do null */
     }
 
-    Event createStartEvent(String qualifiedName) {
+    /**
+     * @param qualifiedName
+     * @return
+     */
+    protected Event createStartEvent(String qualifiedName) {
         return new Event(qualifiedName, StandardMissionEvents.COMPONENT_START);
     }
 
-    Event createStopEvent(String qualifiedName) {
+    /**
+     * @param qualifiedName
+     * @return
+     */
+    protected Event createStopEvent(String qualifiedName) {
         return new Event(qualifiedName, StandardMissionEvents.COMPONENT_STOP);
     }
 }

@@ -34,7 +34,6 @@ package org.hbird.business.importer;
 
 import org.hbird.business.core.StartablePart;
 import org.hbird.business.importer.excell.ImporterComponentDriver;
-import org.hbird.exchange.constants.StandardComponents;
 
 /**
  * @author Gert Villemos
@@ -47,9 +46,11 @@ public class ImporterComponent extends StartablePart {
 	 */
 	private static final long serialVersionUID = 977031947464683135L;
 
+	public static final String IMPORTER_NAME = "Importer";
+	public static final String IMPORTER_DESC = "A component for importing data from files.";
 	public static final String DEFAULT_DRIVER = ImporterComponentDriver.class.getName();
 	
 	public ImporterComponent() {
-		super(StandardComponents.IMPORTER_NAME, StandardComponents.IMPORTER_NAME, StandardComponents.IMPORTER_DESC, DEFAULT_DRIVER);
+		super(IMPORTER_NAME, IMPORTER_DESC, DEFAULT_DRIVER);
 	}
 }

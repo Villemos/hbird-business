@@ -18,6 +18,7 @@ package org.hbird.business.archive.api;
 
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IArchiveManagement;
+import org.hbird.business.archive.ArchiveComponent;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.navigation.OrbitalState;
@@ -37,7 +38,7 @@ public class ArchiveManagement extends HbirdApi implements IArchiveManagement {
 	 * @param issuedBy The name/ID of the component that is using the API to send requests.
 	 */
 	public ArchiveManagement(String issuedBy) {
-		super(issuedBy);
+		super(issuedBy, ArchiveComponent.ARCHIVE_NAME);
 	}
 
 	/* (non-Javadoc)
@@ -48,6 +49,6 @@ public class ArchiveManagement extends HbirdApi implements IArchiveManagement {
 		DeletionRequest request = new DeletionRequest(issuedBy);
 		request.setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
 		request.setArgumentValue(StandardArguments.CLASS, OrbitalState.class.getSimpleName());
-		executeRequest(request);
+		executeRequestRespond(request);
 	}
 }

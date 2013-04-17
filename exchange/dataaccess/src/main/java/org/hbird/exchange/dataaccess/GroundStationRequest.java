@@ -22,8 +22,6 @@ package org.hbird.exchange.dataaccess;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hbird.exchange.constants.StandardComponents;
-
 /**
  * 
  */
@@ -34,7 +32,7 @@ public class GroundStationRequest extends DataRequest {
     private static final long serialVersionUID = -2463827175606652486L;
 
     public GroundStationRequest(String issuedBy) {
-        super(issuedBy, StandardComponents.ARCHIVE_NAME, GroundStationRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy);
         setIsInitialization(true);
     }
 

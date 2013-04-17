@@ -80,8 +80,8 @@ public class HamlibRotatorPart extends Rotator {
      * @param minElevation
      * @param maxElevation
      */
-    public HamlibRotatorPart(String ID, String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation, long port, String host) {
-        super(ID, name, thresholdElevation, minAzimuth, maxAzimuth, minElevation, maxElevation, HamlibRotatorDriver.class.getName());
+    public HamlibRotatorPart(String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation, long port, String host) {
+        super(name, thresholdElevation, minAzimuth, maxAzimuth, minElevation, maxElevation, HamlibRotatorDriver.class.getName());
         this.port = port;
         this.host = host;
     }

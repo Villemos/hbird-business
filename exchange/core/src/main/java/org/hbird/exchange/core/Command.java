@@ -93,7 +93,7 @@ public class Command extends CommandBase {
      * @param description
      */
     public Command(String name, String description) {
-        this("", "", name, description, IScheduled.IMMEDIATE, IScheduled.IMMEDIATE);
+        this("", null, name, description, IScheduled.IMMEDIATE, IScheduled.IMMEDIATE);
     }
 
     /**

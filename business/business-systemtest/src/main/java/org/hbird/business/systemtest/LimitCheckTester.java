@@ -18,6 +18,7 @@ package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
+import org.hbird.business.configurator.ConfiguratorComponent;
 import org.hbird.business.validation.LimitCheckComponent;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.Part;
@@ -39,17 +40,17 @@ public class LimitCheckTester extends SystemTest {
 
         Part limits = parts.get("Limits");
 
-        LimitCheckComponent com = new LimitCheckComponent("PARA1_LowerSoftLimit", "PARA1_LowerSoftLimit", new Limit(eLimitType.Lower, estcube1.getName() + "/PARA1", 2d,
+        LimitCheckComponent com = new LimitCheckComponent("PARA1_LowerSoftLimit", new Limit(eLimitType.Lower, estcube1.getName() + "/PARA1", 2d,
                 "PARA1_LOWER_SOFTLIMIT", "The first lower limit of PARA1"));
         com.setIsPartOf(limits);
-        StartComponent request = new StartComponent("SystemTest", com);
-        injection.sendBody(request);
+        StartComponent request = new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com);
+        publishApi.publish(request);
 
-        com = new LimitCheckComponent("PARA1_LowerHardLimit", "PARA1_LowerHardLimit", new Limit(eLimitType.Lower, estcube1.getName() + "/PARA1", 0d, "PARA1_LOWER_HARDLIMIT",
+        com = new LimitCheckComponent("PARA1_LowerHardLimit", new Limit(eLimitType.Lower, estcube1.getName() + "/PARA1", 0d, "PARA1_LOWER_HARDLIMIT",
                 "The second lower limit of PARA1"));
         com.setIsPartOf(limits);
-        request = new StartComponent("SystemTest", com);
-        injection.sendBody(request);
+        request = new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com);
+        publishApi.publish(request);
 
         Thread.sleep(2000);
 
@@ -65,17 +66,17 @@ public class LimitCheckTester extends SystemTest {
 
         /** Start a limit checker. */
         LOG.info("Issuing commands for starting two upper limit limitcheckers.");
-        com = new LimitCheckComponent("PARA1_UpperSoftLimit", "PARA1_UpperSoftLimit", new Limit(eLimitType.Upper, estcube1.getName() + "/PARA1", 10.5d,
+        com = new LimitCheckComponent("PARA1_UpperSoftLimit", new Limit(eLimitType.Upper, estcube1.getName() + "/PARA1", 10.5d,
                 "PARA1_UPPER_SOFTLIMIT", "The first upper limit of PARA1"));
         com.setIsPartOf(limits);
-        request = new StartComponent("SystemTest", com);
-        injection.sendBody(request);
+        request = new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com);
+        publishApi.publish(request);
 
-        com = new LimitCheckComponent("PARA1_UpperHardLimit", "PARA1_UpperHardLimit", new Limit(eLimitType.Upper, estcube1.getName() + "/PARA1", 15d, "PARA1_UPPER_HARDLIMIT",
+        com = new LimitCheckComponent("PARA1_UpperHardLimit", new Limit(eLimitType.Upper, estcube1.getName() + "/PARA1", 15d, "PARA1_UPPER_HARDLIMIT",
                 "The second upper limit of PARA1"));
         com.setIsPartOf(limits);
-        request = new StartComponent("SystemTest", com);
-        injection.sendBody(request);
+        request = new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com);
+        publishApi.publish(request);
 
         Thread.sleep(2000);
 

@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Gert Villemos
  *
  */
-public interface IQueueManagement {
+public interface IQueueManagement extends IHbirdApi {
 	
 	/**
 	 * Method to list all queues currently existing.

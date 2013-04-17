@@ -26,6 +26,9 @@ import org.hbird.exchange.configurator.StandardEndpoints;
  */
 public class ArchiveComponentDriver extends SoftwareComponentDriver {
 
+    /* (non-Javadoc)
+     * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
+     */
     @Override
     protected void doConfigure() {    	
         from(StandardEndpoints.MONITORING).to("solr:" + addUniqueId("monitoring."));

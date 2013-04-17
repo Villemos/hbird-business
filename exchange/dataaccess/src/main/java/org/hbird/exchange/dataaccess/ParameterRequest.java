@@ -19,7 +19,6 @@ package org.hbird.exchange.dataaccess;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Parameter;
 
 public class ParameterRequest extends DataRequest {
@@ -29,18 +28,18 @@ public class ParameterRequest extends DataRequest {
     private static final long serialVersionUID = -210475353836504189L;
 
     public ParameterRequest(String issuedBy, String parameter) {
-        super(issuedBy, StandardComponents.ARCHIVE_NAME, ParameterRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy);
         setClass(Parameter.class.getSimpleName());
         addName(parameter);
     }
 
     public ParameterRequest(String issuedBy) {
-        super(issuedBy, StandardComponents.ARCHIVE_NAME, ParameterRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy);
         setClass(Parameter.class.getSimpleName());
     }
 
     public ParameterRequest(String issuedBy, List<String> parameter) {
-        super(issuedBy, StandardComponents.ARCHIVE_NAME, ParameterRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy);
         setClass(Parameter.class.getSimpleName());
         addNames(parameter);
     }

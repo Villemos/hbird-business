@@ -19,7 +19,6 @@ package org.hbird.exchange.configurator;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 
@@ -31,7 +30,7 @@ public class StopComponent extends Command {
     private static final long serialVersionUID = -2447358927849450763L;
 
     public StopComponent(String issuedBy, String componentToStop) {
-        super(issuedBy, StandardComponents.CONFIGURATOR_NAME, StopComponent.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy, DESCRIPTION);
         setComponent(componentToStop);
     }
 

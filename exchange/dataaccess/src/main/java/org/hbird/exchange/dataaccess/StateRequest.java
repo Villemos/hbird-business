@@ -19,7 +19,6 @@ package org.hbird.exchange.dataaccess;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.State;
 
 public class StateRequest extends DataRequest {
@@ -28,31 +27,26 @@ public class StateRequest extends DataRequest {
 
     private static final long serialVersionUID = -6214262098953498288L;
 
-    public StateRequest(String issuedBy, String isStateOf) {
-        this(issuedBy, StandardComponents.ARCHIVE_NAME, isStateOf);
-    }
-
     public StateRequest(String issuedBy, String isStateOf, long from, long to) {
-        this(issuedBy, StandardComponents.ARCHIVE_NAME, isStateOf);
+        this(issuedBy, isStateOf);
         setFrom(from);
         setTo(to);
     }
 
     public StateRequest(String issuedBy, String isStateOf, List<String> names) {
-        this(issuedBy, StandardComponents.ARCHIVE_NAME, isStateOf);
+        this(issuedBy, isStateOf);
         addNames(names);
     }
 
-    public StateRequest(String issuedBy, String destination, String isStateOf) {
-        super(issuedBy, destination, StateRequest.class.getSimpleName(), DESCRIPTION);
+    public StateRequest(String issuedBy, String isStateOf) {
+        super(issuedBy);
         setClass(State.class.getSimpleName());
         setIsInitialization(true);
         setArgumentValue(StandardArguments.IS_STATE_OF, isStateOf);
     }
     
     public StateRequest(String issuedBy) {
-        super(issuedBy, StandardComponents.ARCHIVE_NAME, StateRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy);
         setClass(State.class.getSimpleName());
     }
-
 }

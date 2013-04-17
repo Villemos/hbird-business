@@ -50,7 +50,7 @@ public abstract class SoftwareDefinedRadio extends Part implements ICommandableA
 	 * @param name
 	 * @param description
 	 */
-	public SoftwareDefinedRadio(String ID, String name, String description) {
-		super(ID, name, description);
+	public SoftwareDefinedRadio(String name, String description) {
+		super(name, description);
 	}	
 }

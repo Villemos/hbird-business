@@ -23,7 +23,7 @@ import org.apache.camel.Body;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
-import org.hbird.exchange.constants.StandardComponents;
+import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
 import org.hbird.exchange.groundstation.GroundStation;
@@ -41,7 +41,7 @@ public class TleOrbitalPredictor {
 
     protected KeplianOrbitPredictor keplianOrbitPredictor = null;
 
-    public String name = StandardComponents.ORBIT_PROPAGATOR_NAME;
+    public String name = NavigationComponent.ORBIT_PROPAGATOR_NAME;
 
     /**
      * Method used to receive a TLE and generate a propagation request based on the TLE.

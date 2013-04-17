@@ -34,7 +34,7 @@ import org.hbird.exchange.navigation.Satellite;
  * @author Gert Villemos
  * 
  */
-public interface ICatalogue {
+public interface ICatalogue extends IHbirdApi {
 
     /**
      * Method to return a 'catalogue' (a list) of all parameters in the archive.

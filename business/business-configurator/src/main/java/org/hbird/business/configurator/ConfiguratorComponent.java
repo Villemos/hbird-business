@@ -19,9 +19,11 @@ package org.hbird.business.configurator;
 import org.hbird.business.core.StartablePart;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
-import org.hbird.exchange.constants.StandardComponents;
 
 /**
+ * 
+ * Component for starting other components.
+ * 
  * @author Gert Villemos
  * 
  */
@@ -32,10 +34,15 @@ public class ConfiguratorComponent extends StartablePart {
 	 */
     private static final long serialVersionUID = 2865072999875952015L;
 
+    public static final String CONFIGURATOR_NAME = "Configurator";
+    public static final String CONFIGURATOR_DESC = "A component for starting other components.";
 	public static final String DEFAULT_DRIVER = ConfiguratorComponentDriver.class.getName();
 	
+	/**
+	 * Default constructor.
+	 */
 	public ConfiguratorComponent() {
-		super(StandardComponents.CONFIGURATOR_NAME, StandardComponents.CONFIGURATOR_NAME, StandardComponents.CONFIGURATOR_DESC, DEFAULT_DRIVER);
+		super(CONFIGURATOR_NAME, CONFIGURATOR_DESC, DEFAULT_DRIVER);
 	}
 
     {
@@ -43,6 +50,14 @@ public class ConfiguratorComponent extends StartablePart {
         card.commandsIn.put(StopComponent.class.getName(), new StopComponent("", ""));
     }
 
+    
+    /**
+     * Initialization method.
+     * 
+     * Typically called from the Spring XML file, using the init-method attribute.
+     * 
+     * @throws Exception
+     */
     public void init() throws Exception {
         ConfiguratorComponentDriver driver = new ConfiguratorComponentDriver();
         driver.start(this);

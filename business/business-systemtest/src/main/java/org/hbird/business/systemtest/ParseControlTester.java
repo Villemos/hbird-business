@@ -63,7 +63,7 @@ public class ParseControlTester extends SystemTest {
 			totalDelay += 5000;
 
 			/** Check if we have contact events */
-			List<LocationContactEvent> contactEvents = accessApi.getNextLocationContactEventsFor(es5ec.getName(), estcube1.getName());
+			List<LocationContactEvent> contactEvents = accessApi.getNextLocationContactEventsFor(es5ec.getID(), estcube1.getID());
 			if (contactEvents.size() >= 2) {
 				System.out.println("start p1 = " + contactEvents.get(0).getSatelliteState().getPosition().p1);
 				System.out.println("start p2 = " + contactEvents.get(0).getSatelliteState().getPosition().p2);

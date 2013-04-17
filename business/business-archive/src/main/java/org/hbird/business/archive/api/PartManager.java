@@ -37,11 +37,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPartManager;
-import org.hbird.business.api.IPublish;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.Named;
@@ -50,16 +48,23 @@ import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
+ * API for accessing information about Parts
+ * 
  * @author Gert Villemos
  *
  */
-public class PartManager extends HbirdApi implements IPartManager {
+public class PartManager extends Publish implements IPartManager {
 
 	/**
-	 * @param issuedBy
+	 * Constructor. 
+	 * 
+	 * @param issuedBy The name/ID of the component that is using the API to send requests.
+	 * 
+	 * TODO Remove the hardcoded destination
 	 */
 	public PartManager(String issuedBy) {
 		super(issuedBy);
+		this.destination = "Configurator";
 	}
 
 	/* (non-Javadoc)
@@ -67,8 +72,7 @@ public class PartManager extends HbirdApi implements IPartManager {
 	 */
 	@Override
 	public void start(IStartablePart part) {
-		IPublish api = ApiFactory.getPublishApi(issuedBy);
-		api.publish(new StartComponent(issuedBy, part));
+		publish(new StartComponent(issuedBy, part));
 	}
 
 	/* (non-Javadoc)
@@ -76,8 +80,7 @@ public class PartManager extends HbirdApi implements IPartManager {
 	 */
 	@Override
 	public void stop(String partName) {
-		IPublish api = ApiFactory.getPublishApi(issuedBy);
-		api.publish(new StopComponent(issuedBy, partName));
+		publish(new StopComponent(issuedBy, partName));
 	}
 
 	/* (non-Javadoc)

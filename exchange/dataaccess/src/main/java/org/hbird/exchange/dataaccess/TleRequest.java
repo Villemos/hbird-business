@@ -22,7 +22,6 @@ import static org.hbird.exchange.dataaccess.Arguments.create;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
@@ -33,7 +32,7 @@ public class TleRequest extends DataRequest {
     private static final long serialVersionUID = 5283711249928543145L;
 
     public TleRequest(String issuedBy, String satellite) {
-        super(issuedBy, StandardComponents.ARCHIVE_NAME, TleRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy);
         setSatelliteName(satellite);
         setClass(TleOrbitalParameters.class.getSimpleName());
         setIsInitialization(true);
@@ -43,7 +42,7 @@ public class TleRequest extends DataRequest {
     }
 
     public TleRequest(String issuedBy, String satellite, long from, long to) {
-        super(issuedBy, StandardComponents.ARCHIVE_NAME, TleRequest.class.getSimpleName(), DESCRIPTION);
+        super(issuedBy);
         setSatelliteName(satellite);
         setClass(TleOrbitalParameters.class.getSimpleName());
         setIsInitialization(true);

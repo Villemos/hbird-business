@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IOrbitPrediction;
+import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
@@ -100,7 +101,7 @@ public class NavigationTester extends SystemTest {
 		azzert(contactEvents.get(1).getTimestamp() == 1355391373642l);
 
 		/** See if we can get the metadata */
-		List<Named> response = accessApi.getMetadata(parameters);
+		List<Metadata> response = accessApi.getMetadata(parameters);
 		azzert(response.size() == 1, "Expected to receive 1 piece of metadata. Received " + response.size());
 
 		LOG.info("Finished");

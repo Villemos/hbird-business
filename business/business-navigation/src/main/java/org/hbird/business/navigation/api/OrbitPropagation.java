@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IOrbitPrediction;
+import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.business.navigation.orekit.NavigationUtilities;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Named;
@@ -33,7 +34,7 @@ import org.orekit.errors.OrekitException;
 public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
 
     public OrbitPropagation(String issuedBy) {
-        super(issuedBy);
+        super(issuedBy, NavigationComponent.ORBIT_PROPAGATOR_NAME);
     }
 
     @Override
@@ -84,13 +85,13 @@ public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
         sendRequestStream(request);
     }
 
-    protected List<Named> sendRequest(TlePropagationRequest request) {
-        return template.requestBody(inject, request, List.class);
+    protected List<Named> sendRequest(TlePropagationRequest request) {    	
+        return executeRequestRespond(request);
     }
 
     protected void sendRequestStream(TlePropagationRequest request) {
         request.setArgumentValue(StandardArguments.PUBLISH, true);
-        template.sendBody(inject, request);
+        executeRequest(request);
     }
 
     @Override

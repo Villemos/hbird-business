@@ -24,7 +24,6 @@ import static org.hbird.exchange.dataaccess.Arguments.create;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.Event;
 
@@ -39,12 +38,14 @@ public class EventRequest extends DataRequest {
 	 */
 	private static final long serialVersionUID = -8445762922526282503L;
 
+    public static final String DESCRIPTION = "A request to retrieve events (timeline).";
+    
 	/**
 	 * @param issuedBy
 	 * @param destination
 	 */
 	public EventRequest(String issuedBy, Long from, Long to) {
-		super(issuedBy, StandardComponents.ARCHIVE_NAME);
+		super(issuedBy);
         setClass(Event.class.getSimpleName());
         setArgumentValue(StandardArguments.TO, to);
         setArgumentValue(StandardArguments.FROM, from);

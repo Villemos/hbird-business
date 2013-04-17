@@ -18,11 +18,11 @@ package org.hbird.business.navigation;
 
 import org.hbird.business.core.StartablePart;
 import org.hbird.business.navigation.orekit.NavigationComponentDriver;
-import org.hbird.exchange.constants.StandardComponents;
-import org.hbird.exchange.dataaccess.OrbitPredictionRequest;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
 
 /**
+ * 
+ * 
  * @author Gert Villemos
  *
  */
@@ -33,14 +33,15 @@ public class NavigationComponent extends StartablePart {
 	 */
 	private static final long serialVersionUID = -148692363129164616L;
 
+    public static final String ORBIT_PROPAGATOR_NAME = "OrbitPropagator";
+    public static final String ORBIT_PROPAGATOR_DESC = "Component for performing TLE based orbit prediction, including contact events and orbital states.";
 	public static final String DEFAULT_DRIVER = NavigationComponentDriver.class.getName();
 	
 	public NavigationComponent() {
-		super(StandardComponents.ORBIT_PROPAGATOR_NAME, StandardComponents.ORBIT_PROPAGATOR_NAME, StandardComponents.ORBIT_PROPAGATOR_DESC, DEFAULT_DRIVER);
+		super(ORBIT_PROPAGATOR_NAME, ORBIT_PROPAGATOR_DESC, DEFAULT_DRIVER);
 	}
 	
 	{
 		card.commandsIn.put(TlePropagationRequest.class.getName(), new TlePropagationRequest("", ""));
-		card.commandsIn.put(OrbitPredictionRequest.class.getName(), new OrbitPredictionRequest("", "", "", ""));
 	}
 }

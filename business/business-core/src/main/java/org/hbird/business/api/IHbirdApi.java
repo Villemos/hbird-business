@@ -14,27 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.archive.solr;
+package org.hbird.business.api;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+/**
+ * @author Gert Villemos
+ *
+ */
+public interface IHbirdApi {
 
-import org.hbird.exchange.core.Named;
-
-public class ResultSet {
-
-	public List<Named> objects = new ArrayList<Named>();
+	public String getIssuedBy();
 	
-	public Statistics statistics = new Statistics();
+	public void setIssuedBy(String issuedBy);
 	
-	public Map<Object, List<String>> highlights = new HashMap<Object, List<String>>();
+	public String getDestination();
 	
-	public List<Named> getResults() {
-		List<Named> newList = new ArrayList<Named>();
-		newList.addAll(objects);
-		
-		return newList;
-	}
+	public void setDestination(String destination);
+	
 }

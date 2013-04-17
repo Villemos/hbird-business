@@ -23,10 +23,11 @@ import org.apache.camel.impl.DefaultComponent;
 
 /**
  * Represents the component that manages {@link SolrEndpoint}.
+ * 
+ * @author Gert Villemos
  */
 public class SolrComponent extends DefaultComponent {
 
-	
     /* (non-Javadoc)
      * @see org.apache.camel.impl.DefaultComponent#createEndpoint(java.lang.String, java.lang.String, java.util.Map)
      */

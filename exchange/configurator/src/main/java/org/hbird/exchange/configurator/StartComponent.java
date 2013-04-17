@@ -19,7 +19,6 @@ package org.hbird.exchange.configurator;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.interfaces.IStartablePart;
@@ -38,7 +37,7 @@ public class StartComponent extends Command {
     }
 
     public StartComponent(String issuedBy, IStartablePart part) {
-        super(issuedBy, StandardComponents.CONFIGURATOR_NAME, StartComponent.class.getSimpleName(), DESC_STRING);
+        super(issuedBy, DESC_STRING);
         addPart(part);
     }
 

@@ -39,7 +39,6 @@ import org.hbird.business.systemmonitoring.SystemMonitorComponent;
 import org.hbird.business.taskexecutor.TaskExecutionComponent;
 import org.hbird.business.tracking.TrackingComponent;
 import org.hbird.business.websockets.WebsocketInterfaceComponent;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.dataaccess.CommitRequest;
@@ -125,11 +124,11 @@ public abstract class SystemTest {
         registerPart(mission);
 
         /** Define the satellites */
-        Part satellites = new Satellite("Satellites", "Satellites", "The satellite(s) of the mission");
+        Part satellites = new Satellite("Satellites", "The satellite(s) of the mission");
         registerPart(satellites);
         satellites.setIsPartOf(mission);
 
-        estcube1 = new Satellite("ESTCube-1", "ESTCube-1", "ESTcube, the student satellite from TARTU");
+        estcube1 = new Satellite("ESTCube-1", "ESTcube, the student satellite from TARTU");
         registerPart(estcube1);
         estcube1.setIsPartOf(satellites);
 
@@ -140,13 +139,13 @@ public abstract class SystemTest {
 
         D3Vector geoLocationTartu = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Tartu, Tähe 4", Math.toRadians(58.3000D),
                 Math.toRadians(26.7330D), 59.0D);
-        es5ec = new GroundStation("ES5EC", "ES5EC", "The main control centre", geoLocationTartu);
+        es5ec = new GroundStation("ES5EC", "The main control centre", geoLocationTartu);
         registerPart(es5ec);
         es5ec.setIsPartOf(groundstations);
 
-        Rotator rotator = new HamlibRotatorPart("Rotator_ES5EC", "Rotator", 0, -90, 360, 0, 180, 4533, "localhost");
-        RadioDevice radio = new HamlibRadioPart("Radio_ES5EC", "Radio", 136920000l, 136920000l, true, true, 20l, 4532, "localhost");
-        Antenna antenna = new Antenna("Antenna1_ES5EC", "Antenna1", "The prime antenna");
+        Rotator rotator = new HamlibRotatorPart("Rotator_ES5EC", 0, -90, 360, 0, 180, 4533, "localhost");
+        RadioDevice radio = new HamlibRadioPart("Radio_ES5EC", 136920000l, 136920000l, true, true, 20l, 4532, "localhost");
+        Antenna antenna = new Antenna("Antenna1_ES5EC", "The prime antenna");
         registerPart(radio);
         rotator.setIsPartOf(antenna);
         radio.setIsPartOf(antenna);
@@ -215,15 +214,15 @@ public abstract class SystemTest {
         registerPart(eSatellites);
         eSatellites.setIsPartOf(external);
 
-        dkCube1 = new Satellite("DKCube-1", "DKCube-1", "DKcube, the student satellite from AALBORG");
+        dkCube1 = new Satellite("DKCube-1", "DKcube, the student satellite from AALBORG");
         registerPart(dkCube1);
         dkCube1.setIsPartOf(eSatellites);
 
-        deCube1 = new Satellite("DECube-1", "DECube-1", "DEcube, the student satellite from BERLINE");
+        deCube1 = new Satellite("DECube-1", "DEcube, the student satellite from BERLINE");
         registerPart(deCube1);
         deCube1.setIsPartOf(eSatellites);
 
-        strand = new Satellite("STRaND-1", "STRaND-1", "SSTL Smartphone nanosatellite");
+        strand = new Satellite("STRaND-1", "SSTL Smartphone nanosatellite");
         registerPart(strand);
         strand.setIsPartOf(eSatellites);
 
@@ -233,14 +232,14 @@ public abstract class SystemTest {
 
         D3Vector geoLocationAalborg = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Aalborg", Math.toRadians(55.659306D),
                 Math.toRadians(12.587585D), 59.0D);
-        gsAalborg = new GroundStation("Aalborg", "Aalborg", "Supportive antenna from Aalborg university", geoLocationAalborg);
+        gsAalborg = new GroundStation("Aalborg", "Supportive antenna from Aalborg university", geoLocationAalborg);
         registerPart(gsAalborg);
         gsAalborg.setIsPartOf(eGs);
         gsAalborg.addAntenna(antenna);
 
-        Rotator darmstadtRotator = new HamlibRotatorPart("Rotator_DAR", "Rotator", 0, -90, 360, 0, 180, 4533, "localhost");
-        RadioDevice darmstadtRadio = new HamlibRadioPart("Radio_DAR", "Radio", 136920000l, 136920000l, true, true, 20l, 4532, "localhost");
-        Antenna darmstadtAntenna = new Antenna("Antenna1_DAR", "Antenna1", "The prime antenna of DARMSTADT");
+        Rotator darmstadtRotator = new HamlibRotatorPart("Rotator_DAR", 0, -90, 360, 0, 180, 4533, "localhost");
+        RadioDevice darmstadtRadio = new HamlibRadioPart("Radio_DAR", 136920000l, 136920000l, true, true, 20l, 4532, "localhost");
+        Antenna darmstadtAntenna = new Antenna("Antenna1_DAR", "The prime antenna of DARMSTADT");
         registerPart(darmstadtRadio);
         registerPart(darmstadtRotator);
         darmstadtRotator.setIsPartOf(darmstadtAntenna);
@@ -250,7 +249,7 @@ public abstract class SystemTest {
         // "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
         D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.87D),
                 Math.toRadians(8.64D), 59.0D);
-        gsDarmstadt = new GroundStation("Darmstadt", "Darmstadt", "Supportive antenna from Darmstadt university", geoLocationDarmstadt);
+        gsDarmstadt = new GroundStation("Darmstadt", "Supportive antenna from Darmstadt university", geoLocationDarmstadt);
         registerPart(gsDarmstadt);
         darmstadtAntenna.setIsPartOf(gsDarmstadt);
         gsDarmstadt.setIsPartOf(eGs);
@@ -259,7 +258,7 @@ public abstract class SystemTest {
 
         D3Vector geoLocationNewYork = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "New York", Math.toRadians(40.66564D),
                 Math.toRadians(-74.036865D), 59.0D);
-        gsNewYork = new GroundStation("NewYork", "NewYork", "Supportive antenna from NewYork university", geoLocationNewYork);
+        gsNewYork = new GroundStation("NewYork", "Supportive antenna from NewYork university", geoLocationNewYork);
         registerPart(gsNewYork);
         gsNewYork.setIsPartOf(eGs);
         gsNewYork.addAntenna(antenna);
@@ -269,7 +268,7 @@ public abstract class SystemTest {
 		List<String> locations = new ArrayList<String>();
 		locations.add(es5ec.getName());
 		locations.add(gsDarmstadt.getName());
-		estcubePropagationComponent = new OrbitPropagationComponent("SystemTest", "ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000, estcube1, locations);
+		estcubePropagationComponent = new OrbitPropagationComponent("ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000, estcube1, locations);
 		registerPart(estcubePropagationComponent);
         estcubePropagationComponent.setIsPartOf(orbitPropagationAutomation);
 
@@ -346,7 +345,7 @@ public abstract class SystemTest {
         Thread.sleep(2000);
         
         /** Send command to commit all changes. */
-        injection.sendBody(new CommitRequest("SystemTest", StandardComponents.ARCHIVE_NAME));
+        injection.sendBody(new CommitRequest("SystemTest"));
 
     }
 
@@ -583,7 +582,7 @@ public abstract class SystemTest {
 
     protected void forceCommit() throws InterruptedException {
         /** Send command to commit all changes. */
-        injection.sendBody(new CommitRequest("SystemTest", StandardComponents.ARCHIVE_NAME));
+        injection.sendBody(new CommitRequest("SystemTest"));
         Thread.sleep(2000);
     }
 

@@ -25,9 +25,9 @@ import org.apache.camel.model.RouteDefinition;
 import org.hbird.business.api.ApiUtility;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.TypeFilter;
-import org.hbird.exchange.constants.StandardComponents;
+import org.hbird.business.archive.ArchiveComponent;
 import org.hbird.exchange.core.Event;
+import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
@@ -46,46 +46,57 @@ import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
+/**
+ * API for accessing (retrieving) data from the system.
+ * 
+ * @author Gert Villemos
+ *
+ */
 public class DataAccess extends HbirdApi implements IDataAccess {
 
-    protected TypeFilter<Parameter> parameterFilter = new TypeFilter<Parameter>(Parameter.class);
-    protected TypeFilter<State> stateFilter = new TypeFilter<State>(State.class);
-    protected TypeFilter<OrbitalState> orbitalStateFilter = new TypeFilter<OrbitalState>(OrbitalState.class);
-    protected TypeFilter<TleOrbitalParameters> tleOrbitalParameterFilter = new TypeFilter<TleOrbitalParameters>(TleOrbitalParameters.class);
-
+	/**
+	 * Constructor. 
+	 * 
+	 * @param issuedBy The name/ID of the component that is using the API to send requests.
+	 */
     public DataAccess(String issuedBy) {
-        super(issuedBy);
+        super(issuedBy, ArchiveComponent.ARCHIVE_NAME);
     }
 
     @Override
-    public List<Named> getData(DataRequest request) {
-        return template.requestBody(inject, request, List.class);
+    public void configure() throws Exception {
+        /** This configures a direct connection to SOLR. */
+        RouteDefinition route = from(inject).to("solr:api");
+
+        template = getContext().createProducerTemplate();
     }
 
+
     
+    
+    @Override
+    public List<Named> getData(DataRequest request) {
+        return executeRequestRespond(request);
+    }
     
     @Override
     public Parameter getParameter(String name) {
-        List<Parameter> parameter = getParameterAt(null, name, (new Date()).getTime(), 1);
-        return parameter.isEmpty() ? null : parameter.get(0);
+    	return getFirst(getParameterAt(null, name, (new Date()).getTime(), 1));
     }
 
     @Override
     public Parameter getParameter(String source, String name) {
-        List<Parameter> parameter = getParameterAt(source, name, (new Date()).getTime(), 1);
-        return parameter.isEmpty() ? null : parameter.get(0);
+    	return getFirst(getParameterAt(source, name, (new Date()).getTime(), 1));
     }
 
     @Override
     public Parameter getParameterAt(String name, long at) {
-        List<Parameter> parameter = getParameterAt(null, name, at, 1);
-        return parameter.isEmpty() ? null : parameter.get(0);
+    	return getFirst(getParameterAt(null, name, at, 1));
     }
 
     @Override
     public Parameter getParameterAt(String source, String name, long at) {
-        List<Parameter> parameter = getParameterAt(source, name, at, 1);
-        return parameter.isEmpty() ? null : parameter.get(0);
+    	return getFirst(getParameterAt(source, name, at, 1));
     }
 
     
@@ -112,9 +123,6 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return getParameterWithoutState(request);
     }
 
-    
-    
-        
     @Override
     public List<Parameter> getParameters(List<String> names) {
         return getParametersAt(names, (new Date()).getTime(), 1);
@@ -235,82 +243,64 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return getParameterWithState(request);
     }
 
-    
-    
-    
-    
     @Override
     public List<State> getState(String isStateOf) {
         StateRequest request = new StateRequest(issuedBy, isStateOf);
         request.setIsInitialization(true);
         request.setRows(1);
-        return stateFilter.getObjects(template.requestBody(inject, request, List.class));
+        return executeRequestRespond(request);
     }
 
     @Override
     public List<State> getState(String isStateOf, long from, long to) {
-        StateRequest request = new StateRequest(issuedBy, isStateOf, from, to);
-        return stateFilter.getObjects(template.requestBody(inject, request, List.class));
+        return executeRequestRespond(new StateRequest(issuedBy, isStateOf, from, to));
     }
 
     @Override
     public List<State> getStates(List<String> states) {
-        StateRequest request = new StateRequest(issuedBy, null, states);
-        return stateFilter.getObjects(template.requestBody(inject, request, List.class));
+        return executeRequestRespond(new StateRequest(issuedBy, null, states));
     }
 
     @Override
     public List<OrbitalState> getOrbitalStatesFor(String satellite, long from, long to) {
-        OrbitalStateRequest request = new OrbitalStateRequest(issuedBy, satellite, from, to);
-        return orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));
+        return executeRequestRespond(new OrbitalStateRequest(issuedBy, satellite, from, to));
     }
 
     @Override
     public OrbitalState getOrbitalStateFor(String satellite) {
         OrbitalStateRequest request = new OrbitalStateRequest(issuedBy, satellite);
         request.setIsInitialization(true);
-        List<OrbitalState> states = orbitalStateFilter.getObjects(template.requestBody(inject, request, List.class));
-        return states.isEmpty() == true ? null : states.get(0);
+        List<OrbitalState> states = executeRequestRespond(request);
+        return getFirst(states);
     }
 
     @Override
     public List<TleOrbitalParameters> getTleFor(String satellite, long from, long to) {
-        TleRequest request = new TleRequest(issuedBy, satellite, from, to);
-        return tleOrbitalParameterFilter.getObjects(template.requestBody(inject, request, List.class));
+        return executeRequestRespond(new TleRequest(issuedBy, satellite, from, to));
     }
 
     @Override
     public TleOrbitalParameters getTleFor(String satellite) {
         TleRequest request = new TleRequest(issuedBy, satellite);
         request.setIsInitialization(true);
-        List<TleOrbitalParameters> parameters = tleOrbitalParameterFilter.getObjects(template.requestBody(inject, request, List.class));
-
-        return parameters.isEmpty() ? null : parameters.get(0);
+        List<TleOrbitalParameters> parameters = executeRequestRespond(request);
+        return getFirst(parameters);
     }
 
     public GroundStation retrieveLocation(String location) {
         GroundStationRequest request = new GroundStationRequest(issuedBy, location);
-        List respond = template.requestBody(inject, request, List.class);
-        return respond.isEmpty() ? null : (GroundStation) respond.get(0);
-    }
-
-    @Override
-    public void configure() throws Exception {
-        /** This configures a direct connection to SOLR. */
-        RouteDefinition route = from(inject).to("solr:api");
-
-        template = getContext().createProducerTemplate();
+        List<GroundStation> respond = executeRequestRespond(request);
+        return getFirst(respond);
     }
 
     protected Map<Parameter, List<State>> getParameterWithState(ParameterRequest request) {
         request.setIncludeStates(true);
-        List<Named> respond = template.requestBody(inject, request, List.class);
+        List<Named> respond = executeRequestRespond(request);
         return ApiUtility.sortParametersAndState(respond);
     }
 
     protected List<Parameter> getParameterWithoutState(ParameterRequest request) {
-        List<Named> respond = template.requestBody(inject, request, List.class);
-        return parameterFilter.getObjects(respond);
+        return executeRequestRespond(request);
     }
 
     /*
@@ -358,23 +348,24 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         request.setRows(1);
         request.setSatelliteName(satellite);
         request.setFrom(from);
-        List<Named> start = template.requestBody(inject, request, List.class);
+        List<LocationContactEvent> start = executeRequestRespond(request);
 
         /** If we found one, find the following end event. */
         if (start.isEmpty() == false) {
 
-            LocationContactEvent startEvent = (LocationContactEvent) start.get(0);
+            LocationContactEvent startEvent = getFirst(start);
 
             request = new LocationContactEventRequest(issuedBy, location, false);
             request.setRows(1);
             request.setSatelliteName(startEvent.getSatelliteId());
             request.setLocation(startEvent.getGroundStationId());
             request.setFrom(startEvent.getTimestamp());
-            List<Named> end = template.requestBody(inject, request, List.class);
+            List<LocationContactEvent> end = executeRequestRespond(request);
 
             if (end.isEmpty() == false) {
                 events.add(startEvent);
-                events.add((LocationContactEvent) end.get(0));
+                LocationContactEvent endEvent = getFirst(end);
+                events.add(endEvent);
             }
         }
 
@@ -409,11 +400,8 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     @Override
-    public List<Named> getMetadata(Named subject) {
-        /** Get next start event. */
-        MetadataRequest request = new MetadataRequest(issuedBy, subject);
-        List<Named> respond = template.requestBody(inject, request, List.class);
-        return respond;
+    public List<Metadata> getMetadata(Named subject) {
+        return executeRequestRespond(new MetadataRequest(issuedBy, subject));
     }
 
 	/* (non-Javadoc)
@@ -421,8 +409,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 	 */
 	@Override
 	public List<Event> getEvents(Long from, Long to) {
-        EventRequest request = new EventRequest(issuedBy, from, to);
-        return executeRequest(request);
+        return executeRequestRespond(new EventRequest(issuedBy, from, to));
 	}
 
 	/* (non-Javadoc)
@@ -430,10 +417,9 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 	 */
 	@Override
 	public Named resolveNamed(String ID) {
-		DataRequest request = new DataRequest(issuedBy, StandardComponents.ARCHIVE_NAME);
+		DataRequest request = new DataRequest(issuedBy);
 		request.setID(ID);
-		List<Named> results = executeRequest(request);
-
-		return results.isEmpty() ? null : results.get(0);
+		List<Named> results = executeRequestRespond(request);
+		return getFirst(results);
 	}
 }

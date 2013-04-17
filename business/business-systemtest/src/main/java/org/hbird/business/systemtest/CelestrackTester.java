@@ -36,6 +36,8 @@ import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.business.celestrack.CelestrackComponent;
 import org.hbird.exchange.configurator.StartComponent;
+import org.hbird.exchange.navigation.Satellite;
+import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 /**
  * @author Admin
@@ -53,17 +55,18 @@ public class CelestrackTester extends SystemTest {
 
         startMonitoringArchive();
         
-        azzert(accessApi.getTleFor("DTUSAT") == null, "No TLE for DTUSAT");
-        azzert(accessApi.getTleFor("CUTE-1 (CO-55)") == null, "No TLE for CUTE-1");
-        azzert(accessApi.getTleFor("QUAKESAT") == null, "No TLE for QUAKESAT");
+        azzert(accessApi.getTleFor("DTUSAT:Satellite:*") == null, "No TLE for DTUSAT");
+        azzert(accessApi.getTleFor("CUTE-1 (CO-55):Satellite:*") == null, "No TLE for CUTE-1");
+        azzert(accessApi.getTleFor("QUAKESAT:Satellite:*") == null, "No TLE for QUAKESAT");
         
-        publishApi.publish(new StartComponent("Celestrack", new CelestrackComponent()));
+        partmanagerApi.start(new CelestrackComponent());
         
-        Thread.sleep(10000);
+        Thread.sleep(30000);
         
-        azzert(accessApi.getTleFor("DTUSAT") != null, "Have TLE for DTUSAT");
-        azzert(accessApi.getTleFor("CUTE-1 (CO-55)") != null, "Have TLE for CUTE-1");
-        azzert(accessApi.getTleFor("QUAKESAT") != null, "Have TLE for QUAKESAT");
+		Object object = catalogueApi.getSatelliteByName("DTUSAT");
+		azzert(object != null, "Satellite DTUSAT created.");
+		TleOrbitalParameters parameter = accessApi.getTleFor(((Satellite) object).getID());
+        azzert(parameter != null, "Have TLE for DTUSAT");
         
 		LOG.info("Finished");
     }	

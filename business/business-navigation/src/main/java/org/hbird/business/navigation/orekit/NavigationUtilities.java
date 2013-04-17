@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.commons.math.geometry.Vector3D;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.constants.StandardComponents;
+import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
@@ -73,7 +73,7 @@ public class NavigationUtilities {
                 state.getOrbit().getPVCoordinates().getMomentum().getY(),
                 state.getOrbit().getPVCoordinates().getMomentum().getZ());
 
-        return new OrbitalState(StandardComponents.ORBIT_PROPAGATOR_NAME, "OrbitalState", "Orbital state of satellite", state.getDate().toDate(scale).getTime(),
+        return new OrbitalState(NavigationComponent.ORBIT_PROPAGATOR_NAME, "OrbitalState", "Orbital state of satellite", state.getDate().toDate(scale).getTime(),
                 parameters.getSatelliteId(), position,
                 velocity, momentum, parameters);
     }

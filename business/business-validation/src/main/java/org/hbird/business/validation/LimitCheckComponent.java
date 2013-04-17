@@ -54,18 +54,18 @@ public class LimitCheckComponent extends StartablePart {
 	 * @param name
 	 * @param description
 	 */
-	public LimitCheckComponent(String ID, String name, Limit limit, String driver) {
-		super(ID, name, "A limit check component", driver);
+	public LimitCheckComponent(String name, Limit limit, String driver) {
+		super(name, "A limit check component", driver);
 		this.limit = limit;
 	}
 
-	public LimitCheckComponent(String ID, String name, Limit limit) {
-		super(ID, name, "A limit check component", LimitCheckComponentDriver.class.getName());
+	public LimitCheckComponent(String name, Limit limit) {
+		super(name, "A limit check component", LimitCheckComponentDriver.class.getName());
 		this.limit = limit;
 	}
 
-	public LimitCheckComponent(String ID, String name, String limitName, eLimitType type, String ofParameter, Double value, String stateName, String stateDescription) {
-		super(ID, name, "A limit check component", LimitCheckComponentDriver.class.getName());
+	public LimitCheckComponent(String name, String limitName, eLimitType type, String ofParameter, Double value, String stateName, String stateDescription) {
+		super(name, "A limit check component", LimitCheckComponentDriver.class.getName());
 
 		this.limit = new Limit(type, ofParameter, value, stateName, stateDescription);
 	}

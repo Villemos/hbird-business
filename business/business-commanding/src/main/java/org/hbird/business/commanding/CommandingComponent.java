@@ -34,23 +34,26 @@ package org.hbird.business.commanding;
 
 import org.hbird.business.commanding.bean.CommandingComponentDriver;
 import org.hbird.business.core.StartablePart;
-import org.hbird.exchange.constants.StandardComponents;
 
 
 /**
- * @author Admin
+ * Driver to start a commanding chain. Will create the routes and beans needed to 
+ * 
+ * @author Gert Villemos
  *
  */
 public class CommandingComponent extends StartablePart {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2735008464467737242L;
 
+    public static final String COMMAND_RELEASER_NAME = "CommandReleaser";
+
+    public static final String COMMAND_RELEASER_DESC = "A component for managing the release of commands.";
+
+	/** Named of driver class. */
 	public static final String DEFAULT_DRIVER = CommandingComponentDriver.class.getName();
 	
 	public CommandingComponent() {
-		super(StandardComponents.COMMAND_RELEASER_NAME, StandardComponents.COMMAND_RELEASER_NAME, StandardComponents.COMMAND_RELEASER_DESC, DEFAULT_DRIVER);
+		super(COMMAND_RELEASER_NAME, COMMAND_RELEASER_DESC, DEFAULT_DRIVER);
 	}
 }

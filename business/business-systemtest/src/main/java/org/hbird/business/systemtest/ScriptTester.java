@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
+import org.hbird.business.configurator.ConfiguratorComponent;
 import org.hbird.business.scripting.ScriptComponent;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.Label;
@@ -52,12 +53,12 @@ public class ScriptTester extends SystemTest {
                 "A test script parameter.", new Double(0), "Volt"), binding);
         com.setIsPartOf(scripts);
 
-        injection.sendBody(new StartComponent("SystemTest", com));
+        publishApi.publish(new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com));
 
         Thread.sleep(2000);
 
         /** Send one of the two parameters. Should NOT trigger the script. */
-        injection.sendBody(new Parameter("SystemTest", estcube1.getName() + "/PARA3", "A parameter", 2d, "Volt"));
+        publishApi.publish(new Parameter("SystemTest", estcube1.getName() + "/PARA3", "A parameter", 2d, "Volt"));
 
         Thread.sleep(2000);
 
@@ -83,7 +84,7 @@ public class ScriptTester extends SystemTest {
 
         com = new ScriptComponent("ScriptComponent_SYN_STATE1", "SYN_STATE1", script, new State("ScriptEngine", "SYN_STATE1", "", "PARA2", true), binding);
         com.setIsPartOf(scripts);
-        injection.sendBody(new StartComponent("SystemTest", com));
+        publishApi.publish(new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com));
 
         Thread.sleep(2000);
 
@@ -112,7 +113,7 @@ public class ScriptTester extends SystemTest {
         com = new ScriptComponent("ScriptComponent3", "Fahrenheit2CelsiusConvertion", new Parameter("ScriptComponent3", estcube1.getName() + "/SYN2",
                 "Temperature in CELCIUS.", new Double(0), "Celsius"), binding);
         com.setIsPartOf(scripts);
-        injection.sendBody(new StartComponent("SystemTest", com));
+        publishApi.publish(new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com));
 
         Thread.sleep(2000);
 
@@ -133,7 +134,7 @@ public class ScriptTester extends SystemTest {
         com = new ScriptComponent("ScriptComponent4", "OnOffSpline", new Label("ScriptEngine", estcube1.getName() + "/SYN3",
                 "Whether the battery is ON or OFF", "ON"), binding);
         com.setIsPartOf(scripts);
-        injection.sendBody(new StartComponent("SystemTest", com));
+        publishApi.publish(new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com));
 
         Thread.sleep(2000);
 

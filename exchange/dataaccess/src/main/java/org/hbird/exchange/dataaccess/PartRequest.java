@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.constants.StandardComponents;
 import org.hbird.exchange.core.CommandArgument;
 
 /**
@@ -43,7 +42,7 @@ public class PartRequest extends DataRequest {
 	 * @param destination
 	 */
 	public PartRequest(String issuedBy) {
-		super(issuedBy, StandardComponents.ARCHIVE_NAME);
+		super(issuedBy);
         setClass("Part");
 	}
 

@@ -36,6 +36,9 @@ import org.hbird.business.celestrack.CelestrackComponent;
 import org.hbird.business.core.SoftwareComponentDriver;
 
 /**
+ * The driver of the celestract component. Will create the beans and routes required to
+ * pull TLEs from the Celestrack website.
+ * 
  * @author Gert Villemos
  *
  */
@@ -46,6 +49,6 @@ public class CelestrackComponentDriver extends SoftwareComponentDriver {
 	 */
 	@Override
 	protected void doConfigure() {
-        from("timer://foo?fixedRate=true&period=" + ((CelestrackComponent)part).getPeriod()).bean(new CelestrackReader(), "read");
+        from(addTimer("celestrack", ((CelestrackComponent)part).getPeriod())).bean(new CelestrackReader((CelestrackComponent) part), "read");
 	}
 }
