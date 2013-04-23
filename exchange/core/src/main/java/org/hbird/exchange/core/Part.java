@@ -30,13 +30,13 @@ public class Part extends Named implements IPart {
 
     private static final long serialVersionUID = 4961124159238983376L;
 
+    public static final String DEFAULT_ISSUED_BY = "SystemAssembly";
+
     private static final Logger LOG = LoggerFactory.getLogger(Part.class);
 
-    protected static final String DEFAULT_ISSUED_BY = "SystemAssembly";
-    
     /** The full ID of the parent. */
     protected String isPartOf = null;
-    
+
     /**
      * Constructor that will set the ID = name. Should only be used for Parts that are unique, i.e. the name
      * can be used as the unique identifier.
@@ -52,7 +52,7 @@ public class Part extends Named implements IPart {
         super(DEFAULT_ISSUED_BY, name, description);
         this.isPartOf = isPartOf.getID();
     }
-    
+
     public Part(String issuedBy, String name, String description) {
         super(issuedBy, name, description);
     }
@@ -84,10 +84,12 @@ public class Part extends Named implements IPart {
         }
     }
 
+    @Override
     public void setIsPartOf(String parentId) {
-    	this.isPartOf = parentId;
+        this.isPartOf = parentId;
     }
-    
+
+    @Override
     public String prettyPrint() {
         return String.format("%s[name=%s, isPartOf=%s]", this.getClass().getSimpleName(), getName(), getIsPartOf());
     }

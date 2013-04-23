@@ -32,7 +32,7 @@ public class TleRequest extends DataRequest {
     private static final long serialVersionUID = 5283711249928543145L;
 
     public TleRequest(String issuedBy, String satellite) {
-        super(issuedBy);
+        super(issuedBy, TleRequest.class.getSimpleName(), DESCRIPTION);
         setSatelliteName(satellite);
         setClass(TleOrbitalParameters.class.getSimpleName());
         setIsInitialization(true);
@@ -42,7 +42,7 @@ public class TleRequest extends DataRequest {
     }
 
     public TleRequest(String issuedBy, String satellite, long from, long to) {
-        super(issuedBy);
+        super(issuedBy, TleRequest.class.getSimpleName(), DESCRIPTION);
         setSatelliteName(satellite);
         setClass(TleOrbitalParameters.class.getSimpleName());
         setIsInitialization(true);

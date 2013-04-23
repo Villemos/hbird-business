@@ -19,6 +19,10 @@
  */
 package org.hbird.exchange.core;
 
+import java.io.Serializable;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -48,17 +52,12 @@ import org.springframework.beans.factory.annotation.Value;
  * is taking place - all values has to be present in both files to work
  * properly.
  */
-public class ConfigurationBase {
+public class ConfigurationBase implements Serializable {
 
-    public ConfigurationBase() {
-    };
+    private static final long serialVersionUID = -1020014261438984730L;
 
-    public ConfigurationBase(String serviceId, String serviceVersion, int heartBeatInterval) {
-        super();
-        this.serviceId = serviceId;
-        this.serviceVersion = serviceVersion;
-        this.heartBeatInterval = heartBeatInterval;
-    }
+    /** Default value for the heart beat interval. */
+    public static final long DEFAULT_HEART_BEAT_INTERVAL = 5000L;
 
     @Value("${service.id}")
     protected String serviceId;
@@ -66,18 +65,65 @@ public class ConfigurationBase {
     @Value("${service.version}")
     protected String serviceVersion;
 
-    @Value("${heart.beat.interval}")
-    protected int heartBeatInterval;
+    @Value("${heart.beat.interval:5000}")
+    protected long heartBeatInterval = DEFAULT_HEART_BEAT_INTERVAL;
 
-    public String getServiceVersion() {
-        return serviceVersion;
+    public ConfigurationBase() {
     }
 
+    public ConfigurationBase(String serviceId, String serviceVersion, long heartBeatInterval) {
+        this.serviceId = serviceId;
+        this.serviceVersion = serviceVersion;
+        this.heartBeatInterval = heartBeatInterval;
+    }
+
+    /**
+     * @return the serviceId
+     */
     public String getServiceId() {
         return serviceId;
     }
 
-    public int getHeartBeatInterval() {
+    /**
+     * @param serviceId the serviceId to set
+     */
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
+    }
+
+    /**
+     * @return the heartBeatInterval
+     */
+    public long getHeartBeatInterval() {
         return heartBeatInterval;
+    }
+
+    /**
+     * @param heartBeatInterval the heartBeatInterval to set
+     */
+    public void setHeartBeatInterval(long heartBeatInterval) {
+        this.heartBeatInterval = heartBeatInterval;
+    }
+
+    /**
+     * @return the serviceVersion
+     */
+    public String getServiceVersion() {
+        return serviceVersion;
+    }
+
+    /**
+     * @param serviceVersion the serviceVersion to set
+     */
+    public void setServiceVersion(String serviceVersion) {
+        this.serviceVersion = serviceVersion;
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

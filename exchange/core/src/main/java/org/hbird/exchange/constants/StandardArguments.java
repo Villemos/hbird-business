@@ -39,7 +39,7 @@ public class StandardArguments {
     public static final String COUNT = "count";
 
     public static final String DELETE_ALL = "deleteAll";
-    
+
     public static final String DELTA_PROPAGATION = "deltaPropagation";
 
     public static final String DERIVED_FROM = "derivedfrom";
@@ -55,6 +55,8 @@ public class StandardArguments {
     public static final String ELEMENTS = "elements";
 
     public static final String ELEVATION = "elevation";
+
+    public static final String END = "end";
 
     public static final String FROM = "from";
 
@@ -100,11 +102,15 @@ public class StandardArguments {
 
     public static final String SCRIPT_DEFINITION = "scriptdefinition";
 
+    public static final String SATELLITE = "satellite";
+
     public static final String SATELLITE_NAME = "satellite";
 
     public static final String SORT = "sort";
 
     public static final String SORT_ORDER = "sortorder";
+
+    public static final String START = "start";
 
     public static final String START_TIME = "starttime";
 

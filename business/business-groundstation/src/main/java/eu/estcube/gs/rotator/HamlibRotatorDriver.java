@@ -33,34 +33,42 @@
 package eu.estcube.gs.rotator;
 
 import eu.estcube.gs.base.HamlibDriver;
+import eu.estcube.gs.configuration.RotatorDriverConfiguration;
 import eu.estcube.gs.rotator.parameters.GetPosition;
 
 /**
  * @author Admin
- *
+ * 
  */
 public class HamlibRotatorDriver extends HamlibDriver {
 
     @Override
     public void doConfigure() {
         super.doConfigure();
-        
+
         GetPosition getPosition = new GetPosition();
-        
+
         /** Configure the monitoring routes. */
-        from("timer://foo?period=3000")
-            .bean(getPosition, "create")
-            .inOut("netty:tcp://" + getAddress())
-            .split().method(getPosition, "parse")
+        from("timer://foo?period=" + getDriverConfiguration().getDevicePollInterval())
+                .bean(getPosition, "create")
+                .inOut("netty:tcp://" + getAddress())
+                .split().method(getPosition, "parse")
                 .to("direct:parameters." + part.getName());
-            
+
     }
 
-	/* (non-Javadoc)
-	 * @see eu.estcube.gs.base.HamlibDriver#getAddress()
-	 */
-	@Override
-	public String getAddress() {
-		return ((HamlibRotatorPart) part).getHost() + ":" + ((HamlibRotatorPart) part).getPort();
-	}        
+    /*
+     * (non-Javadoc)
+     * 
+     * @see eu.estcube.gs.base.HamlibDriver#getAddress()
+     */
+    @Override
+    public String getAddress() {
+        return getDriverConfiguration().getAddress();
+    }
+
+    RotatorDriverConfiguration getDriverConfiguration() {
+        HamlibRotatorPart rotator = (HamlibRotatorPart) part;
+        return rotator.getConfiguration();
+    }
 }

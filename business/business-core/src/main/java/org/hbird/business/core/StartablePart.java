@@ -32,9 +32,12 @@
  */
 package org.hbird.business.core;
 
+import java.util.List;
+
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.BusinessCard;
+import org.hbird.exchange.core.Command;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
@@ -59,13 +62,7 @@ public class StartablePart extends CommandablePart implements IStartablePart {
 
     protected long heartbeat = DEFAULT_HEARTBEAT;
 
-    protected BusinessCard card = null;
-    {
-    	this.commands.add(new StartComponent("", null));
-    	this.commands.add(new StopComponent("", ""));
-
-    	card = new BusinessCard(name, heartbeat, commands);
-    }
+    protected BusinessCard card;
 
     /**
      * @param name
@@ -83,6 +80,9 @@ public class StartablePart extends CommandablePart implements IStartablePart {
 
     @Override
     public BusinessCard getBusinessCard() {
+        if (card == null) {
+            card = createBusinessCard(getName(), getHeartbeat(), getCommands());
+        }
         return card.touch();
     }
 
@@ -114,5 +114,21 @@ public class StartablePart extends CommandablePart implements IStartablePart {
     @Override
     public void setHeartbeat(long heartbeat) {
         this.heartbeat = heartbeat;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.business.core.CommandablePart#createCommandList()
+     */
+    @Override
+    protected List<Command> createCommandList(List<Command> commands) {
+        commands.add(new StartComponent("", null));
+        commands.add(new StopComponent("", ""));
+        return commands;
+    }
+
+    protected BusinessCard createBusinessCard(String name, long heartBeat, List<Command> commands) {
+        return new BusinessCard(name, heartBeat, commands);
     }
 }

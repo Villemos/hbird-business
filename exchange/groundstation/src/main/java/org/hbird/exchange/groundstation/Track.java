@@ -34,6 +34,7 @@ package org.hbird.exchange.groundstation;
 
 import java.util.List;
 
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.navigation.LocationContactEvent;
@@ -46,30 +47,29 @@ import org.hbird.exchange.navigation.Satellite;
  */
 public class Track extends Command {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2914629015475695302L;
+    private static final long serialVersionUID = -5047301867698410904L;
 
-	/**
-	 * @param issuedBy
-	 * @param destination
-	 */
-	public Track(String issuedBy, String destination, Satellite satellite, LocationContactEvent start, LocationContactEvent end) {
-		super(issuedBy, destination, "Track", "Command to track a satellite from a start event to a stop event.");
-		setArgumentValue("start", start);
-		setArgumentValue("end", end);
-		setArgumentValue("satellite", satellite);
-	}
-	
+    public static final String DESCRIPTION = "Command to track a satellite from a start event to a stop event.";
+
+    /**
+     * @param issuedBy
+     * @param destination
+     */
+    public Track(String issuedBy, String destination, Satellite satellite, LocationContactEvent start, LocationContactEvent end) {
+        super(issuedBy, destination, Track.class.getSimpleName(), DESCRIPTION);
+        setArgumentValue(StandardArguments.START, start);
+        setArgumentValue(StandardArguments.END, end);
+        setArgumentValue(StandardArguments.SATELLITE, satellite);
+    }
+
     /**
      * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
      */
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
-        args.add(new CommandArgument("start", "The start orbital state", LocationContactEvent.class, "", null, true));
-        args.add(new CommandArgument("end", "The end orbital state", LocationContactEvent.class, "", null, true));
-        args.add(new CommandArgument("satellite", "The satellite", Satellite.class, "", null, true));
+        args.add(new CommandArgument(StandardArguments.START, "The start orbital state", LocationContactEvent.class, "", null, true));
+        args.add(new CommandArgument(StandardArguments.END, "The end orbital state", LocationContactEvent.class, "", null, true));
+        args.add(new CommandArgument(StandardArguments.SATELLITE, "The satellite", Satellite.class, "", null, true));
         return args;
     }
 }

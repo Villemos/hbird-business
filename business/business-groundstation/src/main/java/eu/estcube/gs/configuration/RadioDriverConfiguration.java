@@ -14,41 +14,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * 
- */
-package eu.estcube.gs.base;
+package eu.estcube.gs.configuration;
 
-import org.hbird.business.core.StartablePart;
-import org.hbird.exchange.groundstation.ICommandableAntennaPart;
-
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  *
  */
-public abstract class RadioDevice extends StartablePart implements ICommandableAntennaPart {
+@Component
+public class RadioDriverConfiguration extends GroundStationDriverConfiguration {
 
-    private static final long serialVersionUID = -8145860056366710301L;
+    private static final long serialVersionUID = -6578154012216479876L;
 
-	/** Speed of light */ 
-	public static final double SPEED_OF_LIGHT = 299792458.0;                            
-    
-    private long minFrequency;
-    private long maxFrequency;
-    private boolean isUplink;
-    private boolean isDownlink;
-    private long gain;
+    /** Default value for min frequency. */
+    public static final long DEFAULT_FREQUENCY_MIN = 145000000L;
 
-    public RadioDevice(String name, long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain, String driver) {
-		super(name, "A Radio Device.", driver);
-		this.minFrequency = minFrequency;
-		this.maxFrequency = maxFrequency;
-		this.isUplink = isUplink;
-		this.isDownlink = isDownlink;
-		this.gain = gain;
-	}
+    /** Default value for max frequency. */
+    public static final long DEFAULT_FREQUENCY_MAX = 437000000L;
 
-	/**
+    /** Default value for isUplink. */
+    public static final boolean DEFAULT_IS_UPLINK = true;
+
+    /** Default value for isDownlink. */
+    public static final boolean DEFAULT_IS_DOWNLINK = true;
+
+    /** Default value for gain. */
+    public static final long DEFAULT_GAIN = 16L;
+
+    /** Radio device minimal frequency. In Hz. */
+    @Value("${radio.frequency.min:145000000}")
+    protected long minFrequency = DEFAULT_FREQUENCY_MIN;
+
+    /** Radio device maximum frequency. In Hz. */
+    @Value("${radio.frequency.min:437000000}")
+    protected long maxFrequency = DEFAULT_FREQUENCY_MAX;
+
+    /** Shows if radio supports up-link. */
+    @Value("${radio.uplink:true}")
+    protected boolean isUplink = DEFAULT_IS_UPLINK;
+
+    /** Shows if radio supports down-link. */
+    @Value("${radio.downlink:true}")
+    protected boolean isDownlink = DEFAULT_IS_DOWNLINK;
+
+    /** Signal power. In dB. */
+    @Value("${radio.gain:16}")
+    protected long gain = DEFAULT_GAIN;
+
+    public RadioDriverConfiguration() {
+    }
+
+    /**
      * @return the minFrequency
      */
     public long getMinFrequency() {
@@ -56,8 +73,7 @@ public abstract class RadioDevice extends StartablePart implements ICommandableA
     }
 
     /**
-     * @param minFrequency
-     *            the minFrequency to set
+     * @param minFrequency the minFrequency to set
      */
     public void setMinFrequency(long minFrequency) {
         this.minFrequency = minFrequency;
@@ -71,8 +87,7 @@ public abstract class RadioDevice extends StartablePart implements ICommandableA
     }
 
     /**
-     * @param maxFrequency
-     *            the maxFrequency to set
+     * @param maxFrequency the maxFrequency to set
      */
     public void setMaxFrequency(long maxFrequency) {
         this.maxFrequency = maxFrequency;
@@ -86,8 +101,7 @@ public abstract class RadioDevice extends StartablePart implements ICommandableA
     }
 
     /**
-     * @param isUplink
-     *            the isUplink to set
+     * @param isUplink the isUplink to set
      */
     public void setUplink(boolean isUplink) {
         this.isUplink = isUplink;
@@ -101,8 +115,7 @@ public abstract class RadioDevice extends StartablePart implements ICommandableA
     }
 
     /**
-     * @param isDownlink
-     *            the isDownlink to set
+     * @param isDownlink the isDownlink to set
      */
     public void setDownlink(boolean isDownlink) {
         this.isDownlink = isDownlink;
@@ -116,20 +129,9 @@ public abstract class RadioDevice extends StartablePart implements ICommandableA
     }
 
     /**
-     * @param gain
-     *            the gain to set
+     * @param gain the gain to set
      */
     public void setGain(long gain) {
         this.gain = gain;
     }
-	
-    protected double getFrequency() {
-        // TODO - 05.03.2013, kimmell - implement
-        return -1.0D;
-    }
-
-    protected static double calculateDopplerShift(double doppler, double frequency) {
-        return ((1 - (doppler / SPEED_OF_LIGHT)) * frequency) - frequency;
-    }
-
 }

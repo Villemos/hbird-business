@@ -16,9 +16,12 @@
  */
 package org.hbird.business.configurator;
 
+import java.util.List;
+
 import org.hbird.business.core.StartablePart;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
+import org.hbird.exchange.core.Command;
 
 /**
  * 
@@ -36,21 +39,25 @@ public class ConfiguratorComponent extends StartablePart {
 
     public static final String CONFIGURATOR_NAME = "Configurator";
     public static final String CONFIGURATOR_DESC = "A component for starting other components.";
-	public static final String DEFAULT_DRIVER = ConfiguratorComponentDriver.class.getName();
-	
-	/**
-	 * Default constructor.
-	 */
-	public ConfiguratorComponent() {
-		super(CONFIGURATOR_NAME, CONFIGURATOR_DESC, DEFAULT_DRIVER);
-	}
+    public static final String DEFAULT_DRIVER = ConfiguratorComponentDriver.class.getName();
 
-    {
-        card.commandsIn.put(StartComponent.class.getName(), new StartComponent("", null));
-        card.commandsIn.put(StopComponent.class.getName(), new StopComponent("", ""));
+    /**
+     * Default constructor.
+     */
+    public ConfiguratorComponent() {
+        super(CONFIGURATOR_NAME, CONFIGURATOR_DESC, DEFAULT_DRIVER);
     }
 
-    
+    /**
+     * @see org.hbird.business.core.StartablePart#createCommandList()
+     */
+    @Override
+    protected List<Command> createCommandList(List<Command> commands) {
+        commands.add(new StartComponent("", null));
+        commands.add(new StopComponent("", ""));
+        return commands;
+    }
+
     /**
      * Initialization method.
      * 

@@ -33,16 +33,20 @@ import org.orekit.utils.PVCoordinates;
 public class NavigationUtilities {
 
     private static org.apache.log4j.Logger LOG = Logger.getLogger(NavigationUtilities.class);
-	
+
+    /** UTC scale to use. Don't access directly use {@link #getScale()} instead. */
     protected static UTCScale scale = null;
-    
-    static {
-        try {
-            scale = TimeScalesFactory.getUTC();
+
+    protected static UTCScale getScale() {
+        if (scale == null) {
+            try {
+                scale = TimeScalesFactory.getUTC();
+            }
+            catch (OrekitException e) {
+                LOG.error("Failed to load UTC Scale", e);
+            }
         }
-        catch (OrekitException e) {
-            e.printStackTrace();
-        }
+        return scale;
     }
 
     public static PVCoordinates toPVCoordinates(D3Vector pos, D3Vector vel) {
@@ -73,7 +77,8 @@ public class NavigationUtilities {
                 state.getOrbit().getPVCoordinates().getMomentum().getY(),
                 state.getOrbit().getPVCoordinates().getMomentum().getZ());
 
-        return new OrbitalState(NavigationComponent.ORBIT_PROPAGATOR_NAME, "OrbitalState", "Orbital state of satellite", state.getDate().toDate(scale).getTime(),
+        return new OrbitalState(NavigationComponent.ORBIT_PROPAGATOR_NAME, "OrbitalState", "Orbital state of satellite",
+                state.getDate().toDate(getScale()).getTime(),
                 parameters.getSatelliteId(), position,
                 velocity, momentum, parameters);
     }
@@ -91,40 +96,38 @@ public class NavigationUtilities {
 
         PVCoordinates coord = toPVCoordinates(startContactEvent.getSatelliteState().position, startContactEvent.getSatelliteState().velocity);
 
-        AbsoluteDate date = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());            
-		Orbit initialOrbit = new KeplerianOrbit(coord, Constants.frame, date, Constants.MU);
-		Propagator propagator = new KeplerianPropagator(initialOrbit);
+        AbsoluteDate date = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());
+        Orbit initialOrbit = new KeplerianOrbit(coord, Constants.frame, date, Constants.MU);
+        Propagator propagator = new KeplerianPropagator(initialOrbit);
 
-		/** Register initial point */
-    	double azimuth = calculateAzimuth(coord, locationOnEarth, date);
+        /** Register initial point */
+        double azimuth = calculateAzimuth(coord, locationOnEarth, date);
         double elevation = calculateElevation(coord, locationOnEarth, date);
         double doppler = calculateDoppler(coord, locationOnEarth, date);
-        double dopplerShift = calculateDopplerShift(doppler, satellite.getFrequency());
 
-        PointingData entry = new PointingData(startTime, azimuth, elevation, doppler, dopplerShift, startContactEvent.getSatelliteId(), location.getName());
+        PointingData entry = new PointingData(startTime, azimuth, elevation, doppler, startContactEvent.getSatelliteId(), location.getName());
 
         LOG.debug(entry.prettyPrint());
         data.add(entry);
 
-        /** Calculate contact data. */		
+        /** Calculate contact data. */
         for (int i = 1; startTime + contactDataStepSize * i < endTime; i++) {
 
-        	/** New target date */
-            AbsoluteDate target = new AbsoluteDate(new Date(startTime + contactDataStepSize * i), TimeScalesFactory.getUTC());            
-    		SpacecraftState newState = propagator.propagate(target);
-        	coord = newState.getPVCoordinates();
+            /** New target date */
+            AbsoluteDate target = new AbsoluteDate(new Date(startTime + contactDataStepSize * i), TimeScalesFactory.getUTC());
+            SpacecraftState newState = propagator.propagate(target);
+            coord = newState.getPVCoordinates();
 
-        	azimuth = calculateAzimuth(coord, locationOnEarth, date);
+            azimuth = calculateAzimuth(coord, locationOnEarth, date);
             elevation = calculateElevation(coord, locationOnEarth, date);
             doppler = calculateDoppler(coord, locationOnEarth, date);
-            dopplerShift = calculateDopplerShift(doppler, satellite.getFrequency());
 
             long time = startTime + contactDataStepSize * i;
-            
-            entry = new PointingData(time, azimuth, elevation, doppler, dopplerShift, startContactEvent.getSatelliteId(), location.getName());
+
+            entry = new PointingData(time, azimuth, elevation, doppler, startContactEvent.getSatelliteId(), location.getName());
 
             LOG.debug(entry.prettyPrint());
-            data.add(entry);            
+            data.add(entry);
         }
 
         return data;
@@ -139,20 +142,16 @@ public class NavigationUtilities {
     }
 
     protected static double calculateDoppler(PVCoordinates satellite, TopocentricFrame locationOnEarth, AbsoluteDate absoluteDate) throws OrekitException {
-        Orbit initialOrbit = new CartesianOrbit(satellite, Constants.frame, absoluteDate, Constants.MU); // an orbit
-                                                                                                         // defined by
-                                                                                                         // the position
-                                                                                                         // and the
-                                                                                                         // velocity of
-                                                                                                         // the
-                                                                                                         // satellite in
-                                                                                                         // the inertial
-                                                                                                         // frame at the
-                                                                                                         // date.
-        Propagator propagator = new KeplerianPropagator(initialOrbit);// as a propagator, we consider a simple
-                                                                      // KeplerianPropagator.
-        LocalOrbitalFrame lof = new LocalOrbitalFrame(Constants.frame, LOFType.QSW, propagator, "QSW"); // local orbital
-                                                                                                        // frame.
+
+        // an orbit defined by the position and the velocity of the satellite in the inertial frame at the date.
+        Orbit initialOrbit = new CartesianOrbit(satellite, Constants.frame, absoluteDate, Constants.MU);
+
+        // as a propagator, we consider a simple KeplerianPropagator.
+        Propagator propagator = new KeplerianPropagator(initialOrbit);
+
+        // local orbital frame.
+        LocalOrbitalFrame lof = new LocalOrbitalFrame(Constants.frame, LOFType.QSW, propagator, "QSW");
+
         PVCoordinates pv = locationOnEarth.getTransformTo(lof, absoluteDate).transformPVCoordinates(PVCoordinates.ZERO);
         return Vector3D.dotProduct(pv.getPosition(), pv.getVelocity()) / pv.getPosition().getNorm();
     }

@@ -3,14 +3,16 @@ package eu.estcube.gs.hamlib;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.estcube.gs.configuration.GroundStationDriverConfiguration;
+
 public class HamlibIO {
     private static final Logger LOG = LoggerFactory.getLogger(HamlibIO.class);
 
-    public static String getDeviceDriverUrl(HamlibDriverConfiguration config) {
+    public static String getDeviceDriverUrl(GroundStationDriverConfiguration config) {
         return getNettyAddress(config);
     }
 
-    private static String getNettyAddress(HamlibDriverConfiguration config) {
+    private static String getNettyAddress(GroundStationDriverConfiguration config) {
         StringBuilder address = new StringBuilder("netty:tcp://" + config.getAddress());
         LOG.debug("Hamlib config.getAddress {} ", config.getAddress());
 

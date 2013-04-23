@@ -17,148 +17,121 @@
 package eu.estcube.gs.radio;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.hbird.business.api.ApiFactory;
-import org.hbird.business.navigation.orekit.NavigationUtilities;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitPrediction;
+import org.hbird.exchange.core.CommandBase;
 import org.hbird.exchange.groundstation.GroundStation;
-import org.hbird.exchange.groundstation.NativeCommand;
+import org.hbird.exchange.groundstation.Stop;
 import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Satellite;
-import org.orekit.errors.OrekitException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import eu.estcube.gs.base.HamlibDriver;
+import eu.estcube.gs.base.GroundStationTrackingDevice;
 import eu.estcube.gs.base.HamlibNativeCommand;
-import eu.estcube.gs.base.RadioDevice;
+import eu.estcube.gs.base.IPointingDataOptimizer;
+import eu.estcube.gs.configuration.RadioDriverConfiguration;
 import eu.estcube.gs.radio.nativecommands.SetFrequency;
+import eu.estcube.gs.radio.nativecommands.SetVfo;
 
 /**
  * 
  * 
  * @author Gert Villemos
  */
-public class HamlibRadioPart extends RadioDevice {
+public class HamlibRadioPart extends GroundStationTrackingDevice<RadioDriverConfiguration> {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6349745253601876608L;
+    private static final long serialVersionUID = 1817959363284730679L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(HamlibRadioPart.class);
+    public static final String DESCRIPTION = "A Radio Device.";
 
-    /**
-     * @param minFrequency
-     * @param maxFrequency
-     * @param isUplink
-     * @param isDownlink
-     * @param gain
-     */
-    public HamlibRadioPart(String name, long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain, long port, String host) {
-        super(name, minFrequency, maxFrequency, isUplink, isDownlink, gain, HamlibRadioDriver.class.getName());
-        this.port = port;
-        this.host = host;
+    public HamlibRadioPart(String name, RadioDriverConfiguration configuration, IDataAccess dataAccess, IOrbitPrediction prediction,
+            IPointingDataOptimizer<RadioDriverConfiguration> optimizer) {
+        super(name, DESCRIPTION, HamlibRadioDriver.class.getName(), configuration, dataAccess, prediction, optimizer);
     }
 
-    protected long preDelta = 10000;
-    
-    protected long postDelta = 10000;
-
-    protected boolean failOldRequests = true;
-
-    protected long port;
-    protected String host;
-    
-    /* (non-Javadoc)
-     * @see org.hbird.exchange.navigation.ICommandableAntennaPart#parse(org.hbird.exchange.navigation.LocationContactEvent, org.hbird.exchange.navigation.LocationContactEvent, java.util.List)
+    /**
+     * Creates set of {@link HamlibNativeCommand}s for the radio device.
+     * 
+     * For each pointing data entry 4 commands has to be created:
+     * <ol>
+     * <li><tt>V Main\n</tt></li>
+     * <li><tt>F ${uplink.frequency}\n</tt></li>
+     * <li><tt>V Sub\n</tt></li>
+     * <li><tt>F ${downlink.frequency}\n</tt></li>
+     * </ol>
+     * 
+     * 
+     * @param satellite {@link Satellite} to communicate with
+     * @param pointingData {@link PointingData} entry calculated by navigation component (Orekit)
+     * @param track {@link Track} command issued by ?
+     * @param stage contact stage
+     * @param delta delta time between individual commands
+     * @return {@link List} of generated {@link HamlibNativeCommand}s
      */
-    @Override
-    public List<NativeCommand> track(Track command) {
-        List<NativeCommand> commands = new ArrayList<NativeCommand>();
-
-        LocationContactEvent start = command.getArgumentValue("start", LocationContactEvent.class);
-        LocationContactEvent end = command.getArgumentValue("end", LocationContactEvent.class);
-        Satellite satellite = command.getArgumentValue("satellite", Satellite.class);
-
-        if (start.getTimestamp() < (new Date()).getTime() && failOldRequests == true) {
-            return commands;
-        }
-        
-        /** Generate the pointing information, including azimuth, elevation and doppler. */
-        List<PointingData> pointingData = null;
-        try {
-        	GroundStation groundStation = (GroundStation) ApiFactory.getDataAccessApi(this.name).resolveNamed(this.isPartOf);        	
-            pointingData = NavigationUtilities.calculateContactData(start, end, groundStation, satellite, 500);
-        } catch (OrekitException e) {
-            e.printStackTrace();
-        }
-        
-        /** Set initial frequency. */       
-        LOG.info("First nativecommand for part 'Radio' derived from 'Track' command will execute at '" + (start.getTimestamp() - preDelta) + " (" + (new Date(start.getTimestamp() - preDelta)).toLocaleString() + ")'.");
-        commands.add(new HamlibNativeCommand(SetFrequency.createMessageString(satellite.getFrequency() * pointingData.get(0).getDoppler()).toString(), start.getTimestamp() - preDelta, command.getID(), "PreTracking"));
-
-        /** For each point, except the first which has been set in the preParse function, create a native pointing command. */
-        for (int index = 1; index < pointingData.size(); index++) {
-            commands.add(new HamlibNativeCommand(SetFrequency.createMessageString(satellite.getFrequency() * pointingData.get(index).getDoppler()).toString(), pointingData.get(index).getTimestamp(), command.getID(), "Tracking"));
-        }
-        
+    List<CommandBase> createCommands(Satellite satellite, PointingData pointingData, Track track, String stage, long delta) {
+        List<CommandBase> commands = new ArrayList<CommandBase>(4);
+        long timestamp = pointingData.getTimestamp();
+        double doppler = pointingData.getDoppler();
+        String derivedFrom = track.getID();
+        commands.add(new HamlibNativeCommand(SetVfo.FOR_UPLINK, timestamp, derivedFrom, stage));
+        commands.add(new HamlibNativeCommand(SetFrequency.createCommand(satellite.getUplinkFrequency(), doppler), timestamp + 1 * delta, derivedFrom, stage));
+        commands.add(new HamlibNativeCommand(SetVfo.FOR_DOWNLINK, timestamp + 2 * delta, derivedFrom, stage));
+        commands.add(new HamlibNativeCommand(SetFrequency.createCommand(satellite.getDownlinkFrequency(), doppler), timestamp + 3 * delta, derivedFrom, stage));
         return commands;
     }
-    
-    
 
-    /* (non-Javadoc)
-     * @see org.hbird.exchange.navigation.ICommandableAntennaPart#stop()
+    /**
+     * @see org.hbird.exchange.groundstation.ITrackingDevice#emergencyStop(org.hbird.exchange.groundstation.Stop)
      */
     @Override
-    public List<NativeCommand> stop() {
-        // TODO Auto-generated method stub
-        return null;
+    public List<CommandBase> emergencyStop(Stop command) {
+        return NO_COMMANDS;
     }
 
-    /* (non-Javadoc)
-     * @see org.hbird.exchange.navigation.ICommandableAntennaPart#park()
+    /**
+     * @see eu.estcube.gs.base.GroundStationTrackingDevice#createContactCommands(org.hbird.exchange.groundstation.GroundStation,
+     *      org.hbird.exchange.navigation.Satellite, java.util.List,
+     *      eu.estcube.gs.configuration.GroundStationDriverConfiguration, org.hbird.exchange.groundstation.Track)
      */
     @Override
-    public List<NativeCommand> park() {
-        // TODO Auto-generated method stub
-        return null;
+    protected List<CommandBase> createContactCommands(GroundStation gs, Satellite sat, List<PointingData> pointingData, RadioDriverConfiguration configuration,
+            Track trackCommand) {
+
+        List<CommandBase> commands = new ArrayList<CommandBase>((pointingData.size() - 1) * 4);
+        long delayInGroup = configuration.getDelayInCommandGroup();
+        for (int index = 1; index < pointingData.size(); index++) {
+            commands.addAll(createCommands(sat, pointingData.get(index), trackCommand, HamlibNativeCommand.STAGE_TRACKING,
+                    delayInGroup));
+        }
+        return commands;
     }
 
-    /* (non-Javadoc)
-     * @see org.hbird.exchange.navigation.ICommandableAntennaPart#pointTo()
+    /**
+     * @see eu.estcube.gs.base.GroundStationTrackingDevice#isTrackingPossible(org.hbird.exchange.navigation.LocationContactEvent,
+     *      org.hbird.exchange.navigation.LocationContactEvent, org.hbird.exchange.groundstation.GroundStation,
+     *      org.hbird.exchange.navigation.Satellite)
      */
     @Override
-    public List<NativeCommand> pointTo() {
-        // TODO Auto-generated method stub
-        return null;
+    protected boolean isTrackingPossible(LocationContactEvent start, LocationContactEvent end, GroundStation gs, Satellite satellite) {
+        // TODO - 16.04.2013, kimmell - check if minFrequency and max frequency are matching with the satellite
+        // frequencies
+        // TODO - 16.04.2013, kimmell - check if uplink is supported
+        // TODO - 16.04.2013, kimmell - check if downlink is supported
+        return super.isTrackingPossible(start, end, gs, satellite);
     }
 
-    public boolean isFailOldRequests() {
-        return failOldRequests;
+    /**
+     * @see eu.estcube.gs.base.GroundStationTrackingDevice#createPreContactCommands(org.hbird.exchange.groundstation.GroundStation,
+     *      org.hbird.exchange.navigation.Satellite, java.util.List,
+     *      eu.estcube.gs.configuration.GroundStationDriverConfiguration, org.hbird.exchange.groundstation.Track)
+     */
+    @Override
+    protected List<CommandBase> createPreContactCommands(GroundStation gs, Satellite sat, List<PointingData> pointingData,
+            RadioDriverConfiguration configuration, Track trackCommand) {
+
+        return createCommands(sat, pointingData.get(0), trackCommand, HamlibNativeCommand.STAGE_PRE_TRACKING, configuration.getDelayInCommandGroup());
     }
-
-    public void setFailOldRequests(boolean failOldRequests) {
-        this.failOldRequests = failOldRequests;
-    }
-
-	public long getPort() {
-		return port;
-	}
-
-	public void setPort(long port) {
-		this.port = port;
-	}
-
-	public String getHost() {
-		return host;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
-	}
 }

@@ -67,9 +67,9 @@ public class Command extends CommandBase {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = -8080345987907627652L;
-	
-	/** List of arguments. The value is embedded in the header of the exchange. */
+    private static final long serialVersionUID = -8080345987907627652L;
+
+    /** List of arguments. The value is embedded in the header of the exchange. */
     private final Map<String, CommandArgument> arguments;
 
     /**
@@ -85,7 +85,6 @@ public class Command extends CommandBase {
         this(issuedBy, destination, name, description, IScheduled.IMMEDIATE, IScheduled.IMMEDIATE);
     }
 
-    
     /**
      * Constructor for a command template, i.e. a command that has yet to get a destination and an issuedBy.
      * 
@@ -115,7 +114,7 @@ public class Command extends CommandBase {
         super(template.issuedBy, template.name, template.description, IScheduled.IMMEDIATE, template.destination, IScheduled.IMMEDIATE);
         this.arguments = createArgumentMap(new ArrayList<CommandArgument>(template.arguments.values()));
     }
-    
+
     /**
      * Basic constructor
      * 
@@ -268,7 +267,7 @@ public class Command extends CommandBase {
      * @return A list of the names of the missing arguments
      */
     public List<String> checkArguments() {
-        List<String> missingArguments = new ArrayList<String>();
+        List<String> missingArguments = new ArrayList<String>(arguments.size());
 
         Iterator<Entry<String, CommandArgument>> it = arguments.entrySet().iterator();
         while (it.hasNext()) {
@@ -280,18 +279,18 @@ public class Command extends CommandBase {
 
         return missingArguments;
     }
-    
+
     public void setArgumentList(List<CommandArgument> arguments) {
-    	for (CommandArgument argument : arguments) {
-    		this.arguments.put(argument.getName(), argument);
-    	}
+        for (CommandArgument argument : arguments) {
+            this.arguments.put(argument.getName(), argument);
+        }
     }
-    
+
     public List<CommandArgument> getArgumentList() {
-    	return new ArrayList<CommandArgument>(arguments.values());
+        return new ArrayList<CommandArgument>(arguments.values());
     }
-    
+
     public void addArgument(CommandArgument argument) {
-    	this.arguments.put(argument.getName(), argument);
+        this.arguments.put(argument.getName(), argument);
     }
 }

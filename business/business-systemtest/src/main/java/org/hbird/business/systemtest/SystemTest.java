@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.api.IPartManager;
 import org.hbird.business.api.IPublish;
 import org.hbird.business.archive.ArchiveComponent;
@@ -45,12 +46,13 @@ import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.groundstation.Antenna;
 import org.hbird.exchange.groundstation.GroundStation;
-import org.hbird.exchange.interfaces.IStartablePart;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
-import eu.estcube.gs.base.RadioDevice;
-import eu.estcube.gs.base.Rotator;
+import eu.estcube.gs.base.GroundStationTrackingDevice;
+import eu.estcube.gs.base.IPointingDataOptimizer;
+import eu.estcube.gs.configuration.RadioDriverConfiguration;
+import eu.estcube.gs.configuration.RotatorDriverConfiguration;
 import eu.estcube.gs.radio.HamlibRadioPart;
 import eu.estcube.gs.rotator.HamlibRotatorPart;
 
@@ -97,13 +99,15 @@ public abstract class SystemTest {
 
     protected static IPartManager partmanagerApi = ApiFactory.getPartManagerApi("SystemTest");
 
-    protected static ArchiveComponent archive = null;    
+    protected static IOrbitPrediction predictionApi = ApiFactory.getOrbitPredictionApi("SystemTest");
+
+    protected static ArchiveComponent archive = null;
     protected static CommandingComponent comComponent = null;
     protected static NavigationComponent navComponent = null;
     protected static SystemMonitorComponent sysMon = null;
     protected static WebsocketInterfaceComponent webComponent = null;
-    protected static OrbitPropagationComponent estcubePropagationComponent  = null;
-    
+    protected static OrbitPropagationComponent estcubePropagationComponent = null;
+
     protected static Satellite estcube1 = null;
     protected static Satellite dkCube1 = null;
     protected static Satellite deCube1 = null;
@@ -115,8 +119,11 @@ public abstract class SystemTest {
     protected static GroundStation gsNewYork = null;
 
     protected static Part mof = null;
-    
+
     protected static Map<String, Part> parts = new HashMap<String, Part>();
+
+    private static IPointingDataOptimizer<RotatorDriverConfiguration> rotatorOptimizer = null;
+    private static IPointingDataOptimizer<RadioDriverConfiguration> radioOptimizer = null;
 
     static {
         /** Build the system model, starting from 'the mission' */
@@ -143,13 +150,24 @@ public abstract class SystemTest {
         registerPart(es5ec);
         es5ec.setIsPartOf(groundstations);
 
-        Rotator rotator = new HamlibRotatorPart("Rotator_ES5EC", 0, -90, 360, 0, 180, 4533, "localhost");
-        RadioDevice radio = new HamlibRadioPart("Radio_ES5EC", 136920000l, 136920000l, true, true, 20l, 4532, "localhost");
+        RotatorDriverConfiguration rotatorConfig = new RotatorDriverConfiguration();
+        rotatorConfig.setDevicePort(4533);
+        rotatorConfig.setMinAzimuth(-90D);
+        GroundStationTrackingDevice<RotatorDriverConfiguration> rotator = new HamlibRotatorPart("Rotator_ES5EC", rotatorConfig, accessApi, predictionApi,
+                rotatorOptimizer);
+
+        RadioDriverConfiguration radioConfiguration = new RadioDriverConfiguration();
+        radioConfiguration.setMinFrequency(136920000L);
+        radioConfiguration.setMaxFrequency(136920000L);
+        radioConfiguration.setGain(20L);
+        radioConfiguration.setDevicePort(4532);
+        GroundStationTrackingDevice<RadioDriverConfiguration> radio = new HamlibRadioPart("Radio_ES5EC", radioConfiguration, accessApi, predictionApi,
+                radioOptimizer);
         Antenna antenna = new Antenna("Antenna1_ES5EC", "The prime antenna");
         registerPart(radio);
         rotator.setIsPartOf(antenna);
         radio.setIsPartOf(antenna);
-        
+
         registerPart(antenna);
         es5ec.addAntenna(antenna);
         antenna.setIsPartOf(es5ec);
@@ -159,20 +177,18 @@ public abstract class SystemTest {
         registerPart(mof);
         mof.setIsPartOf(mission);
 
-        Part orbitPropagationAutomation = new Part("OrbitPropagationAutomation", "Orbit Propagation Automation", "The component automating the propagation of the ESTCube-1 orbit.");
+        Part orbitPropagationAutomation = new Part("OrbitPropagationAutomation", "Orbit Propagation Automation",
+                "The component automating the propagation of the ESTCube-1 orbit.");
         registerPart(orbitPropagationAutomation);
         orbitPropagationAutomation.setIsPartOf(mof);
-        
+
         Part trackAutomation = new Part("Track Automation", "Track Automation", "The component automating the track of ESTCube-1 by ES5EC.");
         registerPart(trackAutomation);
         trackAutomation.setIsPartOf(mof);
 
-        
-        // OrbitPropagationComponent strandOrbitPropagator = new OrbitPropagationComponent("SystemTest", "ESTcubeNavigation", "", 60 * 60 * 1000, 6 * 60 * 60 * 1000, strand, locations);
+        // OrbitPropagationComponent strandOrbitPropagator = new OrbitPropagationComponent("SystemTest",
+        // "ESTcubeNavigation", "", 60 * 60 * 1000, 6 * 60 * 60 * 1000, strand, locations);
 
-        
-        
-        
         archive = new ArchiveComponent();
         registerPart(archive);
         archive.setIsPartOf(mof);
@@ -185,7 +201,6 @@ public abstract class SystemTest {
         registerPart(navComponent);
         navComponent.setIsPartOf(mof);
 
-        
         Part scripts = new Part("Synthetic Parameters", "Synthetic Parameters", "The synthetic parameters / scripts");
         registerPart(scripts);
         scripts.setIsPartOf(mof);
@@ -237,14 +252,16 @@ public abstract class SystemTest {
         gsAalborg.setIsPartOf(eGs);
         gsAalborg.addAntenna(antenna);
 
-        Rotator darmstadtRotator = new HamlibRotatorPart("Rotator_DAR", 0, -90, 360, 0, 180, 4533, "localhost");
-        RadioDevice darmstadtRadio = new HamlibRadioPart("Radio_DAR", 136920000l, 136920000l, true, true, 20l, 4532, "localhost");
+        GroundStationTrackingDevice<RotatorDriverConfiguration> darmstadtRotator = new HamlibRotatorPart("Rotator_DAR", rotatorConfig, accessApi,
+                predictionApi, rotatorOptimizer);
+        GroundStationTrackingDevice<RadioDriverConfiguration> darmstadtRadio = new HamlibRadioPart("Radio_DAR", radioConfiguration, accessApi, predictionApi,
+                radioOptimizer);
         Antenna darmstadtAntenna = new Antenna("Antenna1_DAR", "The prime antenna of DARMSTADT");
         registerPart(darmstadtRadio);
         registerPart(darmstadtRotator);
         darmstadtRotator.setIsPartOf(darmstadtAntenna);
         darmstadtRadio.setIsPartOf(darmstadtAntenna);
-        
+
         // D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(),
         // "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
         D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.87D),
@@ -262,14 +279,12 @@ public abstract class SystemTest {
         registerPart(gsNewYork);
         gsNewYork.setIsPartOf(eGs);
         gsNewYork.addAntenna(antenna);
-        
-        
-        
-		List<String> locations = new ArrayList<String>();
-		locations.add(es5ec.getName());
-		locations.add(gsDarmstadt.getName());
-		estcubePropagationComponent = new OrbitPropagationComponent("ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000, estcube1, locations);
-		registerPart(estcubePropagationComponent);
+
+        List<String> locations = new ArrayList<String>();
+        locations.add(es5ec.getName());
+        locations.add(gsDarmstadt.getName());
+        estcubePropagationComponent = new OrbitPropagationComponent("ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000, estcube1, locations);
+        registerPart(estcubePropagationComponent);
         estcubePropagationComponent.setIsPartOf(orbitPropagationAutomation);
 
     }
@@ -343,7 +358,7 @@ public abstract class SystemTest {
         injection.sendBody(new DeletionRequest("SystemTest", true));
 
         Thread.sleep(2000);
-        
+
         /** Send command to commit all changes. */
         injection.sendBody(new CommitRequest("SystemTest"));
 
@@ -448,7 +463,8 @@ public abstract class SystemTest {
             Part parent = parts.get("Track Automation");
 
             /** Create command component. */
-            TrackingComponent antennaController = new TrackingComponent("ES5EC_ESTCUBE1", "ES5EC -> ESTCUBE", "The component automating the track of ESTCube-1 by ES5EC.",
+            TrackingComponent antennaController = new TrackingComponent("ES5EC_ESTCUBE1", "ES5EC -> ESTCUBE",
+                    "The component automating the track of ESTCube-1 by ES5EC.",
                     estcube1.getID(), es5ec.getID());
             antennaController.setIsPartOf(parent);
 
@@ -460,9 +476,6 @@ public abstract class SystemTest {
         }
     }
 
-    
-    
-    
     protected static boolean estcube1OrbitPropagatorStarted = false;
 
     public void startEstcubeOrbitPropagator() throws InterruptedException {
@@ -479,8 +492,6 @@ public abstract class SystemTest {
         }
     }
 
-    
-    
     public void startStrandAntennaController() throws InterruptedException {
 
         if (antennaControllerStarter == false) {
@@ -489,7 +500,8 @@ public abstract class SystemTest {
             Part parent = parts.get("Track Automation");
 
             /** Create command component. */
-            TrackingComponent antennaController = new TrackingComponent("DARMSTADT_STRAND", "Darmstadt -> STRAND", "The component automating the track of Strand-1 by Darmstadt.",
+            TrackingComponent antennaController = new TrackingComponent("DARMSTADT_STRAND", "Darmstadt -> STRAND",
+                    "The component automating the track of Strand-1 by Darmstadt.",
                     strand.getName(), gsDarmstadt.getName());
             antennaController.setIsPartOf(parent);
 
