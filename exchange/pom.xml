@@ -34,8 +34,11 @@ The transfer between the presentation tier and the business tier likewise use th
         <module>tasking</module>
         <module>validation</module>
 
-        <module>all</module>
         <module>groundstation</module>
+<!--         <module>transportadapter</module> -->
+        
+        <module>all</module>
+        
     </modules>
 
     <groupId>org.hbird.exchange</groupId>

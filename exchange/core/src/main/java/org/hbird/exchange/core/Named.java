@@ -25,6 +25,7 @@ import org.hbird.exchange.interfaces.INamed;
  * The class is intended to be subtyped, into specific types exchanged within the system such as
  * parameters, commands and tasks. Each subtype thus share a set of attributes.
  * 
+ * @author Gert Villemos
  * */
 public abstract class Named implements INamed, Serializable, Comparable<Named> {
 
@@ -34,15 +35,18 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
     /** The unique UID of this class. */
     private static final long serialVersionUID = -5803219773253020746L;
 
+    /** The ID of the object. Default is '[issuedBy]/[name]'*/
+    protected String ID;
+    
     /** The name of the object. */
     protected String name;
 
     /** A description of the object. */
     protected String description;
 
-	/** The ID (not Name) of the Part that has issued this object. */
+	/** The reference (qualified Name) of the Part that has issued this object. */
     protected String issuedBy;
-
+    
     /**
      * The time at which this object represented a valid state of the system. Default value is the
      * time of creation.
@@ -56,6 +60,17 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
      * @param description The description of the object.
      */
     public Named(String issuedBy, String name, String description) {
+    	this(issuedBy + "/" + name, issuedBy, name, description);
+    }
+
+    /**
+     * Constructor of a Named object. The timestamp will be set to the creation time.
+     * 
+     * @param name The name of the object.
+     * @param description The description of the object.
+     */
+    public Named(String ID, String issuedBy, String name, String description) {
+    	this.ID = ID;
     	this.issuedBy = issuedBy;
     	this.name = name;
         this.description = description;
@@ -89,9 +104,13 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
     }
 
     public String getID() {
-    	return name + ":" + this.getClass().getSimpleName() + ":" + timestamp;
+    	return ID;
     }
-    
+
+    public String getInstanceID() {
+    	return ID + ":" + timestamp;
+    }
+
     /**
 	 * @return the issuedBy
 	 */

@@ -288,14 +288,6 @@
 
 
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <type>jar</type>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>org.hbird.drivers</groupId>
                 <artifactId>all-driver</artifactId>
                 <version>${hbird.version}</version>
@@ -691,13 +683,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>${mockito.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>org.apache.xbean</groupId>
                 <artifactId>xbean-spring</artifactId>
                 <version>${xbean.version}</version>
@@ -770,6 +755,36 @@
                 </configuration>
 
             </plugin>
+
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.codehaus.mojo</groupId> -->
+<!-- 				<artifactId>license-maven-plugin</artifactId> -->
+<!-- 				<version>1.4</version> -->
+<!-- 				<configuration> -->
+<!-- 					<useMissingFile>true</useMissingFile> -->
+<!-- 					<licenseMerges> -->
+<!-- 						<licenseMerge>The Apache Software License, Version 2.0|Apache 2|Apache License|Apache License, Version 2.0</licenseMerge> -->
+<!-- 						<licenseMerge>Berkley Software Distribution (BSD) Style|Aduna BSD license|BSD License|BSD license|BSD|BSD-style license|Berkeley Source Distribution (BSD)|The BSD License|mstor License|ICU License|BSD Style</licenseMerge> -->
+<!-- 						<licenseMerge>Common Development and Distribution License (CDDL), version 1.0|Common Development and Distribution License (CDDL) v1.0|CDDL License|COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0</licenseMerge> -->
+<!-- 						<licenseMerge>Common Public License (CPL), Version 1.0|Common Public License Version 1.0|Common Public License</licenseMerge> -->
+<!-- 						<licenseMerge>GNU Lesser General Public License (LGPL), Version 2.1 (or later)|GNU Library or Lesser General Public License (LGPL)|GNU Lesser General Public License</licenseMerge> -->
+<!-- 						<licenseMerge>Massachusetts Institute of Technology License (MIT)|MIT License|Bouncy Castle Licence|MIT license|The MIT license</licenseMerge> -->
+<!-- 					</licenseMerges> -->
+<!-- 					<licensesOutputDirectory>${basedir}/licences/</licensesOutputDirectory> -->
+<!-- 					<licensesOutputFile>${basedir}/licences/licenses.txt</licensesOutputFile> -->
+<!--                     <licensesConfigFile>${basedir}/licences/licenses.xml</licensesConfigFile> -->
+<!-- 				</configuration> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>package</id> -->
+<!-- 						<goals> -->
+<!-- 							<goal>add-third-party</goal>		 -->
+<!-- 							<goal>license-list</goal>	 -->
+<!-- 							<goal>third-party-report</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
 
         </plugins>
 

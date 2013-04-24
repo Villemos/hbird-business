@@ -4,8 +4,6 @@ import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IQueueManagement;
-import org.hbird.exchange.dataaccess.CommitRequest;
-import org.hbird.exchange.dataaccess.DeletionRequest;
 
 public class Starter extends SystemTest {
 

@@ -36,7 +36,9 @@ import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
- * @author Admin
+ * API for starting and stopping components.
+ * 
+ * @author Gert Villemos
  *
  */
 public interface IPartManager extends IHbirdApi {

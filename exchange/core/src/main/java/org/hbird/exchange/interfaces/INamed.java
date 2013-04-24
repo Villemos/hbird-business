@@ -59,16 +59,27 @@ public interface INamed {
 	public String getName();
 
 	/**
-	 * The ID is a unique string for each instance of an object.
+	 * The ID is a unique string for an entity. The ID identifies the entity being referenced
+	 * (for example the Parameter) not the instance (a parameter value at a specific time).
 	 * 
-	 * A Parameter can be uniquely identified through the Qualified Name. A parameter will have multiple 
-	 * instances; values measured at specific points in time. Each of these will have the same 
-	 * Qualified Name, but the ID will be unique.
+	 * At any given time there may exist many objects with the same ID, but different timestamps. These
+	 * are related; Each represent the same entity (a Parameter), at different points on the timeline (
+	 * value at time X, value at time Y, ...). 
 	 * 
-	 * The ID has the format
-	 * <li>[Qualified name]/[timestamp]</li>
-	 * 
-	 * @return
+	 * @return The ID
 	 */
 	public String getID();
+
+	
+	/**
+	 * The Instance ID is a unique string for an object. The ID identifies the entity being referenced
+	 * (for example the Parameter) not the instance (a parameter value at a specific time).
+	 * 
+	 * At any given time there may exist many objects with the same ID, but different timestamps. These
+	 * are related; Each represent the same entity (a Parameter), at different points on the timeline (
+	 * value at time X, value at time Y, ...). 
+	 * 
+	 * @return The ID
+	 */
+	public String getInstanceID();
 }

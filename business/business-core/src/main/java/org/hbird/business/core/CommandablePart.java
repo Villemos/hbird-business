@@ -40,14 +40,13 @@ import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.ICommandablePart;
 
 /**
+ * A part that can be commanded, i.e. which can receive requests.
+ * 
  * @author Gert Villemos
  *
  */
 public class CommandablePart extends Part implements ICommandablePart {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4725490371074035117L;
 	
 	protected List<Command> commands = new ArrayList<Command>();

@@ -19,8 +19,6 @@
  */
 package org.hbird.exchange.core;
 
-import org.springframework.beans.factory.annotation.Value;
-
 /**
  * Base class for configuration objects.
  * 
@@ -60,13 +58,10 @@ public class ConfigurationBase {
         this.heartBeatInterval = heartBeatInterval;
     }
 
-    @Value("${service.id}")
     protected String serviceId;
 
-    @Value("${service.version}")
     protected String serviceVersion;
 
-    @Value("${heart.beat.interval}")
     protected int heartBeatInterval;
 
     public String getServiceVersion() {
