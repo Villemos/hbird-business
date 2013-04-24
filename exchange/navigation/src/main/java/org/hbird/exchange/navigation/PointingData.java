@@ -56,24 +56,20 @@ public class PointingData implements ISatelliteSpecific, IGroundStationSpecific 
      */
     protected Double doppler;
 
-    protected Double dopplerShift;
-    
     /** Name of the satellite. */
     protected String satelliteName;
 
     protected String groundStationName;
 
     protected long timestamp;
-    
-    public PointingData(long timestamp, Double azimuth, Double elevation, Double doppler, Double dopplerShift,
-            String satelliteName, String groundStationName) {
-    	this.timestamp = timestamp;
-    	this.azimuth = azimuth;
+
+    public PointingData(long timestamp, Double azimuth, Double elevation, Double doppler, String satelliteName, String groundStationName) {
+        this.timestamp = timestamp;
+        this.azimuth = azimuth;
         this.elevation = elevation;
         this.doppler = doppler;
         this.satelliteName = satelliteName;
         this.groundStationName = groundStationName;
-        this.dopplerShift = dopplerShift;
     }
 
     public Double getAzimuth() {
@@ -110,23 +106,16 @@ public class PointingData implements ISatelliteSpecific, IGroundStationSpecific 
         return groundStationName;
     }
 
-    public Double getDopplerShift() {
-		return dopplerShift;
-	}
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-	public void setDopplerShift(Double dopplerShift) {
-		this.dopplerShift = dopplerShift;
-	}
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
-	public long getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public String prettyPrint() {
-    	return (new Date(timestamp)).toLocaleString() + ", Azimuth:" + azimuth + ", Elevation:" + elevation + ", doppler:" + doppler + ", dopplerShift:" + dopplerShift; 
+    public String prettyPrint() {
+        // TODO - 17.04.2013, kimmell - fix this
+        return (new Date(timestamp)).toLocaleString() + ", Azimuth:" + azimuth + ", Elevation:" + elevation + ", doppler:" + doppler;
     }
 }

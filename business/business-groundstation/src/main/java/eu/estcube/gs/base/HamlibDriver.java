@@ -57,8 +57,8 @@ public abstract class HamlibDriver extends SoftwareComponentDriver {
 
         String name = part.getName();
 
-        inMemoryScheduler.setInjectUrl("direct://inject." + this.getPart().getName());
-        
+        inMemoryScheduler.setInjectUrl("direct://inject." + name);
+
         /**
          * Setup route for the PART to receive the commands. The part will generate the
          * NativeCommands. These will be routed to the INTERNAL schedule.

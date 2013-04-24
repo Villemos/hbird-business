@@ -58,14 +58,14 @@ public class BusinessCard extends Named {
     protected long period = -1L;
 
     /** Commands accepted by this {@link Part}. */
-    public Map<String, Command> commandsIn = new HashMap<String, Command>();
-    public Map<String, Command> commandsOut = new HashMap<String, Command>();
+    protected Map<String, Command> commandsIn = new HashMap<String, Command>();
+    protected Map<String, Command> commandsOut = new HashMap<String, Command>();
 
-    public Map<String, Event> eventsIn = new HashMap<String, Event>();
-    public Map<String, Event> eventsOut = new HashMap<String, Event>();
+    protected Map<String, Event> eventsIn = new HashMap<String, Event>();
+    protected Map<String, Event> eventsOut = new HashMap<String, Event>();
 
-    public Map<String, Named> dataIn = new HashMap<String, Named>();
-    public Map<String, Named> dataOut = new HashMap<String, Named>();
+    protected Map<String, Named> dataIn = new HashMap<String, Named>();
+    protected Map<String, Named> dataOut = new HashMap<String, Named>();
 
     public BusinessCard(String issuedBy, long period) {
         // XXX - 03.04.2013, kimmell - name and issuedBy are set to same value here
@@ -75,18 +75,18 @@ public class BusinessCard extends Named {
     }
 
     /**
-	 * @param name
-	 * @param heartbeat
-	 * @param commands
-	 */
-	public BusinessCard(String name, long heartbeat, List<Command> commands) {
-		this(name, heartbeat);
-		for (Command command : commands) {
-			this.commandsIn.put(command.getName(), command);
-		}
-	}
+     * @param name
+     * @param heartbeat
+     * @param commands
+     */
+    public BusinessCard(String name, long heartbeat, List<Command> commandsIn) {
+        this(name, heartbeat);
+        for (Command command : commandsIn) {
+            this.commandsIn.put(command.getName(), command);
+        }
+    }
 
-	public String getHost() {
+    public String getHost() {
         return host;
     }
 
@@ -124,5 +124,89 @@ public class BusinessCard extends Named {
     public BusinessCard touch() {
         timestamp = System.currentTimeMillis();
         return this;
+    }
+
+    /**
+     * @return the commandsIn
+     */
+    public Map<String, Command> getCommandsIn() {
+        return commandsIn;
+    }
+
+    /**
+     * @param commandsIn the commandsIn to set
+     */
+    public void setCommandsIn(Map<String, Command> commandsIn) {
+        this.commandsIn = commandsIn;
+    }
+
+    /**
+     * @return the commandsOut
+     */
+    public Map<String, Command> getCommandsOut() {
+        return commandsOut;
+    }
+
+    /**
+     * @param commandsOut the commandsOut to set
+     */
+    public void setCommandsOut(Map<String, Command> commandsOut) {
+        this.commandsOut = commandsOut;
+    }
+
+    /**
+     * @return the eventsIn
+     */
+    public Map<String, Event> getEventsIn() {
+        return eventsIn;
+    }
+
+    /**
+     * @param eventsIn the eventsIn to set
+     */
+    public void setEventsIn(Map<String, Event> eventsIn) {
+        this.eventsIn = eventsIn;
+    }
+
+    /**
+     * @return the eventsOut
+     */
+    public Map<String, Event> getEventsOut() {
+        return eventsOut;
+    }
+
+    /**
+     * @param eventsOut the eventsOut to set
+     */
+    public void setEventsOut(Map<String, Event> eventsOut) {
+        this.eventsOut = eventsOut;
+    }
+
+    /**
+     * @return the dataIn
+     */
+    public Map<String, Named> getDataIn() {
+        return dataIn;
+    }
+
+    /**
+     * @param dataIn the dataIn to set
+     */
+    public void setDataIn(Map<String, Named> dataIn) {
+        this.dataIn = dataIn;
+    }
+
+    /**
+     * @return the dataOut
+     */
+    public Map<String, Named> getDataOut() {
+        return dataOut;
+    }
+
+    /**
+     * @param dataOut the dataOut to set
+     */
+    public void setDataOut(Map<String, Named> dataOut) {
+        this.dataOut = dataOut;
     }
 }

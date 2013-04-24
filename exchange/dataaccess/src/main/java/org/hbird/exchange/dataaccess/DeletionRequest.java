@@ -16,7 +16,18 @@
  */
 package org.hbird.exchange.dataaccess;
 
-import static org.hbird.exchange.dataaccess.Arguments.*;
+import static org.hbird.exchange.dataaccess.Arguments.APPLICABLE_TO;
+import static org.hbird.exchange.dataaccess.Arguments.CLASS;
+import static org.hbird.exchange.dataaccess.Arguments.DELETE_ALL;
+import static org.hbird.exchange.dataaccess.Arguments.DELTA_PROPAGATION;
+import static org.hbird.exchange.dataaccess.Arguments.DERIVED_FROM;
+import static org.hbird.exchange.dataaccess.Arguments.FROM;
+import static org.hbird.exchange.dataaccess.Arguments.ISSUED_BY;
+import static org.hbird.exchange.dataaccess.Arguments.IS_STATE_OF;
+import static org.hbird.exchange.dataaccess.Arguments.NAMES;
+import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_NAME;
+import static org.hbird.exchange.dataaccess.Arguments.TO;
+import static org.hbird.exchange.dataaccess.Arguments.create;
 
 import java.util.List;
 
@@ -30,11 +41,11 @@ public class DeletionRequest extends DataRequest {
     private static final long serialVersionUID = -811265458963306125L;
 
     public DeletionRequest(String issuedBy) {
-        super(issuedBy);
+        super(issuedBy, DeletionRequest.class.getSimpleName(), DESCRIPTION);
     }
 
     public DeletionRequest(String issuedBy, boolean deleteAll) {
-        super(issuedBy);
+        this(issuedBy);
         setArgumentValue(StandardArguments.DELETE_ALL, deleteAll);
     }
 
@@ -58,18 +69,18 @@ public class DeletionRequest extends DataRequest {
         return args;
     }
 
-	/**
-	 * @return
-	 */
-	public boolean isDeleteAll() {
-		return getArgumentValue(StandardArguments.DELETE_ALL, Boolean.class);
-	}
-	
-	public void setDeleteAll() {
-		setDeleteAll(true);
-	}
+    /**
+     * @return
+     */
+    public boolean isDeleteAll() {
+        return getArgumentValue(StandardArguments.DELETE_ALL, Boolean.class);
+    }
 
-	public void setDeleteAll(boolean deleteAll) {
+    public void setDeleteAll() {
+        setDeleteAll(true);
+    }
+
+    public void setDeleteAll(boolean deleteAll) {
         setArgumentValue(StandardArguments.DELETE_ALL, deleteAll);
-	}
+    }
 }

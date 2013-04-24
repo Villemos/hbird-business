@@ -33,159 +33,119 @@
 package eu.estcube.gs.rotator;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 
-import org.hbird.business.api.ApiFactory;
-import org.hbird.business.navigation.orekit.NavigationUtilities;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitPrediction;
+import org.hbird.exchange.constants.StandardArguments;
+import org.hbird.exchange.core.CommandBase;
 import org.hbird.exchange.groundstation.GroundStation;
-import org.hbird.exchange.groundstation.NativeCommand;
+import org.hbird.exchange.groundstation.Stop;
 import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Satellite;
-import org.orekit.errors.OrekitException;
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.estcube.gs.base.GroundStationTrackingDevice;
 import eu.estcube.gs.base.HamlibNativeCommand;
-import eu.estcube.gs.base.Rotator;
+import eu.estcube.gs.base.IPointingDataOptimizer;
+import eu.estcube.gs.configuration.RotatorDriverConfiguration;
 import eu.estcube.gs.rotator.nativecommands.Park;
 import eu.estcube.gs.rotator.nativecommands.Reset;
 import eu.estcube.gs.rotator.nativecommands.SetPosition;
 
-
 /**
  * Class defining a HAMLIB rotator.
  * 
- * This class implements the methods required to schedule a HAMLIB rotator for 
+ * This class implements the methods required to schedule a HAMLIB rotator for
  * the parse of a satellite.
  * 
  * @author Gert Villemos
- *
+ * 
  */
-public class HamlibRotatorPart extends Rotator {
+public class HamlibRotatorPart extends GroundStationTrackingDevice<RotatorDriverConfiguration> {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4198169440814503234L;
-    
+    private static final long serialVersionUID = -6021178723974020064L;
+
+    public static final String DESCRIPTION = "A rotator of an antenna.";
+
     private static final Logger LOG = LoggerFactory.getLogger(HamlibRotatorPart.class);
 
-    /**
-     * @param thresholdElevation
-     * @param minAzimuth
-     * @param maxAzimuth
-     * @param minElevation
-     * @param maxElevation
-     */
-    public HamlibRotatorPart(String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation, long port, String host) {
-        super(name, thresholdElevation, minAzimuth, maxAzimuth, minElevation, maxElevation, HamlibRotatorDriver.class.getName());
-        this.port = port;
-        this.host = host;
+    public HamlibRotatorPart(String name, RotatorDriverConfiguration configuration, IDataAccess dataAccess, IOrbitPrediction prediction,
+            IPointingDataOptimizer<RotatorDriverConfiguration> optimizer) {
+        super(name, DESCRIPTION, HamlibRotatorDriver.class.getName(), configuration, dataAccess, prediction, optimizer);
     }
 
-    protected long preDelta = 10000;
-    
-    protected long postDelta = 10000;
-
-    protected boolean failOldRequests = true;
-
-    protected List<NativeCommand> commands = null;
-
-    protected long port;
-    protected String host;
-    
-    /* (non-Javadoc)
-     * @see org.hbird.exchange.navigation.ICommandableAntennaPart#parse(org.hbird.exchange.navigation.LocationContactEvent, org.hbird.exchange.navigation.LocationContactEvent, java.util.List)
+    /**
+     * @see org.hbird.exchange.groundstation.ITrackingDevice#emergencyStop(org.hbird.exchange.groundstation.Stop)
      */
     @Override
-    public List<NativeCommand> track(Track command) {
-        commands = new ArrayList<NativeCommand>();
+    public List<CommandBase> emergencyStop(Stop command) {
+        // TODO - 23.04.2013, kimmell - implement this
+        return NO_COMMANDS;
+    }
 
-        LocationContactEvent start = command.getArgumentValue("start", LocationContactEvent.class);
-        LocationContactEvent end = command.getArgumentValue("end", LocationContactEvent.class);
-        Satellite satellite = command.getArgumentValue("satellite", Satellite.class);
-
-        if (start.getTimestamp() < (new Date()).getTime() && failOldRequests == true) {
-            return commands;
-        }   
-        
-        /** Generate the pointing information, including azimuth, elevation and doppler. */
-        List<PointingData> pointingData = null;
-        try {
-        	GroundStation groundStation = (GroundStation) ApiFactory.getDataAccessApi(this.name).resolveNamed(this.isPartOf);        	
-            pointingData = NavigationUtilities.calculateContactData(start, end, groundStation, satellite, 500);
-        } catch (OrekitException e) {
-            e.printStackTrace();
-        }
-
-        /** Pre tracking preparation. */
-        LOG.info("First nativecommand for part 'Radio' derived from 'Track' command will execute at '" + (start.getTimestamp() - preDelta) + " (" + (new Date(start.getTimestamp() - preDelta)).toLocaleString() + ")'.");
-        commands.add(new HamlibNativeCommand(Reset.createMessageString(1).toString(), start.getTimestamp() - preDelta, command.getID(), "PreTracking"));
-        // commands.add(new NativeCommand(SetConfig.createMessageString("Test", 1l).toString(), start.getTimestamp() - preDelta + 1, command.getUuid(), "PreTracking"));
-        commands.add(new HamlibNativeCommand(SetPosition.createMessageString(pointingData.get(0).getAzimuth(), pointingData.get(0).getElevation()).toString(), start.getTimestamp() - preDelta + 2, command.getID(), "PreTracking"));
-
-        /** For each point, except the first which has been set in the preParse function, create a native pointing command. */
+    /**
+     * @see eu.estcube.gs.base.GroundStationTrackingDevice#createContactCommands(org.hbird.exchange.groundstation.GroundStation
+     *      , org.hbird.exchange.navigation.Satellite, java.util.List,
+     *      eu.estcube.gs.configuration.GroundStationDriverConfiguration)
+     */
+    @Override
+    protected List<CommandBase> createContactCommands(GroundStation gs, Satellite sat, List<PointingData> pointingData,
+            RotatorDriverConfiguration configuration, Track trackCommand) {
+        List<CommandBase> commands = new ArrayList<CommandBase>(pointingData.size());
+        String derivedFrom = trackCommand.getID();
         for (int index = 1; index < pointingData.size(); index++) {
-            commands.add(new HamlibNativeCommand(SetPosition.createMessageString(pointingData.get(index).getAzimuth(), pointingData.get(index).getElevation()).toString(), pointingData.get(index).getTimestamp(), command.getID(), "Tracking"));
+            PointingData pd = pointingData.get(index);
+            commands.add(new HamlibNativeCommand(SetPosition.createCommand(pd.getAzimuth(), pd.getElevation()), pd.getTimestamp(), derivedFrom,
+                    HamlibNativeCommand.STAGE_TRACKING));
         }
-        
-        /** Park the antenna. */
-        commands.add(new HamlibNativeCommand(Park.createMessageString().toString(), start.getTimestamp() + postDelta, command.getID(), "PostTracking"));        
-
         return commands;
     }
-       
-    /* (non-Javadoc)
-     * @see org.hbird.exchange.navigation.ICommandableAntennaPart#stop()
+
+    /**
+     * @see eu.estcube.gs.base.GroundStationTrackingDevice#createPreContactCommands(org.hbird.exchange.groundstation.
+     *      GroundStation, org.hbird.exchange.navigation.Satellite, java.util.List,
+     *      eu.estcube.gs.configuration.GroundStationDriverConfiguration, org.hbird.exchange.groundstation.Track)
      */
     @Override
-    public List<NativeCommand> stop() {
-        // TODO Auto-generated method stub
-        return null;
+    protected List<CommandBase> createPreContactCommands(GroundStation gs, Satellite sat, List<PointingData> pointingData,
+            RotatorDriverConfiguration configuration, Track trackCommand) {
+
+        String derivedFrom = trackCommand.getID();
+        long firstCommandTime = trackCommand.getArgumentValue(StandardArguments.START, LocationContactEvent.class).getTimestamp()
+                - configuration.getPreContactDelta();
+        String firstCommand = new DateTime(firstCommandTime).toString(ISODateTimeFormat.dateTime());
+        LOG.info("First nativecommand for part '{}' derived from 'Track' command will execute at '{} ({})'.",
+                new Object[] { getName(), firstCommandTime, firstCommand });
+
+        PointingData pd = pointingData.get(0);
+        CommandBase reset = new HamlibNativeCommand(Reset.ALL, firstCommandTime, derivedFrom, HamlibNativeCommand.STAGE_PRE_TRACKING);
+        CommandBase toStartPositon = new HamlibNativeCommand(SetPosition.createCommand(pd.getAzimuth(), pd.getElevation()), firstCommandTime
+                + configuration.getDelayInCommandGroup(), derivedFrom,
+                HamlibNativeCommand.STAGE_PRE_TRACKING);
+
+        return Arrays.asList(reset, toStartPositon);
     }
 
-    /* (non-Javadoc)
-     * @see org.hbird.exchange.navigation.ICommandableAntennaPart#park()
+    /**
+     * @see eu.estcube.gs.base.GroundStationTrackingDevice#createPostContactCommands(org.hbird.exchange.groundstation.
+     *      GroundStation, org.hbird.exchange.navigation.Satellite, java.util.List,
+     *      eu.estcube.gs.configuration.GroundStationDriverConfiguration, org.hbird.exchange.groundstation.Track)
      */
     @Override
-    public List<NativeCommand> park() {
-        // TODO Auto-generated method stub
-        return null;
+    protected List<CommandBase> createPostContactCommands(GroundStation gs, Satellite sat, List<PointingData> pointingData,
+            RotatorDriverConfiguration configuration, Track trackCommand) {
+
+        LocationContactEvent end = trackCommand.getArgumentValue(StandardArguments.END, LocationContactEvent.class);
+        CommandBase cmd = new HamlibNativeCommand(Park.COMMAND, end.getTimestamp() + configuration.getPostContactDelta(), trackCommand.getID(),
+                HamlibNativeCommand.STAGE_POST_TRACKING);
+        return Arrays.asList(cmd);
     }
 
-    /* (non-Javadoc)
-     * @see org.hbird.exchange.navigation.ICommandableAntennaPart#pointTo()
-     */
-    @Override
-    public List<NativeCommand> pointTo() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public boolean isFailOldRequests() {
-        return failOldRequests;
-    }
-
-    public void setFailOldRequests(boolean failOldRequests) {
-        this.failOldRequests = failOldRequests;
-    }
-
-	public long getPort() {
-		return port;
-	}
-
-	public void setPort(long port) {
-		this.port = port;
-	}
-
-	public String getHost() {
-		return host;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
-	}
 }

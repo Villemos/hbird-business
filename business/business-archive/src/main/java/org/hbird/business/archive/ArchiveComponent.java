@@ -16,8 +16,11 @@
  */
 package org.hbird.business.archive;
 
+import java.util.List;
+
 import org.hbird.business.archive.solr.ArchiveComponentDriver;
 import org.hbird.business.core.StartablePart;
+import org.hbird.exchange.core.Command;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
@@ -34,33 +37,38 @@ import org.hbird.exchange.dataaccess.TleRequest;
  */
 public class ArchiveComponent extends StartablePart {
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = 2145124224125316877L;
+    private static final long serialVersionUID = 2145124224125316877L;
 
     public static final String ARCHIVE_NAME = "Archive";
 
     public static final String ARCHIVE_DESC = "The archive of data";
 
-	/** Default driver name (SOLR) */
-	public static final String DEFAULT_DRIVER = ArchiveComponentDriver.class.getName();
-	
-	/**
-	 * Default constructor. 
-	 */
-	public ArchiveComponent() {
-		super(ARCHIVE_NAME, ARCHIVE_DESC, DEFAULT_DRIVER);
-	}
+    /** Default driver name (SOLR) */
+    public static final String DEFAULT_DRIVER = ArchiveComponentDriver.class.getName();
 
-	{
-		card.commandsIn.put(CommitRequest.class.getName(), new CommitRequest(""));
-		card.commandsIn.put(DataRequest.class.getName(), new DataRequest(""));
-		card.commandsIn.put(DeletionRequest.class.getName(), new DeletionRequest(""));
-		card.commandsIn.put(GroundStationRequest.class.getName(), new GroundStationRequest(""));
-		card.commandsIn.put(OrbitalStateRequest.class.getName(), new OrbitalStateRequest("", ""));
-		card.commandsIn.put(ParameterRequest.class.getName(), new ParameterRequest("", "", 0));
-		card.commandsIn.put(StateRequest.class.getName(), new StateRequest("", ""));
-		card.commandsIn.put(TleRequest.class.getName(), new TleRequest("", ""));
+    /**
+     * Default constructor.
+     */
+    public ArchiveComponent() {
+        super(ARCHIVE_NAME, ARCHIVE_DESC, DEFAULT_DRIVER);
+    }
+
+    /**
+     * @see org.hbird.business.core.StartablePart#createCommandList()
+     */
+    @Override
+    protected List<Command> createCommandList(List<Command> commands) {
+        commands.add(new CommitRequest(""));
+        commands.add(new DataRequest(""));
+        commands.add(new DeletionRequest(""));
+        commands.add(new GroundStationRequest(""));
+        commands.add(new OrbitalStateRequest("", ""));
+        commands.add(new ParameterRequest("", "", 0));
+        commands.add(new StateRequest("", ""));
+        commands.add(new TleRequest("", ""));
+        return commands;
     }
 }

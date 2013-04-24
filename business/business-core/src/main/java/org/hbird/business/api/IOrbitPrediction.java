@@ -141,7 +141,8 @@ public interface IOrbitPrediction extends IHbirdApi {
      * @param satellite {@link Satellite} to track
      * @param contactDataStepSize The step size (ms) when propagating the pointing.
      * @return Sorted list of Pointing Data.
+     * @throws Exception
      */
     public List<PointingData> requestPointingDataFor(LocationContactEvent startContactEvent, LocationContactEvent endContactEvent, GroundStation groundStation,
-            Satellite satellite, long contactDataStepSize);
+            Satellite satellite, long contactDataStepSize) throws Exception;
 }

@@ -27,6 +27,17 @@ public class StateRequest extends DataRequest {
 
     private static final long serialVersionUID = -6214262098953498288L;
 
+    public StateRequest(String issuedBy) {
+        super(issuedBy, StateRequest.class.getSimpleName(), DESCRIPTION);
+        setClass(State.class.getSimpleName());
+    }
+
+    public StateRequest(String issuedBy, String isStateOf) {
+        this(issuedBy);
+        setIsInitialization(true);
+        setArgumentValue(StandardArguments.IS_STATE_OF, isStateOf);
+    }
+
     public StateRequest(String issuedBy, String isStateOf, long from, long to) {
         this(issuedBy, isStateOf);
         setFrom(from);
@@ -38,15 +49,4 @@ public class StateRequest extends DataRequest {
         addNames(names);
     }
 
-    public StateRequest(String issuedBy, String isStateOf) {
-        super(issuedBy);
-        setClass(State.class.getSimpleName());
-        setIsInitialization(true);
-        setArgumentValue(StandardArguments.IS_STATE_OF, isStateOf);
-    }
-    
-    public StateRequest(String issuedBy) {
-        super(issuedBy);
-        setClass(State.class.getSimpleName());
-    }
 }

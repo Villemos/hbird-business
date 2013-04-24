@@ -26,17 +26,31 @@ import org.hbird.exchange.core.ConfigurationBase;
  */
 public class GroundStationConfigurationBase extends ConfigurationBase {
 
-    public GroundStationConfigurationBase() {
-    };
+    private static final long serialVersionUID = 8719054972735774123L;
 
-    public GroundStationConfigurationBase(String serviceId, String serviceVersion, int heartbeatInterval, String groundstationId) {
+    @Value("${gs.id}")
+    protected String groundstationId;
+
+    public GroundStationConfigurationBase() {
+        super();
+    }
+
+    public GroundStationConfigurationBase(String serviceId, String serviceVersion, long heartbeatInterval, String groundstationId) {
         super(serviceId, serviceVersion, heartbeatInterval);
         this.groundstationId = groundstationId;
     }
 
-    protected String groundstationId;
-
+    /**
+     * @return the groundstationId
+     */
     public String getGroundstationId() {
         return groundstationId;
+    }
+
+    /**
+     * @param groundstationId the groundstationId to set
+     */
+    public void setGroundstationId(String groundstationId) {
+        this.groundstationId = groundstationId;
     }
 }

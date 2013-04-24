@@ -29,7 +29,6 @@ import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Satellite;
-import org.orekit.errors.OrekitException;
 
 public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
 
@@ -85,7 +84,7 @@ public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
         sendRequestStream(request);
     }
 
-    protected List<Named> sendRequest(TlePropagationRequest request) {    	
+    protected List<Named> sendRequest(TlePropagationRequest request) {
         return executeRequestRespond(request);
     }
 
@@ -96,15 +95,7 @@ public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
 
     @Override
     public List<PointingData> requestPointingDataFor(LocationContactEvent startContactEvent, LocationContactEvent endContactEvent, GroundStation groundStation,
-            Satellite satellite, long contactDataStepSize) {
-        List<PointingData> pointing = null;
-        try {
-            pointing = NavigationUtilities.calculateContactData(startContactEvent, endContactEvent, groundStation, satellite, contactDataStepSize);
-        }
-        catch (OrekitException e) {
-            e.printStackTrace();
-        }
-
-        return pointing;
+            Satellite satellite, long contactDataStepSize) throws Exception {
+        return NavigationUtilities.calculateContactData(startContactEvent, endContactEvent, groundStation, satellite, contactDataStepSize);
     }
 }

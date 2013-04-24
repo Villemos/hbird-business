@@ -32,7 +32,7 @@ public class GroundStationRequest extends DataRequest {
     private static final long serialVersionUID = -2463827175606652486L;
 
     public GroundStationRequest(String issuedBy) {
-        super(issuedBy);
+        super(issuedBy, GroundStationRequest.class.getSimpleName(), DESCRIPTION);
         setIsInitialization(true);
     }
 

@@ -33,13 +33,13 @@
 package eu.estcube.gs.base;
 
 import org.hbird.exchange.core.Part;
-import org.hbird.exchange.groundstation.ICommandableAntennaPart;
+import org.hbird.exchange.groundstation.ITrackingDevice;
 
 /**
  * @author Gert Villemos
  *
  */
-public abstract class SoftwareDefinedRadio extends Part implements ICommandableAntennaPart {
+public abstract class SoftwareDefinedRadio extends Part implements ITrackingDevice {
 	
 	/**
 	 * 

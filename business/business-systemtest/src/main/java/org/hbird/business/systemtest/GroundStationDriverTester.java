@@ -96,14 +96,14 @@ public class GroundStationDriverTester extends SystemTest {
         long delta = 1363571566678l - 1363571275302l;
 
         OrbitalState startState = new OrbitalState("OrbitPredictor", "OrbitalState", "", now + 20000, "ESTCube-1", startPos, startVel, startMom, null);
-        OrbitalState endState = new OrbitalState("OrbitPredictor", "OrbitalState", "", now + delta + 20000, "ESTCube-1", endPos, endVel, endMom, null);        
+        OrbitalState endState = new OrbitalState("OrbitPredictor", "OrbitalState", "", now + delta + 20000, "ESTCube-1", endPos, endVel, endMom, null);
 
         LocationContactEvent start = new LocationContactEvent("OrbitPredictor", now + 20000, "ES5EC", "", "ESTCube-1", true, startState);
         start.setVisible(true);
         LocationContactEvent end = new LocationContactEvent("OrbitPredictor", now + delta + 20000, "ES5EC", "", "ESTCube-1", false, endState);
         end.setVisible(false);
 
-        estcube1.setFrequency(10000D);
+        estcube1.setUplinkFrequency(10000L);
 
         /**
          * Send a tracking request to the driver. Notice that on creation of the driver we set 'failOldRequests' to

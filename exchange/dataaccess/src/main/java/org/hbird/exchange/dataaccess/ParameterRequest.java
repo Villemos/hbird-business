@@ -27,20 +27,18 @@ public class ParameterRequest extends DataRequest {
 
     private static final long serialVersionUID = -210475353836504189L;
 
-    public ParameterRequest(String issuedBy, String parameter) {
-        super(issuedBy);
+    public ParameterRequest(String issuedBy) {
+        super(issuedBy, ParameterRequest.class.getSimpleName(), DESCRIPTION);
         setClass(Parameter.class.getSimpleName());
+    }
+
+    public ParameterRequest(String issuedBy, String parameter) {
+        this(issuedBy);
         addName(parameter);
     }
 
-    public ParameterRequest(String issuedBy) {
-        super(issuedBy);
-        setClass(Parameter.class.getSimpleName());
-    }
-
     public ParameterRequest(String issuedBy, List<String> parameter) {
-        super(issuedBy);
-        setClass(Parameter.class.getSimpleName());
+        this(issuedBy);
         addNames(parameter);
     }
 

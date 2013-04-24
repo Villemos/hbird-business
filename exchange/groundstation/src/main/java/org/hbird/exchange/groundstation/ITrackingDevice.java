@@ -34,22 +34,27 @@ package org.hbird.exchange.groundstation;
 
 import java.util.List;
 
+import org.hbird.exchange.core.CommandBase;
+
 /**
  * @author Gert Villemos
- *
+ * 
  */
-public interface ICommandableAntennaPart {
+public interface ITrackingDevice {
 
-	/**
-	 * Method to create the commands related to the preparse preparation.
-	 * 
-	 * @return List of commands
-	 */
-	public List<NativeCommand> track(Track command);
-	
-	public List<NativeCommand> stop();
-	
-	public List<NativeCommand> park();
-	
-	public List<NativeCommand> pointTo();
+    /**
+     * Method to create the commands related to the tracking.
+     * 
+     * @param command Track command
+     * @return List of commands
+     */
+    public List<CommandBase> track(Track command);
+
+    /**
+     * Method to create the commands related to emergency stop.
+     * 
+     * @param command Stop command
+     * @return List of commands
+     */
+    public List<CommandBase> emergencyStop(Stop command);
 }

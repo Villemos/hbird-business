@@ -18,25 +18,24 @@ package eu.estcube.gs.base;
 
 import java.util.UUID;
 
-import org.hbird.exchange.groundstation.NativeCommand;
+import org.hbird.exchange.core.CommandBase;
 
 /**
  * Class for native commands to execute on target component.
  * 
  * A native command is a command that is generated for the detailed control of
  * specific parts of the ground segment. Within the ground segment monitoring and
- * control system generic commands are distributed. These 
+ * control system generic commands are distributed. These
  * are received by the drivers of the specific parts. Depending on the parts the
  * generic Command is translated into a sequence of NativeCommands performing the
  * specific control.
  * 
  * As an example the generic command 'Track' (request to track a satellite) will when
- * received by a Hamlib based Ground Station (Rotor and Radio) be translated into
- * <li>The NativeCommand to the Rotor to enter start position</li>
- * <li>The NativeCommands to set the initial frequency</li>
- * <li>A sequence of execution timetagged NativeCommands to the Rotor for tracking.</li>
- * <li>A sequence of execution timetagged NativeCommands to the Radio to change the frequency according to the doppler.</li>
- * <li>The NativeCommand to the Rotor to park the antenna after the parse.</li>
+ * received by a Hamlib based Ground Station (Rotor and Radio) be translated into <li>The NativeCommand to the Rotor to
+ * enter start position</li> <li>The NativeCommands to set the initial frequency</li> <li>A sequence of execution
+ * timetagged NativeCommands to the Rotor for tracking.</li> <li>A sequence of execution timetagged NativeCommands to
+ * the Radio to change the frequency according to the doppler.</li> <li>The NativeCommand to the Rotor to park the
+ * antenna after the parse.</li>
  * 
  * For example antenna rotator command to rotate antenna would look something like:
  * <p>
@@ -46,59 +45,64 @@ import org.hbird.exchange.groundstation.NativeCommand;
  * </p>
  * 
  * Where String "R 132 145" is native command for rotator controlling software.
+ * 
+ * Hamlib documentation http://sourceforge.net/apps/mediawiki/hamlib/index.php?title=Documentation
  */
-public class HamlibNativeCommand extends NativeCommand {
+public class HamlibNativeCommand extends CommandBase {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 583930767013041600L;
+    private static final long serialVersionUID = 8335410768161363858L;
 
-	protected String commandToExecute = "";
-    
+    public static final String DESCRIPTION = "A Hamlib native command";
+
+    public static final String STAGE_PRE_TRACKING = "PreTracking";
+    public static final String STAGE_TRACKING = "Tracking";
+    public static final String STAGE_POST_TRACKING = "PostTracking";
+
+    protected String commandToExecute = "";
+
     protected String derivedfrom = "";
 
     protected String commandid = UUID.randomUUID().toString();
 
     protected String stage = "";
-    
-	public HamlibNativeCommand(String commandToExecute, long executionTime, String derivedFrom, String stage) {
-		super("", "NativeCommand", "A nativecommand");
-		this.commandToExecute = commandToExecute;
-		this.executionTime = executionTime;
-		this.derivedfrom = derivedFrom;
-		this.stage = stage;
-	}
 
-	public String getCommandToExecute() {
-		return commandToExecute;
-	}
+    public HamlibNativeCommand(String commandToExecute, long executionTime, String derivedFrom, String stage) {
+        super("", HamlibNativeCommand.class.getSimpleName(), DESCRIPTION);
+        this.commandToExecute = commandToExecute;
+        this.executionTime = executionTime;
+        this.derivedfrom = derivedFrom;
+        this.stage = stage;
+    }
 
-	public void setCommandToExecute(String commandToExecute) {
-		this.commandToExecute = commandToExecute;
-	}
+    public String getCommandToExecute() {
+        return commandToExecute;
+    }
 
-	public String getStage() {
-		return stage;
-	}
+    public void setCommandToExecute(String commandToExecute) {
+        this.commandToExecute = commandToExecute;
+    }
 
-	public void setStage(String stage) {
-		this.stage = stage;
-	}
+    public String getStage() {
+        return stage;
+    }
 
-	public String getDerivedfrom() {
-		return derivedfrom;
-	}
+    public void setStage(String stage) {
+        this.stage = stage;
+    }
 
-	public void setDerivedfrom(String derivedfrom) {
-		this.derivedfrom = derivedfrom;
-	}
+    public String getDerivedfrom() {
+        return derivedfrom;
+    }
 
-	public String getCommandid() {
-		return commandid;
-	}
+    public void setDerivedfrom(String derivedfrom) {
+        this.derivedfrom = derivedfrom;
+    }
 
-	public void setCommandid(String commandid) {
-		this.commandid = commandid;
-	}    
+    public String getCommandid() {
+        return commandid;
+    }
+
+    public void setCommandid(String commandid) {
+        this.commandid = commandid;
+    }
 }

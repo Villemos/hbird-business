@@ -33,24 +33,29 @@
 package eu.estcube.gs.radio;
 
 import eu.estcube.gs.base.HamlibDriver;
+import eu.estcube.gs.configuration.RadioDriverConfiguration;
 
 /**
  * @author Admin
- *
+ * 
  */
 public class HamlibRadioDriver extends HamlibDriver {
 
     @Override
     public void doConfigure() {
         super.doConfigure();
-                    
+
     }
 
-	/* (non-Javadoc)
-	 * @see eu.estcube.gs.base.HamlibDriver#getAddress()
-	 */
-	@Override
-	public String getAddress() {
-		return ((HamlibRadioPart) part).getHost() + ":" + ((HamlibRadioPart) part).getPort();
-	}        
+    /**
+     * @see eu.estcube.gs.base.HamlibDriver#getAddress()
+     */
+    @Override
+    public String getAddress() {
+        HamlibRadioPart radio = (HamlibRadioPart) part;
+        RadioDriverConfiguration config = radio.getConfiguration();
+        return config.getAddress();
+    }
+
+    // TODO - 23.04.2013, kimmell - poll for the radio frequency
 }

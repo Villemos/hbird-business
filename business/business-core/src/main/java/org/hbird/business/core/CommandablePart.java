@@ -43,47 +43,56 @@ import org.hbird.exchange.interfaces.ICommandablePart;
  * A part that can be commanded, i.e. which can receive requests.
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class CommandablePart extends Part implements ICommandablePart {
 
-	private static final long serialVersionUID = 4725490371074035117L;
-	
-	protected List<Command> commands = new ArrayList<Command>();
+    /**
+    private static final long serialVersionUID = 4725490371074035117L;
 
-	/**
-	 * @param name
-	 * @param description
-	 */
-	public CommandablePart(String issuedBy, String name, String description) {
-		super(issuedBy, name, description);
-	}
+    protected List<Command> commands = createCommandList(new ArrayList<Command>());
 
-	/**
-	 * @param name
-	 * @param description
-	 */
-	public CommandablePart(String name, String description) {
-		super(name, description);
-	}
+    /**
+     * @param name
+     * @param description
+     */
+    public CommandablePart(String issuedBy, String name, String description) {
+        super(issuedBy, name, description);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.ICommandablePart#setCommands(java.util.List)
-	 */
-	@Override
-	public void setCommands(List<Command> commands) {
-		this.commands = commands;
-	}
+    /**
+     * @param name
+     * @param description
+     */
+    public CommandablePart(String name, String description) {
+        super(name, description);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.ICommandablePart#getCommands()
-	 */
-	@Override
-	public List<Command> getCommands() {
-		return commands;
-	}
-	
-	public void addCommand(Command command) {
-		this.commands.add(command);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.exchange.interfaces.ICommandablePart#setCommands(java.util.List)
+     */
+    @Override
+    public void setCommands(List<Command> commands) {
+        this.commands = commands;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.exchange.interfaces.ICommandablePart#getCommands()
+     */
+    @Override
+    public List<Command> getCommands() {
+        return commands;
+    }
+
+    public void addCommand(Command command) {
+        this.commands.add(command);
+    }
+
+    protected List<Command> createCommandList(List<Command> commands) {
+        return commands;
+    }
 }

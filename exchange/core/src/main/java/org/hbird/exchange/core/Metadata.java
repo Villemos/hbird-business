@@ -30,9 +30,9 @@ import org.hbird.exchange.interfaces.INamed;
  */
 public class Metadata extends Named implements IApplicableTo {
 
-    public static final String DESCRIPTION = "Metadata applicable to another Named object.";
+    private static final long serialVersionUID = -8631540528917564301L;
 
-    private static final long serialVersionUID = 2804335094757225970L;
+    public static final String DESCRIPTION = "Metadata applicable to another Named object.";
 
     /** The identifier of the object that this is applicable too. */
     protected String subject = null;
@@ -54,37 +54,36 @@ public class Metadata extends Named implements IApplicableTo {
         this.metadata = metadata;
     }
 
+    @Override
     public String applicableTo() {
         return subject;
     }
 
-	/**
-	 * @return the subject
-	 */
-	public String getSubject() {
-		return subject;
-	}
+    /**
+     * @return the subject
+     */
+    public String getSubject() {
+        return subject;
+    }
 
-	/**
-	 * @param subject the subject to set
-	 */
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+    /**
+     * @param subject the subject to set
+     */
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 
-	/**
-	 * @return the metadata
-	 */
-	public Map<String, Object> getMetadata() {
-		return metadata;
-	}
+    /**
+     * @return the metadata
+     */
+    public Map<String, Object> getMetadata() {
+        return metadata;
+    }
 
-	/**
-	 * @param metadata the metadata to set
-	 */
-	public void setMetadata(Map<String, Object> metadata) {
-		this.metadata = metadata;
-	}
-    
-    
+    /**
+     * @param metadata the metadata to set
+     */
+    public void setMetadata(Map<String, Object> metadata) {
+        this.metadata = metadata;
+    }
 }

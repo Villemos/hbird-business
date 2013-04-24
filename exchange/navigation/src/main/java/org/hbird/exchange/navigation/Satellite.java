@@ -25,15 +25,24 @@ import org.hbird.exchange.interfaces.ISatelliteSpecific;
  */
 public class Satellite extends Part implements ISatelliteSpecific {
 
-    /** The unique UUID. */
-    private static final long serialVersionUID = 6169559659135516782L;
+    private static final long serialVersionUID = -1158112946640794999L;
+
+    /**
+     * Default frequency for the radio in Hz. Safe value - radio devices should support this. Alternative value would be
+     * 437 MHz.
+     */
+    public static final long DEFAULT_RADIO_FREQUENCY = 145000000L;
 
     protected String designator;
 
     protected String satelliteNumber;
 
-    protected Double frequency = 100000D;
-    
+    /** Satellite up-link radio frequency in Hz. From ground to satellite. */
+    protected long uplinkFrequency = DEFAULT_RADIO_FREQUENCY;
+
+    /** Satellite down-link frequency in Hz. From satellite to ground. */
+    protected long downlinkFrequency = DEFAULT_RADIO_FREQUENCY;
+
     /**
      * Constructor.
      * 
@@ -65,13 +74,25 @@ public class Satellite extends Part implements ISatelliteSpecific {
         return name;
     }
 
-	public Double getFrequency() {
-		return frequency;
-	}
+    public long getUplinkFrequency() {
+        return uplinkFrequency;
+    }
 
-	public void setFrequency(Double frequency) {
-		this.frequency = frequency;
-	}
-    
-    
+    public void setUplinkFrequency(long frequency) {
+        this.uplinkFrequency = frequency;
+    }
+
+    /**
+     * @return the downlinkFrequency
+     */
+    public long getDownlinkFrequency() {
+        return downlinkFrequency;
+    }
+
+    /**
+     * @param downlinkFrequency the downlinkFrequency to set
+     */
+    public void setDownlinkFrequency(long downlinkFrequency) {
+        this.downlinkFrequency = downlinkFrequency;
+    }
 }

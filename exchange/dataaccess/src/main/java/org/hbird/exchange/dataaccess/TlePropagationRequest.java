@@ -27,7 +27,6 @@ import static org.hbird.exchange.dataaccess.Arguments.TLE_PARAMETERS;
 import static org.hbird.exchange.dataaccess.Arguments.create;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
@@ -40,25 +39,8 @@ public class TlePropagationRequest extends DataRequest {
 
     private static final long serialVersionUID = 4417878827527226757L;
 
-    /**
-     * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
-     */
-    @Override
-    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
-        args = super.getArgumentDefinitions(args);
-        args.add(create(SATELLITE_NAME));
-        args.add(create(START_TIME));
-        args.add(create(GROUND_STATION_NAMES));
-        args.add(create(DELTA_PROPAGATION));
-        args.add(create(STEP_SIZE));
-        args.add(create(CONTACT_DATA_STEP_SIZE));
-        args.add(create(TLE_PARAMETERS));
-        args.add(create(PUBLISH));
-        return args;
-    }
-
     public TlePropagationRequest(String issuedBy, String satellite) {
-        super(issuedBy);
+        super(issuedBy, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, System.currentTimeMillis());
     }
@@ -75,7 +57,7 @@ public class TlePropagationRequest extends DataRequest {
      *            calculated and issued.
      */
     public TlePropagationRequest(String issuedBy, String satellite, String tleLine1, String tleLine2, Long starttime, List<String> locations) {
-        super(issuedBy);
+        super(issuedBy, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, starttime);
         setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
@@ -91,35 +73,45 @@ public class TlePropagationRequest extends DataRequest {
      * @param locations List of locations for which contact events shall be generated.
      */
     public TlePropagationRequest(String issuedBy, String satellite, TleOrbitalParameters state, List<String> locations) {
-        super(issuedBy);
-        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
-        setArgumentValue(StandardArguments.START_TIME, (new Date()).getTime());
+        this(issuedBy, satellite);
         setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
         setArgumentValue(StandardArguments.TLE_PARAMETERS, state);
     }
 
     public TlePropagationRequest(String issuedBy, String satellite, long from, long to) {
-        super(issuedBy);
+        super(issuedBy, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, from);
         setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);
     }
 
     public TlePropagationRequest(String issuedBy, String satellite, String location, long from, long to) {
-        super(issuedBy);
-        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
-        setArgumentValue(StandardArguments.START_TIME, from);
-        setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);
-
-        setArgumentValue(StandardArguments.GROUND_STATION_NAMES, Arrays.asList(location));
+        this(issuedBy, satellite, Arrays.asList(location), from, to);
     }
 
     public TlePropagationRequest(String issuedBy, String satellite, List<String> locations, long from, long to) {
-        super(issuedBy);
+        super(issuedBy, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
         setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
         setArgumentValue(StandardArguments.START_TIME, from);
         setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);
         setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
+    }
+
+    /**
+     * @see org.hbird.exchange.core.Command#getArgumentDefinitions()
+     */
+    @Override
+    protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
+        args = super.getArgumentDefinitions(args);
+        args.add(create(SATELLITE_NAME));
+        args.add(create(START_TIME));
+        args.add(create(GROUND_STATION_NAMES));
+        args.add(create(DELTA_PROPAGATION));
+        args.add(create(STEP_SIZE));
+        args.add(create(CONTACT_DATA_STEP_SIZE));
+        args.add(create(TLE_PARAMETERS));
+        args.add(create(PUBLISH));
+        return args;
     }
 
     public String getSatellite() {
