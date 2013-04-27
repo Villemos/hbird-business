@@ -26,7 +26,6 @@ import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
 
-
 /**
  * An object representing a ground station.
  * 
@@ -36,22 +35,22 @@ import org.hbird.exchange.interfaces.IGroundStationSpecific;
  * Notice that the antennas are assigned to the ground station location. The actual antenna
  * location might thus be slightly off, depending on how far the antenna is from the actual
  * ground station.
- *
- * The ground station model is loosely based on the concepts of the 
+ * 
+ * The ground station model is loosely based on the concepts of the
  * mercury reference model (http://mgsn.sourceforge.net/docs/modelv0.2.0.php)
  */
 public class GroundStation extends Part implements IGroundStationSpecific {
 
     private static final long serialVersionUID = -8558418536858999621L;
 
-	/** Default description */
+    /** Default description */
     public static final String DESCRIPTION = "A groundstation.";
-    
+
     /** The geo location of the ground station. */
     protected D3Vector geoLocation;
-    
+
     protected List<Antenna> antennas = new ArrayList<Antenna>();
-    
+
     /**
      * 
      */
@@ -69,7 +68,7 @@ public class GroundStation extends Part implements IGroundStationSpecific {
         super(name, description);
         this.geoLocation = geoLocation;
     }
-    
+
     /**
      * 
      * 
@@ -81,7 +80,7 @@ public class GroundStation extends Part implements IGroundStationSpecific {
         this.geoLocation = geoLocation;
     }
 
-	/**
+    /**
      * @see org.hbird.exchange.interfaces.IGroundStationSpecific#getGroundStationId()
      */
     @Override
@@ -89,30 +88,30 @@ public class GroundStation extends Part implements IGroundStationSpecific {
         return getID();
     }
 
-	public D3Vector getGeoLocation() {
-		return geoLocation;
-	}
+    public D3Vector getGeoLocation() {
+        return geoLocation;
+    }
 
-	public void setGeoLocation(D3Vector geoLocation) {
-		this.geoLocation = geoLocation;
-	}
+    public void setGeoLocation(D3Vector geoLocation) {
+        this.geoLocation = geoLocation;
+    }
 
-	public List<Antenna> getAntennas() {
-		return antennas;
-	}
+    public List<Antenna> getAntennas() {
+        return antennas;
+    }
 
-	public void setAntennas(List<Antenna> antennas) {
-		this.antennas = antennas;
-	}
+    public void setAntennas(List<Antenna> antennas) {
+        this.antennas = antennas;
+    }
 
-	/**
-	 * @param antenna
-	 */
-	public void addAntenna(Antenna antenna) {
-		antennas.add(antenna);
-	}
-		
-	public void setAntenna(Antenna antenna) {
-		antennas.add(antenna);
-	} 
+    /**
+     * @param antenna
+     */
+    public void addAntenna(Antenna antenna) {
+        antennas.add(antenna);
+    }
+
+    public void setAntenna(Antenna antenna) {
+        antennas.add(antenna);
+    }
 }

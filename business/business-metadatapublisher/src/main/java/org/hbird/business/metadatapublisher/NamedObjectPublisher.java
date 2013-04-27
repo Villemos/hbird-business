@@ -18,56 +18,72 @@ package org.hbird.business.metadatapublisher;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IPublish;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.interfaces.IStartablePart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class NamedObjectPublisher {
 
-	/** The class logger. */
-	protected static Logger LOG = Logger.getLogger(NamedObjectPublisher.class);
+    public static final String DEFAULT_CONFIGURATOR_NAME = "Configurator"; // has to be same as
+                                                                           // ConfiguratorComponent.CONFIGURATOR_NAME
 
-	protected List<Named> objects = null;
+    /** The class logger. */
+    protected static Logger LOG = LoggerFactory.getLogger(NamedObjectPublisher.class);
 
-	protected String name;
-	
-	/**
-	 * Constructor.
-	 * 
-	 * @param filename Name of the file to be read at intervals.
-	 */
-	public NamedObjectPublisher(String name, List<Named> objects) {
-		this.objects = objects;
-		this.name = name;
-	}
+    protected String name;
 
-	/**
-	 * Method to split the message. The returned message list is actually loaded
-	 * from a Spring file, i.e. the original Exchange is ignored.
-	 * 
-	 * @return A list of messages, carrying as the body a command definition.
-	 */
-	public void start() {
-		IPublish api = ApiFactory.getPublishApi(name);
-		
-		for (Named object : objects) {
-			if (object instanceof IStartablePart) {
-				LOG.info("Creating StartComponent command for part '" + object.getID() + "'.");
-				api.publish(new StartComponent(object.getName(), (IStartablePart) object));
-			}
-			else {
-				LOG.info("Publishing Named object '" + object.getID() + "'.");
-				api.publish(object);
-			}
-		}
-	}
+    protected String destination;
+
+    protected List<Named> objects = null;
+
+    public NamedObjectPublisher(String name, List<Named> objects) {
+        this(name, DEFAULT_CONFIGURATOR_NAME, objects);
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param filename Name of the file to be read at intervals.
+     */
+    public NamedObjectPublisher(String name, String destination, List<Named> objects) {
+        this.name = name;
+        this.destination = destination;
+        this.objects = objects;
+    }
+
+    /**
+     * Method to split the message. The returned message list is actually loaded
+     * from a Spring file, i.e. the original Exchange is ignored.
+     * 
+     * @return A list of messages, carrying as the body a command definition.
+     */
+    public void start() {
+        IPublish api = ApiFactory.getPublishApi(name);
+
+        for (Named object : objects) {
+            if (object instanceof IStartablePart) {
+                LOG.info("Creating StartComponent command for part '{}' to destination '{}'.", object.getID(), destination);
+                if (destination == null) {
+                    LOG.warn("The destination is null; most likely the start command will be ignored. Check your application setup configuration");
+                }
+                StartComponent startCommand = new StartComponent(object.getName(), (IStartablePart) object);
+                startCommand.setDestination(destination);
+                api.publish(startCommand);
+            }
+            else {
+                LOG.info("Publishing Named object '" + object.getID() + "'.");
+                api.publish(object);
+            }
+        }
+    }
 }

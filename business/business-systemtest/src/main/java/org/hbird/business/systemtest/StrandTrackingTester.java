@@ -37,12 +37,10 @@ import java.util.List;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.navigation.OrbitPropagationComponent;
+import org.hbird.business.groundstation.hamlib.radio.HamlibRadioPart;
+import org.hbird.business.groundstation.hamlib.rotator.HamlibRotatorPart;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.groundstation.Antenna;
-
-import eu.estcube.gs.radio.HamlibRadioPart;
-import eu.estcube.gs.rotator.HamlibRotatorPart;
 
 /**
  * @author Admin
@@ -80,11 +78,9 @@ public class StrandTrackingTester extends SystemTest {
         /** Get the drivers (part of the system model) */
         HamlibRotatorPart rotator = (HamlibRotatorPart) parts.get("Rotator");
         rotator.setIsPartOf(antenna);
-        rotator.setFailOldRequests(false);
 
         HamlibRadioPart radio = (HamlibRadioPart) parts.get("Radio");
         radio.setIsPartOf(antenna);
-        radio.setFailOldRequests(false);
 
         publishApi.publish(new StartComponent(rotator.getName(), rotator));
         publishApi.publish(new StartComponent(radio.getName(), radio));
@@ -103,9 +99,8 @@ public class StrandTrackingTester extends SystemTest {
          * Interval (the time for which orbit data must as a minimum be available) to 6es hours.
          * */
 
-        
         // TODO Start the Strand Orbit Propagator part
-        
+
         /** Send a TLE request for a satellite and a subset of locations */
         // IOrbitPrediction api = ApiFactory.getOrbitPredictionApi("SystemTest");
         // api.requestOrbitPropagationStream("ESTCube-1", locations, 1355385448149l, 1355385448149l + 2 * 60 * 60 *

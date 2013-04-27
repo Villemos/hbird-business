@@ -66,12 +66,12 @@
 	<bean id="transferScheduler" class="org.hbird.business.core.TransferScheduler"/>
 
 	<!-- Beans for the driver routes. -->
-    <bean id="decoderSplitOnNewline" class="eu.estcube.gs.hamlib.DecoderSplitOnNewline" />
-    <bean id="decoderBytesToString" class="eu.estcube.gs.hamlib.DecoderBytesToString" />
-    <bean id="decoderBufferer" class="eu.estcube.gs.hamlib.DecoderBufferer" />
-    <bean id="decoderStringLogger" class="eu.estcube.gs.hamlib.DecoderStringLogger" />
-    <bean id="decoderStringToTelemetryObject" class="eu.estcube.gs.hamlib.DecoderStringToTelemetryObject" />
-    <bean id="encoderStringToBytes" class="eu.estcube.gs.hamlib.EncoderStringToBytes" />
+    <bean id="decoderSplitOnNewline" class="org.hbird.business.groundstation.hamlib.protocol.DecoderSplitOnNewline" />
+    <bean id="decoderBytesToString" class="org.hbird.business.groundstation.hamlib.protocol.DecoderBytesToString" />
+    <bean id="decoderBufferer" class="org.hbird.business.groundstation.hamlib.protocol.DecoderBufferer" />
+    <bean id="decoderStringLogger" class="org.hbird.business.groundstation.hamlib.protocol.DecoderStringLogger" />
+    <bean id="decoderStringToTelemetryObject" class="org.hbird.business.groundstation.hamlib.protocol.DecoderStringToTelemetryObject" />
+    <bean id="encoderStringToBytes" class="org.hbird.business.groundstation.hamlib.protocol.HamlibCommandEncoder" />
 
 
 

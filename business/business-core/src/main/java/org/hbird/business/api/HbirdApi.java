@@ -25,8 +25,12 @@ import org.hbird.business.core.HbirdRouteBuilder;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Named;
 import org.hbird.exchange.dataaccess.DataRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class HbirdApi extends HbirdRouteBuilder {
+
+    private static final Logger LOG = LoggerFactory.getLogger(HbirdApi.class);
 
     protected ProducerTemplate template = null;
 
@@ -35,14 +39,16 @@ public abstract class HbirdApi extends HbirdRouteBuilder {
     protected String issuedBy = "";
 
     protected String destination = "";
-    
+
     protected CamelContext context = null;
 
     public HbirdApi(String issuedBy, String destination) {
         this.issuedBy = issuedBy;
         this.destination = destination;
 
-        this.context = getContext();
+        this.context = getContext(); // XXX - 24.04.2013, kimmell - this will create new camel context
+
+        LOG.info("Creating new instance of {}, using {}", getClass().getSimpleName(), this.context);
 
         try {
             context.addRoutes(this);
@@ -50,9 +56,8 @@ public abstract class HbirdApi extends HbirdRouteBuilder {
             this.context.start();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Failed to create new instanceof {}", getClass().getSimpleName(), e);
         }
-
     }
 
     @Override
@@ -61,22 +66,21 @@ public abstract class HbirdApi extends HbirdRouteBuilder {
         addInjectionRoute(route);
     }
 
-    
-	/**
-	 * Method to publish a Named object. 
-	 * 
-	 * @param object
-	 * @return
-	 */
-	public Named publish(Named object) {
-		object.setIssuedBy(issuedBy);
-		if (object instanceof Command && ((Command) object).getDestination() == null) {
-			((Command) object).setDestination(destination);
-		}
+    /**
+     * Method to publish a Named object.
+     * 
+     * @param object
+     * @return
+     */
+    public Named publish(Named object) {
+        object.setIssuedBy(issuedBy);
+        if (object instanceof Command && ((Command) object).getDestination() == null) {
+            ((Command) object).setDestination(destination);
+        }
 
-		template.sendBody(inject, object);
-		return object;
-	}
+        template.sendBody(inject, object);
+        return object;
+    }
 
     /**
      * Method to send a data request that demands a reply.
@@ -85,13 +89,13 @@ public abstract class HbirdApi extends HbirdRouteBuilder {
      * @return
      */
     protected <T> List<T> executeRequestRespond(DataRequest request) {
-		request.setIssuedBy(issuedBy);
+        request.setIssuedBy(issuedBy);
 
-		if (request.getDestination() == null) {
-			request.setDestination(destination);
-		}
-    	
-    	@SuppressWarnings("unchecked")
+        if (request.getDestination() == null) {
+            request.setDestination(destination);
+        }
+
+        @SuppressWarnings("unchecked")
         List<T> list = template.requestBody(inject, request, List.class);
         return list;
     }
@@ -103,12 +107,12 @@ public abstract class HbirdApi extends HbirdRouteBuilder {
      * @return
      */
     protected void executeRequest(Command request) {
-		request.setIssuedBy(issuedBy);
+        request.setIssuedBy(issuedBy);
 
-		if (request.getDestination() == null) {
-			request.setDestination(destination);
-		}
-    	
+        if (request.getDestination() == null) {
+            request.setDestination(destination);
+        }
+
         template.sendBody(inject, request);
     }
 
@@ -116,31 +120,31 @@ public abstract class HbirdApi extends HbirdRouteBuilder {
         return list == null || list.isEmpty() ? null : list.get(0);
     }
 
-	/**
-	 * @return the destination
-	 */
-	public String getDestination() {
-		return destination;
-	}
+    /**
+     * @return the destination
+     */
+    public String getDestination() {
+        return destination;
+    }
 
-	/**
-	 * @param destination the destination to set
-	 */
-	public void setDestination(String destination) {
-		this.destination = destination;
-	}
+    /**
+     * @param destination the destination to set
+     */
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
 
-	/**
-	 * @return the issuedBy
-	 */
-	public String getIssuedBy() {
-		return issuedBy;
-	}
+    /**
+     * @return the issuedBy
+     */
+    public String getIssuedBy() {
+        return issuedBy;
+    }
 
-	/**
-	 * @param issuedBy the issuedBy to set
-	 */
-	public void setIssuedBy(String issuedBy) {
-		this.issuedBy = issuedBy;
-	}
+    /**
+     * @param issuedBy the issuedBy to set
+     */
+    public void setIssuedBy(String issuedBy) {
+        this.issuedBy = issuedBy;
+    }
 }

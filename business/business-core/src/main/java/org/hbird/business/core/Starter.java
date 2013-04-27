@@ -17,7 +17,8 @@
 package org.hbird.business.core;
 
 import org.apache.camel.main.Main;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 /**
@@ -32,8 +33,12 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
  */
 public class Starter {
 
+    public static final String CONTEXT_NAME = "Hummingbird";
+
     /** Class logger */
-    private static org.apache.log4j.Logger LOG = Logger.getLogger("main");
+    private static Logger LOG = LoggerFactory.getLogger(Starter.class);
+
+    private static int counter = 0;
 
     /**
      * The main method
@@ -42,6 +47,13 @@ public class Starter {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
+
+        /* Configure log4j to allow dynamic changes to the log4j file. */
+        String log4jFile = System.getProperty("log4j.configuration");
+        if (log4jFile != null) {
+            org.apache.log4j.PropertyConfigurator.configureAndWatch(log4jFile, 5000);
+        }
+
         Starter starter = new Starter();
         starter.boot();
     }
@@ -57,17 +69,15 @@ public class Starter {
         Main main = new Main();
         main.enableHangupSupport();
 
-        /** Read the configuration file as the first argument. If not set, then we try the default name. */
+        /* Read the configuration file as the first argument. If not set, then we try the default name. */
         String assemblyFile = System.getProperty("hbird.assembly") == null ? "classpath:main.xml" : System.getProperty("hbird.assembly");
 
         LOG.info("Reading assembly file '" + assemblyFile + "'");
-        new FileSystemXmlApplicationContext(assemblyFile);
 
-        /** Configure log4j to allow dynamic changes to the log4j file. */
-        String log4jFile = System.getProperty("log4j.configuration");
-        if (log4jFile != null) {
-            org.apache.log4j.PropertyConfigurator.configureAndWatch(log4jFile, 5000);
-        }
+        FileSystemXmlApplicationContext context = new FileSystemXmlApplicationContext(new String[] { assemblyFile }, false);
+        context.setDisplayName(CONTEXT_NAME + "-" + (++counter));
+        LOG.info("Created Spring AppicationContext {}", context.getDisplayName());
+        context.refresh();
 
         main.run();
     }

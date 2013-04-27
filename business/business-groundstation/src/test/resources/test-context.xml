@@ -8,7 +8,7 @@
         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
     <context:annotation-config/>
-    <context:component-scan base-package="eu.estcube.gs" />
+    <context:component-scan base-package="org.hbird.business.groundstation" />
     
     <!-- Properties config -->
 <!--     <bean id="propertyPlaceholder" class="org.springframework.beans.factory.config.PropertySourcesPlaceholderConfigurer"> -->

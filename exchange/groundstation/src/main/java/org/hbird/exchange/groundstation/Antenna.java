@@ -20,31 +20,32 @@
 package org.hbird.exchange.groundstation;
 
 import org.hbird.exchange.core.Part;
+import org.hbird.exchange.interfaces.IPart;
 
 /**
  * An antenna of a groundstation.
  * 
  * Each antenna is part of one (and only one) ground station.
- *
+ * 
  * @author Lauri Kimmel
  * @author Gert Villemos
  * 
  */
 public class Antenna extends Part {
 
-	private static final long serialVersionUID = -8558418536858999621L;
+    private static final long serialVersionUID = -8558418536858999621L;
 
     protected int thresholdElevation = 0;
-	
-	public Antenna(String name, String description) {
-		super(name, description);
-	}
 
-	public int getThresholdElevation() {
-		return thresholdElevation;
-	}
+    public Antenna(String name, String description, IPart parent) {
+        super(name, description, parent);
+    }
 
-	public void setThresholdElevation(int thresholdElevation) {
-		this.thresholdElevation = thresholdElevation;
-	}	
+    public int getThresholdElevation() {
+        return thresholdElevation;
+    }
+
+    public void setThresholdElevation(int thresholdElevation) {
+        this.thresholdElevation = thresholdElevation;
+    }
 }
