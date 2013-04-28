@@ -72,7 +72,7 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
             doConfigure();
 
             /** Setup the BusinessCard */
-            ProcessorDefinition<?> route = from(addTimer("businesscard", heartbeat)).bean(part, "getBusinessCard");
+            ProcessorDefinition<?> route = from(addTimer("businesscard-", heartbeat)).bean(part, "getBusinessCard");
             addInjectionRoute(route);
         }
         else {

@@ -1,11 +1,13 @@
 package org.hbird.business.groundstation.hamlib.protocol;
 
 import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelHandler.Sharable;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.oneone.OneToOneDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Sharable
 public class HamlibErrorLogger extends OneToOneDecoder {
 
     private static final Logger LOG = LoggerFactory.getLogger(HamlibErrorLogger.class);

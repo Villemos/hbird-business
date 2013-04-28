@@ -14,22 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * 
- */
-package org.hbird.business.groundstation.hamlib.protocol;
+package org.hbird.business.groundstation.hamlib.rotator;
+
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * Constant values for Hamlib protocol.
+ *
  */
-public class HamlibProtocolConstants {
+public class RotatorStateTest {
 
-    /** String encoding used in Hamlib protocol. */
-    public static final String STRING_ENCODING = "ASCII";
+    private RotatorState state;
 
-    /** Max length of the Hamlib response while waiting newline. */
-    public static final int MAX_FRAME_LENGTH = 10240;
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        state = new RotatorState();
+    }
 
-    /** Hamlib protocol marker for the end of the response. */
-    public static final String RESPONSE_END_MARKER = "RPRT";
+    @Test
+    public void testRotatorState() {
+        assertNotNull(state);
+    }
 }

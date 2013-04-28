@@ -130,6 +130,8 @@ public class StandardArguments {
 
     public static final String VALUE = "value";
 
+    public static final String VALUE_HAS_CHANGED = "valueHasChanged";
+
     public static final String VALUE_PARAMETER = "valueparameter";
 
     public static final String VISIBILITY = "visibility";

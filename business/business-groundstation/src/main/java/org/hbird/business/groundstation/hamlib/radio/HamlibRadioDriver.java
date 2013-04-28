@@ -76,9 +76,9 @@ public class HamlibRadioDriver extends HamlibDriver<RadioDriverConfiguration> {
         /** Configure the monitoring routes. */
         // @formatter:off
         
-        from("timer://" + name + ".timer?period=" + interval + "&delay=" + interval)
+        from(asRoute("timer://HamlibPollTimer?period=%s&delay=%s", interval, interval)) // using shared timer here
             .setBody(constant(GetFrequency.COMMAND))
-            .to("seda:" + name + ".toHamlib");
+            .to(asRoute("seda:toHamlib-%s", name));
         
         // @formatter:on
 

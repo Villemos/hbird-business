@@ -67,7 +67,6 @@ public class HamlibRotatorDriver extends HamlibDriver<RotatorDriverConfiguration
     public void doConfigure() {
         super.doConfigure();
 
-        // GetPosition getPosition = new GetPosition();
         GroundStationDriverConfiguration config = driverContext.getConfiguration();
 
         LOG.debug("Setting up hamlib rotator position poll using timeout {} ms and address '{}'", config.getDevicePollInterval(), config.getAddress());
@@ -77,22 +76,9 @@ public class HamlibRotatorDriver extends HamlibDriver<RotatorDriverConfiguration
 
         /** Configure the monitoring routes. */
         // @formatter:off
-        from("timer://" + name + ".rotator?period=" + interval + "&delay=" + interval)
-//            .bean(getPosition, "create")
+        from(asRoute("timer://HamlibPollTimer?period=%s&delay=%s", interval, interval)) // using shared timer here
             .setBody(constant(GetPosition.COMMAND))
-            .to("seda:" + name + ".toHamlib");
-////            .to("log:pollPostion?level=DEBUG")
-//            .doTry()
-//                .inOut("netty:tcp://" + config.getAddress())
-//            .doCatch(Exception.class)
-//                .to("log:hamlibError?level=ERROR&showAll=true")
-//                .stop()
-//            .end()
-//            .to("log:pollResponse?level=DEBUG")
-//        // .split().method(getPosition, "parse")
-//        // .to("direct:parameters." + part.getName())
-
-        ;
+            .to(asRoute("seda:toHamlib-%s", name));
         // @formatter:on
 
     }

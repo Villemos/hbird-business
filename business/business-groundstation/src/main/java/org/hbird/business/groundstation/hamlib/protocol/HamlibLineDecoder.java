@@ -14,22 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * 
- */
 package org.hbird.business.groundstation.hamlib.protocol;
 
+import org.apache.camel.component.netty.ChannelHandlerFactory;
+import org.jboss.netty.channel.ChannelHandler;
+import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
+import org.jboss.netty.handler.codec.frame.Delimiters;
+
 /**
- * Constant values for Hamlib protocol.
+ *
  */
-public class HamlibProtocolConstants {
+public class HamlibLineDecoder implements ChannelHandlerFactory {
 
-    /** String encoding used in Hamlib protocol. */
-    public static final String STRING_ENCODING = "ASCII";
-
-    /** Max length of the Hamlib response while waiting newline. */
-    public static final int MAX_FRAME_LENGTH = 10240;
-
-    /** Hamlib protocol marker for the end of the response. */
-    public static final String RESPONSE_END_MARKER = "RPRT";
+    /**
+     * @see org.apache.camel.component.netty.ChannelHandlerFactory#newChannelHandler()
+     */
+    @Override
+    public ChannelHandler newChannelHandler() {
+        return new DelimiterBasedFrameDecoder(HamlibProtocolConstants.MAX_FRAME_LENGTH, false, Delimiters.lineDelimiter());
+    }
 }

@@ -27,13 +27,13 @@ import org.apache.commons.lang3.StringUtils;
 public class HamlibProtocolHelper {
 
     /**
-     * Checks if response last line starts with {@link HamlibProtocolConstants#DEVICE_END_MESSAGE}.<br/>
+     * Checks if response last line starts with {@link HamlibProtocolConstants#RESPONSE_END_MARKER}.<br/>
      * 
      * @param response
      * @return
      */
     public static boolean isFullMessge(String response) {
-        return getLastLine(response).startsWith(HamlibProtocolConstants.DEVICE_END_MESSAGE);
+        return getLastLine(response).startsWith(HamlibProtocolConstants.RESPONSE_END_MARKER);
     }
 
     /**
@@ -50,7 +50,7 @@ public class HamlibProtocolHelper {
     /**
      * Returns error code from Hamlib response.<br/>
      * 
-     * In case the response last line is not starting with the {@link HamlibProtocolConstants#DEVICE_END_MESSAGE} return
+     * In case the response last line is not starting with the {@link HamlibProtocolConstants#RESPONSE_END_MARKER} return
      * <tt>null</tt>.
      * 
      * Error code <tt>0</tt> marks successful response. Other values indicate error in the Hamlib.
@@ -60,8 +60,8 @@ public class HamlibProtocolHelper {
      */
     public static String getErrorCode(String response) {
         String lastLine = getLastLine(response);
-        if (lastLine.startsWith(HamlibProtocolConstants.DEVICE_END_MESSAGE)) {
-            return lastLine.substring(HamlibProtocolConstants.DEVICE_END_MESSAGE.length() + 1);
+        if (lastLine.startsWith(HamlibProtocolConstants.RESPONSE_END_MARKER)) {
+            return lastLine.substring(HamlibProtocolConstants.RESPONSE_END_MARKER.length() + 1);
         }
         return null;
     }
@@ -87,9 +87,9 @@ public class HamlibProtocolHelper {
             }
             String key;
             String value;
-            if (line.startsWith(HamlibProtocolConstants.DEVICE_END_MESSAGE)) {
-                key = HamlibProtocolConstants.DEVICE_END_MESSAGE;
-                value = StringUtils.substringAfter(line, HamlibProtocolConstants.DEVICE_END_MESSAGE);
+            if (line.startsWith(HamlibProtocolConstants.RESPONSE_END_MARKER)) {
+                key = HamlibProtocolConstants.RESPONSE_END_MARKER;
+                value = StringUtils.substringAfter(line, HamlibProtocolConstants.RESPONSE_END_MARKER);
             }
             else {
                 key = StringUtils.substringBefore(line, ":");

@@ -32,30 +32,46 @@
  */
 package org.hbird.business.groundstation.base;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.camel.Body;
 import org.apache.camel.Headers;
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Parameter;
 
 /**
  * @author Admin
- *
+ * 
  */
+// TODO - 28.04.2013, kimmell - make more generic; usable for all INamed objects
+// TODO - 28.04.2013, kimmell - move to business core
 public class OnChange {
 
-	protected Map<String, Number> parameters = new HashMap<String, Number>();
-	
-	public void process(@Body Parameter parameter, @Headers Map<String, Object> headers) {
-		if (parameters.containsKey(parameter.getName())) {
-			if (parameter.getValue().equals(parameters.get(parameter.getName()))) {
-				headers.put("hbird.haschanged", false);
-			}
-		}
-		else {
-			parameters.put(parameter.getName(), parameter.getValue());
-		}
-		headers.put("hbird.haschanged", true);
-	}	
+    public static final int DEFAULT_ESTIMATED_NUMBER_OF_ELEMENTS = 128;
+
+    protected final Map<String, Number> parameters;
+
+    public OnChange() {
+        this(DEFAULT_ESTIMATED_NUMBER_OF_ELEMENTS);
+    }
+
+    public OnChange(int estimatedNumberOfElements) {
+        parameters = new ConcurrentHashMap<String, Number>(estimatedNumberOfElements);
+    }
+
+    public void process(@Body Parameter parameter, @Headers Map<String, Object> headers) {
+        String name = parameter.getName();
+        Number value = parameter.getValue();
+        boolean hasChanged;
+
+        if (parameters.containsKey(name)) {
+            hasChanged = !parameters.get(name).equals(value);
+        }
+        else {
+            parameters.put(name, value);
+            hasChanged = true;
+        }
+        headers.put(StandardArguments.VALUE_HAS_CHANGED, hasChanged);
+    }
 }

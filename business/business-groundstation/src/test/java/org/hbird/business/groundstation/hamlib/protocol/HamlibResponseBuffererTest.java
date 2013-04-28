@@ -4,10 +4,9 @@ import java.nio.charset.Charset;
 
 import junit.framework.TestCase;
 
-import org.hbird.business.groundstation.hamlib.protocol.HamlibProtocolConstants;
-import org.hbird.business.groundstation.hamlib.protocol.HamlibResponseBufferer;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.ChannelHandler;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,7 +57,7 @@ public class HamlibResponseBuffererTest extends TestCase {
 
         msg = new Object();
         decoder = new HamlibResponseBufferer();
-        input = HamlibProtocolConstants.DEVICE_END_MESSAGE + " 0\n";
+        input = HamlibProtocolConstants.RESPONSE_END_MARKER + " 0\n";
         buffer = ChannelBuffers.wrappedBuffer(new byte[] {});
         buffer = ChannelBuffers.wrappedBuffer(input.getBytes());
         msg = buffer.toString(Charset.forName(HamlibProtocolConstants.STRING_ENCODING));
@@ -66,31 +65,41 @@ public class HamlibResponseBuffererTest extends TestCase {
 
         msg = new Object();
         decoder = new HamlibResponseBufferer();
-        input = "abs" + HamlibProtocolConstants.DEVICE_END_MESSAGE + " 0\n";
+        input = "abs" + HamlibProtocolConstants.RESPONSE_END_MARKER + " 0\n";
         buffer = ChannelBuffers.wrappedBuffer(input.getBytes());
         msg = buffer.toString(Charset.forName(HamlibProtocolConstants.STRING_ENCODING));
         assertEquals(input, decoder.decode(null, null, msg));
 
         msg = new Object();
         decoder = new HamlibResponseBufferer();
-        input = "abs " + HamlibProtocolConstants.DEVICE_END_MESSAGE + " 0\n";
+        input = "abs " + HamlibProtocolConstants.RESPONSE_END_MARKER + " 0\n";
         buffer = ChannelBuffers.wrappedBuffer(input.getBytes());
         msg = buffer.toString(Charset.forName(HamlibProtocolConstants.STRING_ENCODING));
         assertEquals(input, decoder.decode(null, null, msg));
 
         msg = new Object();
         decoder = new HamlibResponseBufferer();
-        input = "abs " + HamlibProtocolConstants.DEVICE_END_MESSAGE + " -11\n";
+        input = "abs " + HamlibProtocolConstants.RESPONSE_END_MARKER + " -11\n";
         buffer = ChannelBuffers.wrappedBuffer(input.getBytes());
         msg = buffer.toString(Charset.forName(HamlibProtocolConstants.STRING_ENCODING));
         assertEquals(input, decoder.decode(null, null, msg));
 
         msg = new Object();
         decoder = new HamlibResponseBufferer();
-        input = "abs " + HamlibProtocolConstants.DEVICE_END_MESSAGE + " 11\n";
+        input = "abs " + HamlibProtocolConstants.RESPONSE_END_MARKER + " 11\n";
         buffer = ChannelBuffers.wrappedBuffer(input.getBytes());
         msg = buffer.toString(Charset.forName(HamlibProtocolConstants.STRING_ENCODING));
         assertEquals(input, decoder.decode(null, null, msg));
     }
 
+    @Test
+    public void testNwChannelHandler() {
+        ChannelHandler h1 = decoder.newChannelHandler();
+        ChannelHandler h2 = decoder.newChannelHandler();
+        assertNotNull(h1);
+        assertEquals(HamlibResponseBufferer.class, h1.getClass());
+        assertNotNull(h2);
+        assertEquals(HamlibResponseBufferer.class, h2.getClass());
+        assertNotSame(h1, h2);
+    }
 }
