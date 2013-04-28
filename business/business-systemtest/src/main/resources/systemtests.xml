@@ -81,7 +81,7 @@
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
 				<to uri="bean:catalogueapi" />
-               <to uri="bean:event" />
+                <to uri="bean:event" />
  				<to uri="bean:businesscard" /> 
 				<to uri="bean:parameterarchive" />
 				<to uri="bean:statearchive" />

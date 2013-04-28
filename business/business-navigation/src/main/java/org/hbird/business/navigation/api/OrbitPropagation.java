@@ -23,7 +23,7 @@ import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.business.navigation.orekit.NavigationUtilities;
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
@@ -37,25 +37,25 @@ public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
     }
 
     @Override
-    public List<Named> requestOrbitPropagation(String satellite) {
+    public List<EntityInstance> requestOrbitPropagation(String satellite) {
         TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite);
         return sendRequest(request);
     }
 
     @Override
-    public List<Named> requestOrbitPropagation(String satellite, long from, long to) {
+    public List<EntityInstance> requestOrbitPropagation(String satellite, long from, long to) {
         TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, from, to);
         return sendRequest(request);
     }
 
     @Override
-    public List<Named> requestOrbitPropagation(String satellite, String location, long from, long to) {
+    public List<EntityInstance> requestOrbitPropagation(String satellite, String location, long from, long to) {
         TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, location, from, to);
         return sendRequest(request);
     }
 
     @Override
-    public List<Named> requestOrbitPropagation(String satellite, List<String> locations, long from, long to) {
+    public List<EntityInstance> requestOrbitPropagation(String satellite, List<String> locations, long from, long to) {
         TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, locations, from, to);
         return sendRequest(request);
     }
@@ -84,7 +84,7 @@ public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
         sendRequestStream(request);
     }
 
-    protected List<Named> sendRequest(TlePropagationRequest request) {
+    protected List<EntityInstance> sendRequest(TlePropagationRequest request) {
         return executeRequestRespond(request);
     }
 

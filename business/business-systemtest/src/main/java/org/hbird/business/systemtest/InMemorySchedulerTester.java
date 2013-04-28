@@ -38,7 +38,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.business.core.InMemoryScheduler;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 
 /**
  * @author Admin
@@ -81,7 +81,7 @@ public class InMemorySchedulerTester extends SystemTest {
         
         Thread.sleep(8000);
 
-        for (Named entry : inMemoryTestListener.elements) {
+        for (EntityInstance entry : inMemoryTestListener.elements) {
         	LOG.info("executiontime:" + ((DummyTask) entry).getExecutionTime() + ", name:" + entry.getName());
         }
         

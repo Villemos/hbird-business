@@ -38,7 +38,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.core.Label;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 

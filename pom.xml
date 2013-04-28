@@ -105,6 +105,8 @@
         <commons-codec.version>1.7</commons-codec.version>
         <gson.version>2.2.2</gson.version>
         <guava.version>14.0.1</guava.version>
+		<joda.version>2.2</joda.version>
+
 
         <version.java>1.6</version.java>
         <version.junit>4.10</version.junit>
@@ -359,6 +361,12 @@
                 <version>${hbird.version}</version>
             </dependency>
 
+	        <dependency>
+	            <groupId>com.google.guava</groupId>
+	            <artifactId>guava</artifactId>
+	            <version>${guava.version}</version>
+	        </dependency>
+
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>rangecheck</artifactId>
@@ -504,7 +512,11 @@
                 <version>${hbird.version}</version>
             </dependency>
 
-
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>${joda.version}</version>
+			</dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>

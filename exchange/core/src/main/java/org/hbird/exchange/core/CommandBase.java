@@ -22,7 +22,7 @@ import org.hbird.exchange.interfaces.ITransferable;
 /**
  *
  */
-public class CommandBase extends Named implements IScheduled, ITransferable {
+public class CommandBase extends EntityInstance implements IScheduled, ITransferable {
 
     private static final long serialVersionUID = -5289428765905258384L;
 

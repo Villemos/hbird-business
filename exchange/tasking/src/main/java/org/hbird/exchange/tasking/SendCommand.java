@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 
 public class SendCommand extends Task {
 
@@ -52,13 +52,13 @@ public class SendCommand extends Task {
 	 * 
 	 * @param arg0 The exchange to be send.
 	 */
-	public List<Named> execute() {
+	public List<EntityInstance> execute() {
 		LOG.info("Sending command '" + command.getName() + "'.");
 		
 		command.setExecutionTime((new Date().getTime()));
 		
 		/** Send the preconfigured parameter. */
-		List<Named> returnValue = new ArrayList<Named>();
+		List<EntityInstance> returnValue = new ArrayList<EntityInstance>();
 		returnValue.add(command);
 		return returnValue;
 	}

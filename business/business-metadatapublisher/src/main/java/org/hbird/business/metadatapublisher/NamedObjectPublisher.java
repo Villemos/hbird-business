@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IPublish;
 import org.hbird.exchange.configurator.StartComponent;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
@@ -36,7 +36,7 @@ public class NamedObjectPublisher {
 	/** The class logger. */
 	protected static Logger LOG = Logger.getLogger(NamedObjectPublisher.class);
 
-	protected List<Named> objects = null;
+	protected List<EntityInstance> objects = null;
 
 	protected String name;
 	
@@ -45,7 +45,7 @@ public class NamedObjectPublisher {
 	 * 
 	 * @param filename Name of the file to be read at intervals.
 	 */
-	public NamedObjectPublisher(String name, List<Named> objects) {
+	public NamedObjectPublisher(String name, List<EntityInstance> objects) {
 		this.objects = objects;
 		this.name = name;
 	}
@@ -59,7 +59,7 @@ public class NamedObjectPublisher {
 	public void start() {
 		IPublish api = ApiFactory.getPublishApi(name);
 		
-		for (Named object : objects) {
+		for (EntityInstance object : objects) {
 			if (object instanceof IStartablePart) {
 				LOG.info("Creating StartComponent command for part '" + object.getID() + "'.");
 				api.publish(new StartComponent(object.getName(), (IStartablePart) object));

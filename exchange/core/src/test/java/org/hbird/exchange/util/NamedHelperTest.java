@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,14 +43,14 @@ public class NamedHelperTest {
     private static final String NAME_2 = "name-2";
 
     @Mock
-    private Named named1;
+    private EntityInstance named1;
 
     @Mock
-    private Named named2;
+    private EntityInstance named2;
 
     private InOrder inOrder;
 
-    private Collection<Named> collection;
+    private Collection<EntityInstance> collection;
 
     /**
      * @throws java.lang.Exception
@@ -58,7 +58,7 @@ public class NamedHelperTest {
     @Before
     public void setUp() throws Exception {
         inOrder = inOrder(named1, named2);
-        collection = new ArrayList<Named>();
+        collection = new ArrayList<EntityInstance>();
         collection.add(named1);
         collection.add(named2);
         when(named1.getName()).thenReturn(NAME_1);
@@ -82,7 +82,7 @@ public class NamedHelperTest {
      */
     @Test
     public void testToStringEmptyCollection() {
-        String result = NamedHelper.toString(Collections.<Named> emptyList());
+        String result = NamedHelper.toString(Collections.<EntityInstance> emptyList());
         assertEquals("[]", result);
         inOrder.verifyNoMoreInteractions();
     }

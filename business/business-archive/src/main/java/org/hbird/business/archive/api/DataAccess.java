@@ -28,7 +28,7 @@ import org.hbird.business.api.IDataAccess;
 import org.hbird.business.archive.ArchiveComponent;
 import org.hbird.exchange.core.Event;
 import org.hbird.exchange.core.Metadata;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.DataRequest;
@@ -75,7 +75,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     
     
     @Override
-    public List<Named> getData(DataRequest request) {
+    public List<EntityInstance> getData(DataRequest request) {
         return executeRequestRespond(request);
     }
     
@@ -295,7 +295,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 
     protected Map<Parameter, List<State>> getParameterWithState(ParameterRequest request) {
         request.setIncludeStates(true);
-        List<Named> respond = executeRequestRespond(request);
+        List<EntityInstance> respond = executeRequestRespond(request);
         return ApiUtility.sortParametersAndState(respond);
     }
 
@@ -400,7 +400,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     @Override
-    public List<Metadata> getMetadata(Named subject) {
+    public List<Metadata> getMetadata(EntityInstance subject) {
         return executeRequestRespond(new MetadataRequest(issuedBy, subject));
     }
 
@@ -416,10 +416,10 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 	 * @see org.hbird.business.api.IDataAccess#resolveNamed(java.lang.String)
 	 */
 	@Override
-	public Named resolveNamed(String ID) {
+	public EntityInstance resolveNamed(String ID) {
 		DataRequest request = new DataRequest(issuedBy);
 		request.setID(ID);
-		List<Named> results = executeRequestRespond(request);
+		List<EntityInstance> results = executeRequestRespond(request);
 		return getFirst(results);
 	}
 }

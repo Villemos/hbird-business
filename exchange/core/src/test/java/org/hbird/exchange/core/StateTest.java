@@ -47,7 +47,7 @@ public class StateTest {
     private static final long NOW = System.currentTimeMillis();
 
     @Mock
-    private Named isStateOf;
+    private EntityInstance isStateOf;
 
     private State state;
 
@@ -177,7 +177,7 @@ public class StateTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.State#setIsStateOf(org.hbird.exchange.core.Named)}.
+     * Test method for {@link org.hbird.exchange.core.State#setIsStateOf(org.hbird.exchange.core.EntityInstance)}.
      */
     @Test
     public void testSetIsStateOfNamed() {
@@ -189,12 +189,12 @@ public class StateTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.State#setIsStateOf(org.hbird.exchange.core.Named)}.
+     * Test method for {@link org.hbird.exchange.core.State#setIsStateOf(org.hbird.exchange.core.EntityInstance)}.
      */
     @Test
     public void testSetIsStateOfNamedNull() {
         assertEquals(STATE_OF, state.getIsStateOf());
-        state.setIsStateOf((Named) null);
+        state.setIsStateOf((EntityInstance) null);
         assertNull(state.getIsStateOf());
     }
 }

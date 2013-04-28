@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import org.apache.camel.Body;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.State;
 
 
@@ -27,10 +27,10 @@ public class InMemoryParameterBuffer {
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(InMemoryParameterBuffer.class);
 	
 	/* Map holding the buffered values. */
-	protected Map<String, Named> latestParameterValue = new HashMap<String, Named>();
+	protected Map<String, EntityInstance> latestParameterValue = new HashMap<String, EntityInstance>();
 
 	/** Semantic parameter. */
-	protected Map<String, List<Named>> latestParameterValueSemantic = new HashMap<String, List<Named>>();
+	protected Map<String, List<EntityInstance>> latestParameterValueSemantic = new HashMap<String, List<EntityInstance>>();
 	
 	protected Pattern parameterName = Pattern.compile("name=(.+)");
 	protected Pattern isStateOf = Pattern.compile("isStateOf=(.+)");
@@ -65,7 +65,7 @@ public class InMemoryParameterBuffer {
 	 */
 	
 	/** TODO The method should consider the timestamp as there is no guarantee of order */
-	public void storeParameter(@Body Named parameter) {
+	public void storeParameter(@Body EntityInstance parameter) {
 		latestParameterValue.put(parameter.getName(), parameter);
 		
 		if (parameter instanceof State) {
@@ -73,7 +73,7 @@ public class InMemoryParameterBuffer {
 			if (state.getIsStateOf() != null) {
 				
 				if (latestParameterValueSemantic.get(state.getIsStateOf()) == null) {
-					latestParameterValueSemantic.put((String) state.getIsStateOf(), new ArrayList<Named>());
+					latestParameterValueSemantic.put((String) state.getIsStateOf(), new ArrayList<EntityInstance>());
 				}
 				
 				latestParameterValueSemantic.get(state.getIsStateOf()).add(state);
@@ -87,7 +87,7 @@ public class InMemoryParameterBuffer {
 	 * 
 	 * @return The Map acting as a buffer.
 	 */
-	public Map<String, Named> getLatestParameterValue() {
+	public Map<String, EntityInstance> getLatestParameterValue() {
 		return latestParameterValue;
 	}
 }

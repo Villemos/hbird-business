@@ -24,7 +24,7 @@ import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.navigation.NavigationComponent;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -63,7 +63,7 @@ public class TleOrbitalPredictor {
      * @throws OrekitException
      */
     @Handler
-    public List<Named> predictOrbit(@Body TlePropagationRequest request) throws OrekitException {
+    public List<EntityInstance> predictOrbit(@Body TlePropagationRequest request) throws OrekitException {
 
     	LOG.info("Received TLE propagation request from '" + request.getIssuedBy() + "'.");
     	
@@ -73,7 +73,7 @@ public class TleOrbitalPredictor {
             parameters = getTleParameters(request.getSatellite());
         }
 
-        List<Named> results = null;
+        List<EntityInstance> results = null;
 
         /** If no TLE found, then we cant propagate. */
         if (parameters == null) {

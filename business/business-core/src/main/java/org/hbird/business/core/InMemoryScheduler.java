@@ -38,7 +38,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.camel.ProducerTemplate;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.interfaces.IScheduled;
 
 import com.google.common.collect.Ordering;
@@ -53,7 +53,7 @@ import com.google.common.collect.TreeMultimap;
 public class InMemoryScheduler implements Runnable {
 
     /** The complete queue of Named objects. Is a multimap because multiple entries can have the same execution time. */
-    protected TreeMultimap<Long, Named> queue = TreeMultimap.create(Ordering.<Long> natural(), Ordering.natural());
+    protected TreeMultimap<Long, EntityInstance> queue = TreeMultimap.create(Ordering.<Long> natural(), Ordering.natural());
 
     /** The timestamp of the next object to be send. */
     protected long currentlyScheduled = 0;
@@ -85,7 +85,7 @@ public class InMemoryScheduler implements Runnable {
      * @param entry The object to be added.
      */
     public synchronized void add(IScheduled entry) {
-        queue.put(entry.getExecutionTime(), (Named) entry);
+        queue.put(entry.getExecutionTime(), (EntityInstance) entry);
 
         if (currentlyScheduled == 0 || entry.getExecutionTime() < currentlyScheduled) {
             run();
@@ -132,8 +132,8 @@ public class InMemoryScheduler implements Runnable {
         }
     }
 
-    protected void send(SortedSet<Named> toSend) {
-        for (Named entry : toSend) {
+    protected void send(SortedSet<EntityInstance> toSend) {
+        for (EntityInstance entry : toSend) {
             inject.sendBody(injectUrl, entry);
         }
     }

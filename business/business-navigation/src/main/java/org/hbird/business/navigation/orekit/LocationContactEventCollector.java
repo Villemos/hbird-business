@@ -23,7 +23,7 @@ import java.util.List;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IPublish;
 import org.hbird.business.navigation.NavigationComponent;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.errors.OrekitException;
@@ -64,7 +64,7 @@ public class LocationContactEventCollector extends ElevationDetector {
 
     protected TleOrbitalParameters parameters = null;
 
-    protected List<Named> events = new ArrayList<Named>();
+    protected List<EntityInstance> events = new ArrayList<EntityInstance>();
 
     /**
      * COnstructor of an injector of location contact events.
@@ -114,7 +114,7 @@ public class LocationContactEventCollector extends ElevationDetector {
         return CONTINUE;
     }
 
-    public List<Named> getDataSet() {
+    public List<EntityInstance> getDataSet() {
         return events;
     }
 }

@@ -26,7 +26,7 @@ import org.hbird.exchange.interfaces.IState;
  * 
  * @author Gert Villemos
  */
-public class State extends Named implements IState {
+public class State extends EntityInstance implements IState {
 
     /** The unique UID. */
     private static final long serialVersionUID = 3658873252806807331L;
@@ -122,7 +122,7 @@ public class State extends Named implements IState {
      * @see org.hbird.exchange.interfaces.IIsStateOf#setIsStateOf(org.hbird.exchange.core.Named)
      */
     @Override
-    public void setIsStateOf(Named isStateOf) {
+    public void setIsStateOf(EntityInstance isStateOf) {
         this.isStateOf = isStateOf == null ? null : isStateOf.getID();
     }
 }

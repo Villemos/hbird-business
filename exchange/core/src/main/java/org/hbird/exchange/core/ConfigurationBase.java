@@ -61,7 +61,6 @@ public class ConfigurationBase implements Serializable {
 
     protected String serviceVersion;
 
-    @Value("${heart.beat.interval:5000}")
     protected long heartBeatInterval = DEFAULT_HEART_BEAT_INTERVAL;
 
     public ConfigurationBase() {

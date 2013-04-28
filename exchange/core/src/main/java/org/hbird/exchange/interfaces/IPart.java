@@ -41,7 +41,7 @@ package org.hbird.exchange.interfaces;
  * @author Gert Villemos
  *
  */
-public interface IPart extends INamed {
+public interface IPart extends IEntityInstance {
 	
 	/**
 	 * Method to get the Named object that this object is a part of.

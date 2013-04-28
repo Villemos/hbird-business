@@ -29,7 +29,7 @@ import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Metadata;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
@@ -57,7 +57,7 @@ public class Publish extends HbirdApi implements IPublish {
 	 * @see org.hbird.business.api.IPublish#publish(org.hbird.exchange.core.Named)
 	 */
 	@Override
-	public Named publish(Named object) {
+	public EntityInstance publish(EntityInstance object) {
 		object.setIssuedBy(issuedBy);
 		if (object instanceof Command && ((Command) object).getDestination() == null) {
 			((Command) object).setDestination(destination);
@@ -155,7 +155,7 @@ public class Publish extends HbirdApi implements IPublish {
 	 * @see org.hbird.business.api.IPublish#publichMetadata(org.hbird.exchange.core.Named, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Metadata publishMetadata(Named subject, String key, String value) {
+	public Metadata publishMetadata(EntityInstance subject, String key, String value) {
 		Map<String, Object> metadata = new HashMap<String, Object>();
 		metadata.put(key, value);
 		

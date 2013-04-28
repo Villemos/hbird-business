@@ -38,7 +38,7 @@ import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 
 public class DataRequest extends Command {
 
@@ -161,7 +161,7 @@ public class DataRequest extends Command {
         return getArgumentValue(StandardArguments.TO, Long.class);
     }
 
-    public void setDerivedFrom(INamed source) {
+    public void setDerivedFrom(IEntityInstance source) {
         setArgumentValue(StandardArguments.DERIVED_FROM, source.getID());
     }
 

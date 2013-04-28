@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hbird.exchange.core.D3Vector;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.groundstation.Antenna;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -53,10 +53,10 @@ import org.orekit.utils.PVCoordinates;
  */
 public class KeplianOrbitPredictor {
 
-	public List<Named> predictOrbit(List<GroundStation> groundStations, PVCoordinates pvCoordinates, long startTime, String satellite, double stepSize,
+	public List<EntityInstance> predictOrbit(List<GroundStation> groundStations, PVCoordinates pvCoordinates, long startTime, String satellite, double stepSize,
 			double deltaPropagation, long contactDataStepSize, TleOrbitalParameters parameters, boolean publish) throws OrekitException {
 
-		List<Named> results = new ArrayList<Named>();
+		List<EntityInstance> results = new ArrayList<EntityInstance>();
 
 		AbsoluteDate initialDate = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());
 

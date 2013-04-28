@@ -28,7 +28,7 @@ import java.math.BigInteger;
  * a new parameter is simply the creation of a Parameter with a new name.
  * 
  */
-public class Parameter extends Named {
+public class Parameter extends EntityInstance {
 
     /** The unique UID. */
     private static final long serialVersionUID = 889400984561961325L;
@@ -136,7 +136,7 @@ public class Parameter extends Named {
      * not the same, i.e. Integer and Double.
      */
     @Override
-    public int compareTo(Named cTo) {
+    public int compareTo(EntityInstance cTo) {
 
         if (cTo instanceof Parameter) {
             Parameter rhs = (Parameter) cTo;

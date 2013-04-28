@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.tasking.SetParameter;
@@ -29,8 +29,8 @@ public class ImportProducerTest {
 
             /** Unpack the data */
             for (Object obj : objects) {
-                System.out.println("Putting name " + ((Named) obj).getName());
-                readObjects.put(((Named) obj).getName(), obj);
+                System.out.println("Putting name " + ((EntityInstance) obj).getName());
+                readObjects.put(((EntityInstance) obj).getName(), obj);
             }
 
             assertTrue(readObjects.size() == 8);

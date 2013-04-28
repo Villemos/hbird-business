@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IPublish;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.errors.PropagationException;
@@ -49,7 +49,7 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
 	protected String satellite = null;
 
-	protected List<Named> states = new ArrayList<Named>();
+	protected List<EntityInstance> states = new ArrayList<EntityInstance>();
 	
 	public OrbitalStateCollector(String satellite, TleOrbitalParameters parameters, boolean publish) {
 		this.publish = publish;
@@ -76,7 +76,7 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 		}
 	}
 
-	public List<Named> getDataSet() {
+	public List<EntityInstance> getDataSet() {
 		return states;
 	}
 }

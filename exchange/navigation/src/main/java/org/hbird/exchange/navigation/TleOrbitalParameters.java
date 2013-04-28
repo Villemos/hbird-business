@@ -17,7 +17,7 @@
  * under the License. */
 package org.hbird.exchange.navigation;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
 /**
@@ -26,7 +26,7 @@ import org.hbird.exchange.interfaces.ISatelliteSpecific;
  * @author Gert Villemos
  * 
  */
-public class TleOrbitalParameters extends Named implements ISatelliteSpecific {
+public class TleOrbitalParameters extends EntityInstance implements ISatelliteSpecific {
 
     public static final String DESCRIPTION = "The TLE state of the satellite.";
 

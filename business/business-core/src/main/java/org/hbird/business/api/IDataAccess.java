@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.hbird.exchange.core.Event;
 import org.hbird.exchange.core.Metadata;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.DataRequest;
@@ -121,9 +121,9 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
  */
 public interface IDataAccess extends IHbirdApi {
 
-	public List<Named> getData(DataRequest request);
+	public List<EntityInstance> getData(DataRequest request);
 
-	public Named resolveNamed(String ID);
+	public EntityInstance resolveNamed(String ID);
 
 	/**
 	 * Method to retrieve the last sample of a single parameter. The method will return
@@ -678,7 +678,7 @@ public interface IDataAccess extends IHbirdApi {
 	 * @param subject The Named object that the metadata must be applicable to.
 	 * @return A list with zero or more metadata objects applicable to the subject
 	 */
-	public List<Metadata> getMetadata(Named subject);
+	public List<Metadata> getMetadata(EntityInstance subject);
 
 	
 	

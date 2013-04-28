@@ -36,7 +36,7 @@ import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
@@ -46,7 +46,7 @@ import org.hbird.exchange.interfaces.IApplicableTo;
 import org.hbird.exchange.interfaces.IDerivedFrom;
 import org.hbird.exchange.interfaces.IGenerationTimestamped;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 import org.hbird.exchange.navigation.LocationContactEvent;
@@ -114,7 +114,7 @@ public class SolrProducer extends DefaultProducer {
 
 					String request = createRequest((DataRequest) body);
 					LOG.info("Search string = " + request);
-					List<Named> results = doInitializationRequest(dataRequest, request);
+					List<EntityInstance> results = doInitializationRequest(dataRequest, request);
 
 					LOG.info("Returning {} entries.", results.size());
 					exchange.getOut().setBody(results);
@@ -126,7 +126,7 @@ public class SolrProducer extends DefaultProducer {
 					LOG.info("Search string = {}.", request);
 
 					SolrQuery query = createQuery(dataRequest, request);
-					List<Named> results = retrieve(query);
+					List<EntityInstance> results = retrieve(query);
 
 					LOG.info("Returning {} entries.", results.size());
 					exchange.getOut().setBody(results);
@@ -134,12 +134,12 @@ public class SolrProducer extends DefaultProducer {
 			}
 			else if (body instanceof List) {
 				/** Insert each element. */
-				for (Named entry : (List<Named>) body) {
+				for (EntityInstance entry : (List<EntityInstance>) body) {
 					insert(entry);
 				}
 			}
-			else if (body instanceof Named) {
-				insert((Named) body);
+			else if (body instanceof EntityInstance) {
+				insert((EntityInstance) body);
 			}
 		}
 		catch (Exception e) {
@@ -287,7 +287,7 @@ public class SolrProducer extends DefaultProducer {
 		return isStateOf == null || isStateOf.equals("") ? "" : " AND isStateOf:\"" + isStateOf + "\"";
 	}
 
-	private List<Named> doInitializationRequest(DataRequest body, String request) {
+	private List<EntityInstance> doInitializationRequest(DataRequest body, String request) {
 
 		SolrQuery query = new SolrQuery(request);
 
@@ -306,7 +306,7 @@ public class SolrProducer extends DefaultProducer {
 
 		query.setQueryType("basic");
 
-		List<Named> results = new ArrayList<Named>();
+		List<EntityInstance> results = new ArrayList<EntityInstance>();
 
 		QueryResponse response;
 		try {
@@ -337,7 +337,7 @@ public class SolrProducer extends DefaultProducer {
 							sampleQuery.setSortField(StandardArguments.TIMESTAMP, ORDER.desc);
 							sampleQuery.setQueryType("basic");
 
-							for (Named newObj : retrieve(sampleQuery)) {
+							for (EntityInstance newObj : retrieve(sampleQuery)) {
 								results.add(newObj);
 								LOG.info("Added object '" + newObj.getID() + "'");
 							}
@@ -411,19 +411,19 @@ public class SolrProducer extends DefaultProducer {
 	 * @param exchange
 	 * @throws Exception
 	 */
-	protected void insert(Named io) throws Exception {
+	protected void insert(EntityInstance io) throws Exception {
 
 		LOG.info("Storing object: " + io.prettyPrint());
 		
 		/** The document we will be storing. */
 		SolrInputDocument document = new SolrInputDocument();
 
-		document.setField(StandardArguments.HAS_URI, io.getID());
+		document.setField(StandardArguments.HAS_URI, io.getInstanceID());
 		
 		document.addField(StandardArguments.NAME, io.getName());
 		document.addField(StandardArguments.DESCRIPTION, io.getDescription());
-		document.addField(StandardArguments.ISSUED_BY, ((INamed) io).getIssuedBy());
-		document.addField(StandardArguments.TIMESTAMP, ((INamed) io).getTimestamp());
+		document.addField(StandardArguments.ISSUED_BY, ((IEntityInstance) io).getIssuedBy());
+		document.addField(StandardArguments.TIMESTAMP, ((IEntityInstance) io).getTimestamp());
 
 		/** TODO Gert; find a nice way of managing subclassing. For now we put the class as generic 'Part' as well as specific subtype. */
 		if (io instanceof IPart) {
@@ -548,7 +548,7 @@ public class SolrProducer extends DefaultProducer {
 	 * @throws IllegalArgumentException
 	 * @throws RemoteException
 	 */
-	protected List<Named> retrieve(SolrQuery query) {
+	protected List<EntityInstance> retrieve(SolrQuery query) {
 
 		LOG.debug("Issuing request '{}'.", query.toString());
 

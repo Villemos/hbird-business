@@ -22,7 +22,7 @@ import org.hbird.business.commanding.CommandingComponent;
 import org.hbird.business.configurator.ConfiguratorComponent;
 import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.configurator.StandardEndpoints;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 public class BusinessCardTester extends SystemTest {
@@ -40,11 +40,11 @@ public class BusinessCardTester extends SystemTest {
 
 		synchronized (businessCardListener.elements) {
 			Boolean didArrive = false;
-			for (Named obj : businessCardListener.elements) {
+			for (EntityInstance obj : businessCardListener.elements) {
 				LOG.info(obj);
-				if (obj instanceof Named) {
+				if (obj instanceof EntityInstance) {
 					/** Notice that the name given to the configurator in the assembly is 'Main Configurator' */
-					if (((Named)obj).getIssuedBy().equals(ConfiguratorComponent.CONFIGURATOR_NAME)) {
+					if (((EntityInstance)obj).getIssuedBy().equals(ConfiguratorComponent.CONFIGURATOR_NAME)) {
 						didArrive = true;
 						break;
 					}
@@ -63,11 +63,11 @@ public class BusinessCardTester extends SystemTest {
 
 		synchronized (businessCardListener.elements) {
 			Boolean commandingDidArrive = false;
-			for (Named obj : businessCardListener.elements) {
+			for (EntityInstance obj : businessCardListener.elements) {
 				LOG.info(obj);
-				if (obj instanceof Named) {
+				if (obj instanceof EntityInstance) {
 
-					if (((Named)obj).getIssuedBy().equals(CommandingComponent.COMMAND_RELEASER_NAME)) {
+					if (((EntityInstance)obj).getIssuedBy().equals(CommandingComponent.COMMAND_RELEASER_NAME)) {
 						commandingDidArrive = true;
 						break;
 					}
@@ -92,11 +92,11 @@ public class BusinessCardTester extends SystemTest {
 
 		synchronized (businessCardListener.elements) {
 			Boolean commandingDidArrive = false;
-			for (Named obj : businessCardListener.elements) {
+			for (EntityInstance obj : businessCardListener.elements) {
 				LOG.info(obj);
-				if (obj instanceof Named) {
+				if (obj instanceof EntityInstance) {
 
-					if (((Named)obj).getIssuedBy().equals(commanding.getName())) {
+					if (((EntityInstance)obj).getIssuedBy().equals(commanding.getName())) {
 						commandingDidArrive = true;
 						break;
 					}

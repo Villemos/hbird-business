@@ -10,7 +10,7 @@ import javax.management.openmbean.OpenDataException;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.navigation.LocationContactEvent;
 
 public class ParseControlTester extends SystemTest {
@@ -100,7 +100,7 @@ public class ParseControlTester extends SystemTest {
 			Thread.sleep(5000);
 			totalDelay += 5000;
 
-			for (Named command : commandingListener.elements) {
+			for (EntityInstance command : commandingListener.elements) {
 				if (command.getName().equals("Track")) {
 					found = true;
 				}

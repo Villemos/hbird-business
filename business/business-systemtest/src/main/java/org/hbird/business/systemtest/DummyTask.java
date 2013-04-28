@@ -35,7 +35,7 @@ package org.hbird.business.systemtest;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.tasking.Task;
 
 /**
@@ -64,9 +64,9 @@ public class DummyTask extends Task {
 	 * @see org.hbird.exchange.tasking.Task#execute()
 	 */
 	@Override
-	public List<Named> execute() {
+	public List<EntityInstance> execute() {
 		System.out.println("Dummy task executed.");
-		return new ArrayList<Named>();
+		return new ArrayList<EntityInstance>();
 	}
 	
 	public long getDeliveryTime() {

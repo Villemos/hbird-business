@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * @author Gert Villemos
  * 
  */
-public class Part extends Named implements IPart {
+public class Part extends EntityInstance implements IPart {
 
     private static final long serialVersionUID = 4961124159238983376L;
 
@@ -71,7 +71,7 @@ public class Part extends Named implements IPart {
     }
 
     /**
-     * @see org.hbird.exchange.interfaces.IPartOf#setIsPartOf(org.hbird.exchange.core.Named)
+     * @see org.hbird.exchange.interfaces.IPartOf#setIsPartOf(org.hbird.exchange.core.EntityInstance)
      */
     @Override
     public void setIsPartOf(IPart parent) {

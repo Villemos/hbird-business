@@ -23,7 +23,7 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.model.RouteDefinition;
 import org.hbird.business.core.HbirdRouteBuilder;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.dataaccess.DataRequest;
 
 public abstract class HbirdApi extends HbirdRouteBuilder {
@@ -68,7 +68,7 @@ public abstract class HbirdApi extends HbirdRouteBuilder {
 	 * @param object
 	 * @return
 	 */
-	public Named publish(Named object) {
+	public EntityInstance publish(EntityInstance object) {
 		object.setIssuedBy(issuedBy);
 		if (object instanceof Command && ((Command) object).getDestination() == null) {
 			((Command) object).setDestination(destination);

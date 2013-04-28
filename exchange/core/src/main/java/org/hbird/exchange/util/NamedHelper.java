@@ -18,7 +18,7 @@ package org.hbird.exchange.util;
 
 import java.util.Collection;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 
 /**
  * Helper methods for working with Named objects.
@@ -26,18 +26,18 @@ import org.hbird.exchange.core.Named;
 public class NamedHelper {
 
     /**
-     * Returns simple {@link String} representation of {@link Collection} of {@link Named} objects.
+     * Returns simple {@link String} representation of {@link Collection} of {@link EntityInstance} objects.
      * 
-     * @param collection {@link Collection} of {@link Named}
-     * @return simple {@link String} representation of {@link Collection} of {@link Named} objects
+     * @param collection {@link Collection} of {@link EntityInstance}
+     * @return simple {@link String} representation of {@link Collection} of {@link EntityInstance} objects
      */
-    public static String toString(Collection<? extends Named> collection) {
+    public static String toString(Collection<? extends EntityInstance> collection) {
         if (collection == null) {
             return "null";
         }
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        for (Named named : collection) {
+        for (EntityInstance named : collection) {
             sb.append(named.getName()).append(",");
         }
         if (sb.length() > 1) {

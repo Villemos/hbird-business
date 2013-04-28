@@ -24,7 +24,7 @@ import javax.script.*;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.scripting.ScriptExecutionRequest;
 
 /** 
@@ -84,11 +84,11 @@ public class ScriptExecutor {
 	 * @param in A parameter required to evaluate the script.
 	 * @return A parameter holding the return value of the script. May be null if the script could not evaluate.
 	 */
-	public Named calculate(Named in) {
+	public EntityInstance calculate(EntityInstance in) {
 
 		LOG.debug("Script '" + request.name + "': received dependent object '" + in.getName() + "' with timestamp '.");
 
-		Named returnValue = null;
+		EntityInstance returnValue = null;
 
 		try {
 			/** Bind the parameter to the script. */

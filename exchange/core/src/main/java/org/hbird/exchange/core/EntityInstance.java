@@ -16,9 +16,7 @@
  */
 package org.hbird.exchange.core;
 
-import java.io.Serializable;
-
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 
 /**
  * The super class of all types being exchanged. Contains a name and a description.
@@ -27,31 +25,30 @@ import org.hbird.exchange.interfaces.INamed;
  * 
  * @author Gert Villemos
  * */
-public abstract class Named implements INamed, Serializable, Comparable<Named> {
-
-    /** Default separator for the qualified name. */
-    public static final String DEFAULT_QUALIFIED_NAME_SEPARATOR = "/";
+public abstract class EntityInstance extends Entity implements IEntityInstance, Comparable<EntityInstance> {
 
     /** The unique UID of this class. */
     private static final long serialVersionUID = -5803219773253020746L;
-
-    /** The ID of the object. Default is '[issuedBy]/[name]'*/
-    protected String ID;
     
-    /** The name of the object. */
-    protected String name;
-
-    /** A description of the object. */
-    protected String description;
-
-	/** The reference (qualified Name) of the Part that has issued this object. */
-    protected String issuedBy;
+    protected static final String ID_SEPARATOR = "/";
     
     /**
      * The time at which this object represented a valid state of the system. Default value is the
      * time of creation.
      */
-    protected long timestamp = System.currentTimeMillis();
+    protected long timestamp = 0;
+
+    /**
+     * Constructor of a Named object. 
+     * 
+     * The ID of the instance will be set as '[issuedBy]/[name]' 
+     * 
+     * @param name The name of the object.
+     * @param description The description of the object.
+     */
+    public EntityInstance(String issuedBy, String name, String description) {
+    	this(issuedBy + ID_SEPARATOR + name, issuedBy, name, description);
+    }
 
     /**
      * Constructor of a Named object. The timestamp will be set to the creation time.
@@ -59,71 +56,10 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
      * @param name The name of the object.
      * @param description The description of the object.
      */
-    public Named(String issuedBy, String name, String description) {
-    	this(issuedBy + "/" + name, issuedBy, name, description);
+    public EntityInstance(String ID, String issuedBy, String name, String description) {
+    	super(ID, name, description, issuedBy);
+    	this.timestamp = System.currentTimeMillis();
     }
-
-    /**
-     * Constructor of a Named object. The timestamp will be set to the creation time.
-     * 
-     * @param name The name of the object.
-     * @param description The description of the object.
-     */
-    public Named(String ID, String issuedBy, String name, String description) {
-    	this.ID = ID;
-    	this.issuedBy = issuedBy;
-    	this.name = name;
-        this.description = description;
-    }
-
-    /**
-     * Getter of the object name.
-     * 
-     * @return The name of the object.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Getter of the description of the object.
-     * 
-     * @return The description of the object.
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getID() {
-    	return ID;
-    }
-
-    public String getInstanceID() {
-    	return ID + ":" + timestamp;
-    }
-
-    /**
-	 * @return the issuedBy
-	 */
-	public String getIssuedBy() {
-		return issuedBy;
-	}
-
-	/**
-	 * @param issuedBy the issuedBy to set
-	 */
-	public void setIssuedBy(String issuedBy) {
-		this.issuedBy = issuedBy;
-	}
 
 	/**
 	 * @return the timestamp
@@ -139,9 +75,14 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
 		this.timestamp = timestamp;
 	}
 
+	public String getInstanceID() {
+		return ID + ":" + timestamp;
+	}
+
 	public String prettyPrint() {
         return String.format("%s[name=%s]", this.getClass().getSimpleName(), getName());
     }
+
 
     /*
      * (non-Javadoc)
@@ -149,7 +90,7 @@ public abstract class Named implements INamed, Serializable, Comparable<Named> {
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo(Named o) {
+    public int compareTo(EntityInstance o) {
         if (this == o) {
             return 0;
         }

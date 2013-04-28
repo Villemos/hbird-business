@@ -28,7 +28,6 @@ public class GroundStationConfigurationBase extends ConfigurationBase {
 
     private static final long serialVersionUID = 8719054972735774123L;
 
-    @Value("${gs.id}")
     protected String groundstationId;
 
     public GroundStationConfigurationBase() {

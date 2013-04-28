@@ -45,7 +45,7 @@ import org.hbird.exchange.util.LocalHostNameResolver;
  * @author Admin
  * 
  */
-public class BusinessCard extends Named {
+public class BusinessCard extends EntityInstance {
 
     private static final long serialVersionUID = -4619331399009932893L;
 
@@ -64,8 +64,8 @@ public class BusinessCard extends Named {
     protected Map<String, Event> eventsIn = new HashMap<String, Event>();
     protected Map<String, Event> eventsOut = new HashMap<String, Event>();
 
-    protected Map<String, Named> dataIn = new HashMap<String, Named>();
-    protected Map<String, Named> dataOut = new HashMap<String, Named>();
+    protected Map<String, EntityInstance> dataIn = new HashMap<String, EntityInstance>();
+    protected Map<String, EntityInstance> dataOut = new HashMap<String, EntityInstance>();
 
     public BusinessCard(String issuedBy, long period) {
         // XXX - 03.04.2013, kimmell - name and issuedBy are set to same value here
@@ -185,28 +185,28 @@ public class BusinessCard extends Named {
     /**
      * @return the dataIn
      */
-    public Map<String, Named> getDataIn() {
+    public Map<String, EntityInstance> getDataIn() {
         return dataIn;
     }
 
     /**
      * @param dataIn the dataIn to set
      */
-    public void setDataIn(Map<String, Named> dataIn) {
+    public void setDataIn(Map<String, EntityInstance> dataIn) {
         this.dataIn = dataIn;
     }
 
     /**
      * @return the dataOut
      */
-    public Map<String, Named> getDataOut() {
+    public Map<String, EntityInstance> getDataOut() {
         return dataOut;
     }
 
     /**
      * @param dataOut the dataOut to set
      */
-    public void setDataOut(Map<String, Named> dataOut) {
+    public void setDataOut(Map<String, EntityInstance> dataOut) {
         this.dataOut = dataOut;
     }
 }

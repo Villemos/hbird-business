@@ -47,7 +47,6 @@ import org.hbird.exchange.interfaces.ICommandablePart;
  */
 public class CommandablePart extends Part implements ICommandablePart {
 
-    /**
     private static final long serialVersionUID = 4725490371074035117L;
 
     protected List<Command> commands = createCommandList(new ArrayList<Command>());

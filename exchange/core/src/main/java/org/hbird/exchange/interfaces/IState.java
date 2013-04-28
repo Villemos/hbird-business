@@ -32,17 +32,17 @@
  */
 package org.hbird.exchange.interfaces;
 
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 
 /**
  * @author Gert Villemos
  *
  */
-public interface IState extends INamed {
+public interface IState extends IEntityInstance {
 
     public String getIsStateOf();
 
-    public void setIsStateOf(Named isStateOf);
+    public void setIsStateOf(EntityInstance isStateOf);
 
     public Boolean getValue();
 

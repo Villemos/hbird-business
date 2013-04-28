@@ -60,7 +60,7 @@ public class BusinessCardTest {
     private Map<String, Event> events;
 
     @Mock
-    private Map<String, Named> data;
+    private Map<String, EntityInstance> data;
 
     @Mock
     private Command cmd1;
@@ -299,7 +299,7 @@ public class BusinessCardTest {
      */
     @Test
     public void testSetDataIn() {
-        Map<String, Named> map = card.getDataIn();
+        Map<String, EntityInstance> map = card.getDataIn();
         assertNotNull(map);
         assertTrue(map.isEmpty());
         card.setDataIn(data);
@@ -319,7 +319,7 @@ public class BusinessCardTest {
      */
     @Test
     public void testSetDataOut() {
-        Map<String, Named> map = card.getDataOut();
+        Map<String, EntityInstance> map = card.getDataOut();
         assertNotNull(map);
         assertTrue(map.isEmpty());
         card.setDataOut(data);

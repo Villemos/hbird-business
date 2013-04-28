@@ -42,7 +42,7 @@ import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPartManager;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.IStartablePart;
@@ -89,7 +89,7 @@ public class PartManager extends Publish implements IPartManager {
 	@Override
 	public IPart resolveParent(IPart child) {
 		IDataAccess api = ApiFactory.getDataAccessApi(issuedBy);
-		Named resolution = api.resolveNamed(child.getIsPartOf());
+		EntityInstance resolution = api.resolveNamed(child.getIsPartOf());
 		
 		return resolution == null ? null : (IPart) resolution;
 	}

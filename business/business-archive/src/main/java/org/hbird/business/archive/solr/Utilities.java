@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -35,14 +35,14 @@ public class Utilities {
 	
 	protected static XStream xstream = new XStream();
 	
-	public static synchronized List<Named> getResultSet(QueryResponse response, int rows) {
-		List<Named> results = new ArrayList<Named>();
+	public static synchronized List<EntityInstance> getResultSet(QueryResponse response, int rows) {
+		List<EntityInstance> results = new ArrayList<EntityInstance>();
 
 		for (SolrDocument document : response.getResults()) {
 			String inputString = (String) document.get("serialization");
 			inputString = inputString.replaceAll("<!\\[CDATA\\[", "").replaceAll("\\]\\]", "");
 			try {
-				results.add((Named) xstream.fromXML(inputString));
+				results.add((EntityInstance) xstream.fromXML(inputString));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}		

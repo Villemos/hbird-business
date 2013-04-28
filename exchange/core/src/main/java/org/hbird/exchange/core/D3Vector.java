@@ -21,7 +21,7 @@ package org.hbird.exchange.core;
 
 
 /** A 3D vector, i.e. three values describing a spartial property such as position, velocity or acceleration. */
-public class D3Vector extends Named {
+public class D3Vector extends EntityInstance {
 
 	/** The unique UUID. */
 	private static final long serialVersionUID = 1878961587496053034L;

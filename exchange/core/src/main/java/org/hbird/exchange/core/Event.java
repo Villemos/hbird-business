@@ -45,7 +45,7 @@ package org.hbird.exchange.core;
  * @author Gert Villemos
  * 
  */
-public class Event extends Named {
+public class Event extends EntityInstance {
 
     /**
 	 * 

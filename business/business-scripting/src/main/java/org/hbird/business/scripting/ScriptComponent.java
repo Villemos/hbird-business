@@ -37,7 +37,7 @@ import java.util.Map;
 
 import org.hbird.business.core.StartablePart;
 import org.hbird.business.scripting.bean.ScriptComponentDriver;
-import org.hbird.exchange.core.Named;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.scripting.ScriptExecutionRequest;
 
@@ -73,7 +73,7 @@ public class ScriptComponent extends StartablePart {
      * @param bindings A Map defining the bindings between monitoring parameters of the system and the parameters in the
      *            script.
      */
-    public ScriptComponent(String componentname, String scriptname, Named output, Map<String, String> bindings) {
+    public ScriptComponent(String componentname, String scriptname, EntityInstance output, Map<String, String> bindings) {
         super(componentname, DESC_STRING, ScriptComponentDriver.class.getName());
         request = new ScriptExecutionRequest(scriptname, "", "javascript", output, bindings);
     }
@@ -94,7 +94,7 @@ public class ScriptComponent extends StartablePart {
      * @param bindings A Map defining the bindings between monitoring parameters of the system and the parameters in the
      *            script.
      */
-    public ScriptComponent(String componentname, String scriptName, String script, Named output, Map<String, String> bindings) {
+    public ScriptComponent(String componentname, String scriptName, String script, EntityInstance output, Map<String, String> bindings) {
         super(componentname, DESC_STRING, ScriptComponentDriver.class.getName());
 
         request = new ScriptExecutionRequest(scriptName, script, "JavaScript", output, bindings);
