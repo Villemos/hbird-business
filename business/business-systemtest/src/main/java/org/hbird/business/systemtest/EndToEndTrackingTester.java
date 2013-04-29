@@ -37,11 +37,10 @@ import java.util.List;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
+import org.hbird.business.groundstation.hamlib.radio.HamlibRadioPart;
+import org.hbird.business.groundstation.hamlib.rotator.HamlibRotatorPart;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.groundstation.Antenna;
-
-import eu.estcube.gs.radio.HamlibRadioPart;
-import eu.estcube.gs.rotator.HamlibRotatorPart;
 
 /**
  * @author Admin
@@ -79,12 +78,10 @@ public class EndToEndTrackingTester extends SystemTest {
         /** Get the drivers (part of the system model) */
         HamlibRotatorPart rotator = (HamlibRotatorPart) parts.get("Rotator");
         rotator.setIsPartOf(antenna);
-        rotator.setFailOldRequests(false);
 
         HamlibRadioPart radio = (HamlibRadioPart) parts.get("Radio");
 
         radio.setIsPartOf(antenna);
-        radio.setFailOldRequests(false);
 
         publishApi.publish(new StartComponent(rotator.getName(), rotator));
         publishApi.publish(new StartComponent(radio.getName(), radio));

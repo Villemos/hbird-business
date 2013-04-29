@@ -23,7 +23,7 @@
 	</bean>	
 	
 	<!-- String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation, long port, String host -->
-	<bean id="rotator" class="eu.estcube.gs.rotator.HamlibRotatorPart">
+	<bean id="rotator" class="org.hbird.business.groundstation.hamlib.rotator.HamlibRotatorPart">
 		<constructor-arg index="0" value="Rotator"/>
 		<constructor-arg index="1" value="0"/>
 		<constructor-arg index="2" value="0"/>				
@@ -35,7 +35,7 @@
 	</bean>
 
 	<!-- long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain -->
-	<bean id="radio" class="eu.estcube.gs.radio.HamlibRadioPart">
+	<bean id="radio" class="org.hbird.business.groundstation.hamlib.radio.HamlibRadioPart">
 		<constructor-arg index="0" value="Radio"/>
 		<constructor-arg index="1" value="0"/>
 		<constructor-arg index="2" value="1000000"/>				

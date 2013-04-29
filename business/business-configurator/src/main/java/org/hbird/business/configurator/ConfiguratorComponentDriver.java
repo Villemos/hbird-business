@@ -23,9 +23,12 @@ import java.util.Map.Entry;
 
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
+import org.apache.camel.spring.spi.ApplicationContextRegistry;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.configurator.StandardEndpoints;
@@ -35,13 +38,14 @@ import org.hbird.exchange.constants.StandardMissionEvents;
 import org.hbird.exchange.core.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Driver of the configurator component. Creates a configurator bean and the routes needed to receive
  * configuration requests.
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
 
@@ -52,10 +56,18 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
     /** A list of components and the routes of the component. */
     protected Map<String, RoutesDefinition> components = new HashMap<String, RoutesDefinition>();
 
+    protected ApplicationContext applicationContext;
+
     /**
      * Default constructor.
      */
     public ConfiguratorComponentDriver() {
+        this(null);
+        LOG.warn("Started ConfigurationComponentDriver without applcation context. Bean registry will not be available in started components!");
+    }
+
+    public ConfiguratorComponentDriver(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 
     /**
@@ -75,15 +87,30 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
      */
     public void start(ConfiguratorComponent part) throws Exception {
         this.part = part;
-        CamelContext context = getContext();
-
+        CamelContext context = createContext(applicationContext);
+        LOG.info("Starting ConfiguratorComponent '{}'; CamelContext {}; ApplicationContext={}", new Object[] { part.getName(), context.getName(),
+                applicationContext.getDisplayName() });
         try {
             context.addRoutes(this);
             context.start();
+            LOG.info("ConfiguratorComponent '{}' started", part.getName());
         }
         catch (Exception e) {
             LOG.error("Failed to start ConfiguatorComponentDriver", e);
         }
+    }
+
+    CamelContext createContext(ApplicationContext applicationContext) {
+        CamelContext camelContext;
+        if (applicationContext == null) {
+            camelContext = getContext();
+            LOG.warn("No Spring ApplicationContext available; using default CamelContext {} without bean registry", camelContext.getName());
+        }
+        else {
+            camelContext = new DefaultCamelContext(new ApplicationContextRegistry(applicationContext));
+            LOG.info("Created new CamelContext {} using Spring ApplicationContext; bean registry should be availabel", camelContext.getName());
+        }
+        return camelContext;
     }
 
     /**
@@ -96,7 +123,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
     public synchronized void startComponent(@Body StartComponent command, CamelContext context) throws Exception {
         String qName = command.getPart().getName();
         String driverName = command.getPart().getDriverName();
-        LOG.info("Received start request for part '{}'. Will use driver '{}'.", qName, driverName);
+        LOG.info("Received start request for part '{}'. Will use driver '{}' and CamelContex {}.", new Object[] { qName, driverName, context.getName() });
 
         if (components.containsKey(qName)) {
             LOG.error("Received second request for start of the same component - '{}'.", qName);
@@ -110,6 +137,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
                 try {
                     SoftwareComponentDriver builder = (SoftwareComponentDriver) Class.forName(driverName).newInstance();
                     builder.setCommand(command);
+                    builder.setContext((ModelCamelContext) context);
                     context.addRoutes(builder);
 
                     /** Register component in list of components maintained by this configurator. */
@@ -156,11 +184,15 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
         return values;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.hbird.business.core.SoftwareComponentDriver#configure()
      */
     @Override
     public void configure() throws Exception {
+
+        LOG.info("Accepting Commands with destination '{}'", part.getName());
 
         /** Setup route to receive commands. */
         from(StandardEndpoints.COMMANDS + "?" + addDestinationSelector(part.getName()))
@@ -184,7 +216,9 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
      */
     @Override
@@ -207,4 +241,5 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
     protected Event createStopEvent(String qualifiedName) {
         return new Event(qualifiedName, StandardMissionEvents.COMPONENT_STOP);
     }
+
 }

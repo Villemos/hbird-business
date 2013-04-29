@@ -22,6 +22,9 @@ import org.hbird.business.core.StartablePart;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.Command;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * 
@@ -30,7 +33,7 @@ import org.hbird.exchange.core.Command;
  * @author Gert Villemos
  * 
  */
-public class ConfiguratorComponent extends StartablePart {
+public class ConfiguratorComponent extends StartablePart implements ApplicationContextAware {
 
     /**
 	 * 
@@ -41,11 +44,28 @@ public class ConfiguratorComponent extends StartablePart {
     public static final String CONFIGURATOR_DESC = "A component for starting other components.";
     public static final String DEFAULT_DRIVER = ConfiguratorComponentDriver.class.getName();
 
+    protected ApplicationContext applicationContext;
+
+    public ConfiguratorComponent(String name) {
+        super(name, CONFIGURATOR_DESC, DEFAULT_DRIVER);
+    }
+
     /**
      * Default constructor.
      */
     public ConfiguratorComponent() {
-        super(CONFIGURATOR_NAME, CONFIGURATOR_DESC, DEFAULT_DRIVER);
+        this(CONFIGURATOR_NAME);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.
+     * ApplicationContext)
+     */
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 
     /**
@@ -66,7 +86,7 @@ public class ConfiguratorComponent extends StartablePart {
      * @throws Exception
      */
     public void init() throws Exception {
-        ConfiguratorComponentDriver driver = new ConfiguratorComponentDriver();
+        ConfiguratorComponentDriver driver = new ConfiguratorComponentDriver(applicationContext);
         driver.start(this);
     }
 }

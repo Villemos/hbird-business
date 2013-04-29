@@ -3,9 +3,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
        http://camel.apache.org/schema/spring
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
@@ -17,25 +17,26 @@
 	 -->
 
 	<bean id="root" class="org.hbird.exchange.core.Part">
-		<constructor-arg index="0" value="ESTCUBE" />
-		<constructor-arg index="1" value="The root system. Complete, everything." />
+		<constructor-arg index="0" name="name" value="ESTCUBE" />
+		<constructor-arg index="1" name="description" value="The root system. Complete, everything." />
 	</bean>
 
 	<bean id="satellites" class="org.hbird.exchange.core.Part">
-		<constructor-arg index="0" value="Satellites" />
-		<constructor-arg index="1" value="The satellite(s) of the mission" />
-		<property name="isPartOf" ref="root" />
+		<constructor-arg index="0" name="name" value="Satellites" />
+		<constructor-arg index="1" name="description" value="The satellite(s) of the mission" />
+		<constructor-arg index="2" name="isPartOf" ref="root" />
 	</bean>
 
 	<bean id="groundstations" class="org.hbird.exchange.core.Part">
-		<constructor-arg index="0" value="Ground Stations" />
-		<constructor-arg index="1" value="The groundstation(s) of the mission" />
-		<property name="isPartOf" ref="root" />	</bean>
+		<constructor-arg index="0" name="name" value="Ground Stations" />
+		<constructor-arg index="1" name="description" value="The groundstation(s) of the mission" />
+        <constructor-arg index="2" name="isPartOf" ref="root" />
+    </bean>
 
 	<bean id="moc" class="org.hbird.exchange.core.Part">
-		<constructor-arg index="0" value="Mission Operation Center" />
-		<constructor-arg index="1" value="The groundsystem(s) of the mission" />
-		<property name="isPartOf" ref="root" />
+		<constructor-arg index="0" name="name" value="Mission Operation Center" />
+		<constructor-arg index="1" name="description" value="The groundsystem(s) of the mission" />
+        <constructor-arg index="2" name="isPartOf" ref="root" />
 	</bean>
 
 </beans>

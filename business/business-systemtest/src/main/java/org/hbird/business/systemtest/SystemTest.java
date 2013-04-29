@@ -34,6 +34,11 @@ import org.hbird.business.api.IPartManager;
 import org.hbird.business.api.IPublish;
 import org.hbird.business.archive.ArchiveComponent;
 import org.hbird.business.commanding.CommandingComponent;
+import org.hbird.business.groundstation.base.GroundStationPart;
+import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
+import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
+import org.hbird.business.groundstation.hamlib.radio.HamlibRadioPart;
+import org.hbird.business.groundstation.hamlib.rotator.HamlibRotatorPart;
 import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.business.navigation.OrbitPropagationComponent;
 import org.hbird.business.systemmonitoring.SystemMonitorComponent;
@@ -48,13 +53,6 @@ import org.hbird.exchange.groundstation.Antenna;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
-
-import eu.estcube.gs.base.GroundStationTrackingDevice;
-import eu.estcube.gs.base.IPointingDataOptimizer;
-import eu.estcube.gs.configuration.RadioDriverConfiguration;
-import eu.estcube.gs.configuration.RotatorDriverConfiguration;
-import eu.estcube.gs.radio.HamlibRadioPart;
-import eu.estcube.gs.rotator.HamlibRotatorPart;
 
 public abstract class SystemTest {
 
@@ -122,9 +120,6 @@ public abstract class SystemTest {
 
     protected static Map<String, Part> parts = new HashMap<String, Part>();
 
-    private static IPointingDataOptimizer<RotatorDriverConfiguration> rotatorOptimizer = null;
-    private static IPointingDataOptimizer<RadioDriverConfiguration> radioOptimizer = null;
-
     static {
         /** Build the system model, starting from 'the mission' */
         Part mission = new Part("ESTCUBE", "ESTCUBE", "The root system. Complete, everything.");
@@ -153,17 +148,15 @@ public abstract class SystemTest {
         RotatorDriverConfiguration rotatorConfig = new RotatorDriverConfiguration();
         rotatorConfig.setDevicePort(4533);
         rotatorConfig.setMinAzimuth(-90D);
-        GroundStationTrackingDevice<RotatorDriverConfiguration> rotator = new HamlibRotatorPart("Rotator_ES5EC", rotatorConfig, accessApi, predictionApi,
-                rotatorOptimizer);
+        GroundStationPart<RotatorDriverConfiguration> rotator = new HamlibRotatorPart("Rotator_ES5EC", rotatorConfig);
 
         RadioDriverConfiguration radioConfiguration = new RadioDriverConfiguration();
         radioConfiguration.setMinFrequency(136920000L);
         radioConfiguration.setMaxFrequency(136920000L);
         radioConfiguration.setGain(20L);
         radioConfiguration.setDevicePort(4532);
-        GroundStationTrackingDevice<RadioDriverConfiguration> radio = new HamlibRadioPart("Radio_ES5EC", radioConfiguration, accessApi, predictionApi,
-                radioOptimizer);
-        Antenna antenna = new Antenna("Antenna1_ES5EC", "The prime antenna");
+        GroundStationPart<RadioDriverConfiguration> radio = new HamlibRadioPart("Radio_ES5EC", radioConfiguration);
+        Antenna antenna = new Antenna("Antenna1_ES5EC", "The prime antenna", es5ec);
         registerPart(radio);
         rotator.setIsPartOf(antenna);
         radio.setIsPartOf(antenna);
@@ -252,26 +245,23 @@ public abstract class SystemTest {
         gsAalborg.setIsPartOf(eGs);
         gsAalborg.addAntenna(antenna);
 
-        GroundStationTrackingDevice<RotatorDriverConfiguration> darmstadtRotator = new HamlibRotatorPart("Rotator_DAR", rotatorConfig, accessApi,
-                predictionApi, rotatorOptimizer);
-        GroundStationTrackingDevice<RadioDriverConfiguration> darmstadtRadio = new HamlibRadioPart("Radio_DAR", radioConfiguration, accessApi, predictionApi,
-                radioOptimizer);
-        Antenna darmstadtAntenna = new Antenna("Antenna1_DAR", "The prime antenna of DARMSTADT");
-        registerPart(darmstadtRadio);
-        registerPart(darmstadtRotator);
-        darmstadtRotator.setIsPartOf(darmstadtAntenna);
-        darmstadtRadio.setIsPartOf(darmstadtAntenna);
-
         // D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(),
         // "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
         D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "Darmstadt", Math.toRadians(49.87D),
                 Math.toRadians(8.64D), 59.0D);
         gsDarmstadt = new GroundStation("Darmstadt", "Supportive antenna from Darmstadt university", geoLocationDarmstadt);
         registerPart(gsDarmstadt);
-        darmstadtAntenna.setIsPartOf(gsDarmstadt);
         gsDarmstadt.setIsPartOf(eGs);
-        gsDarmstadt.addAntenna(darmstadtAntenna);
         // 49,87 LON:8,64
+
+        GroundStationPart<RotatorDriverConfiguration> darmstadtRotator = new HamlibRotatorPart("Rotator_DAR", rotatorConfig);
+        GroundStationPart<RadioDriverConfiguration> darmstadtRadio = new HamlibRadioPart("Radio_DAR", radioConfiguration);
+        Antenna darmstadtAntenna = new Antenna("Antenna1_DAR", "The prime antenna of DARMSTADT", gsDarmstadt);
+        registerPart(darmstadtRadio);
+        registerPart(darmstadtRotator);
+        darmstadtRotator.setIsPartOf(darmstadtAntenna);
+        darmstadtRadio.setIsPartOf(darmstadtAntenna);
+        gsDarmstadt.addAntenna(darmstadtAntenna);
 
         D3Vector geoLocationNewYork = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(), "New York", Math.toRadians(40.66564D),
                 Math.toRadians(-74.036865D), 59.0D);

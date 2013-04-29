@@ -56,6 +56,8 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
     @Override
     public void configure() throws Exception {
 
+        LOG.info("Start configuration in {}", getClass().getSimpleName());
+
         /** Get the part specification from the start request. */
         if (command != null) {
             part = command.getPart();
@@ -70,12 +72,15 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
             doConfigure();
 
             /** Setup the BusinessCard */
-            ProcessorDefinition<?> route = from(addTimer("businesscard", heartbeat)).bean(part, "getBusinessCard");
+            ProcessorDefinition<?> route = from(addTimer("businesscard-", heartbeat)).bean(part, "getBusinessCard");
             addInjectionRoute(route);
         }
         else {
             LOG.error("No part has been defined for this driver. Cannot start nothing...");
         }
+
+        LOG.info("Configuration done in {}", getClass().getSimpleName());
+
     }
 
     protected void addCommandHandler() {
