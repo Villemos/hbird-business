@@ -80,7 +80,7 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
 	}
 
 	public String prettyPrint() {
-        return String.format("%s[name=%s]", this.getClass().getSimpleName(), getName());
+        return String.format("%s[ID=%s, name=%s]", this.getClass().getSimpleName(), getInstanceID(), getName());
     }
 
 

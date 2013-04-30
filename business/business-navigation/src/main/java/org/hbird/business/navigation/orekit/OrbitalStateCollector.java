@@ -50,6 +50,8 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 	protected String satellite = null;
 
 	protected List<EntityInstance> states = new ArrayList<EntityInstance>();
+
+	protected String orbitalStateEntityId = null;
 	
 	public OrbitalStateCollector(String satellite, TleOrbitalParameters parameters, boolean publish) {
 		this.publish = publish;
@@ -60,6 +62,7 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 		}
 		
 		this.parameters = parameters;		
+		this.orbitalStateEntityId = satellite + "/OrbitalState";
 	}
 	
 	/* (non-Javadoc)
@@ -68,6 +71,7 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 	public void handleStep(SpacecraftState currentState, boolean isLast) throws PropagationException {
 
 		OrbitalState state = NavigationUtilities.toOrbitalState(currentState, parameters);
+		state.setEntityID(orbitalStateEntityId);
 		states.add(state);
 
 		/** If stream mode, then deliver the data as a stream. */

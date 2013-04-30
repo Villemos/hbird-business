@@ -60,7 +60,7 @@ public class DataRequestTest {
         assertTrue(dataRequest.hasArgument(StandardArguments.ROWS));
         assertTrue(dataRequest.hasArgument(StandardArguments.INITIALIZATION));
         assertTrue(dataRequest.hasArgument(StandardArguments.DERIVED_FROM));
-        assertEquals(12, dataRequest.getArguments().size());
+        assertEquals(13, dataRequest.getArguments().size());
     }
 
     @Test

@@ -380,6 +380,21 @@ public abstract class SystemTest {
         }
     }
 
+    public void stopTaskComponent(String name) throws InterruptedException {
+
+        if (startedTaskComponents.contains(name) == true) {
+            LOG.info("Issuing command for stop of a task executor component '" + name + "'.");
+
+            /** Start the part. */
+            partmanagerApi.stop(name);
+
+            /** Give the component time to startup. */
+            Thread.sleep(1000);
+
+            startedTaskComponents.remove(name);
+        }
+    }
+
     protected static boolean commandingChainStarted = false;
 
     public void startCommandingChain() throws InterruptedException {
@@ -427,6 +442,20 @@ public abstract class SystemTest {
         }
     }
 
+    public void stopOrbitPredictor() throws InterruptedException {
+
+        if (orbitPredictorStarted == true) {
+            LOG.info("Issuing command for stop of a orbital predictor.");
+
+            /** Create command component. */
+            partmanagerApi.stop(navComponent.getName());
+
+            Thread.sleep(2000);
+
+            orbitPredictorStarted = false;
+        }
+    }
+
     protected static boolean websocketsStarted = false;
 
     public void startWebSockets() throws InterruptedException {
@@ -453,9 +482,7 @@ public abstract class SystemTest {
             Part parent = parts.get("Track Automation");
 
             /** Create command component. */
-            TrackingComponent antennaController = new TrackingComponent("ES5EC_ESTCUBE1", "ES5EC -> ESTCUBE",
-                    "The component automating the track of ESTCube-1 by ES5EC.",
-                    estcube1.getID(), es5ec.getID());
+            TrackingComponent antennaController = new TrackingComponent("ES5EC_ESTCUBE1", "The component automating the track of ESTCube-1 by ES5EC.", estcube1.getID(), es5ec.getID());
             antennaController.setIsPartOf(parent);
 
             partmanagerApi.start(antennaController);
@@ -463,6 +490,19 @@ public abstract class SystemTest {
             Thread.sleep(2000);
 
             antennaControllerStarter = true;
+        }
+    }
+
+    public void stopAntennaController() throws InterruptedException {
+
+        if (antennaControllerStarter == true) {
+            LOG.info("Issuing command for stop of an antenna controller.");
+
+            partmanagerApi.stop("ES5EC_ESTCUBE1");
+
+            Thread.sleep(2000);
+
+            antennaControllerStarter = false;
         }
     }
 
@@ -479,6 +519,20 @@ public abstract class SystemTest {
             Thread.sleep(2000);
 
             estcube1OrbitPropagatorStarted = true;
+        }
+    }
+
+    public void stopEstcubeOrbitPropagator() throws InterruptedException {
+
+        if (estcube1OrbitPropagatorStarted == true) {
+            LOG.info("Issuing command for stop of an ESTCube-1 orbit propagation.");
+
+            /** Create command component. */
+            partmanagerApi.stop(estcubePropagationComponent.getName());
+
+            Thread.sleep(2000);
+
+            estcube1OrbitPropagatorStarted = false;
         }
     }
 

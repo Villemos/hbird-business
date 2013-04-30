@@ -97,6 +97,6 @@ public class TleOrbitalParameters extends EntityInstance implements ISatelliteSp
     
     @Override
     public String prettyPrint() {
-        return String.format("%s[name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getName(), timestamp, satellite);
+        return String.format("%s[ID=%s, name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getInstanceID(), getName(), timestamp, satellite);
     }
 }

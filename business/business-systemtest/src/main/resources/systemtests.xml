@@ -65,36 +65,27 @@
 						
 	<bean id="transferScheduler" class="org.hbird.business.core.TransferScheduler"/>
 
-	<!-- Beans for the driver routes. -->
-    <bean id="decoderSplitOnNewline" class="org.hbird.business.groundstation.hamlib.protocol.DecoderSplitOnNewline" />
-    <bean id="decoderBytesToString" class="org.hbird.business.groundstation.hamlib.protocol.DecoderBytesToString" />
-    <bean id="decoderBufferer" class="org.hbird.business.groundstation.hamlib.protocol.DecoderBufferer" />
-    <bean id="decoderStringLogger" class="org.hbird.business.groundstation.hamlib.protocol.DecoderStringLogger" />
-    <bean id="decoderStringToTelemetryObject" class="org.hbird.business.groundstation.hamlib.protocol.DecoderStringToTelemetryObject" />
-    <bean id="encoderStringToBytes" class="org.hbird.business.groundstation.hamlib.protocol.HamlibCommandEncoder" />
-
-
 
 	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
 
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
-				<to uri="bean:catalogueapi" />
-                <to uri="bean:event" />
- 				<to uri="bean:businesscard" /> 
-				<to uri="bean:parameterarchive" />
-				<to uri="bean:statearchive" />
-	 			<to uri="bean:dataaccessapi" />
-				<to uri="bean:limitcheck" />
-				<to uri="bean:scripting" />
-		 		<to uri="bean:tasking" />
-	 			<to uri="bean:commanding" />
-	 	 		<to uri="bean:websockettester" />
-	 			<to uri="bean:navigation" />
-	 			<to uri="bean:automaticorbitpropagation" />
-	 			<to uri="bean:parsecontroller" />
-				<to uri="bean:inmemoryscheduler" />
+<!-- 				<to uri="bean:catalogueapi" /> -->
+<!--                 <to uri="bean:event" /> -->
+<!--  				<to uri="bean:businesscard" />  -->
+<!-- 				<to uri="bean:parameterarchive" /> -->
+<!-- 				<to uri="bean:statearchive" /> -->
+<!-- 	 			<to uri="bean:dataaccessapi" /> -->
+<!-- 				<to uri="bean:limitcheck" /> -->
+<!-- 				<to uri="bean:scripting" /> -->
+<!-- 		 		<to uri="bean:tasking" /> -->
+<!-- 	 			<to uri="bean:commanding" /> -->
+<!-- 	 	 		<to uri="bean:websockettester" /> -->
+<!-- 	 			<to uri="bean:navigation" /> -->
+<!-- 	 			<to uri="bean:automaticorbitpropagation" /> -->
+<!-- 	 			<to uri="bean:parsecontroller" /> -->
+<!-- 				<to uri="bean:inmemoryscheduler" /> -->
 	 			<to uri="bean:celestrack" />
 	 			<to uri="bean:finisher" />
 

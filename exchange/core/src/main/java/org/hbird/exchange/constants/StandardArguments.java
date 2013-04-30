@@ -70,8 +70,10 @@ public class StandardArguments {
 
     public static final String HEART_BEAT = "heartbeat";
 
-    public static final String ID = "ID";
+    public static final String ENTITY_ID = "entityID";
 
+    public static final String ENTITY_INSTANCE_ID = "entityInstanceID";
+    
     public static final String INCLUDE_STATES = "includeStates";
 
     public static final String INITIAL_STATE = "initialstate";

@@ -153,6 +153,7 @@ public class SolrProducer extends DefaultProducer {
 		String classPart = null;
 		String sourcePart = null;
 		String namePart = null;
+		String idPart = null;
 		String isStateOfPart = null;
 		String ofSatellitePart = null;
 		String locationPart = null;
@@ -188,6 +189,11 @@ public class SolrProducer extends DefaultProducer {
 					namePart += "OR isStateOf:\"" + name + "\"";
 				}
 			}
+		}
+
+		/** Set the type of data we are retrieving. */
+		if (body.hasArgumentValue(StandardArguments.ENTITY_ID)) {
+			sourcePart = "entityID:\"" + body.getArgumentValue(StandardArguments.ENTITY_ID, String.class) + "\"";
 		}
 
 		/** Set the isStateOf, if there. */
@@ -271,7 +277,13 @@ public class SolrProducer extends DefaultProducer {
 	protected String createTimestampElement(Long from, Long to) {
 		String timePart = null;
 		if (from != null && to != null) {
-			timePart = "timestamp:[" + from + " TO " + to + "]";
+			if (from == to) {
+				timePart = "timestamp:" + to;
+			}
+			else  {
+				timePart = "timestamp:[" + from + " TO " + to + "]";
+
+			}
 		}
 		else if (from == null && to != null) {
 			timePart = "timestamp:[* TO " + to + "]";
@@ -421,6 +433,7 @@ public class SolrProducer extends DefaultProducer {
 		document.setField(StandardArguments.HAS_URI, io.getInstanceID());
 		
 		document.addField(StandardArguments.NAME, io.getName());
+		document.addField(StandardArguments.ENTITY_ID, io.getID());
 		document.addField(StandardArguments.DESCRIPTION, io.getDescription());
 		document.addField(StandardArguments.ISSUED_BY, ((IEntityInstance) io).getIssuedBy());
 		document.addField(StandardArguments.TIMESTAMP, ((IEntityInstance) io).getTimestamp());

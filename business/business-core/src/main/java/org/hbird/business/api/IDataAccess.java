@@ -123,7 +123,7 @@ public interface IDataAccess extends IHbirdApi {
 
 	public List<EntityInstance> getData(DataRequest request);
 
-	public EntityInstance resolveNamed(String ID);
+	public EntityInstance resolve(String ID);
 
 	/**
 	 * Method to retrieve the last sample of a single parameter. The method will return

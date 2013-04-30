@@ -109,6 +109,12 @@ public class ParseControlTester extends SystemTest {
 
 		azzert(found, "Received 'Track' command");
 
+		
+		stopOrbitPredictor();
+		stopTaskComponent("TaskExecutor1");
+		stopEstcubeOrbitPropagator();
+		stopAntennaController();
+		
 		LOG.info("Finished");
 	}
 }

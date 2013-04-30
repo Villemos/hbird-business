@@ -91,6 +91,6 @@ public class Part extends EntityInstance implements IPart {
 
     @Override
     public String prettyPrint() {
-        return String.format("%s[name=%s, isPartOf=%s]", this.getClass().getSimpleName(), getName(), getIsPartOf());
+        return String.format("%s[ID=%s, name=%s, isPartOf=%s]", this.getClass().getSimpleName(), getInstanceID(), getName(), getIsPartOf());
     }
 }

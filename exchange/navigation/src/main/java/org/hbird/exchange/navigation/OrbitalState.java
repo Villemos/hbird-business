@@ -130,7 +130,7 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
 
     @Override
     public String prettyPrint() {
-        return String.format("%s[name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getName(), timestamp, satellite);
+        return String.format("%s[ID=%s, name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getInstanceID(), getName(), timestamp, satellite);
     }
 
 	/* (non-Javadoc)

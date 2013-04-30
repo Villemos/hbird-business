@@ -416,10 +416,12 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 	 * @see org.hbird.business.api.IDataAccess#resolveNamed(java.lang.String)
 	 */
 	@Override
-	public EntityInstance resolveNamed(String ID) {
+	public EntityInstance resolve(String ID) {
 		DataRequest request = new DataRequest(issuedBy);
-		request.setID(ID);
+		request.setID(ID);		
+		request.setIsInitialization(true);
 		List<EntityInstance> results = executeRequestRespond(request);
 		return getFirst(results);
 	}
+	
 }

@@ -101,7 +101,7 @@ public class Entity implements IEntity, Serializable {
     	return ID;
     }
 
-    public void setID(String ID) {
+    public void setEntityID(String ID) {
     	this.ID = ID;
     } 
     

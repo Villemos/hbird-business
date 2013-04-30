@@ -113,7 +113,7 @@ public class State extends EntityInstance implements IState {
 
     @Override
     public String prettyPrint() {
-        return String.format("State {name=%s, state=%s, isStateOf=%s, timestamp=%s}", name, state, isStateOf, timestamp);
+        return String.format("State {ID=%s, name=%s, state=%s, isStateOf=%s, timestamp=%s}", name, getInstanceID(), state, isStateOf, timestamp);
     }
 
     /*

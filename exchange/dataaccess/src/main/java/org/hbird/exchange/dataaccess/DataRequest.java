@@ -16,19 +16,7 @@
  */
 package org.hbird.exchange.dataaccess;
 
-import static org.hbird.exchange.dataaccess.Arguments.CLASS;
-import static org.hbird.exchange.dataaccess.Arguments.DERIVED_FROM;
-import static org.hbird.exchange.dataaccess.Arguments.FROM;
-import static org.hbird.exchange.dataaccess.Arguments.INCLUDE_STATES;
-import static org.hbird.exchange.dataaccess.Arguments.INITIALIZATION;
-import static org.hbird.exchange.dataaccess.Arguments.ISSUED_BY;
-import static org.hbird.exchange.dataaccess.Arguments.IS_STATE_OF;
-import static org.hbird.exchange.dataaccess.Arguments.NAMES;
-import static org.hbird.exchange.dataaccess.Arguments.ROWS;
-import static org.hbird.exchange.dataaccess.Arguments.SORT;
-import static org.hbird.exchange.dataaccess.Arguments.SORT_ORDER;
-import static org.hbird.exchange.dataaccess.Arguments.TO;
-import static org.hbird.exchange.dataaccess.Arguments.create;
+import static org.hbird.exchange.dataaccess.Arguments.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +53,7 @@ public class DataRequest extends Command {
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
         args.add(create(CLASS));
+        args.add(create(ENTITY_ID));
         args.add(create(FROM));
         args.add(create(TO));
         args.add(create(IS_STATE_OF));
@@ -194,11 +183,28 @@ public class DataRequest extends Command {
     }
 
     public void setID(String ID) {
+    	if (ID.contains(":")) {
+    		setEntityInstanceID(ID);
+    	}
+    	else {
+    		setEntityID(ID);
+    	}
+    }
+    
+    public void setEntityID(String entityID) {
+        setArgumentValue(StandardArguments.ENTITY_ID, entityID);
+    }
+
+    public void setEntityInstanceID(String entityInstanceID) {
         if (ID != null) {
             String[] elements = ID.split(":");
-            addName(elements[0]);
-            setClass(elements[1]);
-            setTimestamp(Long.parseLong(elements[2]));
+            setEntityID(elements[0]);
+            setAt(Long.parseLong(elements[1]));
         }
+    }
+    
+    public void setAt(Long at) {
+    	setFrom(at);
+    	setTo(at);
     }
 }

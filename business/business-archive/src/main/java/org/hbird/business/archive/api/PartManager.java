@@ -89,7 +89,7 @@ public class PartManager extends Publish implements IPartManager {
 	@Override
 	public IPart resolveParent(IPart child) {
 		IDataAccess api = ApiFactory.getDataAccessApi(issuedBy);
-		EntityInstance resolution = api.resolveNamed(child.getIsPartOf());
+		EntityInstance resolution = api.resolve(child.getIsPartOf());
 		
 		return resolution == null ? null : (IPart) resolution;
 	}

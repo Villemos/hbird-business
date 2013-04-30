@@ -78,6 +78,9 @@ public class Arguments {
     public static final CommandArgument NAMES = new CommandArgument(StandardArguments.NAMES, "List of names of named objects to be retrieved.", List.class,
             false);
 
+    public static final CommandArgument ENTITY_ID = new CommandArgument(StandardArguments.ENTITY_ID, "The entity ID of the entry.", String.class,
+            false);
+
     public static final CommandArgument PUBLISH = new CommandArgument(StandardArguments.PUBLISH,
             "Flag indicating that the resulting predictions should be published to the system instead of returned as a response.", Boolean.class, "",
             Boolean.class, false);
