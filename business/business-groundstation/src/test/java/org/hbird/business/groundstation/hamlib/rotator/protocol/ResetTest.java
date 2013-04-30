@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,7 +61,7 @@ public class ResetTest {
 
     @Test
     public void testHandleError() {
-        List<INamed> result = reset.handle(context, ERROR_RESPONSE);
+        List<IEntityInstance> result = reset.handle(context, ERROR_RESPONSE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verifyNoMoreInteractions();
@@ -69,7 +69,7 @@ public class ResetTest {
 
     @Test
     public void testHandle() {
-        List<INamed> result = reset.handle(context, OK_RESPONSE);
+        List<IEntityInstance> result = reset.handle(context, OK_RESPONSE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verifyNoMoreInteractions();

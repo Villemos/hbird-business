@@ -25,7 +25,7 @@ import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.device.response.ResponseHandler;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibProtocolHelper;
 import org.hbird.business.groundstation.hamlib.radio.RadioState;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 
 /**
  *
@@ -48,8 +48,8 @@ public class SetVfo implements ResponseHandler<RadioDriverConfiguration, String,
      *      java.lang.Object)
      */
     @Override
-    public List<INamed> handle(DriverContext<RadioDriverConfiguration, String, String> driverContext, String response) {
-        List<INamed> result = Collections.emptyList(); // no parameters to return; just update the device state
+    public List<IEntityInstance> handle(DriverContext<RadioDriverConfiguration, String, String> driverContext, String response) {
+        List<IEntityInstance> result = Collections.emptyList(); // no parameters to return; just update the device state
         if (HamlibProtocolHelper.isErrorResponse(response)) {
             // TODO - 26.04.2013, kimmell - handle error here
         }

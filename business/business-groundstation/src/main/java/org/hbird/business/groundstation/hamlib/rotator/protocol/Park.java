@@ -7,7 +7,7 @@ import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
 import org.hbird.business.groundstation.device.response.ResponseHandler;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibProtocolHelper;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 
 public class Park implements ResponseHandler<RotatorDriverConfiguration, String, String> {
 
@@ -27,7 +27,7 @@ public class Park implements ResponseHandler<RotatorDriverConfiguration, String,
      *      java.lang.Object)
      */
     @Override
-    public List<INamed> handle(DriverContext<RotatorDriverConfiguration, String, String> driverContext, String response) {
+    public List<IEntityInstance> handle(DriverContext<RotatorDriverConfiguration, String, String> driverContext, String response) {
         if (HamlibProtocolHelper.isErrorResponse(response)) {
             // TODO - 27.04.2013, kimmell - handle error response
             return Collections.emptyList();

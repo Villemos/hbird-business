@@ -46,7 +46,7 @@ public class NamedObjectPublisher {
 
 	protected List<EntityInstance> objects = null;
 
-    public NamedObjectPublisher(String name, List<Named> objects) {
+    public NamedObjectPublisher(String name, List<EntityInstance> objects) {
         this(name, DEFAULT_CONFIGURATOR_NAME, objects);
     }
 
@@ -55,7 +55,7 @@ public class NamedObjectPublisher {
      * 
      * @param filename Name of the file to be read at intervals.
      */
-	public NamedObjectPublisher(String name, List<EntityInstance> objects) {
+	public NamedObjectPublisher(String name, String destination, List<EntityInstance> objects) {
         this.name = name;
         this.destination = destination;
         this.objects = objects;

@@ -27,7 +27,7 @@ import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration
 import org.hbird.business.groundstation.device.response.ResponseHandler;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibProtocolHelper;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 
 /**
  *
@@ -54,8 +54,8 @@ public class GetPosition implements ResponseHandler<RotatorDriverConfiguration, 
      *      org.hbird.exchange.interfaces.IPart)
      */
     @Override
-    public List<INamed> handle(DriverContext<RotatorDriverConfiguration, String, String> driverContext, String response) {
-        List<INamed> result;
+    public List<IEntityInstance> handle(DriverContext<RotatorDriverConfiguration, String, String> driverContext, String response) {
+        List<IEntityInstance> result;
         if (HamlibProtocolHelper.isErrorResponse(response)) {
             // TODO - 25.04.2013, kimmell - handle error case here; RPRT -1 etc
             result = Collections.emptyList();
@@ -69,7 +69,7 @@ public class GetPosition implements ResponseHandler<RotatorDriverConfiguration, 
             Parameter elevation = new Parameter(issuedBy, PARAMETER_ELEVEATION, "Elevation of the antenna rotator", typeConverter.convertTo(Double.class,
                     responseParams.get(PARAMETER_ELEVEATION)), "Degree");
 
-            result = new ArrayList<INamed>(2);
+            result = new ArrayList<IEntityInstance>(2);
             result.add(azimuth);
             result.add(elevation);
         }

@@ -28,7 +28,7 @@ import org.apache.camel.TypeConverter;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 import org.hbird.exchange.interfaces.IPart;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,7 +81,7 @@ public class GetPositionTest {
 
     @Test
     public void testHandleError() throws Exception {
-        List<INamed> result = getPosition.handle(context, ERROR_RESPONSE);
+        List<IEntityInstance> result = getPosition.handle(context, ERROR_RESPONSE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verifyNoMoreInteractions();
@@ -89,7 +89,7 @@ public class GetPositionTest {
 
     @Test
     public void testHandle() throws Exception {
-        List<INamed> result = getPosition.handle(context, OK_RESPONSE);
+        List<IEntityInstance> result = getPosition.handle(context, OK_RESPONSE);
         assertNotNull(result);
         assertEquals(2, result.size());
 

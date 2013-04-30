@@ -27,7 +27,7 @@ import org.hbird.business.groundstation.device.response.ResponseHandler;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibProtocolHelper;
 import org.hbird.business.navigation.orekit.NavigationUtilities;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 
 /**
  *
@@ -49,8 +49,8 @@ public class SetFrequency implements ResponseHandler<RadioDriverConfiguration, S
      *      org.hbird.exchange.interfaces.IPart)
      */
     @Override
-    public List<INamed> handle(DriverContext<RadioDriverConfiguration, String, String> driverContext, String response) {
-        List<INamed> result;
+    public List<IEntityInstance> handle(DriverContext<RadioDriverConfiguration, String, String> driverContext, String response) {
+        List<IEntityInstance> result;
         if (HamlibProtocolHelper.isErrorResponse(response)) {
             // TODO - 25.04.2013, kimmell - handle error case here; RPRT -1 etc
             result = Collections.emptyList();
@@ -62,7 +62,7 @@ public class SetFrequency implements ResponseHandler<RadioDriverConfiguration, S
             String description = String.format("%s Target Frequency for the radio", linkName);
             Parameter param = new Parameter(driverContext.getPart().getID(), name, description, converter.convertTo(
                     Long.class, HamlibProtocolHelper.toMap(response).get(KEY)), "Hz");
-            result = new ArrayList<INamed>(1);
+            result = new ArrayList<IEntityInstance>(1);
             result.add(param);
         }
         return result;

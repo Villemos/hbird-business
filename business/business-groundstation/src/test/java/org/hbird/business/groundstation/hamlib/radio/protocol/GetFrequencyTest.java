@@ -30,7 +30,7 @@ import org.hbird.business.groundstation.base.GroundStationConstants;
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.radio.RadioState;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 import org.hbird.exchange.interfaces.IPart;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,7 +92,7 @@ public class GetFrequencyTest {
 
     @Test
     public void testHandleErrorResponse() throws Exception {
-        List<INamed> result = getFrequency.handle(context, ERROR_REOPNSE);
+        List<IEntityInstance> result = getFrequency.handle(context, ERROR_REOPNSE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verifyNoMoreInteractions();
@@ -101,7 +101,7 @@ public class GetFrequencyTest {
     @Test
     public void testHandleDownlinkFrequency() throws Exception {
         when(radioState.getCurrentVfo()).thenReturn("VFOA");
-        List<INamed> result = getFrequency.handle(context, OK_REOPNSE);
+        List<IEntityInstance> result = getFrequency.handle(context, OK_REOPNSE);
         assertNotNull(result);
         assertEquals(1, result.size());
         Parameter p = (Parameter) result.get(0);
@@ -124,7 +124,7 @@ public class GetFrequencyTest {
     @Test
     public void testHandleUplinkFrequency() throws Exception {
         when(radioState.getCurrentVfo()).thenReturn("VFOB");
-        List<INamed> result = getFrequency.handle(context, OK_REOPNSE);
+        List<IEntityInstance> result = getFrequency.handle(context, OK_REOPNSE);
         assertNotNull(result);
         assertEquals(1, result.size());
         Parameter p = (Parameter) result.get(0);
@@ -147,7 +147,7 @@ public class GetFrequencyTest {
     @Test
     public void testHandleUnknownFrequency() throws Exception {
         when(radioState.getCurrentVfo()).thenReturn("VFOC");
-        List<INamed> result = getFrequency.handle(context, OK_REOPNSE);
+        List<IEntityInstance> result = getFrequency.handle(context, OK_REOPNSE);
         assertNotNull(result);
         assertEquals(1, result.size());
         Parameter p = (Parameter) result.get(0);

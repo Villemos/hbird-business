@@ -29,7 +29,7 @@ import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.radio.RadioState;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 import org.hbird.exchange.interfaces.IPart;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,7 +94,7 @@ public class SetFrequencyTest {
     @Test
     public void testHandleDownlink() throws Exception {
         when(state.getCurrentVfo()).thenReturn("VFOA");
-        List<INamed> result = setFrequency.handle(context, OK_RESPONSE);
+        List<IEntityInstance> result = setFrequency.handle(context, OK_RESPONSE);
         assertNotNull(result);
         assertEquals(1, result.size());
         Parameter p = (Parameter) result.get(0);
@@ -118,7 +118,7 @@ public class SetFrequencyTest {
     @Test
     public void testHandleUplink() throws Exception {
         when(state.getCurrentVfo()).thenReturn("VFOB");
-        List<INamed> result = setFrequency.handle(context, OK_RESPONSE);
+        List<IEntityInstance> result = setFrequency.handle(context, OK_RESPONSE);
         assertNotNull(result);
         assertEquals(1, result.size());
         Parameter p = (Parameter) result.get(0);
@@ -142,7 +142,7 @@ public class SetFrequencyTest {
     @Test
     public void testHandleUnknown() throws Exception {
         when(state.getCurrentVfo()).thenReturn("VFOC");
-        List<INamed> result = setFrequency.handle(context, OK_RESPONSE);
+        List<IEntityInstance> result = setFrequency.handle(context, OK_RESPONSE);
         assertNotNull(result);
         assertEquals(1, result.size());
         Parameter p = (Parameter) result.get(0);
@@ -165,7 +165,7 @@ public class SetFrequencyTest {
 
     @Test
     public void testHandleErrorResponse() throws Exception {
-        List<INamed> result = setFrequency.handle(context, ERROR_RESPONSE);
+        List<IEntityInstance> result = setFrequency.handle(context, ERROR_RESPONSE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verifyNoMoreInteractions();

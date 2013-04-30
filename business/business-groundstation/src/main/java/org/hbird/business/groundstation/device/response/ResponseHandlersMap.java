@@ -24,7 +24,7 @@ import java.util.Map;
 import org.apache.camel.Handler;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +48,7 @@ public class ResponseHandlersMap<C extends GroundStationDriverConfiguration, K, 
     }
 
     @Handler
-    public List<INamed> handle(R response) {
+    public List<IEntityInstance> handle(R response) {
         if (response == null) {
             LOG.warn("Response is null");
             return Collections.emptyList();

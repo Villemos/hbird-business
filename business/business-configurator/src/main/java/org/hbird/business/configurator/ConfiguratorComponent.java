@@ -86,6 +86,7 @@ public class ConfiguratorComponent extends StartablePart implements ApplicationC
      * @throws Exception
      */
     public void init() throws Exception {
+    	
         ConfiguratorComponentDriver driver = new ConfiguratorComponentDriver(applicationContext);
         driver.start(this);
     }

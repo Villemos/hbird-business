@@ -27,7 +27,7 @@ import java.util.List;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.radio.RadioState;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,7 +71,7 @@ public class SetVfoTest {
 
     @Test
     public void testHandle() throws Exception {
-        List<INamed> result = setVfo.handle(context, OK_RESPONSE);
+        List<IEntityInstance> result = setVfo.handle(context, OK_RESPONSE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verify(context, times(1)).getDeviceState();
@@ -81,7 +81,7 @@ public class SetVfoTest {
 
     @Test
     public void testHandleError() throws Exception {
-        List<INamed> result = setVfo.handle(context, ERROR_RESPONSE);
+        List<IEntityInstance> result = setVfo.handle(context, ERROR_RESPONSE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verifyNoMoreInteractions();

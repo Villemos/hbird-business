@@ -88,8 +88,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
     public void start(ConfiguratorComponent part) throws Exception {
         this.part = part;
         CamelContext context = createContext(applicationContext);
-        LOG.info("Starting ConfiguratorComponent '{}'; CamelContext {}; ApplicationContext={}", new Object[] { part.getName(), context.getName(),
-                applicationContext.getDisplayName() });
+        LOG.info("Starting ConfiguratorComponent '{}'; CamelContext {};", new Object[] { part.getName(), context.getName()});
         try {
             context.addRoutes(this);
             context.start();

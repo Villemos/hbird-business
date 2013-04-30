@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,7 +64,7 @@ public class DefaultResponseHandlerTest {
 
     @Test
     public void testHandle() throws Exception {
-        List<INamed> result = handler.handle(context, MESSAGE);
+        List<IEntityInstance> result = handler.handle(context, MESSAGE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verifyNoMoreInteractions();

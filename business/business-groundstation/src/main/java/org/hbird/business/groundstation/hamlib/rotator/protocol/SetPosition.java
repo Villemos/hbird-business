@@ -15,7 +15,7 @@ import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration
 import org.hbird.business.groundstation.device.response.ResponseHandler;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibProtocolHelper;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 
 public class SetPosition implements ResponseHandler<RotatorDriverConfiguration, String, String> {
 
@@ -44,13 +44,13 @@ public class SetPosition implements ResponseHandler<RotatorDriverConfiguration, 
      *      java.lang.Object)
      */
     @Override
-    public List<INamed> handle(DriverContext<RotatorDriverConfiguration, String, String> driverContext, String response) {
+    public List<IEntityInstance> handle(DriverContext<RotatorDriverConfiguration, String, String> driverContext, String response) {
         if (HamlibProtocolHelper.isErrorResponse(response)) {
             // TODO - 27.04.2013, kimmell - handle error response
             return Collections.emptyList();
         }
         else {
-            List<INamed> result = new ArrayList<INamed>(2);
+            List<IEntityInstance> result = new ArrayList<IEntityInstance>(2);
             TypeConverter converter = driverContext.getTypeConverter();
             String issuedBy = driverContext.getPart().getID();
             Map<String, String> map = HamlibProtocolHelper.toMap(response);

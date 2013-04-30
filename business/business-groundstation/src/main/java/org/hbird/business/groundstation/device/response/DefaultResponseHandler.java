@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +45,7 @@ public class DefaultResponseHandler<C extends GroundStationDriverConfiguration, 
      *      org.hbird.exchange.interfaces.IPart)
      */
     @Override
-    public List<INamed> handle(DriverContext<C, K, R> driverContext, R response) {
+    public List<IEntityInstance> handle(DriverContext<C, K, R> driverContext, R response) {
         LOG.warn("No handler for response {}", String.valueOf(response));
         return Collections.emptyList();
     }

@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
-import org.hbird.exchange.interfaces.INamed;
+import org.hbird.exchange.interfaces.IEntityInstance;
 import org.hbird.exchange.interfaces.IPart;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +58,7 @@ public class ResponseHandlersMapTest {
     private ResponseHandler<GroundStationDriverConfiguration, String, String> handler;
 
     @Mock
-    private List<INamed> params;
+    private List<IEntityInstance> params;
 
     private ResponseHandlersMap<GroundStationDriverConfiguration, String, String> responseHandlers;
 
@@ -88,7 +88,7 @@ public class ResponseHandlersMapTest {
 
     @Test
     public void testHandleNull() throws Exception {
-        List<INamed> result = responseHandlers.handle(null);
+        List<IEntityInstance> result = responseHandlers.handle(null);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verifyNoMoreInteractions();
@@ -97,7 +97,7 @@ public class ResponseHandlersMapTest {
     @Test
     public void testHandleDriverContextIsNull() throws Exception {
         responseHandlers = new ResponseHandlersMap<GroundStationDriverConfiguration, String, String>(null);
-        List<INamed> result = responseHandlers.handle(RESPONSE);
+        List<IEntityInstance> result = responseHandlers.handle(RESPONSE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verifyNoMoreInteractions();
@@ -107,7 +107,7 @@ public class ResponseHandlersMapTest {
     public void testHandleKeyExtractorIsNull() {
         when(driverContext.getKeyExtractor()).thenReturn(null);
         responseHandlers = new ResponseHandlersMap<GroundStationDriverConfiguration, String, String>(driverContext);
-        List<INamed> result = responseHandlers.handle(RESPONSE);
+        List<IEntityInstance> result = responseHandlers.handle(RESPONSE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verify(driverContext, times(1)).getKeyExtractor();
@@ -117,7 +117,7 @@ public class ResponseHandlersMapTest {
     @Test
     public void testHandleKeyExtractorReturnsNull() {
         when(keyExtractor.getKey(RESPONSE)).thenReturn(null);
-        List<INamed> result = responseHandlers.handle(RESPONSE);
+        List<IEntityInstance> result = responseHandlers.handle(RESPONSE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verify(driverContext, times(1)).getKeyExtractor();
@@ -129,7 +129,7 @@ public class ResponseHandlersMapTest {
     public void testHandleKeyExtractorReturnsUnknownKey() {
         when(keyExtractor.getKey(RESPONSE)).thenReturn("!" + KEY);
         responseHandlers.addHandler(handler);
-        List<INamed> result = responseHandlers.handle(RESPONSE);
+        List<IEntityInstance> result = responseHandlers.handle(RESPONSE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verify(handler, times(1)).getKey();
@@ -143,7 +143,7 @@ public class ResponseHandlersMapTest {
         when(keyExtractor.getKey(RESPONSE)).thenReturn(KEY);
         when(handler.handle(driverContext, RESPONSE)).thenThrow(exception);
         responseHandlers.addHandler(handler);
-        List<INamed> result = responseHandlers.handle(RESPONSE);
+        List<IEntityInstance> result = responseHandlers.handle(RESPONSE);
         assertNotNull(result);
         assertEquals(0, result.size());
         inOrder.verify(handler, times(1)).getKey();
@@ -158,7 +158,7 @@ public class ResponseHandlersMapTest {
         when(keyExtractor.getKey(RESPONSE)).thenReturn(KEY);
         when(handler.handle(driverContext, RESPONSE)).thenReturn(params);
         responseHandlers.addHandler(handler);
-        List<INamed> result = responseHandlers.handle(RESPONSE);
+        List<IEntityInstance> result = responseHandlers.handle(RESPONSE);
         assertEquals(params, result);
         inOrder.verify(handler, times(1)).getKey();
         inOrder.verify(driverContext, times(1)).getKeyExtractor();
