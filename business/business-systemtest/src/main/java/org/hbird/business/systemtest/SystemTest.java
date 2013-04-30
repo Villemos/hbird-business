@@ -17,6 +17,7 @@
 package org.hbird.business.systemtest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,7 @@ import org.hbird.business.navigation.OrbitPropagationComponent;
 import org.hbird.business.systemmonitoring.SystemMonitorComponent;
 import org.hbird.business.taskexecutor.TaskExecutionComponent;
 import org.hbird.business.tracking.TrackingComponent;
+import org.hbird.business.tracking.configuration.TrackingDriverConfiguration;
 import org.hbird.business.websockets.WebsocketInterfaceComponent;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.Part;
@@ -119,7 +121,7 @@ public abstract class SystemTest {
     protected static Part taskComponent = null;
     protected static Part scripts = null;
     protected static Part limits = null;
-    
+
     protected static Part mof = null;
 
     protected static Map<String, Part> parts = new HashMap<String, Part>();
@@ -250,7 +252,8 @@ public abstract class SystemTest {
         List<String> locations = new ArrayList<String>();
         locations.add(es5ec.getName());
         locations.add(gsDarmstadt.getName());
-        estcubePropagationComponent = new OrbitPropagationComponent(orbitPropagationAutomation, "ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000, estcube1, locations);
+        estcubePropagationComponent = new OrbitPropagationComponent(orbitPropagationAutomation, "ESTcubeNavigation", "", 60 * 1000, 12 * 60 * 60 * 1000,
+                estcube1, locations);
         registerPart(estcubePropagationComponent);
 
     }
@@ -457,8 +460,14 @@ public abstract class SystemTest {
 
             Part parent = parts.get("Track Automation");
 
+            TrackingDriverConfiguration config = new TrackingDriverConfiguration();
+            config.setGroundstationId(es5ec.getID());
+            config.setSatelliteIds(Arrays.asList(estcube1.getID()));
+
             /** Create command component. */
-            TrackingComponent antennaController = new TrackingComponent(taskComponent, "ES5EC_ESTCUBE1", "The component automating the track of ESTCube-1 by ES5EC.", estcube1.getID(), es5ec.getID());
+
+            TrackingComponent antennaController = new TrackingComponent(taskComponent, "ES5EC_ESTCUBE1",
+                    "The component automating the track of ESTCube-1 by ES5EC.", config);
             antennaController.setIsPartOf(parent);
 
             partmanagerApi.start(antennaController);
@@ -519,10 +528,14 @@ public abstract class SystemTest {
 
             Part parent = parts.get("Track Automation");
 
+            TrackingDriverConfiguration config = new TrackingDriverConfiguration();
+            config.setGroundstationId(gsDarmstadt.getID());
+            config.setSatelliteIds(Arrays.asList(strand.getID()));
+
             /** Create command component. */
-            TrackingComponent antennaController = new TrackingComponent(taskComponent, "DARMSTADT_STRAND", "Darmstadt -> STRAND",
-                    "The component automating the track of Strand-1 by Darmstadt.",
-                    strand.getName(), gsDarmstadt.getName());
+            TrackingComponent antennaController = new TrackingComponent(taskComponent, "DARMSTADT_STRAND",
+                    "The component automating the track of Strand-1 by Darmstadt.", config);
+
             antennaController.setIsPartOf(parent);
 
             partmanagerApi.start(antennaController);

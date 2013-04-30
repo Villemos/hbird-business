@@ -15,6 +15,20 @@
         <constructor-arg index="0" name="name" value="ES5EC configurator"/>
     </bean>
     
+    <bean id="trackingConfig" class="org.hbird.business.tracking.configuration.TrackingDriverConfiguration">
+        <property name="groundstationId" value="ES5EC"/>
+        <property name="satelliteIds">
+            <list>
+                <value>ESTCube-1</value>
+            </list>
+        </property>
+    </bean>
+        
+    <bean id="tracking" class="org.hbird.business.tracking.TrackingComponent">
+        <constructor-arg index="0" name="name" value="Tracking_ES5EC_ESTCUBE" />
+        <constructor-arg index="1" name="description" value="The component automating the track of ESTCube-1 by ES5EC." />
+        <constructor-arg index="2" name="configuration" ref="trackingConfig"></constructor-arg>
+    </bean>
 			
 	<!-- Publish the parts of the ground station -->
 	<bean id="starter" class="org.hbird.business.metadatapublisher.NamedObjectPublisher" init-method="start">
@@ -26,6 +40,7 @@
 				<ref bean="es5ec" />
 				<ref bean="rotator" />
 				<ref bean="radio" />
+                <ref bean="tracking"/>
 			</list>
 		</constructor-arg>
 	</bean>

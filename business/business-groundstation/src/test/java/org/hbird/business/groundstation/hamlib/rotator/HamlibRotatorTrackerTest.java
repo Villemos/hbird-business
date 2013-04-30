@@ -32,7 +32,6 @@ import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Park;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Reset;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.SetPosition;
-import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandBase;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
@@ -100,10 +99,7 @@ public class HamlibRotatorTrackerTest {
     private PointingData pd3;
 
     @Mock
-    private LocationContactEvent start;
-
-    @Mock
-    private LocationContactEvent end;
+    private LocationContactEvent contact;
 
     private List<PointingData> pointingData;
 
@@ -118,7 +114,7 @@ public class HamlibRotatorTrackerTest {
     public void setUp() throws Exception {
         tracker = new HamlibRotatorTracker(configuration, catalogue, orbitPrediction, optimizer);
         pointingData = Arrays.asList(pd1, pd2, pd3);
-        inOrder = inOrder(configuration, catalogue, optimizer, orbitPrediction, stop, track, gs, sat, pd1, pd2, pd3, start, end);
+        inOrder = inOrder(configuration, catalogue, optimizer, orbitPrediction, stop, track, gs, sat, pd1, pd2, pd3, contact);
         when(pd1.getAzimuth()).thenReturn(AZIMUTH_1);
         when(pd1.getElevation()).thenReturn(ELEVATION_1);
         when(pd1.getTimestamp()).thenReturn(NOW + 1);
@@ -129,10 +125,9 @@ public class HamlibRotatorTrackerTest {
         when(pd3.getElevation()).thenReturn(ELEVATION_3);
         when(pd3.getTimestamp()).thenReturn(NOW + 3);
         when(track.getID()).thenReturn(ID);
-        when(track.getArgumentValue(StandardArguments.START, LocationContactEvent.class)).thenReturn(start);
-        when(track.getArgumentValue(StandardArguments.END, LocationContactEvent.class)).thenReturn(end);
-        when(start.getTimestamp()).thenReturn(NOW);
-        when(end.getTimestamp()).thenReturn(NOW + 10);
+        when(track.getLocationContactEvent()).thenReturn(contact);
+        when(contact.getStartTime()).thenReturn(NOW);
+        when(contact.getEndTime()).thenReturn(NOW + 10);
         when(configuration.getPreContactDelta()).thenReturn(PRE_DELTA);
         when(configuration.getPostContactDelta()).thenReturn(POST_DELTA);
         when(configuration.getDelayInCommandGroup()).thenReturn(DELAY);
@@ -203,8 +198,8 @@ public class HamlibRotatorTrackerTest {
         assertEquals(SetPosition.createCommand(AZIMUTH_1, ELEVATION_1), cmd.getCommandToExecute());
 
         inOrder.verify(track, times(1)).getID();
-        inOrder.verify(track, times(1)).getArgumentValue(StandardArguments.START, LocationContactEvent.class);
-        inOrder.verify(start, times(1)).getTimestamp();
+        inOrder.verify(track, times(1)).getLocationContactEvent();
+        inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verify(configuration, times(1)).getPreContactDelta();
         inOrder.verify(pd1, times(1)).getAzimuth();
         inOrder.verify(pd1, times(1)).getElevation();
@@ -228,8 +223,8 @@ public class HamlibRotatorTrackerTest {
         assertEquals(HamlibNativeCommand.STAGE_POST_TRACKING, cmd.getStage());
         assertEquals(Park.COMMAND, cmd.getCommandToExecute());
 
-        inOrder.verify(track, times(1)).getArgumentValue(StandardArguments.END, LocationContactEvent.class);
-        inOrder.verify(end, times(1)).getTimestamp();
+        inOrder.verify(track, times(1)).getLocationContactEvent();
+        inOrder.verify(contact, times(1)).getEndTime();
         inOrder.verify(configuration, times(1)).getPostContactDelta();
         inOrder.verify(track, times(1)).getID();
         inOrder.verifyNoMoreInteractions();

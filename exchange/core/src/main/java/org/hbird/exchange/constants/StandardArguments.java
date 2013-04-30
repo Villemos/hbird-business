@@ -34,6 +34,12 @@ public class StandardArguments {
 
     public static final String COMPONENT_NAME = "componentname";
 
+    public static final String CONTACT = "contact";
+
+    public static final String CONTACT_ID = "contactId";
+
+    public static final String CONTACT_START = "contactStartTime";
+
     public static final String CONTACT_DATA_STEP_SIZE = "contactDataStepSize";
 
     public static final String COUNT = "count";
@@ -93,6 +99,8 @@ public class StandardArguments {
     public static final String NAME = "name";
 
     public static final String NAMES = "names";
+
+    public static final String ORBIT_NUMBER = "orbitNumber";
 
     public static final String PATTERN = "pattern";
 

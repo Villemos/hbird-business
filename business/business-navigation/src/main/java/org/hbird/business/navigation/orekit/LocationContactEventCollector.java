@@ -17,7 +17,6 @@
 package org.hbird.business.navigation.orekit;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.hbird.business.api.ApiFactory;
@@ -31,6 +30,7 @@ import org.orekit.frames.TopocentricFrame;
 import org.orekit.propagation.SpacecraftState;
 import org.orekit.propagation.events.ElevationDetector;
 import org.orekit.time.TimeScalesFactory;
+import org.orekit.tle.TLE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,26 +45,25 @@ public class LocationContactEventCollector extends ElevationDetector {
     private static final long serialVersionUID = 801203905525890103L;
 
     private static final Logger LOG = LoggerFactory.getLogger(LocationContactEventCollector.class);
-    
-    /** The ground station / location that comes into contact. */
-    protected String groundStation = null;
 
-    /** The name of the antenna. */
-    protected String antenna = null;
-    
+    /** The ground station / location that comes into contact. */
+    protected final String groundStationId;
+
     /** The satellite. */
-    protected String satellite = null;
+    protected final String satelliteId;
 
     /** FIXME I don't know what this does but OREKIT needs it... */
-    public static final double maxcheck = 1.;
+    public static final double maxcheck = 10.0D; // calculation step in seconds?
 
-    protected IPublish api = null;
+    protected IPublish api;
 
-    protected boolean publish = false;
+    protected boolean publish;
 
-    protected TleOrbitalParameters parameters = null;
+    protected TleOrbitalParameters tleParameters;
 
     protected List<EntityInstance> events = new ArrayList<EntityInstance>();
+
+    protected SpacecraftState lastStartState;
 
     /**
      * COnstructor of an injector of location contact events.
@@ -75,46 +74,67 @@ public class LocationContactEventCollector extends ElevationDetector {
      * @param location The location to which contact has been established / lost if this event occurs.
      * @param contactDataStepSize
      */
-    public LocationContactEventCollector(double elevation, TopocentricFrame topo, String satellite, String location, String antenna, TleOrbitalParameters parameters,
+    public LocationContactEventCollector(double elevation, TopocentricFrame topo, String satelliteId, String groundStationId, TleOrbitalParameters parameters,
             boolean publish) {
         super(maxcheck, elevation, topo);
-
         this.publish = publish;
-        if (publish) {
-        	// TODO set proper name
-            api = ApiFactory.getPublishApi("");
-        }
-
-        this.satellite = satellite;
-        this.groundStation = location;
-        this.antenna = antenna;
-        this.parameters = parameters;
+        this.satelliteId = satelliteId;
+        this.groundStationId = groundStationId;
+        this.tleParameters = parameters;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
      * @see org.orekit.propagation.events.ElevationDetector#eventOccurred(org.orekit.propagation.SpacecraftState,
-     * boolean)
+     *      boolean)
      */
     @Override
     public int eventOccurred(final SpacecraftState state, final boolean increasing) throws OrekitException {
 
-    	long atTime = state.getDate().toDate(TimeScalesFactory.getUTC()).getTime();
-        LocationContactEvent event = new LocationContactEvent(NavigationComponent.ORBIT_PROPAGATOR_NAME, atTime, groundStation, antenna, satellite, increasing, NavigationUtilities.toOrbitalState(state, parameters)); 
-        events.add(event);
-
-        /** If stream mode, then deliver the data as a stream. */
-        if (publish) {
-        	LOG.info("Injecting " + (increasing == true? "START" : "END") + " contact event at '" + atTime + " (" + (new Date(atTime)).toLocaleString() + ")' for satellite '" + satellite + "' and groundstation '" + groundStation + "'");
-            api.publish(event);
+        if (increasing) {
+            // we have new start state; tore it
+            lastStartState = state;
+        }
+        else if (!increasing && lastStartState != null) {
+            // we have both - start & end; create new LocationContactEvent
+            LocationContactEvent event = createEvent(groundStationId, satelliteId, tleParameters, lastStartState, state);
+            events.add(event);
+            if (publish) {
+                publish(event);
+            }
+            lastStartState = null;
         }
 
-        /** Continue listening for events. */
+        // Continue listening for events.
         return CONTINUE;
     }
 
     public List<EntityInstance> getDataSet() {
         return events;
     }
+
+    LocationContactEvent createEvent(String groundStationId, String satelliteId, TleOrbitalParameters tleParameters, SpacecraftState startState,
+            SpacecraftState endState) throws OrekitException {
+        long now = System.currentTimeMillis();
+        long startTime = startState.getDate().toDate(TimeScalesFactory.getUTC()).getTime();
+        long endTime = endState.getDate().toDate(TimeScalesFactory.getUTC()).getTime();
+        TLE tle = new TLE(tleParameters.getTleLine1(), tleParameters.getTleLine2());
+        long orbitNumber = NavigationUtilities.calculateOrbitNumber(tle, startState.getDate());
+        LocationContactEvent event = new LocationContactEvent(NavigationComponent.ORBIT_PROPAGATOR_NAME, now, groundStationId, satelliteId,
+                tleParameters.getID(), startTime, endTime, orbitNumber);
+        event.setSatelliteStateAtStart(NavigationUtilities.toOrbitalState(startState, tleParameters));
+        return event;
+    }
+
+    void publish(LocationContactEvent event) {
+        LOG.info("Injecting new LocationContactEvent {}", event.prettyPrint());
+        getPublisher().publish(event);
+    }
+
+    IPublish getPublisher() {
+        if (api == null) {
+            api = ApiFactory.getPublishApi(NavigationComponent.ORBIT_PROPAGATOR_NAME);
+        }
+        return api;
+    }
+
 }

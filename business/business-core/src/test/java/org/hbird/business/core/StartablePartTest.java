@@ -182,11 +182,12 @@ public class StartablePartTest {
      */
     @Test
     public void testCreateBusinessCard() {
-        BusinessCard card = part.createBusinessCard(NAME, PERIOD, commands);
+        BusinessCard card = part.createBusinessCard(NAME, PERIOD, commands, DESCRIPTION);
         assertNotNull(card);
         assertEquals(NAME, card.getName());
         assertEquals(NAME, card.getIssuedBy());
         assertEquals(PERIOD, card.getPeriod());
+        assertEquals(DESCRIPTION, card.getDescription());
         Map<String, Command> map = card.getCommandsIn();
         assertNotNull(map);
         assertEquals(2, map.size());

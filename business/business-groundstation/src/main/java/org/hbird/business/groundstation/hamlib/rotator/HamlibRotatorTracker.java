@@ -28,13 +28,11 @@ import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Park;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Reset;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.SetPosition;
-import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandBase;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
 import org.hbird.exchange.groundstation.Stop;
 import org.hbird.exchange.groundstation.Track;
-import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Satellite;
 
@@ -75,7 +73,7 @@ public class HamlibRotatorTracker extends TrackingSupport<RotatorDriverConfigura
             RotatorDriverConfiguration configuration, Track trackCommand) {
 
         String derivedFrom = trackCommand.getID();
-        long firstCommandTime = trackCommand.getArgumentValue(StandardArguments.START, LocationContactEvent.class).getTimestamp()
+        long firstCommandTime = trackCommand.getLocationContactEvent().getStartTime()
                 - configuration.getPreContactDelta();
 
         PointingData pd = pointingData.get(0);
@@ -91,8 +89,8 @@ public class HamlibRotatorTracker extends TrackingSupport<RotatorDriverConfigura
     protected List<CommandBase> createPostContactCommands(GroundStation gs, Satellite sat, List<PointingData> pointingData,
             RotatorDriverConfiguration configuration, Track trackCommand) {
 
-        LocationContactEvent end = trackCommand.getArgumentValue(StandardArguments.END, LocationContactEvent.class);
-        CommandBase cmd = new HamlibNativeCommand(Park.COMMAND, end.getTimestamp() + configuration.getPostContactDelta(), trackCommand.getID(),
+        long end = trackCommand.getLocationContactEvent().getEndTime();
+        CommandBase cmd = new HamlibNativeCommand(Park.COMMAND, end + configuration.getPostContactDelta(), trackCommand.getID(),
                 HamlibNativeCommand.STAGE_POST_TRACKING);
         return Arrays.asList(cmd);
     }

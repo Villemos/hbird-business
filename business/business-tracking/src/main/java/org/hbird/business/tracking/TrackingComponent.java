@@ -34,60 +34,55 @@ package org.hbird.business.tracking;
 
 import org.hbird.business.core.StartablePart;
 import org.hbird.business.tracking.bean.TrackingComponentDriver;
+import org.hbird.business.tracking.configuration.TrackingDriverConfiguration;
 import org.hbird.exchange.interfaces.IPart;
-
 
 /**
  * @author Gert Villemos
- *
+ * 
  */
 public class TrackingComponent extends StartablePart {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8231598458372644L;
+    private static final long serialVersionUID = -4634379319818576131L;
 
-	public static final String DEFAULT_NAME = "TrackingAutomation";
-	public static final String DEFAULT_DESCRIPTION = "Component for automating tracking of a satellite from a specific ground station.";
-	public static final String DEFAULT_DRIVER = TrackingComponentDriver.class.getName();
-	
-	/** The ID of the satellite. */
-	protected String satellite;
-	
-	/** The ID of the antenna. */
-	protected String antenna;
-	
-	/**
-	 * @param name
-	 * @param description
-	 * @param commands
-	 */
-	public TrackingComponent(IPart isPartOf, String name, String description, String satellite, String antenna, String driver) {
-		super(isPartOf, name, description, driver);
-		this.satellite = satellite;
-		this.antenna = antenna;
-	}
+    public static final String DEFAULT_NAME = "TrackingAutomation";
+    public static final String DEFAULT_DESCRIPTION = "Component for automating tracking of a satellite from a specific ground station.";
+    public static final String DEFAULT_DRIVER = TrackingComponentDriver.class.getName();
 
-	public TrackingComponent(IPart isPartOf, String name, String description, String satellite, String antenna) {
-		super(isPartOf, name, description, TrackingComponentDriver.class.getName());
-		this.satellite = satellite;
-		this.antenna = antenna;
-	}
+    private final TrackingDriverConfiguration configuration;
 
-	public TrackingComponent(IPart isPartOf, String name, String description, IPart satellite, IPart antenna) {
-		super(isPartOf, name, description, TrackingComponentDriver.class.getName());
+    /**
+     * @param name
+     * @param description
+     * @param commands
+     */
+    public TrackingComponent(IPart isPartOf, String name, String description, String driver, TrackingDriverConfiguration configuration) {
+        super(isPartOf, name, description, driver);
+        this.configuration = configuration;
+    }
 
-		// TODO Gert; Should getID() be used here?
-		this.satellite = satellite.getID();
-		this.antenna = antenna.getID();
-	}
+    public TrackingComponent(IPart isPartOf, String name, String description, TrackingDriverConfiguration configuration) {
+        this(isPartOf, name, description, DEFAULT_DRIVER, configuration);
+    }
 
-	public String getSatellite() {
-		return satellite;
-	}
+    public TrackingComponent(IPart isPartOf, String name, TrackingDriverConfiguration configuration) {
+        this(isPartOf, name, DEFAULT_DESCRIPTION, DEFAULT_DRIVER, configuration);
+    }
 
-	public String getAntenna() {
-		return antenna;
-	}
+    public TrackingComponent(IPart isPartOf, TrackingDriverConfiguration configuration) {
+        this(isPartOf, DEFAULT_NAME, DEFAULT_DESCRIPTION, DEFAULT_DRIVER, configuration);
+    }
+
+    public TrackingDriverConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    /**
+     * @see org.hbird.exchange.core.Entity#getDescription()
+     */
+    @Override
+    public String getDescription() {
+        return String.format("%s for ground station %s; version: %s", getClass().getSimpleName(), configuration.getGroundstationId(),
+                configuration.getServiceVersion());
+    }
 }

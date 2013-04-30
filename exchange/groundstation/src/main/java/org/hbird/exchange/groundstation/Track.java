@@ -49,16 +49,15 @@ public class Track extends Command {
 
     private static final long serialVersionUID = -5047301867698410904L;
 
-    public static final String DESCRIPTION = "Command to track a satellite from a start event to a stop event.";
+    public static final String DESCRIPTION = "Command to track a satellite during the location contact event.";
 
     /**
      * @param issuedBy
      * @param destination
      */
-    public Track(String issuedBy, String destination, Satellite satellite, LocationContactEvent start, LocationContactEvent end) {
+    public Track(String issuedBy, String destination, Satellite satellite, LocationContactEvent event) {
         super(issuedBy, destination, Track.class.getSimpleName(), DESCRIPTION);
-        setArgumentValue(StandardArguments.START, start);
-        setArgumentValue(StandardArguments.END, end);
+        setArgumentValue(StandardArguments.CONTACT, event);
         setArgumentValue(StandardArguments.SATELLITE, satellite);
     }
 
@@ -67,9 +66,16 @@ public class Track extends Command {
      */
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
-        args.add(new CommandArgument(StandardArguments.START, "The start orbital state", LocationContactEvent.class, "", null, true));
-        args.add(new CommandArgument(StandardArguments.END, "The end orbital state", LocationContactEvent.class, "", null, true));
+        args.add(new CommandArgument(StandardArguments.CONTACT, "The contact to track", LocationContactEvent.class, "", null, true));
         args.add(new CommandArgument(StandardArguments.SATELLITE, "The satellite", Satellite.class, "", null, true));
         return args;
+    }
+
+    public LocationContactEvent getLocationContactEvent() {
+        return getArgumentValue(StandardArguments.CONTACT, LocationContactEvent.class);
+    }
+
+    public Satellite getSatellite() {
+        return getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
     }
 }

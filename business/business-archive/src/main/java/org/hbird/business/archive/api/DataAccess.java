@@ -26,9 +26,9 @@ import org.hbird.business.api.ApiUtility;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.archive.ArchiveComponent;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Event;
 import org.hbird.exchange.core.Metadata;
-import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.DataRequest;
@@ -50,15 +50,15 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
  * API for accessing (retrieving) data from the system.
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class DataAccess extends HbirdApi implements IDataAccess {
 
-	/**
-	 * Constructor. 
-	 * 
-	 * @param issuedBy The name/ID of the component that is using the API to send requests.
-	 */
+    /**
+     * Constructor.
+     * 
+     * @param issuedBy The name/ID of the component that is using the API to send requests.
+     */
     public DataAccess(String issuedBy) {
         super(issuedBy, ArchiveComponent.ARCHIVE_NAME);
     }
@@ -71,35 +71,31 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         template = getContext().createProducerTemplate();
     }
 
-
-    
-    
     @Override
     public List<EntityInstance> getData(DataRequest request) {
         return executeRequestRespond(request);
     }
-    
+
     @Override
     public Parameter getParameter(String name) {
-    	return getFirst(getParameterAt(null, name, (new Date()).getTime(), 1));
+        return getFirst(getParameterAt(null, name, (new Date()).getTime(), 1));
     }
 
     @Override
     public Parameter getParameter(String source, String name) {
-    	return getFirst(getParameterAt(source, name, (new Date()).getTime(), 1));
+        return getFirst(getParameterAt(source, name, (new Date()).getTime(), 1));
     }
 
     @Override
     public Parameter getParameterAt(String name, long at) {
-    	return getFirst(getParameterAt(null, name, at, 1));
+        return getFirst(getParameterAt(null, name, at, 1));
     }
 
     @Override
     public Parameter getParameterAt(String source, String name, long at) {
-    	return getFirst(getParameterAt(source, name, at, 1));
+        return getFirst(getParameterAt(source, name, at, 1));
     }
 
-    
     @Override
     public List<Parameter> getParameter(String name, int rows) {
         return getParameterAt(null, name, (new Date()).getTime(), rows);
@@ -309,8 +305,8 @@ public class DataAccess extends HbirdApi implements IDataAccess {
      * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
-    public List<LocationContactEvent> getNextLocationContactEventsForLocation(String location) {
-        return getNextLocationContactEventsFor(location, null, (new Date()).getTime());
+    public LocationContactEvent getNextLocationContactEventForLocation(String location) {
+        return getNextLocationContactEventFor(location, null, (new Date()).getTime());
     }
 
     /*
@@ -319,8 +315,8 @@ public class DataAccess extends HbirdApi implements IDataAccess {
      * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
-    public List<LocationContactEvent> getNextLocationContactEventsForLocation(String location, long from) {
-        return getNextLocationContactEventsFor(location, null, from);
+    public LocationContactEvent getNextLocationContactEventForLocation(String location, long from) {
+        return getNextLocationContactEventFor(location, null, from);
     }
 
     /*
@@ -329,8 +325,8 @@ public class DataAccess extends HbirdApi implements IDataAccess {
      * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
-    public List<LocationContactEvent> getNextLocationContactEventsFor(String location, String satellite) {
-        return getNextLocationContactEventsFor(location, satellite, (new Date()).getTime());
+    public LocationContactEvent getNextLocationContactEventFor(String location, String satellite) {
+        return getNextLocationContactEventFor(location, satellite, (new Date()).getTime());
     }
 
     /*
@@ -339,37 +335,14 @@ public class DataAccess extends HbirdApi implements IDataAccess {
      * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
-    public List<LocationContactEvent> getNextLocationContactEventsFor(String location, String satellite, long from) {
-
-        List<LocationContactEvent> events = new ArrayList<LocationContactEvent>();
-
-        /** Get next start event. */
-        LocationContactEventRequest request = new LocationContactEventRequest(issuedBy, location, true);
+    public LocationContactEvent getNextLocationContactEventFor(String location, String satellite, long from) {
+        /* Get next start event. */
+        LocationContactEventRequest request = new LocationContactEventRequest(issuedBy, location);
         request.setRows(1);
         request.setSatelliteName(satellite);
         request.setFrom(from);
-        List<LocationContactEvent> start = executeRequestRespond(request);
-
-        /** If we found one, find the following end event. */
-        if (start.isEmpty() == false) {
-
-            LocationContactEvent startEvent = getFirst(start);
-
-            request = new LocationContactEventRequest(issuedBy, location, false);
-            request.setRows(1);
-            request.setSatelliteName(startEvent.getSatelliteId());
-            request.setLocation(startEvent.getGroundStationId());
-            request.setFrom(startEvent.getTimestamp());
-            List<LocationContactEvent> end = executeRequestRespond(request);
-
-            if (end.isEmpty() == false) {
-                events.add(startEvent);
-                LocationContactEvent endEvent = getFirst(end);
-                events.add(endEvent);
-            }
-        }
-
-        return events;
+        List<LocationContactEvent> events = executeRequestRespond(request);
+        return getFirst(events);
     }
 
     @Override
@@ -384,10 +357,10 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 
     @Override
     public List<PointingData> getNextLocationPointingDataFor(String location, String satellite) {
-        List<LocationContactEvent> events = getNextLocationContactEventsForLocation(location);
+        LocationContactEvent event = getNextLocationContactEventForLocation(location);
 
-        if (events.isEmpty() == false) {
-            return getLocationPointingDataFor(location, events.get(0).getTimestamp(), events.get(1).getTimestamp());
+        if (event != null) {
+            return getLocationPointingDataFor(location, event.getStartTime(), event.getEndTime());
         }
 
         return new ArrayList<PointingData>();
@@ -404,24 +377,27 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return executeRequestRespond(new MetadataRequest(issuedBy, subject));
     }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.IDataAccess#getEvents(long, long)
-	 */
-	@Override
-	public List<Event> getEvents(Long from, Long to) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.business.api.IDataAccess#getEvents(long, long)
+     */
+    @Override
+    public List<Event> getEvents(Long from, Long to) {
         return executeRequestRespond(new EventRequest(issuedBy, from, to));
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.IDataAccess#resolveNamed(java.lang.String)
-	 */
-	@Override
-	public EntityInstance resolve(String ID) {
-		DataRequest request = new DataRequest(issuedBy);
-		request.setID(ID);		
-		request.setIsInitialization(true);
-		List<EntityInstance> results = executeRequestRespond(request);
-		return getFirst(results);
-	}
-	
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.business.api.IDataAccess#resolveNamed(java.lang.String)
+     */
+    @Override
+    public EntityInstance resolve(String ID) {
+        DataRequest request = new DataRequest(issuedBy);
+        request.setID(ID);
+        request.setIsInitialization(true);
+        List<EntityInstance> results = executeRequestRespond(request);
+        return getFirst(results);
+    }
 }

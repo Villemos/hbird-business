@@ -100,10 +100,7 @@ public class HamlibRadioTrackerTest {
     private GroundStation gs;
 
     @Mock
-    private LocationContactEvent start;
-
-    @Mock
-    private LocationContactEvent end;
+    private LocationContactEvent contact;
 
     private List<PointingData> pointingData;
 
@@ -118,7 +115,7 @@ public class HamlibRadioTrackerTest {
     public void setUp() throws Exception {
         tracker = new HamlibRadioTracker(config, catalogue, prediction, optimizer);
         pointingData = Arrays.asList(pd1, pd2, pd3);
-        inOrder = inOrder(satellite, track, config, catalogue, prediction, optimizer, pd1, pd2, pd3, stop, start, end);
+        inOrder = inOrder(satellite, track, config, catalogue, prediction, optimizer, pd1, pd2, pd3, stop, contact);
         when(satellite.getUplinkFrequency()).thenReturn(UPLINK_FREQUENCY);
         when(satellite.getDownlinkFrequency()).thenReturn(DOWNLINK_FREQUENCY);
         when(track.getID()).thenReturn(ID);
@@ -313,8 +310,7 @@ public class HamlibRadioTrackerTest {
      */
     @Test
     public void testIsTrackingPossible() {
-        assertTrue(tracker.isTrackingPossible(start, end, gs, satellite));
+        assertTrue(tracker.isTrackingPossible(contact, gs, satellite));
         inOrder.verifyNoMoreInteractions();
     }
-
 }

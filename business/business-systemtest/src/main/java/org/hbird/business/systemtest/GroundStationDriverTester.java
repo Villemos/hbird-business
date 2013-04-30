@@ -93,12 +93,9 @@ public class GroundStationDriverTester extends SystemTest {
         long delta = 1363571566678l - 1363571275302l;
 
         OrbitalState startState = new OrbitalState("OrbitPredictor", "OrbitalState", "", now + 20000, "ESTCube-1", startPos, startVel, startMom, null);
-        OrbitalState endState = new OrbitalState("OrbitPredictor", "OrbitalState", "", now + delta + 20000, "ESTCube-1", endPos, endVel, endMom, null);
 
-        LocationContactEvent start = new LocationContactEvent("OrbitPredictor", now + 20000, "ES5EC", "", "ESTCube-1", true, startState);
-        start.setVisible(true);
-        LocationContactEvent end = new LocationContactEvent("OrbitPredictor", now + delta + 20000, "ES5EC", "", "ESTCube-1", false, endState);
-        end.setVisible(false);
+        LocationContactEvent contact = new LocationContactEvent("OrbitPredictor", now, "ES5EC", "ESTCube-1", "", now + 20000, now + delta + 20000, 10203L);
+        contact.setSatelliteStateAtStart(startState);
 
         estcube1.setUplinkFrequency(10000L);
 
@@ -108,7 +105,7 @@ public class GroundStationDriverTester extends SystemTest {
          * i.e. even if the request we now send is old, it will still be processed.
          */
 
-        injection.sendBody(new Track("SystemTest", "ES5EC", estcube1, start, end));
+        injection.sendBody(new Track("SystemTest", "ES5EC", estcube1, contact));
 
         while (true) {
             Thread.sleep(20000);

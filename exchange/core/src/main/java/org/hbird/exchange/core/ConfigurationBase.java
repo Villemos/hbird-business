@@ -23,6 +23,8 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Value;
+
 /**
  * Base class for configuration objects.
  * 
@@ -57,10 +59,13 @@ public class ConfigurationBase implements Serializable {
     /** Default value for the heart beat interval. */
     public static final long DEFAULT_HEART_BEAT_INTERVAL = 5000L;
 
+    @Value("${service.id}")
     protected String serviceId;
 
+    @Value("${service.version}")
     protected String serviceVersion;
 
+    @Value("${heart.beat.interval:5000}")
     protected long heartBeatInterval = DEFAULT_HEART_BEAT_INTERVAL;
 
     public ConfigurationBase() {

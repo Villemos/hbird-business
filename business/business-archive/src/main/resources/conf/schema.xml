@@ -213,7 +213,7 @@
 
 	
 	<!-- Additional 'LocationContactEvent' class fields. -->
-   <field name="visibility" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
+   <field name="orbitNumber" type="long" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
 
 	<!-- 'IPartOf' class fields. -->
    <field name="isPartOf" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>

@@ -98,12 +98,12 @@ public class HamlibRadioTracker extends TrackingSupport<RadioDriverConfiguration
     }
 
     @Override
-    protected boolean isTrackingPossible(LocationContactEvent start, LocationContactEvent end, GroundStation gs, Satellite satellite) {
+    protected boolean isTrackingPossible(LocationContactEvent locationContactEvent, GroundStation gs, Satellite satellite) {
         // TODO - 16.04.2013, kimmell - check if minFrequency and max frequency are matching with the satellite
         // frequencies
         // TODO - 16.04.2013, kimmell - check if uplink is supported
         // TODO - 16.04.2013, kimmell - check if downlink is supported
-        return super.isTrackingPossible(start, end, gs, satellite);
+        return super.isTrackingPossible(locationContactEvent, gs, satellite);
     }
 
     @Override

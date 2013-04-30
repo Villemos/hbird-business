@@ -82,7 +82,7 @@ public class StartablePart extends CommandablePart implements IStartablePart {
     @Override
     public BusinessCard getBusinessCard() {
         if (card == null) {
-            card = createBusinessCard(getName(), getHeartbeat(), getCommands());
+            card = createBusinessCard(getName(), getHeartbeat(), getCommands(), getDescription());
         }
         return card.touch();
     }
@@ -129,7 +129,9 @@ public class StartablePart extends CommandablePart implements IStartablePart {
         return commands;
     }
 
-    protected BusinessCard createBusinessCard(String name, long heartBeat, List<Command> commands) {
-        return new BusinessCard(name, heartBeat, commands);
+    protected BusinessCard createBusinessCard(String name, long heartBeat, List<Command> commands, String description) {
+        BusinessCard card = new BusinessCard(name, heartBeat, commands);
+        card.setDescription(description);
+        return card;
     }
 }

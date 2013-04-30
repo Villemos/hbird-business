@@ -68,7 +68,7 @@ public class GroundStationPart<C extends GroundStationDriverConfiguration> exten
     @Override
     protected List<Command> createCommandList(List<Command> commands) {
         commands = super.createCommandList(commands);
-        commands.add(new Track("", "", null, null, null));
+        commands.add(new Track("", "", null, null));
         commands.add(new Stop(""));
         return commands;
     }

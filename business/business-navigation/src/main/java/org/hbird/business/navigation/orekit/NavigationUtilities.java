@@ -28,9 +28,20 @@ import org.orekit.propagation.analytical.KeplerianPropagator;
 import org.orekit.time.AbsoluteDate;
 import org.orekit.time.TimeScalesFactory;
 import org.orekit.time.UTCScale;
+import org.orekit.tle.TLE;
 import org.orekit.utils.PVCoordinates;
 
 public class NavigationUtilities {
+
+    // constants for orbit number calculation from TLE
+
+    public static final int MINUTES_PER_DAY = 60 * 24;
+    public static final int SECONDS_PER_DAY = 60 * MINUTES_PER_DAY;
+
+    public static final double NORMALIZED_EQUATORIAL_RADIUS = 1.0;
+    public static final double XKE = 0.0743669161331734132;
+    public static final double XJ2 = 1.082616e-3;
+    public static final double CK2 = 0.5 * XJ2 * NORMALIZED_EQUATORIAL_RADIUS * NORMALIZED_EQUATORIAL_RADIUS;
 
     private static org.apache.log4j.Logger LOG = Logger.getLogger(NavigationUtilities.class);
 
@@ -83,18 +94,19 @@ public class NavigationUtilities {
                 velocity, momentum, parameters);
     }
 
-    public static List<PointingData> calculateContactData(LocationContactEvent startContactEvent, LocationContactEvent endContactEvent,
+    public static List<PointingData> calculateContactData(LocationContactEvent locationContactEvent,
             GroundStation groundStation, Satellite satellite, long contactDataStepSize) throws OrekitException {
         List<PointingData> data = new ArrayList<PointingData>();
 
-        long startTime = startContactEvent.getTimestamp();
-        long endTime = endContactEvent.getTimestamp();
+        long startTime = locationContactEvent.getStartTime();
+        long endTime = locationContactEvent.getEndTime();
 
         D3Vector location = groundStation.getGeoLocation();
         GeodeticPoint point = new GeodeticPoint(location.p1, location.p2, location.p3);
         TopocentricFrame locationOnEarth = new TopocentricFrame(Constants.earth, point, "");
 
-        PVCoordinates coord = toPVCoordinates(startContactEvent.getSatelliteState().position, startContactEvent.getSatelliteState().velocity);
+        OrbitalState startState = locationContactEvent.getSatelliteStateAtStart();
+        PVCoordinates coord = toPVCoordinates(startState.getPosition(), startState.getVelocity());
 
         AbsoluteDate date = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());
         Orbit initialOrbit = new KeplerianOrbit(coord, Constants.frame, date, Constants.MU);
@@ -105,7 +117,7 @@ public class NavigationUtilities {
         double elevation = calculateElevation(coord, locationOnEarth, date);
         double doppler = calculateDoppler(coord, locationOnEarth, date);
 
-        PointingData entry = new PointingData(startTime, azimuth, elevation, doppler, startContactEvent.getSatelliteId(), location.getName());
+        PointingData entry = new PointingData(startTime, azimuth, elevation, doppler, locationContactEvent.getSatelliteId(), location.getName());
 
         LOG.debug(entry.prettyPrint());
         data.add(entry);
@@ -124,7 +136,7 @@ public class NavigationUtilities {
 
             long time = startTime + contactDataStepSize * i;
 
-            entry = new PointingData(time, azimuth, elevation, doppler, startContactEvent.getSatelliteId(), location.getName());
+            entry = new PointingData(time, azimuth, elevation, doppler, locationContactEvent.getSatelliteId(), location.getName());
 
             LOG.debug(entry.prettyPrint());
             data.add(entry);
@@ -158,5 +170,30 @@ public class NavigationUtilities {
 
     public static double calculateDopplerShift(double doppler, double frequency) {
         return ((1 - (doppler / Constants.SPEED_OF_LIGHT)) * frequency) - frequency;
+    }
+
+    public static int calculateOrbitNumber(TLE tle, AbsoluteDate date) throws OrekitException {
+        // calculations for original recovered mean motion.
+        final double a1 = Math.pow(XKE / (tle.getMeanMotion() * 60.0), 2.0 / 3.0);
+        final double cosi0 = Math.cos(tle.getI());
+        final double theta2 = cosi0 * cosi0;
+        final double x3thm1 = 3.0 * theta2 - 1.0;
+        final double e0sq = tle.getE() * tle.getE();
+        final double beta02 = 1.0 - e0sq;
+        final double beta0 = Math.sqrt(beta02);
+        final double tval = CK2 * 1.5 * x3thm1 / (beta0 * beta02);
+        final double delta1 = tval / (a1 * a1);
+        final double a0 = a1 * (1.0 - delta1 * (1.0 / 3.0 + delta1 * (1.0 + 134.0 / 81.0 * delta1)));
+        final double delta0 = tval / (a0 * a0);
+
+        // recover original mean motion :
+        final double xn0dp = tle.getMeanMotion() * 60.0 / (delta0 + 1.0);
+
+        double age = date.durationFrom(tle.getDate()) / SECONDS_PER_DAY;
+
+        int orbitNum = (int) (Math.floor((xn0dp * MINUTES_PER_DAY / (Math.PI * 2) + age * tle.getBStar() * 1.0) * age
+                + tle.getMeanAnomaly() / (Math.PI * 2))
+                + tle.getRevolutionNumberAtEpoch() - 1);
+        return orbitNum;
     }
 }

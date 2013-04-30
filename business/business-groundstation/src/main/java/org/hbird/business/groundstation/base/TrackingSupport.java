@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IOrbitPrediction;
-import org.hbird.business.core.util.Dates;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandBase;
@@ -33,6 +32,7 @@ import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Satellite;
+import org.hbird.exchange.util.Dates;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
@@ -82,14 +82,10 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
             return NO_COMMANDS;
         }
 
-        LocationContactEvent start = command.getArgumentValue(StandardArguments.START, LocationContactEvent.class);
-        LocationContactEvent end = command.getArgumentValue(StandardArguments.END, LocationContactEvent.class);
-        Satellite satellite = command.getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
+        LocationContactEvent contact = command.getLocationContactEvent();
+        Satellite satellite = command.getSatellite();
 
-        if (!validateArgument(start, StandardArguments.START)) {
-            return NO_COMMANDS;
-        }
-        if (!validateArgument(end, StandardArguments.END)) {
+        if (!validateArgument(contact, StandardArguments.START)) {
             return NO_COMMANDS;
         }
         if (!validateArgument(satellite, StandardArguments.SATELLITE)) {
@@ -113,11 +109,11 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
 
         long now = System.currentTimeMillis();
 
-        if (!validateByTime(start.getTimestamp(), now, configuration.isSkipOutDatedCommands())) {
+        if (!validateByTime(contact.getStartTime(), now, configuration.isSkipOutDatedCommands())) {
             return NO_COMMANDS;
         }
 
-        if (!isTrackingPossible(start, end, groundStation, satellite)) {
+        if (!isTrackingPossible(contact, groundStation, satellite)) {
             return NO_COMMANDS;
         }
 
@@ -125,14 +121,14 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
 
         List<PointingData> pointingData = null;
         try {
-            pointingData = orbitPrediction.requestPointingDataFor(start, end, groundStation, satellite, configuration.getCommandInterval());
+            pointingData = orbitPrediction.requestPointingDataFor(contact, groundStation, satellite, configuration.getCommandInterval());
         }
         catch (Exception e) {
             LOG.error("Failed to calculate pointing data for the overpass; ground station: {}; satellite: {}; over pass start time: {}; Exception: ",
                     new Object[] {
                             groundStation.getGroundStationId(),
                             satellite.getSatelliteId(),
-                            Dates.toIso8601DateFormat(start.getTimestamp()),
+                            Dates.toIso8601DateFormat(contact.getStartTime()),
                             e
                     });
             return NO_COMMANDS;
@@ -170,7 +166,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
      * @param satellite {@link Satellite}
      * @return true if tracking is possible
      */
-    protected boolean isTrackingPossible(LocationContactEvent start, LocationContactEvent end, GroundStation gs, Satellite satellite) {
+    protected boolean isTrackingPossible(LocationContactEvent contactLocationEvent, GroundStation gs, Satellite satellite) {
         return true;
     }
 

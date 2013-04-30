@@ -2,7 +2,6 @@ package org.hbird.business.systemtest;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
 
 import javax.jms.InvalidSelectorException;
 import javax.management.MalformedObjectNameException;
@@ -15,106 +14,92 @@ import org.hbird.exchange.navigation.LocationContactEvent;
 
 public class ParseControlTester extends SystemTest {
 
-	private static org.apache.log4j.Logger LOG = Logger.getLogger(ParseControlTester.class);
+    private static org.apache.log4j.Logger LOG = Logger.getLogger(ParseControlTester.class);
 
-	@Handler
-	public void process() throws InterruptedException, MalformedObjectNameException, MalformedURLException, NullPointerException, IOException,
-	InvalidSelectorException, OpenDataException {
+    @Handler
+    public void process() throws InterruptedException, MalformedObjectNameException, MalformedURLException, NullPointerException, IOException,
+            InvalidSelectorException, OpenDataException {
 
-		LOG.info("------------------------------------------------------------------------------------------------------------");
-		LOG.info("Starting");
+        LOG.info("------------------------------------------------------------------------------------------------------------");
+        LOG.info("Starting");
 
-		startMonitoringArchive();
-		startOrbitPredictor();
+        startMonitoringArchive();
+        startOrbitPredictor();
 
-		/** Start a task executor. */
-		startTaskComponent("TaskExecutor1");
+        /** Start a task executor. */
+        startTaskComponent("TaskExecutor1");
 
-		Thread.sleep(1000);
+        Thread.sleep(1000);
 
-		publishTleParameters();
-		publishGroundStationsAndSatellites();
+        publishTleParameters();
+        publishGroundStationsAndSatellites();
 
-		/** Send command to commit all changes. */
-		forceCommit();
+        /** Send command to commit all changes. */
+        forceCommit();
 
-		Thread.sleep(1000);
+        Thread.sleep(1000);
 
-		startEstcubeOrbitPropagator();
-		
-		/** Create a controller task and inject it. */
-		
-		Thread.sleep(1000);
+        startEstcubeOrbitPropagator();
 
-		/** Now start the antenna controller. */
-		startAntennaController();
+        /** Create a controller task and inject it. */
 
-		Thread.sleep(5000);
+        Thread.sleep(1000);
 
-		/**
-		 * The antenna controller will only generate the schedule AFTER the first 2 contact events have been generated.
-		 * We check this .
-		 */
+        /** Now start the antenna controller. */
+        startAntennaController();
 
-		/** Retrieve the next set of contact events (start-end) for this station. */
-		int totalDelay = 0;
-		while (totalDelay < 130000) {
-			Thread.sleep(5000);
-			totalDelay += 5000;
+        Thread.sleep(5000);
 
-			/** Check if we have contact events */
-			List<LocationContactEvent> contactEvents = accessApi.getNextLocationContactEventsFor(es5ec.getID(), estcube1.getID());
-			if (contactEvents.size() >= 2) {
-				System.out.println("start p1 = " + contactEvents.get(0).getSatelliteState().getPosition().p1);
-				System.out.println("start p2 = " + contactEvents.get(0).getSatelliteState().getPosition().p2);
-				System.out.println("start p3 = " + contactEvents.get(0).getSatelliteState().getPosition().p3);
+        /**
+         * The antenna controller will only generate the schedule AFTER the first 2 contact events have been generated.
+         * We check this .
+         */
 
-				System.out.println("start v1 = " + contactEvents.get(0).getSatelliteState().getVelocity().p1);
-				System.out.println("start v2 = " + contactEvents.get(0).getSatelliteState().getVelocity().p2);
-				System.out.println("start v3 = " + contactEvents.get(0).getSatelliteState().getVelocity().p3);
+        /** Retrieve the next set of contact events (start-end) for this station. */
+        int totalDelay = 0;
+        while (totalDelay < 130000) {
+            Thread.sleep(5000);
+            totalDelay += 5000;
 
-				System.out.println("start m1 = " + contactEvents.get(0).getSatelliteState().getMomentum().p1);
-				System.out.println("start m2 = " + contactEvents.get(0).getSatelliteState().getMomentum().p2);
-				System.out.println("start m3 = " + contactEvents.get(0).getSatelliteState().getMomentum().p3);
+            /** Check if we have contact events */
+            LocationContactEvent contactEvent = accessApi.getNextLocationContactEventFor(es5ec.getID(), estcube1.getID());
+            if (contactEvent != null) {
+                System.out.println("start p1 = " + contactEvent.getSatelliteStateAtStart().getPosition().p1);
+                System.out.println("start p2 = " + contactEvent.getSatelliteStateAtStart().getPosition().p2);
+                System.out.println("start p3 = " + contactEvent.getSatelliteStateAtStart().getPosition().p3);
 
-				System.out.println("end p1 = " + contactEvents.get(1).getSatelliteState().getPosition().p1);
-				System.out.println("end p2 = " + contactEvents.get(1).getSatelliteState().getPosition().p2);
-				System.out.println("end p3 = " + contactEvents.get(1).getSatelliteState().getPosition().p3);
+                System.out.println("start v1 = " + contactEvent.getSatelliteStateAtStart().getVelocity().p1);
+                System.out.println("start v2 = " + contactEvent.getSatelliteStateAtStart().getVelocity().p2);
+                System.out.println("start v3 = " + contactEvent.getSatelliteStateAtStart().getVelocity().p3);
 
-				System.out.println("end v1 = " + contactEvents.get(1).getSatelliteState().getVelocity().p1);
-				System.out.println("end v2 = " + contactEvents.get(1).getSatelliteState().getVelocity().p2);
-				System.out.println("end v3 = " + contactEvents.get(1).getSatelliteState().getVelocity().p3);
+                System.out.println("start m1 = " + contactEvent.getSatelliteStateAtStart().getMomentum().p1);
+                System.out.println("start m2 = " + contactEvent.getSatelliteStateAtStart().getMomentum().p2);
+                System.out.println("start m3 = " + contactEvent.getSatelliteStateAtStart().getMomentum().p3);
+                break;
+            }
+        }
 
-				System.out.println("end m1 = " + contactEvents.get(1).getSatelliteState().getMomentum().p1);
-				System.out.println("end m2 = " + contactEvents.get(1).getSatelliteState().getMomentum().p2);
-				System.out.println("end m3 = " + contactEvents.get(1).getSatelliteState().getMomentum().p3);
+        /** Give the parse controller a bit of time to react. */
+        totalDelay = 0;
+        boolean found = false;
+        while (totalDelay < 80000 && found == false) {
+            Thread.sleep(5000);
+            totalDelay += 5000;
 
-				break;
-			}
-		}
+            for (EntityInstance command : commandingListener.elements) {
+                if (command.getName().equals("Track")) {
+                    found = true;
+                }
+            }
+        }
 
-		/** Give the parse controller a bit of time to react. */
-		totalDelay = 0;
-		boolean found = false;
-		while (totalDelay < 80000 && found == false) {
-			Thread.sleep(5000);
-			totalDelay += 5000;
+        azzert(found, "Received 'Track' command");
 
-			for (EntityInstance command : commandingListener.elements) {
-				if (command.getName().equals("Track")) {
-					found = true;
-				}
-			}
-		}
+        stopOrbitPredictor();
+        stopTaskComponent("TaskExecutor1");
+        stopEstcubeOrbitPropagator();
+        stopAntennaController();
 
-		azzert(found, "Received 'Track' command");
-
-		
-		stopOrbitPredictor();
-		stopTaskComponent("TaskExecutor1");
-		stopEstcubeOrbitPropagator();
-		stopAntennaController();
-		
-		LOG.info("Finished");
-	}
+        LOG.info("Finished");
+    }
 }

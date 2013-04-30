@@ -97,10 +97,7 @@ public class TrackingSupportTest {
     private PointingData pd2;
 
     @Mock
-    private LocationContactEvent start;
-
-    @Mock
-    private LocationContactEvent end;
+    private LocationContactEvent contact;
 
     @Mock
     private IOrbitPrediction prediction;
@@ -169,9 +166,8 @@ public class TrackingSupportTest {
             }
 
             @Override
-            protected boolean isTrackingPossible(LocationContactEvent start, LocationContactEvent end, GroundStation gs, Satellite sat) {
-                return TrackingSupportTest.this.start.equals(start) &&
-                        TrackingSupportTest.this.end.equals(end) &&
+            protected boolean isTrackingPossible(LocationContactEvent locationContactEvent, GroundStation gs, Satellite sat) {
+                return TrackingSupportTest.this.contact.equals(locationContactEvent) &&
                         TrackingSupportTest.this.gs.equals(gs) &&
                         TrackingSupportTest.this.sat1.equals(sat);
             }
@@ -214,7 +210,7 @@ public class TrackingSupportTest {
         // trackCommand, pd1, pd2, start, end,
         // prediction, catalogue, optimizer);
 
-        inOrder = inOrder(configuration, command1, command2, command3, command4, command5, command6, gs, sat1, sat2, trackCommand, pd1, pd2, start, end,
+        inOrder = inOrder(configuration, command1, command2, command3, command4, command5, command6, gs, sat1, sat2, trackCommand, pd1, pd2, contact,
                 prediction, catalogue, optimizer);
     }
 
@@ -227,60 +223,40 @@ public class TrackingSupportTest {
     }
 
     @Test
-    public void testTrackCommandArgumentStartIsNull() {
+    public void testTrackContactIsNull() {
         when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
-        when(trackCommand.getArgumentValue(StandardArguments.START, LocationContactEvent.class)).thenReturn(null);
-        when(trackCommand.getArgumentValue(StandardArguments.END, LocationContactEvent.class)).thenReturn(end);
-        when(trackCommand.getArgumentValue(StandardArguments.SATELLITE, Satellite.class)).thenReturn(sat1);
+        when(trackCommand.getLocationContactEvent()).thenReturn(null);
+        when(trackCommand.getSatellite()).thenReturn(sat1);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
         inOrder.verify(trackCommand, times(1)).checkArguments();
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.START, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.END, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
+        inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
+        inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testTrackCommandArgumentEndIsNull() {
+    public void testTrackSatIsNull() {
         when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
-        when(trackCommand.getArgumentValue(StandardArguments.START, LocationContactEvent.class)).thenReturn(start);
-        when(trackCommand.getArgumentValue(StandardArguments.END, LocationContactEvent.class)).thenReturn(null);
-        when(trackCommand.getArgumentValue(StandardArguments.SATELLITE, Satellite.class)).thenReturn(sat1);
+        when(trackCommand.getLocationContactEvent()).thenReturn(contact);
+        when(trackCommand.getSatellite()).thenReturn(null);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
         inOrder.verify(trackCommand, times(1)).checkArguments();
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.START, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.END, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void testTrackCommandArgumentSatIsNull() {
-        when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
-        when(trackCommand.getArgumentValue(StandardArguments.START, LocationContactEvent.class)).thenReturn(start);
-        when(trackCommand.getArgumentValue(StandardArguments.END, LocationContactEvent.class)).thenReturn(end);
-        when(trackCommand.getArgumentValue(StandardArguments.SATELLITE, Satellite.class)).thenReturn(null);
-        assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
-        inOrder.verify(trackCommand, times(1)).checkArguments();
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.START, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.END, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
+        inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
+        inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testTrackFailedToResolveGroundStation() {
         when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
-        when(trackCommand.getArgumentValue(StandardArguments.START, LocationContactEvent.class)).thenReturn(start);
-        when(trackCommand.getArgumentValue(StandardArguments.END, LocationContactEvent.class)).thenReturn(end);
-        when(trackCommand.getArgumentValue(StandardArguments.SATELLITE, Satellite.class)).thenReturn(sat1);
+        when(trackCommand.getLocationContactEvent()).thenReturn(contact);
+        when(trackCommand.getSatellite()).thenReturn(sat1);
         when(configuration.getGroundstationId()).thenReturn(GS_NAME);
         when(catalogue.getGroundStationByName(GS_NAME)).thenThrow(exception);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
         inOrder.verify(trackCommand, times(1)).checkArguments();
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.START, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.END, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
+        inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
+        inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verify(configuration, times(1)).getGroundstationId();
         inOrder.verify(catalogue, times(1)).getGroundStationByName(GS_NAME);
         inOrder.verifyNoMoreInteractions();
@@ -289,16 +265,14 @@ public class TrackingSupportTest {
     @Test
     public void testTrackGroundStationNull() {
         when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
-        when(trackCommand.getArgumentValue(StandardArguments.START, LocationContactEvent.class)).thenReturn(start);
-        when(trackCommand.getArgumentValue(StandardArguments.END, LocationContactEvent.class)).thenReturn(end);
-        when(trackCommand.getArgumentValue(StandardArguments.SATELLITE, Satellite.class)).thenReturn(sat1);
+        when(trackCommand.getLocationContactEvent()).thenReturn(contact);
+        when(trackCommand.getSatellite()).thenReturn(sat1);
         when(configuration.getGroundstationId()).thenReturn(GS_NAME);
         when(catalogue.getGroundStationByName(GS_NAME)).thenReturn(null);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
         inOrder.verify(trackCommand, times(1)).checkArguments();
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.START, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.END, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
+        inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
+        inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verify(configuration, times(1)).getGroundstationId();
         inOrder.verify(catalogue, times(1)).getGroundStationByName(GS_NAME);
         inOrder.verifyNoMoreInteractions();
@@ -307,21 +281,19 @@ public class TrackingSupportTest {
     @Test
     public void testTrackOutdatedCommands() {
         when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
-        when(trackCommand.getArgumentValue(StandardArguments.START, LocationContactEvent.class)).thenReturn(start);
-        when(trackCommand.getArgumentValue(StandardArguments.END, LocationContactEvent.class)).thenReturn(end);
-        when(trackCommand.getArgumentValue(StandardArguments.SATELLITE, Satellite.class)).thenReturn(sat1);
+        when(trackCommand.getLocationContactEvent()).thenReturn(contact);
+        when(trackCommand.getSatellite()).thenReturn(sat1);
         when(configuration.getGroundstationId()).thenReturn(GS_NAME);
         when(catalogue.getGroundStationByName(GS_NAME)).thenReturn(gs);
-        when(start.getTimestamp()).thenReturn(NOW - 1);
+        when(contact.getStartTime()).thenReturn(NOW - 1);
         when(configuration.isSkipOutDatedCommands()).thenReturn(true);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
         inOrder.verify(trackCommand, times(1)).checkArguments();
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.START, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.END, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
+        inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
+        inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verify(configuration, times(1)).getGroundstationId();
         inOrder.verify(catalogue, times(1)).getGroundStationByName(GS_NAME);
-        inOrder.verify(start, times(1)).getTimestamp();
+        inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verify(configuration, times(1)).isSkipOutDatedCommands();
         inOrder.verifyNoMoreInteractions();
     }
@@ -329,21 +301,19 @@ public class TrackingSupportTest {
     @Test
     public void testTrackNotPossible() {
         when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
-        when(trackCommand.getArgumentValue(StandardArguments.START, LocationContactEvent.class)).thenReturn(start);
-        when(trackCommand.getArgumentValue(StandardArguments.END, LocationContactEvent.class)).thenReturn(end);
-        when(trackCommand.getArgumentValue(StandardArguments.SATELLITE, Satellite.class)).thenReturn(sat2);
+        when(trackCommand.getLocationContactEvent()).thenReturn(contact);
+        when(trackCommand.getSatellite()).thenReturn(sat2);
         when(configuration.getGroundstationId()).thenReturn(GS_NAME);
         when(catalogue.getGroundStationByName(GS_NAME)).thenReturn(gs);
-        when(start.getTimestamp()).thenReturn(NOW + 1000L * 60 * 60);
+        when(contact.getStartTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(configuration.isSkipOutDatedCommands()).thenReturn(true);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
         inOrder.verify(trackCommand, times(1)).checkArguments();
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.START, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.END, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
+        inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
+        inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verify(configuration, times(1)).getGroundstationId();
         inOrder.verify(catalogue, times(1)).getGroundStationByName(GS_NAME);
-        inOrder.verify(start, times(1)).getTimestamp();
+        inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verify(configuration, times(1)).isSkipOutDatedCommands();
         inOrder.verifyNoMoreInteractions();
     }
@@ -351,41 +321,38 @@ public class TrackingSupportTest {
     @Test
     public void testTrackPredictionException() throws Exception {
         when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
-        when(trackCommand.getArgumentValue(StandardArguments.START, LocationContactEvent.class)).thenReturn(start);
-        when(trackCommand.getArgumentValue(StandardArguments.END, LocationContactEvent.class)).thenReturn(end);
-        when(trackCommand.getArgumentValue(StandardArguments.SATELLITE, Satellite.class)).thenReturn(sat1);
+        when(trackCommand.getLocationContactEvent()).thenReturn(contact);
+        when(trackCommand.getSatellite()).thenReturn(sat1);
         when(configuration.getGroundstationId()).thenReturn(GS_NAME);
         when(catalogue.getGroundStationByName(GS_NAME)).thenReturn(gs);
-        when(start.getTimestamp()).thenReturn(NOW + 1000L * 60 * 60);
+        when(contact.getStartTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(configuration.getCommandInterval()).thenReturn(STEP);
-        when(prediction.requestPointingDataFor(start, end, gs, sat1, STEP)).thenThrow(exception);
+        when(prediction.requestPointingDataFor(contact, gs, sat1, STEP)).thenThrow(exception);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
         inOrder.verify(trackCommand, times(1)).checkArguments();
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.START, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.END, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
+        inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
+        inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verify(configuration, times(1)).getGroundstationId();
         inOrder.verify(catalogue, times(1)).getGroundStationByName(GS_NAME);
-        inOrder.verify(start, times(1)).getTimestamp();
+        inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verify(configuration, times(1)).getCommandInterval();
-        inOrder.verify(prediction, times(1)).requestPointingDataFor(start, end, gs, sat1, STEP);
+        inOrder.verify(prediction, times(1)).requestPointingDataFor(contact, gs, sat1, STEP);
         inOrder.verify(gs, times(1)).getGroundStationId();
         inOrder.verify(sat1, times(1)).getSatelliteId();
-        inOrder.verify(start, times(1)).getTimestamp();
+        inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testTrack() throws Exception {
         when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
-        when(trackCommand.getArgumentValue(StandardArguments.START, LocationContactEvent.class)).thenReturn(start);
-        when(trackCommand.getArgumentValue(StandardArguments.END, LocationContactEvent.class)).thenReturn(end);
-        when(trackCommand.getArgumentValue(StandardArguments.SATELLITE, Satellite.class)).thenReturn(sat1);
+        when(trackCommand.getLocationContactEvent()).thenReturn(contact);
+        when(trackCommand.getSatellite()).thenReturn(sat1);
         when(configuration.getGroundstationId()).thenReturn(GS_NAME);
         when(catalogue.getGroundStationByName(GS_NAME)).thenReturn(gs);
-        when(start.getTimestamp()).thenReturn(NOW + 1000L * 60 * 60);
+        when(contact.getStartTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(configuration.getCommandInterval()).thenReturn(STEP);
-        when(prediction.requestPointingDataFor(start, end, gs, sat1, STEP)).thenReturn(pointingData);
+        when(prediction.requestPointingDataFor(contact, gs, sat1, STEP)).thenReturn(pointingData);
         when(optimizer.optimize(pointingData, configuration)).thenReturn(pointingData);
         when(command1.getExecutionTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(command6.getExecutionTime()).thenReturn(NOW + 1000L * 60 * 61);
@@ -401,14 +368,13 @@ public class TrackingSupportTest {
         assertEquals(command6, trackingCommands.get(5));
 
         inOrder.verify(trackCommand, times(1)).checkArguments();
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.START, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.END, LocationContactEvent.class);
-        inOrder.verify(trackCommand, times(1)).getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
+        inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
+        inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verify(configuration, times(1)).getGroundstationId();
         inOrder.verify(catalogue, times(1)).getGroundStationByName(GS_NAME);
-        inOrder.verify(start, times(1)).getTimestamp();
+        inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verify(configuration, times(1)).getCommandInterval();
-        inOrder.verify(prediction, times(1)).requestPointingDataFor(start, end, gs, sat1, STEP);
+        inOrder.verify(prediction, times(1)).requestPointingDataFor(contact, gs, sat1, STEP);
         inOrder.verify(optimizer, times(1)).optimize(pointingData, configuration);
         inOrder.verify(command1, times(1)).getExecutionTime();
         inOrder.verify(command6, times(1)).getExecutionTime();
@@ -422,7 +388,7 @@ public class TrackingSupportTest {
 
     @Test
     public void testIsTrackingPossible() {
-        assertTrue(trackingDevice.isTrackingPossible(start, end, gs, sat1));
+        assertTrue(trackingDevice.isTrackingPossible(contact, gs, sat1));
     }
 
     @Test
@@ -462,7 +428,7 @@ public class TrackingSupportTest {
         };
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.createPreContactCommands(gs, sat1, pointingData, configuration, trackCommand));
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.createPostContactCommands(gs, sat1, pointingData, configuration, trackCommand));
-        assertTrue(trackingDevice.isTrackingPossible(start, end, gs, sat1));
+        assertTrue(trackingDevice.isTrackingPossible(contact, gs, sat1));
     }
 
     @Test

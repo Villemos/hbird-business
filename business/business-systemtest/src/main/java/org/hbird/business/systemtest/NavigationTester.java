@@ -28,118 +28,111 @@ import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IOrbitPrediction;
-import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.EntityInstance;
+import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 public class NavigationTester extends SystemTest {
 
-	private static org.apache.log4j.Logger LOG = Logger.getLogger(NavigationTester.class);
+    private static org.apache.log4j.Logger LOG = Logger.getLogger(NavigationTester.class);
 
-	@Handler
-	public void process() throws InterruptedException {
+    @Handler
+    public void process() throws InterruptedException {
 
-		LOG.info("------------------------------------------------------------------------------------------------------------");
-		LOG.info("Starting");
+        LOG.info("------------------------------------------------------------------------------------------------------------");
+        LOG.info("Starting");
 
-		startMonitoringArchive();
-		startOrbitPredictor();
+        startMonitoringArchive();
+        startOrbitPredictor();
 
-		Thread.sleep(2000);
+        Thread.sleep(2000);
 
-		orbitalStateListener.elements.clear();
+        orbitalStateListener.elements.clear();
 
-		publishGroundStationsAndSatellites();
-		TleOrbitalParameters parameters = publishTleParameters();
+        publishGroundStationsAndSatellites();
+        TleOrbitalParameters parameters = publishTleParameters();
 
-		List<String> locations = new ArrayList<String>();
-		locations.add(es5ec.getName());
-		locations.add(gsAalborg.getName());
+        List<String> locations = new ArrayList<String>();
+        locations.add(es5ec.getName());
+        locations.add(gsAalborg.getName());
 
-		/** Send command to commit all changes. */
-		forceCommit();
+        /** Send command to commit all changes. */
+        forceCommit();
 
-		orbitalStateListener.elements.clear();
+        orbitalStateListener.elements.clear();
 
-		/** Send a TLE request for a satellite and a subset of locations */
-		IOrbitPrediction api = ApiFactory.getOrbitPredictionApi("SystemTest");
-		api.requestOrbitPropagationStream(estcube1.getID(), locations, 1355385448149l, 1355385448149l + 2 * 60 * 60 * 1000);
+        /** Send a TLE request for a satellite and a subset of locations */
+        IOrbitPrediction api = ApiFactory.getOrbitPredictionApi("SystemTest");
+        api.requestOrbitPropagationStream(estcube1.getID(), locations, 1355385448149l, 1355385448149l + 2 * 60 * 60 * 1000);
 
-		int totalSleep = 0;
-		while (totalSleep < 120000 && orbitalStateListener.elements.size() != 121) {
-			Thread.sleep(2000);
-			totalSleep += 2000;
-		}
+        int totalSleep = 0;
+        while (totalSleep < 120000 && orbitalStateListener.elements.size() != 121) {
+            Thread.sleep(2000);
+            totalSleep += 2000;
+        }
 
-		azzert(orbitalStateListener.elements.size() == 121, "Expect to receive 121 orbital states. Received " + orbitalStateListener.elements.size());
-		print(orbitalStateListener.elements);
+        azzert(orbitalStateListener.elements.size() == 121, "Expect to receive 121 orbital states. Received " + orbitalStateListener.elements.size());
+        print(orbitalStateListener.elements);
 
-		azzert(locationEventListener.elements.size() == 6, "Expect to receive 6 location events. Received " + locationEventListener.elements.size());
-		print(locationEventListener.elements);
+        azzert(locationEventListener.elements.size() == 6, "Expect to receive 6 location events. Received " + locationEventListener.elements.size());
+        print(locationEventListener.elements);
 
-		/** Send command to commit all changes. */
-		forceCommit();
+        /** Send command to commit all changes. */
+        forceCommit();
 
-		/** Retrieve the next set of TARTU events and check them. */
-		IDataAccess dataApi = ApiFactory.getDataAccessApi("SystemTest");
-		List<LocationContactEvent> contactEvents = dataApi.getNextLocationContactEventsForLocation(es5ec.getID(), 1355385522265l);
+        /** Retrieve the next set of TARTU events and check them. */
+        IDataAccess dataApi = ApiFactory.getDataAccessApi("SystemTest");
+        LocationContactEvent contactEvent = dataApi.getNextLocationContactEventForLocation(es5ec.getID(), 1355385522265l);
 
-		azzert(contactEvents.size() == 2);
-		azzert(contactEvents.get(0).getTimestamp() == 1355390676020l);
-		azzert(contactEvents.get(1).getTimestamp() == 1355391229267l);
+        azzert(contactEvent != null);
+        azzert(contactEvent.getStartTime() == 1355390676020l);
+        azzert(contactEvent.getEndTime() == 1355391229267l);
 
-		/**
-		 * Check the contact events with Aalborg. Notice that there is one LOST contact event first. The retrieval
-		 * should NOT get this.
-		 */
-		contactEvents = dataApi.getNextLocationContactEventsForLocation(gsAalborg.getID(), 1355385522265l);
+        /**
+         * Check the contact events with Aalborg. Notice that there is one LOST contact event first. The retrieval
+         * should NOT get this.
+         */
+        contactEvent = dataApi.getNextLocationContactEventForLocation(gsAalborg.getID(), 1355385522265l);
 
-		azzert(contactEvents.size() == 2);
-		azzert(contactEvents.get(0).getTimestamp() == 1355390809139l);
-		azzert(contactEvents.get(1).getTimestamp() == 1355391373642l);
+        azzert(contactEvent != null);
+        azzert(contactEvent.getStartTime() == 1355390809139l);
+        azzert(contactEvent.getEndTime() == 1355391373642l);
 
-		/** See if we can get the metadata */
-		List<Metadata> response = accessApi.getMetadata(parameters);
-		azzert(response.size() == 1, "Expected to receive 1 piece of metadata. Received " + response.size());
+        /** See if we can get the metadata */
+        List<Metadata> response = accessApi.getMetadata(parameters);
+        azzert(response.size() == 1, "Expected to receive 1 piece of metadata. Received " + response.size());
 
-		LOG.info("Finished");
-	}
+        LOG.info("Finished");
+    }
 
-	protected void print(List<EntityInstance> elements) {
+    protected void print(List<EntityInstance> elements) {
 
-		TreeMap<Long, EntityInstance> sorted = new TreeMap<Long, EntityInstance>();
+        TreeMap<Long, EntityInstance> sorted = new TreeMap<Long, EntityInstance>();
 
-		for (EntityInstance element : elements) {
-			if (element instanceof EntityInstance) {
-				sorted.put(((EntityInstance)element).getTimestamp(), (EntityInstance)element);
-			}
-		}
+        for (EntityInstance element : elements) {
+            if (element instanceof EntityInstance) {
+                sorted.put(element.getTimestamp(), element);
+            }
+        }
 
-		Iterator<Entry<Long, EntityInstance>> it = sorted.entrySet().iterator();
-		while (it.hasNext()) {
-			EntityInstance element = it.next().getValue();
+        Iterator<Entry<Long, EntityInstance>> it = sorted.entrySet().iterator();
+        while (it.hasNext()) {
+            EntityInstance element = it.next().getValue();
 
-			if (element instanceof TleOrbitalParameters) {
-				continue;
-			}
+            if (element instanceof TleOrbitalParameters) {
+                continue;
+            }
 
-			if (element instanceof OrbitalState) {
-				OrbitalState state = (OrbitalState) element;
-				System.out.println(new Date(element.getTimestamp()) + "   Orbital State:  " + state.getPosition().p1 + ", " + state.getPosition().p2);
-			}
-			else if (element instanceof LocationContactEvent) {
-				LocationContactEvent event = (LocationContactEvent) element;
-				if (event.isVisible() == true) {
-					System.out.println(new Date(element.getTimestamp()) + " Location Event: " + event.getTimestamp() + " " + event.getGroundStationId()
-							+ " got contact to " + event.getSatelliteId());
-				}
-				else {
-					System.out.println(new Date(element.getTimestamp()) + " Location Event: " + event.getTimestamp() + " " + event.getGroundStationId()
-							+ " lost contact to " + event.getSatelliteId());
-				}
-			}
-		}
-	}
+            if (element instanceof OrbitalState) {
+                OrbitalState state = (OrbitalState) element;
+                System.out.println(new Date(element.getTimestamp()) + "   Orbital State:  " + state.getPosition().p1 + ", " + state.getPosition().p2);
+            }
+            else if (element instanceof LocationContactEvent) {
+                LocationContactEvent event = (LocationContactEvent) element;
+                System.out.println(event.prettyPrint());
+            }
+        }
+    }
 }

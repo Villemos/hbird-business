@@ -40,22 +40,22 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
      * from the
      * timestamp for simulated / predicted values.
      */
-    public long generationTime = 0;
+    protected long generationTime = 0;
 
     /** The name of the satellite that this orbital state is applicable to. */
-    public String satellite = null;
+    protected String satelliteId;
 
     /** Position measured in TODO */
-    public D3Vector position;
+    protected D3Vector position;
 
     /** Velocity measured in meters / second. */
-    public D3Vector velocity;
+    protected D3Vector velocity;
 
     /** Momentum measured in TODO */
-    public D3Vector momentum;
+    protected D3Vector momentum;
 
-    public String derivedFrom;
-    
+    protected String derivedFrom;
+
     /**
      * Constructor of an orbital state.
      * 
@@ -66,10 +66,10 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
      * @param position The position of the orbit.
      * @param velocity The velocity of the orbit.
      */
-    public OrbitalState(String issuedBy, String name, String description, long timestamp, long generationTime, String satellite, D3Vector position,
+    public OrbitalState(String issuedBy, String name, String description, long timestamp, long generationTime, String satelliteId, D3Vector position,
             D3Vector velocity, D3Vector momentum, EntityInstance derivedFrom) {
         super(issuedBy, name, description);
-        this.satellite = satellite;
+        this.satelliteId = satelliteId;
         this.position = position;
         this.velocity = velocity;
         this.momentum = momentum;
@@ -78,10 +78,10 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
         this.derivedFrom = derivedFrom.getID();
     }
 
-    public OrbitalState(String issuedBy, String name, String description, long timestamp, String satellite, D3Vector position, D3Vector velocity,
+    public OrbitalState(String issuedBy, String name, String description, long timestamp, String satelliteId, D3Vector position, D3Vector velocity,
             D3Vector momentum, EntityInstance derivedFrom) {
         super(issuedBy, name, description);
-        this.satellite = satellite;
+        this.satelliteId = satelliteId;
         this.position = position;
         this.velocity = velocity;
         this.momentum = momentum;
@@ -107,7 +107,7 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
 
     @Override
     public String getSatelliteId() {
-        return satellite;
+        return satelliteId;
     }
 
     public D3Vector getMomentum() {
@@ -130,14 +130,17 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
 
     @Override
     public String prettyPrint() {
-        return String.format("%s[ID=%s, name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getInstanceID(), getName(), timestamp, satellite);
+        return String.format("%s[ID=%s, name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getInstanceID(), getName(), timestamp,
+                satelliteId);
     }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.exchange.interfaces.IDerivedFrom#getDerivedFrom()
-	 */
-	@Override
-	public String getDerivedFrom() {
-		return derivedFrom;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.exchange.interfaces.IDerivedFrom#getDerivedFrom()
+     */
+    @Override
+    public String getDerivedFrom() {
+        return derivedFrom;
+    }
 }

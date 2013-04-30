@@ -2,7 +2,6 @@ package org.hbird.exchange.dataaccess;
 
 import static org.hbird.exchange.dataaccess.Arguments.GROUND_STATION_NAME;
 import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_NAME;
-import static org.hbird.exchange.dataaccess.Arguments.VISIBILITY;
 import static org.hbird.exchange.dataaccess.Arguments.create;
 
 import java.util.List;
@@ -15,19 +14,12 @@ public class LocationContactEventRequest extends DataRequest {
 
     private static final long serialVersionUID = -5990938785008117581L;
 
-
     public static final String DESCRIPTION = "A request to retrieve location contact events of a satellite / ground station.";
 
     public LocationContactEventRequest(String issuedBy, String location) {
         super(issuedBy);
         setClass(LocationContactEvent.class.getSimpleName());
         setArgumentValue(StandardArguments.GROUND_STATION_NAME, location);
-    }
-
-    public LocationContactEventRequest(String issuedBy, String location, boolean visibility) {
-        this(issuedBy, location);
-        setClass(LocationContactEvent.class.getSimpleName());
-        setArgumentValue(StandardArguments.VISIBILITY, visibility);
     }
 
     /**
@@ -38,7 +30,6 @@ public class LocationContactEventRequest extends DataRequest {
         args = super.getArgumentDefinitions(args);
         args.add(create(SATELLITE_NAME));
         args.add(create(GROUND_STATION_NAME));
-        args.add(create(VISIBILITY));
         return args;
     }
 
@@ -56,9 +47,5 @@ public class LocationContactEventRequest extends DataRequest {
 
     public String getGroundStationName() {
         return getArgumentValue(StandardArguments.GROUND_STATION_NAME, String.class);
-    }
-
-    public boolean getVisibility() {
-        return getArgumentValue(StandardArguments.VISIBILITY, Boolean.class);
     }
 }

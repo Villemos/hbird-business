@@ -143,6 +143,6 @@ public interface IOrbitPrediction extends IHbirdApi {
      * @return Sorted list of Pointing Data.
      * @throws Exception
      */
-    public List<PointingData> requestPointingDataFor(LocationContactEvent startContactEvent, LocationContactEvent endContactEvent, GroundStation groundStation,
+    public List<PointingData> requestPointingDataFor(LocationContactEvent locationContactEvent, GroundStation groundStation,
             Satellite satellite, long contactDataStepSize) throws Exception;
 }

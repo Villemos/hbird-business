@@ -16,9 +16,13 @@
  */
 package org.hbird.exchange.navigation;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hbird.exchange.core.Event;
-import org.hbird.exchange.interfaces.IAntennaSpecific;
+import org.hbird.exchange.interfaces.IDerivedFrom;
+import org.hbird.exchange.interfaces.IGroundStationSpecific;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
+import org.hbird.exchange.util.Dates;
 
 /**
  * The ground station control will, based on the mission timeline, orchestra the ground station.
@@ -41,29 +45,48 @@ import org.hbird.exchange.interfaces.ISatelliteSpecific;
  * 
  * @author Gert Villemos
  */
-public class LocationContactEvent extends Event implements IAntennaSpecific, ISatelliteSpecific {
+public class LocationContactEvent extends Event implements IGroundStationSpecific, ISatelliteSpecific, IDerivedFrom {
 
-    private static final long serialVersionUID = 6129893135305263533L;
+    private static final long serialVersionUID = -7200905393604330565L;
 
-    protected long generationTime = 0;
+    public static final String EVENT_ID_SEPARATOR = "-";
+    public static final String DESCRIPTION = "A contact event between a satellite and a location";
+
+    protected final long startTime;
+
+    protected final long endTime;
 
     /** The location that contact has been established /lost with. */
-    protected String location = null;
-
-    /**
-     * The antenna at the location. The same location may have multiple antennas. This event if for a specific
-     * groundstation / antenna pair.
-     */
-    protected String antenna = null;
+    protected final String groundStationId;
 
     /** The satellite that contact has been established /lost with. */
-    protected String satellite = null;
+    protected final String satelliteId;
+
+    /** ID of calculation source. Eg ID of TLE. */
+    protected final String derivedFromId;
+
+    protected final long orbitNumber;
+
+    protected boolean inSunLigth;
+
+    protected ContactParameterRange azimuth;
+
+    protected ExtendedContactParameterRange elevation;
+
+    protected ContactParameterRange uplinkDoppler;
+
+    protected ContactParameterRange downlinkDoppler;
+
+    protected ExtendedContactParameterRange uplinkSignalLoss;
+
+    protected ExtendedContactParameterRange downlinkSignalLoss;
+
+    protected ExtendedContactParameterRange range;
+
+    protected ExtendedContactParameterRange signalDelay;
 
     /** The state of the satellite as the event occurs. */
-    protected OrbitalState satelliteState = null;
-
-    /** Flag indicating whether the visibility (contact) is now established or lost. */
-    protected boolean isVisible = true;
+    protected OrbitalState satelliteStateAtStart;
 
     /**
      * Constructor of a location contact event.
@@ -74,55 +97,213 @@ public class LocationContactEvent extends Event implements IAntennaSpecific, ISa
      * @param location The location to which contact has been established / lost.
      * @param satellite The satellite to which contact has been established / lost.
      */
-    public LocationContactEvent(String issuedBy, long timestamp, String location, String antenna, String satellite, boolean isVisible,
-            OrbitalState satelliteState) {
-        super(issuedBy, "ContactEvent", "A contact event between a satellite and a location", timestamp);
-        this.location = location;
-        this.antenna = antenna;
-        this.satellite = satellite;
-        this.isVisible = isVisible;
-        this.satelliteState = satelliteState;
+    public LocationContactEvent(String issuedBy, long generationTime, String groundStationId, String satelliteId, String derivedFrom, long startTime,
+            long endTime, long orbitNumber) {
+        super(issuedBy, LocationContactEvent.class.getName(), DESCRIPTION, generationTime);
+        this.groundStationId = groundStationId;
+        this.satelliteId = satelliteId;
+        this.derivedFromId = derivedFrom;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.orbitNumber = orbitNumber;
     }
 
     @Override
     public String getGroundStationId() {
-        return location;
+        return groundStationId;
     }
 
     @Override
     public String getSatelliteId() {
-        return satellite;
+        return satelliteId;
     }
 
-    public boolean isVisible() {
-        return isVisible;
+    /**
+     * @return the inSunLigth
+     */
+    public boolean isInSunLigth() {
+        return inSunLigth;
     }
 
-    public void setVisible(boolean isVisible) {
-        this.isVisible = isVisible;
+    /**
+     * @param inSunLigth the inSunLigth to set
+     */
+    public void setInSunLigth(boolean inSunLigth) {
+        this.inSunLigth = inSunLigth;
+    }
+
+    /**
+     * @return the azimuth
+     */
+    public ContactParameterRange getAzimuth() {
+        return azimuth;
+    }
+
+    /**
+     * @param azimuth the azimuth to set
+     */
+    public void setAzimuth(ContactParameterRange azimuth) {
+        this.azimuth = azimuth;
+    }
+
+    /**
+     * @return the elevation
+     */
+    public ExtendedContactParameterRange getElevation() {
+        return elevation;
+    }
+
+    /**
+     * @param elevation the elevation to set
+     */
+    public void setElevation(ExtendedContactParameterRange elevation) {
+        this.elevation = elevation;
+    }
+
+    /**
+     * @return the uplinkDoppler
+     */
+    public ContactParameterRange getUplinkDoppler() {
+        return uplinkDoppler;
+    }
+
+    /**
+     * @param uplinkDoppler the uplinkDoppler to set
+     */
+    public void setUplinkDoppler(ContactParameterRange uplinkDoppler) {
+        this.uplinkDoppler = uplinkDoppler;
+    }
+
+    /**
+     * @return the downlinkDoppler
+     */
+    public ContactParameterRange getDownlinkDoppler() {
+        return downlinkDoppler;
+    }
+
+    /**
+     * @param downlinkDoppler the downlinkDoppler to set
+     */
+    public void setDownlinkDoppler(ContactParameterRange downlinkDoppler) {
+        this.downlinkDoppler = downlinkDoppler;
+    }
+
+    /**
+     * @return the uplinkSignalLoss
+     */
+    public ExtendedContactParameterRange getUplinkSignalLoss() {
+        return uplinkSignalLoss;
+    }
+
+    /**
+     * @param uplinkSignalLoss the uplinkSignalLoss to set
+     */
+    public void setUplinkSignalLoss(ExtendedContactParameterRange uplinkSignalLoss) {
+        this.uplinkSignalLoss = uplinkSignalLoss;
+    }
+
+    /**
+     * @return the downlinkSignalLoss
+     */
+    public ExtendedContactParameterRange getDownlinkSignalLoss() {
+        return downlinkSignalLoss;
+    }
+
+    /**
+     * @param downlinkSignalLoss the downlinkSignalLoss to set
+     */
+    public void setDownlinkSignalLoss(ExtendedContactParameterRange downlinkSignalLoss) {
+        this.downlinkSignalLoss = downlinkSignalLoss;
+    }
+
+    /**
+     * @return the range
+     */
+    public ExtendedContactParameterRange getRange() {
+        return range;
+    }
+
+    /**
+     * @param range the range to set
+     */
+    public void setRange(ExtendedContactParameterRange range) {
+        this.range = range;
+    }
+
+    /**
+     * @return the signalDelay
+     */
+    public ExtendedContactParameterRange getSignalDelay() {
+        return signalDelay;
+    }
+
+    /**
+     * @param signalDelay the signalDelay to set
+     */
+    public void setSignalDelay(ExtendedContactParameterRange signalDelay) {
+        this.signalDelay = signalDelay;
+    }
+
+    /**
+     * @return the startTime
+     */
+    public long getStartTime() {
+        return startTime;
+    }
+
+    /**
+     * @return the endTime
+     */
+    public long getEndTime() {
+        return endTime;
+    }
+
+    /**
+     * @return the orbitNumber
+     */
+    public long getOrbitNumber() {
+        return orbitNumber;
+    }
+
+    /**
+     * @see org.hbird.exchange.interfaces.IDerivedFrom#getDerivedFrom()
+     */
+    @Override
+    public String getDerivedFrom() {
+        return derivedFromId;
+    }
+
+    /**
+     * @return the satelliteStateAtStart
+     */
+    public OrbitalState getSatelliteStateAtStart() {
+        return satelliteStateAtStart;
+    }
+
+    /**
+     * @param satelliteStateAtStart the satelliteStateAtStart to set
+     */
+    public void setSatelliteStateAtStart(OrbitalState satelliteStateAtStart) {
+        this.satelliteStateAtStart = satelliteStateAtStart;
+    }
+
+    public String getEventId() {
+        return new StringBuilder().append(getGroundStationId())
+                .append(EVENT_ID_SEPARATOR)
+                .append(getSatelliteId())
+                .append(EVENT_ID_SEPARATOR)
+                .append(getOrbitNumber()).toString();
     }
 
     @Override
     public String prettyPrint() {
-        return this.getClass().getSimpleName() + "[name=" + name + ", timestamp=" + timestamp + ", location=" + getGroundStationId() + ", satellite="
-                + satellite + ", visibility=" + isVisible + "]";
-    }
-
-    @Override
-    public String getAntennaName() {
-        return antenna;
-    }
-
-    @Override
-    public void setAntennaName(String antenna) {
-        this.antenna = antenna;
-    }
-
-    public OrbitalState getSatelliteState() {
-        return satelliteState;
-    }
-
-    public void setSatelliteState(OrbitalState satelliteState) {
-        this.satelliteState = satelliteState;
+        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        builder.append("eventId", getEventId());
+        builder.append("start", Dates.toDefaultDateFormat(startTime));
+        builder.append("end", Dates.toDefaultDateFormat(endTime));
+        builder.append("gs", groundStationId);
+        builder.append("sat", satelliteId);
+        builder.append("orbit", orbitNumber);
+        return builder.build();
     }
 }

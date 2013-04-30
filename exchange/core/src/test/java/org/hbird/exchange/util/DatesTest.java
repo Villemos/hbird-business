@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.core.util;
+package org.hbird.exchange.util;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.hbird.exchange.util.Dates;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

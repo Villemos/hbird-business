@@ -137,6 +137,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
         TrackingSupport<C> tracker = createTrackingSupport(config, catalogue, prediction, optimizer);    
         
          from(StandardEndpoints.COMMANDS + "?selector=name='Track'")
+         // TODO - 28.04.2013, kimmell - missing GS based filter here!
              .log(asRoute("Received 'Track' command from '%s'. Will generate Hamlib commands for '%s'", simple("${body.issuedBy}").getText(), name))
              .split()
                  .method(tracker, "track")
