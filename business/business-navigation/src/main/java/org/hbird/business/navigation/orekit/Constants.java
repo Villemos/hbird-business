@@ -23,27 +23,37 @@ import org.orekit.frames.FramesFactory;
 
 public class Constants {
 
-	/** equatorial radius in meter */
-	public static final double EQUATORIAL_RADIUS_OF_THE_EARTH  = 6378137.0;
-	
-	/** Earth flattening */
-	public static final double FLATTEING_OF_THE_ERATH_ON_POLES = 1.0 / 298.257223563; 
-	
-	/** A central attraction coefficient */ 
-	public static final double MU = 3.986004415e+14;                                    
-	
-	/** Speed of light */ 
-	public static final double SPEED_OF_LIGHT = 299792458.0;                            
+    /** Equatorial radius of Earth in meters. */
+    public static final double EQUATORIAL_RADIUS_OF_THE_EARTH = org.orekit.utils.Constants.WGS84_EARTH_EQUATORIAL_RADIUS;
 
-	protected static OneAxisEllipsoid earth; 
+    /** Earth flattening */
+    public static final double FLATTEING_OF_THE_ERATH_ON_POLES = org.orekit.utils.Constants.WGS84_EARTH_FLATTENING;
 
-	protected static Frame frame = FramesFactory.getEME2000();
-	
-	static {
-		try {
-			earth = new OneAxisEllipsoid(EQUATORIAL_RADIUS_OF_THE_EARTH, FLATTEING_OF_THE_ERATH_ON_POLES, FramesFactory.getITRF2005());
-		} catch (OrekitException e) {
-			e.printStackTrace();
-		}
-	}
+    /** A central attraction coefficient m<sup>3</sup>/s<sup>2</sup>. */
+    public static final double MU = org.orekit.utils.Constants.WGS84_EARTH_MU;
+
+    /** Speed of light m/s. */
+    public static final double SPEED_OF_LIGHT = org.orekit.utils.Constants.SPEED_OF_LIGHT;
+
+    public static final int MINUTES_PER_DAY = 60 * 24;
+    public static final int SECONDS_PER_DAY = 60 * MINUTES_PER_DAY;
+
+    // constants for orbit number calculation from TLE
+    public static final double NORMALIZED_EQUATORIAL_RADIUS = 1.0;
+    public static final double XKE = 0.0743669161331734132;
+    public static final double XJ2 = 1.082616e-3;
+    public static final double CK2 = 0.5 * XJ2 * NORMALIZED_EQUATORIAL_RADIUS * NORMALIZED_EQUATORIAL_RADIUS;
+
+    protected static OneAxisEllipsoid earth;
+
+    protected static Frame FRAME = FramesFactory.getEME2000();
+
+    static {
+        try {
+            earth = new OneAxisEllipsoid(EQUATORIAL_RADIUS_OF_THE_EARTH, FLATTEING_OF_THE_ERATH_ON_POLES, FramesFactory.getITRF2005());
+        }
+        catch (OrekitException e) {
+            throw new RuntimeException("Failed to create EARTH constant in " + Constants.class.getName(), e);
+        }
+    }
 }

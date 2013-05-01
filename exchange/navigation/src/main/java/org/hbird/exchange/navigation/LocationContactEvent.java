@@ -99,7 +99,7 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
      */
     public LocationContactEvent(String issuedBy, long generationTime, String groundStationId, String satelliteId, String derivedFrom, long startTime,
             long endTime, long orbitNumber) {
-        super(issuedBy, LocationContactEvent.class.getName(), DESCRIPTION, generationTime);
+        super(issuedBy, LocationContactEvent.class.getSimpleName(), DESCRIPTION, generationTime);
         this.groundStationId = groundStationId;
         this.satelliteId = satelliteId;
         this.derivedFromId = derivedFrom;

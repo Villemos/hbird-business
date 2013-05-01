@@ -32,10 +32,7 @@ import org.hbird.exchange.interfaces.IPart;
  */
 public class NavigationComponent extends StartablePart {
 
-    /**
-	 * 
-	 */
-    private static final long serialVersionUID = -148692363129164616L;
+    private static final long serialVersionUID = 4017755260726979987L;
 
     public static final String ORBIT_PROPAGATOR_NAME = "OrbitPropagator";
     public static final String ORBIT_PROPAGATOR_DESC = "Component for performing TLE based orbit prediction, including contact events and orbital states.";

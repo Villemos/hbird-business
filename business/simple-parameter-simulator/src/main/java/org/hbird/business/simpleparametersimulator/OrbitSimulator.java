@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hbird.business.navigation.orekit.KeplianOrbitPredictor;
+import org.hbird.business.navigation.orekit.KeplerianOrbitPredictor;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.navigation.OrbitalState;
 
@@ -95,7 +95,7 @@ public class OrbitSimulator {
     protected void initialize() {
         // OrbitPredictionRequest request = new OrbitPredictionRequest(issuedBy, "", "Measured Orbital State", "A simulated orbit.", satellite, initialState, locations);
     	// 
-        // KeplianOrbitPredictor orbitPredictor = new KeplianOrbitPredictor();
+        // KeplerianOrbitPredictor orbitPredictor = new KeplerianOrbitPredictor();
         // try {
         // /** The results will contain Orbital States as well as orbital events. Only take the states.
         // *

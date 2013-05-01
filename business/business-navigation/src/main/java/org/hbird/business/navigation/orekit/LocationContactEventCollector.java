@@ -19,7 +19,6 @@ package org.hbird.business.navigation.orekit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IPublish;
 import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.core.EntityInstance;
@@ -29,6 +28,7 @@ import org.orekit.errors.OrekitException;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.propagation.SpacecraftState;
 import org.orekit.propagation.events.ElevationDetector;
+import org.orekit.time.AbsoluteDate;
 import org.orekit.time.TimeScalesFactory;
 import org.orekit.tle.TLE;
 import org.slf4j.Logger;
@@ -41,8 +41,10 @@ import org.slf4j.LoggerFactory;
  */
 public class LocationContactEventCollector extends ElevationDetector {
 
-    /** The unique UID */
-    private static final long serialVersionUID = 801203905525890103L;
+    private static final long serialVersionUID = 5610579540868577419L;
+
+    /** FIXME I don't know what this does but OREKIT needs it... */
+    public static final double maxcheck = 10.0D; // calculation step in seconds?
 
     private static final Logger LOG = LoggerFactory.getLogger(LocationContactEventCollector.class);
 
@@ -52,14 +54,9 @@ public class LocationContactEventCollector extends ElevationDetector {
     /** The satellite. */
     protected final String satelliteId;
 
-    /** FIXME I don't know what this does but OREKIT needs it... */
-    public static final double maxcheck = 10.0D; // calculation step in seconds?
+    protected final IPublish publisher;
 
-    protected IPublish api;
-
-    protected boolean publish;
-
-    protected TleOrbitalParameters tleParameters;
+    protected final TleOrbitalParameters tleParameters;
 
     protected List<EntityInstance> events = new ArrayList<EntityInstance>();
 
@@ -75,12 +72,12 @@ public class LocationContactEventCollector extends ElevationDetector {
      * @param contactDataStepSize
      */
     public LocationContactEventCollector(double elevation, TopocentricFrame topo, String satelliteId, String groundStationId, TleOrbitalParameters parameters,
-            boolean publish) {
+            IPublish publisher) {
         super(maxcheck, elevation, topo);
-        this.publish = publish;
         this.satelliteId = satelliteId;
         this.groundStationId = groundStationId;
         this.tleParameters = parameters;
+        this.publisher = publisher;
     }
 
     /**
@@ -91,15 +88,16 @@ public class LocationContactEventCollector extends ElevationDetector {
     public int eventOccurred(final SpacecraftState state, final boolean increasing) throws OrekitException {
 
         if (increasing) {
-            // we have new start state; tore it
+            // we have new start state; store it
             lastStartState = state;
         }
         else if (!increasing && lastStartState != null) {
             // we have both - start & end; create new LocationContactEvent
             LocationContactEvent event = createEvent(groundStationId, satelliteId, tleParameters, lastStartState, state);
             events.add(event);
-            if (publish) {
-                publish(event);
+            if (publisher != null) {
+                LOG.info("Injecting new LocationContactEvent {}", event.prettyPrint());
+                publisher.publish(event);
             }
             lastStartState = null;
         }
@@ -115,26 +113,15 @@ public class LocationContactEventCollector extends ElevationDetector {
     LocationContactEvent createEvent(String groundStationId, String satelliteId, TleOrbitalParameters tleParameters, SpacecraftState startState,
             SpacecraftState endState) throws OrekitException {
         long now = System.currentTimeMillis();
-        long startTime = startState.getDate().toDate(TimeScalesFactory.getUTC()).getTime();
+        AbsoluteDate startDate = startState.getDate();
+        long startTime = startDate.toDate(TimeScalesFactory.getUTC()).getTime();
         long endTime = endState.getDate().toDate(TimeScalesFactory.getUTC()).getTime();
         TLE tle = new TLE(tleParameters.getTleLine1(), tleParameters.getTleLine2());
-        long orbitNumber = NavigationUtilities.calculateOrbitNumber(tle, startState.getDate());
-        LocationContactEvent event = new LocationContactEvent(NavigationComponent.ORBIT_PROPAGATOR_NAME, now, groundStationId, satelliteId,
-                tleParameters.getID(), startTime, endTime, orbitNumber);
-        event.setSatelliteStateAtStart(NavigationUtilities.toOrbitalState(startState, tleParameters));
+        long orbitNumber = NavigationUtilities.calculateOrbitNumber(tle, startDate);
+        String tleInstanceId = tleParameters.getInstanceID();
+        LocationContactEvent event = new LocationContactEvent(NavigationComponent.ORBIT_PROPAGATOR_NAME, now, groundStationId, satelliteId, tleInstanceId,
+                startTime, endTime, orbitNumber);
+        event.setSatelliteStateAtStart(NavigationUtilities.toOrbitalState(startState, satelliteId, tleInstanceId));
         return event;
     }
-
-    void publish(LocationContactEvent event) {
-        LOG.info("Injecting new LocationContactEvent {}", event.prettyPrint());
-        getPublisher().publish(event);
-    }
-
-    IPublish getPublisher() {
-        if (api == null) {
-            api = ApiFactory.getPublishApi(NavigationComponent.ORBIT_PROPAGATOR_NAME);
-        }
-        return api;
-    }
-
 }

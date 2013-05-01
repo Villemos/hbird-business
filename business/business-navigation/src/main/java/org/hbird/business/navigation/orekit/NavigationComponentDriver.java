@@ -17,6 +17,10 @@
 package org.hbird.business.navigation.orekit;
 
 import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPublish;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
@@ -25,25 +29,29 @@ import org.hbird.exchange.dataaccess.TlePropagationRequest;
  * Component builder to create a Navigation Component
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class NavigationComponentDriver extends SoftwareComponentDriver {
 
-	@Override
-	public void doConfigure() {
+    @Override
+    public void doConfigure() {
 
-		TleOrbitalPredictor tlePredictor = new TleOrbitalPredictor();
-		KeplianOrbitPredictor keplianOrbitPredictor = new KeplianOrbitPredictor();
-		tlePredictor.setKeplianOrbitPredictor(keplianOrbitPredictor);
+        String partName = part.getName();
 
-		/** Create the route and the interface for getting the Locations. */
-		// from("direct:locationstore").to("solr:locationstore");
-		
-		/** Route for commands to this component, requests for predictions. */
-		from(StandardEndpoints.COMMANDS + "?" + addClassSelector(TlePropagationRequest.class.getSimpleName()))
-		.bean(tlePredictor);
-		
-		ProcessorDefinition<?> route = from("direct:navigationinjection");
-		addInjectionRoute(route);
-	}
+        KeplerianOrbitPredictor predictor = new KeplerianOrbitPredictor();
+        IDataAccess dao = ApiFactory.getDataAccessApi(partName);
+        ICatalogue catalogue = ApiFactory.getCatalogueApi(partName);
+        IPublish publisher = ApiFactory.getPublishApi(partName);
+        TleOrbitalPredictor tlePredictor = new TleOrbitalPredictor(dao, catalogue, publisher, predictor);
+
+        /** Create the route and the interface for getting the Locations. */
+        // from("direct:locationstore").to("solr:locationstore");
+
+        /** Route for commands to this component, requests for predictions. */
+        from(StandardEndpoints.COMMANDS + "?" + addClassSelector(TlePropagationRequest.class.getSimpleName()))
+                .bean(tlePredictor);
+
+        ProcessorDefinition<?> route = from("direct:navigationinjection");
+        addInjectionRoute(route);
+    }
 }

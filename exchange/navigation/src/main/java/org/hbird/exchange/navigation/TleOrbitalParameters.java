@@ -74,6 +74,15 @@ public class TleOrbitalParameters extends EntityInstance implements ISatelliteSp
         this.tleLine2 = tleLine2;
     }
 
+    public TleOrbitalParameters(String issuedBy, String name, String description, long timestamp, Satellite satellite, String tleLine1, String tleLine2) {
+        super(issuedBy, name, description);
+        this.satellite = satellite.getID();
+        this.timestamp = timestamp;
+        this.tleLine1 = tleLine1;
+        this.tleLine2 = tleLine2;
+        setEntityID(this.satellite + ID_SEPARATOR + name);
+    }
+
     @Override
     public String getSatelliteId() {
         return satellite;
@@ -94,9 +103,10 @@ public class TleOrbitalParameters extends EntityInstance implements ISatelliteSp
     public void setTleLine2(String tleLine2) {
         this.tleLine2 = tleLine2;
     }
-    
+
     @Override
     public String prettyPrint() {
-        return String.format("%s[ID=%s, name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getInstanceID(), getName(), timestamp, satellite);
+        return String.format("%s[ID=%s, name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getInstanceID(), getName(), timestamp,
+                satellite);
     }
 }

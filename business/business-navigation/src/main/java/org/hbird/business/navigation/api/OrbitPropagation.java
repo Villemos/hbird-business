@@ -96,6 +96,6 @@ public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
     @Override
     public List<PointingData> requestPointingDataFor(LocationContactEvent locationContactEvent, GroundStation groundStation,
             Satellite satellite, long contactDataStepSize) throws Exception {
-        return NavigationUtilities.calculateContactData(locationContactEvent, groundStation, satellite, contactDataStepSize);
+        return NavigationUtilities.calculateContactData(locationContactEvent, groundStation, contactDataStepSize);
     }
 }

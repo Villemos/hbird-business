@@ -35,9 +35,9 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 public class TlePropagationRequest extends DataRequest {
 
-    public static final String DESCRIPTION = "A request for orbit prediction.";
+    private static final long serialVersionUID = 8912576417486920829L;
 
-    private static final long serialVersionUID = 4417878827527226757L;
+    public static final String DESCRIPTION = "A request for orbit prediction.";
 
     public TlePropagationRequest(String issuedBy, String satellite) {
         super(issuedBy, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
@@ -114,7 +114,7 @@ public class TlePropagationRequest extends DataRequest {
         return args;
     }
 
-    public String getSatellite() {
+    public String getSatelliteId() {
         return getArgumentValue(StandardArguments.SATELLITE_NAME, String.class);
     }
 
@@ -134,6 +134,7 @@ public class TlePropagationRequest extends DataRequest {
         return getArgumentValue(StandardArguments.STEP_SIZE, Long.class);
     }
 
+    @SuppressWarnings("unchecked")
     public List<String> getLocations() {
         return getArgumentValue(StandardArguments.GROUND_STATION_NAMES, List.class);
     }

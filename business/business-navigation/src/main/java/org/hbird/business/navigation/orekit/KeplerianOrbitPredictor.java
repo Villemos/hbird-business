@@ -17,11 +17,12 @@
 package org.hbird.business.navigation.orekit;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import org.hbird.business.api.IPublish;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.EntityInstance;
+import org.hbird.exchange.dataaccess.TlePropagationRequest;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.bodies.GeodeticPoint;
@@ -33,7 +34,6 @@ import org.orekit.propagation.Propagator;
 import org.orekit.propagation.analytical.KeplerianPropagator;
 import org.orekit.propagation.events.EventDetector;
 import org.orekit.time.AbsoluteDate;
-import org.orekit.time.TimeScalesFactory;
 import org.orekit.utils.PVCoordinates;
 
 /**
@@ -50,43 +50,32 @@ import org.orekit.utils.PVCoordinates;
  * 
  * 
  */
-public class KeplianOrbitPredictor {
+public class KeplerianOrbitPredictor {
 
-    public List<EntityInstance> predictOrbit(List<GroundStation> groundStations, PVCoordinates pvCoordinates, long startTime, String satelliteId,
-            double stepSize, double deltaPropagation, long contactDataStepSize, TleOrbitalParameters parameters, boolean publish) throws OrekitException {
+    public List<EntityInstance> predictOrbit(TlePropagationRequest request, List<GroundStation> groundStations, PVCoordinates pvCoordinates,
+            AbsoluteDate startTime, TleOrbitalParameters parameters, IPublish publisher) throws OrekitException {
 
         List<EntityInstance> results = new ArrayList<EntityInstance>();
 
-        AbsoluteDate initialDate = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());
-
-        // Initial date
-        Orbit initialOrbit = new KeplerianOrbit(pvCoordinates, Constants.frame, initialDate, Constants.MU);
+        // TODO - 01.05.2013, kimmell - check which Orbit and frame to use here
+        Orbit initialOrbit = new KeplerianOrbit(pvCoordinates, Constants.FRAME, startTime, Constants.MU);
 
         Propagator propagator = new KeplerianPropagator(initialOrbit);
+        String satelliteId = request.getSatelliteId();
 
-        OrbitalStateCollector injector = new OrbitalStateCollector(satelliteId, parameters, publish);
+        OrbitalStateCollector injector = new OrbitalStateCollector(satelliteId, parameters, publisher);
 
         /** Register the visibility events for the requested locations. */
         for (GroundStation groundStation : groundStations) {
             D3Vector location = groundStation.getGeoLocation();
             GeodeticPoint point = new GeodeticPoint(location.p1, location.p2, location.p3);
             TopocentricFrame sta1Frame = new TopocentricFrame(Constants.earth, point, location.getName());
-
-            // /** The ground station may have multiple antennas, with different properties. */
-            // for (Antenna antenna : groundStation.getAntennas()) {
-            //
-            // /** Register the injector that will send the detected events, for this location and antenna, to the
-            // propagator. */
-            // EventDetector sta1Visi = new LocationContactEventCollector(antenna.getThresholdElevation(), sta1Frame,
-            // satellite, groundStation.getID(), antenna.getName(), parameters, publish);
-            // propagator.addEventDetector(sta1Visi);
-            // }
-            EventDetector sta1Visi = new LocationContactEventCollector(0, sta1Frame, satelliteId, groundStation.getID(), parameters, publish);
+            EventDetector sta1Visi = new LocationContactEventCollector(0, sta1Frame, satelliteId, groundStation.getID(), parameters, publisher);
             propagator.addEventDetector(sta1Visi);
         }
 
-        propagator.setMasterMode(stepSize, injector);
-        propagator.propagate(new AbsoluteDate(initialDate, deltaPropagation));
+        propagator.setMasterMode(request.getStepSize(), injector);
+        propagator.propagate(new AbsoluteDate(startTime, request.getDeltaPropagation()));
 
         /** Add the data set with the orbital data. */
         results.addAll(injector.getDataSet());

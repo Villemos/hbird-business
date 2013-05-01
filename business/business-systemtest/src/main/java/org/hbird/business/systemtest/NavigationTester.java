@@ -17,7 +17,6 @@
 package org.hbird.business.systemtest;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -33,6 +32,7 @@ import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
+import org.hbird.exchange.util.Dates;
 
 public class NavigationTester extends SystemTest {
 
@@ -76,7 +76,7 @@ public class NavigationTester extends SystemTest {
         azzert(orbitalStateListener.elements.size() == 121, "Expect to receive 121 orbital states. Received " + orbitalStateListener.elements.size());
         print(orbitalStateListener.elements);
 
-        azzert(locationEventListener.elements.size() == 6, "Expect to receive 6 location events. Received " + locationEventListener.elements.size());
+        azzert(locationEventListener.elements.size() == 2, "Expect to receive 2 location events. Received " + locationEventListener.elements.size());
         print(locationEventListener.elements);
 
         /** Send command to commit all changes. */
@@ -127,7 +127,8 @@ public class NavigationTester extends SystemTest {
 
             if (element instanceof OrbitalState) {
                 OrbitalState state = (OrbitalState) element;
-                System.out.println(new Date(element.getTimestamp()) + "   Orbital State:  " + state.getPosition().p1 + ", " + state.getPosition().p2);
+                System.out.printf("%s Orbital state: %s, %s; %s%n", Dates.toDefaultDateFormat(state.getTimestamp()), state.getPosition().p1,
+                        state.getPosition().p2, state.getGeoLocation());
             }
             else if (element instanceof LocationContactEvent) {
                 LocationContactEvent event = (LocationContactEvent) element;

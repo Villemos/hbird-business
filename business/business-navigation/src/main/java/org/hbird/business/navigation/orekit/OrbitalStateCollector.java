@@ -19,7 +19,6 @@ package org.hbird.business.navigation.orekit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IPublish;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.navigation.OrbitalState;
@@ -28,9 +27,8 @@ import org.orekit.errors.PropagationException;
 import org.orekit.propagation.SpacecraftState;
 import org.orekit.propagation.sampling.OrekitFixedStepHandler;
 
-
 /**
- * Callback class of the orekit propagator. The propagator will call the 
+ * Callback class of the orekit propagator. The propagator will call the
  * 'handleStep' method on this object at intervals, providing the next orbital state.
  * This class transforms the orbital state provided by orekit into a generic
  * type, and parses it to the 'seda:OrbitPredictions' route. This route must be
@@ -38,49 +36,43 @@ import org.orekit.propagation.sampling.OrekitFixedStepHandler;
  */
 public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
-	/** The unique UID */
-	private static final long serialVersionUID = 3944670616542918255L;
+    private static final long serialVersionUID = 7292599962670447718L;
 
-	protected TleOrbitalParameters parameters;
-	
-	protected IPublish api = null;
-	
-	protected boolean publish = false;
+    protected final String satelliteId;
 
-	protected String satellite = null;
+    protected TleOrbitalParameters parameters;
 
-	protected List<EntityInstance> states = new ArrayList<EntityInstance>();
+    protected final IPublish publisher;
 
-	protected String orbitalStateEntityId = null;
-	
-	public OrbitalStateCollector(String satellite, TleOrbitalParameters parameters, boolean publish) {
-		this.publish = publish;
-		this.satellite = satellite;
-		if (publish) {
-			// TODO set proper name
-			api = ApiFactory.getPublishApi("");
-		}
-		
-		this.parameters = parameters;		
-		this.orbitalStateEntityId = satellite + "/OrbitalState";
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.orekit.propagation.sampling.OrekitFixedStepHandler#handleStep(org.orekit.propagation.SpacecraftState, boolean)
-	 */
-	public void handleStep(SpacecraftState currentState, boolean isLast) throws PropagationException {
+    protected List<EntityInstance> states = new ArrayList<EntityInstance>();
 
-		OrbitalState state = NavigationUtilities.toOrbitalState(currentState, parameters);
-		state.setEntityID(orbitalStateEntityId);
-		states.add(state);
+    protected String orbitalStateEntityId = null;
 
-		/** If stream mode, then deliver the data as a stream. */
-		if (publish) {
-			api.publish(state);
-		}
-	}
+    public OrbitalStateCollector(String satelliteId, TleOrbitalParameters parameters, IPublish publisher) {
+        this.satelliteId = satelliteId;
+        this.parameters = parameters;
+        this.publisher = publisher;
+        this.orbitalStateEntityId = satelliteId + "/OrbitalState";
+    }
 
-	public List<EntityInstance> getDataSet() {
-		return states;
-	}
+    /**
+     * @see org.orekit.propagation.sampling.OrekitFixedStepHandler#handleStep(org.orekit.propagation.SpacecraftState,
+     *      boolean)
+     */
+    @Override
+    public void handleStep(SpacecraftState currentState, boolean isLast) throws PropagationException {
+
+        OrbitalState state = NavigationUtilities.toOrbitalState(currentState, satelliteId, parameters.getInstanceID());
+        state.setEntityID(orbitalStateEntityId);
+        states.add(state);
+
+        /* If stream mode, then deliver the data as a stream. */
+        if (publisher != null) {
+            publisher.publish(state);
+        }
+    }
+
+    public List<EntityInstance> getDataSet() {
+        return states;
+    }
 }

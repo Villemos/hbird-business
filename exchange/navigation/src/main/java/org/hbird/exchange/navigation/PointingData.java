@@ -17,10 +17,11 @@
  * under the License. */
 package org.hbird.exchange.navigation;
 
-import java.util.Date;
-
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
+import org.hbird.exchange.util.Dates;
 
 /**
  * Class describing the attributes between two objects, such as
@@ -115,7 +116,13 @@ public class PointingData implements ISatelliteSpecific, IGroundStationSpecific 
     }
 
     public String prettyPrint() {
-        // TODO - 17.04.2013, kimmell - fix this
-        return (new Date(timestamp)).toLocaleString() + ", Azimuth:" + azimuth + ", Elevation:" + elevation + ", doppler:" + doppler;
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("time", Dates.toDefaultDateFormat(timestamp))
+                .append("azimuth", azimuth)
+                .append("elevation", elevation)
+                .append("doppler", doppler)
+                .append("sat", satelliteName)
+                .append("gs", groundStationName)
+                .build();
     }
 }

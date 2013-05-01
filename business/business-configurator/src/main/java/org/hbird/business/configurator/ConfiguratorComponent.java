@@ -66,11 +66,9 @@ public class ConfiguratorComponent extends StartablePart implements ApplicationC
         this(new Part("System", ""), CONFIGURATOR_NAME);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
      * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.
-     * ApplicationContext)
+     *      ApplicationContext)
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -95,7 +93,6 @@ public class ConfiguratorComponent extends StartablePart implements ApplicationC
      * @throws Exception
      */
     public void start() throws Exception {
-    	
         ConfiguratorComponentDriver driver = new ConfiguratorComponentDriver(applicationContext);
         driver.start(this);
     }
