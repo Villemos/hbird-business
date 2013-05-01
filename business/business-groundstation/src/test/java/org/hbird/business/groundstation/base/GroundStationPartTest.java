@@ -31,6 +31,7 @@ import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.Part;
 import org.hbird.exchange.groundstation.Stop;
 import org.hbird.exchange.groundstation.Track;
 import org.junit.Before;
@@ -63,7 +64,7 @@ public class GroundStationPartTest {
      */
     @Before
     public void setUp() throws Exception {
-        part = new GroundStationPart<GroundStationDriverConfiguration>(NAME, DESCRIPTION, DRIVER_NAME, configuration);
+        part = new GroundStationPart<GroundStationDriverConfiguration>(new Part("root", ""), NAME, DESCRIPTION, DRIVER_NAME, configuration);
         inOrder = inOrder(configuration);
     }
 

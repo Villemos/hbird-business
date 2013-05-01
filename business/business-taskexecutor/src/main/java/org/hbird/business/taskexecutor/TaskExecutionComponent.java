@@ -34,6 +34,7 @@ package org.hbird.business.taskexecutor;
 
 import org.hbird.business.core.StartablePart;
 import org.hbird.business.taskexecutor.bean.TaskExecutorComponentDriver;
+import org.hbird.exchange.interfaces.IPart;
 
 /**
  * @author Gert Villemos
@@ -50,7 +51,7 @@ public class TaskExecutionComponent extends StartablePart {
     public static final String TASK_EXECUTOR_DESC = "Component for executing scheduled tasks.";
 	public static final String DEFAULT_DRIVER = TaskExecutorComponentDriver.class.getName();
 	
-	public TaskExecutionComponent() {
-		super(TASK_EXECUTOR_NAME, TASK_EXECUTOR_DESC, DEFAULT_DRIVER);
+	public TaskExecutionComponent(IPart isPartOf) {
+		super(isPartOf, TASK_EXECUTOR_NAME, TASK_EXECUTOR_DESC, DEFAULT_DRIVER);
 	}
 }

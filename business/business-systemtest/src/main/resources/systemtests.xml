@@ -9,7 +9,7 @@
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponentDriver" init-method="start"/>
+	<bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponent" init-method="start"/>
 
 	<bean id="monitoring.listener" class="org.hbird.business.systemtest.Listener" />
 	<bean id="commanding.listener" class="org.hbird.business.systemtest.Listener" />
@@ -71,21 +71,21 @@
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
-<!-- 				<to uri="bean:catalogueapi" /> -->
-<!--                 <to uri="bean:event" /> -->
-<!--  				<to uri="bean:businesscard" />  -->
-<!-- 				<to uri="bean:parameterarchive" /> -->
-<!-- 				<to uri="bean:statearchive" /> -->
-<!-- 	 			<to uri="bean:dataaccessapi" /> -->
-<!-- 				<to uri="bean:limitcheck" /> -->
-<!-- 				<to uri="bean:scripting" /> -->
-<!-- 		 		<to uri="bean:tasking" /> -->
-<!-- 	 			<to uri="bean:commanding" /> -->
-<!-- 	 	 		<to uri="bean:websockettester" /> -->
+				<to uri="bean:catalogueapi" />
+                <to uri="bean:event" />
+ 				<to uri="bean:businesscard" /> 
+				<to uri="bean:parameterarchive" />
+				<to uri="bean:statearchive" />
+	 			<to uri="bean:dataaccessapi" />
+				<to uri="bean:limitcheck" />
+				<to uri="bean:scripting" />
+		 		<to uri="bean:tasking" />
+	 			<to uri="bean:commanding" />
+	 	 		<to uri="bean:websockettester" />
 <!-- 	 			<to uri="bean:navigation" /> -->
 <!-- 	 			<to uri="bean:automaticorbitpropagation" /> -->
-<!-- 	 			<to uri="bean:parsecontroller" /> -->
-<!-- 				<to uri="bean:inmemoryscheduler" /> -->
+	 			<to uri="bean:parsecontroller" />
+				<to uri="bean:inmemoryscheduler" />
 	 			<to uri="bean:celestrack" />
 	 			<to uri="bean:finisher" />
 

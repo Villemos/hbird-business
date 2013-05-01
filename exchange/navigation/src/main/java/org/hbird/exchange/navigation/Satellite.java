@@ -17,6 +17,7 @@
 package org.hbird.exchange.navigation;
 
 import org.hbird.exchange.core.Part;
+import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 
 /**
@@ -42,6 +43,16 @@ public class Satellite extends Part implements ISatelliteSpecific {
 
     /** Satellite down-link frequency in Hz. From satellite to ground. */
     protected long downlinkFrequency = DEFAULT_RADIO_FREQUENCY;
+
+    /**
+     * Constructor.
+     * 
+     * @param name The name of the satellite.
+     * @param description The description of the satellite.
+     */
+    public Satellite(IPart isPartOf, String name, String description) {
+        super(isPartOf, name, description);
+    }
 
     /**
      * Constructor.

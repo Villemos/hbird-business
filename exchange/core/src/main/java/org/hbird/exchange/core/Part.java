@@ -45,20 +45,20 @@ public class Part extends EntityInstance implements IPart {
      * @param description
      */
     public Part(String name, String description) {
-        super(DEFAULT_ISSUED_BY, name, description);
+        super(ID_SEPARATOR + name, DEFAULT_ISSUED_BY, name, description);
     }
 
-    public Part(String name, String description, IPart isPartOf) {
-        super(DEFAULT_ISSUED_BY, name, description);
+    public Part(IPart isPartOf, String name, String description) {
+        super(isPartOf.getID() + ID_SEPARATOR + name, DEFAULT_ISSUED_BY, name, description);
         this.isPartOf = isPartOf.getID();
     }
 
     public Part(String issuedBy, String name, String description) {
-        super(issuedBy, name, description);
+        super(ID_SEPARATOR + name, issuedBy, name, description);
     }
 
-    public Part(String issuedBy, String name, String description, IPart isPartOf) {
-        super(issuedBy, name, description);
+    public Part(IPart isPartOf, String issuedBy, String name, String description) {
+        super(isPartOf.getID() + ID_SEPARATOR + name, issuedBy, name, description);
         this.isPartOf = isPartOf.getID();
     }
 

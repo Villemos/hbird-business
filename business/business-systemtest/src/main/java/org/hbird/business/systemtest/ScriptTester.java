@@ -49,7 +49,7 @@ public class ScriptTester extends SystemTest {
         binding.put(estcube1.getName() + "/PARA3", "in1");
         binding.put(estcube1.getName() + "/PARA4", "in2");
 
-        ScriptComponent com = new ScriptComponent("ScriptComponent_SYN1", "SYN1", script, new Parameter("ScriptEngine", estcube1.getName() + "/SYN1",
+        ScriptComponent com = new ScriptComponent(scripts, "ScriptComponent_SYN1", "SYN1", script, new Parameter("ScriptEngine", estcube1.getName() + "/SYN1",
                 "A test script parameter.", new Double(0), "Volt"), binding);
         com.setIsPartOf(scripts);
 
@@ -82,7 +82,7 @@ public class ScriptTester extends SystemTest {
         binding = new HashMap<String, String>();
         binding.put(estcube1.getName() + "/PARA5", "in1");
 
-        com = new ScriptComponent("ScriptComponent_SYN_STATE1", "SYN_STATE1", script, new State("ScriptEngine", "SYN_STATE1", "", "PARA2", true), binding);
+        com = new ScriptComponent(scripts, "ScriptComponent_SYN_STATE1", "SYN_STATE1", script, new State("ScriptEngine", "SYN_STATE1", "", "PARA2", true), binding);
         com.setIsPartOf(scripts);
         publishApi.publish(new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com));
 
@@ -110,7 +110,7 @@ public class ScriptTester extends SystemTest {
         new HashMap<String, String>();
         binding.put(estcube1.getName() + "/PARA6", "in1");
 
-        com = new ScriptComponent("ScriptComponent3", "Fahrenheit2CelsiusConvertion", new Parameter("ScriptComponent3", estcube1.getName() + "/SYN2",
+        com = new ScriptComponent(scripts, "ScriptComponent3", "Fahrenheit2CelsiusConvertion", new Parameter("ScriptComponent3", estcube1.getName() + "/SYN2",
                 "Temperature in CELCIUS.", new Double(0), "Celsius"), binding);
         com.setIsPartOf(scripts);
         publishApi.publish(new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com));
@@ -131,7 +131,7 @@ public class ScriptTester extends SystemTest {
         binding.put(estcube1.getName() + "/PARA8", "in1");
         binding.put(estcube1.getName() + "/PARA7", "threshold");
 
-        com = new ScriptComponent("ScriptComponent4", "OnOffSpline", new Label("ScriptEngine", estcube1.getName() + "/SYN3",
+        com = new ScriptComponent(scripts, "ScriptComponent4", "OnOffSpline", new Label("ScriptEngine", estcube1.getName() + "/SYN3",
                 "Whether the battery is ON or OFF", "ON"), binding);
         com.setIsPartOf(scripts);
         publishApi.publish(new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com));

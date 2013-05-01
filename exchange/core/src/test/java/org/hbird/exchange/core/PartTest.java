@@ -56,10 +56,10 @@ public class PartTest {
     public void setUp() throws Exception {
         root1 = new Part(ROOT_1, ROOT_1, DESCRIPTION);
         root2 = new Part(ROOT_2, ROOT_2, DESCRIPTION);
-        root1Child1 = new Part(CHILD_1, CHILD_1, DESCRIPTION, root1);
-        root1Child2 = new Part(CHILD_2, CHILD_2, DESCRIPTION, root1);
-        root2Child1 = new Part(CHILD_1, CHILD_1, DESCRIPTION, root2);
-        root2Child2 = new Part(CHILD_2, CHILD_2, DESCRIPTION, root2);
+        root1Child1 = new Part(root1, CHILD_1, CHILD_1, DESCRIPTION);
+        root1Child2 = new Part(root1, CHILD_2, CHILD_2, DESCRIPTION);
+        root2Child1 = new Part(root2, CHILD_1, CHILD_1, DESCRIPTION);
+        root2Child2 = new Part(root2, CHILD_2, CHILD_2, DESCRIPTION);
         COMMANDS.clear();
     }
 
@@ -139,7 +139,7 @@ public class PartTest {
      */
     @Test
     public void testPartStringStringIPartListOfCommand() {
-        Part part = new Part(CHILD_1, CHILD_1, DESCRIPTION, root1);
+        Part part = new Part(root1, CHILD_1, CHILD_1, DESCRIPTION);
         assertEquals(CHILD_1, part.getName());
         assertEquals(DESCRIPTION, part.getDescription());
         assertEquals(root1.getID(), part.getIsPartOf());

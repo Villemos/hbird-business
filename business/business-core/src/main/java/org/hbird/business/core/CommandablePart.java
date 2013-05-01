@@ -38,6 +38,7 @@ import java.util.List;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.ICommandablePart;
+import org.hbird.exchange.interfaces.IPart;
 
 /**
  * A part that can be commanded, i.e. which can receive requests.
@@ -55,16 +56,16 @@ public class CommandablePart extends Part implements ICommandablePart {
      * @param name
      * @param description
      */
-    public CommandablePart(String issuedBy, String name, String description) {
-        super(issuedBy, name, description);
+    public CommandablePart(IPart isPartOf, String issuedBy, String name, String description) {
+        super(isPartOf, issuedBy, name, description);
     }
 
     /**
      * @param name
      * @param description
      */
-    public CommandablePart(String name, String description) {
-        super(name, description);
+    public CommandablePart(IPart isPartOf, String name, String description) {
+        super(isPartOf, name, description);
     }
 
     /*

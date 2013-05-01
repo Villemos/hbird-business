@@ -37,8 +37,8 @@ public class Antenna extends Part {
 
     protected int thresholdElevation = 0;
 
-    public Antenna(String name, String description, IPart parent) {
-        super(name, description, parent);
+    public Antenna(IPart isPartOf, String name, String description) {
+        super(isPartOf, name, description);
     }
 
     public int getThresholdElevation() {

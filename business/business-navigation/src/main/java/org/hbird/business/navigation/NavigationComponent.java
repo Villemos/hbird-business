@@ -22,6 +22,7 @@ import org.hbird.business.core.StartablePart;
 import org.hbird.business.navigation.orekit.NavigationComponentDriver;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
+import org.hbird.exchange.interfaces.IPart;
 
 /**
  * 
@@ -40,8 +41,8 @@ public class NavigationComponent extends StartablePart {
     public static final String ORBIT_PROPAGATOR_DESC = "Component for performing TLE based orbit prediction, including contact events and orbital states.";
     public static final String DEFAULT_DRIVER = NavigationComponentDriver.class.getName();
 
-    public NavigationComponent() {
-        super(ORBIT_PROPAGATOR_NAME, ORBIT_PROPAGATOR_DESC, DEFAULT_DRIVER);
+    public NavigationComponent(IPart isPartOf) {
+        super(isPartOf, ORBIT_PROPAGATOR_NAME, ORBIT_PROPAGATOR_DESC, DEFAULT_DRIVER);
     }
 
     /**

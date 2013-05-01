@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.inOrder;
 
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
+import org.hbird.exchange.core.Part;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +49,7 @@ public class HamlibRotatorPartTest {
      */
     @Before
     public void setUp() throws Exception {
-        hamlibRotatorPart = new HamlibRotatorPart(NAME, configuration);
+        hamlibRotatorPart = new HamlibRotatorPart(new Part("root", ""), NAME, configuration);
         inOrder = inOrder(configuration);
     }
 

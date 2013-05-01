@@ -79,7 +79,7 @@ public class StartablePartTest {
         commands = new ArrayList<Command>();
         commands.add(cmd1);
         commands.add(cmd2);
-        part = new StartablePart(ISSUED_BY, NAME, DESCRIPTION, DRIVER_NAME);
+        part = new StartablePart(new Part("root", ""), ISSUED_BY, NAME, DESCRIPTION, DRIVER_NAME);
         inOrder = inOrder(cmd1, cmd2);
         when(cmd1.getName()).thenReturn(CMD_1);
         when(cmd2.getName()).thenReturn(CMD_2);
@@ -110,7 +110,7 @@ public class StartablePartTest {
      */
     @Test
     public void testStartablePart() {
-        part = new StartablePart(NAME, DESCRIPTION, DRIVER_NAME);
+        part = new StartablePart(new Part("root", ""), NAME, DESCRIPTION, DRIVER_NAME);
         assertEquals(NAME, part.getName());
         assertEquals(Part.DEFAULT_ISSUED_BY, part.getIssuedBy());
         assertNull(part.getConfigurator());

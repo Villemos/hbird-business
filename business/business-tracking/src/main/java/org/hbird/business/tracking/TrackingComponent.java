@@ -63,20 +63,20 @@ public class TrackingComponent extends StartablePart {
 	 * @param description
 	 * @param commands
 	 */
-	public TrackingComponent(String name, String description, String satellite, String antenna, String driver) {
-		super(name, description, driver);
+	public TrackingComponent(IPart isPartOf, String name, String description, String satellite, String antenna, String driver) {
+		super(isPartOf, name, description, driver);
 		this.satellite = satellite;
 		this.antenna = antenna;
 	}
 
-	public TrackingComponent(String name, String description, String satellite, String antenna) {
-		super(name, description, TrackingComponentDriver.class.getName());
+	public TrackingComponent(IPart isPartOf, String name, String description, String satellite, String antenna) {
+		super(isPartOf, name, description, TrackingComponentDriver.class.getName());
 		this.satellite = satellite;
 		this.antenna = antenna;
 	}
 
-	public TrackingComponent(String name, String description, IPart satellite, IPart antenna) {
-		super(name, description, TrackingComponentDriver.class.getName());
+	public TrackingComponent(IPart isPartOf, String name, String description, IPart satellite, IPart antenna) {
+		super(isPartOf, name, description, TrackingComponentDriver.class.getName());
 
 		// TODO Gert; Should getID() be used here?
 		this.satellite = satellite.getID();

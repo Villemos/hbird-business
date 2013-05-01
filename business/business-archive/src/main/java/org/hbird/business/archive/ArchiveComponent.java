@@ -29,6 +29,7 @@ import org.hbird.exchange.dataaccess.OrbitalStateRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
+import org.hbird.exchange.interfaces.IPart;
 
 /**
  * StartablePart for storage of data.
@@ -52,8 +53,8 @@ public class ArchiveComponent extends StartablePart {
     /**
      * Default constructor.
      */
-    public ArchiveComponent() {
-        super(ARCHIVE_NAME, ARCHIVE_DESC, DEFAULT_DRIVER);
+    public ArchiveComponent(IPart isPartOf) {
+        super(isPartOf, ARCHIVE_NAME, ARCHIVE_DESC, DEFAULT_DRIVER);
     }
 
     /**

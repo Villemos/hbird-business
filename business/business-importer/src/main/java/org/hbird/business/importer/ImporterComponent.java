@@ -34,6 +34,7 @@ package org.hbird.business.importer;
 
 import org.hbird.business.core.StartablePart;
 import org.hbird.business.importer.excell.ImporterComponentDriver;
+import org.hbird.exchange.interfaces.IPart;
 
 /**
  * @author Gert Villemos
@@ -50,7 +51,7 @@ public class ImporterComponent extends StartablePart {
 	public static final String IMPORTER_DESC = "A component for importing data from files.";
 	public static final String DEFAULT_DRIVER = ImporterComponentDriver.class.getName();
 	
-	public ImporterComponent() {
-		super(IMPORTER_NAME, IMPORTER_DESC, DEFAULT_DRIVER);
+	public ImporterComponent(IPart isPartOf) {
+		super(isPartOf, IMPORTER_NAME, IMPORTER_DESC, DEFAULT_DRIVER);
 	}
 }

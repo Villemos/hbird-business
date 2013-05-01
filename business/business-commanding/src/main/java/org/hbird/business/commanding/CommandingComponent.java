@@ -34,6 +34,7 @@ package org.hbird.business.commanding;
 
 import org.hbird.business.commanding.bean.CommandingComponentDriver;
 import org.hbird.business.core.StartablePart;
+import org.hbird.exchange.interfaces.IPart;
 
 
 /**
@@ -53,7 +54,7 @@ public class CommandingComponent extends StartablePart {
 	/** Named of driver class. */
 	public static final String DEFAULT_DRIVER = CommandingComponentDriver.class.getName();
 	
-	public CommandingComponent() {
-		super(COMMAND_RELEASER_NAME, COMMAND_RELEASER_DESC, DEFAULT_DRIVER);
+	public CommandingComponent(IPart isPartOf) {
+		super(isPartOf, COMMAND_RELEASER_NAME, COMMAND_RELEASER_DESC, DEFAULT_DRIVER);
 	}
 }

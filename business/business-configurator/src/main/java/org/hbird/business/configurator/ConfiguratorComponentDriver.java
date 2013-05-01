@@ -75,9 +75,9 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
      * 
      * @throws Exception
      */
-    public void start() throws Exception {
-        start(new ConfiguratorComponent());
-    }
+//    public void start() throws Exception {
+//        start(new ConfiguratorComponent());
+//    }
 
     /**
      * Method to start the configurator part.

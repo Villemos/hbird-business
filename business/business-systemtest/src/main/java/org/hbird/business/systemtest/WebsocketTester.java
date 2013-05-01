@@ -57,7 +57,7 @@ public class WebsocketTester extends SystemTest {
         LOG.info("Starting");
 
     	/** Issue request to start the websockets. */
-    	injection.sendBody(new StartComponent("SystemTest", new WebsocketInterfaceComponent()));
+    	injection.sendBody(new StartComponent("SystemTest", new WebsocketInterfaceComponent(mof)));
     	
     	boolean state = true;
     	

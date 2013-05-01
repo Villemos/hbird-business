@@ -19,6 +19,7 @@ package org.hbird.business.groundstation.hamlib.radio;
 import static org.junit.Assert.assertEquals;
 
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
+import org.hbird.exchange.core.Part;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +46,7 @@ public class HamlibRadioPartTest {
 
     @Before
     public void setup() {
-        part = new HamlibRadioPart(NAME, config);
+        part = new HamlibRadioPart(new Part("root", ""), NAME, config);
         inOrder = Mockito.inOrder(config);
     }
 

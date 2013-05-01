@@ -34,6 +34,7 @@ package org.hbird.business.groundstation.hamlib.rotator;
 
 import org.hbird.business.groundstation.base.GroundStationPart;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
+import org.hbird.exchange.interfaces.IPart;
 
 /**
  * Class defining a HAMLIB rotator.
@@ -47,7 +48,7 @@ public class HamlibRotatorPart extends GroundStationPart<RotatorDriverConfigurat
 
     public static final String DESCRIPTION = "A rotator of an antenna.";
 
-    public HamlibRotatorPart(String name, RotatorDriverConfiguration configuration) {
-        super(name, DESCRIPTION, HamlibRotatorDriver.class.getName(), configuration);
+    public HamlibRotatorPart(IPart isPartOf, String name, RotatorDriverConfiguration configuration) {
+        super(isPartOf, name, DESCRIPTION, HamlibRotatorDriver.class.getName(), configuration);
     }
 }

@@ -22,6 +22,8 @@ import org.hbird.business.core.StartablePart;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.Part;
+import org.hbird.exchange.interfaces.IPart;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -46,15 +48,22 @@ public class ConfiguratorComponent extends StartablePart implements ApplicationC
 
     protected ApplicationContext applicationContext;
 
-    public ConfiguratorComponent(String name) {
-        super(name, CONFIGURATOR_DESC, DEFAULT_DRIVER);
+    public ConfiguratorComponent(IPart isPartOf, String name) {
+        super(isPartOf, name, CONFIGURATOR_DESC, DEFAULT_DRIVER);
+    }
+
+    /**
+     * Default constructor.
+     */
+    public ConfiguratorComponent(IPart isPartOf) {
+        this(isPartOf, CONFIGURATOR_NAME);
     }
 
     /**
      * Default constructor.
      */
     public ConfiguratorComponent() {
-        this(CONFIGURATOR_NAME);
+        this(new Part("System", ""), CONFIGURATOR_NAME);
     }
 
     /*
@@ -85,7 +94,7 @@ public class ConfiguratorComponent extends StartablePart implements ApplicationC
      * 
      * @throws Exception
      */
-    public void init() throws Exception {
+    public void start() throws Exception {
     	
         ConfiguratorComponentDriver driver = new ConfiguratorComponentDriver(applicationContext);
         driver.start(this);

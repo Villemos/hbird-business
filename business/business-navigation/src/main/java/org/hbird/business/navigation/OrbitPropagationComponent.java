@@ -95,16 +95,16 @@ public class OrbitPropagationComponent extends StartablePart {
 	 * @param satellite The satellite that the controller should predict the orbital data for
 	 * @param locations The locations to which contact data should be calculated
 	 */
-	public OrbitPropagationComponent(String name, String description, long executionDelay, long leadTime, Satellite satellite, List<String> locations) {
-		super(name, description, OrbitPropagationComponentDriver.class.getName());
+	public OrbitPropagationComponent(IPart isPartOf, String name, String description, long executionDelay, long leadTime, Satellite satellite, List<String> locations) {
+		super(isPartOf, name, description, OrbitPropagationComponentDriver.class.getName());
 		this.executionDelay = executionDelay;
 		this.leadTime = leadTime;
 		this.satellite = satellite.getID();
 		this.locations = locations;
 	}
 
-	public OrbitPropagationComponent(String name, String description, long executionDelay, long leadTime, IPart satellite, List<IPart> locations) {
-		super(name, description, OrbitPropagationComponentDriver.class.getName());
+	public OrbitPropagationComponent(IPart isPartOf, String name, String description, long executionDelay, long leadTime, IPart satellite, List<IPart> locations) {
+		super(isPartOf, name, description, OrbitPropagationComponentDriver.class.getName());
 		this.executionDelay = executionDelay;
 		this.leadTime = leadTime;
 		this.satellite = satellite.getID();
@@ -123,8 +123,8 @@ public class OrbitPropagationComponent extends StartablePart {
 	 * @param executionDelay The delay between checks that the required orbital states are available.
 	 * @param satellite The satellite that the controller should predict the orbital data for
 	 */
-	public OrbitPropagationComponent(String name, String description, long executionDelay, String satellite) {
-		super(name, description, OrbitPropagationComponentDriver.class.getName());
+	public OrbitPropagationComponent(String name, String description, long executionDelay, String satellite, IPart isPartOf) {
+		super(isPartOf, name, description, OrbitPropagationComponentDriver.class.getName());
 		this.executionDelay = executionDelay;
 		this.satellite = satellite;
 	}

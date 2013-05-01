@@ -38,6 +38,7 @@ import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.core.Command;
+import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
@@ -68,13 +69,13 @@ public class StartablePart extends CommandablePart implements IStartablePart {
      * @param name
      * @param description
      */
-    public StartablePart(String name, String description, String driverName) {
-        super(name, description);
+    public StartablePart(IPart isPartOf, String name, String description, String driverName) {
+        super(isPartOf, name, description);
         this.driverName = driverName;
     }
 
-    public StartablePart(String issuedBy, String name, String description, String driverName) {
-        super(issuedBy, name, description);
+    public StartablePart(IPart isPartOf, String issuedBy, String name, String description, String driverName) {
+        super(isPartOf, issuedBy, name, description);
         this.driverName = driverName;
     }
 

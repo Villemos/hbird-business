@@ -59,7 +59,7 @@ public class CelestrackTester extends SystemTest {
         azzert(accessApi.getTleFor("CUTE-1 (CO-55):Satellite:*") == null, "No TLE for CUTE-1");
         azzert(accessApi.getTleFor("QUAKESAT:Satellite:*") == null, "No TLE for QUAKESAT");
         
-        partmanagerApi.start(new CelestrackComponent());
+        partmanagerApi.start(new CelestrackComponent(mof));
         
         Thread.sleep(30000);
         
