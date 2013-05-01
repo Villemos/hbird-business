@@ -6,7 +6,7 @@
     <groupId>org.hbird</groupId>
     <artifactId>hummingbird</artifactId>
     <packaging>pom</packaging>
-    <version>0.7.1-SNAPSHOT</version>
+    <version>0.8.0-SNAPSHOT</version>
 
     <name>Hummingbird Root</name>
     <description>The Hummingbird root project is a container for all Hummingbird components, each created in a separate maven module. By building this project, the complete system can be built.</description>
@@ -71,7 +71,7 @@
     <!-- Properties can be overridden in ~/.m2/settings.xml to configure environment
         specific values. -->
     <properties>
-        <hbird.version>0.7.1-SNAPSHOT</hbird.version>
+        <hbird.version>0.8.0-SNAPSHOT</hbird.version>
 
         <distribution.url.snapshots>http://www.villemos.com:8080/artifactory/libs-snapshot-local</distribution.url.snapshots>
         <distribution.url.releases>http://www.villemos.com:8080/artifactory/libs-release-local</distribution.url.releases>
