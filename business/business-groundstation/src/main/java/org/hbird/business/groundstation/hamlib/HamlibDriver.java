@@ -47,6 +47,7 @@ import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.core.InMemoryScheduler;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.groundstation.base.DriverContext;
+import org.hbird.business.groundstation.base.GroundStationCommandFilter;
 import org.hbird.business.groundstation.base.OnChange;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.base.Verifier;
@@ -135,9 +136,10 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
         IOrbitPrediction prediction = ApiFactory.getOrbitPredictionApi(part.getID());
         IPointingDataOptimizer<C> optimizer = createOptimizer(config.getPointingDataOptimzerClassName()); // can be null
         TrackingSupport<C> tracker = createTrackingSupport(config, catalogue, prediction, optimizer);    
+        GroundStationCommandFilter commandFilter = new GroundStationCommandFilter(config);
         
          from(StandardEndpoints.COMMANDS + "?selector=name='Track'")
-         // TODO - 28.04.2013, kimmell - missing GS based filter here!
+             .filter().method(commandFilter, "acceptTrack")
              .log(asRoute("Received 'Track' command from '%s'. Will generate Hamlib commands for '%s'", simple("${body.issuedBy}").getText(), name))
              .split()
                  .method(tracker, "track")
@@ -222,7 +224,6 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
             return (IPointingDataOptimizer<C>) Class.forName(className).newInstance();
         }
         catch (Exception e) {
-            e.printStackTrace();
             LOG.error("Failed to create instance of IPointingDataOptimizer for name {}", className, e);
             return null;
         }
