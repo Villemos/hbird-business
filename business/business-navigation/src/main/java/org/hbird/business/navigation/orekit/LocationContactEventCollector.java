@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.business.api.IPublish;
-import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -119,8 +118,16 @@ public class LocationContactEventCollector extends ElevationDetector {
         TLE tle = new TLE(tleParameters.getTleLine1(), tleParameters.getTleLine2());
         long orbitNumber = NavigationUtilities.calculateOrbitNumber(tle, startDate);
         String tleInstanceId = tleParameters.getInstanceID();
-        LocationContactEvent event = new LocationContactEvent(NavigationComponent.ORBIT_PROPAGATOR_NAME, now, groundStationId, satelliteId, tleInstanceId,
-                startTime, endTime, orbitNumber);
+        LocationContactEvent event = new LocationContactEvent(groundStationId + "/" + satelliteId);
+        event.setTimestamp(now);
+        event.setSatelliteId(satelliteId);
+        event.setGroundStationId(groundStationId);
+        event.setDerivedFromId(tleInstanceId);
+        event.setStartTime(startTime);
+        event.setEndTime(endTime);
+        event.setOrbitNumber(orbitNumber);
+        
+        
         event.setSatelliteStateAtStart(NavigationUtilities.toOrbitalState(startState, satelliteId, tleInstanceId));
         return event;
     }

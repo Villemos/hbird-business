@@ -43,7 +43,11 @@ public class CpuMonitor extends Monitor {
      */
     @Handler
     public Parameter check() {
-        return new Parameter(componentId, parameterName, "The average CPU usage the last minute.",
-                ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage(), "Percentage/CPU");
+    	Parameter parameter = new Parameter(componentId + "/CPU", parameterName);
+    	parameter.setDescription("The average CPU usage the last minute.");
+    	parameter.setValue(ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage());
+    	parameter.setUnit("Percentage/CPU");
+    	
+    	return parameter;
     }
 }

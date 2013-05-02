@@ -41,20 +41,8 @@ public class CommandBase extends EntityInstance implements IScheduled, ITransfer
      */
     protected long executionTime = IScheduled.IMMEDIATE;
 
-    public CommandBase(String issuedBy, String name, String description, long executionTime, String destination, long transferTime) {
-        super(issuedBy, name, description);
-        this.executionTime = executionTime;
-        this.destination = destination;
-        this.transferTime = transferTime;
-    }
-
-    /**
-     * @param issuedBy
-     * @param name
-     * @param description
-     */
-    public CommandBase(String issuedBy, String name, String description) {
-        this(issuedBy, name, description, -1L, null, -1L);
+    public CommandBase(String ID, String name) {
+        super(ID, name);
     }
 
     /**

@@ -32,16 +32,15 @@
  */
 package org.hbird.business.tracking;
 
-import org.hbird.business.core.StartablePart;
+import org.hbird.business.core.StartableEntity;
 import org.hbird.business.tracking.bean.TrackingComponentDriver;
 import org.hbird.business.tracking.configuration.TrackingDriverConfiguration;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * @author Gert Villemos
  * 
  */
-public class TrackingComponent extends StartablePart {
+public class TrackingComponent extends StartableEntity {
 
     private static final long serialVersionUID = -4634379319818576131L;
 
@@ -49,40 +48,27 @@ public class TrackingComponent extends StartablePart {
     public static final String DEFAULT_DESCRIPTION = "Component for automating tracking of a satellite from a specific ground station.";
     public static final String DEFAULT_DRIVER = TrackingComponentDriver.class.getName();
 
-    private final TrackingDriverConfiguration configuration;
+    private TrackingDriverConfiguration configuration;
 
     /**
      * @param name
      * @param description
      * @param commands
      */
-    public TrackingComponent(IPart isPartOf, String name, String description, String driver, TrackingDriverConfiguration configuration) {
-        super(isPartOf, name, description, driver);
-        this.configuration = configuration;
-    }
-
-    public TrackingComponent(IPart isPartOf, String name, String description, TrackingDriverConfiguration configuration) {
-        this(isPartOf, name, description, DEFAULT_DRIVER, configuration);
-    }
-
-    public TrackingComponent(IPart isPartOf, String name, TrackingDriverConfiguration configuration) {
-        this(isPartOf, name, DEFAULT_DESCRIPTION, DEFAULT_DRIVER, configuration);
-    }
-
-    public TrackingComponent(IPart isPartOf, TrackingDriverConfiguration configuration) {
-        this(isPartOf, DEFAULT_NAME, DEFAULT_DESCRIPTION, DEFAULT_DRIVER, configuration);
-    }
+	public TrackingComponent(String ID) {
+		super(ID, DEFAULT_NAME);
+		setDescription(DEFAULT_DESCRIPTION);
+		setDriverName(DEFAULT_DRIVER);
+	}
 
     public TrackingDriverConfiguration getConfiguration() {
         return configuration;
     }
 
-    /**
-     * @see org.hbird.exchange.core.Entity#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return String.format("%s for ground station %s; version: %s", getClass().getSimpleName(), configuration.getGroundstationId(),
-                configuration.getServiceVersion());
-    }
+	/**
+	 * @param configuration the configuration to set
+	 */
+	public void setConfiguration(TrackingDriverConfiguration configuration) {
+		this.configuration = configuration;
+	}
 }

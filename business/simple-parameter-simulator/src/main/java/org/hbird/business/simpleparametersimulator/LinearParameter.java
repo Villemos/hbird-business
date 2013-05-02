@@ -21,7 +21,6 @@ import java.util.Date;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * A linearly changing parameter. The value is calculated as
@@ -35,6 +34,8 @@ public class LinearParameter extends BaseParameter {
 	/** The class logger. */
 	protected static Logger logger = Logger.getLogger(LinearParameter.class);
 
+	protected String ID;
+	
 	/** The initial value of the parameter. The intersection with the Y-axis so to say. */
 	protected double intercept = 0;
 
@@ -55,8 +56,9 @@ public class LinearParameter extends BaseParameter {
 	 * @param modolus The delta time at which the value resets.
 	 * @param name The name of the parameter to be generated.
 	 */
-	public LinearParameter(IPart issuedBy, String name, String description, String unit, double intercept, double deltaFrequency, long modolus) {
+	public LinearParameter(String ID, String issuedBy, String name, String description, String unit, double intercept, double deltaFrequency, long modolus) {
 		super(issuedBy, name, description);
+		this.ID = ID;
 		this.intercept = intercept;
 		this.deltaFrequency = deltaFrequency;	
 		this.modolus = modolus;
@@ -74,7 +76,12 @@ public class LinearParameter extends BaseParameter {
 		logger.debug("Sending new linear value with name '" + name + "'.");
 		this.value = new Double(intercept + deltaFrequency * (((new Date()).getTime() - startTime.getTime()) % modolus));
 
-		return new Parameter(issuedBy, name, description, value, unit);
+		Parameter newParameter = new Parameter(ID, name);
+		newParameter.setIssuedBy(issuedBy);
+		newParameter.setDescription(description);
+		newParameter.setValue(value);
+		newParameter.setUnit(unit);
+		return newParameter;
 	}
 
 	public double getIntercept() {

@@ -20,18 +20,25 @@ import java.util.Date;
 
 import org.apache.camel.Handler;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.interfaces.IPart;
 
 public class TimeParameter extends BaseParameter {
 
-	public TimeParameter(IPart issuedBy, String name, String description, String unit) {
+	protected String ID;
+	
+	public TimeParameter(String ID, String issuedBy, String name, String description, String unit) {
 		super(issuedBy, name, description, 0d, unit);
+		this.ID = ID;
 	}
 
 	@Override
 	@Handler
 	protected Parameter process() {
 		value = (new Date()).getTime();		
-		return new Parameter(issuedBy, name, description, value, unit);
+		Parameter newParameter = new Parameter(ID, name);
+		newParameter.setIssuedBy(issuedBy);
+		newParameter.setDescription(description);
+		newParameter.setValue(value);
+		newParameter.setUnit(unit);
+		return newParameter;
 	}
 }

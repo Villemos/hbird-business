@@ -53,8 +53,8 @@ public class NavigationUtilities {
 
     public static PVCoordinates toPVCoordinates(D3Vector pos, D3Vector vel) {
 
-        Vector3D position = new Vector3D(pos.p1, pos.p2, pos.p3);
-        Vector3D velocity = new Vector3D(vel.p1, vel.p2, vel.p3);
+        Vector3D position = new Vector3D(pos.getP1(), pos.getP2(), pos.getP3());
+        Vector3D velocity = new Vector3D(vel.getP1(), vel.getP2(), vel.getP3());
 
         return new PVCoordinates(position, velocity);
     }
@@ -66,19 +66,34 @@ public class NavigationUtilities {
         Vector3D pvcMomoentum = state.getOrbit().getPVCoordinates().getMomentum();
 
         /* Create position vector. */
-        D3Vector position = new D3Vector("", "Position", "Position", "The orbital position of the satellite at the given time.",
-                pvcPosition.getX(), pvcPosition.getY(), pvcPosition.getZ());
+        D3Vector position = new D3Vector("", "Position");
+        position.setDescription("The orbital position of the satellite at the given time.");
+        position.setP1(pvcPosition.getX());
+        position.setP2(pvcPosition.getY());
+        position.setP3(pvcPosition.getZ());
 
         /* Create velocity vector. */
-        D3Vector velocity = new D3Vector("", "Velocity", "Velocity", "The orbital velocity of the satellite at the given time",
-                pvcVelocity.getX(), pvcVelocity.getY(), pvcVelocity.getZ());
+        D3Vector velocity = new D3Vector("", "Velocity");
+        velocity.setDescription("The orbital velocity of the satellite at the given time.");
+        velocity.setP1(pvcVelocity.getX());
+        velocity.setP2(pvcVelocity.getY());
+        velocity.setP3(pvcVelocity.getZ());
 
         /* Create momentum vector. */
-        D3Vector momentum = new D3Vector("", "Velocity", "Velocity", "The orbital velocity of the satellite at the given time",
-                pvcMomoentum.getX(), pvcMomoentum.getY(), pvcMomoentum.getZ());
+        D3Vector momentum = new D3Vector("", "Momentum");
+        momentum.setDescription("The orbital momentum of the satellite at the given time.");
+        momentum.setP1(pvcMomoentum.getX());
+        momentum.setP2(pvcMomoentum.getY());
+        momentum.setP3(pvcMomoentum.getZ());
 
-        OrbitalState result = new OrbitalState(NavigationComponent.ORBIT_PROPAGATOR_NAME, OrbitalState.class.getSimpleName(), "Orbital state of satellite",
-                state.getDate().toDate(getScale()).getTime(), satelliteId, position, velocity, momentum, derivedFrom);
+        OrbitalState result = new OrbitalState(satelliteId + "/OrbitalState", OrbitalState.class.getSimpleName());
+        result.setDescription("Orbital state of satellite");
+        result.setTimestamp(state.getDate().toDate(getScale()).getTime());
+        result.setSatelliteId(satelliteId);
+        result.setPosition(position);
+        result.setVelocity(velocity);
+        result.setMomentum(momentum);
+        result.setDerivedFrom(derivedFrom);
 
         try {
             GeoLocation geoLocation = toGeoLocation(state);
@@ -108,7 +123,7 @@ public class NavigationUtilities {
         long endTime = locationContactEvent.getEndTime();
 
         D3Vector location = groundStation.getGeoLocation();
-        GeodeticPoint point = new GeodeticPoint(location.p1, location.p2, location.p3);
+        GeodeticPoint point = new GeodeticPoint(location.getP1(), location.getP2(), location.getP3());
         TopocentricFrame locationOnEarth = new TopocentricFrame(Constants.earth, point, groundStation.getName());
 
         OrbitalState startState = locationContactEvent.getSatelliteStateAtStart();

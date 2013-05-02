@@ -98,8 +98,8 @@ public abstract class BaseLimitChecker {
 	 * @throws Exception
 	 */
 	public State processEnabled(@Body State newEnabled) throws Exception {
-		limit.enabled = (Boolean) newEnabled.getValue();
-		logger.info("Limit '" + limit.getName() + "' switches to ENABLED state '" + limit.enabled + "'.");
+		limit.setEnabled((Boolean) newEnabled.getValue());
+		logger.info("Limit '" + limit.getName() + "' switches to ENABLED state '" + limit.getEnabled() + "'.");
 		return doProcess(lastValue);
 	}
 
@@ -119,7 +119,10 @@ public abstract class BaseLimitChecker {
 		State state = null;
 
 		if (isEnabled() == true && isReady()) {
-			state = new State("LimitChecker", limit.getName(), limit.getDescription(), parameter.getName(), checkLimit(parameter));
+			state = new State(limit.getName(), limit.getName());
+			state.setDescription(limit.getDescription());
+			state.setIsStateOf(parameter.getID());
+			state.setState(checkLimit(parameter));
 		}
 		
 		return state;
@@ -134,7 +137,7 @@ public abstract class BaseLimitChecker {
 	 * @return Flag that will be true of the limit is enabled. Else false.
 	 */
 	protected boolean isEnabled() {
-		return limit.enabled == null || limit.enabled == true;
+		return limit.getEnabled() == null || limit.getEnabled() == true;
 	}
 
 	/**

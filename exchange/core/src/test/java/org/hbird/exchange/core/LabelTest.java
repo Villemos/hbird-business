@@ -21,8 +21,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,6 +36,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class LabelTest {
 
     private static final String ISSUED_BY = "ISSUER";
+    private static final String ID = "ID";
     private static final String NAME = "the name";
     private static final String DESCRIPTION = "description";
     private static final String VALUE = "THE VALUE";
@@ -55,7 +54,10 @@ public class LabelTest {
     @Before
     public void setUp() throws Exception {
         inOrder = inOrder(template);
-        label = new Label(ISSUED_BY, NAME, DESCRIPTION, VALUE);
+        label = new Label(ID, NAME);
+        label.setIssuedBy(ISSUED_BY);
+        label.setDescription(DESCRIPTION);
+        label.setValue(VALUE);
     }
 
     /**
@@ -73,32 +75,6 @@ public class LabelTest {
      */
     @Test
     public void testLabelStringStringStringString() {
-        assertEquals(ISSUED_BY, label.getIssuedBy());
-        assertEquals(NAME, label.getName());
-        assertEquals(DESCRIPTION, label.getDescription());
-        assertEquals(VALUE, label.getValue());
-        assertEquals(NAME, label.getName());
-        long diff = System.currentTimeMillis() - label.getTimestamp();
-        assertTrue("diff=" + diff, diff >= 0 && diff < 1000L * 30);
-        assertNotNull(label.getID());
-    }
-
-    /**
-     * Test method for {@link org.hbird.exchange.core.Label#Label(org.hbird.exchange.core.Label)}.
-     */
-    @Test
-    public void testLabelLabel() {
-        when(template.getIssuedBy()).thenReturn(ISSUED_BY);
-        when(template.getName()).thenReturn(NAME);
-        when(template.getDescription()).thenReturn(DESCRIPTION);
-        when(template.getValue()).thenReturn(VALUE);
-
-        label = new Label(template);
-        inOrder.verify(template, times(1)).getIssuedBy();
-        inOrder.verify(template, times(1)).getName();
-        inOrder.verify(template, times(1)).getDescription();
-        inOrder.verify(template, times(1)).getValue();
-
         assertEquals(ISSUED_BY, label.getIssuedBy());
         assertEquals(NAME, label.getName());
         assertEquals(DESCRIPTION, label.getDescription());

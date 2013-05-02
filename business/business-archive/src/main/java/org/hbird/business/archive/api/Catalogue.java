@@ -132,7 +132,9 @@ public class Catalogue extends HbirdApi implements ICatalogue {
      * @return The GroundStation request to be issued
      */
     protected GroundStationRequest createGroundStationRequest(List<String> names) {
-        GroundStationRequest request = new GroundStationRequest(issuedBy, names);
+        GroundStationRequest request = new GroundStationRequest("request/" + issuedBy);
+        request.addNames(names);
+        request.setIssuedBy(issuedBy);
         configureInit(request, GroundStation.class);
         return request;
     }

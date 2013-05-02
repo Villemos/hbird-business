@@ -47,40 +47,8 @@ public class Parameter extends EntityInstance {
      * @param value An object holding the value.
      * @param unit The unit of the value.
      */
-    public Parameter(String issuedBy, String name, String description, Number value, String unit) {
-        this(issuedBy, name, description, unit);
-        this.value = value;
-    }
-
-    /**
-     * Creates a Parameter with a timestamp set to 'now'.
-     * 
-     * @param name The name of the parameter
-     * @param description A description of the parameter.
-     * @param value An object holding the value.
-     * @param unit The unit of the value.
-     */
-    public Parameter(String issuedBy, String name, String description, Number value, String unit, long timestamp) {
-        this(issuedBy, name, description, unit);
-        this.value = value;
-        this.timestamp = timestamp;
-    }
-
-    /**
-     * Creates a Parameter with a timestamp set to 'now'.
-     * 
-     * @param name The name of the parameter
-     * @param description A description of the parameter.
-     * @param value An object holding the value.
-     * @param unit The unit of the value.
-     */
-    public Parameter(String issuedBy, String name, String description, String unit) {
-        super(issuedBy, name, description);
-        this.unit = unit;
-    }
-
-    public Parameter(Parameter base) {
-        this(base.issuedBy, base.name, base.description, base.value, base.unit);
+    public Parameter(String ID, String name) {
+        super(ID, name);
     }
 
     /**
@@ -126,6 +94,8 @@ public class Parameter extends EntityInstance {
     public void setUnit(String unit) {
         this.unit = unit;
     }
+    
+    
 
     /*
      * (non-Javadoc)

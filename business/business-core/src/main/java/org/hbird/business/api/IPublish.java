@@ -46,24 +46,23 @@ public interface IPublish extends IHbirdApi {
 	/**
 	 * Method to force a commit of all data. Any process should flush buffers and cashes.
 	 */
-	public void commit();
+	public void commit(String ID);
 
 	public EntityInstance publish(EntityInstance object);
 	
-	public Parameter publishParameter(String name, String description, Number value, String unit);
-	public Parameter publishParameter(String name, String description, Number value, String unit, long timestamp);
+	public Parameter publishParameter(String ID, String name, String description, Number value, String unit);
+	public Parameter publishParameter(String ID, String name, String description, Number value, String unit, long timestamp);
 	
-	public State publishState(String name, String description, String isStateOf, Boolean state);
-	public State publishState(String name, String description, String isStateOf, Boolean state, long timestamp);
+	public State publishState(String ID, String name, String description, String isStateOf, Boolean state);
+	public State publishState(String ID, String name, String description, String isStateOf, Boolean state, long timestamp);
 	
-	public Label publishLabel(String name, String description, String value);
+	public Label publishLabel(String ID, String name, String description, String value);
 
-	public Binary publishBinary(String name, String description, byte[] rawdata);
+	public Binary publishBinary(String ID, String name, String description, byte[] rawdata);
 
-	public Command publishCommand(String name, String description, List<CommandArgument> arguments);
-	public Command publishCommandTemplate(String name, String description, List<CommandArgument> arguments);
-	public CommandRequest publishCommandRequest(String name, String description, Command command);
-	public CommandRequest publishCommandRequest(String name, String description, Command command, List<String> lockStates, List<Task> tasks);
+	public Command publishCommand(String ID, String name, String description, List<CommandArgument> arguments);
+	public CommandRequest publishCommandRequest(String ID, String name, String description, Command command);
+	public CommandRequest publishCommandRequest(String ID, String name, String description, Command command, List<String> lockStates, List<Task> tasks);
 	
 	/**
 	 * Method to create and publish a piece of metadata associated to a Named object.
@@ -72,7 +71,7 @@ public interface IPublish extends IHbirdApi {
 	 * @param key The key of the metadata.
 	 * @param metadata The value of the metadata
 	 */
-	public Metadata publishMetadata(EntityInstance subject, String key, String metadata);
+	public Metadata publishMetadata(String ID, String name, EntityInstance subject, String key, String metadata);
 
-	public TleOrbitalParameters publishTleParameters(String name, String satellite, String tle1, String tle2);
+	public TleOrbitalParameters publishTleParameters(String ID, String name, String satellite, String tle1, String tle2);
 }

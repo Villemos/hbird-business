@@ -18,6 +18,7 @@ package org.hbird.exchange.core;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.hbird.exchange.interfaces.IEntity;
 
 /**
@@ -64,11 +65,9 @@ public class Entity implements IEntity, Serializable {
 	 * @param description
 	 * @param issuedBy
 	 */
-	public Entity(String ID, String name, String description, String issuedBy) {
+	public Entity(String ID, String name) {
 		this.ID = ID;
 		this.name = name;
-		this.description = description;
-		this.issuedBy = issuedBy;
 	}
 
 	/**
@@ -117,5 +116,12 @@ public class Entity implements IEntity, Serializable {
 	 */
 	public void setIssuedBy(String issuedBy) {
 		this.issuedBy = issuedBy;
+	}
+
+	/**
+	 * @param iD the iD to set
+	 */
+	public void setID(String iD) {
+		ID = iD;
 	}	
-}
+} 

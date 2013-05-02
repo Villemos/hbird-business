@@ -19,8 +19,7 @@
  */
 package org.hbird.exchange.dataaccess;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.hbird.exchange.constants.StandardArguments;
 
 /**
  * 
@@ -31,24 +30,13 @@ public class GroundStationRequest extends DataRequest {
 
     private static final long serialVersionUID = -2463827175606652486L;
 
-    public GroundStationRequest(String issuedBy) {
-        super(issuedBy, GroundStationRequest.class.getSimpleName(), DESCRIPTION);
+    public GroundStationRequest(String ID) {
+        super(ID, GroundStationRequest.class.getSimpleName());
+        setDescription(DESCRIPTION);
         setIsInitialization(true);
     }
-
-    /**
-     * @param issuedBy
-     * @param destination
-     */
-    public GroundStationRequest(String issuedBy, List<String> groundStationNames) {
-        this(issuedBy);
-        addNames(groundStationNames);
-    }
-
-    public GroundStationRequest(String issuedBy, String groundStation) {
-        this(issuedBy);
-        List<String> groundStations = new ArrayList<String>();
-        groundStations.add(groundStation);
-        addNames(groundStations);
+    
+    public void setLocation(String location) {
+        setArgumentValue(StandardArguments.GROUND_STATION_NAME, location);
     }
 }

@@ -19,7 +19,7 @@ package org.hbird.exchange.core;
 /**
  * Class holding binary data.
  * 
- * @author Admin
+ * @author Gert Villemos
  * 
  */
 public class Binary extends EntityInstance {
@@ -35,30 +35,13 @@ public class Binary extends EntityInstance {
     /**
      * Constructor
      * 
-     * @param issuedBy The name of the system element that issued this binary data
+     * @param ID The Entity ID that this is an instance of
      * @param name Name of this binary data
-     * @param type The type of the data
-     * @param description A description of the data
-     * @param rawData The raw data
-     */
-    public Binary(String issuedBy, String name, String description, byte[] rawData) {
-        this(issuedBy, name, description, rawData, null);
-    }
-
-    /**
-     * Constructor
-     * 
-     * @param issuedBy The name of the system element that issued this binary data
-     * @param name Name of this binary data
-     * @param type The type of the data
-     * @param description A description of the data
      * @param rawData The raw data
      * @param format format of the raw data
      */
-    public Binary(String issuedBy, String name, String description, byte[] rawData, String format) {
-        super(issuedBy, name, description);
-        this.rawData = rawData;
-        this.format = format;
+    public Binary(String ID, String name) {
+        super(ID, name);
     }
 
     public byte[] getRawData() {

@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.core.EntityInstance;
 
 public class MetadataRequest extends DataRequest {
 
@@ -15,10 +14,8 @@ public class MetadataRequest extends DataRequest {
 
     public static final String DESCRIPTION = "A request to retrieve metadata related to a Named object.";
     
-    public MetadataRequest(String issuedBy, EntityInstance applicableTo) {
-        super(issuedBy);
-
-        this.setArgumentValue(StandardArguments.APPLICABLE_TO, applicableTo.getID());
+    public MetadataRequest(String ID) {
+        super(ID);
     }
 
     /**
@@ -30,4 +27,11 @@ public class MetadataRequest extends DataRequest {
         args.add(create(APPLICABLE_TO));
         return args;
     }
+
+	/**
+	 * @param id
+	 */
+	public void setIsApplicableTo(String applicableTo) {
+        setArgumentValue(StandardArguments.APPLICABLE_TO, applicableTo);
+	}
 }

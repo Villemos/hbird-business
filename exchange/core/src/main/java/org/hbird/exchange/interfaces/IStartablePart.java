@@ -22,7 +22,7 @@ import org.hbird.exchange.core.BusinessCard;
  * @author Gert Villemos
  * 
  */
-public interface IStartablePart extends IPart {
+public interface IStartablePart extends IEntityInstance {
 
     public String getDriverName();
 

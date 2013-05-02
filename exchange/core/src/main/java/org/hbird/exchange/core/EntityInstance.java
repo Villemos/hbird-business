@@ -16,6 +16,9 @@
  */
 package org.hbird.exchange.core;
 
+import java.io.Serializable;
+
+import org.apache.commons.lang3.SerializationUtils;
 import org.hbird.exchange.interfaces.IEntityInstance;
 
 /**
@@ -30,8 +33,6 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
     /** The unique UID of this class. */
     private static final long serialVersionUID = -5803219773253020746L;
     
-    protected static final String ID_SEPARATOR = "/";
-    
     /**
      * The time at which this object represented a valid state of the system. Default value is the
      * time of creation.
@@ -39,25 +40,13 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
     protected long timestamp = 0;
 
     /**
-     * Constructor of a Named object. 
-     * 
-     * The ID of the instance will be set as '[issuedBy]/[name]' 
-     * 
-     * @param name The name of the object.
-     * @param description The description of the object.
-     */
-    public EntityInstance(String issuedBy, String name, String description) {
-    	this(issuedBy + ID_SEPARATOR + name, issuedBy, name, description);
-    }
-
-    /**
      * Constructor of a Named object. The timestamp will be set to the creation time.
      * 
      * @param name The name of the object.
      * @param description The description of the object.
      */
-    public EntityInstance(String ID, String issuedBy, String name, String description) {
-    	super(ID, name, description, issuedBy);
+    public EntityInstance(String ID, String name) {
+    	super(ID, name);
     	this.timestamp = System.currentTimeMillis();
     }
 
@@ -78,7 +67,13 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
 	public String getInstanceID() {
 		return ID + ":" + timestamp;
 	}
-
+	
+	public <T extends Serializable> T cloneEntity() {
+		EntityInstance newInstance = (EntityInstance) SerializationUtils.clone(this);
+		newInstance.setTimestamp(System.currentTimeMillis());
+		return (T) newInstance;
+	}
+	
 	public String prettyPrint() {
         return String.format("%s[ID=%s, name=%s]", this.getClass().getSimpleName(), getInstanceID(), getName());
     }

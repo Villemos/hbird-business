@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.Map;
 
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * Base type for all simulated parameters. Holds the name and implements the Camel
@@ -49,8 +48,8 @@ public abstract class BaseParameter {
 	 * @param name
 	 * @param description
 	 */
-	public BaseParameter(IPart issuedBy, String name, String description) {
-		this.issuedBy = issuedBy.getName();
+	public BaseParameter(String issuedBy, String name, String description) {
+		this.issuedBy = issuedBy;
 		this.name = name;
 		this.description = description;
 	}
@@ -62,8 +61,8 @@ public abstract class BaseParameter {
 	 * @param value
 	 * @param unit
 	 */
-	public BaseParameter(IPart issuedBy, String name, String description, Number value, String unit) {
-		this.issuedBy = issuedBy.getName();
+	public BaseParameter(String issuedBy, String name, String description, Number value, String unit) {
+		this.issuedBy = issuedBy;
 		this.name = name;
 		this.description = description;
 		this.value = value;

@@ -88,7 +88,7 @@ public class ContactScheduler {
                 .newJob(TrackCommandCreationJob.class)
                 .withIdentity(createJobName(event), groupName)
                 .usingJobData(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID, event.getInstanceID())
-                .usingJobData(TrackCommandCreationJob.JOB_DATA_EVENT_ID, event.getEventId())
+                .usingJobData(TrackCommandCreationJob.JOB_DATA_EVENT_ID, event.getID())
                 .usingJobData(TrackCommandCreationJob.JOB_DATA_TLE_ID, event.getDerivedFrom())
                 .usingJobData(TrackCommandCreationJob.JOB_DATA_START_TIME, event.getStartTime())
                 .build();
@@ -96,11 +96,11 @@ public class ContactScheduler {
     }
 
     String createJobName(LocationContactEvent event) {
-        return String.format("%s-%s", PREFIX_JOB, event.getEventId());
+        return String.format("%s-%s", PREFIX_JOB, event.getID());
     }
 
     String createTriggerName(LocationContactEvent event) {
-        return String.format("%s-%s", PREFIX_TRIGGER, event.getEventId());
+        return String.format("%s-%s", PREFIX_TRIGGER, event.getID());
     }
 
     String createGroupName(LocationContactEvent event) {

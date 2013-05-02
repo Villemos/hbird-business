@@ -51,33 +51,8 @@ public class CommandRequest extends EntityInstance implements ITransferable {
     /** List of tasks to be performed after the release of the command. */
     protected List<Task> tasks = new ArrayList<Task>();
 
-    public CommandRequest(String issuedBy, String name, String description) {
-        super(issuedBy, name, description);
-    }
-
-    /**
-     * Basic constructor
-     * 
-     * @param name The name of the command.
-     * @param arguments The arguments of the command.
-     * @param lockStates The states of the command which must be true upon release.
-     * @param tasks The tasks to be performed as part of the command validation.
-     * @param transferTime The time at which the command should be released by the MCS for transfer to the satellite.
-     * @param executionTime The time at which the command should be executed onboard.
-     */
-    public CommandRequest(String issuedBy, String name, String description, List<String> lockStates, List<Task> tasks, Command command) {
-        super(issuedBy, name, description);
-        this.command = command;
-        this.lockStates = lockStates;
-        this.tasks = tasks;
-    }
-
-    public CommandRequest(String issuedBy, String name, String description, List<String> lockStates, List<Task> tasks, Command command, long transferTime) {
-        super(issuedBy, name, description);
-        this.command = command;
-        this.lockStates = lockStates;
-        this.tasks = tasks;
-        this.transferTime = transferTime;
+    public CommandRequest(String ID, String name) {
+        super(ID, name);
     }
 
     /**
@@ -136,4 +111,27 @@ public class CommandRequest extends EntityInstance implements ITransferable {
     public void setDestination(String destination) {
         this.destination = destination;
     }
+
+	/**
+	 * @param command the command to set
+	 */
+	public void setCommand(Command command) {
+		this.command = command;
+	}
+
+	/**
+	 * @param lockStates the lockStates to set
+	 */
+	public void setLockStates(List<String> lockStates) {
+		this.lockStates = lockStates;
+	}
+
+	/**
+	 * @param tasks the tasks to set
+	 */
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
+	}
+    
+    
 }

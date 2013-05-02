@@ -41,19 +41,19 @@ public class LimitCheckComponentDriver extends SoftwareComponentDriver {
 		String componentName = request.getName();
 		String limitValueName = componentName + "/" + "LimitValue";
 		
-		if (limit.type == eLimitType.Lower) {
-			createRoute(limit.limitOfParameter, new LowerLimitChecker(limit), componentName, limitValueName);
+		if (limit.getType() == eLimitType.Lower) {
+			createRoute(limit.getLimitOfParameter(), new LowerLimitChecker(limit), componentName, limitValueName);
 		}
-		else if (limit.type == eLimitType.Upper) {
-			createRoute(limit.limitOfParameter, new UpperLimitChecker(limit), componentName, limitValueName);
+		else if (limit.getType() == eLimitType.Upper) {
+			createRoute(limit.getLimitOfParameter(), new UpperLimitChecker(limit), componentName, limitValueName);
 		}
-		else if (limit.type == eLimitType.Static) {
-			createRoute(limit.limitOfParameter, new StaticLimitChecker(limit), componentName, limitValueName);
+		else if (limit.getType() == eLimitType.Static) {
+			createRoute(limit.getLimitOfParameter(), new StaticLimitChecker(limit), componentName, limitValueName);
 		}
-		else if (limit.type == eLimitType.Differential) {
+		else if (limit.getType() == eLimitType.Differential) {
 			DifferentialLimitChecker checker = new DifferentialLimitChecker(limit);
 			checker.setApi(ApiFactory.getDataAccessApi(part.getName()));
-			createRoute(limit.limitOfParameter, checker, componentName, limitValueName);
+			createRoute(limit.getLimitOfParameter(), checker, componentName, limitValueName);
 		}
 
 		addCommandHandler();

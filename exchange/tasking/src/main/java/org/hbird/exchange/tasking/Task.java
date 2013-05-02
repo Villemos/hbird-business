@@ -56,9 +56,8 @@ public abstract class Task extends EntityInstance implements IScheduled {
 	 * @param description A description of the task
 	 * @param executionTime The java time (ms) when the task should be executed. 0 is immediately.
 	 */
-	public Task(String issuedBy, String name, String description, long executionDelay) {
-		super(issuedBy, name, description);
-		this.executionDelay = executionDelay;
+	public Task(String ID, String name) {
+		super(ID, name);
 	}
 	
 	public abstract List<EntityInstance> execute();

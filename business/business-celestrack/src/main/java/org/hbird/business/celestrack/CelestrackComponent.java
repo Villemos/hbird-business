@@ -33,8 +33,7 @@
 package org.hbird.business.celestrack;
 
 import org.hbird.business.celestrack.http.CelestrackComponentDriver;
-import org.hbird.business.core.StartablePart;
-import org.hbird.exchange.interfaces.IPart;
+import org.hbird.business.core.StartableEntity;
 
 /**
  * Component for reading TLEs of satellites from the Celestrack website.
@@ -42,7 +41,7 @@ import org.hbird.exchange.interfaces.IPart;
  * @author Gert Villemos
  *
  */
-public class CelestrackComponent extends StartablePart {
+public class CelestrackComponent extends StartableEntity {
 
 	/**
 	 * 
@@ -74,8 +73,10 @@ public class CelestrackComponent extends StartablePart {
 	/**
 	 * Default constructor.
 	 */
-	public CelestrackComponent(IPart isPartOf) {
-		super(isPartOf, DEFAULT_NAME, DEFAULT_DESCRIPTION, DEFAULT_DRIVER);
+	public CelestrackComponent(String ID) {
+		super(ID, DEFAULT_NAME);
+		setDescription(DEFAULT_DESCRIPTION);
+		setDriverName(DEFAULT_DRIVER);
 	}
 
 	public String getElements() {

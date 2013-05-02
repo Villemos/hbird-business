@@ -19,7 +19,6 @@ package org.hbird.exchange.core;
 import java.util.Map;
 
 import org.hbird.exchange.interfaces.IApplicableTo;
-import org.hbird.exchange.interfaces.IEntityInstance;
 
 /**
  * Class for metadata to another Named object. The object 'points' to the subject through the
@@ -35,7 +34,7 @@ public class Metadata extends EntityInstance implements IApplicableTo {
     public static final String DESCRIPTION = "Metadata applicable to another Named object.";
 
     /** The identifier of the object that this is applicable too. */
-    protected String subject = null;
+    protected String applicableTo = null;
 
     /** The metadata itself. Can be any type, keyed on string. */
     protected Map<String, Object> metadata = null;
@@ -48,29 +47,13 @@ public class Metadata extends EntityInstance implements IApplicableTo {
      * @param toSubject A Named object that this metadata is applicable to.
      * @param metadata The metadata. Map keyed on a string ID and hold an object.
      */
-    public Metadata(String issuedBy, String name, IEntityInstance toSubject, Map<String, Object> metadata) {
-        super(issuedBy, name, DESCRIPTION);
-        this.subject = toSubject.getID();
-        this.metadata = metadata;
+    public Metadata(String ID, String name) {
+        super(ID, name);
     }
 
     @Override
     public String applicableTo() {
-        return subject;
-    }
-
-    /**
-     * @return the subject
-     */
-    public String getSubject() {
-        return subject;
-    }
-
-    /**
-     * @param subject the subject to set
-     */
-    public void setSubject(String subject) {
-        this.subject = subject;
+        return applicableTo;
     }
 
     /**
@@ -86,4 +69,11 @@ public class Metadata extends EntityInstance implements IApplicableTo {
     public void setMetadata(Map<String, Object> metadata) {
         this.metadata = metadata;
     }
-}
+
+	/**
+	 * @param id
+	 */
+	public void setApplicableTo(String id) {
+		this.applicableTo = id;
+	}
+} 

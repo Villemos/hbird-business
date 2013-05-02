@@ -16,35 +16,46 @@
  */
 package org.hbird.exchange.core;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * A command block is a set of commands that are released and transfered to the destination as one block.
- * 
- * The command block can can be treated as a command that is a single command until released to the 
- * destination, where it becomes many commands. 
- * 
  * @author Gert Villemos
  *
  */
-public class CommandBlock extends Command {
+public class HierachicalView extends EntityInstance {
 
-	private static final long serialVersionUID = -5681255679860543896L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7751452991750905686L;
 
-	/** The commands that this command block carries. */
-	protected List<Command> commands = new ArrayList<Command>();
-	
-	public CommandBlock(String ID, String name) {
+	/**
+	 * @param ID
+	 * @param name
+	 */
+	public HierachicalView(String ID, String name) {
 		super(ID, name);
 	}
 	
+	/** Map where key is CHILD, value is PARENT. As each child can have only one parent (in a specific View), the map entry is unique. */
+	protected Map<String, String> relationships = new HashMap<String, String>();
+	
+	public void addRelationship(String child, String parent) {
+		relationships.put(child, parent);
+	}
+
 	/**
-	 * Adds a command to the command block
-	 * 
-	 * @param command The command to be added.
+	 * @return the relationships
 	 */
-	public void addCommand(Command command) {
-		commands.add(command);
-	}	
+	public Map<String, String> getRelationships() {
+		return relationships;
+	}
+
+	/**
+	 * @param relationships the relationships to set
+	 */
+	public void setRelationships(Map<String, String> relationships) {
+		this.relationships = relationships;
+	}
 }

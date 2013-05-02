@@ -111,7 +111,11 @@ public class CelestrackReader  {
 						satellite = (Satellite) object;
 					}
 					
-					api.publish(new TleOrbitalParameters("Celestrack", elements[index].trim() + "/TLE", satellite.getID(), elements[index + 1].trim(), elements[index + 2].trim()));
+					TleOrbitalParameters parameters = new TleOrbitalParameters(satellite.getID() + "/TLE", TleOrbitalParameters.class.getSimpleName());
+					parameters.setSatellite(satellite.getID());
+					parameters.setTleLine1(elements[index + 1].trim());
+					parameters.setTleLine2(elements[index + 2].trim());
+					api.publish(parameters);
 				}
 			}
 		}

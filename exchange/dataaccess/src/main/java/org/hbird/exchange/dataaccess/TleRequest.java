@@ -31,23 +31,14 @@ public class TleRequest extends DataRequest {
 
     private static final long serialVersionUID = 5283711249928543145L;
 
-    public TleRequest(String issuedBy, String satellite) {
-        super(issuedBy, TleRequest.class.getSimpleName(), DESCRIPTION);
-        setSatelliteName(satellite);
+    public TleRequest(String ID) {
+        super(ID, TleRequest.class.getSimpleName());
+        setDescription(DESCRIPTION);
         setClass(TleOrbitalParameters.class.getSimpleName());
         setIsInitialization(true);
         setSort(StandardArguments.TIMESTAMP);
         setSortOrder("DESC");
         setRows(1);
-    }
-
-    public TleRequest(String issuedBy, String satellite, long from, long to) {
-        super(issuedBy, TleRequest.class.getSimpleName(), DESCRIPTION);
-        setSatelliteName(satellite);
-        setClass(TleOrbitalParameters.class.getSimpleName());
-        setIsInitialization(true);
-        setFrom(from);
-        setTo(to);
     }
 
     /**

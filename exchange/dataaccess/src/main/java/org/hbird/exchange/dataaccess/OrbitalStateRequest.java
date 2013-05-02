@@ -31,21 +31,13 @@ public class OrbitalStateRequest extends DataRequest {
 
     private static final long serialVersionUID = -5920513650830048315L;
 
-    public OrbitalStateRequest(String issuedBy, String satellite) {
-        super(issuedBy, OrbitalStateRequest.class.getSimpleName(), DESCRIPTION);
-        setSatelliteName(satellite);
+    public OrbitalStateRequest(String ID) {
+        super(ID, OrbitalStateRequest.class.getSimpleName());
+        setDescription(DESCRIPTION);
         setIsInitialization(true);
         setRows(1);
         setSort(StandardArguments.TIMESTAMP);
         setSortOrder("DESC");
-        setClass(OrbitalState.class.getSimpleName());
-    }
-
-    public OrbitalStateRequest(String issuedBy, String satellite, Long from, Long to) {
-        super(issuedBy, OrbitalStateRequest.class.getSimpleName(), DESCRIPTION);
-        setSatelliteName(satellite);
-        setFromTime(from);
-        setToTime(to);
         setClass(OrbitalState.class.getSimpleName());
     }
 

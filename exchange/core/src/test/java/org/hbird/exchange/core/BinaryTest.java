@@ -31,6 +31,7 @@ import org.junit.Test;
  */
 public class BinaryTest {
 
+    private static final String ID = "ID";
     private static final String NAME = "NAME";
     private static final String ISSUER = "issuer";
     private static final String DESCRIPTION = "description";
@@ -44,7 +45,10 @@ public class BinaryTest {
      */
     @Before
     public void setUp() throws Exception {
-        binary = new Binary(ISSUER, NAME, DESCRIPTION, DATA);
+        binary = new Binary(ID, NAME);
+        binary.setIssuedBy(ISSUER);
+        binary.setDescription(DESCRIPTION);
+        binary.setRawData(DATA);
     }
 
     /**
@@ -96,7 +100,7 @@ public class BinaryTest {
      */
     @Test
     public void testSetFormat() {
-        binary = new Binary(ISSUER, NAME, DESCRIPTION, DATA, FORMAT);
+        binary = new Binary(ID, NAME);
         assertEquals(FORMAT, binary.getFormat());
         binary.setFormat(null);
         assertNull(binary.getFormat());

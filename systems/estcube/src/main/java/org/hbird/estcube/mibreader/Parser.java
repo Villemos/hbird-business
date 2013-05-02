@@ -37,7 +37,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IPublish;
-import org.hbird.business.core.CommandablePart;
+import org.hbird.business.core.CommandableEntity;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 
@@ -58,7 +58,7 @@ public class Parser {
 
 	protected int proxyPort = 0;
 
-	protected List<CommandablePart> parts = null;
+	protected List<CommandableEntity> parts = null;
 	
 	public void parse() throws Exception {
 
@@ -88,8 +88,8 @@ public class Parser {
 			LOG.info("File length without comments=" + text.length());
 
 			/** Turn the part list into something easier to use. */
-			Map<String, CommandablePart> partsMap = new HashMap<String, CommandablePart>();
-			for (CommandablePart part : parts) {
+			Map<String, CommandableEntity> partsMap = new HashMap<String, CommandableEntity>();
+			for (CommandableEntity part : parts) {
 				partsMap.put(part.getName(), part);
 			}			
 			
@@ -146,7 +146,7 @@ public class Parser {
 		}
 		
 		IPublish api = ApiFactory.getPublishApi("parser");
-		for (CommandablePart part : parts) {
+		for (CommandableEntity part : parts) {
 			LOG.info("Publishing satellite part (subsystem) '" + part.getName() + "'");
 			api.publish(part);
 		}
@@ -183,11 +183,11 @@ public class Parser {
 		this.proxyPort = proxyPort;
 	}
 
-	public List<CommandablePart> getParts() {
+	public List<CommandableEntity> getParts() {
 		return parts;
 	}
 
-	public void setParts(List<CommandablePart> parts) {
+	public void setParts(List<CommandableEntity> parts) {
 		this.parts = parts;
 	}
 }

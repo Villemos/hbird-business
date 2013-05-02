@@ -26,7 +26,7 @@ import static org.hbird.exchange.dataaccess.Arguments.STEP_SIZE;
 import static org.hbird.exchange.dataaccess.Arguments.TLE_PARAMETERS;
 import static org.hbird.exchange.dataaccess.Arguments.create;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.exchange.constants.StandardArguments;
@@ -39,62 +39,10 @@ public class TlePropagationRequest extends DataRequest {
 
     public static final String DESCRIPTION = "A request for orbit prediction.";
 
-    public TlePropagationRequest(String issuedBy, String satellite) {
-        super(issuedBy, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
-        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+    public TlePropagationRequest(String ID) {
+        super(ID, TlePropagationRequest.class.getSimpleName());
+        setDescription(DESCRIPTION);
         setArgumentValue(StandardArguments.START_TIME, System.currentTimeMillis());
-    }
-
-    /**
-     * Constructor of a orbital prediction request.
-     * 
-     * @param satellite The satellite that should be predicted.
-     * @param position The current position of the satellite.
-     * @param velocity The current velocity of the satellite.
-     * @param starttime The start time at which the prediction should start. This must correspond to the time of the
-     *            position and velocity.
-     * @param locations A list of locations, to which orbital events (establishment / loss of contact, etc) should be
-     *            calculated and issued.
-     */
-    public TlePropagationRequest(String issuedBy, String satellite, String tleLine1, String tleLine2, Long starttime, List<String> locations) {
-        super(issuedBy, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
-        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
-        setArgumentValue(StandardArguments.START_TIME, starttime);
-        setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
-        setArgumentValue(StandardArguments.TLE_PARAMETERS, new TleOrbitalParameters(issuedBy, satellite + "/TLE", satellite, tleLine1, tleLine2));
-    }
-
-    /**
-     * Constructor based on a current Orbital State.
-     * 
-     * @param name The name of the request.
-     * @param satellite The satellite for which the prediction is done.
-     * @param state The initial orbital state.
-     * @param locations List of locations for which contact events shall be generated.
-     */
-    public TlePropagationRequest(String issuedBy, String satellite, TleOrbitalParameters state, List<String> locations) {
-        this(issuedBy, satellite);
-        setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
-        setArgumentValue(StandardArguments.TLE_PARAMETERS, state);
-    }
-
-    public TlePropagationRequest(String issuedBy, String satellite, long from, long to) {
-        super(issuedBy, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
-        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
-        setArgumentValue(StandardArguments.START_TIME, from);
-        setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);
-    }
-
-    public TlePropagationRequest(String issuedBy, String satellite, String location, long from, long to) {
-        this(issuedBy, satellite, Arrays.asList(location), from, to);
-    }
-
-    public TlePropagationRequest(String issuedBy, String satellite, List<String> locations, long from, long to) {
-        super(issuedBy, TlePropagationRequest.class.getSimpleName(), DESCRIPTION);
-        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
-        setArgumentValue(StandardArguments.START_TIME, from);
-        setArgumentValue(StandardArguments.DELTA_PROPAGATION, (to - from) / 1000);
-        setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
     }
 
     /**
@@ -146,4 +94,27 @@ public class TlePropagationRequest extends DataRequest {
     public boolean getPublish() {
         return getArgumentValue(StandardArguments.PUBLISH, Boolean.class);
     }
+
+	/**
+	 * @param satellite
+	 */
+	public void setSatellite(String satellite) {
+        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+	}
+	
+	/**
+	 * @param satellite
+	 */
+	public void setLocation(String location) {
+		List<String> names = new ArrayList<String>();
+		names.add(location);
+        setArgumentValue(StandardArguments.GROUND_STATION_NAMES, names);
+	}
+	
+	/**
+	 * @param satellite
+	 */
+	public void setLocations(List<String> locations) {
+        setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
+	}	
 }

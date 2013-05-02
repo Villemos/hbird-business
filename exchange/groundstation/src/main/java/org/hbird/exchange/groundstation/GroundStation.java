@@ -25,7 +25,6 @@ import java.util.List;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * An object representing a ground station.
@@ -55,41 +54,9 @@ public class GroundStation extends Part implements IGroundStationSpecific {
     /**
      * 
      */
-    public GroundStation(IPart isPartOf, String name) {
-        super(isPartOf, name, DESCRIPTION);
-    }
-
-    /**
-     * 
-     * 
-     * @param geoLocation
-     * @param antennas
-     */
-    public GroundStation(IPart isPartOf, String name, String description, D3Vector geoLocation) {
-        super(isPartOf, name, description);
-        this.geoLocation = geoLocation;
-    }
-
-    /**
-     * 
-     * 
-     * @param geoLocation
-     * @param antennas
-     */
-    public GroundStation(String name, String description, D3Vector geoLocation) {
-        super(name, description);
-        this.geoLocation = geoLocation;
-    }
-
-    /**
-     * 
-     * 
-     * @param geoLocation
-     * @param antennas
-     */
-    public GroundStation(String name, D3Vector geoLocation) {
-        super(name, DESCRIPTION);
-        this.geoLocation = geoLocation;
+    public GroundStation(String ID, String name) {
+        super(ID, name);
+        setDescription(DESCRIPTION);
     }
 
     /**

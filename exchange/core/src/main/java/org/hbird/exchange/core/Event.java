@@ -52,16 +52,7 @@ public class Event extends EntityInstance {
 	 */
     private static final long serialVersionUID = 8958078334517112743L;
 
-    public Event(String issuedBy, String name, String description, long timestamp) {
-        super(issuedBy, name, description);
-        this.timestamp = timestamp;
-    }
-
-    public Event(String issuedBy, Event eventTemplate, long timestamp) {
-        this(issuedBy, eventTemplate.getName(), eventTemplate.getDescription(), timestamp);
-    }
-
-    public Event(String issuedBy, Event eventTemplate) {
-        this(issuedBy, eventTemplate, System.currentTimeMillis());
+    public Event(String ID, String name) {
+        super(ID, name);
     }
 }

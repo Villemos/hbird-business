@@ -29,9 +29,9 @@ public class StopComponent extends Command {
 
     private static final long serialVersionUID = -2447358927849450763L;
 
-    public StopComponent(String issuedBy, String componentToStop) {
-        super(issuedBy, null, StopComponent.class.getSimpleName(), DESCRIPTION);
-        setComponent(componentToStop);
+    public StopComponent(String ID) {
+        super(ID, StopComponent.class.getSimpleName());
+        setDescription(DESCRIPTION);
     }
 
     /**

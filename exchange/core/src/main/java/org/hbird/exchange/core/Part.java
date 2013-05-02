@@ -16,81 +16,22 @@
  */
 package org.hbird.exchange.core;
 
-import org.hbird.exchange.interfaces.IPart;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * A part is something that is 'part' of something else (... most likely).
- * 
  * @author Gert Villemos
- * 
+ *
  */
-public class Part extends EntityInstance implements IPart {
+public class Part extends EntityInstance {
 
-    private static final long serialVersionUID = 4961124159238983376L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8414896547483447947L;
 
-    public static final String DEFAULT_ISSUED_BY = "SystemAssembly";
-
-    private static final Logger LOG = LoggerFactory.getLogger(Part.class);
-
-    /** The full ID of the parent. */
-    protected String isPartOf = null;
-
-    /**
-     * Constructor that will set the ID = name. Should only be used for Parts that are unique, i.e. the name
-     * can be used as the unique identifier.
-     * 
-     * @param name
-     * @param description
-     */
-    public Part(String name, String description) {
-        super(ID_SEPARATOR + name, DEFAULT_ISSUED_BY, name, description);
-    }
-
-    public Part(IPart isPartOf, String name, String description) {
-        super(isPartOf.getID() + ID_SEPARATOR + name, DEFAULT_ISSUED_BY, name, description);
-        this.isPartOf = isPartOf.getID();
-    }
-
-    public Part(String issuedBy, String name, String description) {
-        super(ID_SEPARATOR + name, issuedBy, name, description);
-    }
-
-    public Part(IPart isPartOf, String issuedBy, String name, String description) {
-        super(isPartOf.getID() + ID_SEPARATOR + name, issuedBy, name, description);
-        this.isPartOf = isPartOf.getID();
-    }
-
-    /**
-     * @see org.hbird.exchange.interfaces.IPartOf#getIsPartOf()
-     */
-    @Override
-    public String getIsPartOf() {
-        return isPartOf;
-    }
-
-    /**
-     * @see org.hbird.exchange.interfaces.IPartOf#setIsPartOf(org.hbird.exchange.core.EntityInstance)
-     */
-    @Override
-    public void setIsPartOf(IPart parent) {
-        if (parent == null) {
-            // TODO - 29.03.2013, kimmell - throw IllegalArgumentException or RuntimeException here?
-            LOG.error("Attempting to set NULL parent for Part '{}'. Likely a configuration error.", this.getName());
-        }
-        else {
-            this.isPartOf = parent.getID();
-        }
-    }
-
-    @Override
-    public void setIsPartOf(String parentId) {
-        this.isPartOf = parentId;
-    }
-
-    @Override
-    public String prettyPrint() {
-        return String.format("%s[ID=%s, name=%s, isPartOf=%s]", this.getClass().getSimpleName(), getInstanceID(), getName(), getIsPartOf());
-    }
+	/**
+	 * @param ID
+	 * @param name
+	 */
+	public Part(String ID, String name) {
+		super(ID, name);
+	}
 }

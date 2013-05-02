@@ -230,7 +230,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
      * @return
      */
     protected Event createStartEvent(String qualifiedName) {
-        return new Event(qualifiedName, StandardMissionEvents.COMPONENT_START);
+        return StandardMissionEvents.COMPONENT_START.cloneEntity();
     }
 
     /**
@@ -238,7 +238,6 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
      * @return
      */
     protected Event createStopEvent(String qualifiedName) {
-        return new Event(qualifiedName, StandardMissionEvents.COMPONENT_STOP);
+        return StandardMissionEvents.COMPONENT_STOP.cloneEntity();
     }
-
 }

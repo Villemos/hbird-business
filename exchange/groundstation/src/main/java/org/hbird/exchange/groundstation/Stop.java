@@ -24,12 +24,8 @@ public class Stop extends Command {
 
     private static final long serialVersionUID = -1721160626653889307L;
 
-    public Stop(String issuedBy) {
-        super(issuedBy, "", Stop.class.getSimpleName(), DESCRIPTION);
-    }
-
-    public Stop(String issuedBy, long executionTime) {
-        super(issuedBy, "", Stop.class.getSimpleName(), DESCRIPTION);
-        this.executionTime = executionTime;
+    public Stop(String ID) {
+        super(ID, Stop.class.getSimpleName());
+        setDescription(DESCRIPTION);
     }
 }

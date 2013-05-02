@@ -45,54 +45,38 @@ import org.hbird.exchange.core.Event;
  */
 public class StandardMissionEvents {
 
-    public static final Event LAUNCH = new Event("",
-            "Launch",
-            "The launch of the satellite.",
-            0L);
+	
+    public static final Event LAUNCH = new Event("Event/Launch", "Launch");
 
-    public static final Event PREDICTED_GROUND_STATION_CONTACT_ESTABLISH = new Event("",
-            "PredictedGroundStationContact",
-            "Prediction that contact with a specific satellite, ground station and antenna will occur at this time.",
-            0L);
+    public static final Event PREDICTED_GROUND_STATION_CONTACT_ESTABLISH = new Event("Event/PredictedGroundStationContact", "PredictedGroundStationContact");
 
-    public static final Event GROUND_STATION_CONTACT_ESTABLISHED = new Event("",
-            "GroundStationContactEstablished",
-            "Registration that contact with a specific satellite, ground station and antenna occured at this time.",
-            0L);
+    public static final Event GROUND_STATION_CONTACT_ESTABLISHED = new Event("Event/GroundStationContactEstablished", "GroundStationContactEstablished");
 
-    public static final Event PREDICTED_GROUND_STATION_CONTACT_LOST = new Event("",
-            "PredictedGroundStationContactLost",
-            "Prediction that a contact with a specific satellite, ground station and antenna will occur at this time.",
-            0L);
+    public static final Event PREDICTED_GROUND_STATION_CONTACT_LOST = new Event("Event/PredictedGroundStationContactLost", "PredictedGroundStationContactLost");
 
-    public static final Event GROUND_STATION_CONTACT_LOST = new Event("",
-            "GroundStationContactLost",
-            "Registration that contact with a specific satellite, ground station and antenna occured at this time.",
-            0L);
+    public static final Event GROUND_STATION_CONTACT_LOST = new Event("Event/GroundStationContactLost", "GroundStationContactLost");
 
-    public static final Event SINGLE_UPSET_EVENT = new Event("",
-            "SingleUpsetEvent",
-            "Registration that a Single Upset Event (SUE) occured.",
-            0L);
+    public static final Event SINGLE_UPSET_EVENT = new Event("Event/SingleUpsetEvent","SingleUpsetEvent");
 
-    public static final Event CONTROL_REESTABLISHED = new Event("",
-            "ControlReestablished",
-            "Registration that control of the satellite was reestablished after a SUE.",
-            0L);
+    public static final Event CONTROL_REESTABLISHED = new Event("Event/ControlReestablished", "ControlReestablished");
 
-    public static final Event DECOMMISIONING = new Event("",
-            "Decommisioning",
-            "Decommisioning of the satellite.",
-            0L);
+    public static final Event DECOMMISIONING = new Event("Event/Decommisioning", "Decommisioning");
 
-    public static final Event COMPONENT_START = new Event("",
-            "ComponentStart",
-            "Component started",
-            0L);
+    public static final Event COMPONENT_START = new Event("Event/ComponentStart", "ComponentStart");
 
-    public static final Event COMPONENT_STOP = new Event("",
-            "ComponentStop",
-            "Component stopping",
-            0L);
+    public static final Event COMPONENT_STOP = new Event("Event/ComponentStop", "ComponentStop");
+
+	static {
+		LAUNCH.setDescription("The launch of the satellite.");
+		PREDICTED_GROUND_STATION_CONTACT_ESTABLISH.setDescription("Prediction that contact with a specific satellite, ground station and antenna will occur at this time.");
+		GROUND_STATION_CONTACT_ESTABLISHED.setDescription("Registration that contact with a specific satellite, ground station and antenna occured at this time.");
+		PREDICTED_GROUND_STATION_CONTACT_LOST.setDescription("Prediction that a contact with a specific satellite, ground station and antenna will occur at this time.");
+		GROUND_STATION_CONTACT_LOST.setDescription("Registration that contact with a specific satellite, ground station and antenna occured at this time.");
+		SINGLE_UPSET_EVENT.setDescription("Registration that a Single Upset Event (SUE) occured.");
+		CONTROL_REESTABLISHED.setDescription("Registration that control of the satellite was reestablished after a SUE.");
+		DECOMMISIONING.setDescription("Decommisioning of the satellite.");
+		COMPONENT_START.setDescription("Component started");
+		COMPONENT_STOP.setDescription("Component stopping");
+	}
 
 }

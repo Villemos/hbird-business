@@ -33,55 +33,88 @@ import org.hbird.exchange.navigation.Satellite;
 public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
 
     public OrbitPropagation(String issuedBy) {
-        super(issuedBy, NavigationComponent.ORBIT_PROPAGATOR_NAME);
+        super(issuedBy, NavigationComponent.DEFAULT_NAME);
     }
 
     @Override
     public List<EntityInstance> requestOrbitPropagation(String satellite) {
-        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite);
+        TlePropagationRequest request = new TlePropagationRequest(getID());
+        request.setIssuedBy(issuedBy);
+        request.setSatellite(satellite);
         return sendRequest(request);
     }
 
     @Override
     public List<EntityInstance> requestOrbitPropagation(String satellite, long from, long to) {
-        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, from, to);
+        TlePropagationRequest request = new TlePropagationRequest(getID());
+        request.setIssuedBy(issuedBy);
+        request.setSatellite(satellite);
+        request.setFrom(from);
+        request.setTo(to);
         return sendRequest(request);
     }
 
     @Override
     public List<EntityInstance> requestOrbitPropagation(String satellite, String location, long from, long to) {
-        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, location, from, to);
+        TlePropagationRequest request = new TlePropagationRequest(getID());
+        request.setIssuedBy(issuedBy);
+        request.setSatellite(satellite);
+        request.setLocation(location);
+        request.setFrom(from);
+        request.setTo(to);
         return sendRequest(request);
     }
 
     @Override
     public List<EntityInstance> requestOrbitPropagation(String satellite, List<String> locations, long from, long to) {
-        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, locations, from, to);
+        TlePropagationRequest request = new TlePropagationRequest(getID());
+        request.setIssuedBy(issuedBy);
+        request.setSatellite(satellite);
+        request.setLocations(locations);
+        request.setFrom(from);
+        request.setTo(to);
         return sendRequest(request);
     }
 
     @Override
     public void requestOrbitPropagationStream(String satellite) {
-        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite);
+        TlePropagationRequest request = new TlePropagationRequest(getID());
+        request.setIssuedBy(issuedBy);
+        request.setSatellite(satellite);
         sendRequestStream(request);
     }
 
     @Override
     public void requestOrbitPropagationStream(String satellite, long from, long to) {
-        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, from, to);
+        TlePropagationRequest request = new TlePropagationRequest(getID());
+        request.setIssuedBy(issuedBy);
+        request.setSatellite(satellite);
+        request.setFrom(from);
+        request.setTo(to);
         sendRequestStream(request);
     }
 
     @Override
     public void requestOrbitPropagationStream(String satellite, String location, long from, long to) {
-        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, location, from, to);
+        TlePropagationRequest request = new TlePropagationRequest(getID());
+        request.setIssuedBy(issuedBy);
+        request.setSatellite(satellite);
+        request.setLocation(location);
+        request.setFrom(from);
+        request.setTo(to);
         sendRequestStream(request);
     }
 
     @Override
     public void requestOrbitPropagationStream(String satellite, List<String> locations, long from, long to) {
-        TlePropagationRequest request = new TlePropagationRequest(issuedBy, satellite, locations, from, to);
+        TlePropagationRequest request = new TlePropagationRequest(getID());
+        request.setIssuedBy(issuedBy);
+        request.setSatellite(satellite);
+        request.setLocations(locations);
+        request.setFrom(from);
+        request.setTo(to);
         sendRequestStream(request);
+
     }
 
     protected List<EntityInstance> sendRequest(TlePropagationRequest request) {

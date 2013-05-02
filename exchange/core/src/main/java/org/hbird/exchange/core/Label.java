@@ -17,7 +17,7 @@
 package org.hbird.exchange.core;
 
 /**
- * @author Admin
+ * @author Gert Villemos
  * 
  *         A Label is a String value used to denote something. It can for example be a
  *         calibrated value describing something as 'ON' or 'OFF'.
@@ -39,13 +39,8 @@ public class Label extends EntityInstance {
      * @param description A description of the label.
      * @param value An object holding the value of the label.
      */
-    public Label(String issuedBy, String name, String description, String value) {
-        super(issuedBy, name, description);
-        this.value = value;
-    }
-
-    public Label(Label base) {
-        this(base.getIssuedBy(), base.getName(), base.getDescription(), base.getValue());
+    public Label(String ID, String name) {
+        super(ID, name);
     }
 
     public String getValue() {

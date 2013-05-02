@@ -22,7 +22,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import org.hbird.exchange.core.EntityInstance;
-import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Parameter;
 
 /**
@@ -54,20 +53,10 @@ public class SetParameter extends Task {
 	 * @param executionTime The time at which the task should be executed.
 	 * @param parameter The parameter to be set.
 	 */
-	public SetParameter(String issuedBy, String name, String description, long executionTime, Parameter parameter) {
-		super(issuedBy, name, description, executionTime);
-		this.parameter = parameter;
+	public SetParameter(String ID, String name) {
+		super(ID, name);
 	}
 	
-	public SetParameter(SetParameter base) {
-		this(base.issuedBy, base.name, base.description, base.executionTime, base.parameter);
-	}
-
-	public SetParameter(String issuedBy, String name, String description, int executionTime, String paraName, String paraDescription, Number value, String unit) {
-		super(issuedBy, name, description, executionTime);
-		this.parameter = new Parameter(name, paraName, paraDescription, value, unit);
-	}
-
 	/**
 	 * Method that will send the message to the parameter query. 
 	 * 

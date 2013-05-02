@@ -16,10 +16,10 @@ public class LocationContactEventRequest extends DataRequest {
 
     public static final String DESCRIPTION = "A request to retrieve location contact events of a satellite / ground station.";
 
-    public LocationContactEventRequest(String issuedBy, String location) {
-        super(issuedBy);
+    public LocationContactEventRequest(String ID) {
+        super(ID, LocationContactEventRequest.class.getSimpleName());
         setClass(LocationContactEvent.class.getSimpleName());
-        setArgumentValue(StandardArguments.GROUND_STATION_NAME, location);
+        setDescription(DESCRIPTION);
     }
 
     /**

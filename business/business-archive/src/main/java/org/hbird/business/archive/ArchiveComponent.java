@@ -19,7 +19,7 @@ package org.hbird.business.archive;
 import java.util.List;
 
 import org.hbird.business.archive.solr.ArchiveComponentDriver;
-import org.hbird.business.core.StartablePart;
+import org.hbird.business.core.StartableEntity;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
@@ -29,14 +29,13 @@ import org.hbird.exchange.dataaccess.OrbitalStateRequest;
 import org.hbird.exchange.dataaccess.ParameterRequest;
 import org.hbird.exchange.dataaccess.StateRequest;
 import org.hbird.exchange.dataaccess.TleRequest;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * StartablePart for storage of data.
  * 
  * @author Gert Villemos
  */
-public class ArchiveComponent extends StartablePart {
+public class ArchiveComponent extends StartableEntity {
 
     /**
 	 * 
@@ -53,12 +52,14 @@ public class ArchiveComponent extends StartablePart {
     /**
      * Default constructor.
      */
-    public ArchiveComponent(IPart isPartOf) {
-        super(isPartOf, ARCHIVE_NAME, ARCHIVE_DESC, DEFAULT_DRIVER);
+    public ArchiveComponent(String ID) {
+        super(ID, ARCHIVE_NAME);
+        setDescription(ARCHIVE_DESC);
+        setDriverName(DEFAULT_DRIVER);
     }
 
     /**
-     * @see org.hbird.business.core.StartablePart#createCommandList()
+     * @see org.hbird.business.core.StartableEntity#createCommandList()
      */
     @Override
     protected List<Command> createCommandList(List<Command> commands) {
@@ -66,10 +67,10 @@ public class ArchiveComponent extends StartablePart {
         commands.add(new DataRequest(""));
         commands.add(new DeletionRequest(""));
         commands.add(new GroundStationRequest(""));
-        commands.add(new OrbitalStateRequest("", ""));
-        commands.add(new ParameterRequest("", "", 0));
-        commands.add(new StateRequest("", ""));
-        commands.add(new TleRequest("", ""));
+        commands.add(new OrbitalStateRequest(""));
+        commands.add(new ParameterRequest(""));
+        commands.add(new StateRequest(""));
+        commands.add(new TleRequest(""));
         return commands;
     }
 }

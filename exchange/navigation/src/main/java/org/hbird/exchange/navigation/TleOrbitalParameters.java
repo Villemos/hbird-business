@@ -41,46 +41,8 @@ public class TleOrbitalParameters extends EntityInstance implements ISatelliteSp
     /** TLE line element 2. */
     protected String tleLine2;
 
-    public TleOrbitalParameters(String issuedBy, String name, String description, long timestamp, String satellite, String tleLine1, String tleLine2) {
-        super(issuedBy, name, description);
-
-        this.satellite = satellite;
-        this.tleLine1 = tleLine1;
-        this.tleLine2 = tleLine2;
-        this.timestamp = timestamp;
-    }
-
-    public TleOrbitalParameters(String issuedBy, String name, String description, String satellite, String tleLine1, String tleLine2) {
-        super(issuedBy, name, description);
-
-        this.satellite = satellite;
-        this.tleLine1 = tleLine1;
-        this.tleLine2 = tleLine2;
-    }
-
-    public TleOrbitalParameters(String issuedBy, String name, String satellite, String tleLine1, String tleLine2) {
-        super(issuedBy, name, DESCRIPTION);
-
-        this.satellite = satellite;
-        this.tleLine1 = tleLine1;
-        this.tleLine2 = tleLine2;
-    }
-
-    public TleOrbitalParameters(String issuedBy, String name, Satellite satellite, String tleLine1, String tleLine2) {
-        super(issuedBy, name, DESCRIPTION);
-
-        this.satellite = satellite.getID();
-        this.tleLine1 = tleLine1;
-        this.tleLine2 = tleLine2;
-    }
-
-    public TleOrbitalParameters(String issuedBy, String name, String description, long timestamp, Satellite satellite, String tleLine1, String tleLine2) {
-        super(issuedBy, name, description);
-        this.satellite = satellite.getID();
-        this.timestamp = timestamp;
-        this.tleLine1 = tleLine1;
-        this.tleLine2 = tleLine2;
-        setEntityID(this.satellite + ID_SEPARATOR + name);
+    public TleOrbitalParameters(String ID, String name) {
+        super(ID, name);
     }
 
     @Override
@@ -104,7 +66,23 @@ public class TleOrbitalParameters extends EntityInstance implements ISatelliteSp
         this.tleLine2 = tleLine2;
     }
 
-    @Override
+    
+    
+    /**
+	 * @return the satellite
+	 */
+	public String getSatellite() {
+		return satellite;
+	}
+
+	/**
+	 * @param satellite the satellite to set
+	 */
+	public void setSatellite(String satellite) {
+		this.satellite = satellite;
+	}
+
+	@Override
     public String prettyPrint() {
         return String.format("%s[ID=%s, name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getInstanceID(), getName(), timestamp,
                 satellite);

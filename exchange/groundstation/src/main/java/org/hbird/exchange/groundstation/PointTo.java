@@ -54,9 +54,8 @@ public class PointTo extends Command {
 	 * @param name
 	 * @param description
 	 */
-	public PointTo(String issuedBy, String destination, Double azimuth, Double elevation) {
-		super(issuedBy, destination, "PointTo", "A request to point the rotator to a given azimuth/elevation.");
-		
-		// TODO Add arguments
+	public PointTo(String ID) {
+		super(ID, PointTo.class.getSimpleName());
+		setDescription("A request to point the rotator to a given azimuth/elevation.");
 	}
 }

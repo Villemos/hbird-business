@@ -42,7 +42,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hbird.exchange.util.LocalHostNameResolver;
 
 /**
- * @author Admin
+ * @author Gert Villemos
  * 
  */
 public class BusinessCard extends EntityInstance {
@@ -67,23 +67,10 @@ public class BusinessCard extends EntityInstance {
     protected Map<String, EntityInstance> dataIn = new HashMap<String, EntityInstance>();
     protected Map<String, EntityInstance> dataOut = new HashMap<String, EntityInstance>();
 
-    public BusinessCard(String issuedBy, long period) {
-        // XXX - 03.04.2013, kimmell - name and issuedBy are set to same value here
-        super(issuedBy, issuedBy, DESCRIPTION);
-        this.period = period;
+    public BusinessCard(String ID, String name) {
+        super(ID, name);
+        
         this.host = LocalHostNameResolver.getLocalHostName();
-    }
-
-    /**
-     * @param name
-     * @param heartbeat
-     * @param commands
-     */
-    public BusinessCard(String name, long heartbeat, List<Command> commandsIn) {
-        this(name, heartbeat);
-        for (Command command : commandsIn) {
-            this.commandsIn.put(command.getName(), command);
-        }
     }
 
     public String getHost() {
@@ -138,6 +125,13 @@ public class BusinessCard extends EntityInstance {
      */
     public void setCommandsIn(Map<String, Command> commandsIn) {
         this.commandsIn = commandsIn;
+    }
+
+    public void setCommandsIn(List<Command> commandsIn) {
+        this.commandsIn = new HashMap<String, Command>();
+        for (Command command : commandsIn) {
+        	this.commandsIn.put(command.getName(), command);
+        }
     }
 
     /**

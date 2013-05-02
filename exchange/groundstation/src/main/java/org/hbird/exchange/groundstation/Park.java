@@ -56,8 +56,8 @@ public class Park extends Command {
 	 * @param name
 	 * @param description
 	 */
-	public Park(String issuedBy, String destination) {
-		super(issuedBy, destination, "Park", "Command to park the object.");
-		// TODO Add arguments
+	public Park(String ID) {
+		super(ID, Park.class.getSimpleName());
+		setDescription("Command to park the object.");
 	}
 }

@@ -21,7 +21,6 @@ import java.util.Date;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * Class for generating a parameter developing like a sinus curve. The value
@@ -48,6 +47,8 @@ public class SinusCurveParameter extends BaseParameter {
 	/** The class logger. */
 	protected static Logger logger = Logger.getLogger(SinusCurveParameter.class);
 
+	protected String ID;
+	
 	/** The delta change in angle per milisecond. Defaults to one full curve every 10 seconds. */
 	protected double angularFrequency = 2*Math.PI/10000;
 	
@@ -76,8 +77,9 @@ public class SinusCurveParameter extends BaseParameter {
 	 * @param modolus
 	 * @param name
 	 */
-	public SinusCurveParameter(IPart issuedBy, String name, String description, String unit, double angularFrequency, double amplitude, double phase, double intercept, long modolus) {
+	public SinusCurveParameter(String ID, String issuedBy, String name, String description, String unit, double angularFrequency, double amplitude, double phase, double intercept, long modolus) {
 		super(issuedBy, name, description);
+		this.ID = ID;
 		this.angularFrequency = angularFrequency;
 		this.amplitude = amplitude;
 		this.phase = phase;
@@ -102,8 +104,13 @@ public class SinusCurveParameter extends BaseParameter {
 			logger.error("Courght exception " + e);
 			e.printStackTrace();
 		}
-		
-		return new Parameter(issuedBy, name, description, value, unit);
+
+		Parameter newParameter = new Parameter(ID, name);
+		newParameter.setIssuedBy(issuedBy);
+		newParameter.setDescription(description);
+		newParameter.setValue(value);
+		newParameter.setUnit(unit);
+		return newParameter;
 	}
 
 	public double getAngularFrequency() {

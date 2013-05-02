@@ -49,25 +49,8 @@ public class State extends EntityInstance implements IState {
      * @param isStateOff The object that this state is a state off.
      * @param state The current state.
      */
-    public State(String issuedBy, String name, String description, String isStateOff, boolean state) {
-        super(issuedBy, name, description);
-        this.isStateOf = isStateOff;
-        this.state = state;
-    }
-
-    /**
-     * Constructor of the state parameter. The timestamp will be set to the current time.
-     * 
-     * @param stateName the name of this state.
-     * @param description A description of this state.
-     * @param timestamp The time at which the state parameter was calculated. Should be after the object
-     *            that this parameter is a state off.
-     * @param isStateOff The object that this state is a state off.
-     * @param state The current state.
-     */
-    public State(String issuedBy, String name, String description, String isStateOff, boolean state, long timestamp) {
-        this(issuedBy, name, description, isStateOff, state);
-        setTimestamp(timestamp);
+    public State(String ID, String name) {
+        super(ID, name);
     }
 
     @Override
@@ -125,4 +108,20 @@ public class State extends EntityInstance implements IState {
     public void setIsStateOf(EntityInstance isStateOf) {
         this.isStateOf = isStateOf == null ? null : isStateOf.getID();
     }
+
+	/**
+	 * @return the state
+	 */
+	public Boolean getState() {
+		return state;
+	}
+
+	/**
+	 * @param state the state to set
+	 */
+	public void setState(Boolean state) {
+		this.state = state;
+	}
+    
+    
 }

@@ -38,14 +38,13 @@ import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
  * @author Gert Villemos
  * 
  */
-public class StartablePart extends CommandablePart implements IStartablePart {
+public class StartableEntity extends CommandableEntity implements IStartablePart {
 
     /** Default heart beat interval in millis. */
     public static final long DEFAULT_HEARTBEAT = 5000L;
@@ -69,14 +68,8 @@ public class StartablePart extends CommandablePart implements IStartablePart {
      * @param name
      * @param description
      */
-    public StartablePart(IPart isPartOf, String name, String description, String driverName) {
-        super(isPartOf, name, description);
-        this.driverName = driverName;
-    }
-
-    public StartablePart(IPart isPartOf, String issuedBy, String name, String description, String driverName) {
-        super(isPartOf, issuedBy, name, description);
-        this.driverName = driverName;
+    public StartableEntity(String ID, String name) {
+        super(ID, name);
     }
 
     @Override
@@ -124,13 +117,15 @@ public class StartablePart extends CommandablePart implements IStartablePart {
      */
     @Override
     protected List<Command> createCommandList(List<Command> commands) {
-        commands.add(new StartComponent("", null));
-        commands.add(new StopComponent("", ""));
+        commands.add(new StartComponent(""));
+        commands.add(new StopComponent(""));
         return commands;
     }
 
     protected BusinessCard createBusinessCard(String name, long heartBeat, List<Command> commands, String description) {
-        BusinessCard card = new BusinessCard(name, heartBeat, commands);
+        BusinessCard card = new BusinessCard(name, name);
+        card.setPeriod(heartBeat);
+        card.setCommandsIn(commands);
         card.setDescription(description);
         return card;
     }

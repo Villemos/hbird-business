@@ -68,7 +68,7 @@ public class KeplerianOrbitPredictor {
         /** Register the visibility events for the requested locations. */
         for (GroundStation groundStation : groundStations) {
             D3Vector location = groundStation.getGeoLocation();
-            GeodeticPoint point = new GeodeticPoint(location.p1, location.p2, location.p3);
+            GeodeticPoint point = new GeodeticPoint(location.getP1(), location.getP2(), location.getP3());
             TopocentricFrame sta1Frame = new TopocentricFrame(Constants.earth, point, location.getName());
             EventDetector sta1Visi = new LocationContactEventCollector(0, sta1Frame, satelliteId, groundStation.getID(), parameters, publisher);
             propagator.addEventDetector(sta1Visi);

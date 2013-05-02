@@ -32,15 +32,14 @@
  */
 package org.hbird.business.websockets;
 
-import org.hbird.business.core.StartablePart;
+import org.hbird.business.core.StartableEntity;
 import org.hbird.business.websockets.bean.WebsocketInterfaceComponentDriver;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * @author Gert Villemos
  *
  */
-public class WebsocketInterfaceComponent extends StartablePart {
+public class WebsocketInterfaceComponent extends StartableEntity {
 
 	/**
 	 * 
@@ -51,7 +50,9 @@ public class WebsocketInterfaceComponent extends StartablePart {
     public static final String WEB_SOCKET_DESC = "Component which will publish data on websockets";
 	public static final String DEFAULT_DRIVER = WebsocketInterfaceComponentDriver.class.getName();
 
-	public WebsocketInterfaceComponent(IPart isPartOf) {
-		super(isPartOf, WEB_SOCKET_NAME, WEB_SOCKET_DESC, DEFAULT_DRIVER);
+	public WebsocketInterfaceComponent(String ID) {
+		super(ID, WEB_SOCKET_NAME);
+		setDescription(WEB_SOCKET_DESC);
+		setDriverName(DEFAULT_DRIVER);
 	}
 }

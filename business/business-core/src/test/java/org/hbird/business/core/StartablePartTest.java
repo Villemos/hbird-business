@@ -49,7 +49,8 @@ import org.mockito.runners.MockitoJUnitRunner;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class StartablePartTest {
-
+	
+    public static final String ID = "ID";
     public static final String NAME = "name";
     public static final String ISSUED_BY = "issuer";
     public static final String DESCRIPTION = "description";
@@ -65,7 +66,7 @@ public class StartablePartTest {
     @Mock
     private Command cmd2;
 
-    private StartablePart part;
+    private StartableEntity part;
 
     private List<Command> commands;
 
@@ -79,7 +80,10 @@ public class StartablePartTest {
         commands = new ArrayList<Command>();
         commands.add(cmd1);
         commands.add(cmd2);
-        part = new StartablePart(new Part("root", ""), ISSUED_BY, NAME, DESCRIPTION, DRIVER_NAME);
+        part = new StartableEntity(ID, NAME);
+        part.setIssuedBy(ISSUED_BY);
+        part.setDescription(DESCRIPTION);
+        part.setDriverName(DRIVER_NAME);
         inOrder = inOrder(cmd1, cmd2);
         when(cmd1.getName()).thenReturn(CMD_1);
         when(cmd2.getName()).thenReturn(CMD_2);
@@ -92,7 +96,7 @@ public class StartablePartTest {
 
     /**
      * Test method for
-     * {@link org.hbird.business.core.StartablePart#StartablePart(java.lang.String, java.lang.String, java.lang.String)}
+     * {@link org.hbird.business.core.StartableEntity#StartablePart(java.lang.String, java.lang.String, java.lang.String)}
      * .
      */
     @Test
@@ -102,25 +106,11 @@ public class StartablePartTest {
         assertNull(part.getConfigurator());
         assertEquals(DESCRIPTION, part.getDescription());
         assertEquals(DRIVER_NAME, part.getDriverName());
-        assertEquals(StartablePart.DEFAULT_HEARTBEAT, part.getHeartbeat());
+        assertEquals(StartableEntity.DEFAULT_HEARTBEAT, part.getHeartbeat());
     }
 
     /**
-     * Test method for {@link org.hbird.business.core.StartablePart#StartablePart(String, String, String, String)} .
-     */
-    @Test
-    public void testStartablePart() {
-        part = new StartablePart(new Part("root", ""), NAME, DESCRIPTION, DRIVER_NAME);
-        assertEquals(NAME, part.getName());
-        assertEquals(Part.DEFAULT_ISSUED_BY, part.getIssuedBy());
-        assertNull(part.getConfigurator());
-        assertEquals(DESCRIPTION, part.getDescription());
-        assertEquals(DRIVER_NAME, part.getDriverName());
-        assertEquals(StartablePart.DEFAULT_HEARTBEAT, part.getHeartbeat());
-    }
-
-    /**
-     * Test method for {@link org.hbird.business.core.StartablePart#getDriverName()}.
+     * Test method for {@link org.hbird.business.core.StartableEntity#getDriverName()}.
      */
     @Test
     public void testGetDriverName() {
@@ -128,7 +118,7 @@ public class StartablePartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.business.core.StartablePart#setDriverName(java.lang.String)}.
+     * Test method for {@link org.hbird.business.core.StartableEntity#setDriverName(java.lang.String)}.
      */
     @Test
     public void testSetDriverName() {
@@ -140,7 +130,7 @@ public class StartablePartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.business.core.StartablePart#getConfigurator()}.
+     * Test method for {@link org.hbird.business.core.StartableEntity#getConfigurator()}.
      */
     @Test
     public void testGetConfigurator() {
@@ -148,7 +138,7 @@ public class StartablePartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.business.core.StartablePart#setConfigurator(java.lang.String)}.
+     * Test method for {@link org.hbird.business.core.StartableEntity#setConfigurator(java.lang.String)}.
      */
     @Test
     public void testSetConfigurator() {
@@ -158,7 +148,7 @@ public class StartablePartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.business.core.StartablePart#getHeartbeat()}.
+     * Test method for {@link org.hbird.business.core.StartableEntity#getHeartbeat()}.
      */
     @Test
     public void testGetHeartbeat() {
@@ -166,19 +156,19 @@ public class StartablePartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.business.core.StartablePart#setHeartbeat(long)}.
+     * Test method for {@link org.hbird.business.core.StartableEntity#setHeartbeat(long)}.
      */
     @Test
     public void testSetHeartbeat() {
-        assertEquals(StartablePart.DEFAULT_HEARTBEAT, part.getHeartbeat());
+        assertEquals(StartableEntity.DEFAULT_HEARTBEAT, part.getHeartbeat());
         part.setHeartbeat(0);
         assertEquals(0, part.getHeartbeat());
-        part.setHeartbeat(-1 * StartablePart.DEFAULT_HEARTBEAT);
-        assertEquals(-1 * StartablePart.DEFAULT_HEARTBEAT, part.getHeartbeat());
+        part.setHeartbeat(-1 * StartableEntity.DEFAULT_HEARTBEAT);
+        assertEquals(-1 * StartableEntity.DEFAULT_HEARTBEAT, part.getHeartbeat());
     }
 
     /**
-     * Test method for {@link org.hbird.business.core.StartablePart#createBusinessCard(String, long, java.util.List)}.
+     * Test method for {@link org.hbird.business.core.StartableEntity#createBusinessCard(String, long, java.util.List)}.
      */
     @Test
     public void testCreateBusinessCard() {
@@ -200,7 +190,7 @@ public class StartablePartTest {
     }
 
     /**
-     * Test method for {@link org.hbird.business.core.StartablePart#getBusinessCard()}.
+     * Test method for {@link org.hbird.business.core.StartableEntity#getBusinessCard()}.
      */
     @Test
     public void testGetBusinessCard() {
@@ -209,7 +199,7 @@ public class StartablePartTest {
         assertNotNull(card);
         assertEquals(NAME, card.getName());
         assertEquals(NAME, card.getIssuedBy());
-        assertEquals(StartablePart.DEFAULT_HEARTBEAT, card.getPeriod());
+        assertEquals(StartableEntity.DEFAULT_HEARTBEAT, card.getPeriod());
         Map<String, Command> map = card.getCommandsIn();
         assertNotNull(map);
         assertEquals(2, map.size());

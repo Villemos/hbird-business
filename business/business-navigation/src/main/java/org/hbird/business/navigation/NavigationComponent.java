@@ -18,11 +18,10 @@ package org.hbird.business.navigation;
 
 import java.util.List;
 
-import org.hbird.business.core.StartablePart;
+import org.hbird.business.core.StartableEntity;
 import org.hbird.business.navigation.orekit.NavigationComponentDriver;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.dataaccess.TlePropagationRequest;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * 
@@ -30,24 +29,29 @@ import org.hbird.exchange.interfaces.IPart;
  * @author Gert Villemos
  * 
  */
-public class NavigationComponent extends StartablePart {
+public class NavigationComponent extends StartableEntity {
 
     private static final long serialVersionUID = 4017755260726979987L;
 
-    public static final String ORBIT_PROPAGATOR_NAME = "OrbitPropagator";
-    public static final String ORBIT_PROPAGATOR_DESC = "Component for performing TLE based orbit prediction, including contact events and orbital states.";
+    public static final String DEFAULT_NAME = "OrbitPropagator";
+    public static final String DEFAULT_DESCRIPTION = "Component for performing TLE based orbit prediction, including contact events and orbital states.";
     public static final String DEFAULT_DRIVER = NavigationComponentDriver.class.getName();
 
-    public NavigationComponent(IPart isPartOf) {
-        super(isPartOf, ORBIT_PROPAGATOR_NAME, ORBIT_PROPAGATOR_DESC, DEFAULT_DRIVER);
-    }
+	/**
+	 * Default constructor.
+	 */
+	public NavigationComponent(String ID) {
+		super(ID, DEFAULT_NAME);
+		setDescription(DEFAULT_DESCRIPTION);
+		setDriverName(DEFAULT_DRIVER);
+	}
 
     /**
-     * @see org.hbird.business.core.StartablePart#createCommandList()
+     * @see org.hbird.business.core.StartableEntity#createCommandList()
      */
     @Override
     protected List<Command> createCommandList(List<Command> commands) {
-        commands.add(new TlePropagationRequest("", ""));
+        commands.add(new TlePropagationRequest(""));
         return commands;
     }
 }

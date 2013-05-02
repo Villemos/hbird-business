@@ -49,8 +49,8 @@ public class Turn extends Command {
 
 	public enum eDirection {RIGHT, LEFT};	
 	
-	public Turn(String issuedBy, String destination, eDirection direction, Double angle) {
-		super(issuedBy, destination, "Turn", "Move the bot backwards. The distance (in meter) is set by the argument 'Distance'.");
-		// TODO Define command arguments
+	public Turn(String ID) {
+		super(ID, Turn.class.getSimpleName());
+		setDescription("Move the bot backwards. The distance (in meter) is set by the argument 'Distance'.");
 	}
 }

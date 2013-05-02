@@ -38,6 +38,7 @@ import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.core.Part;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DataRequest;
@@ -47,7 +48,6 @@ import org.hbird.exchange.interfaces.IDerivedFrom;
 import org.hbird.exchange.interfaces.IEntityInstance;
 import org.hbird.exchange.interfaces.IGenerationTimestamped;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
-import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.Satellite;
@@ -443,7 +443,7 @@ public class SolrProducer extends DefaultProducer {
          * TODO Gert; find a nice way of managing subclassing. For now we put the class as generic 'Part' as well as
          * specific subtype.
          */
-        if (io instanceof IPart) {
+        if (io instanceof Part) {
             document.addField(StandardArguments.CLASS, "Part");
         }
         document.addField(StandardArguments.CLASS, io.getClass().getSimpleName());
@@ -494,11 +494,6 @@ public class SolrProducer extends DefaultProducer {
         }
         if (io instanceof IGroundStationSpecific) {
             document.addField("ofLocation", ((IGroundStationSpecific) io).getGroundStationId());
-        }
-        if (io instanceof IPart) {
-            if (((IPart) io).getIsPartOf() != null) {
-                document.addField("isPartOf", ((IPart) io).getIsPartOf());
-            }
         }
         if (io instanceof IApplicableTo) {
             document.addField("applicableTo", ((IApplicableTo) io).applicableTo());

@@ -16,18 +16,14 @@
  */
 package org.hbird.business.navigation;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IOrbitPrediction;
-import org.hbird.business.core.StartablePart;
-import org.hbird.business.navigation.controller.OrbitPropagationComponentDriver;
-import org.hbird.exchange.interfaces.IPart;
+import org.hbird.business.core.StartableEntity;
 import org.hbird.exchange.navigation.OrbitalState;
-import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * The delta time to propagate the leadTime when executed is the 'executionDelay'. Default is 1 hour.
  * Means that the task will execute every hour and will propagate the orbit.
  */
-public class OrbitPropagationComponent extends StartablePart {
+public class OrbitPropagationComponent extends StartableEntity {
 
 	/**
 	 * 
@@ -85,48 +81,10 @@ public class OrbitPropagationComponent extends StartablePart {
 	protected int count = 0;
 
 	/**
-	 * Constructor
-	 * 
-	 * @param issuedBy The name of the component that started the task
-	 * @param name The name of the task
-	 * @param description A description of the task
-	 * @param executionDelay The delay between checks that the required orbital states are available.
-	 * @param leadTime The minimum time from NOW that orbital states should be available at all times
-	 * @param satellite The satellite that the controller should predict the orbital data for
-	 * @param locations The locations to which contact data should be calculated
+	 * Default constructor.
 	 */
-	public OrbitPropagationComponent(IPart isPartOf, String name, String description, long executionDelay, long leadTime, Satellite satellite, List<String> locations) {
-		super(isPartOf, name, description, OrbitPropagationComponentDriver.class.getName());
-		this.executionDelay = executionDelay;
-		this.leadTime = leadTime;
-		this.satellite = satellite.getID();
-		this.locations = locations;
-	}
-
-	public OrbitPropagationComponent(IPart isPartOf, String name, String description, long executionDelay, long leadTime, IPart satellite, List<IPart> locations) {
-		super(isPartOf, name, description, OrbitPropagationComponentDriver.class.getName());
-		this.executionDelay = executionDelay;
-		this.leadTime = leadTime;
-		this.satellite = satellite.getID();
-
-		this.locations = new ArrayList<String>();
-		for (IPart location : locations) {
-			this.locations.add(location.getID());
-		}
-	}
-
-	/** Constructor using the default value of the lead time (6 hours) and using all known locations.
-	 * 
-	 * @param issuedBy The name of the component that started the task
-	 * @param name The name of the task
-	 * @param description A description of the task
-	 * @param executionDelay The delay between checks that the required orbital states are available.
-	 * @param satellite The satellite that the controller should predict the orbital data for
-	 */
-	public OrbitPropagationComponent(String name, String description, long executionDelay, String satellite, IPart isPartOf) {
-		super(isPartOf, name, description, OrbitPropagationComponentDriver.class.getName());
-		this.executionDelay = executionDelay;
-		this.satellite = satellite;
+	public OrbitPropagationComponent(String ID, String name) {
+		super(ID, name);
 	}
 
 	

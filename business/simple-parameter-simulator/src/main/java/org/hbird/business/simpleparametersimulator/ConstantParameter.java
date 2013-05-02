@@ -19,7 +19,6 @@ package org.hbird.business.simpleparametersimulator;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * A constant parameter. Every time process is called, a new instance of the
@@ -30,7 +29,9 @@ public class ConstantParameter extends BaseParameter {
 	/** The class logger. */
 	protected static Logger LOG = Logger.getLogger(ConstantParameter.class);
 
-	public ConstantParameter(IPart issuedBy, String name, String description, String unit, Double value) {
+	protected String ID;
+	
+	public ConstantParameter(String ID, String issuedBy, String name, String description, String unit, Double value) {
 		super(issuedBy, name, description, value, unit);
 	}
 
@@ -40,7 +41,13 @@ public class ConstantParameter extends BaseParameter {
 	@Handler
 	public Parameter process() {
 		LOG.debug("Sending new constant value with name '" + name + "' and value .");
-		return new Parameter(issuedBy, name, description, value, unit);
+		
+		Parameter newParameter = new Parameter(ID, name);
+		newParameter.setIssuedBy(issuedBy);
+		newParameter.setDescription(description);
+		newParameter.setValue(value);
+		newParameter.setUnit(unit);
+		return newParameter;
 	}
 
 	public Double getConstantValue() {

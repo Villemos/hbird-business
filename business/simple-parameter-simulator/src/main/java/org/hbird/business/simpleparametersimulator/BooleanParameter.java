@@ -19,7 +19,6 @@ package org.hbird.business.simpleparametersimulator;
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * Class simulating a boolean parameter. The parameter flips each time the process
@@ -30,6 +29,7 @@ public class BooleanParameter {
 	/** The class logger. */
 	protected static Logger LOG = Logger.getLogger(BooleanParameter.class);
 
+	protected String ID;
 	protected String issuedBy;
 	protected String name;
 	protected String description;
@@ -43,8 +43,9 @@ public class BooleanParameter {
 	 * @param value The initial value of the parameter.
 	 * @param name The name of the parameter to be generated.
 	 */
-	public BooleanParameter(IPart issuedBy, String name, String description, Boolean value, String isStateOf) {
-		this.issuedBy = issuedBy.getName();
+	public BooleanParameter(String ID, String issuedBy, String name, String description, Boolean value, String isStateOf) {
+		this.ID = ID;
+		this.issuedBy = issuedBy;
 		this.name = name;
 		this.description = description;
 		this.value = value;
@@ -65,6 +66,12 @@ public class BooleanParameter {
 			e.printStackTrace();
 		}
 		
-		return new State(issuedBy, name, description, isStateOf, value);
+		State newState = new State(ID, name);
+		newState.setIssuedBy(issuedBy);
+		newState.setDescription(description);
+		newState.setIsStateOf(isStateOf);
+		newState.setValue(value);
+		
+		return newState;
 	}
 }

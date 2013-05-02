@@ -25,8 +25,6 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +45,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class BusinessCardTest {
 
+    private static final String ID = "ID";
+    private static final String NAME = "NAME";
     private static final String ISSUED_BY = "issuer";
     private static final String HOST = "host";
     private static final long PERIOD = 12345L;
@@ -79,7 +79,9 @@ public class BusinessCardTest {
      */
     @Before
     public void setUp() throws Exception {
-        card = new BusinessCard(ISSUED_BY, PERIOD);
+        card = new BusinessCard(ID, NAME);
+        card.setIssuedBy(ISSUED_BY);
+        card.setPeriod(PERIOD);
         commandsIn = new ArrayList<Command>(2);
         commandsIn.add(cmd1);
         commandsIn.add(cmd2);
@@ -89,57 +91,6 @@ public class BusinessCardTest {
     @After
     public void tearDown() {
         inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void testBusinessCardWithCommandsIn() {
-        when(cmd1.getName()).thenReturn(CMD_1);
-        when(cmd2.getName()).thenReturn(CMD_2);
-        card = new BusinessCard(ISSUED_BY, PERIOD, commandsIn);
-        Map<String, Command> map = card.getCommandsIn();
-        assertNotNull(map);
-        assertEquals(2, map.size());
-        assertTrue(map.containsKey(CMD_1));
-        assertEquals(cmd1, map.get(CMD_1));
-        assertTrue(map.containsKey(CMD_2));
-        assertEquals(cmd2, map.get(CMD_2));
-        inOrder.verify(cmd1, times(1)).getName();
-        inOrder.verify(cmd2, times(1)).getName();
-    }
-
-    /**
-     * Test method for {@link org.hbird.exchange.core.BusinessCard#BusinessCard(java.lang.String, java.util.List, long)}
-     * .
-     */
-    @Test
-    public void testBusinessCardStringListOfCommandLong() {
-        card = new BusinessCard(ISSUED_BY, PERIOD);
-        assertEquals(ISSUED_BY, card.getIssuedBy());
-        assertEquals(ISSUED_BY, card.getName());
-        assertTrue(card.getTimestamp() <= System.currentTimeMillis() && card.getTimestamp() > System.currentTimeMillis() - 3 * 1000L);
-        assertEquals(BusinessCard.DESCRIPTION, card.getDescription());
-        assertEquals(PERIOD, card.getPeriod());
-        assertNotNull(card.getID());
-        assertEquals(ISSUED_BY, card.getName());
-        assertEquals(LocalHostNameResolver.getLocalHostName(), card.getHost());
-    }
-
-    /**
-     * Test method for
-     * {@link org.hbird.exchange.core.BusinessCard#BusinessCard(java.lang.String, java.lang.String, java.util.List, long)}
-     * .
-     */
-    @Test
-    public void testBusinessCardStringStringListOfCommandLong() {
-        card = new BusinessCard(ISSUED_BY, PERIOD);
-        assertEquals(ISSUED_BY, card.getIssuedBy());
-        assertEquals(ISSUED_BY, card.getName());
-        assertTrue(card.getTimestamp() <= System.currentTimeMillis() && card.getTimestamp() > System.currentTimeMillis() - 3 * 1000L);
-        assertEquals(BusinessCard.DESCRIPTION, card.getDescription());
-        assertEquals(PERIOD, card.getPeriod());
-        assertNotNull(card.getID());
-        assertEquals(ISSUED_BY, card.getName());
-        assertEquals(LocalHostNameResolver.getLocalHostName(), card.getHost());
     }
 
     /**

@@ -55,8 +55,8 @@ public class Move extends Command {
 	 * @param name
 	 * @param description
 	 */
-	public Move(String issuedBy, String destination, eDirection direction, long speed) {
-		super(issuedBy, destination, "Move", "Command to move the antenna in some direction");
-		// TODO set parameters
+	public Move(String ID) {
+		super(ID, Move.class.getSimpleName());
+		setDescription("Command to move the antenna in some direction");
 	}	
 }

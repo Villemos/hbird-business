@@ -16,9 +16,6 @@
  */
 package org.hbird.exchange.dataaccess;
 
-import java.util.List;
-
-import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Parameter;
 
 public class ParameterRequest extends DataRequest {
@@ -27,56 +24,9 @@ public class ParameterRequest extends DataRequest {
 
     private static final long serialVersionUID = -210475353836504189L;
 
-    public ParameterRequest(String issuedBy) {
-        super(issuedBy, ParameterRequest.class.getSimpleName(), DESCRIPTION);
+    public ParameterRequest(String ID) {
+        super(ID, ParameterRequest.class.getSimpleName());
+        setDescription(DESCRIPTION);
         setClass(Parameter.class.getSimpleName());
-    }
-
-    public ParameterRequest(String issuedBy, String parameter) {
-        this(issuedBy);
-        addName(parameter);
-    }
-
-    public ParameterRequest(String issuedBy, List<String> parameter) {
-        this(issuedBy);
-        addNames(parameter);
-    }
-
-    public ParameterRequest(String issuedBy, String parameter, int rows) {
-        this(issuedBy, parameter);
-        setSort(StandardArguments.TIMESTAMP);
-        setSortOrder("DESC");
-        setRows(rows);
-    }
-
-    public ParameterRequest(String issuedBy, String parameter, Long from, Long to) {
-        this(issuedBy, parameter);
-        setFrom(from);
-        setTo(to);
-    }
-
-    public ParameterRequest(String issuedBy, String parameter, Long from, Long to, int rows) {
-        this(issuedBy, parameter);
-        setFrom(from);
-        setTo(to);
-        setRows(rows);
-    }
-
-    public ParameterRequest(String issuedBy, List<String> parameters, int rows) {
-        this(issuedBy, parameters);
-        setRows(rows);
-    }
-
-    public ParameterRequest(String issuedBy, List<String> parameters, Long from, Long to) {
-        this(issuedBy, parameters);
-        setFrom(from);
-        setTo(to);
-    }
-
-    public ParameterRequest(String issuedBy, List<String> parameters, Long from, Long to, int rows) {
-        this(issuedBy, parameters);
-        setFrom(from);
-        setTo(to);
-        setRows(rows);
     }
 }

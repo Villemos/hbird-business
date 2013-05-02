@@ -76,7 +76,10 @@ public class NamedObjectPublisher {
                 if (destination == null) {
                     LOG.warn("The destination is null; most likely the start command will be ignored. Check your application setup configuration");
                 }
-                StartComponent startCommand = new StartComponent(object.getName(), (IStartablePart) object);
+                
+                StartComponent startCommand = new StartComponent(object.getID() + "/StartRequest");
+                startCommand.addPart((IStartablePart) object);
+                
                 startCommand.setDestination(destination);
                 api.publish(startCommand);
             }

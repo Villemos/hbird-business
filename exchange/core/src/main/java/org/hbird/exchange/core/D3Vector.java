@@ -35,22 +35,61 @@ public class D3Vector extends EntityInstance {
 	 * @param p2 The second element. The parameter instance can describe the element in detail.
 	 * @param p3 The third element. The parameter instance can describe the element in detail.
 	 */
-	public D3Vector(String issuedBy, String name, String type, String description, Double p1, Double p2, Double p3) {
-		super(issuedBy, name, description);
-		this.p1 = p1;
-		this.p2 = p2;
-		this.p3 = p3;
+	public D3Vector(String ID, String name) {
+		super(ID, name);
 	}
 
 	/** Spartial dimension 1. Depending on the applied reference frame, may be position / speed / acceleration in 
 	 * Cartesian x-axis, longitude or similar. */
-	public double p1;
+	protected double p1;
 	
 	/** Spartial dimension 2. Depending on the applied reference frame, may be position / speed / acceleration in 
 	 * Cartesian y-axis, latitude or similar. */
-	public double p2;
+	protected double p2;
 	
 	/** Spartial dimension 3. Depending on the applied reference frame, may be position / speed / acceleration in 
 	 * Cartesian z-axis, elevation or similar. */
-	public double p3;
+	protected double p3;
+
+	/**
+	 * @return the p1
+	 */
+	public double getP1() {
+		return p1;
+	}
+
+	/**
+	 * @param p1 the p1 to set
+	 */
+	public void setP1(double p1) {
+		this.p1 = p1;
+	}
+
+	/**
+	 * @return the p2
+	 */
+	public double getP2() {
+		return p2;
+	}
+
+	/**
+	 * @param p2 the p2 to set
+	 */
+	public void setP2(double p2) {
+		this.p2 = p2;
+	}
+
+	/**
+	 * @return the p3
+	 */
+	public double getP3() {
+		return p3;
+	}
+
+	/**
+	 * @param p3 the p3 to set
+	 */
+	public void setP3(double p3) {
+		this.p3 = p3;
+	}
 }

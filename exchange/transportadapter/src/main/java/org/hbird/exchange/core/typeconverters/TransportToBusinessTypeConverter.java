@@ -108,10 +108,12 @@ public class TransportToBusinessTypeConverter {
 	 * @return The business tier parameter
 	 */
 	protected static Parameter convertToParameter(org.hbird.core.spacesystemmodel.tmtc.Parameter<?> p, Number v) {
-		Parameter newBusinessParameter = new Parameter("TransportTier", p.getQualifiedName(), p.getShortDescription(), "");
-		newBusinessParameter.setTimestamp(p.getReceivedTime());
-		newBusinessParameter.setValue(v);
-		return newBusinessParameter;
+//		Parameter newBusinessParameter = new Parameter("TransportTier", p.getQualifiedName(), p.getShortDescription(), "");
+//		newBusinessParameter.setTimestamp(p.getReceivedTime());
+//		newBusinessParameter.setValue(v);
+//		return newBusinessParameter;
+		
+		return null;
 	}
 
 }

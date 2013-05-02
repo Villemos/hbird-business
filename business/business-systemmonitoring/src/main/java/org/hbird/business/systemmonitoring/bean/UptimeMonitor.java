@@ -19,7 +19,11 @@ public class UptimeMonitor extends Monitor {
 
     @Handler
     public Parameter check() {
-        return new Parameter(componentId, parameterName, "JVM uptime",
-                ManagementFactory.getRuntimeMXBean().getUptime(), "ms");
+    	Parameter parameter = new Parameter(componentId + "/uptime", parameterName);
+    	parameter.setDescription("JVM uptime.");
+    	parameter.setValue(ManagementFactory.getRuntimeMXBean().getUptime());
+    	parameter.setUnit("ms");
+    	
+    	return parameter;
     }
 }

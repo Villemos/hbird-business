@@ -32,7 +32,7 @@
  */
 package org.hbird.business.api;
 
-import org.hbird.exchange.interfaces.IPart;
+import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 /**
@@ -47,7 +47,7 @@ public interface IPartManager extends IHbirdApi {
 	
 	public void stop(String name);
 
-	public IPart resolveParent(IPart child);
+	public Part resolveParent(Part child);
 	
 	/**
 	 * The qualified name is a unique name of the object within the system. It has 
@@ -65,7 +65,7 @@ public interface IPartManager extends IHbirdApi {
 	 * 
 	 * @return
 	 */
-	public String getQualifiedName(IPart part);
+	public String getQualifiedName(Part part);
 	
-	public String getQualifiedName(IPart part, String separator);
+	public String getQualifiedName(Part part, String separator);
 }

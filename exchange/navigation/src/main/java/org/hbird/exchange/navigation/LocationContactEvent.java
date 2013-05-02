@@ -49,23 +49,22 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
 
     private static final long serialVersionUID = -7200905393604330565L;
 
-    public static final String EVENT_ID_SEPARATOR = "-";
     public static final String DESCRIPTION = "A contact event between a satellite and a location";
 
-    protected final long startTime;
+    protected long startTime;
 
-    protected final long endTime;
+    protected long endTime;
 
     /** The location that contact has been established /lost with. */
-    protected final String groundStationId;
+    protected String groundStationId;
 
     /** The satellite that contact has been established /lost with. */
-    protected final String satelliteId;
+    protected String satelliteId;
 
     /** ID of calculation source. Eg ID of TLE. */
-    protected final String derivedFromId;
+    protected String derivedFromId;
 
-    protected final long orbitNumber;
+    protected long orbitNumber;
 
     protected boolean inSunLigth;
 
@@ -97,15 +96,9 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
      * @param location The location to which contact has been established / lost.
      * @param satellite The satellite to which contact has been established / lost.
      */
-    public LocationContactEvent(String issuedBy, long generationTime, String groundStationId, String satelliteId, String derivedFrom, long startTime,
-            long endTime, long orbitNumber) {
-        super(issuedBy, LocationContactEvent.class.getSimpleName(), DESCRIPTION, generationTime);
-        this.groundStationId = groundStationId;
-        this.satelliteId = satelliteId;
-        this.derivedFromId = derivedFrom;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.orbitNumber = orbitNumber;
+    public LocationContactEvent(String ID) {
+        super(ID, LocationContactEvent.class.getSimpleName());
+        setDescription(DESCRIPTION);
     }
 
     @Override
@@ -287,18 +280,61 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
         this.satelliteStateAtStart = satelliteStateAtStart;
     }
 
-    public String getEventId() {
-        return new StringBuilder().append(getGroundStationId())
-                .append(EVENT_ID_SEPARATOR)
-                .append(getSatelliteId())
-                .append(EVENT_ID_SEPARATOR)
-                .append(getOrbitNumber()).toString();
-    }
+    
+    
+    /**
+	 * @return the derivedFromId
+	 */
+	public String getDerivedFromId() {
+		return derivedFromId;
+	}
 
-    @Override
+	/**
+	 * @param derivedFromId the derivedFromId to set
+	 */
+	public void setDerivedFromId(String derivedFromId) {
+		this.derivedFromId = derivedFromId;
+	}
+
+	/**
+	 * @param startTime the startTime to set
+	 */
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
+	/**
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(long endTime) {
+		this.endTime = endTime;
+	}
+
+	/**
+	 * @param groundStationId the groundStationId to set
+	 */
+	public void setGroundStationId(String groundStationId) {
+		this.groundStationId = groundStationId;
+	}
+
+	/**
+	 * @param satelliteId the satelliteId to set
+	 */
+	public void setSatelliteId(String satelliteId) {
+		this.satelliteId = satelliteId;
+	}
+
+	/**
+	 * @param orbitNumber the orbitNumber to set
+	 */
+	public void setOrbitNumber(long orbitNumber) {
+		this.orbitNumber = orbitNumber;
+	}
+
+	@Override
     public String prettyPrint() {
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-        builder.append("eventId", getEventId());
+        builder.append("eventId", getID());
         builder.append("start", Dates.toDefaultDateFormat(startTime));
         builder.append("end", Dates.toDefaultDateFormat(endTime));
         builder.append("gs", groundStationId);

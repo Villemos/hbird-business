@@ -40,13 +40,9 @@ public class DeletionRequest extends DataRequest {
 
     private static final long serialVersionUID = -811265458963306125L;
 
-    public DeletionRequest(String issuedBy) {
-        super(issuedBy, DeletionRequest.class.getSimpleName(), DESCRIPTION);
-    }
-
-    public DeletionRequest(String issuedBy, boolean deleteAll) {
-        this(issuedBy);
-        setArgumentValue(StandardArguments.DELETE_ALL, deleteAll);
+    public DeletionRequest(String ID) {
+        super(ID, DeletionRequest.class.getSimpleName());
+        setDescription(DESCRIPTION);
     }
 
     /**

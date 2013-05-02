@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.hbird.exchange.interfaces.IScheduled;
-
 /**
  * @TITLE Command Definition
  *        This object represents a command.
@@ -70,7 +68,7 @@ public class Command extends CommandBase {
     private static final long serialVersionUID = -8080345987907627652L;
 
     /** List of arguments. The value is embedded in the header of the exchange. */
-    private final Map<String, CommandArgument> arguments;
+    protected Map<String, CommandArgument> arguments = null;
 
     /**
      * Constructor to create a command with the standard set of arguments. The arguments
@@ -81,53 +79,8 @@ public class Command extends CommandBase {
      * @param name The name of the command
      * @param description The description of the command
      */
-    public Command(String issuedBy, String destination, String name, String description) {
-        this(issuedBy, destination, name, description, IScheduled.IMMEDIATE, IScheduled.IMMEDIATE);
-    }
-
-    /**
-     * Constructor for a command template, i.e. a command that has yet to get a destination and an issuedBy.
-     * 
-     * @param name
-     * @param description
-     */
-    public Command(String name, String description) {
-        this("", null, name, description, IScheduled.IMMEDIATE, IScheduled.IMMEDIATE);
-    }
-
-    /**
-     * Constructor to create a command with a custom set of arguments. The provided
-     * set of arguments override the arguments defined by the {@link #getArgumentDefinitions()} method.
-     * 
-     * @param issuedBy The name of the entity issuing this command
-     * @param destination The destination of the command
-     * @param name The name of the command
-     * @param description The description of the command
-     * @param arguments The arguments to be used
-     */
-    public Command(String issuedBy, String destination, String name, String description, List<CommandArgument> arguments) {
-        super(issuedBy, name, description, IScheduled.IMMEDIATE, destination, IScheduled.IMMEDIATE);
-        this.arguments = createArgumentMap(arguments);
-    }
-
-    public Command(Command template) {
-        super(template.issuedBy, template.name, template.description, IScheduled.IMMEDIATE, template.destination, IScheduled.IMMEDIATE);
-        this.arguments = createArgumentMap(new ArrayList<CommandArgument>(template.arguments.values()));
-    }
-
-    /**
-     * Basic constructor
-     * 
-     * @param name The name of the command.
-     * @param arguments The arguments of the command.
-     * @param lockStates The states of the command which must be true upon release.
-     * @param tasks The tasks to be performed as part of the command validation.
-     * @param releaseTime The time at which the command should be released by the MCS for transfer to the satellite.
-     * @param executionTime The time at which the command should be executed onboard.
-     */
-    public Command(String issuedBy, String destination, String name, String description, long releaseTime, long executionTime) {
-        super(issuedBy, name, description, executionTime, destination, releaseTime);
-        this.arguments = createArgumentMap(getArgumentDefinitions(new ArrayList<CommandArgument>()));
+    public Command(String ID, String name) {
+        super(ID, name);
     }
 
     /**

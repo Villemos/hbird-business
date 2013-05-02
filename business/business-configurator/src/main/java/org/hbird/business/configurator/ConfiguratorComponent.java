@@ -18,12 +18,10 @@ package org.hbird.business.configurator;
 
 import java.util.List;
 
-import org.hbird.business.core.StartablePart;
+import org.hbird.business.core.StartableEntity;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.Part;
-import org.hbird.exchange.interfaces.IPart;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -35,36 +33,27 @@ import org.springframework.context.ApplicationContextAware;
  * @author Gert Villemos
  * 
  */
-public class ConfiguratorComponent extends StartablePart implements ApplicationContextAware {
+public class ConfiguratorComponent extends StartableEntity implements ApplicationContextAware {
 
     /**
 	 * 
 	 */
     private static final long serialVersionUID = 2865072999875952015L;
 
-    public static final String CONFIGURATOR_NAME = "Configurator";
-    public static final String CONFIGURATOR_DESC = "A component for starting other components.";
+    public static final String DEFAULT_NAME = "Configurator";
+    public static final String DEFAULT_DESCRIPTION = "A component for starting other components.";
     public static final String DEFAULT_DRIVER = ConfiguratorComponentDriver.class.getName();
 
     protected ApplicationContext applicationContext;
 
-    public ConfiguratorComponent(IPart isPartOf, String name) {
-        super(isPartOf, name, CONFIGURATOR_DESC, DEFAULT_DRIVER);
-    }
-
-    /**
-     * Default constructor.
-     */
-    public ConfiguratorComponent(IPart isPartOf) {
-        this(isPartOf, CONFIGURATOR_NAME);
-    }
-
-    /**
-     * Default constructor.
-     */
-    public ConfiguratorComponent() {
-        this(new Part("System", ""), CONFIGURATOR_NAME);
-    }
+	/**
+	 * Default constructor.
+	 */
+	public ConfiguratorComponent(String ID) {
+		super(ID, DEFAULT_NAME);
+		setDescription(DEFAULT_DESCRIPTION);
+		setDriverName(DEFAULT_DRIVER);
+	}
 
     /**
      * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.
@@ -76,12 +65,12 @@ public class ConfiguratorComponent extends StartablePart implements ApplicationC
     }
 
     /**
-     * @see org.hbird.business.core.StartablePart#createCommandList()
+     * @see org.hbird.business.core.StartableEntity#createCommandList()
      */
     @Override
     protected List<Command> createCommandList(List<Command> commands) {
-        commands.add(new StartComponent("", null));
-        commands.add(new StopComponent("", ""));
+        commands.add(new StartComponent(""));
+        commands.add(new StopComponent(""));
         return commands;
     }
 

@@ -28,8 +28,8 @@ public class Move extends Command {
 
 	public enum eDirection {FORWARD, BACKWARDS};
 	
-	public Move(String issuedBy, String destination, eDirection direction, Double meters) {
-		super(issuedBy, destination, "MoveBackward", "Move the bot backwards. The distance (in meter) is set by the argument 'Distance'.");
-		// TODO Define command arguments
+	public Move(String ID) {
+		super(ID, Move.class.getSimpleName());
+		setDescription("Move the bot backwards. The distance (in meter) is set by the argument 'Distance'.");
 	}
 }

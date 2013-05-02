@@ -20,7 +20,6 @@
 package org.hbird.exchange.groundstation;
 
 import org.hbird.exchange.core.Part;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * An antenna of a groundstation.
@@ -37,8 +36,12 @@ public class Antenna extends Part {
 
     protected int thresholdElevation = 0;
 
-    public Antenna(IPart isPartOf, String name, String description) {
-        super(isPartOf, name, description);
+    /** Default description */
+    public static final String DESCRIPTION = "An antenna.";
+    
+    public Antenna(String ID, String name) {
+        super(ID, name);
+        setDescription(DESCRIPTION);
     }
 
     public int getThresholdElevation() {

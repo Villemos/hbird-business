@@ -71,104 +71,133 @@ public class Publish extends HbirdApi implements IPublish {
 	 * @see org.hbird.business.api.IPublish#publishParameter(java.lang.String, java.lang.String, java.lang.Number, java.lang.String)
 	 */
 	@Override
-	public Parameter publishParameter(String name, String description, Number value, String unit) {
-		return (Parameter) publish(new Parameter(issuedBy, name, description, value, unit));
+	public Parameter publishParameter(String ID, String name, String description, Number value, String unit) {
+		return publishParameter(ID, name, description, value, unit, System.currentTimeMillis());
 	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publishParameter(java.lang.String, java.lang.String, java.lang.Number, java.lang.String, long)
 	 */
 	@Override
-	public Parameter publishParameter(String name, String description, Number value, String unit, long timestamp) {
-		return (Parameter) publish(new Parameter(issuedBy, name, description, value, unit, timestamp));
+	public Parameter publishParameter(String ID, String name, String description, Number value, String unit, long timestamp) {
+		Parameter parameter = new Parameter(ID, name);
+		parameter.setDescription(description);
+		parameter.setValue(value);
+		parameter.setUnit(unit);
+		parameter.setTimestamp(timestamp);
+		
+		return (Parameter) publish(parameter);
+
 	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publishState(java.lang.String, java.lang.String, java.lang.String, java.lang.Boolean)
 	 */
 	@Override
-	public State publishState(String name, String description, String isStateOf, Boolean state) {
-		return (State) publish(new State(issuedBy, name, description, isStateOf, state));
+	public State publishState(String ID, String name, String description, String isStateOf, Boolean state) {
+		return publishState(ID, name, description, isStateOf, state, System.currentTimeMillis());
 	}
 
-	public State publishState(String name, String description, String isStateOf, Boolean state, long timestamp) {
-		return (State) publish(new State(issuedBy, name, description, isStateOf, state, timestamp));
+	public State publishState(String ID, String name, String description, String isStateOf, Boolean state, long timestamp) {
+		State newState = new State(ID, name);
+		newState.setDescription(description);
+		newState.setIsStateOf(isStateOf);
+		newState.setState(state);
+		newState.setTimestamp(timestamp);
+		
+		return (State) publish(newState);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publishLabel(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Label publishLabel(String name, String description, String value) {
-		return (Label) publish(new Label(issuedBy, name, description, value));
+	public Label publishLabel(String ID, String name, String description, String value) {
+		Label label = new Label(ID, name);
+		label.setDescription(description);
+		label.setValue(value);		
+		return (Label) publish(label);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publishBinary(java.lang.String, java.lang.String, byte[])
 	 */
 	@Override
-	public Binary publishBinary(String name, String description, byte[] rawdata) {
-		return (Binary) publish(new Binary(issuedBy, name, description, rawdata));
+	public Binary publishBinary(String ID, String name, String description, byte[] rawData) {
+		Binary binary = new Binary(ID, name);
+		binary.setDescription(description);
+		binary.setRawData(rawData);		
+		return (Binary) publish(binary);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publishCommand(java.lang.String, java.lang.String, java.util.List)
 	 */
 	@Override
-	public Command publishCommand(String name, String description, List<CommandArgument> arguments) {
-		return (Command) publish(new Command(issuedBy, name, "Command", description, arguments));
-	}
-
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.IPublish#publishCommandTemplate(java.lang.String, java.lang.String, java.util.List)
-	 */
-	@Override
-	public Command publishCommandTemplate(String name, String description, List<CommandArgument> arguments) {
-		return (Command) publish(new Command(issuedBy, name, "CommandTemplate", description, arguments));
+	public Command publishCommand(String ID, String name, String description, List<CommandArgument> arguments) {
+		Command command = new Command(ID, name);
+		command.setDescription(description);
+		command.setArgumentList(arguments);				
+		return (Command) publish(command);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publishCommandRequest(java.lang.String, java.lang.String, org.hbird.exchange.core.Command)
 	 */
 	@Override
-	public CommandRequest publishCommandRequest(String name, String description, Command command) {
-		return (CommandRequest) publish(new CommandRequest(issuedBy, name, description, null, null, command));
+	public CommandRequest publishCommandRequest(String ID, String name, String description, Command command) {
+		CommandRequest request = new CommandRequest(ID, name);
+		request.setDescription(description);
+		request.setCommand(command);
+		return (CommandRequest) publish(request);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publishCommandRequest(java.lang.String, java.lang.String, org.hbird.exchange.core.Command, java.util.List, java.util.List)
 	 */
 	@Override
-	public CommandRequest publishCommandRequest(String name, String description, Command command, List<String> lockStates, List<Task> tasks) {
-		return (CommandRequest) publish(new CommandRequest(issuedBy, name, description, lockStates, tasks, command));
+	public CommandRequest publishCommandRequest(String ID, String name, String description, Command command, List<String> lockStates, List<Task> tasks) {
+		CommandRequest request = new CommandRequest(ID, name);
+		request.setDescription(description);
+		request.setCommand(command);
+		request.setLockStates(lockStates);
+		request.setTasks(tasks);
+		request.setIssuedBy(description);
+		return (CommandRequest) publish(request);
+
 	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#commit()
 	 */
 	@Override
-	public void commit() {
-		template.sendBody(inject, new CommitRequest(issuedBy));
+	public void commit(String ID) {
+		template.sendBody(inject, new CommitRequest(ID));
 	}
 		
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publichMetadata(org.hbird.exchange.core.Named, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Metadata publishMetadata(EntityInstance subject, String key, String value) {
+	public Metadata publishMetadata(String ID, String name, EntityInstance subject, String key, String value) {
 		Map<String, Object> metadata = new HashMap<String, Object>();
 		metadata.put(key, value);
 		
-		return (Metadata) publish(new Metadata(issuedBy, key, subject, metadata));
+		Metadata obj = new Metadata(ID, name);
+		obj.setApplicableTo(subject.getID());
+		obj.setIssuedBy(value);
+		obj.setMetadata(metadata);
+		
+		return (Metadata) publish(obj);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPublish#publishTleParameters(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public TleOrbitalParameters publishTleParameters(String name, String satellite, String tle1, String tle2) {
-		TleOrbitalParameters obj = new TleOrbitalParameters(issuedBy, name, satellite, tle1, tle2); 
-		template.sendBody(inject, obj);
-		return obj;
+	public TleOrbitalParameters publishTleParameters(String ID, String name, String satellite, String tle1, String tle2) {
+		TleOrbitalParameters request = new TleOrbitalParameters(ID, name);
+		
+		return (TleOrbitalParameters) publish(request);
 	}
 }

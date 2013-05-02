@@ -18,7 +18,7 @@ package org.hbird.business.groundstation.base;
 
 import java.util.List;
 
-import org.hbird.business.core.StartablePart;
+import org.hbird.business.core.StartableEntity;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.groundstation.Stop;
@@ -28,7 +28,7 @@ import org.hbird.exchange.interfaces.IPart;
 /**
  *
  */
-public class GroundStationPart<C extends GroundStationDriverConfiguration> extends StartablePart {
+public class GroundStationPart<C extends GroundStationDriverConfiguration> extends StartableEntity {
 
     private static final long serialVersionUID = 3285012782965015995L;
 
@@ -47,7 +47,7 @@ public class GroundStationPart<C extends GroundStationDriverConfiguration> exten
     }
 
     /**
-     * @see org.hbird.business.core.StartablePart#getHeartbeat()
+     * @see org.hbird.business.core.StartableEntity#getHeartbeat()
      */
     @Override
     public long getHeartbeat() {
@@ -55,7 +55,7 @@ public class GroundStationPart<C extends GroundStationDriverConfiguration> exten
     }
 
     /**
-     * @see org.hbird.business.core.StartablePart#setHeartbeat(long)
+     * @see org.hbird.business.core.StartableEntity#setHeartbeat(long)
      */
     @Override
     public void setHeartbeat(long heartbeat) {
@@ -63,7 +63,7 @@ public class GroundStationPart<C extends GroundStationDriverConfiguration> exten
     }
 
     /**
-     * @see org.hbird.business.core.StartablePart#createCommandList(java.util.List)
+     * @see org.hbird.business.core.StartableEntity#createCommandList(java.util.List)
      */
     @Override
     protected List<Command> createCommandList(List<Command> commands) {

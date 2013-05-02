@@ -22,7 +22,10 @@ public class ReportStatus extends Command {
 
 	private static final long serialVersionUID = 8773680196556791644L;
 
-	public ReportStatus(String issuedBy, String destination) {
-		super(issuedBy, destination, "ReportStatus", "Request to a configurator for a report of the status. The status includes the components started by the configurator.");
+	protected static final String DESCRIPTION = "Request to a configurator for a report of the status. The status includes the components started by the configurator.";
+	
+	public ReportStatus(String ID) {
+		super(ID, ReportStatus.class.getSimpleName());
+		setDescription(DESCRIPTION);
 	}	
 }

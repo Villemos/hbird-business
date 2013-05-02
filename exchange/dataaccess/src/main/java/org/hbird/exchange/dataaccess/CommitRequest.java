@@ -24,7 +24,9 @@ public class CommitRequest extends Command {
 
     private static final long serialVersionUID = 3068998173204822616L;
 
-    public CommitRequest(String issuedBy) {
-        super(issuedBy, null, CommitRequest.class.getSimpleName(), DESCRIPTION);
+    public CommitRequest(String ID) {
+        super(ID, CommitRequest.class.getSimpleName());
+        
+        setDescription(DESCRIPTION);
     }
 }

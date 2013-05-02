@@ -26,21 +26,14 @@ import org.hbird.exchange.core.EntityInstance;
 
 public class SendCommand extends Task {
 
-	public SendCommand(String issuedBy, String name, String description, long executionDelay, Command command) {
-		super(issuedBy, name, description, executionDelay);
-		this.command = command;
-	}
-
-	public SendCommand(String issuedBy, String name, String description, long executionDelay, long repeat, Command command) {
-		super(issuedBy, name, description, executionDelay);
-		this.command = command;
-		this.repeat = repeat;
-	}
-
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3795605171483125337L;
+
+	public SendCommand(String ID, String name) {
+		super(ID, name);
+	}
 	
 	/** The class logger. */
 	protected static Logger LOG = Logger.getLogger(SendCommand.class);

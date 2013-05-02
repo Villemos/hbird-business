@@ -27,10 +27,8 @@
     <module>business-validation</module>
     <module>business-commanding</module>
     <module>business-cfdp</module>
-    <module>business-importer</module>
     <module>business-archive</module>
     <module>business-configurator</module>
-    <module>business-queuemanagement</module>
     <module>business-tracking</module>
     <module>business-websockets</module>
     <module>business-groundstation</module>

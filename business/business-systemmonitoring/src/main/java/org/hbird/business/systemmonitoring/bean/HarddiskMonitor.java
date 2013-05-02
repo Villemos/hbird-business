@@ -49,16 +49,19 @@ public class HarddiskMonitor extends Monitor {
             long free = root.getFreeSpace();
             double used = total == 0 ? 0 : (100D - ((100 * free) / total));
 
-            list[i * 3 + 0] = new Parameter(componentId, naming.createAbsoluteName(Base.HOST.toString(),
-                    HostInfo.getHostName(),
-                    name, "Available Disk Space"), "The available harddisk space.",
-                    total, "Byte");
-            list[i * 3 + 1] = new Parameter(componentId, naming.createAbsoluteName(Base.HOST.toString(),
-                    HostInfo.getHostName(),
-                    name, "Free Disk Space"), "The free harddisk space.", free, "Byte");
-            list[i * 3 + 2] = new Parameter(componentId, naming.createAbsoluteName(Base.HOST.toString(),
-                    HostInfo.getHostName(),
-                    name, "Used Disk Space"), "The used harddisk space.", used, "%");
+            
+            // TODO Not sure how to set ID and name...
+            
+//            list[i * 3 + 0] = new Parameter(componentId, naming.createAbsoluteName(Base.HOST.toString(),
+//                    HostInfo.getHostName(),
+//                    name, "Available Disk Space"), "The available harddisk space.",
+//                    total, "Byte");
+//            list[i * 3 + 1] = new Parameter(componentId, naming.createAbsoluteName(Base.HOST.toString(),
+//                    HostInfo.getHostName(),
+//                    name, "Free Disk Space"), "The free harddisk space.", free, "Byte");
+//            list[i * 3 + 2] = new Parameter(componentId, naming.createAbsoluteName(Base.HOST.toString(),
+//                    HostInfo.getHostName(),
+//                    name, "Used Disk Space"), "The used harddisk space.", used, "%");
         }
         return list;
     }

@@ -27,17 +27,13 @@ public class StartComponent extends Command {
 
     private static final long serialVersionUID = -8017279911954733945L;
 
-    public static final String DESC_STRING = "Request to start a component.";
+    public static final String DESCRIPTION = "Request to start a component.";
 
     public static final String ARGUMENT_DESCRIPTION_PART = "The system part that this command requests the start of.";
 
-    public StartComponent(String issuedBy, String destination, IStartablePart part) {
-        super(issuedBy, destination, StartComponent.class.getSimpleName(), DESC_STRING);
-        addPart(part);
-    }
-
-    public StartComponent(String issuedBy, IStartablePart part) {
-        this(issuedBy, null, part);
+    public StartComponent(String ID) {
+        super(ID, StartComponent.class.getSimpleName());
+        setDescription(DESCRIPTION);
     }
 
     /**
@@ -49,7 +45,7 @@ public class StartComponent extends Command {
         return args;
     }
 
-    protected void addPart(IStartablePart part) {
+    public void addPart(IStartablePart part) {
         setArgumentValue(StandardArguments.PART, part);
     }
 

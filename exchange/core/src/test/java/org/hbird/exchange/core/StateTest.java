@@ -59,7 +59,11 @@ public class StateTest {
     @Before
     public void setUp() throws Exception {
         inOrder = inOrder(isStateOf);
-        state = new State(ISSUED_BY, NAME, DESCRIPTION, STATE_OF, STATE);
+        state = new State(ID, NAME);
+        state.setIssuedBy(ISSUED_BY);
+        state.setDescription(DESCRIPTION);
+        state.setIsStateOf(STATE_OF);
+        state.setState(STATE);
     }
 
     /**
@@ -92,24 +96,6 @@ public class StateTest {
         assertEquals(NAME, state.getName());
         long diff = System.currentTimeMillis() - state.getTimestamp();
         assertTrue("diff=" + diff, diff >= 0 && diff < 1000L * 30);
-        assertNotNull(state.getID());
-        assertEquals(STATE, state.getValue());
-    }
-
-    /**
-     * Test method for
-     * {@link org.hbird.exchange.core.State#State(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, long)}
-     * .
-     */
-    @Test
-    public void testStateStringStringStringStringBooleanLong() {
-        state = new State(ISSUED_BY, NAME, DESCRIPTION, STATE_OF, STATE, NOW);
-        assertEquals(ISSUED_BY, state.getIssuedBy());
-        assertEquals(NAME, state.getName());
-        assertEquals(DESCRIPTION, state.getDescription());
-        assertEquals(STATE_OF, state.getIsStateOf());
-        assertEquals(NAME, state.getName());
-        assertEquals(NOW, state.getTimestamp());
         assertNotNull(state.getID());
         assertEquals(STATE, state.getValue());
     }

@@ -147,4 +147,8 @@ public abstract class HbirdApi extends HbirdRouteBuilder {
     public void setIssuedBy(String issuedBy) {
         this.issuedBy = issuedBy;
     }
+    
+	protected String getID() {
+		return issuedBy + "/request";
+	}
 }

@@ -55,10 +55,9 @@ public class Track extends Command {
      * @param issuedBy
      * @param destination
      */
-    public Track(String issuedBy, String destination, Satellite satellite, LocationContactEvent event) {
-        super(issuedBy, destination, Track.class.getSimpleName(), DESCRIPTION);
-        setArgumentValue(StandardArguments.CONTACT, event);
-        setArgumentValue(StandardArguments.SATELLITE, satellite);
+    public Track(String ID) {
+        super(ID, Track.class.getSimpleName());
+        setDescription(DESCRIPTION);
     }
 
     /**

@@ -17,9 +17,6 @@
 package org.hbird.exchange.core;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -30,6 +27,7 @@ public class EventTest {
 
     private static final String ISSUER1 = "issuer";
     private static final String ISSUER2 = "issuer";
+    private static final String ID = "ID";
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
     private static final Long NOW = System.currentTimeMillis();
@@ -42,59 +40,9 @@ public class EventTest {
      */
     @Test
     public void testEventStringStringStringStringLong() {
-        Event event = new Event(ISSUER1, NAME, DESCRIPTION, NOW);
-        assertEquals(ISSUER1, event.getIssuedBy());
-        assertEquals(NAME, event.getName());
-        assertEquals(DESCRIPTION, event.getDescription());
-        assertEquals(NOW.longValue(), event.getTimestamp());
-        assertNotNull(event.getID());
+        Event event = new Event(ID, NAME);
+        assertEquals(ID, event.getID());
         assertEquals(NAME, event.getName());
     }
 
-    /**
-     * Test method for
-     * {@link org.hbird.exchange.core.Event#Event(java.lang.String, org.hbird.exchange.core.Event, long)}.
-     */
-    @Test
-    public void testEventStringEventLong() {
-        Event template = new Event(ISSUER1, NAME, DESCRIPTION, NOW);
-        assertEquals(ISSUER1, template.getIssuedBy());
-        assertEquals(NAME, template.getName());
-        assertEquals(DESCRIPTION, template.getDescription());
-        assertEquals(NOW.longValue(), template.getTimestamp());
-        assertNotNull(template.getID());
-        assertEquals(NAME, template.getName());
-
-        Event event = new Event(ISSUER2, template, NOW_PLUS_ONE);
-        assertEquals(ISSUER2, event.getIssuedBy());
-        assertEquals(NAME, event.getName());
-        assertEquals(DESCRIPTION, event.getDescription());
-        assertEquals(NOW_PLUS_ONE.longValue(), event.getTimestamp());
-        assertNotNull(event.getID());
-        assertNotSame(template.getID(), event.getID());
-        assertEquals(NAME, event.getName());
-    }
-
-    /**
-     * Test method for {@link org.hbird.exchange.core.Event#Event(java.lang.String, org.hbird.exchange.core.Event)}.
-     */
-    @Test
-    public void testEventStringEvent() {
-        Event template = new Event(ISSUER1, NAME, DESCRIPTION, NOW);
-        assertEquals(ISSUER1, template.getIssuedBy());
-        assertEquals(NAME, template.getName());
-        assertEquals(DESCRIPTION, template.getDescription());
-        assertEquals(NOW.longValue(), template.getTimestamp());
-        assertNotNull(template.getID());
-        assertEquals(NAME, template.getName());
-
-        Event event = new Event(ISSUER2, template);
-        assertEquals(ISSUER2, event.getIssuedBy());
-        assertEquals(NAME, event.getName());
-        assertEquals(DESCRIPTION, event.getDescription());
-        assertTrue(event.getTimestamp() >= NOW);
-        assertNotNull(event.getID());
-        assertNotSame(template.getID(), event.getID());
-        assertEquals(NAME, event.getName());
-    }
 }
