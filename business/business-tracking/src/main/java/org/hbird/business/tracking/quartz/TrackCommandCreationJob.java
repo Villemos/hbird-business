@@ -93,7 +93,7 @@ public class TrackCommandCreationJob implements Job {
                 String tleId = event.getDerivedFrom();
                 TleOrbitalParameters eventTle = getTle(tleCache, tleId);
                 if (eventTle != null) {
-                    TleOrbitalParameters latestTle = getLatestTle(dao, sat);
+                    TleOrbitalParameters latestTle = getLatestTle(dao, satId);
                     if (latestTle == null || areEqual(eventTle, latestTle)) {
                         Track command = createTrackCommand(event, sat);
                         LOG.info("Issuing Track command for the {}", event.prettyPrint());
@@ -129,8 +129,8 @@ public class TrackCommandCreationJob implements Job {
         return tleCache.getById(tleId);
     }
 
-    TleOrbitalParameters getLatestTle(IDataAccess dao, Satellite sat) {
-        return dao.getTleFor(sat.getID());
+    TleOrbitalParameters getLatestTle(IDataAccess dao, String satelliteId) {
+        return dao.getTleFor(satelliteId);
     }
 
     Track createTrackCommand(LocationContactEvent event, Satellite satellite) {
