@@ -16,13 +16,12 @@
  */
 package org.hbird.business.tracking.bean;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.camel.CamelContext;
+import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.groundstation.GroundStation;
+import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.Satellite;
 import org.orekit.errors.OrekitException;
@@ -50,98 +49,102 @@ import org.slf4j.LoggerFactory;
  */
 public class TrackingControl {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TrackingControl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TrackingControl.class);
 
-    /** The definition of {@link GroundStation}. */
-    protected final String groundStationId;
+	/** The definition of {@link GroundStation}. */
+	protected final String groundStationId;
 
-    /** The definition of the {@link Satellite} to track. */
-    protected final String satelliteId;
-    protected Satellite satellite = null;
+	/** The definition of the {@link Satellite} to track. */
+	protected final String satelliteId;
+	protected Satellite satellite = null;
 
-    /** The name of this component. */
-    protected final String name;
+	/** The name of this component. */
+	protected final String name;
 
-    /** API for retrieving contact data. */
-    protected IDataAccess api = null;
+	/** API for retrieving contact data. */
+	protected IDataAccess api = null;
 
-    /** The last retrieved contact events for the location / satellite. */
-    protected List<LocationContactEvent> nextContactEvents = new ArrayList<LocationContactEvent>();
+	/** The last retrieved contact events for the location / satellite. */
+	protected LocationContactEvent nextContactEvents = null;
 
-    /**
-     * Constructor.
-     * 
-     * @param name The name of this component. Used when issue requests (issuedBy).
-     * @param location The location (antenna) that this controller is controlling.
-     * @param satelliteName The satellite that the controller manages the schedule for.
-     * @param queueName The name of the queue into which the antenna control commands shall be injected.
-     */
-    public TrackingControl(String name, String groundStationName, String satelliteName) {
-        this.name = name;
-        this.groundStationId = groundStationName;
-        this.satelliteId = satelliteName;
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param name The name of this component. Used when issue requests (issuedBy).
+	 * @param location The location (antenna) that this controller is controlling.
+	 * @param satelliteName The satellite that the controller manages the schedule for.
+	 * @param queueName The name of the queue into which the antenna control commands shall be injected.
+	 */
+	public TrackingControl(String name, String groundStationName, String satelliteName) {
+		this.name = name;
+		this.groundStationId = groundStationName;
+		this.satelliteId = satelliteName;
+	}
 
-    /**
-     * Method to be called at intervals. The method will, based on the next set of contact events for
-     * the location and satellite, create a schedule of time-tagged commands and inject them into the
-     * queue of the antenna.
-     * 
-     * @param context The context of the processor. Must contain a 'from' route as defined by the 'injectName'
-     *            attribute.
-     * @throws OrekitException
-     * 
-     * @return List of commands to the antenna parts
-     */
-    public Command process(CamelContext context) throws OrekitException {
-        Command command = null;
+	/**
+	 * Method to be called at intervals. The method will, based on the next set of contact events for
+	 * the location and satellite, create a schedule of time-tagged commands and inject them into the
+	 * queue of the antenna.
+	 * 
+	 * @param context The context of the processor. Must contain a 'from' route as defined by the 'injectName'
+	 *            attribute.
+	 * @throws OrekitException
+	 * 
+	 * @return List of commands to the antenna parts
+	 */
+	public Command process(CamelContext context) throws OrekitException {
+		Track command = null;
+		if (api == null) {
+			api = ApiFactory.getDataAccessApi(this.name, context);
+		}
 
-        // if (api == null) {
-        // api = ApiFactory.getDataAccessApi(this.name);
-        // }
-        //
-        // /** Retrieve the next set of contact events (start-end) for this station. */
-        // List<LocationContactEvent> contactEvents = api.getNextLocationContactEventsFor(groundStationId, satelliteId);
-        //
-        // /** If there are contact events. */
-        // if (contactEvents.size() == 2) {
-        //
-        // /** Check if we already have events. If yes; see if they are different. */
-        // if (nextContactEvents.isEmpty() || nextContactEvents.get(0).getTimestamp() !=
-        // contactEvents.get(0).getTimestamp()) {
-        //
-        // LOG.info("Found start/stop location contact events for location / satellite " + groundStationId + " / " +
-        // satelliteId + ". Will generate 'Track' command.");
-        //
-        // nextContactEvents = contactEvents;
-        //
-        // /** Get the definition of the satellite. */
-        // if (satellite == null) {
-        // Object named = ApiFactory.getDataAccessApi(this.name).resolve(satelliteId);
-        // if (named == null) {
-        // LOG.error("No Satellite available for the name {}", satelliteId);
-        // return command;
-        // }
-        // else {
-        // satellite = (Satellite) named;
-        // }
-        // }
-        //
-        // /** Schedule the tracking. */
-        // command = new Track(name, groundStationId, satellite, nextContactEvents.get(0), nextContactEvents.get(1));
-        // }
-        // }
-        // else {
-        // LOG.info("Did not find start/stop location contact events for groundstation '" + groundStationId +
-        // "' and satellite '" + satelliteId + "'.");
-        // }
+		/** Retrieve the next set of contact events (start-end) for this station. */
+		LocationContactEvent contactEvents = api.getNextLocationContactEventFor(groundStationId, satelliteId);
 
-        /** Return command for scheduling. */
-        return command;
-    }
+		/** If there are contact events. */
+		if (contactEvents != null) {
 
-    double getFrequency(GroundStation groundStation, Satellite satellite) {
-        // TODO - 05.03.2013, kimmell - implement
-        return -1.0D;
-    }
+			/** Check if we already have events. If yes; see if they are different. */
+			if (nextContactEvents == null || nextContactEvents.getTimestamp() != contactEvents.getTimestamp()) {
+
+				LOG.info("Found start/stop location contact events for location / satellite " + groundStationId + " / " +
+						satelliteId + ". Will generate 'Track' command.");
+
+				nextContactEvents = contactEvents;
+
+				/** Get the definition of the satellite. */
+				if (satellite == null) {
+					Object named = ApiFactory.getDataAccessApi(this.name, context).resolve(satelliteId);
+					if (named == null) {
+						LOG.error("No Satellite available for the name {}", satelliteId);
+						return command;
+					}
+					else {
+						satellite = (Satellite) named;
+					}
+				}
+
+				/** Schedule the tracking. */
+				command = new Track("TRACK");
+				command.setDestination(groundStationId);
+				command.setLocationContactEvent(nextContactEvents);
+				command.setIssuedBy(this.name);
+				command.setSatellite(satellite);
+				
+				LOG.info("Creating Track command for ground station '" + groundStationId + "' to track satellite '" + satelliteId + "'");
+			}
+		}
+		else {
+			LOG.info("Did not find start/stop location contact events for groundstation '" + groundStationId +
+					"' and satellite '" + satelliteId + "'.");
+		}
+
+		/** Return command for scheduling. */
+		return command;
+	}
+
+	double getFrequency(GroundStation groundStation, Satellite satellite) {
+		// TODO - 05.03.2013, kimmell - implement
+		return -1.0D;
+	}
 }

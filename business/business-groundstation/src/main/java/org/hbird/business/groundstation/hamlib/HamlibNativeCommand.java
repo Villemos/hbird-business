@@ -62,12 +62,11 @@ public class HamlibNativeCommand extends CommandBase {
 
     protected String derivedfrom = "";
 
-    protected String commandid = UUID.randomUUID().toString();
-
     protected String stage = "";
 
     public HamlibNativeCommand(String commandToExecute, long executionTime, String derivedFrom, String stage) {
-        super("", HamlibNativeCommand.class.getSimpleName(), DESCRIPTION);
+        super(UUID.randomUUID().toString(), HamlibNativeCommand.class.getSimpleName());
+        this.description = DESCRIPTION;
         this.commandToExecute = commandToExecute;
         this.executionTime = executionTime;
         this.derivedfrom = derivedFrom;
@@ -96,13 +95,5 @@ public class HamlibNativeCommand extends CommandBase {
 
     public void setDerivedfrom(String derivedfrom) {
         this.derivedfrom = derivedfrom;
-    }
-
-    public String getCommandid() {
-        return commandid;
-    }
-
-    public void setCommandid(String commandid) {
-        this.commandid = commandid;
     }
 }

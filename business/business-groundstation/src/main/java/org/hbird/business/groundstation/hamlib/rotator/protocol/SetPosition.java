@@ -58,11 +58,17 @@ public class SetPosition implements ResponseHandler<RotatorDriverConfiguration, 
             String azimuthValue = StringUtils.substringBefore(args, " ").trim();
             String elevationValue = StringUtils.substringAfter(args, " ").trim();
 
-            Parameter azimut = new Parameter(issuedBy, "Target Azimuth", "Target Azimuth of the antenna rotator", converter.convertTo(Double.class,
-                    azimuthValue), "Degree");
-            Parameter elevation = new Parameter(issuedBy, "Target Elevation", "Target Elevation of the antenna rotator", converter.convertTo(Double.class,
-                    elevationValue), "Degree");
-            result.add(azimut);
+            Parameter azimuth = new Parameter(issuedBy + "/" + "Target Azimuth", "Target Azimuth");
+            azimuth.setDescription("Azimuth of the antenna rotator");
+            azimuth.setValue(converter.convertTo(Double.class, azimuthValue));
+            azimuth.setUnit("Degree");
+            
+            Parameter elevation = new Parameter(issuedBy + "/" + "Target Elevation", "Target Elevation");
+            elevation.setDescription("Elevation of the antenna rotator");
+            elevation.setValue(converter.convertTo(Double.class, elevationValue));
+            elevation.setUnit("Degree");
+
+            result.add(azimuth);
             result.add(elevation);
             return result;
         }

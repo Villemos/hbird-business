@@ -42,37 +42,37 @@ public class StateArchivalTester extends SystemTest {
 		Thread.sleep(2000);
 
     	/** Store states. */
-        publishApi.publishState("STATE1", "A test description", "COMMAND1:Command:*", true);
+        publishApi.publishState("STATE1", "STATE1", "A test description", "COMMAND1:Command:*", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE2", "A test description", "COMMAND1:Command:*", true);
+        publishApi.publishState("STATE2", "STATE2", "A test description", "COMMAND1:Command:*", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE3", "A test description", "COMMAND1:Command:*", false);
+        publishApi.publishState("STATE3", "STATE3", "A test description", "COMMAND1:Command:*", false);
 		Thread.sleep(1);
-        publishApi.publishState("STATE4", "A test description", "COMMAND1:Command:*", true);
+        publishApi.publishState("STATE4", "STATE4", "A test description", "COMMAND1:Command:*", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE5", "A test description", "COMMAND1:Command:*", true);
+        publishApi.publishState("STATE5", "STATE5", "A test description", "COMMAND1:Command:*", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE6", "A test description", "COMMAND1:Command:*", false);
+        publishApi.publishState("STATE6", "STATE6", "A test description", "COMMAND1:Command:*", false);
 		Thread.sleep(1);
-        publishApi.publishState("STATE7", "A test description", "COMMAND1:Command:*", true);
+        publishApi.publishState("STATE7", "STATE7", "A test description", "COMMAND1:Command:*", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE1", "A test description", "COMMAND2:Command:*", true);
+        publishApi.publishState("STATE1", "STATE1", "A test description", "COMMAND2:Command:*", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE2", "A test description", "COMMAND2:Command:*", true);
+        publishApi.publishState("STATE2", "STATE2", "A test description", "COMMAND2:Command:*", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE3", "A test description", "COMMAND2:Command:*", false);
+        publishApi.publishState("STATE3", "STATE3", "A test description", "COMMAND2:Command:*", false);
 		Thread.sleep(1);
-        publishApi.publishState("STATE4", "A test description", "COMMAND2:Command:*", true);
+        publishApi.publishState("STATE4", "STATE4", "A test description", "COMMAND2:Command:*", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE5", "A test description", "COMMAND2:Command:*", true);
+        publishApi.publishState("STATE5", "STATE5", "A test description", "COMMAND2:Command:*", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE1", "A test description", "COMMAND3:Command:*", true);
+        publishApi.publishState("STATE1", "STATE1", "A test description", "COMMAND3:Command:*", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE2", "A test description", "COMMAND3:Command:*", true);
+        publishApi.publishState("STATE2", "STATE2", "A test description", "COMMAND3:Command:*", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE3", "A test description", "COMMAND3:Command:*", true);
+        publishApi.publishState("STATE3", "STATE3", "A test description", "COMMAND3:Command:*", true);
 		Thread.sleep(1);
-        publishApi.publishState("STATE4", "A test description", "COMMAND3:Command:*", true);
+        publishApi.publishState("STATE4", "STATE4", "A test description", "COMMAND3:Command:*", true);
 
         Thread.sleep(2000);
         
@@ -97,11 +97,11 @@ public class StateArchivalTester extends SystemTest {
         azzert(states.get("STATE7").getValue() == true, "STATE7 should be 'true'");
 
     	/** Store a new set of states. Notice that STATE1 and STATE3 doesnt change. */
-        publishApi.publishState("STATE2", "A test description", "COMMAND1:Command:*", true);
-        publishApi.publishState("STATE4", "A test description", "COMMAND1:Command:*", true);
-        publishApi.publishState("STATE5", "A test description", "COMMAND1:Command:*", false);
-        publishApi.publishState("STATE6", "A test description", "COMMAND1:Command:*", true);
-        publishApi.publishState("STATE7", "A test description", "COMMAND1:Command:*", true);
+        publishApi.publishState("STATE2", "STATE2", "A test description", "COMMAND1:Command:*", true);
+        publishApi.publishState("STATE4", "STATE4", "A test description", "COMMAND1:Command:*", true);
+        publishApi.publishState("STATE5", "STATE5", "A test description", "COMMAND1:Command:*", false);
+        publishApi.publishState("STATE6", "STATE6", "A test description", "COMMAND1:Command:*", true);
+        publishApi.publishState("STATE7", "STATE7", "A test description", "COMMAND1:Command:*", true);
 
         Thread.sleep(2000);
         

@@ -122,6 +122,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
     public synchronized void startComponent(@Body StartComponent command, CamelContext context) throws Exception {
         String qName = command.getPart().getName();
         String driverName = command.getPart().getDriverName();
+        command.getPart().setContext(context);
         LOG.info("Received start request for part '{}'. Will use driver '{}' and CamelContex {}.", new Object[] { qName, driverName, context.getName() });
 
         if (components.containsKey(qName)) {
@@ -141,7 +142,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
 
                     /** Register component in list of components maintained by this configurator. */
                     components.put(qName, builder.getRouteCollection());
-                    context.createProducerTemplate().asyncSendBody(ENDPOINT_TO_EVENTS, createStartEvent(qName));
+                    context.createProducerTemplate().asyncSendBody(ENDPOINT_TO_EVENTS, createStartEvent());
                 }
                 catch (Exception e) {
                     LOG.error("Failed to start part '{}'", qName, e);
@@ -169,7 +170,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
 
             /** Deregister. */
             components.remove(qName);
-            getContext().createProducerTemplate().asyncSendBody(ENDPOINT_TO_EVENTS, createStopEvent(qName));
+            getContext().createProducerTemplate().asyncSendBody(ENDPOINT_TO_EVENTS, createStopEvent());
         }
     }
 
@@ -229,15 +230,19 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
      * @param qualifiedName
      * @return
      */
-    protected Event createStartEvent(String qualifiedName) {
-        return StandardMissionEvents.COMPONENT_START.cloneEntity();
+    protected Event createStartEvent() {
+    	Event event = StandardMissionEvents.COMPONENT_START.cloneEntity();
+    	event.setIssuedBy(this.part.getID());
+        return event;
     }
 
     /**
      * @param qualifiedName
      * @return
      */
-    protected Event createStopEvent(String qualifiedName) {
-        return StandardMissionEvents.COMPONENT_STOP.cloneEntity();
+    protected Event createStopEvent() {
+    	Event event = StandardMissionEvents.COMPONENT_STOP.cloneEntity();
+    	event.setIssuedBy(this.part.getID());
+        return event;
     }
 }

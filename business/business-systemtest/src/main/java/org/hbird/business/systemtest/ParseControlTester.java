@@ -64,17 +64,17 @@ public class ParseControlTester extends SystemTest {
             /** Check if we have contact events */
             LocationContactEvent contactEvent = accessApi.getNextLocationContactEventFor(es5ec.getID(), estcube1.getID());
             if (contactEvent != null) {
-                System.out.println("start p1 = " + contactEvent.getSatelliteStateAtStart().getPosition().p1);
-                System.out.println("start p2 = " + contactEvent.getSatelliteStateAtStart().getPosition().p2);
-                System.out.println("start p3 = " + contactEvent.getSatelliteStateAtStart().getPosition().p3);
+                System.out.println("start p1 = " + contactEvent.getSatelliteStateAtStart().getPosition().getP1());
+                System.out.println("start p2 = " + contactEvent.getSatelliteStateAtStart().getPosition().getP2());
+                System.out.println("start p3 = " + contactEvent.getSatelliteStateAtStart().getPosition().getP3());
 
-                System.out.println("start v1 = " + contactEvent.getSatelliteStateAtStart().getVelocity().p1);
-                System.out.println("start v2 = " + contactEvent.getSatelliteStateAtStart().getVelocity().p2);
-                System.out.println("start v3 = " + contactEvent.getSatelliteStateAtStart().getVelocity().p3);
+                System.out.println("start v1 = " + contactEvent.getSatelliteStateAtStart().getVelocity().getP1());
+                System.out.println("start v2 = " + contactEvent.getSatelliteStateAtStart().getVelocity().getP2());
+                System.out.println("start v3 = " + contactEvent.getSatelliteStateAtStart().getVelocity().getP3());
 
-                System.out.println("start m1 = " + contactEvent.getSatelliteStateAtStart().getMomentum().p1);
-                System.out.println("start m2 = " + contactEvent.getSatelliteStateAtStart().getMomentum().p2);
-                System.out.println("start m3 = " + contactEvent.getSatelliteStateAtStart().getMomentum().p3);
+                System.out.println("start m1 = " + contactEvent.getSatelliteStateAtStart().getMomentum().getP1());
+                System.out.println("start m2 = " + contactEvent.getSatelliteStateAtStart().getMomentum().getP2());
+                System.out.println("start m3 = " + contactEvent.getSatelliteStateAtStart().getMomentum().getP3());
                 break;
             }
         }

@@ -78,6 +78,10 @@ public class TlePropagationRequest extends DataRequest {
         return getArgumentValue(StandardArguments.DELTA_PROPAGATION, Long.class);
     }
 
+    public void setDeltaPropagation(Long deltaPropagation) {
+        setArgumentValue(StandardArguments.DELTA_PROPAGATION, deltaPropagation);
+    }
+
     public Long getStepSize() {
         return getArgumentValue(StandardArguments.STEP_SIZE, Long.class);
     }

@@ -16,6 +16,7 @@
  */
 package org.hbird.business.archive.api;
 
+import org.apache.camel.CamelContext;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IArchiveManagement;
 import org.hbird.business.archive.ArchiveComponent;
@@ -41,6 +42,10 @@ public class ArchiveManagement extends HbirdApi implements IArchiveManagement {
 		super(issuedBy, ArchiveComponent.ARCHIVE_NAME);
 	}
 
+	public ArchiveManagement(String issuedBy, CamelContext context) {
+		super(issuedBy, ArchiveComponent.ARCHIVE_NAME, context);
+	}
+
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IArchiveManagement#deleteOrbitalStates(java.lang.String)
 	 */
@@ -49,6 +54,7 @@ public class ArchiveManagement extends HbirdApi implements IArchiveManagement {
 		DeletionRequest request = new DeletionRequest(issuedBy);
 		request.setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
 		request.setArgumentValue(StandardArguments.CLASS, OrbitalState.class.getSimpleName());
+		request.setDeleteAll(false);
 		executeRequestRespond(request);
 	}
 }

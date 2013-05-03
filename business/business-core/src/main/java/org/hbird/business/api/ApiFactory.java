@@ -16,6 +16,8 @@
  */
 package org.hbird.business.api;
 
+import org.apache.camel.CamelContext;
+
 
 /**
  * Factory class for creating API implementations. 
@@ -74,4 +76,46 @@ public class ApiFactory {
 		
 		return api;
 	}
+
+	
+	static public synchronized IDataAccess getDataAccessApi(String issuedBy, CamelContext context) {
+		return (IDataAccess) createInstance(dataAccessClass, issuedBy, context);
+	}
+
+	static public synchronized IPublish getPublishApi(String issuedBy, CamelContext context) {
+		return (IPublish) createInstance(publishClass, issuedBy, context);
+	}
+
+	static public synchronized ICatalogue getCatalogueApi(String issuedBy, CamelContext context) {
+		return (ICatalogue) createInstance(catalogueClass, issuedBy, context);
+	}
+
+	static public synchronized IOrbitPrediction getOrbitPredictionApi(String issuedBy, CamelContext context) {
+		return (IOrbitPrediction) createInstance(orbitPredictionClass, issuedBy, context);
+	}
+
+	static public synchronized IQueueManagement getQueueManagementApi(String issuedBy, CamelContext context) {
+		return (IQueueManagement) createInstance(queueManagementClass, issuedBy, context);
+	}
+
+	static public synchronized IPartManager getPartManagerApi(String issuedBy, CamelContext context) {
+		return (IPartManager) createInstance(partmanagerClass, issuedBy, context);
+	}
+
+	static public synchronized IArchiveManagement getArchiveManagerApi(String issuedBy, CamelContext context) {
+		return (IArchiveManagement) createInstance(archiveManagerClass, issuedBy, context);
+	}
+
+	static protected synchronized Object createInstance(String clazz, String issuedBy, CamelContext context) {
+		Object api = null;
+		
+		try {
+			api = Class.forName(clazz).getConstructor(String.class, CamelContext.class).newInstance(issuedBy, context);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return api;
+	}
+
 }

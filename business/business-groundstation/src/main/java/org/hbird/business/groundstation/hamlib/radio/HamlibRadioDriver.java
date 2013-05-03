@@ -50,7 +50,7 @@ import org.hbird.business.groundstation.hamlib.radio.protocol.GetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetVfo;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
-import org.hbird.exchange.interfaces.IPart;
+import org.hbird.exchange.interfaces.IStartablePart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,13 +100,12 @@ public class HamlibRadioDriver extends HamlibDriver<RadioDriverConfiguration> {
      * @see org.hbird.business.groundstation.hamlib.HamlibDriver#createDriverContext(org.hbird.exchange.interfaces.IPart)
      */
     @Override
-    protected DriverContext<RadioDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IPart part) {
+    protected DriverContext<RadioDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IStartablePart part) {
         HamlibRadioPart radio = (HamlibRadioPart) part;
         RadioDriverConfiguration config = radio.getConfiguration();
         ResponseKeyExtractor<String, String> keyExtractor = new HamlibResponseKeyExtractor();
         RadioState deviceState = new RadioState();
-        DriverContext<RadioDriverConfiguration, String, String> context = new DriverContext<RadioDriverConfiguration, String, String>(part, config,
-                keyExtractor, camelContext.getTypeConverter(), deviceState);
+        DriverContext<RadioDriverConfiguration, String, String> context = new DriverContext<RadioDriverConfiguration, String, String>(part, config, keyExtractor, camelContext.getTypeConverter(), deviceState);
         return context;
     }
 

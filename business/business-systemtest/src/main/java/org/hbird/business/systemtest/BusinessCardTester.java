@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import org.hbird.business.commanding.CommandingComponent;
 import org.hbird.business.configurator.ConfiguratorComponent;
 import org.hbird.exchange.configurator.ReportStatus;
-import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.interfaces.IStartablePart;
 
@@ -44,7 +43,7 @@ public class BusinessCardTester extends SystemTest {
 				LOG.info(obj);
 				if (obj instanceof EntityInstance) {
 					/** Notice that the name given to the configurator in the assembly is 'Main Configurator' */
-					if (((EntityInstance)obj).getIssuedBy().equals(ConfiguratorComponent.CONFIGURATOR_NAME)) {
+					if (((EntityInstance)obj).getIssuedBy().equals(ConfiguratorComponent.DEFAULT_ID)) {
 						didArrive = true;
 						break;
 					}
@@ -59,15 +58,13 @@ public class BusinessCardTester extends SystemTest {
 
 		Thread.sleep(3000);
 
-		IStartablePart commanding = (IStartablePart) parts.get(CommandingComponent.COMMAND_RELEASER_NAME);
-
 		synchronized (businessCardListener.elements) {
 			Boolean commandingDidArrive = false;
 			for (EntityInstance obj : businessCardListener.elements) {
 				LOG.info(obj);
 				if (obj instanceof EntityInstance) {
 
-					if (((EntityInstance)obj).getIssuedBy().equals(CommandingComponent.COMMAND_RELEASER_NAME)) {
+					if (((EntityInstance)obj).getIssuedBy().equals(comComponent.getID())) {
 						commandingDidArrive = true;
 						break;
 					}
@@ -80,8 +77,8 @@ public class BusinessCardTester extends SystemTest {
 
 		Thread.sleep(3000);
 
-		Object data = injection.requestBody(new ReportStatus("SystemTest", "Configurator"));
-		azzert(data != null, "Status received from Configurator.");
+//		Object data = injection.requestBody(new ReportStatus("systemtest/request"));
+//		azzert(data != null, "Status received from Configurator.");
 
 		/** Stop the CommandingChain and check that it is actually stopped. */
 		stopCommandingChain();
@@ -96,7 +93,7 @@ public class BusinessCardTester extends SystemTest {
 				LOG.info(obj);
 				if (obj instanceof EntityInstance) {
 
-					if (((EntityInstance)obj).getIssuedBy().equals(commanding.getName())) {
+					if (((EntityInstance)obj).getIssuedBy().equals(comComponent.getID())) {
 						commandingDidArrive = true;
 						break;
 					}

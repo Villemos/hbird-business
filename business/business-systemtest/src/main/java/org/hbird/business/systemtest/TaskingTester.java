@@ -23,7 +23,6 @@ import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.tasking.SendCommand;
 import org.hbird.exchange.tasking.SetParameter;
-import org.hbird.exchange.tasking.Task;
 
 public class TaskingTester extends SystemTest {
 
@@ -35,8 +34,7 @@ public class TaskingTester extends SystemTest {
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
 
-        Part limits = parts.get("Limits");
-        String parameterName = limits.getName() + "/PARA1_LowerHardLimit/LIMIT";
+        String parameterName = "PARA1";
 
         Part taskExecutor = parts.get("Task Executor");
 
@@ -47,9 +45,18 @@ public class TaskingTester extends SystemTest {
         Thread.sleep(2000);
 
         /** Create simple task that sets a parameter. Is executed immediatly. */
-        injection.sendBody(new SetParameter("SystemTest", "SET_PARA1", "A test parameter set by a task", 0, parameterName, "A test parameter more", 9d,
-                "Bananas"));
+        
+        SetParameter setparameter1 = new SetParameter("SET_PARA1", "SET_PARA1");
+        setparameter1.setDescription("A test parameter set by a task");
 
+        Parameter parameter1 = new Parameter(parameterName, parameterName);
+        parameter1.setDescription("A test parameter more");
+        parameter1.setValue(9d);
+        parameter1.setUnit("Bananas");
+        setparameter1.setParameter(parameter1);
+        
+        publishApi.publish(setparameter1);
+        
         Thread.sleep(2000);
 
         azzert(parameterListener.lastReceived.getName().equals(parameterName), "The 'Set' parameter was received,");
@@ -61,21 +68,28 @@ public class TaskingTester extends SystemTest {
         parameterListener.elements.clear();
 
         /** Create a repeatable Set. */
-        Task task = new SetParameter("SystemTest", "Set2", "A test parameter set by a task", 0, parameterName, "A test parameter more", 9d, "Bananas");
-        task.setRepeat(5);
-        task.setExecutionDelay(1000);
-        injection.sendBody(task);
+        SetParameter setparameter2 = new SetParameter("SET_PARA2", "SET_PARA2");
+        setparameter2.setDescription("A test parameter set by a task");
+        setparameter2.setParameter(parameter1);
+        setparameter2.setRepeat(5);
+        setparameter2.setExecutionDelay(1000);
+        
+        publishApi.publish(setparameter2);
 
         Thread.sleep(10000);
 
         azzert(parameterListener.elements.size() == 5, "Received 5 repetitions.");
 
         /** Create a task for issuing a command. */
-        String commandName = estcube1.getName() + "/COM1";
-        String task2Name = taskExecutor.getName() + "/SEND_COM1";
-        Command command = new Command("SystemTest", "Any", commandName, "A test command used to test SendCommand task.", 0, 0);
-        injection.sendBody(new SendCommand("SystemTest", task2Name, "A test parameter set by a task", 0, command));
-
+        String commandName = "COM1";
+        String task2Name = "SEND_COM1";
+        Command command = new Command(commandName, commandName);
+        command.setDescription("A test command used to test SendCommand task.");
+        
+        SendCommand sendCommand = new SendCommand(task2Name, task2Name);
+        sendCommand.setCommand(command);
+        publishApi.publish(sendCommand);
+        
         Thread.sleep(2000);
 
         azzert(commandingListener.lastReceived.getName().equals(commandName), "Received command.");

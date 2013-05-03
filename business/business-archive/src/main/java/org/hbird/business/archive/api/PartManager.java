@@ -32,6 +32,7 @@
  */
 package org.hbird.business.archive.api;
 
+import org.apache.camel.CamelContext;
 import org.hbird.business.api.IPartManager;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
@@ -58,6 +59,11 @@ public class PartManager extends Publish implements IPartManager {
 		this.destination = "Configurator";
 	}
 
+	public PartManager(String issuedBy, CamelContext context) {
+		super(issuedBy, context);
+		this.destination = "Configurator";
+	}
+
 	/* (non-Javadoc)
 	 * @see org.hbird.business.api.IPartManager#start(org.hbird.exchange.interfaces.IStartablePart)
 	 */
@@ -65,7 +71,7 @@ public class PartManager extends Publish implements IPartManager {
 	public void start(IStartablePart part) {
 		StartComponent request = new StartComponent(getID());
 		request.setIssuedBy(issuedBy);
-		request.addPart(part);
+		request.setPart(part);
 		publish(request);
 	}
 

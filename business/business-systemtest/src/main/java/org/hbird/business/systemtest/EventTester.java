@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.camel.Handler;
 import org.hbird.business.commanding.CommandingComponent;
+import org.hbird.business.configurator.ConfiguratorComponent;
 import org.hbird.exchange.constants.StandardMissionEvents;
 import org.hbird.exchange.core.Event;
 import org.slf4j.Logger;
@@ -49,10 +50,9 @@ public class EventTester extends SystemTest {
         azzert(eventListener.elements.size() == 1, "There should be 1 events published");
         Event event = (Event) eventListener.elements.get(0);
         azzert(StandardMissionEvents.COMPONENT_START.getName().equals(event.getName()), "startEvent.getName()");
-        azzert(parts.get(CommandingComponent.COMMAND_RELEASER_NAME).getName().equals(event.getIssuedBy()), "startEvent.getIssuedBy()");
+        azzert(event.getIssuedBy().equals(ConfiguratorComponent.DEFAULT_ID), "startEvent.getIssuedBy()");
         long diff = System.currentTimeMillis() - event.getTimestamp();
         azzert(diff >= 0L && diff <= 30000L, "startEvent.getTimestamp()");
-        azzert(event.getIssuedBy().equals(CommandingComponent.COMMAND_RELEASER_NAME), "startEvent.getName()");
         azzert(event.getID() != null, "startEvent.getID()");
         azzert(StandardMissionEvents.COMPONENT_START.getDescription().equals(event.getDescription()), "startEvent.getDescription()");
 
@@ -61,10 +61,9 @@ public class EventTester extends SystemTest {
         azzert(eventListener.elements.size() == 2, "There should be 2 events published");
         event = (Event) eventListener.elements.get(1);
         azzert(StandardMissionEvents.COMPONENT_STOP.getName().equals(event.getName()), "stopEvent.getName()");
-        azzert(parts.get(CommandingComponent.COMMAND_RELEASER_NAME).getName().equals(event.getIssuedBy()), "stopEvent.getIssuedBy()");
         diff = System.currentTimeMillis() - event.getTimestamp();
         azzert(diff >= 0L && diff <= 30000L, "stopEvent.getTimestamp()");
-        azzert(event.getIssuedBy().equals(CommandingComponent.COMMAND_RELEASER_NAME), "stopEvent.getName()");
+        azzert(event.getIssuedBy().equals(ConfiguratorComponent.DEFAULT_ID), "stopEvent.getName()");
         azzert(event.getID() != null, "stopEvent.getUuid()");
         azzert(StandardMissionEvents.COMPONENT_STOP.getDescription().equals(event.getDescription()), "stopEvent.getDescription()");
 

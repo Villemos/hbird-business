@@ -45,7 +45,7 @@ public class StartComponent extends Command {
         return args;
     }
 
-    public void addPart(IStartablePart part) {
+    public void setPart(IStartablePart part) {
         setArgumentValue(StandardArguments.PART, part);
     }
 

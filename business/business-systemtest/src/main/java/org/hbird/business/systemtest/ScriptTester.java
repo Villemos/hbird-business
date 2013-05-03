@@ -21,9 +21,8 @@ import java.util.Map;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.configurator.ConfiguratorComponent;
 import org.hbird.business.scripting.ScriptComponent;
-import org.hbird.exchange.configurator.StartComponent;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.Part;
@@ -42,34 +41,35 @@ public class ScriptTester extends SystemTest {
         /** Create script component from scratch. */
         String script = "var value=in1.asDouble()*10 + in2.asDouble(); output.setValue(value);\n";
 
+        String scriptName = "SYN1";
         //
         Part scripts = parts.get("Synthetic Parameters");
 
         Map<String, String> binding = new HashMap<String, String>();
-        binding.put(estcube1.getName() + "/PARA3", "in1");
-        binding.put(estcube1.getName() + "/PARA4", "in2");
+        binding.put("PARA3", "in1");
+        binding.put("PARA4", "in2");
 
-        ScriptComponent com = new ScriptComponent(scripts, "ScriptComponent_SYN1", "SYN1", script, new Parameter("ScriptEngine", estcube1.getName() + "/SYN1",
-                "A test script parameter.", new Double(0), "Volt"), binding);
-        com.setIsPartOf(scripts);
-
-        publishApi.publish(new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com));
-
+        Parameter parameter = new Parameter("SYN1", "SYN1");
+        parameter.setDescription("A test script parameter.");
+        parameter.setUnit("Volt");
+        
+        ScriptComponent com = createScriptComponent("SCRIPT1", script, scriptName, binding, parameter);
+        partmanagerApi.start(com);
         Thread.sleep(2000);
 
         /** Send one of the two parameters. Should NOT trigger the script. */
-        publishApi.publish(new Parameter("SystemTest", estcube1.getName() + "/PARA3", "A parameter", 2d, "Volt"));
+        publishApi.publishParameter("PARA3", "PARA3", "A parameter", 2d, "Volt");
 
         Thread.sleep(2000);
 
         azzert(parameterListener.lastReceived.getName().equals("SYN_PARA1") == false);
 
         /** Send the other parameter. Should trigger the script. */
-        injection.sendBody(new Parameter("SystemTest", estcube1.getName() + "/PARA4", "A parameter", 5d, "Volt"));
-
+        publishApi.publishParameter("PARA4", "PARA4", "A parameter", 5d, "Volt");
+        
         Thread.sleep(2000);
 
-        azzert(parameterListener.lastReceived.getName().equals(estcube1.getName() + "/SYN1") == true);
+        azzert(parameterListener.lastReceived.getName().equals("SYN1") == true);
         azzert(parameterListener.lastReceived instanceof Parameter);
         Parameter out = (Parameter) parameterListener.lastReceived;
         azzert(out.getDescription().equals("A test script parameter."));
@@ -80,90 +80,113 @@ public class ScriptTester extends SystemTest {
         script = "if (in1.asInt() == 4) {output.setValid()} else {output.setInvalid()}\n";
 
         binding = new HashMap<String, String>();
-        binding.put(estcube1.getName() + "/PARA5", "in1");
+        binding.put("PARA5", "in1");
 
-        com = new ScriptComponent(scripts, "ScriptComponent_SYN_STATE1", "SYN_STATE1", script, new State("ScriptEngine", "SYN_STATE1", "", "PARA2", true), binding);
-        com.setIsPartOf(scripts);
-        publishApi.publish(new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com));
-
-        Thread.sleep(2000);
-
-        injection.sendBody(new Parameter("SystemTest", estcube1.getName() + "/PARA5", "A parameter", 5d, "Volt"));
+        State state = new State("SYN_STATE_1", "SYN_STATE_1");
+        state.setIsStateOf("PARA2");
+        
+        com = createScriptComponent("SCRIPT2", script, scriptName, binding, state);
+        partmanagerApi.start(com);
 
         Thread.sleep(2000);
 
-        azzert(stateListener.lastReceived.getName().equals("SYN_STATE1") == true);
+        publishApi.publishParameter("PARA5", "PARA5", "A parameter", 5d, "Volt");
+        
+        Thread.sleep(2000);
+
+        azzert(stateListener.lastReceived.getName().equals("SYN_STATE_1") == true);
         azzert(stateListener.lastReceived instanceof State);
         State out2 = (State) stateListener.lastReceived;
         azzert(out2.getValue() == false);
 
-        injection.sendBody(new Parameter("SystemTest", estcube1.getName() + "/PARA5", "A parameter", 4d, "Volt"));
+        publishApi.publishParameter("PARA5", "PARA5", "A parameter", 4d, "Volt");
 
         Thread.sleep(2000);
 
-        azzert(stateListener.lastReceived.getName().equals("SYN_STATE1") == true);
+        azzert(stateListener.lastReceived.getName().equals("SYN_STATE_1") == true);
         azzert(stateListener.lastReceived instanceof State);
         State out3 = (State) stateListener.lastReceived;
         azzert(out3.getValue() == true);
 
         /** Test the triggering of a script from the library */
         new HashMap<String, String>();
-        binding.put(estcube1.getName() + "/PARA6", "in1");
+        binding.put("PARA6", "in1");
 
-        com = new ScriptComponent(scripts, "ScriptComponent3", "Fahrenheit2CelsiusConvertion", new Parameter("ScriptComponent3", estcube1.getName() + "/SYN2",
-                "Temperature in CELCIUS.", new Double(0), "Celsius"), binding);
-        com.setIsPartOf(scripts);
-        publishApi.publish(new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com));
+        script = null;
+        scriptName = "Fahrenheit2CelsiusConvertion";
+
+        parameter = new Parameter("SYN2", "SYN2");
+        parameter.setDescription("Temperature in CELCIUS.");
+        parameter.setValue( new Double(0));
+        parameter.setUnit("Celsius");
+        
+        com = createScriptComponent("SCRIPT3", script, scriptName, binding, parameter);
+        partmanagerApi.start(com);
+
+        
+        Thread.sleep(2000);
+
+        publishApi.publishParameter("PARA6", "PARA6", "The temperature in FAHRENHEIT.", 200d, "Fahrenheit");
 
         Thread.sleep(2000);
 
-        injection.sendBody(new Parameter("SystemTest", estcube1.getName() + "/PARA6", "The temperature in FAHRENHEIT.", 200d, "Fahrenheit"));
-
-        Thread.sleep(2000);
-
-        azzert(parameterListener.lastReceived.getName().equals(estcube1.getName() + "/SYN2") == true);
+        azzert(parameterListener.lastReceived.getName().equals("SYN2") == true);
         azzert(parameterListener.lastReceived instanceof Parameter);
         Parameter out4 = (Parameter) parameterListener.lastReceived;
         azzert(out4.getValue().doubleValue() == 93.33333333333333);
 
         /** Test script that creates a label */
         binding = new HashMap<String, String>();
-        binding.put(estcube1.getName() + "/PARA8", "in1");
-        binding.put(estcube1.getName() + "/PARA7", "threshold");
+        binding.put("PARA8", "in1");
+        binding.put("PARA7", "threshold");
 
-        com = new ScriptComponent(scripts, "ScriptComponent4", "OnOffSpline", new Label("ScriptEngine", estcube1.getName() + "/SYN3",
-                "Whether the battery is ON or OFF", "ON"), binding);
-        com.setIsPartOf(scripts);
-        publishApi.publish(new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com));
+        script = null;
+        scriptName = "OnOffSpline";
+        
+        Label label = new Label("SYN3", "SYN3");
+        label.setDescription("Whether the battery is ON or OFF");
+        label.setValue("ON");
+        
+        com = createScriptComponent("SCRIPT4", script, scriptName, binding, label);
+        partmanagerApi.start(com);
 
         Thread.sleep(2000);
 
-        injection.sendBody(new Parameter("SystemTest", estcube1.getName() + "/PARA7", "The ON / OFF threshold.", 300d, "Volt"));
-        injection.sendBody(new Parameter("SystemTest", estcube1.getName() + "/PARA8", "Dont know.", 200d, "Volt"));
-
+        publishApi.publishParameter("PARA7", "PARA7", "The ON / OFF threshold.", 300d, "Volt");
+        publishApi.publishParameter("PARA8", "PARA8", "Dont know.", 200d, "Volt");
+        
         Thread.sleep(2000);
 
-        azzert(labelListener.lastReceived.getName().equals(estcube1.getName() + "/SYN3") == true);
+        azzert(labelListener.lastReceived.getName().equals("SYN3") == true);
         azzert(labelListener.lastReceived instanceof Label);
         Label out5 = (Label) labelListener.lastReceived;
         azzert(out5.getValue().equals("OFF"));
 
-        injection.sendBody(new Parameter("test", estcube1.getName() + "/PARA8", "Dont know.", 300d, "Volt"));
-
+        publishApi.publishParameter("PARA8", "PARA8", "Dont know.", 300d, "Volt");
+        
         Thread.sleep(2000);
 
-        azzert(labelListener.lastReceived.getName().equals(estcube1.getName() + "/SYN3") == true);
+        azzert(labelListener.lastReceived.getName().equals("SYN3") == true);
         out5 = (Label) labelListener.lastReceived;
         azzert(out5.getValue().equals("ON"));
 
-        injection.sendBody(new Parameter("test", estcube1.getName() + "/PARA8", "Dont know.", 400d, "Volt"));
+        publishApi.publishParameter("PARA8", "PARA8", "Dont know.", 400d, "Volt");
 
         Thread.sleep(2000);
 
-        azzert(labelListener.lastReceived.getName().equals(estcube1.getName() + "/SYN3") == true);
+        azzert(labelListener.lastReceived.getName().equals("SYN3") == true);
         out5 = (Label) labelListener.lastReceived;
         azzert(out5.getValue().equals("ON"));
 
         LOG.info("Finished");
+    }
+    
+    public ScriptComponent createScriptComponent(String componentName, String script,  String scriptName, Map<String, String> binding, EntityInstance obj) {
+    	ScriptComponent component = new ScriptComponent(componentName, componentName);
+    	component.setScript(script);
+    	component.setScriptName(scriptName);
+    	component.setBinding(binding);
+    	component.setReturnType(obj);
+    	return component;
     }
 }

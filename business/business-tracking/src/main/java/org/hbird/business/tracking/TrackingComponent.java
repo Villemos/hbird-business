@@ -50,6 +50,10 @@ public class TrackingComponent extends StartableEntity {
 
     private TrackingDriverConfiguration configuration;
 
+    // TODO When the configuration above works, remove these
+    protected String satellite;
+    protected String location;
+    
     /**
      * @param name
      * @param description
@@ -71,4 +75,34 @@ public class TrackingComponent extends StartableEntity {
 	public void setConfiguration(TrackingDriverConfiguration configuration) {
 		this.configuration = configuration;
 	}
+
+	/**
+	 * @return the satellite
+	 */
+	public String getSatellite() {
+		return satellite;
+	}
+
+	/**
+	 * @param satellite the satellite to set
+	 */
+	public void setSatellite(String satellite) {
+		this.satellite = satellite;
+	}
+
+	/**
+	 * @return the location
+	 */
+	public String getLocation() {
+		return location;
+	}
+
+	/**
+	 * @param location the location to set
+	 */
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	
+	
 }

@@ -67,9 +67,10 @@ public class GetFrequency implements ResponseHandler<RadioDriverConfiguration, S
             String parameterName = String.format("%s %s", linkName, PARAMETER);
             String description = String.format("%s Frequency of the radio", linkName);
 
-            Parameter param = new Parameter(driverContext.getPart().getID(), parameterName, description, typeConverter.convertTo(Long.class,
-                    HamlibProtocolHelper.toMap(response).get(PARAMETER)), "Hz");
-
+            Parameter param = new Parameter(driverContext.getPart().getID() + "/" + parameterName, parameterName);
+            param.setDescription(description);
+            param.setValue(typeConverter.convertTo(Long.class, HamlibProtocolHelper.toMap(response).get(PARAMETER)));
+            param.setUnit("Hz");
             result = new ArrayList<IEntityInstance>(1);
             result.add(param);
         }

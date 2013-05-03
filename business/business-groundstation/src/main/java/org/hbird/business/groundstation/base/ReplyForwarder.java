@@ -55,6 +55,12 @@ public class ReplyForwarder {
         String[] messageSplit = message.split("\n");
         String[] name = messageSplit[0].split(":");
 
-        return new State(sourceName, "ExecutionState", "Raw response from Hamlib", name[0], message.contains("RPRT 0"));
+        State state = new State("ExecutionState", "ExecutionState");
+        state.setIssuedBy(sourceName);
+        state.setDescription("Raw response from Hamlib");
+        state.setState(message.contains("RPRT 0"));
+        state.setIsStateOf(name[0]);
+        
+        return state;
 	}
 }

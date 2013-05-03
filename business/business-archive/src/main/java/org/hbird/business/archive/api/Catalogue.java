@@ -19,6 +19,7 @@ package org.hbird.business.archive.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.camel.CamelContext;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.archive.ArchiveComponent;
@@ -49,6 +50,10 @@ public class Catalogue extends HbirdApi implements ICatalogue {
 	 */
     public Catalogue(String issuedBy) {
         super(issuedBy, ArchiveComponent.ARCHIVE_NAME);
+    }
+
+    public Catalogue(String issuedBy, CamelContext context) {
+        super(issuedBy, ArchiveComponent.ARCHIVE_NAME, context);
     }
 
     /**
@@ -84,7 +89,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     /**
      * @see org.hbird.business.api.ICatalogue#getSatellites()
      */
-    @Override
+  
     public List<Satellite> getSatellites() {
         SatelliteRequest request = createSatelliteRequest(issuedBy);
         return executeRequestRespond(request);

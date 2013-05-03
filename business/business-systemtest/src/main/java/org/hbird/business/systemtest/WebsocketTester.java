@@ -32,15 +32,11 @@
  */
 package org.hbird.business.systemtest;
 
-import java.util.Date;
-
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.business.websockets.WebsocketInterfaceComponent;
 import org.hbird.exchange.configurator.StartComponent;
-import org.hbird.exchange.core.Event;
-import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.core.State;
+import org.hbird.exchange.constants.StandardMissionEvents;
 
 /**
  * @author Admin
@@ -57,29 +53,30 @@ public class WebsocketTester extends SystemTest {
         LOG.info("Starting");
 
     	/** Issue request to start the websockets. */
-    	injection.sendBody(new StartComponent("SystemTest", new WebsocketInterfaceComponent(mof)));
+        StartComponent request = new StartComponent("SystemTest");
+        request.setPart(new WebsocketInterfaceComponent("WEBSOCKET"));
+    	publishApi.publish(request);
     	
     	boolean state = true;
     	
     	/** Circle and insert log messages and parameters... */
     	for (double value = 0; value < 20; value++) {
-    		injection.sendBody(new Parameter("SystemTest", "/groundstation/TARTU/Rotator/Temperature", "A test parameter", value, "Celcius"));
-    		injection.sendBody(new Parameter("SystemTest", "/groundstation/TARTU/Rotator/Longitude", "Another test parameter", value, "Radians"));
-    		injection.sendBody(new Parameter("SystemTest", "/groundstation/TARTU/Radio/Frequency", "Another test parameter", value, "MHerz"));
+    		publishApi.publishParameter("PARA1", "PARA1", "A test parameter", value, "Celcius");
+    		publishApi.publishParameter("PARA2", "PARA2", "Another test parameter", value, "Radians");
+    		publishApi.publishParameter("PARA3", "PARA3", "Another test parameter", value, "MHerz");
     		
     		LOG.info("Publishing parameter 'PARA1' with value " + value);
     		
     		LOG.warn("A warning");
     		LOG.error("An error");
     		
-    		publishApi.publish(new Event("SystemTest", "Event1", "A test event", (new Date()).getTime()));
+    		publishApi.publish(StandardMissionEvents.CONTROL_REESTABLISHED.cloneEntity());
 
-    		publishApi.publish(new State("SystemTest", "State2", "The lower limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", true));
-    		publishApi.publish(new State("SystemTest", "State1", "The upper limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", state));
+    		publishApi.publishState("STATE2", "STATE2", "The lower limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", true);
+    		publishApi.publishState("STATE1", "STATE1", "The upper limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", state);
     		state = !state;    		
     		
     		Thread.sleep(1000);
     	}
-    }
-	
+    }    
 }

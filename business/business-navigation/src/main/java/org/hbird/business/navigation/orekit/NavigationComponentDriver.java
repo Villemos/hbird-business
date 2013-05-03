@@ -39,9 +39,9 @@ public class NavigationComponentDriver extends SoftwareComponentDriver {
         String partName = part.getName();
 
         KeplerianOrbitPredictor predictor = new KeplerianOrbitPredictor();
-        IDataAccess dao = ApiFactory.getDataAccessApi(partName);
-        ICatalogue catalogue = ApiFactory.getCatalogueApi(partName);
-        IPublish publisher = ApiFactory.getPublishApi(partName);
+        IDataAccess dao = ApiFactory.getDataAccessApi(partName, part.getContext());
+        ICatalogue catalogue = ApiFactory.getCatalogueApi(partName, part.getContext());
+        IPublish publisher = ApiFactory.getPublishApi(partName, part.getContext());
         TleOrbitalPredictor tlePredictor = new TleOrbitalPredictor(dao, catalogue, publisher, predictor);
 
         /** Create the route and the interface for getting the Locations. */

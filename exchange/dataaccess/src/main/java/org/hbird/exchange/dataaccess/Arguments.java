@@ -44,7 +44,7 @@ public class Arguments {
             "Flag indicating that the complete archive should be deleted.", Boolean.class, false);
 
     public static final CommandArgument DELTA_PROPAGATION = new CommandArgument(StandardArguments.DELTA_PROPAGATION,
-            "The delta propagation from the starttime.", Long.class, "Seconds", 2 * 60 * 60d, true);
+            "The delta propagation from the starttime.", Long.class, "Seconds", 6 * 60 * 60l, true);
 
     public static final CommandArgument DERIVED_FROM = new CommandArgument(StandardArguments.DERIVED_FROM,
             "Identifier of the named object of which an object must be derived from.", String.class, false);

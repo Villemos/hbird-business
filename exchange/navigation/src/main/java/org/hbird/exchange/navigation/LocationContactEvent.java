@@ -335,6 +335,7 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
     public String prettyPrint() {
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
         builder.append("eventId", getID());
+        builder.append("timestamp", getTimestamp());
         builder.append("start", Dates.toDefaultDateFormat(startTime));
         builder.append("end", Dates.toDefaultDateFormat(endTime));
         builder.append("gs", groundStationId);

@@ -127,8 +127,8 @@ public class NavigationTester extends SystemTest {
 
             if (element instanceof OrbitalState) {
                 OrbitalState state = (OrbitalState) element;
-                System.out.printf("%s Orbital state: %s, %s; %s%n", Dates.toDefaultDateFormat(state.getTimestamp()), state.getPosition().p1,
-                        state.getPosition().p2, state.getGeoLocation());
+                System.out.printf("%s Orbital state: %s, %s; %s%n", Dates.toDefaultDateFormat(state.getTimestamp()), state.getPosition().getP1(),
+                        state.getPosition().getP2(), state.getGeoLocation());
             }
             else if (element instanceof LocationContactEvent) {
                 LocationContactEvent event = (LocationContactEvent) element;

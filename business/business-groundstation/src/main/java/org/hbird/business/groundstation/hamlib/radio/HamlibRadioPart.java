@@ -18,7 +18,6 @@ package org.hbird.business.groundstation.hamlib.radio;
 
 import org.hbird.business.groundstation.base.GroundStationPart;
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  * 
@@ -31,7 +30,7 @@ public class HamlibRadioPart extends GroundStationPart<RadioDriverConfiguration>
 
     public static final String DESCRIPTION = "A Radio Device.";
 
-    public HamlibRadioPart(IPart isPartOf, String name, RadioDriverConfiguration configuration) {
-        super(isPartOf, name, DESCRIPTION, HamlibRadioDriver.class.getName(), configuration);
+    public HamlibRadioPart(String ID, String name, RadioDriverConfiguration configuration) {
+        super(ID, name, DESCRIPTION, HamlibRadioDriver.class.getName(), configuration);
     }
 }

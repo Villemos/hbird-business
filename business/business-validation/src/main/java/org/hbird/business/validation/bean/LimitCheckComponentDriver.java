@@ -21,6 +21,7 @@ import org.hbird.business.api.ApiFactory;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.validation.LimitCheckComponent;
 import org.hbird.exchange.configurator.StandardEndpoints;
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.validation.Limit;
 import org.hbird.exchange.validation.Limit.eLimitType;
 
@@ -38,22 +39,22 @@ public class LimitCheckComponentDriver extends SoftwareComponentDriver {
 		LimitCheckComponent request = (LimitCheckComponent) part;
 		Limit limit = request.getLimit();
 
-		String componentName = request.getName();
-		String limitValueName = componentName + "/" + "LimitValue";
+		String componentID = request.getID();
+		String limitValueName = componentID + "/" + "LimitValue";
 		
 		if (limit.getType() == eLimitType.Lower) {
-			createRoute(limit.getLimitOfParameter(), new LowerLimitChecker(limit), componentName, limitValueName);
+			createRoute(limit.getLimitOfParameter(), new LowerLimitChecker(limit), componentID, limitValueName);
 		}
 		else if (limit.getType() == eLimitType.Upper) {
-			createRoute(limit.getLimitOfParameter(), new UpperLimitChecker(limit), componentName, limitValueName);
+			createRoute(limit.getLimitOfParameter(), new UpperLimitChecker(limit), componentID, limitValueName);
 		}
 		else if (limit.getType() == eLimitType.Static) {
-			createRoute(limit.getLimitOfParameter(), new StaticLimitChecker(limit), componentName, limitValueName);
+			createRoute(limit.getLimitOfParameter(), new StaticLimitChecker(limit), componentID, limitValueName);
 		}
 		else if (limit.getType() == eLimitType.Differential) {
 			DifferentialLimitChecker checker = new DifferentialLimitChecker(limit);
 			checker.setApi(ApiFactory.getDataAccessApi(part.getName()));
-			createRoute(limit.getLimitOfParameter(), checker, componentName, limitValueName);
+			createRoute(limit.getLimitOfParameter(), checker, componentID, limitValueName);
 		}
 
 		addCommandHandler();
@@ -67,15 +68,15 @@ public class LimitCheckComponentDriver extends SoftwareComponentDriver {
 	 * @param componentname The name of this component
 	 * @param limitValueName The name of the value defining the limit
 	 */
-	protected void createRoute(String parameter, BaseLimitChecker limit, String componentname, String limitValueName) {
+	protected void createRoute(String parameter, BaseLimitChecker limit, String componentid, String limitValueName) {
 
 		/** Create the route for limit checking. */
-		ProcessorDefinition<?> route = from(StandardEndpoints.MONITORING + "?selector=name='" + parameter + "'")
+		ProcessorDefinition<?> route = from(StandardEndpoints.MONITORING + "?selector=" + StandardArguments.ENTITY_ID + "='" + parameter + "'")
 				.bean(limit, "processParameter");
 		addInjectionRoute(route);
 
 		/** Create the route for enabling/disabling limit checking. */
-		route = from(StandardEndpoints.MONITORING + "?selector=isStateOf='" + componentname + "'")
+		route = from(StandardEndpoints.MONITORING + "?selector=isStateOf='" + componentid + "'")
 				.bean(limit, "processEnabled");
 		addInjectionRoute(route);
 

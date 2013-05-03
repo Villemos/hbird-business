@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.camel.CamelContext;
 import org.hbird.business.api.ApiUtility;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IDataAccess;
@@ -62,10 +63,16 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 		super(issuedBy, ArchiveComponent.ARCHIVE_NAME);
 	}
 
+	public DataAccess(String issuedBy, CamelContext context) {
+		super(issuedBy, ArchiveComponent.ARCHIVE_NAME, context);
+	}
+
 	@Override
 	public void configure() throws Exception {
 		/** This configures a direct connection to SOLR. */
-		from(inject).to("solr:api");
+		if (containsRoute("seda://injectToSolr") == false) {
+			from("seda://injectToSolr").to("solr:api");
+		}
 
 		template = getContext().createProducerTemplate();
 	}
@@ -115,7 +122,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 		ParameterRequest request = new ParameterRequest(getID());
 		request.setIssuedBy(issuedBy);
 		request.setRows(rows);
-		request.setName(name);
+		request.addName(name);
 		request.setIsInitialization(true);
 		request.setTo(at);
 		return getParameterWithoutState(request);
@@ -168,7 +175,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 		ParameterRequest request = new ParameterRequest(getID());
 		request.setIssuedBy(issuedBy);
 		request.setRows(rows);
-		request.setName(name);
+		request.addName(name);
 		request.setIsInitialization(true);
 		request.setTo(at);
 		return getParameterWithState(request);
@@ -206,7 +213,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 	public List<Parameter> getParameter(String name, long from, long to) {
 		ParameterRequest request = new ParameterRequest(getID());
 		request.setIssuedBy(issuedBy);
-		request.setName(name);
+		request.addName(name);
 		request.setFrom(from);
 		request.setTo(to);
 		return getParameterWithoutState(request);
@@ -216,7 +223,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 	public List<Parameter> getParameter(String name, long from, long to, int rows) {
 		ParameterRequest request = new ParameterRequest(getID());
 		request.setIssuedBy(issuedBy);
-		request.setName(name);
+		request.addName(name);
 		request.setFrom(from);
 		request.setTo(to);
 		request.setRows(rows);
@@ -248,7 +255,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 	public Map<Parameter, List<State>> getParameterAndStates(String name, long from, long to) {
 		ParameterRequest request = new ParameterRequest(getID());
 		request.setIssuedBy(issuedBy);
-		request.setName(name);
+		request.addName(name);
 		request.setFrom(from);
 		request.setTo(to);
 		return getParameterWithState(request);
@@ -258,7 +265,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 	public Map<Parameter, List<State>> getParameterAndStates(String name, long from, long to, int rows) {
 		ParameterRequest request = new ParameterRequest(getID());
 		request.setIssuedBy(issuedBy);
-		request.setName(name);
+		request.addName(name);
 		request.setFrom(from);
 		request.setTo(to);
 		request.setRows(rows);
@@ -400,7 +407,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 	 */
 	@Override
 	public LocationContactEvent getNextLocationContactEventFor(String location, String satellite) {
-		return getNextLocationContactEventFor(location, satellite, (new Date()).getTime());
+		return getNextLocationContactEventFor(location, satellite, System.currentTimeMillis());
 	}
 
 	/*
@@ -414,7 +421,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 		LocationContactEventRequest request = new LocationContactEventRequest(getID());
 		request.setIssuedBy(issuedBy);
 		request.setLocation(location);
-		
+
 		request.setRows(1);
 		request.setSatelliteName(satellite);
 		request.setFrom(from);
@@ -454,7 +461,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 		MetadataRequest request = new MetadataRequest(getID());
 		request.setIssuedBy(issuedBy);
 		request.setIsApplicableTo(subject.getID());
-		
+
 		return executeRequestRespond(request);
 	}
 

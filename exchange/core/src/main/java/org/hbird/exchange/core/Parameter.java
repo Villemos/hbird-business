@@ -155,6 +155,6 @@ public class Parameter extends EntityInstance {
 
     @Override
     public String prettyPrint() {
-        return String.format("%s[ID=%s, issuedBy=%s, name=%s, value=%s, timestamp=%s]", this.getClass().getSimpleName(), getInstanceID(), issuedBy, name, value, timestamp);
+        return String.format("%s[ID=%s, issuedBy=%s, name=%s, value=%s, timestamp=%s]", this.getClass().getSimpleName(), getID(), issuedBy, name, value, timestamp);
     }
 }

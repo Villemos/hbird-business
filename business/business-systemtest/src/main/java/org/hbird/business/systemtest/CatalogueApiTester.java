@@ -51,10 +51,6 @@ public class CatalogueApiTester extends SystemTest {
 		List<Part> results = catalogueApi.getParts();
 		azzert(results.size() == parts.values().size() , "Expected to receive " + parts.values().size() + " entries.");
 		
-		/** Retrieve all children of a part. */
-		results = catalogueApi.getPartChildren(mof.getID());
-		azzert(results.size() == 10, "Expected to receive 5 children of MOC.");
-		
 		LOG.info("Finished");
 	}	
 }

@@ -20,7 +20,6 @@ import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.groundstation.Track;
-import org.hbird.exchange.interfaces.IPart;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -53,8 +52,6 @@ public class TrackCommandCreationJob implements Job {
 
     private EntityCache<TleOrbitalParameters> tleCache;
 
-    private IPart part;
-
     public void setDataAccess(IDataAccess dao) {
         this.dao = dao;
     }
@@ -82,13 +79,6 @@ public class TrackCommandCreationJob implements Job {
     }
 
     /**
-     * @param part the part to set
-     */
-    public void setPart(IPart part) {
-        this.part = part;
-    }
-
-    /**
      * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
      */
     @Override
@@ -105,7 +95,7 @@ public class TrackCommandCreationJob implements Job {
                 if (eventTle != null) {
                     TleOrbitalParameters latestTle = getLatestTle(dao, sat);
                     if (latestTle == null || areEqual(eventTle, latestTle)) {
-                        Track command = createTrackCommand(part, event, sat);
+                        Track command = createTrackCommand(event, sat);
                         LOG.info("Issuing Track command for the {}", event.prettyPrint());
                         producer.asyncSendBody(endPoint, command);
                     }
@@ -143,8 +133,11 @@ public class TrackCommandCreationJob implements Job {
         return dao.getTleFor(sat.getID());
     }
 
-    Track createTrackCommand(IPart part, LocationContactEvent event, Satellite satellite) {
-        return new Track(part.getID(), event.getGroundStationId(), satellite, event);
+    Track createTrackCommand(LocationContactEvent event, Satellite satellite) {
+    	Track track = new Track(satellite.getID());
+    	track.setDestination(event.getGroundStationId());
+    	track.setSatellite(satellite);
+        return track;
     }
 
     boolean areEqual(TleOrbitalParameters tle1, TleOrbitalParameters tle2) {

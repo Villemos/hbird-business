@@ -19,7 +19,7 @@ package org.hbird.business.tracking.bean;
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
-import org.hbird.exchange.interfaces.IPart;
+import org.hbird.exchange.interfaces.IStartablePart;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.quartz.spi.TriggerFiredBundle;
@@ -40,16 +40,13 @@ public class TrackCommandCreationJobFactory extends AdaptableJobFactory {
 
     private final EntityCache<TleOrbitalParameters> tleCache;
 
-    private final IPart part;
-
     public TrackCommandCreationJobFactory(IDataAccess dao, ProducerTemplate producer, String endPoint, EntityCache<Satellite> satelliteCache,
-            EntityCache<TleOrbitalParameters> tleCache, IPart part) {
+            EntityCache<TleOrbitalParameters> tleCache, IStartablePart part) {
         this.dao = dao;
         this.producer = producer;
         this.endPoint = endPoint;
         this.satelliteCache = satelliteCache;
         this.tleCache = tleCache;
-        this.part = part;
     }
 
     /**
@@ -65,7 +62,6 @@ public class TrackCommandCreationJobFactory extends AdaptableJobFactory {
             commandCreator.setEndpoint(endPoint);
             commandCreator.setSatelliteCache(satelliteCache);
             commandCreator.setTleCache(tleCache);
-            commandCreator.setPart(part);
         }
         return job;
     }

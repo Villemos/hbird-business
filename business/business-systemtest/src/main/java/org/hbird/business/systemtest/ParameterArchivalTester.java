@@ -45,44 +45,44 @@ public class ParameterArchivalTester extends SystemTest {
 		
 		/** Publish parameters. */
 		LOG.info("Publishing parameters.");
-		publishApi.publishParameter(para1Name,  "A test description,", 2d, "Volt");
+		publishApi.publishParameter(para1Name, para1Name, "A test description,", 2d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter(para1Name,  "A test description,", 2.1d, "Volt");
+		publishApi.publishParameter(para1Name, para1Name, "A test description,", 2.1d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter(para1Name,  "A test description,", 2.2d, "Volt");
+		publishApi.publishParameter(para1Name, para1Name, "A test description,", 2.2d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter(para1Name,  "A test description,", 2.3d, "Volt");
+		publishApi.publishParameter(para1Name, para1Name, "A test description,", 2.3d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter(para1Name,  "A test description,", 2.4d, "Volt");
+		publishApi.publishParameter(para1Name, para1Name, "A test description,", 2.4d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter(para1Name,  "A test description,", 2.5d, "Volt");
+		publishApi.publishParameter(para1Name, para1Name, "A test description,", 2.5d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter(para1Name,  "A test description,", 2.6d, "Volt");
+		publishApi.publishParameter(para1Name, para1Name, "A test description,", 2.6d, "Volt");
 		Thread.sleep(1);
-		publishApi.publishParameter(para2Name,  "A test description,", 2l, "Meter");
+		publishApi.publishParameter(para2Name, para2Name, "A test description,", 2l, "Meter");
 
 		/** Make sure we have different timestamps. */
 		Thread.sleep(1);
 		Date start = new Date();
 		Thread.sleep(1);
 		
-		publishApi.publishParameter(para2Name,  "A test description,", 3l, "Meter");
+		publishApi.publishParameter(para2Name, para2Name, "A test description,", 3l, "Meter");
 		Thread.sleep(1);
-		publishApi.publishParameter(para2Name,  "A test description,", 4l, "Meter");
+		publishApi.publishParameter(para2Name, para2Name, "A test description,", 4l, "Meter");
 		Thread.sleep(1);
-		publishApi.publishParameter(para3Name,  "A test description,", 10f, "Seconds");
+		publishApi.publishParameter(para3Name, para3Name, "A test description,", 10f, "Seconds");
 		Thread.sleep(1);
-		publishApi.publishParameter(para3Name,  "A test description,", 15f, "Seconds");
+		publishApi.publishParameter(para3Name, para3Name, "A test description,", 15f, "Seconds");
 		Thread.sleep(1);
-		publishApi.publishParameter(para3Name,  "A test description,", 20f, "Seconds");
+		publishApi.publishParameter(para3Name, para3Name, "A test description,", 20f, "Seconds");
 		
 		Thread.sleep(1);
 		Date end = new Date();
 		Thread.sleep(1);
 		
-		publishApi.publishParameter(para2Name,  "A test description,", 5l, "Meter");
+		publishApi.publishParameter(para2Name, para2Name, "A test description,", 5l, "Meter");
 		Thread.sleep(1);
-		publishApi.publishParameter(para3Name,  "A test description,", 35f, "Seconds");
+		publishApi.publishParameter(para3Name, para3Name, "A test description,", 35f, "Seconds");
 
         Thread.sleep(2000);
 		

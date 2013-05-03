@@ -78,7 +78,7 @@ public class NamedObjectPublisher {
                 }
                 
                 StartComponent startCommand = new StartComponent(object.getID() + "/StartRequest");
-                startCommand.addPart((IStartablePart) object);
+                startCommand.setPart((IStartablePart) object);
                 
                 startCommand.setDestination(destination);
                 api.publish(startCommand);

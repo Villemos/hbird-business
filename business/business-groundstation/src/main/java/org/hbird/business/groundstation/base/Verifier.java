@@ -167,6 +167,11 @@ public class Verifier {
 
 	protected State createState(String stage, boolean state, String derivedFrom) {
 		LOG.info("Sending state '" + state + "' for stage '" + stage + "' of command '" + derivedFrom + "'");
-		return new State("Rotator", stage, stageDescription.get(stage), derivedFrom, state);
+		State stateObj = new State("/Rotator/" + stage, stage);
+		stateObj.setDescription(stageDescription.get(stage));
+		stateObj.setIsStateOf(derivedFrom);
+		stateObj.setState(state);
+		
+		return stateObj;
 	}
 }

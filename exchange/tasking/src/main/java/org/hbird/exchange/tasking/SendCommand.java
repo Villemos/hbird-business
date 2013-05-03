@@ -55,4 +55,20 @@ public class SendCommand extends Task {
 		returnValue.add(command);
 		return returnValue;
 	}
+
+	/**
+	 * @return the command
+	 */
+	public Command getCommand() {
+		return command;
+	}
+
+	/**
+	 * @param command the command to set
+	 */
+	public void setCommand(Command command) {
+		this.command = command;
+	}
+	
+	
 }

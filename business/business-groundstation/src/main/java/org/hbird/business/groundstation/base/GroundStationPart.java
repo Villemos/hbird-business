@@ -23,7 +23,6 @@ import org.hbird.business.groundstation.configuration.GroundStationDriverConfigu
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.groundstation.Stop;
 import org.hbird.exchange.groundstation.Track;
-import org.hbird.exchange.interfaces.IPart;
 
 /**
  *
@@ -34,8 +33,10 @@ public class GroundStationPart<C extends GroundStationDriverConfiguration> exten
 
     protected final C configuration;
 
-    public GroundStationPart(IPart isPartOf, String name, String description, String driverName, C configuration) {
-        super(isPartOf, name, description, driverName);
+    public GroundStationPart(String ID, String name, String description, String driverName, C configuration) {
+        super(ID, name);
+        this.description = description;
+        this.driverName = driverName;
         this.configuration = configuration;
     }
 
@@ -68,7 +69,7 @@ public class GroundStationPart<C extends GroundStationDriverConfiguration> exten
     @Override
     protected List<Command> createCommandList(List<Command> commands) {
         commands = super.createCommandList(commands);
-        commands.add(new Track("", "", null, null));
+        commands.add(new Track(""));
         commands.add(new Stop(""));
         return commands;
     }

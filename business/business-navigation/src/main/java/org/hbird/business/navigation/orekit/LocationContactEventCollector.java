@@ -119,7 +119,7 @@ public class LocationContactEventCollector extends ElevationDetector {
         long orbitNumber = NavigationUtilities.calculateOrbitNumber(tle, startDate);
         String tleInstanceId = tleParameters.getInstanceID();
         LocationContactEvent event = new LocationContactEvent(groundStationId + "/" + satelliteId);
-        event.setTimestamp(now);
+        event.setTimestamp(startTime);
         event.setSatelliteId(satelliteId);
         event.setGroundStationId(groundStationId);
         event.setDerivedFromId(tleInstanceId);

@@ -34,6 +34,7 @@ package org.hbird.business.core;
 
 import java.util.List;
 
+import org.apache.camel.CamelContext;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.BusinessCard;
@@ -63,6 +64,22 @@ public class StartableEntity extends CommandableEntity implements IStartablePart
     protected long heartbeat = DEFAULT_HEARTBEAT;
 
     protected BusinessCard card;
+
+	protected CamelContext context = null;	
+
+	/**
+	 * @return the context
+	 */
+	public CamelContext getContext() {
+		return context;
+	}
+
+	/**
+	 * @param context the context to set
+	 */
+	public void setContext(CamelContext context) {
+		this.context = context;
+	}
 
     /**
      * @param name
@@ -127,6 +144,7 @@ public class StartableEntity extends CommandableEntity implements IStartablePart
         card.setPeriod(heartBeat);
         card.setCommandsIn(commands);
         card.setDescription(description);
+        card.setIssuedBy(ID);
         return card;
     }
 }

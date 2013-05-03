@@ -36,72 +36,72 @@ public class DataAccessApiTester extends SystemTest {
 
         IPublish estcubeApi = ApiFactory.getPublishApi(estcube1.getName());
         
-        estcubeApi.publishParameter("PARA1", "",1, "", 1);
-        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 1);
-        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 1);
+        estcubeApi.publishParameter("PARA1", "PARA1", "",1, "", 1);
+        estcubeApi.publishState("STATE1_OF_PARA1", "STATE1_OF_PARA1", "","PARA1", true, 1);
+        estcubeApi.publishState("STATE2_OF_PARA1", "STATE2_OF_PARA1", "","PARA1", true, 1);
 
-        estcubeApi.publishParameter("PARA1", "",1, "", 2);
-        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 2);
-        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 2);
+        estcubeApi.publishParameter("PARA1", "PARA1", "",1, "", 2);
+        estcubeApi.publishState("STATE1_OF_PARA1", "STATE1_OF_PARA1", "","PARA1", true, 2);
+        estcubeApi.publishState("STATE2_OF_PARA1", "STATE2_OF_PARA1", "","PARA1", true, 2);
 
-        estcubeApi.publishParameter("PARA2", "",2, "", 3);
-        estcubeApi.publishState("STATE1_OF_PARA2", "","PARA2", true, 3);
+        estcubeApi.publishParameter("PARA2", "PARA2", "",2, "", 3);
+        estcubeApi.publishState("STATE1_OF_PARA2", "STATE1_OF_PARA2", "","PARA2", true, 3);
 
-        estcubeApi.publishParameter("PARA1", "",1, "", 4);
-        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 4);
-        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 4);
+        estcubeApi.publishParameter("PARA1", "PARA1", "",1, "", 4);
+        estcubeApi.publishState("STATE1_OF_PARA1", "STATE1_OF_PARA1", "","PARA1", true, 4);
+        estcubeApi.publishState("STATE2_OF_PARA1", "STATE2_OF_PARA1", "","PARA1", true, 4);
 
-        estcubeApi.publishParameter("PARA1", "",1, "", 5);
-        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 5);
-        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 5);
+        estcubeApi.publishParameter("PARA1", "PARA1", "",1, "", 5);
+        estcubeApi.publishState("STATE1_OF_PARA1", "STATE1_OF_PARA1", "","PARA1", true, 5);
+        estcubeApi.publishState("STATE2_OF_PARA1", "STATE2_OF_PARA1", "","PARA1", true, 5);
 
-        estcubeApi.publishParameter("PARA2", "",1, "", 6);
-        estcubeApi.publishState("STATE1_OF_PARA2", "","PARA2", true, 6);
+        estcubeApi.publishParameter("PARA2", "PARA2", "",1, "", 6);
+        estcubeApi.publishState("STATE1_OF_PARA2", "STATE1_OF_PARA2", "","PARA2", true, 6);
 
-        estcubeApi.publishParameter("PARA3", "",1, "", 7);
+        estcubeApi.publishParameter("PARA3", "PARA3", "",1, "", 7);
 
-        estcubeApi.publishParameter("PARA1", "",1, "", 8);
-        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 8);
-        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 8);
+        estcubeApi.publishParameter("PARA1", "PARA1", "",1, "", 8);
+        estcubeApi.publishState("STATE1_OF_PARA1", "STATE1_OF_PARA1", "","PARA1", true, 8);
+        estcubeApi.publishState("STATE2_OF_PARA1", "STATE2_OF_PARA1", "","PARA1", true, 8);
 
-        estcubeApi.publishParameter("PARA1", "",1, "", 9);
-        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 9);
-        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 9);
+        estcubeApi.publishParameter("PARA1", "PARA1", "",1, "", 9);
+        estcubeApi.publishState("STATE1_OF_PARA1", "STATE1_OF_PARA1", "","PARA1", true, 9);
+        estcubeApi.publishState("STATE2_OF_PARA1", "STATE2_OF_PARA1", "","PARA1", true, 9);
 
-        estcubeApi.publishParameter("PARA4", "",1, "", 10);
-        estcubeApi.publishState("STATE1_OF_PARA4", "",estcube1.getID() + "/PARA4", true, 10);
+        estcubeApi.publishParameter("PARA4", "PARA4", "",1, "", 10);
+        estcubeApi.publishState("STATE1_OF_PARA4", "STATE1_OF_PARA4", "",estcube1.getID() + "/PARA4", true, 10);
 
-        estcubeApi.publishParameter("PARA5", "",1, "", 11);
+        estcubeApi.publishParameter("PARA5", "PARA5", "",1, "", 11);
 
-        estcubeApi.publishParameter("PARA1", "",1, "", 12);
-        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 12);
-        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 12);
+        estcubeApi.publishParameter("PARA1", "PARA1", "",1, "", 12);
+        estcubeApi.publishState("STATE1_OF_PARA1", "STATE1_OF_PARA1", "","PARA1", true, 12);
+        estcubeApi.publishState("STATE2_OF_PARA1", "STATE2_OF_PARA1", "","PARA1", true, 12);
 
-        estcubeApi.publishParameter("PARA2", "",1, "", 13);
-        estcubeApi.publishState("STATE1_OF_PARA2", "","PARA2", true, 13);
+        estcubeApi.publishParameter("PARA2", "PARA2", "",1, "", 13);
+        estcubeApi.publishState("STATE1_OF_PARA2", "STATE1_OF_PARA2", "","PARA2", true, 13);
 
-        estcubeApi.publishParameter("PARA2", "",1, "", 14);
-        estcubeApi.publishState("STATE1_OF_PARA2", "","PARA2", true, 14);
+        estcubeApi.publishParameter("PARA2", "PARA2", "",1, "", 14);
+        estcubeApi.publishState("STATE1_OF_PARA2", "STATE1_OF_PARA2", "","PARA2", true, 14);
 
-        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 15);
-        estcubeApi.publishParameter("PARA1", "",1, "", 15);
-        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 15);
+        estcubeApi.publishState("STATE1_OF_PARA1", "STATE1_OF_PARA1", "","PARA1", true, 15);
+        estcubeApi.publishParameter("PARA1", "PARA1", "",1, "", 15);
+        estcubeApi.publishState("STATE2_OF_PARA1", "STATE2_OF_PARA1", "","PARA1", true, 15);
 
-        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 16);
-        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 16);
-        estcubeApi.publishParameter("PARA1", "",1, "", 16);
+        estcubeApi.publishState("STATE1_OF_PARA1", "STATE1_OF_PARA1", "","PARA1", true, 16);
+        estcubeApi.publishState("STATE2_OF_PARA1", "STATE2_OF_PARA1", "","PARA1", true, 16);
+        estcubeApi.publishParameter("PARA1", "PARA1", "",1, "", 16);
 
-        estcubeApi.publishParameter("PARA3", "",1, "", 17);
+        estcubeApi.publishParameter("PARA3", "PARA3", "",1, "", 17);
 
-        estcubeApi.publishParameter("PARA1", "",1, "", 18);
-        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 18);
-        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 18);
+        estcubeApi.publishParameter("PARA1", "PARA1", "",1, "", 18);
+        estcubeApi.publishState("STATE1_OF_PARA1", "STATE1_OF_PARA1", "","PARA1", true, 18);
+        estcubeApi.publishState("STATE2_OF_PARA1", "STATE2_OF_PARA1", "","PARA1", true, 18);
 
-        estcubeApi.publishParameter("PARA3", "",1, "", 19);
+        estcubeApi.publishParameter("PARA3", "PARA3", "",1, "", 19);
 
-        estcubeApi.publishParameter("PARA1", "",1, "", 20);
-        estcubeApi.publishState("STATE1_OF_PARA1", "","PARA1", true, 20);
-        estcubeApi.publishState("STATE2_OF_PARA1", "","PARA1", true, 20);
+        estcubeApi.publishParameter("PARA1", "PARA1", "",1, "", 20);
+        estcubeApi.publishState("STATE1_OF_PARA1", "STATE1_OF_PARA1", "","PARA1", true, 20);
+        estcubeApi.publishState("STATE2_OF_PARA1", "STATE2_OF_PARA1", "","PARA1", true, 20);
 
         estcubeApi.publish(es5ec);
         estcubeApi.publish(gsAalborg);

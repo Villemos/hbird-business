@@ -69,7 +69,7 @@ public abstract class BaseLimitChecker {
 	 * @throws Exception
 	 */
 	public State processParameter(@Body Parameter newParameter) {
-		logger.debug("Limit state '" + limit.getName() + "' received parameter value for validation.");
+		logger.info("Limit state '" + limit.getName() + "' received parameter value for validation.");
 		State state = doProcess(newParameter);
 		lastValue = newParameter;
 		return state;

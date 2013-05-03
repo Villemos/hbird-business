@@ -81,6 +81,7 @@ public class Command extends CommandBase {
      */
     public Command(String ID, String name) {
         super(ID, name);
+        this.arguments = createArgumentMap(getArgumentDefinitions(new ArrayList<CommandArgument>()));
     }
 
     /**
@@ -246,4 +247,6 @@ public class Command extends CommandBase {
     public void addArgument(CommandArgument argument) {
         this.arguments.put(argument.getName(), argument);
     }
+    
+    
 }

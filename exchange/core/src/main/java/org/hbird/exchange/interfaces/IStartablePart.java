@@ -16,6 +16,7 @@
  */
 package org.hbird.exchange.interfaces;
 
+import org.apache.camel.CamelContext;
 import org.hbird.exchange.core.BusinessCard;
 
 /**
@@ -42,4 +43,8 @@ public interface IStartablePart extends IEntityInstance {
      * @return {@link BusinessCard} describing the {@link IStartablePart}
      */
     public BusinessCard getBusinessCard();
+    
+    public void setContext(CamelContext context);
+    
+    public CamelContext getContext();
 }

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.camel.CamelContext;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IPublish;
 import org.hbird.business.archive.ArchiveComponent;
@@ -51,6 +52,10 @@ public class Publish extends HbirdApi implements IPublish {
 	 */
 	public Publish(String issuedBy) {
 		super(issuedBy, ArchiveComponent.ARCHIVE_NAME);
+	}
+
+	public Publish(String issuedBy, CamelContext context) {
+		super(issuedBy, ArchiveComponent.ARCHIVE_NAME, context);
 	}
 
 	/* (non-Javadoc)
@@ -195,8 +200,11 @@ public class Publish extends HbirdApi implements IPublish {
 	 * @see org.hbird.business.api.IPublish#publishTleParameters(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public TleOrbitalParameters publishTleParameters(String ID, String name, String satellite, String tle1, String tle2) {
+	public TleOrbitalParameters publishTleParameters(String ID, String name, String satellite, String tleLine1, String tleLine2) {
 		TleOrbitalParameters request = new TleOrbitalParameters(ID, name);
+		request.setSatellite(satellite);
+		request.setTleLine1(tleLine1);
+		request.setTleLine2(tleLine2);
 		
 		return (TleOrbitalParameters) publish(request);
 	}

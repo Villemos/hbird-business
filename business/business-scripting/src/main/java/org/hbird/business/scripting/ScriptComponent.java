@@ -95,7 +95,11 @@ public class ScriptComponent extends StartableEntity {
 
         request.inputBinding = inputBinding;
 	}
-	
+
+	public void setBinding(Map<String, String> bindings) {
+        request.inputBinding = bindings;
+	}
+
 	public void setReturnType(EntityInstance obj) {
 		request.output = obj;
 	}

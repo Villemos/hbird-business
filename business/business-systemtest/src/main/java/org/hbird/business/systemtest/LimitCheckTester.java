@@ -18,7 +18,6 @@ package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.configurator.ConfiguratorComponent;
 import org.hbird.business.validation.LimitCheckComponent;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.Part;
@@ -35,22 +34,16 @@ public class LimitCheckTester extends SystemTest {
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
 
+        startMonitoringArchive();
+        
         /** Start a limit checker. */
         LOG.info("Issuing commands for starting two lower limit limitcheckers.");
 
-        Part limits = parts.get("Limits");
-
-        LimitCheckComponent com = new LimitCheckComponent(limits, "PARA1_LowerSoftLimit", new Limit(eLimitType.Lower, estcube1.getName() + "/PARA1", 2d,
-                "PARA1_LOWER_SOFTLIMIT", "The first lower limit of PARA1"));
-        com.setIsPartOf(limits);
-        StartComponent request = new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com);
-        publishApi.publish(request);
-
-        com = new LimitCheckComponent(limits, "PARA1_LowerHardLimit", new Limit(eLimitType.Lower, estcube1.getName() + "/PARA1", 0d, "PARA1_LOWER_HARDLIMIT",
-                "The second lower limit of PARA1"));
-        com.setIsPartOf(limits);
-        request = new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com);
-        publishApi.publish(request);
+        LimitCheckComponent com = createLimitCheckComponent("LIMIT_CHECKER_1", "PARA1_LOWER_SOFTLIMIT", eLimitType.Lower, "PARA1", 2d, "The first lower limit of PARA1");        
+        partmanagerApi.start(com);
+   
+        com = createLimitCheckComponent("LIMIT_CHECKER_2", "PARA1_LOWER_HARDLIMIT", eLimitType.Lower, "PARA1", 0d, "The second lower limit of PARA1");        
+        partmanagerApi.start(com);
 
         Thread.sleep(2000);
 
@@ -66,18 +59,13 @@ public class LimitCheckTester extends SystemTest {
 
         /** Start a limit checker. */
         LOG.info("Issuing commands for starting two upper limit limitcheckers.");
-        com = new LimitCheckComponent(limits, "PARA1_UpperSoftLimit", new Limit(eLimitType.Upper, estcube1.getName() + "/PARA1", 10.5d,
-                "PARA1_UPPER_SOFTLIMIT", "The first upper limit of PARA1"));
-        com.setIsPartOf(limits);
-        request = new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com);
-        publishApi.publish(request);
+        
+        com = createLimitCheckComponent("LIMIT_CHECKER_3", "PARA1_UPPER_SOFTLIMIT", eLimitType.Upper, "PARA1", 10.5d, "The first upper limit of PARA1");        
+        partmanagerApi.start(com);
 
-        com = new LimitCheckComponent(limits, "PARA1_UpperHardLimit", new Limit(eLimitType.Upper, estcube1.getName() + "/PARA1", 15d, "PARA1_UPPER_HARDLIMIT",
-                "The second upper limit of PARA1"));
-        com.setIsPartOf(limits);
-        request = new StartComponent("SystemTest", ConfiguratorComponent.CONFIGURATOR_NAME, com);
-        publishApi.publish(request);
-
+        com = createLimitCheckComponent("LIMIT_CHECKER_4", "PARA1_UPPER_HARDLIMIT", eLimitType.Upper, "PARA1", 15d, "The second upper limit of PARA1");        
+        partmanagerApi.start(com);
+        
         Thread.sleep(2000);
 
         send(9d, "PARA1_UPPER_SOFTLIMIT", true, "PARA1_UPPER_HARDLIMIT", true);
@@ -90,33 +78,46 @@ public class LimitCheckTester extends SystemTest {
         send(9d, "PARA1_UPPER_SOFTLIMIT", true, "PARA1_UPPER_HARDLIMIT", true);
 
         /** Disable limit. */
-        LOG.info("Disabling limit 'PARA1_UpperSoftLimit'.");
-        publishApi.publishState("PARA1_UpperSoftLimit_SWITCH", "A test description", "PARA1_UpperSoftLimit", false);
+        LOG.info("Disabling limit component 'LIMIT_CHECKER_3'.");
+        publishApi.publishState("PARA1_UPPER_SOFTLIMIT_SWITCH", "PARA1_UPPER_SOFTLIMIT_SWITCH", "A test description", "LIMIT_CHECKER_3", false);
 
         Thread.sleep(2000);
 
         /** Would normally violate SOFT limit, but the limit should be disabled. */
-        azzert(stateListener.lastReceived.getName().equals("PARA1_UpperSoftLimit_SWITCH") == true, "Disabling state distributed.");
+        azzert(stateListener.lastReceived.getName().equals("PARA1_UPPER_SOFTLIMIT_SWITCH") == true, "Disabling state distributed.");
         send(11d, "PARA1_UPPER_SOFTLIMIT", true, "PARA1_UPPER_HARDLIMIT", true);
 
         Thread.sleep(2000);
 
-        azzert(stateListener.lastReceived.getName().equals("PARA1_UpperSoftLimit") == false, "Disabled state was not distributed.");
+        azzert(stateListener.lastReceived.getName().equals("PARA1_UPPER_SOFTLIMIT") == false, "Disabled state was not distributed.");
 
         LOG.info("Finished");
     }
 
+    protected LimitCheckComponent createLimitCheckComponent(String componentName, String limitName, eLimitType type, String parameterId, Double value, String description) {
+    	
+    	LimitCheckComponent component = new LimitCheckComponent(componentName, componentName);
+
+    	Limit limit = new Limit(limitName, limitName);
+    	limit.setLimitOfParameter(parameterId);
+    	limit.setValue(value);
+    	limit.setDescription(description);
+    	limit.setType(type);
+
+    	component.setLimit(limit);
+
+    	return component;
+    }
+    
     protected void send(Double value, String soft, boolean expectedSoft, String hard, boolean expectedHard) throws InterruptedException {
         LOG.info("Publishing parameters.");
-        publishApi.publishParameter(estcube1.getName() + "/PARA1", "A test description,", value, "Volt");
+        publishApi.publishParameter("PARA1", "PARA1", "A test description,", value, "Volt");
 
         /** Give the limit checkers a bit of time. */
         Thread.sleep(2000);
 
         /** Check that the states were calculated and distributed. */
-        azzert(stateListener.states.get(soft).getValue() == expectedSoft, "Received soft limit");
-        azzert(stateListener.states.get(hard).getValue() == expectedHard, "Received hard limit");
-
-        // stateListener.states.clear();
+        azzert(stateListener.states.get(soft).getValue() == expectedSoft, "Received soft limit with value " + expectedSoft);
+        azzert(stateListener.states.get(hard).getValue() == expectedHard, "Received hard limit with value "+ expectedHard);
     }
 }

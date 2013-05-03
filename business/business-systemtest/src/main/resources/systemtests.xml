@@ -53,7 +53,6 @@
 	<bean id="catalogueapi" class="org.hbird.business.systemtest.CatalogueApiTester" parent="testerTemplate"/>
 	<bean id="automaticorbitpropagation" class="org.hbird.business.systemtest.AutomaticOrbitPropagationTester" parent="testerTemplate"/>
 	<bean id="parsecontroller" class="org.hbird.business.systemtest.ParseControlTester" parent="testerTemplate"/>
-	<bean id="jmstester" class="org.hbird.business.systemtest.JmsSelectorTester" parent="testerTemplate"/>
 	<bean id="websockettester" class="org.hbird.business.systemtest.WebsocketTester" parent="testerTemplate"/>
 	<bean id="groundstationdriver" class="org.hbird.business.systemtest.GroundStationDriverTester" parent="testerTemplate"/>
 	<bean id="endtoendtracking" class="org.hbird.business.systemtest.EndToEndTrackingTester" parent="testerTemplate"/>
@@ -71,29 +70,28 @@
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
-				<to uri="bean:catalogueapi" />
-                <to uri="bean:event" />
- 				<to uri="bean:businesscard" /> 
-				<to uri="bean:parameterarchive" />
-				<to uri="bean:statearchive" />
-	 			<to uri="bean:dataaccessapi" />
-				<to uri="bean:limitcheck" />
-				<to uri="bean:scripting" />
-		 		<to uri="bean:tasking" />
-	 			<to uri="bean:commanding" />
-	 	 		<to uri="bean:websockettester" />
-<!-- 	 			<to uri="bean:navigation" /> -->
-<!-- 	 			<to uri="bean:automaticorbitpropagation" /> -->
+<!-- 				<to uri="bean:catalogueapi" /> -->
+<!--                 <to uri="bean:event" /> -->
+<!--  				<to uri="bean:businesscard" />  -->
+<!-- 				<to uri="bean:parameterarchive" /> -->
+<!-- 				<to uri="bean:statearchive" /> -->
+<!-- 	 			<to uri="bean:dataaccessapi" /> -->
+<!-- 				<to uri="bean:limitcheck" /> -->
+<!-- 				<to uri="bean:scripting" /> -->
+<!-- 		 		<to uri="bean:tasking" /> -->
+<!-- 	 			<to uri="bean:commanding" /> -->
+<!-- 	 	 		<to uri="bean:websockettester" /> -->
 	 			<to uri="bean:parsecontroller" />
 				<to uri="bean:inmemoryscheduler" />
 	 			<to uri="bean:celestrack" />
 	 			<to uri="bean:finisher" />
 
-
+<!-- NOT USED -->
+<!-- 	 			<to uri="bean:navigation" /> -->
+<!-- 	 			<to uri="bean:automaticorbitpropagation" /> -->
 <!-- 	 			<to uri="bean:groundstationdriver" /> -->
 <!-- 	 			<to uri="bean:endtoendtracking" /> -->
 <!-- 	 			<to uri="bean:strandtracking" /> -->
-<!-- 	 			<to uri="bean:jmstester" /> -->
 
 		</route>
 
@@ -122,13 +120,6 @@
 				<when>
 		            <simple>${in.body} is 'org.hbird.exchange.interfaces.IGroundStationSpecific'</simple>
 		            <setHeader headerName="location"><simple>${in.body.groundStationId}</simple></setHeader>
-				</when>
-			</choice>
-
-			<choice>
-				<when>
-		            <simple>${in.body} is 'org.hbird.exchange.interfaces.IPart'</simple>
-		            <setHeader headerName="isPartOf"><simple>${in.body.isPartOf}</simple></setHeader>
 				</when>
 			</choice>
 

@@ -40,11 +40,21 @@ public class ConfiguratorComponent extends StartableEntity implements Applicatio
 	 */
     private static final long serialVersionUID = 2865072999875952015L;
 
+    public static final String DEFAULT_ID = "Configurator";
     public static final String DEFAULT_NAME = "Configurator";
     public static final String DEFAULT_DESCRIPTION = "A component for starting other components.";
     public static final String DEFAULT_DRIVER = ConfiguratorComponentDriver.class.getName();
 
     protected ApplicationContext applicationContext;
+
+	/**
+	 * Default constructor.
+	 */
+	public ConfiguratorComponent() {
+		super(DEFAULT_ID, DEFAULT_NAME);
+		setDescription(DEFAULT_DESCRIPTION);
+		setDriverName(DEFAULT_DRIVER);
+	}
 
 	/**
 	 * Default constructor.

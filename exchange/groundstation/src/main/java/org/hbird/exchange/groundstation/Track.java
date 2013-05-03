@@ -77,4 +77,13 @@ public class Track extends Command {
     public Satellite getSatellite() {
         return getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
     }
+    
+    public void setLocationContactEvent(LocationContactEvent event) {
+    	setArgumentValue(StandardArguments.CONTACT, event);
+    }
+
+    public void setSatellite(Satellite satellite) {
+        setArgumentValue(StandardArguments.SATELLITE, satellite);
+    }
+
 }

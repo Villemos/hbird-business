@@ -51,7 +51,8 @@ public class DummyTask extends Task {
 	 * @param executionDelay
 	 */
 	public DummyTask(String issuedBy, String name, String description, long executionTime) {
-		super(issuedBy, name, description, 0);
+		super("DUMMY_TASK", name);
+		this.description = description;
 		this.executionTime = executionTime;
 	}
 

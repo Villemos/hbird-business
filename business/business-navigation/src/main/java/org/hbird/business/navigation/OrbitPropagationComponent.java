@@ -23,6 +23,7 @@ import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.core.StartableEntity;
+import org.hbird.business.navigation.controller.OrbitPropagationComponentDriver;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.slf4j.Logger;
@@ -56,6 +57,7 @@ public class OrbitPropagationComponent extends StartableEntity {
 
 	protected static final Logger LOG = LoggerFactory.getLogger(OrbitPropagationComponent.class);
 
+	protected static String DEFAULT_DESCRIPTION = "Component for automatically propagating the orbit of a satellite.";
 	
 	/**
 	 * The interval (ms) for which propagation should be available. The controller will ensure that there
@@ -85,6 +87,8 @@ public class OrbitPropagationComponent extends StartableEntity {
 	 */
 	public OrbitPropagationComponent(String ID, String name) {
 		super(ID, name);
+		this.setDriverName(OrbitPropagationComponentDriver.class.getName());
+		this.setDescription(DEFAULT_DESCRIPTION);
 	}
 
 	
@@ -107,7 +111,7 @@ public class OrbitPropagationComponent extends StartableEntity {
 		LOG.info("Propagating orbit of satellite '" + satellite + "'.");
 
 		/** Get the latest TLE */
-		IDataAccess api = ApiFactory.getDataAccessApi(this.name);
+		IDataAccess api = ApiFactory.getDataAccessApi(this.name, getContext());
 		TleOrbitalParameters tleParameters = api.getTleFor(satellite);
 
 		if (tleParameters == null) {
@@ -120,10 +124,10 @@ public class OrbitPropagationComponent extends StartableEntity {
 		OrbitalState state = api.getOrbitalStateFor(satellite);
 
 		/** If the TLE has changed, then we should clear the orbital states and recalculate them. */
-		if (state != null && tleParameters.getID().equals(state.getDerivedFrom()) == false) {
+		if (state != null && tleParameters.getInstanceID().equals(state.getDerivedFrom()) == false) {
 			/** Clear all states of this satellite */
-			LOG.info("Latest orbital state based on TLE '" + state.getDerivedFrom() + "'. Latest TLE in archive is '" + tleParameters.getID() + "'. Deleting stored orbital states.");
-			ApiFactory.getArchiveManagerApi(this.name).deleteOrbitalStates(satellite);
+			LOG.info("Latest orbital state based on TLE '" + state.getDerivedFrom() + "'. Latest TLE in archive is '" + tleParameters.getInstanceID() + "'. Deleting stored orbital states.");
+			ApiFactory.getArchiveManagerApi(this.name, getContext()).deleteOrbitalStates(satellite);
 			state = null;
 		}
 
@@ -148,7 +152,7 @@ public class OrbitPropagationComponent extends StartableEntity {
 		if (from != 0 && to != 0) {
 			/** Request a propagation of the orbit. We use the 'stream' version of the method which means the result
 			 * is published directly by the propegator to the system. */
-			IOrbitPrediction predictionApi = ApiFactory.getOrbitPredictionApi(this.getName());
+			IOrbitPrediction predictionApi = ApiFactory.getOrbitPredictionApi(getName(), getContext());
 
 			/** Request a propagation of the orbit. We use the 'stream' version of the method which means the result
 			 * is published directly by the propegator to the system. */

@@ -18,6 +18,7 @@ package org.hbird.business.navigation.api;
 
 import java.util.List;
 
+import org.apache.camel.CamelContext;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.navigation.NavigationComponent;
@@ -34,6 +35,10 @@ public class OrbitPropagation extends HbirdApi implements IOrbitPrediction {
 
     public OrbitPropagation(String issuedBy) {
         super(issuedBy, NavigationComponent.DEFAULT_NAME);
+    }
+
+    public OrbitPropagation(String issuedBy, CamelContext context) {
+        super(issuedBy, NavigationComponent.DEFAULT_NAME, context);
     }
 
     @Override

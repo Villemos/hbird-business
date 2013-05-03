@@ -68,7 +68,7 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
 		return ID + ":" + timestamp;
 	}
 	
-	public <T extends Serializable> T cloneEntity() {
+	public <T extends EntityInstance> T cloneEntity() {
 		EntityInstance newInstance = (EntityInstance) SerializationUtils.clone(this);
 		newInstance.setTimestamp(System.currentTimeMillis());
 		return (T) newInstance;

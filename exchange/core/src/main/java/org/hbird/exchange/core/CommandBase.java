@@ -91,4 +91,6 @@ public class CommandBase extends EntityInstance implements IScheduled, ITransfer
     public void setExecutionTime(long executionTime) {
         this.executionTime = executionTime;
     }
+    
+    
 }
