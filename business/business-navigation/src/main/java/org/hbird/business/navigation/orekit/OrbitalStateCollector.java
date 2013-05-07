@@ -20,9 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.business.api.IPublish;
-import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.navigation.OrbitalState;
-import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.errors.PropagationException;
 import org.orekit.propagation.SpacecraftState;
 import org.orekit.propagation.sampling.OrekitFixedStepHandler;
@@ -33,6 +31,8 @@ import org.orekit.propagation.sampling.OrekitFixedStepHandler;
  * This class transforms the orbital state provided by orekit into a generic
  * type, and parses it to the 'seda:OrbitPredictions' route. This route must be
  * configured as part of the system.
+ * 
+ * @author Gert Villemos
  */
 public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
@@ -40,19 +40,16 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
     protected final String satelliteId;
 
-    protected TleOrbitalParameters parameters;
+    protected final String derivedFrom;
 
-    protected final IPublish publisher;
+    protected List<OrbitalState> states = new ArrayList<OrbitalState>();
 
-    protected List<EntityInstance> states = new ArrayList<EntityInstance>();
-
-    protected String orbitalStateEntityId = null;
-
-    public OrbitalStateCollector(String satelliteId, TleOrbitalParameters parameters, IPublish publisher) {
+    protected IPublish publisher = null;
+    
+    public OrbitalStateCollector(String satelliteId, String derivedFrom, IPublish publisher) {
         this.satelliteId = satelliteId;
-        this.parameters = parameters;
+        this.derivedFrom = derivedFrom;
         this.publisher = publisher;
-        this.orbitalStateEntityId = satelliteId + "/OrbitalState";
     }
 
     /**
@@ -62,17 +59,39 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
     @Override
     public void handleStep(SpacecraftState currentState, boolean isLast) throws PropagationException {
 
-        OrbitalState state = NavigationUtilities.toOrbitalState(currentState, satelliteId, parameters.getInstanceID());
-        state.setEntityID(orbitalStateEntityId);
-        states.add(state);
+        OrbitalState state = NavigationUtilities.toOrbitalState(currentState, satelliteId, derivedFrom);
+        state.setEntityID(satelliteId + "/orbitalstate");
 
-        /* If stream mode, then deliver the data as a stream. */
+        states.add(state);
         if (publisher != null) {
             publisher.publish(state);
         }
+
     }
 
-    public List<EntityInstance> getDataSet() {
+    public List<OrbitalState> getDataSet() {
         return states;
     }
+    
+    public OrbitalState getLatestState() {
+        return states.isEmpty() ? null : states.get(states.size() - 1);
+    }
+
+    public void clearDataSet() {
+    	states.clear();
+    }
+
+	/**
+	 * @return the publisher
+	 */
+	public IPublish getPublisher() {
+		return publisher;
+	}
+
+	/**
+	 * @param publisher the publisher to set
+	 */
+	public void setPublisher(IPublish publisher) {
+		this.publisher = publisher;
+	}
 }

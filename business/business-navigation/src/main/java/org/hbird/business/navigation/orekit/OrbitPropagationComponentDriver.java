@@ -30,14 +30,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.navigation.controller;
+package org.hbird.business.navigation.orekit;
 
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.OrbitPropagationComponent;
 
 /**
- * @author Admin
+ * @author Gert Villemos
  *
  */
 public class OrbitPropagationComponentDriver extends SoftwareComponentDriver {
@@ -47,9 +47,11 @@ public class OrbitPropagationComponentDriver extends SoftwareComponentDriver {
 	 */
 	@Override
 	protected void doConfigure() {
+		
 		OrbitPropagationComponent com = (OrbitPropagationComponent) part;
-
-        ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(part, "execute");
+		OrbitPropagationBean bean = new OrbitPropagationBean(com);
+		
+        ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute");
         addInjectionRoute(route);
 	}
 }

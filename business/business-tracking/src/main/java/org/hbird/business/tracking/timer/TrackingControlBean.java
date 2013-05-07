@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.tracking.bean;
+package org.hbird.business.tracking.timer;
 
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.ApiFactory;
@@ -47,9 +47,9 @@ import org.slf4j.LoggerFactory;
  * @author Gert Villemos
  * 
  */
-public class TrackingControl {
+public class TrackingControlBean {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TrackingControl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TrackingControlBean.class);
 
 	/** The definition of {@link GroundStation}. */
 	protected final String groundStationId;
@@ -75,7 +75,7 @@ public class TrackingControl {
 	 * @param satelliteName The satellite that the controller manages the schedule for.
 	 * @param queueName The name of the queue into which the antenna control commands shall be injected.
 	 */
-	public TrackingControl(String name, String groundStationName, String satelliteName) {
+	public TrackingControlBean(String name, String groundStationName, String satelliteName) {
 		this.name = name;
 		this.groundStationId = groundStationName;
 		this.satelliteId = satelliteName;

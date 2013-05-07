@@ -31,8 +31,16 @@ public class ArchiveComponentDriver extends SoftwareComponentDriver {
      */
     @Override
     protected void doConfigure() {    	
-        from(StandardEndpoints.MONITORING).to("solr:" + addUniqueId("monitoring."));
-        from(StandardEndpoints.EVENTS).to("solr:" + addUniqueId("events."));
-        from(StandardEndpoints.COMMANDS).to("solr:" + addUniqueId("commanding."));
+    	
+    	/** The SOLR component */
+    	from("direct:solr_storage").to("solr:storage");
+    	
+    	/** Routes for receiving data and requests. */
+        from(StandardEndpoints.MONITORING).to("direct:solr_storage");
+        from(StandardEndpoints.EVENTS).to("direct:solr_storage");
+        from(StandardEndpoints.COMMANDS).to("direct:solr_storage");
+        
+        /** Route for submitting the documents as a batch to the SOLR server. */
+        from(addTimer("solr_submit", 5000)).setHeader("SUBMIT", simple("true")).to("direct:solr_storage");
     };
 }

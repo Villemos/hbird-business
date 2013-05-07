@@ -82,8 +82,8 @@
 <!-- 	 			<to uri="bean:commanding" /> -->
 <!-- 	 	 		<to uri="bean:websockettester" /> -->
 	 			<to uri="bean:parsecontroller" />
-				<to uri="bean:inmemoryscheduler" />
-	 			<to uri="bean:celestrack" />
+<!-- 				<to uri="bean:inmemoryscheduler" /> -->
+<!-- 	 			<to uri="bean:celestrack" /> -->
 	 			<to uri="bean:finisher" />
 
 <!-- NOT USED -->

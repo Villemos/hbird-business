@@ -37,15 +37,17 @@ import org.slf4j.LoggerFactory;
  * This camel route processor will receive callbacks from the orekit library
  * notifying of events such as the establishment / loss of contact. The processor
  * will create the corresponding OrbitalEvent and send it to the consumer.
+ * 
+ * @author Gert Villemos
  */
-public class LocationContactEventCollector extends ElevationDetector {
+public class ContactEventCollector extends ElevationDetector {
 
     private static final long serialVersionUID = 5610579540868577419L;
 
     /** FIXME I don't know what this does but OREKIT needs it... */
     public static final double maxcheck = 10.0D; // calculation step in seconds?
 
-    private static final Logger LOG = LoggerFactory.getLogger(LocationContactEventCollector.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContactEventCollector.class);
 
     /** The ground station / location that comes into contact. */
     protected final String groundStationId;
@@ -70,8 +72,7 @@ public class LocationContactEventCollector extends ElevationDetector {
      * @param location The location to which contact has been established / lost if this event occurs.
      * @param contactDataStepSize
      */
-    public LocationContactEventCollector(double elevation, TopocentricFrame topo, String satelliteId, String groundStationId, TleOrbitalParameters parameters,
-            IPublish publisher) {
+    public ContactEventCollector(double elevation, TopocentricFrame topo, String satelliteId, String groundStationId, TleOrbitalParameters parameters, IPublish publisher) {
         super(maxcheck, elevation, topo);
         this.satelliteId = satelliteId;
         this.groundStationId = groundStationId;
@@ -111,7 +112,6 @@ public class LocationContactEventCollector extends ElevationDetector {
 
     LocationContactEvent createEvent(String groundStationId, String satelliteId, TleOrbitalParameters tleParameters, SpacecraftState startState,
             SpacecraftState endState) throws OrekitException {
-        long now = System.currentTimeMillis();
         AbsoluteDate startDate = startState.getDate();
         long startTime = startDate.toDate(TimeScalesFactory.getUTC()).getTime();
         long endTime = endState.getDate().toDate(TimeScalesFactory.getUTC()).getTime();

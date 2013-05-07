@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.math.geometry.Vector3D;
-import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.GeoLocation;
@@ -32,6 +31,10 @@ import org.orekit.utils.PVCoordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author Gert Villemos
+ *
+ */
 public class NavigationUtilities {
 
     private static Logger LOG = LoggerFactory.getLogger(NavigationUtilities.class);
@@ -59,7 +62,7 @@ public class NavigationUtilities {
         return new PVCoordinates(position, velocity);
     }
 
-    public static OrbitalState toOrbitalState(SpacecraftState state, String satelliteId, String derivedFrom) {
+    public static synchronized OrbitalState toOrbitalState(SpacecraftState state, String satelliteId, String derivedFrom) {
 
         Vector3D pvcPosition = state.getOrbit().getPVCoordinates().getPosition();
         Vector3D pvcVelocity = state.getOrbit().getPVCoordinates().getVelocity();

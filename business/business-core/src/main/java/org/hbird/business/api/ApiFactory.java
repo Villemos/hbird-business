@@ -32,7 +32,6 @@ public class ApiFactory {
 	static protected String dataAccessClass = System.getProperty("hbird.dataaccess.class", "org.hbird.business.archive.api.DataAccess");
 	static protected String publishClass = System.getProperty("hbird.publish.class", "org.hbird.business.archive.api.Publish");
 	static protected String catalogueClass = System.getProperty("hbird.catalogue.class", "org.hbird.business.archive.api.Catalogue");
-	static protected String orbitPredictionClass = System.getProperty("hbird.orbitprediction.class", "org.hbird.business.navigation.api.OrbitPropagation");
 	static protected String queueManagementClass = System.getProperty("hbird.queuemanagement.class", "org.hbird.business.queuemanagement.api.QueueManagerApi");
 	static protected String partmanagerClass = System.getProperty("hbird.partmanager.class", "org.hbird.business.archive.api.PartManager");
 	static protected String archiveManagerClass = System.getProperty("hbird.archivemanager.class", "org.hbird.business.archive.api.ArchiveManagement");
@@ -47,10 +46,6 @@ public class ApiFactory {
 
 	static public synchronized ICatalogue getCatalogueApi(String issuedBy) {
 		return (ICatalogue) createInstance(catalogueClass, issuedBy);
-	}
-
-	static public synchronized IOrbitPrediction getOrbitPredictionApi(String issuedBy) {
-		return (IOrbitPrediction) createInstance(orbitPredictionClass, issuedBy);
 	}
 
 	static public synchronized IQueueManagement getQueueManagementApi(String issuedBy) {
@@ -88,10 +83,6 @@ public class ApiFactory {
 
 	static public synchronized ICatalogue getCatalogueApi(String issuedBy, CamelContext context) {
 		return (ICatalogue) createInstance(catalogueClass, issuedBy, context);
-	}
-
-	static public synchronized IOrbitPrediction getOrbitPredictionApi(String issuedBy, CamelContext context) {
-		return (IOrbitPrediction) createInstance(orbitPredictionClass, issuedBy, context);
 	}
 
 	static public synchronized IQueueManagement getQueueManagementApi(String issuedBy, CamelContext context) {

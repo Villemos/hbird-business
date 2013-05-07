@@ -1,4 +1,4 @@
-package org.hbird.business.tracking.bean;
+package org.hbird.business.tracking.timer;
 
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.model.RouteDefinition;
@@ -9,7 +9,7 @@ import org.hbird.business.core.cache.EntityCache;
 import org.hbird.business.core.cache.SatelliteResolver;
 import org.hbird.business.core.cache.TleResolver;
 import org.hbird.business.tracking.TrackingComponent;
-import org.hbird.business.tracking.configuration.TrackingDriverConfiguration;
+import org.hbird.business.tracking.quartz.TrackingDriverConfiguration;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.quartz.Scheduler;
@@ -69,7 +69,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver {
         
         // @formatter:on
 
-        TrackingControl controller = new TrackingControl(part.getName(), ((TrackingComponent) part).getLocation(), ((TrackingComponent) part).getSatellite());
+        TrackingControlBean controller = new TrackingControlBean(part.getName(), ((TrackingComponent) part).getLocation(), ((TrackingComponent) part).getSatellite());
 
         /** Create the route for triggering the calculation. */
         RouteDefinition route = from(addTimer("antennacontrol", 60000l)).bean(controller, "process");

@@ -33,8 +33,8 @@
 package org.hbird.business.tracking;
 
 import org.hbird.business.core.StartableEntity;
-import org.hbird.business.tracking.bean.TrackingComponentDriver;
-import org.hbird.business.tracking.configuration.TrackingDriverConfiguration;
+import org.hbird.business.tracking.quartz.TrackingDriverConfiguration;
+import org.hbird.business.tracking.timer.TrackingComponentDriver;
 
 /**
  * @author Gert Villemos
@@ -50,7 +50,6 @@ public class TrackingComponent extends StartableEntity {
 
     private TrackingDriverConfiguration configuration;
 
-    // TODO When the configuration above works, remove these
     protected String satellite;
     protected String location;
     
@@ -103,6 +102,4 @@ public class TrackingComponent extends StartableEntity {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	
-	
 }

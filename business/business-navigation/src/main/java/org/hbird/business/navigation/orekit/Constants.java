@@ -21,6 +21,10 @@ import org.orekit.errors.OrekitException;
 import org.orekit.frames.Frame;
 import org.orekit.frames.FramesFactory;
 
+/**
+ * @author Gert Villemos
+ *
+ */
 public class Constants {
 
     /** Equatorial radius of Earth in meters. */
@@ -44,9 +48,9 @@ public class Constants {
     public static final double XJ2 = 1.082616e-3;
     public static final double CK2 = 0.5 * XJ2 * NORMALIZED_EQUATORIAL_RADIUS * NORMALIZED_EQUATORIAL_RADIUS;
 
-    protected static OneAxisEllipsoid earth;
+    public static OneAxisEllipsoid earth;
 
-    protected static Frame FRAME = FramesFactory.getEME2000();
+    public static Frame FRAME = FramesFactory.getEME2000();
 
     static {
         try {

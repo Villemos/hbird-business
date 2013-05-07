@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.ApiUtility;
@@ -69,12 +70,19 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 
 	@Override
 	public void configure() throws Exception {
-		/** This configures a direct connection to SOLR. */
-		if (containsRoute("seda://injectToSolr") == false) {
-			from("seda://injectToSolr").to("solr:api");
-		}
+
+		inject += "_" + UUID.randomUUID().toString();
+
+		from(inject).to("solr:api");
 
 		template = getContext().createProducerTemplate();
+
+		/** This configures a direct connection to SOLR. */
+		//		if (containsRoute("seda://injectToSolr") == false) {
+		//			from("seda://injectToSolr").to("solr:api");
+		//		}
+		//
+		//		template = getContext().createProducerTemplate();
 	}
 
 	@Override

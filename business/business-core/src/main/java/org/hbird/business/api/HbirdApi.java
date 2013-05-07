@@ -17,6 +17,7 @@
 package org.hbird.business.api;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
@@ -80,16 +81,23 @@ public abstract class HbirdApi extends HbirdRouteBuilder {
 	@Override
 	public void configure() throws Exception {
 
-		if (containsRoute(inject) == false) {
-			LOG.info("Creating injection route '" + inject + "'.");
-			RouteDefinition route = from(inject);
-			addInjectionRoute(route);
-		}
-		else {
-			LOG.info("Found existing injection route '" + inject + "'.");
-		}
+		/** Make this injection route unique. */
+		inject += "_" + UUID.randomUUID().toString();
+
+		LOG.info("Creating injection route '" + inject + "'.");
+		RouteDefinition route = from(inject);
+		addInjectionRoute(route);
+
+		//		if (containsRoute(inject) == false) {
+		//			LOG.info("Creating injection route '" + inject + "'.");
+		//			RouteDefinition route = from(inject);
+		//			addInjectionRoute(route);
+		//		}
+		//		else {
+		//			LOG.info("Found existing injection route '" + inject + "'.");
+		//		}
 	}
-	
+
 	protected boolean containsRoute(String routeUri) {
 		boolean found = false;
 		for (Route route : getContext().getRoutes()) {
@@ -98,7 +106,7 @@ public abstract class HbirdApi extends HbirdRouteBuilder {
 				break;
 			}
 		}
-		
+
 		return found;
 	}
 

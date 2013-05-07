@@ -30,7 +30,6 @@ import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.api.IPartManager;
 import org.hbird.business.api.IPublish;
 import org.hbird.business.archive.ArchiveComponent;
@@ -40,12 +39,12 @@ import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.radio.HamlibRadioPart;
 import org.hbird.business.groundstation.hamlib.rotator.HamlibRotatorPart;
-import org.hbird.business.navigation.NavigationComponent;
+import org.hbird.business.navigation.ContactEventComponent;
 import org.hbird.business.navigation.OrbitPropagationComponent;
 import org.hbird.business.systemmonitoring.SystemMonitorComponent;
 import org.hbird.business.taskexecutor.TaskExecutionComponent;
 import org.hbird.business.tracking.TrackingComponent;
-import org.hbird.business.tracking.configuration.TrackingDriverConfiguration;
+import org.hbird.business.tracking.quartz.TrackingDriverConfiguration;
 import org.hbird.business.websockets.WebsocketInterfaceComponent;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.Part;
@@ -99,15 +98,14 @@ public abstract class SystemTest {
 
     protected static IPartManager partmanagerApi = ApiFactory.getPartManagerApi("SystemTest");
 
-    protected static IOrbitPrediction predictionApi = ApiFactory.getOrbitPredictionApi("SystemTest");
-
     protected static ArchiveComponent archive = null;
     protected static CommandingComponent comComponent = null;
-    protected static NavigationComponent navComponent = null;
+    protected static ContactEventComponent navComponent = null;
     protected static SystemMonitorComponent sysMon = null;
     protected static WebsocketInterfaceComponent webComponent = null;
     protected static OrbitPropagationComponent estcubePropagationComponent = null;
-
+    protected static ContactEventComponent estcubeLocationComponent = null;
+    
     protected static Satellite estcube1 = null;
     protected static Satellite dkCube1 = null;
     protected static Satellite deCube1 = null;
@@ -198,7 +196,7 @@ public abstract class SystemTest {
         comComponent = new CommandingComponent("COMMANDING");
 //        registerPart(comComponent);
 //
-        navComponent = new NavigationComponent("NAVIGATION");
+        navComponent = new ContactEventComponent("NAVIGATION");
 //        registerPart(navComponent);
 //
 //        scripts = new Part(mof, "Synthetic Parameters", "Synthetic Parameters", "The synthetic parameters / scripts");
@@ -278,15 +276,16 @@ public abstract class SystemTest {
 //        registerPart(gsNewYork);
         gsNewYork.addAntenna(antenna);
 //
+        estcubePropagationComponent = new OrbitPropagationComponent("ESTCUBE_ORBIT_PROPAGATOR");
+        estcubePropagationComponent.setSatellite(estcube1.getID());
+        
         List<String> locations = new ArrayList<String>();
         locations.add(es5ec.getName());
         locations.add(gsDarmstadt.getName());
-        estcubePropagationComponent = new OrbitPropagationComponent("ESTCUBE_ORBIT_PROPAGATOR", "ESTCUBE_ORBIT_PROPAGATOR");
-        estcubePropagationComponent.setExecutionDelay(60 * 1000);
-        estcubePropagationComponent.setLeadTime(12 * 60 * 60 * 1000);
-        estcubePropagationComponent.setSatellite(estcube1.getID());
-        estcubePropagationComponent.setLocations(locations);
-//        registerPart(estcubePropagationComponent);
+        estcubeLocationComponent = new ContactEventComponent("ESTCUBE_ES5EC_CONTACT_PREDICTOR");              estcubeLocationComponent.setSatellite(estcube1.getID());
+        estcubeLocationComponent.setLocations(locations);
+        estcubeLocationComponent.setSatellite(estcube1.getID());
+        //        registerPart(estcubePropagationComponent);
 
     }
 
@@ -446,7 +445,6 @@ public abstract class SystemTest {
         if (orbitPredictorStarted == false) {
             LOG.info("Issuing command for start of a orbital predictor.");
 
-            /** Create command component. */
             partmanagerApi.start(navComponent);
 
             Thread.sleep(2000);
@@ -532,12 +530,11 @@ public abstract class SystemTest {
 
         if (estcube1OrbitPropagatorStarted == false) {
             LOG.info("Issuing command for start of an ESTCube-1 orbit propagation.");
-
-            estcubePropagationComponent.setLeadTime(24 * 60 * 60 * 1000);
             
             /** Create command component. */
             partmanagerApi.start(estcubePropagationComponent);
-
+           partmanagerApi.start(estcubeLocationComponent);
+            
             Thread.sleep(2000);
 
             estcube1OrbitPropagatorStarted = true;

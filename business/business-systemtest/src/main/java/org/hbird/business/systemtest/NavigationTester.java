@@ -26,7 +26,8 @@ import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.IOrbitPrediction;
+import org.hbird.business.navigation.ContactEventComponent;
+import org.hbird.business.navigation.OrbitPropagationComponent;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.navigation.LocationContactEvent;
@@ -64,9 +65,22 @@ public class NavigationTester extends SystemTest {
         orbitalStateListener.elements.clear();
 
         /** Send a TLE request for a satellite and a subset of locations */
-        IOrbitPrediction api = ApiFactory.getOrbitPredictionApi("SystemTest");
-        api.requestOrbitPropagationStream(estcube1.getID(), locations, 1355385448149l, 1355385448149l + 2 * 60 * 60 * 1000);
-
+        OrbitPropagationComponent orbCom = new OrbitPropagationComponent("ESTCUBE_ORBIT_PROPAGATOR");
+        orbCom.setSatellite(estcube1.getID());
+        orbCom.setFrom(1355385448149l);
+        orbCom.setTo(1355385448149l + 2 * 60 * 60 * 1000);
+        orbCom.setExecutionDelay(0l);
+                
+        ContactEventComponent conCom = new ContactEventComponent("ESTCUBE_ES5EC_CONTACT_PREDICTOR");              estcubeLocationComponent.setSatellite(estcube1.getID());
+        conCom.setLocations(locations);
+        conCom.setSatellite(estcube1.getID());
+        orbCom.setFrom(1355385448149l);
+        orbCom.setTo(1355385448149l + 2 * 60 * 60 * 1000);
+        orbCom.setExecutionDelay(0l);
+        
+        partmanagerApi.start(orbCom);
+        partmanagerApi.start(conCom);
+        
         int totalSleep = 0;
         while (totalSleep < 120000 && orbitalStateListener.elements.size() != 121) {
             Thread.sleep(2000);

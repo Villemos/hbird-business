@@ -24,7 +24,7 @@ public class ParseControlTester extends SystemTest {
         LOG.info("Starting");
 
         startMonitoringArchive();
-        startOrbitPredictor();
+        // startOrbitPredictor();
 
         /** Start a task executor. */
         startTaskComponent("TaskExecutor1");

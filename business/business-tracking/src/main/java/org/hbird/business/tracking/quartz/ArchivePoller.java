@@ -14,14 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.tracking.bean;
+package org.hbird.business.tracking.quartz;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.camel.Handler;
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.tracking.configuration.TrackingDriverConfiguration;
 import org.hbird.exchange.navigation.LocationContactEvent;
 
 /**
