@@ -29,6 +29,9 @@ public class SystemMonitorComponentDriver extends SoftwareComponentDriver {
 
     @Override
     public void doConfigure() {
+
+        // TODO - 13.05.2013, kimmell - fix Monitors; create the base ID (command.getName() + "/" + hostname) here
+
         from(addTimer("systemmonitor", 10000)).multicast().to("seda:heap", "seda:thread",
                 "seda:cpu", "seda:harddisk", "seda:os", "seda:uptime");
 

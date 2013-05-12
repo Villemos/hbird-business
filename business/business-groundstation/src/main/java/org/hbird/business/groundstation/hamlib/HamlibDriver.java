@@ -43,7 +43,6 @@ import org.apache.camel.component.netty.NettyConfiguration;
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.core.InMemoryScheduler;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.groundstation.base.DriverContext;
@@ -59,6 +58,7 @@ import org.hbird.business.groundstation.hamlib.protocol.HamlibErrorLogger;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibLineDecoder;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibProtocolConstants;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibResponseBufferer;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
@@ -133,9 +133,9 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
          */
 
         ICatalogue catalogue = ApiFactory.getCatalogueApi(part.getID());
-        IOrbitPrediction prediction = ApiFactory.getOrbitPredictionApi(part.getID());
+        PointingDataCalculator calulator = new PointingDataCalculator();
         IPointingDataOptimizer<C> optimizer = createOptimizer(config.getPointingDataOptimzerClassName()); // can be null
-        TrackingSupport<C> tracker = createTrackingSupport(config, catalogue, prediction, optimizer);    
+        TrackingSupport<C> tracker = createTrackingSupport(config, catalogue, calulator, optimizer);    
         GroundStationCommandFilter commandFilter = new GroundStationCommandFilter(config);
         
          from(StandardEndpoints.COMMANDS + "?selector=name='Track'")
@@ -281,7 +281,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
 
     protected abstract List<ResponseHandler<C, String, String>> createResponseHandlers();
 
-    protected abstract TrackingSupport<C> createTrackingSupport(C config, ICatalogue catalogue,
-            IOrbitPrediction prediction, IPointingDataOptimizer<C> optimizer);
+    protected abstract TrackingSupport<C> createTrackingSupport(C config, ICatalogue catalogue, PointingDataCalculator calculator,
+            IPointingDataOptimizer<C> optimizer);
 
 }

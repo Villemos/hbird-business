@@ -19,7 +19,6 @@ package org.hbird.business.groundstation.base;
 import org.apache.camel.TypeConverter;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
 import org.hbird.business.groundstation.device.response.ResponseKeyExtractor;
-import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.IStartablePart;
 
 /**

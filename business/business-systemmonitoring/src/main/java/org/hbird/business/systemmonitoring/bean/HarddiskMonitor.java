@@ -20,10 +20,11 @@ import java.io.File;
 import java.net.UnknownHostException;
 
 import org.apache.camel.Handler;
-import org.hbird.business.core.naming.Base;
 import org.hbird.exchange.core.Parameter;
 
 public class HarddiskMonitor extends Monitor {
+
+    public static final String ESCAPED_SHLASH = "&#47;";
 
     public HarddiskMonitor(String componentId) {
         super(componentId);
@@ -44,25 +45,29 @@ public class HarddiskMonitor extends Monitor {
 
         for (int i = 0; i < roots.length; i++) {
             File root = roots[i];
-            String name = root.getPath();
+            String hddName = root.getPath();
             long total = root.getTotalSpace();
             long free = root.getFreeSpace();
             double used = total == 0 ? 0 : (100D - ((100 * free) / total));
 
-            
             // TODO Not sure how to set ID and name...
-            
-//            list[i * 3 + 0] = new Parameter(componentId, naming.createAbsoluteName(Base.HOST.toString(),
-//                    HostInfo.getHostName(),
-//                    name, "Available Disk Space"), "The available harddisk space.",
-//                    total, "Byte");
-//            list[i * 3 + 1] = new Parameter(componentId, naming.createAbsoluteName(Base.HOST.toString(),
-//                    HostInfo.getHostName(),
-//                    name, "Free Disk Space"), "The free harddisk space.", free, "Byte");
-//            list[i * 3 + 2] = new Parameter(componentId, naming.createAbsoluteName(Base.HOST.toString(),
-//                    HostInfo.getHostName(),
-//                    name, "Used Disk Space"), "The used harddisk space.", used, "%");
+            list[i * 3 + 0] = createParameter(componentId, HostInfo.getHostName(), hddName, "Available Disk Space", "The available harddisk space.", "Byte",
+                    total);
+            list[i * 3 + 1] = createParameter(componentId, HostInfo.getHostName(), hddName, "Free Disk Space", "The free harddisk space.", "Byte", free);
+            list[i * 3 + 2] = createParameter(componentId, HostInfo.getHostName(), hddName, "Used Disk Space", "The used harddisk space.", "%", used);
         }
         return list;
+    }
+
+    Parameter createParameter(String componentId, String host, String hdd, String name, String description, String unit, Number value) {
+        Parameter p = new Parameter(createId(componentId, host, hdd, name), name);
+        p.setDescription(description);
+        p.setUnit(unit);
+        p.setValue(value);
+        return p;
+    }
+
+    String createId(String component, String host, String hdd, String parameter) {
+        return String.format("%s/%s/%s/%s", component, host, hdd.replace("/", ESCAPED_SHLASH), parameter);
     }
 }

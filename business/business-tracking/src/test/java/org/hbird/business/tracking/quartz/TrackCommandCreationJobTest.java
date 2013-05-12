@@ -28,6 +28,7 @@ import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.groundstation.Track;
+import org.hbird.exchange.interfaces.IStartablePart;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -56,6 +57,9 @@ public class TrackCommandCreationJobTest {
     private static final String PART_ID = "Tracking";
     private static final String GS_ID = "gs-0";
     private static final long NOW = System.currentTimeMillis();
+
+    @Mock
+    private IStartablePart part;
 
     @Mock
     private IDataAccess dao;
@@ -97,12 +101,14 @@ public class TrackCommandCreationJobTest {
     @Before
     public void setUp() throws Exception {
         job = new TrackCommandCreationJob();
+        job.setPart(part);
         job.setDataAccess(dao);
         job.setEndpoint(ENDPOINT);
         job.setProducerTemplate(producerTemplate);
         job.setSatelliteCache(satelliteCache);
         job.setTleCache(tleCache);
-        inOrder = inOrder(dao, producerTemplate, satelliteCache, tleCache, quartzContext, event, satellite, tle1, tle2, jobData);
+        inOrder = inOrder(dao, producerTemplate, satelliteCache, tleCache, quartzContext, event, satellite, tle1, tle2, jobData, part);
+        when(part.getID()).thenReturn(PART_ID);
         when(quartzContext.getMergedJobDataMap()).thenReturn(jobData);
         when(jobData.getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID)).thenReturn(CONTACT_INSTANCE_ID);
         when(event.getSatelliteId()).thenReturn(SATELLITE_ID);
@@ -197,8 +203,6 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(event, times(1)).getDerivedFrom();
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
         inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
-        // inOrder.verify(tle1, times(1)).getTimestamp();
-        // inOrder.verify(tle2, times(1)).getTimestamp();
         inOrder.verify(event, times(1)).getGroundStationId();
         inOrder.verify(event, times(1)).prettyPrint();
         ArgumentCaptor<Track> captor = ArgumentCaptor.forClass(Track.class);

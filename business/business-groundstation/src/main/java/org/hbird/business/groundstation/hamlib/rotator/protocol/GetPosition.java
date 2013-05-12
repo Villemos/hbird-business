@@ -62,15 +62,17 @@ public class GetPosition implements ResponseHandler<RotatorDriverConfiguration, 
         }
         else {
             Map<String, String> responseParams = HamlibProtocolHelper.toMap(response);
-            String issuedBy = driverContext.getPart().getID();
+            String id = driverContext.getPart().getID();
             TypeConverter typeConverter = driverContext.getTypeConverter();
-            
-            Parameter azimuth = new Parameter(issuedBy + "/" + PARAMETER_AZIMUTH, PARAMETER_AZIMUTH);
+
+            Parameter azimuth = new Parameter(id + "/" + PARAMETER_AZIMUTH, PARAMETER_AZIMUTH);
+            azimuth.setIssuedBy(id);
             azimuth.setDescription("Azimuth of the antenna rotator");
             azimuth.setValue(typeConverter.convertTo(Double.class, responseParams.get(PARAMETER_AZIMUTH)));
             azimuth.setUnit("Degree");
-            
-            Parameter elevation = new Parameter(issuedBy + "/" + PARAMETER_ELEVEATION, PARAMETER_ELEVEATION);
+
+            Parameter elevation = new Parameter(id + "/" + PARAMETER_ELEVEATION, PARAMETER_ELEVEATION);
+            elevation.setIssuedBy(id);
             elevation.setDescription("Elevation of the antenna rotator");
             elevation.setValue(typeConverter.convertTo(Double.class, responseParams.get(PARAMETER_ELEVEATION)));
             elevation.setUnit("Degree");

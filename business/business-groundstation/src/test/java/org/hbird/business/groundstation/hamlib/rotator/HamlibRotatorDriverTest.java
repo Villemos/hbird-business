@@ -29,7 +29,6 @@ import java.util.List;
 import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
@@ -39,6 +38,7 @@ import org.hbird.business.groundstation.hamlib.rotator.protocol.GetPosition;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Park;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Reset;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.SetPosition;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,10 +69,10 @@ public class HamlibRotatorDriverTest {
     private ICatalogue catalogue;
 
     @Mock
-    private IOrbitPrediction prediction;
+    private IPointingDataOptimizer<RotatorDriverConfiguration> optimizer;
 
     @Mock
-    private IPointingDataOptimizer<RotatorDriverConfiguration> optimizer;
+    private PointingDataCalculator calculator;
 
     private HamlibRotatorDriver driver;
 
@@ -84,7 +84,7 @@ public class HamlibRotatorDriverTest {
     @Before
     public void setUp() throws Exception {
         driver = new HamlibRotatorDriver();
-        inOrder = inOrder(camelContext, part, driverConfig, catalogue, prediction, optimizer, converter);
+        inOrder = inOrder(camelContext, part, driverConfig, catalogue, optimizer, converter, calculator);
         when(camelContext.getTypeConverter()).thenReturn(converter);
         when(part.getConfiguration()).thenReturn(driverConfig);
     }
@@ -118,7 +118,7 @@ public class HamlibRotatorDriverTest {
 
     @Test
     public void testCreateTrackingSupport() throws Exception {
-        TrackingSupport<RotatorDriverConfiguration> tracking = driver.createTrackingSupport(driverConfig, catalogue, prediction, optimizer);
+        TrackingSupport<RotatorDriverConfiguration> tracking = driver.createTrackingSupport(driverConfig, catalogue, calculator, optimizer);
         assertNotNull(tracking);
         inOrder.verifyNoMoreInteractions();
     }

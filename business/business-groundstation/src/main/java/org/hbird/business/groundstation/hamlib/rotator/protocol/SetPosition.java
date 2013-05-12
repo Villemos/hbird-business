@@ -52,19 +52,21 @@ public class SetPosition implements ResponseHandler<RotatorDriverConfiguration, 
         else {
             List<IEntityInstance> result = new ArrayList<IEntityInstance>(2);
             TypeConverter converter = driverContext.getTypeConverter();
-            String issuedBy = driverContext.getPart().getID();
+            String id = driverContext.getPart().getID();
             Map<String, String> map = HamlibProtocolHelper.toMap(response);
             String args = map.get(KEY);
             String azimuthValue = StringUtils.substringBefore(args, " ").trim();
             String elevationValue = StringUtils.substringAfter(args, " ").trim();
 
-            Parameter azimuth = new Parameter(issuedBy + "/" + "Target Azimuth", "Target Azimuth");
-            azimuth.setDescription("Azimuth of the antenna rotator");
+            Parameter azimuth = new Parameter(id + "/" + "Target Azimuth", "Target Azimuth");
+            azimuth.setIssuedBy(id);
+            azimuth.setDescription("Target Azimuth of the antenna rotator");
             azimuth.setValue(converter.convertTo(Double.class, azimuthValue));
             azimuth.setUnit("Degree");
-            
-            Parameter elevation = new Parameter(issuedBy + "/" + "Target Elevation", "Target Elevation");
-            elevation.setDescription("Elevation of the antenna rotator");
+
+            Parameter elevation = new Parameter(id + "/" + "Target Elevation", "Target Elevation");
+            elevation.setIssuedBy(id);
+            elevation.setDescription("Target Elevation of the antenna rotator");
             elevation.setValue(converter.convertTo(Double.class, elevationValue));
             elevation.setUnit("Degree");
 

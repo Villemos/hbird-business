@@ -29,7 +29,7 @@ import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.interfaces.IEntityInstance;
-import org.hbird.exchange.interfaces.IPart;
+import org.hbird.exchange.interfaces.IStartablePart;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +54,7 @@ public class SetPositionTest {
     private TypeConverter converter;
 
     @Mock
-    private IPart part;
+    private IStartablePart part;
 
     private SetPosition setPosition;
 

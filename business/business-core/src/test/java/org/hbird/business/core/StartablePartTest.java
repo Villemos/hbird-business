@@ -35,7 +35,6 @@ import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.Part;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +48,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class StartablePartTest {
-	
+
     public static final String ID = "ID";
     public static final String NAME = "name";
     public static final String ISSUED_BY = "issuer";
@@ -172,10 +171,10 @@ public class StartablePartTest {
      */
     @Test
     public void testCreateBusinessCard() {
-        BusinessCard card = part.createBusinessCard(NAME, PERIOD, commands, DESCRIPTION);
+        BusinessCard card = part.createBusinessCard(ID, NAME, PERIOD, commands, DESCRIPTION);
         assertNotNull(card);
         assertEquals(NAME, card.getName());
-        assertEquals(NAME, card.getIssuedBy());
+        assertEquals(ID, card.getIssuedBy());
         assertEquals(PERIOD, card.getPeriod());
         assertEquals(DESCRIPTION, card.getDescription());
         Map<String, Command> map = card.getCommandsIn();
@@ -198,7 +197,7 @@ public class StartablePartTest {
         BusinessCard card = part.getBusinessCard();
         assertNotNull(card);
         assertEquals(NAME, card.getName());
-        assertEquals(NAME, card.getIssuedBy());
+        assertEquals(ID, card.getIssuedBy());
         assertEquals(StartableEntity.DEFAULT_HEARTBEAT, card.getPeriod());
         Map<String, Command> map = card.getCommandsIn();
         assertNotNull(map);

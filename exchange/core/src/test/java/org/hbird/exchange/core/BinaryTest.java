@@ -101,6 +101,8 @@ public class BinaryTest {
     @Test
     public void testSetFormat() {
         binary = new Binary(ID, NAME);
+        assertNull(binary.getFormat());
+        binary.setFormat(FORMAT);
         assertEquals(FORMAT, binary.getFormat());
         binary.setFormat(null);
         assertNull(binary.getFormat());

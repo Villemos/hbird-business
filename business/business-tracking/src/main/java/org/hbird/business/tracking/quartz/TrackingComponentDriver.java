@@ -32,7 +32,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver {
         Scheduler scheduler;
         try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
-            JobFactory factory = new TrackCommandCreationJobFactory(dao, producer, TRACK_COMMAND_INJECTOR, satelliteCache, tleCache);
+            JobFactory factory = new TrackCommandCreationJobFactory(part, dao, producer, TRACK_COMMAND_INJECTOR, satelliteCache, tleCache);
             scheduler.setJobFactory(factory);
             scheduler.start();
         }

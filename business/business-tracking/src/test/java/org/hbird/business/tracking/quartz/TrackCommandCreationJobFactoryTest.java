@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
+import org.hbird.exchange.interfaces.IStartablePart;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.junit.After;
@@ -49,6 +50,9 @@ import org.slf4j.LoggerFactory;
 public class TrackCommandCreationJobFactoryTest {
 
     private static final String END_POINT = "direct:inject";
+
+    @Mock
+    private IStartablePart part;
 
     @Mock
     private IDataAccess dao;
@@ -85,8 +89,8 @@ public class TrackCommandCreationJobFactoryTest {
      */
     @Before
     public void setUp() throws Exception {
-        factory = new TrackCommandCreationJobFactory(dao, producer, END_POINT, satelliteCache, tleCache);
-        inOrder = inOrder(dao, producer, satelliteCache, tleCache, bundle, jobDetail, job, scheduler);
+        factory = new TrackCommandCreationJobFactory(part, dao, producer, END_POINT, satelliteCache, tleCache);
+        inOrder = inOrder(dao, producer, satelliteCache, tleCache, bundle, jobDetail, job, scheduler, part);
         when(bundle.getJobDetail()).thenReturn(jobDetail);
     }
 

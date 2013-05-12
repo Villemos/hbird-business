@@ -31,7 +31,6 @@ import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.Part;
 import org.hbird.exchange.groundstation.Stop;
 import org.hbird.exchange.groundstation.Track;
 import org.junit.Before;
@@ -47,6 +46,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class GroundStationPartTest {
 
+    private static final String ID = "ID";
     private static final String DESCRIPTION = "description";
     private static final String DRIVER_NAME = "driver";
     private static final String NAME = "name";
@@ -64,7 +64,7 @@ public class GroundStationPartTest {
      */
     @Before
     public void setUp() throws Exception {
-        part = new GroundStationPart<GroundStationDriverConfiguration>(new Part("root", ""), NAME, DESCRIPTION, DRIVER_NAME, configuration);
+        part = new GroundStationPart<GroundStationDriverConfiguration>(ID, NAME, DESCRIPTION, DRIVER_NAME, configuration);
         inOrder = inOrder(configuration);
     }
 
@@ -103,7 +103,7 @@ public class GroundStationPartTest {
         when(configuration.getHeartBeatInterval()).thenReturn(HEARTBEAT_INTERVAL);
         BusinessCard card = part.getBusinessCard();
         assertEquals(NAME, card.getName());
-        assertEquals(NAME, card.getIssuedBy());
+        assertEquals(ID, card.getIssuedBy());
         assertEquals(HEARTBEAT_INTERVAL, card.getPeriod());
         Map<String, Command> commands = card.getCommandsIn();
         assertEquals(4, commands.size());

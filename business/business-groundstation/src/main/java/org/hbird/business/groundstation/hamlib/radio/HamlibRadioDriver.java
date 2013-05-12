@@ -37,7 +37,6 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
@@ -49,6 +48,7 @@ import org.hbird.business.groundstation.hamlib.protocol.HamlibResponseKeyExtract
 import org.hbird.business.groundstation.hamlib.radio.protocol.GetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetVfo;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
 import org.hbird.exchange.interfaces.IStartablePart;
 import org.slf4j.Logger;
@@ -105,7 +105,8 @@ public class HamlibRadioDriver extends HamlibDriver<RadioDriverConfiguration> {
         RadioDriverConfiguration config = radio.getConfiguration();
         ResponseKeyExtractor<String, String> keyExtractor = new HamlibResponseKeyExtractor();
         RadioState deviceState = new RadioState();
-        DriverContext<RadioDriverConfiguration, String, String> context = new DriverContext<RadioDriverConfiguration, String, String>(part, config, keyExtractor, camelContext.getTypeConverter(), deviceState);
+        DriverContext<RadioDriverConfiguration, String, String> context = new DriverContext<RadioDriverConfiguration, String, String>(part, config,
+                keyExtractor, camelContext.getTypeConverter(), deviceState);
         return context;
     }
 
@@ -116,7 +117,7 @@ public class HamlibRadioDriver extends HamlibDriver<RadioDriverConfiguration> {
      */
     @Override
     protected TrackingSupport<RadioDriverConfiguration> createTrackingSupport(RadioDriverConfiguration config, ICatalogue catalogue,
-            IOrbitPrediction prediction, IPointingDataOptimizer<RadioDriverConfiguration> optimizer) {
-        return new HamlibRadioTracker(config, catalogue, prediction, optimizer);
+            PointingDataCalculator calculator, IPointingDataOptimizer<RadioDriverConfiguration> optimizer) {
+        return new HamlibRadioTracker(config, catalogue, calculator, optimizer);
     }
 }

@@ -23,7 +23,6 @@ The transfer between the presentation tier and the business tier likewise use th
         <module>core</module>
 
         <module>cfdp</module>
-        <module>commandqueuemanagement</module>
         <module>commandcontainer</module>
         <module>configurator</module>
         <module>movementcontrol</module>
@@ -36,9 +35,9 @@ The transfer between the presentation tier and the business tier likewise use th
 
         <module>groundstation</module>
 <!--         <module>transportadapter</module> -->
-        
+
         <module>all</module>
-        
+
     </modules>
 
     <groupId>org.hbird.exchange</groupId>

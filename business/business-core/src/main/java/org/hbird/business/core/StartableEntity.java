@@ -65,21 +65,23 @@ public class StartableEntity extends CommandableEntity implements IStartablePart
 
     protected BusinessCard card;
 
-	protected CamelContext context = null;	
+    protected CamelContext context = null;
 
-	/**
-	 * @return the context
-	 */
-	public CamelContext getContext() {
-		return context;
-	}
+    /**
+     * @return the context
+     */
+    @Override
+    public CamelContext getContext() {
+        return context;
+    }
 
-	/**
-	 * @param context the context to set
-	 */
-	public void setContext(CamelContext context) {
-		this.context = context;
-	}
+    /**
+     * @param context the context to set
+     */
+    @Override
+    public void setContext(CamelContext context) {
+        this.context = context;
+    }
 
     /**
      * @param name
@@ -92,7 +94,7 @@ public class StartableEntity extends CommandableEntity implements IStartablePart
     @Override
     public BusinessCard getBusinessCard() {
         if (card == null) {
-            card = createBusinessCard(getName(), getHeartbeat(), getCommands(), getDescription());
+            card = createBusinessCard(getID(), getName(), getHeartbeat(), getCommands(), getDescription());
         }
         return card.touch();
     }
@@ -139,12 +141,12 @@ public class StartableEntity extends CommandableEntity implements IStartablePart
         return commands;
     }
 
-    protected BusinessCard createBusinessCard(String name, long heartBeat, List<Command> commands, String description) {
+    protected BusinessCard createBusinessCard(String id, String name, long heartBeat, List<Command> commands, String description) {
         BusinessCard card = new BusinessCard(name, name);
         card.setPeriod(heartBeat);
         card.setCommandsIn(commands);
         card.setDescription(description);
-        card.setIssuedBy(ID);
+        card.setIssuedBy(id);
         return card;
     }
 }

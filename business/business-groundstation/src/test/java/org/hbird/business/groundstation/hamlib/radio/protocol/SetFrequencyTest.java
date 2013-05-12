@@ -30,7 +30,7 @@ import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.radio.RadioState;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.interfaces.IEntityInstance;
-import org.hbird.exchange.interfaces.IPart;
+import org.hbird.exchange.interfaces.IStartablePart;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +57,7 @@ public class SetFrequencyTest {
     private TypeConverter converter;
 
     @Mock
-    private IPart part;
+    private IStartablePart part;
 
     @Mock
     private RadioDriverConfiguration config;

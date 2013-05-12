@@ -37,7 +37,6 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
@@ -50,6 +49,7 @@ import org.hbird.business.groundstation.hamlib.rotator.protocol.GetPosition;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Park;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Reset;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.SetPosition;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
 import org.hbird.exchange.interfaces.IStartablePart;
 import org.slf4j.Logger;
@@ -85,7 +85,8 @@ public class HamlibRotatorDriver extends HamlibDriver<RotatorDriverConfiguration
 
     /**
      * @see org.hbird.business.groundstation.base.HamlibDriver#createResponseHandlers()
--     */
+     *      -
+     */
     @Override
     protected List<ResponseHandler<RotatorDriverConfiguration, String, String>> createResponseHandlers() {
         List<ResponseHandler<RotatorDriverConfiguration, String, String>> list = new ArrayList<ResponseHandler<RotatorDriverConfiguration, String, String>>(4);
@@ -116,7 +117,7 @@ public class HamlibRotatorDriver extends HamlibDriver<RotatorDriverConfiguration
      */
     @Override
     protected TrackingSupport<RotatorDriverConfiguration> createTrackingSupport(RotatorDriverConfiguration config, ICatalogue catalogue,
-            IOrbitPrediction prediction, IPointingDataOptimizer<RotatorDriverConfiguration> optimizer) {
-        return new HamlibRotatorTracker(config, catalogue, prediction, optimizer);
+            PointingDataCalculator calculator, IPointingDataOptimizer<RotatorDriverConfiguration> optimizer) {
+        return new HamlibRotatorTracker(config, catalogue, calculator, optimizer);
     }
 }

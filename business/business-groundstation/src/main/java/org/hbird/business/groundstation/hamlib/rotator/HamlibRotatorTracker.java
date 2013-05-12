@@ -21,13 +21,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Park;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Reset;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.SetPosition;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.core.CommandBase;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
@@ -41,9 +41,9 @@ import org.hbird.exchange.navigation.Satellite;
  */
 public class HamlibRotatorTracker extends TrackingSupport<RotatorDriverConfiguration> {
 
-    public HamlibRotatorTracker(RotatorDriverConfiguration config, ICatalogue catalogue, IOrbitPrediction prediction,
+    public HamlibRotatorTracker(RotatorDriverConfiguration config, ICatalogue catalogue, PointingDataCalculator calculator,
             IPointingDataOptimizer<RotatorDriverConfiguration> optimizer) {
-        super(config, catalogue, prediction, optimizer);
+        super(config, catalogue, calculator, optimizer);
     }
 
     /**
