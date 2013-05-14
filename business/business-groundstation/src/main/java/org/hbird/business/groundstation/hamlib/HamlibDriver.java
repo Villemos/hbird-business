@@ -88,15 +88,15 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
     @Override
     public void doConfigure() {
 
-        if (part == null) {
+        if (entity == null) {
             throw new IllegalStateException("No IPart definition available");
         }
 
         CamelContext camelContext = getContext();
 
-        driverContext = createDriverContext(camelContext, part);
+        driverContext = createDriverContext(camelContext, entity);
 
-        String name = part.getName();
+        String name = entity.getName();
         C config = driverContext.getConfiguration();
 
         NettyComponent nettyComponent = camelContext.getComponent("netty", NettyComponent.class);
@@ -132,7 +132,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
          * The NativeCommands are at their execution time read through the EXECUTION below.
          */
 
-        ICatalogue catalogue = ApiFactory.getCatalogueApi(part.getID());
+        ICatalogue catalogue = ApiFactory.getCatalogueApi(entity.getID());
         PointingDataCalculator calulator = new PointingDataCalculator();
         IPointingDataOptimizer<C> optimizer = createOptimizer(config.getPointingDataOptimzerClassName()); // can be null
         TrackingSupport<C> tracker = createTrackingSupport(config, catalogue, calulator, optimizer);    

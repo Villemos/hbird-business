@@ -71,7 +71,7 @@ public class HamlibRadioDriver extends HamlibDriver<RadioDriverConfiguration> {
         LOG.debug("Setting up Hamlib radio frequency poll using timeout {} ms and address '{}'", config.getDevicePollInterval(), config.getAddress());
 
         long interval = config.getDevicePollInterval();
-        String name = part.getName();
+        String name = entity.getName();
 
         /** Configure the monitoring routes. */
         // @formatter:off

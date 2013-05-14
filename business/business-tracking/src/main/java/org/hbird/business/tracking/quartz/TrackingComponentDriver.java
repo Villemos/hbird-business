@@ -21,8 +21,8 @@ public class TrackingComponentDriver extends SoftwareComponentDriver {
     @Override
     protected void doConfigure() {
 
-        String name = part.getName();
-        TrackingDriverConfiguration config = ((TrackingComponent) part).getConfiguration();
+        String name = entity.getName();
+        TrackingDriverConfiguration config = ((TrackingComponent) entity).getConfiguration();
         IDataAccess dao = ApiFactory.getDataAccessApi(name);
         EntityCache<Satellite> satelliteCache = new EntityCache<Satellite>(new SatelliteResolver(dao));
         EntityCache<TleOrbitalParameters> tleCache = new EntityCache<TleOrbitalParameters>(new TleResolver(dao));
@@ -32,7 +32,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver {
         Scheduler scheduler;
         try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
-            JobFactory factory = new TrackCommandCreationJobFactory(part, dao, producer, TRACK_COMMAND_INJECTOR, satelliteCache, tleCache);
+            JobFactory factory = new TrackCommandCreationJobFactory(entity, dao, producer, TRACK_COMMAND_INJECTOR, satelliteCache, tleCache);
             scheduler.setJobFactory(factory);
             scheduler.start();
         }

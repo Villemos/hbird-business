@@ -29,7 +29,7 @@ public class StartComponent extends Command {
 
     public static final String DESCRIPTION = "Request to start a component.";
 
-    public static final String ARGUMENT_DESCRIPTION_PART = "The system part that this command requests the start of.";
+    public static final String ARGUMENT_DESCRIPTION_ENTITY = "The entity that this command requests the start of.";
 
     public StartComponent(String ID) {
         super(ID, StartComponent.class.getSimpleName());
@@ -41,15 +41,15 @@ public class StartComponent extends Command {
      */
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
-        args.add(new CommandArgument(StandardArguments.PART, ARGUMENT_DESCRIPTION_PART, IStartableEntity.class, true));
+        args.add(new CommandArgument(StandardArguments.ENTITY, ARGUMENT_DESCRIPTION_ENTITY, IStartableEntity.class, true));
         return args;
     }
 
-    public void setPart(IStartableEntity part) {
-        setArgumentValue(StandardArguments.PART, part);
+    public void setEntity(IStartableEntity entity) {
+        setArgumentValue(StandardArguments.ENTITY, entity);
     }
 
-    public IStartableEntity getPart() {
-        return getArgumentValue(StandardArguments.PART, IStartableEntity.class);
+    public IStartableEntity getEntity() {
+        return getArgumentValue(StandardArguments.ENTITY, IStartableEntity.class);
     }
 }

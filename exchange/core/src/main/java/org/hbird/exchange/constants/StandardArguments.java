@@ -28,6 +28,8 @@ public class StandardArguments {
 
     public static final String APPLICABLE_TO = "applicableto";
 
+    public static final String ARGUMENTS_LENGTH = "argumentsLength";
+
     public static final String AZIMUTH = "azimuth";
 
     public static final String CLASS = "class";
@@ -64,6 +66,8 @@ public class StandardArguments {
 
     public static final String END = "end";
 
+    public static final String ENTITY = "entity";
+
     public static final String FROM = "from";
 
     public static final String FREQUENCY = "frequency";
@@ -79,7 +83,7 @@ public class StandardArguments {
     public static final String ENTITY_ID = "entityID";
 
     public static final String ENTITY_INSTANCE_ID = "entityInstanceID";
-    
+
     public static final String INCLUDE_STATES = "includeStates";
 
     public static final String INITIAL_STATE = "initialstate";
@@ -89,6 +93,8 @@ public class StandardArguments {
     public static final String IS_STATE_OF = "isStateOf";
 
     public static final String ISSUED_BY = "issuedBy";
+
+    public static final String LENGTH = "length";
 
     public static final String LIMIT = "limit";
 
@@ -103,6 +109,8 @@ public class StandardArguments {
     public static final String ORBIT_NUMBER = "orbitNumber";
 
     public static final String PATTERN = "pattern";
+
+    public static final String PRIORITY = "priority";
 
     public static final String PUBLISH = "publish";
 
@@ -119,6 +127,8 @@ public class StandardArguments {
     public static final String SORT = "sort";
 
     public static final String SORT_ORDER = "sortorder";
+
+    public static final String SOURCE = "source";
 
     public static final String START = "start";
 
@@ -137,6 +147,8 @@ public class StandardArguments {
     public static final String TYPE = "type";
 
     public static final String UNIT = "unit";
+
+    public static final String USERNAME = "username";
 
     public static final String VALUE = "value";
 

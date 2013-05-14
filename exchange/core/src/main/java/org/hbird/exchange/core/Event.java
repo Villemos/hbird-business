@@ -45,12 +45,9 @@ package org.hbird.exchange.core;
  * @author Gert Villemos
  * 
  */
-public class Event extends EntityInstance {
+public class Event extends ApplicableTo {
 
-    /**
-	 * 
-	 */
-    private static final long serialVersionUID = 8958078334517112743L;
+    private static final long serialVersionUID = 2077961401607838192L;
 
     public Event(String ID, String name) {
         super(ID, name);

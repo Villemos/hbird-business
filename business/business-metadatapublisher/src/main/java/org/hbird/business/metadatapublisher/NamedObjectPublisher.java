@@ -44,7 +44,7 @@ public class NamedObjectPublisher {
 
     protected String destination;
 
-	protected List<EntityInstance> objects = null;
+    protected List<EntityInstance> objects = null;
 
     public NamedObjectPublisher(String name, List<EntityInstance> objects) {
         this(name, DEFAULT_CONFIGURATOR_NAME, objects);
@@ -55,7 +55,7 @@ public class NamedObjectPublisher {
      * 
      * @param filename Name of the file to be read at intervals.
      */
-	public NamedObjectPublisher(String name, String destination, List<EntityInstance> objects) {
+    public NamedObjectPublisher(String name, String destination, List<EntityInstance> objects) {
         this.name = name;
         this.destination = destination;
         this.objects = objects;
@@ -70,16 +70,16 @@ public class NamedObjectPublisher {
     public void start() {
         IPublish api = ApiFactory.getPublishApi(name);
 
-		for (EntityInstance object : objects) {
+        for (EntityInstance object : objects) {
             if (object instanceof IStartableEntity) {
                 LOG.info("Creating StartComponent command for part '{}' to destination '{}'.", object.getID(), destination);
                 if (destination == null) {
                     LOG.warn("The destination is null; most likely the start command will be ignored. Check your application setup configuration");
                 }
-                
+
                 StartComponent startCommand = new StartComponent(object.getID() + "/StartRequest");
-                startCommand.setPart((IStartableEntity) object);
-                
+                startCommand.setEntity((IStartableEntity) object);
+
                 startCommand.setDestination(destination);
                 api.publish(startCommand);
             }

@@ -49,6 +49,6 @@ public class CelestrackComponentDriver extends SoftwareComponentDriver {
 	 */
 	@Override
 	protected void doConfigure() {
-        from(addTimer("celestrack", ((CelestrackComponent)part).getPeriod())).bean(new CelestrackReader((CelestrackComponent) part), "read");
+        from(addTimer("celestrack", ((CelestrackComponent)entity).getPeriod())).bean(new CelestrackReader((CelestrackComponent) entity), "read");
 	}
 }

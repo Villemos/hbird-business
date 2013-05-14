@@ -14,48 +14,51 @@
 
 	<!-- String issuedBy, String name, String type, String description, Double p1, Double p2, Double p3 -->
 	<bean id="location" class="org.hbird.exchange.core.D3Vector">
-		<constructor-arg index="0" name="issuedBy" value="ES5EC"/>
-		<constructor-arg index="1" name="name" value="ES5EC Location"/>
-		<constructor-arg index="2" name="type" value="Location"/>
-		<constructor-arg index="3" name="description" value="The geo location of the ES5EC ground station."/>
-		<constructor-arg index="4" name="p1" value="26.7147224" />
-		<constructor-arg index="5" name="p2" value="58.3708465" />
-		<constructor-arg index="6" name="p3" value="0d" />
+		<constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations/ES5EC/Geo Location"/>
+		<constructor-arg index="1" name="name" value="Geo Location"/>
+		<property name="issuedBy" value="/ESTCUBE/GroundStations/ES5EC"/>
+		<property name="description" value="The geo location of the ES5EC ground station."/>
+		<property name="p1" value="26.7147224" />
+		<property name="p2" value="58.3708465" />
+		<property name="p3" value="0d" />
 	</bean>	
 
 	<!-- D3Vector geoLocation, Antenna antenna -->
 	<bean id="es5ec" class="org.hbird.exchange.groundstation.GroundStation">
-		<constructor-arg index="0" name="name" value="ES5EC" />
-		<constructor-arg index="1" name="geoLocation" ref="location" />
+		<constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations/ES5EC" />
+		<constructor-arg index="1" name="name" value="ES5EC" />
+		<property name="geoLocation" ref="location" />
 	</bean>
 
 	<bean id="antenna" class="org.hbird.exchange.groundstation.Antenna">
-		<constructor-arg index="0" name="name" value="ES5EC_Antenna_1" />
-        <constructor-arg index="1" name="description" value="Antenna of the ES5EC groundstation" />
-        <constructor-arg index="2" name="parent" ref="es5ec"/>
+		<constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations/ES5EC/Antenna" />
+		<constructor-arg index="1" name="name" value="ES5EC Antenna 1" />
+        <property name="description" value="Antenna of the ES5EC groundstation" />
 	</bean>
     
     <bean id="rotatorConfig" class="org.hbird.business.groundstation.configuration.RotatorDriverConfiguration">
         <property name="devicePort" value="4533"/>
-        <property name="groundstationId" value="ES5EC"/>
+        <property name="groundstationId" value="/ESTCUBE/GroundStations/ES5EC"/>
     </bean>
 	
 	<!-- String name, int thresholdElevation, int minAzimuth, int maxAzimuth, int minElevation, int maxElevation, long port, String host -->
 	<bean id="rotator" class="org.hbird.business.groundstation.hamlib.rotator.HamlibRotatorPart">
-        <constructor-arg index="0" name="name" value="ES5EC_Rotator"/>
-        <constructor-arg index="1" name="configuration" ref="rotatorConfig"/>
+        <constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations/ES5EC/Rotator" />
+        <constructor-arg index="1" name="name" value="ES5EC Rotator"/>
+        <constructor-arg index="2" name="configuration" ref="rotatorConfig"/>
 	</bean>
 
     <bean id="radioConfig" class="org.hbird.business.groundstation.configuration.RadioDriverConfiguration">
         <property name="devicePort" value="4532"/>
-        <property name="groundstationId" value="ES5EC"/>
+        <property name="groundstationId" value="/ESTCUBE/GroundStations/ES5EC"/>
     </bean>
 
 
 	<!-- long minFrequency, long maxFrequency, boolean isUplink, boolean isDownlink, long gain -->
 	<bean id="radio" class="org.hbird.business.groundstation.hamlib.radio.HamlibRadioPart">
-        <constructor-arg index="0" name="name" value="ES5EC_Radio"/>
-        <constructor-arg index="1" name="configuration" ref="radioConfig"/>
+        <constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations/ES5EC/Radio" />
+        <constructor-arg index="1" name="name" value="ES5EC Radio"/>
+        <constructor-arg index="2" name="configuration" ref="radioConfig"/>
 	</bean>
 			
 </beans>

@@ -26,8 +26,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.tracking.quartz.ArchivePoller;
-import org.hbird.business.tracking.quartz.TrackingDriverConfiguration;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,8 +89,10 @@ public class ArchivePollerTest {
         inOrder.verify(config, times(1)).getSatelliteIds();
         inOrder.verify(config, times(1)).getGroundstationId();
         inOrder.verify(dao, times(1)).getNextLocationContactEventFor(GS_ID, SAT_1);
+        inOrder.verify(event1, times(1)).prettyPrint();
         inOrder.verify(dao, times(1)).getNextLocationContactEventFor(GS_ID, SAT_2);
         inOrder.verify(dao, times(1)).getNextLocationContactEventFor(GS_ID, SAT_3);
+        inOrder.verify(event2, times(1)).prettyPrint();
         inOrder.verifyNoMoreInteractions();
     }
 }

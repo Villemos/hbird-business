@@ -43,84 +43,84 @@ import org.hbird.exchange.interfaces.IStartableEntity;
  * API for accessing information about Parts
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class PartManager extends Publish implements IPartManager {
 
-	/**
-	 * Constructor. 
-	 * 
-	 * @param issuedBy The name/ID of the component that is using the API to send requests.
-	 * 
-	 * TODO Remove the hardcoded destination
-	 */
-	public PartManager(String issuedBy) {
-		super(issuedBy);
-		this.destination = "Configurator";
-	}
+    /**
+     * Constructor.
+     * 
+     * @param issuedBy The name/ID of the component that is using the API to send requests.
+     * 
+     *            TODO Remove the hardcoded destination
+     */
+    public PartManager(String issuedBy) {
+        super(issuedBy);
+        this.destination = "Configurator";
+    }
 
-	public PartManager(String issuedBy, CamelContext context) {
-		super(issuedBy, context);
-		this.destination = "Configurator";
-	}
+    public PartManager(String issuedBy, CamelContext context) {
+        super(issuedBy, context);
+        this.destination = "Configurator";
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.IPartManager#start(org.hbird.exchange.interfaces.IStartablePart)
-	 */
-	@Override
-	public void start(IStartableEntity part) {
-		StartComponent request = new StartComponent(getID());
-		request.setIssuedBy(issuedBy);
-		request.setPart(part);
-		publish(request);
-	}
+    /**
+     * @see org.hbird.business.api.IPartManager#start(org.hbird.exchange.interfaces.IStartablePart)
+     */
+    @Override
+    public void start(IStartableEntity entity) {
+        StartComponent request = new StartComponent(getID());
+        request.setIssuedBy(issuedBy);
+        request.setEntity(entity);
+        publish(request);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.IPartManager#stop(java.lang.String)
-	 */
-	@Override
-	public void stop(String partName) {
-		StopComponent request = new StopComponent(getID());
-		request.setIssuedBy(issuedBy);
-		request.setComponent(partName);
-		publish(request);
-	}
+    /**
+     * @see org.hbird.business.api.IPartManager#stop(java.lang.String)
+     */
+    @Override
+    public void stop(String entityID) {
+        StopComponent request = new StopComponent(getID());
+        request.setIssuedBy(issuedBy);
+        request.setEntityID(entityID);
+        publish(request);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.IPartManager#resolveParent(org.hbird.exchange.interfaces.IPart)
-	 */
-	@Override
-	public Part resolveParent(Part child) {
-//		IDataAccess api = ApiFactory.getDataAccessApi(issuedBy);
-//		EntityInstance resolution = api.resolve(child.getID());
-//		
-//		return resolution == null ? null : (Part) resolution;
-		
-		// TODO The method must take into consideration a IView organizing the parts
-		return null;
-	}
+    /**
+     * @see org.hbird.business.api.IPartManager#resolveParent(org.hbird.exchange.interfaces.IPart)
+     */
+    @Override
+    public Part resolveParent(Part child) {
+        // IDataAccess api = ApiFactory.getDataAccessApi(issuedBy);
+        // EntityInstance resolution = api.resolve(child.getID());
+        //
+        // return resolution == null ? null : (Part) resolution;
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.IPartManager#getQualifiedName(org.hbird.exchange.interfaces.IPart)
-	 */
-	@Override
-	public String getQualifiedName(Part part) {		
-		return getQualifiedName(part, "/");
-	}
+        // TODO The method must take into consideration a IView organizing the parts
+        return null;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.IPartManager#getQualifiedName(org.hbird.exchange.interfaces.IPart, java.lang.String)
-	 */
-	@Override
-	public String getQualifiedName(Part part, String separator) {
-//		ICatalogue api = ApiFactory.getCatalogueApi(issuedBy);
-//		List<Part> parts = api.getParts();
-//		Map<String, Part> partMap = new HashMap<String, Part>();
-//		for (Part aPart : parts) {
-//			partMap.put(aPart.getID(), aPart);
-//		}
-		
-		// TODO The method must take into consideration a IView organizing the parts
-		return null;
-	}
+    /**
+     * @see org.hbird.business.api.IPartManager#getQualifiedName(org.hbird.exchange.interfaces.IPart)
+     */
+    @Override
+    public String getQualifiedName(Part part) {
+        return getQualifiedName(part, "/");
+    }
+
+    /**
+     * @see org.hbird.business.api.IPartManager#getQualifiedName(org.hbird.exchange.interfaces.IPart, java.lang.String)
+     */
+    @Override
+    public String getQualifiedName(Part part, String separator) {
+        // ICatalogue api = ApiFactory.getCatalogueApi(issuedBy);
+        // List<Part> parts = api.getParts();
+        // Map<String, Part> partMap = new HashMap<String, Part>();
+        // for (Part aPart : parts) {
+        // partMap.put(aPart.getID(), aPart);
+        // }
+
+        // TODO The method must take into consideration a IView organizing the parts
+        return null;
+    }
 }
