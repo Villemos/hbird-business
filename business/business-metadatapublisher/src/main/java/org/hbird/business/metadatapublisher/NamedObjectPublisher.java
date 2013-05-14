@@ -22,7 +22,7 @@ import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IPublish;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.EntityInstance;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,14 +71,14 @@ public class NamedObjectPublisher {
         IPublish api = ApiFactory.getPublishApi(name);
 
 		for (EntityInstance object : objects) {
-            if (object instanceof IStartablePart) {
+            if (object instanceof IStartableEntity) {
                 LOG.info("Creating StartComponent command for part '{}' to destination '{}'.", object.getID(), destination);
                 if (destination == null) {
                     LOG.warn("The destination is null; most likely the start command will be ignored. Check your application setup configuration");
                 }
                 
                 StartComponent startCommand = new StartComponent(object.getID() + "/StartRequest");
-                startCommand.setPart((IStartablePart) object);
+                startCommand.setPart((IStartableEntity) object);
                 
                 startCommand.setDestination(destination);
                 api.publish(startCommand);

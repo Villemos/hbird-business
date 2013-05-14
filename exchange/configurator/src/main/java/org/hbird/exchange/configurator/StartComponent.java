@@ -21,7 +21,7 @@ import java.util.List;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 
 public class StartComponent extends Command {
 
@@ -41,15 +41,15 @@ public class StartComponent extends Command {
      */
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
-        args.add(new CommandArgument(StandardArguments.PART, ARGUMENT_DESCRIPTION_PART, IStartablePart.class, true));
+        args.add(new CommandArgument(StandardArguments.PART, ARGUMENT_DESCRIPTION_PART, IStartableEntity.class, true));
         return args;
     }
 
-    public void setPart(IStartablePart part) {
+    public void setPart(IStartableEntity part) {
         setArgumentValue(StandardArguments.PART, part);
     }
 
-    public IStartablePart getPart() {
-        return getArgumentValue(StandardArguments.PART, IStartablePart.class);
+    public IStartableEntity getPart() {
+        return getArgumentValue(StandardArguments.PART, IStartableEntity.class);
     }
 }

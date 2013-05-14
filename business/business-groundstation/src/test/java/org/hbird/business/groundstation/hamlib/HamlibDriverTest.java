@@ -43,7 +43,7 @@ import org.hbird.business.groundstation.hamlib.protocol.HamlibLineDecoder;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibResponseBufferer;
 import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.junit.Before;
@@ -103,7 +103,7 @@ public class HamlibDriverTest {
             }
 
             @Override
-            protected DriverContext<GroundStationDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IStartablePart part) {
+            protected DriverContext<GroundStationDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IStartableEntity part) {
                 return null;
             }
         };

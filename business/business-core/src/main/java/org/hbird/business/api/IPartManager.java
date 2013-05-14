@@ -33,7 +33,7 @@
 package org.hbird.business.api;
 
 import org.hbird.exchange.core.Part;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 
 /**
  * API for starting and stopping components.
@@ -43,7 +43,7 @@ import org.hbird.exchange.interfaces.IStartablePart;
  */
 public interface IPartManager extends IHbirdApi {
 
-	public void start(IStartablePart part);
+	public void start(IStartableEntity part);
 	
 	public void stop(String name);
 

@@ -19,21 +19,21 @@ package org.hbird.business.groundstation.base;
 import org.apache.camel.TypeConverter;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
 import org.hbird.business.groundstation.device.response.ResponseKeyExtractor;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 
 /**
  *
  */
 public class DriverContext<C extends GroundStationDriverConfiguration, K, R> {
 
-    protected final IStartablePart part;
+    protected final IStartableEntity part;
     protected final C configuration;
     protected final ResponseKeyExtractor<K, R> keyExtractor;
     protected final TypeConverter typeConverter;
 
     protected final Object deviceState;
 
-    public DriverContext(IStartablePart part, C configuration, ResponseKeyExtractor<K, R> keyExtractor, TypeConverter typeConverter,
+    public DriverContext(IStartableEntity part, C configuration, ResponseKeyExtractor<K, R> keyExtractor, TypeConverter typeConverter,
             Object deviceState) {
         this.part = part;
         this.configuration = configuration;
@@ -59,7 +59,7 @@ public class DriverContext<C extends GroundStationDriverConfiguration, K, R> {
     /**
      * @return the part
      */
-    public IStartablePart getPart() {
+    public IStartableEntity getPart() {
         return part;
     }
 

@@ -20,7 +20,7 @@ import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.groundstation.Track;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -43,7 +43,7 @@ public class TrackCommandCreationJob implements Job {
 
     private static final Logger LOG = LoggerFactory.getLogger(TrackCommandCreationJob.class);
 
-    private IStartablePart part;
+    private IStartableEntity part;
 
     private IDataAccess dao;
 
@@ -55,7 +55,7 @@ public class TrackCommandCreationJob implements Job {
 
     private EntityCache<TleOrbitalParameters> tleCache;
 
-    public void setPart(IStartablePart part) {
+    public void setPart(IStartableEntity part) {
         this.part = part;
     }
 
@@ -140,7 +140,7 @@ public class TrackCommandCreationJob implements Job {
         return dao.getTleFor(satelliteId);
     }
 
-    Track createTrackCommand(IStartablePart part, LocationContactEvent event, Satellite satellite) {
+    Track createTrackCommand(IStartableEntity part, LocationContactEvent event, Satellite satellite) {
         Track track = new Track(satellite.getID());
         track.setIssuedBy(part.getID());
         track.setDestination(event.getGroundStationId());

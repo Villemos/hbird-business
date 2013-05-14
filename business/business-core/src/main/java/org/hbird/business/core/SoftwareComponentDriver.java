@@ -20,7 +20,7 @@ import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,7 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
     protected StartComponent command = null;
 
     /** The part that this driver starts. */
-    protected IStartablePart part = null;
+    protected IStartableEntity part = null;
 
     /**
      * Sets the command which this builder use to create the component.
@@ -141,11 +141,11 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
         return "selector=name='" + name + "'";
     }
 
-    public IStartablePart getPart() {
+    public IStartableEntity getPart() {
         return part;
     }
 
-    public void setPart(IStartablePart part) {
+    public void setPart(IStartableEntity part) {
         this.part = part;
     }
 }

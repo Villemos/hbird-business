@@ -16,9 +16,9 @@
  */
 package org.hbird.exchange.core;
 
-import java.io.Serializable;
-
 import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hbird.exchange.interfaces.IEntityInstance;
 
 /**
@@ -32,7 +32,9 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
 
     /** The unique UID of this class. */
     private static final long serialVersionUID = -5803219773253020746L;
-    
+
+    public static final String INSTANCE_ID_SEPARATOR = ":";
+
     /**
      * The time at which this object represented a valid state of the system. Default value is the
      * time of creation.
@@ -46,38 +48,47 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
      * @param description The description of the object.
      */
     public EntityInstance(String ID, String name) {
-    	super(ID, name);
-    	this.timestamp = System.currentTimeMillis();
+        super(ID, name);
+        this.timestamp = System.currentTimeMillis();
     }
 
-	/**
-	 * @return the timestamp
-	 */
-	public long getTimestamp() {
-		return timestamp;
-	}
-
-	/**
-	 * @param timestamp the timestamp to set
-	 */
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public String getInstanceID() {
-		return ID + ":" + timestamp;
-	}
-	
-	public <T extends EntityInstance> T cloneEntity() {
-		EntityInstance newInstance = (EntityInstance) SerializationUtils.clone(this);
-		newInstance.setTimestamp(System.currentTimeMillis());
-		return (T) newInstance;
-	}
-	
-	public String prettyPrint() {
-        return String.format("%s[ID=%s, name=%s]", this.getClass().getSimpleName(), getInstanceID(), getName());
+    /**
+     * @return the timestamp
+     */
+    @Override
+    public long getTimestamp() {
+        return timestamp;
     }
 
+    /**
+     * @param timestamp the timestamp to set
+     */
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    @Override
+    public String getInstanceID() {
+        return new StringBuilder()
+                .append(ID)
+                .append(INSTANCE_ID_SEPARATOR)
+                .append(timestamp)
+                .toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends EntityInstance> T cloneEntity() {
+        EntityInstance newInstance = SerializationUtils.clone(this);
+        newInstance.setTimestamp(System.currentTimeMillis());
+        return (T) newInstance;
+    }
+
+    public String prettyPrint() {
+        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        builder.append("ID", getInstanceID());
+        builder.append("name", getName());
+        return builder.build();
+    }
 
     /*
      * (non-Javadoc)

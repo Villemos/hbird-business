@@ -19,7 +19,7 @@ package org.hbird.business.tracking.quartz;
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.quartz.Job;
@@ -33,7 +33,7 @@ import org.quartz.spi.TriggerFiredBundle;
  */
 public class TrackCommandCreationJobFactory extends SimpleJobFactory {
 
-    private final IStartablePart part;
+    private final IStartableEntity part;
 
     private final IDataAccess dao;
 
@@ -45,7 +45,7 @@ public class TrackCommandCreationJobFactory extends SimpleJobFactory {
 
     private final EntityCache<TleOrbitalParameters> tleCache;
 
-    public TrackCommandCreationJobFactory(IStartablePart part, IDataAccess dao, ProducerTemplate producer, String endPoint,
+    public TrackCommandCreationJobFactory(IStartableEntity part, IDataAccess dao, ProducerTemplate producer, String endPoint,
             EntityCache<Satellite> satelliteCache,
             EntityCache<TleOrbitalParameters> tleCache) {
         this.part = part;

@@ -37,7 +37,7 @@ import org.hbird.business.api.IPartManager;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.Part;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 
 /**
  * API for accessing information about Parts
@@ -68,7 +68,7 @@ public class PartManager extends Publish implements IPartManager {
 	 * @see org.hbird.business.api.IPartManager#start(org.hbird.exchange.interfaces.IStartablePart)
 	 */
 	@Override
-	public void start(IStartablePart part) {
+	public void start(IStartableEntity part) {
 		StartComponent request = new StartComponent(getID());
 		request.setIssuedBy(issuedBy);
 		request.setPart(part);

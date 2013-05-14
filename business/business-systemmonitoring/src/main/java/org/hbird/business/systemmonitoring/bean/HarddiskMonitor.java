@@ -49,25 +49,22 @@ public class HarddiskMonitor extends Monitor {
             long total = root.getTotalSpace();
             long free = root.getFreeSpace();
             double used = total == 0 ? 0 : (100D - ((100 * free) / total));
+            String baseId = naming.buildId(componentId, hddName);
 
             // TODO Not sure how to set ID and name...
-            list[i * 3 + 0] = createParameter(componentId, HostInfo.getHostName(), hddName, "Available Disk Space", "The available harddisk space.", "Byte",
-                    total);
-            list[i * 3 + 1] = createParameter(componentId, HostInfo.getHostName(), hddName, "Free Disk Space", "The free harddisk space.", "Byte", free);
-            list[i * 3 + 2] = createParameter(componentId, HostInfo.getHostName(), hddName, "Used Disk Space", "The used harddisk space.", "%", used);
+            list[i * 3 + 0] = createParameter(baseId, "Available Disk Space", "The available harddisk space.", "Byte", total);
+            list[i * 3 + 1] = createParameter(baseId, "Free Disk Space", "The free harddisk space.", "Byte", free);
+            list[i * 3 + 2] = createParameter(baseId, "Used Disk Space", "The used harddisk space.", "%", used);
         }
         return list;
     }
 
-    Parameter createParameter(String componentId, String host, String hdd, String name, String description, String unit, Number value) {
-        Parameter p = new Parameter(createId(componentId, host, hdd, name), name);
+    Parameter createParameter(String baseId, String name, String description, String unit, Number value) {
+        Parameter p = new Parameter(naming.buildId(baseId, name), name);
         p.setDescription(description);
         p.setUnit(unit);
         p.setValue(value);
         return p;
     }
 
-    String createId(String component, String host, String hdd, String parameter) {
-        return String.format("%s/%s/%s/%s", component, host, hdd.replace("/", ESCAPED_SHLASH), parameter);
-    }
 }

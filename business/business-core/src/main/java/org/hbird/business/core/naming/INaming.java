@@ -14,26 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.systemmonitoring.bean;
+package org.hbird.business.core.naming;
 
-import org.hbird.business.core.naming.DefaultNaming;
-import org.hbird.business.core.naming.INaming;
+/**
+ *
+ */
+public interface INaming {
 
-public class Monitor {
-
-    protected String componentId;
-
-    protected INaming naming = new DefaultNaming();
-
-    public Monitor(String componentId) {
-        this.componentId = componentId;
-    }
-
-    public void setNaming(INaming naming) {
-        this.naming = naming;
-    }
-
-    public INaming getNaming() {
-        return this.naming;
-    }
+    public String buildId(String base, String name);
 }

@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.junit.After;
@@ -52,7 +52,7 @@ public class TrackCommandCreationJobFactoryTest {
     private static final String END_POINT = "direct:inject";
 
     @Mock
-    private IStartablePart part;
+    private IStartableEntity part;
 
     @Mock
     private IDataAccess dao;

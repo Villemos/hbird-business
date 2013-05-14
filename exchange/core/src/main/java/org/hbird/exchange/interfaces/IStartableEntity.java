@@ -23,28 +23,24 @@ import org.hbird.exchange.core.BusinessCard;
  * @author Gert Villemos
  * 
  */
-public interface IStartablePart extends IEntityInstance {
+public interface IStartableEntity extends IEntityInstance {
 
     public String getDriverName();
 
     public void setDriverName(String driverName);
-
-    public String getConfigurator();
-
-    public void setConfigurator(String configurator);
 
     public long getHeartbeat();
 
     public void setHeartbeat(long heartbeat);
 
     /**
-     * Returns {@link BusinessCard} describing the {@link IStartablePart}.
+     * Returns {@link BusinessCard} describing the {@link IStartableEntity}.
      * 
-     * @return {@link BusinessCard} describing the {@link IStartablePart}
+     * @return {@link BusinessCard} describing the {@link IStartableEntity}
      */
     public BusinessCard getBusinessCard();
-    
+
     public void setContext(CamelContext context);
-    
+
     public CamelContext getContext();
 }

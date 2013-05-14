@@ -5,14 +5,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.hbird.business.core.naming.DefaultNaming;
-import org.hbird.business.core.naming.Naming;
+import org.hbird.business.core.naming.INaming;
 import org.hbird.business.systemmonitoring.bean.Monitor;
 import org.junit.Before;
 import org.junit.Test;
 
 public class MonitorTest {
 
-    private Naming naming;
+    private INaming naming;
 
     private Monitor monitor;
 

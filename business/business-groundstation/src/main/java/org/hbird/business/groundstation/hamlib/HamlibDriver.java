@@ -62,7 +62,7 @@ import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.slf4j.Logger;
@@ -277,7 +277,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
         return handlerMap;
     }
 
-    protected abstract DriverContext<C, String, String> createDriverContext(CamelContext camelContext, IStartablePart part);
+    protected abstract DriverContext<C, String, String> createDriverContext(CamelContext camelContext, IStartableEntity part);
 
     protected abstract List<ResponseHandler<C, String, String>> createResponseHandlers();
 

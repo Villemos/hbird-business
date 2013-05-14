@@ -28,7 +28,7 @@ import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.groundstation.Track;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -59,7 +59,7 @@ public class TrackCommandCreationJobTest {
     private static final long NOW = System.currentTimeMillis();
 
     @Mock
-    private IStartablePart part;
+    private IStartableEntity part;
 
     @Mock
     private IDataAccess dao;

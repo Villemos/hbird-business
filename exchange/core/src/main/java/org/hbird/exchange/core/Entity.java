@@ -18,67 +18,64 @@ package org.hbird.exchange.core;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.hbird.exchange.interfaces.IEntity;
 
 /**
- * An ‚entity‘ is a specific ‘thing’ in the system, such as a Part, or a parameter. 
+ * An ‚entity‘ is a specific ‘thing’ in the system, such as a Part, or a parameter.
  * 
- * The value at a given point in time is represented by an entity instance. An instance 
- * hold a timestamp and the value(s) of the entity at the time. The timestamp define 
- * when the instance is valid. Each entity is only represented by one instance at any point 
- * in time; the instance always supersedes all previously created instances. As an example 
- * the entity ‘/ESTcube/WeatherStations/Station1/Temperature’ (a Parameter measuring the 
- * temperature of a specific location) can have different values at different points in 
- * time, represented by different instances of the entity. But it cannot have two 
- * valid values at the same time. Consider the timeline below
- * <li>Time X. Instance A with value = 22 Degrees.</li>
- * <li>Time Y (> X). Instance B with value = 24 Degrees.</li>
+ * The value at a given point in time is represented by an entity instance. An instance
+ * hold a timestamp and the value(s) of the entity at the time. The timestamp define
+ * when the instance is valid. Each entity is only represented by one instance at any point
+ * in time; the instance always supersedes all previously created instances. As an example
+ * the entity ‘/ESTcube/WeatherStations/Station1/Temperature’ (a Parameter measuring the
+ * temperature of a specific location) can have different values at different points in
+ * time, represented by different instances of the entity. But it cannot have two
+ * valid values at the same time. Consider the timeline below <li>Time X. Instance A with value = 22 Degrees.</li> <li>
+ * Time Y (> X). Instance B with value = 24 Degrees.</li>
  * 
  * At time Y only instance B is valid; instance A has been superseded.
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class Entity implements IEntity, Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3604923675901537443L;
+    private static final long serialVersionUID = -3604923675901537443L;
 
     /** The ID of the entity. */
     protected String ID;
-	
+
     /** The name of the object. */
     protected String name;
 
     /** A description of the object. */
     protected String description;
 
-	/** The Entity ID (not the instance ID) of the Part that has issued this object. */
+    /** The Entity ID (not the instance ID) of the Part that has issued this object. */
     protected String issuedBy;
-    
-    /**
-	 * @param iD
-	 * @param name
-	 * @param description
-	 * @param issuedBy
-	 */
-	public Entity(String ID, String name) {
-		this.ID = ID;
-		this.name = name;
-	}
 
-	/**
+    /**
+     * @param iD
+     * @param name
+     * @param description
+     * @param issuedBy
+     */
+    public Entity(String ID, String name) {
+        this.ID = ID;
+        this.name = name;
+    }
+
+    /**
      * Getter of the object name.
      * 
      * @return The name of the object.
      */
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -88,6 +85,7 @@ public class Entity implements IEntity, Serializable {
      * 
      * @return The description of the object.
      */
+    @Override
     public String getDescription() {
         return description;
     }
@@ -96,32 +94,30 @@ public class Entity implements IEntity, Serializable {
         this.description = description;
     }
 
+    @Override
     public String getID() {
-    	return ID;
+        return ID;
     }
 
-    public void setEntityID(String ID) {
-    	this.ID = ID;
-    } 
-    
     /**
-	 * @return the issuedBy
-	 */
-	public String getIssuedBy() {
-		return issuedBy;
-	}
+     * @return the issuedBy
+     */
+    @Override
+    public String getIssuedBy() {
+        return issuedBy;
+    }
 
-	/**
-	 * @param issuedBy the issuedBy to set
-	 */
-	public void setIssuedBy(String issuedBy) {
-		this.issuedBy = issuedBy;
-	}
+    /**
+     * @param issuedBy the issuedBy to set
+     */
+    public void setIssuedBy(String issuedBy) {
+        this.issuedBy = issuedBy;
+    }
 
-	/**
-	 * @param iD the iD to set
-	 */
-	public void setID(String iD) {
-		ID = iD;
-	}	
-} 
+    /**
+     * @param iD the iD to set
+     */
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+}
