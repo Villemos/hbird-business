@@ -11,10 +11,6 @@
 
 	<import resource="groundstation-es5ec-parts.xml" />
     
-    <bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponent" init-method="init">
-        <constructor-arg index="0" name="name" value="ES5EC configurator"/>
-    </bean>
-    
     <bean id="trackingConfig" class="org.hbird.business.tracking.configuration.TrackingDriverConfiguration">
         <property name="groundstationId" value="ES5EC"/>
         <property name="satelliteIds">

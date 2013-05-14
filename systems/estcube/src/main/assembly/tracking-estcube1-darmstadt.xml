@@ -9,16 +9,25 @@
        http://camel.apache.org/schema/spring
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<import resource="satellite-strand-parts.xml" />
+
+	<import resource="groundstation-darmstadt.xml" />
+	<import resource="satellite-estcube1-parts.xml" />
 	
+	<bean id="tracking" class="org.hbird.business.tracking.TrackingComponent">
+		<constructor-arg index="0" value="DARMSTADT_ESTCUBE_TRACKING" />
+		<property name="description" value="The component automating the track of Strand by Darmstadt." />
+		<property name="satellite" value="ESTCUBE" />
+		<property name="location" value="GS_DARMSTADT" />
+	</bean>
+	
+	<!-- Publish the parts of the ground station -->
 	<bean id="starter" class="org.hbird.business.metadatapublisher.NamedObjectPublisher" init-method="start">
 		<constructor-arg index="0" value="SystemCore"/>
 		<constructor-arg index="1">
-        	<list>
- 		       	<ref bean="tle"/>
-            	<ref bean="strand" />
-         	</list>
-	    </constructor-arg>
+			<list>
+				<ref bean="tracking" />
+			</list>
+		</constructor-arg>
 	</bean>
 
 </beans>

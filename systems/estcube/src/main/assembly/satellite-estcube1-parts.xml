@@ -2,82 +2,67 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
-       http://www.springframework.org/schema/beans 
-       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-       http://www.springframework.org/schema/context 
-       http://www.springframework.org/schema/context/spring-context-2.5.xsd
-       http://camel.apache.org/schema/spring 
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://camel.apache.org/schema/spring
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
 	<import resource="core-parts.xml" />
 
 	<bean id="estcube" class="org.hbird.exchange.navigation.Satellite">
-		<constructor-arg index="0" value="ESTCube-1" />
-		<constructor-arg index="1" value="The mission objectives of the ESTCube-1 mission are: 1. To test the deployment of a 10 meter Hoytether as a part of the development work of the Electric solar wind sail. http://www.electric-sailing.com/, 2. To measure the electric sail force, interacting with the tether, 3. To take a picture of the deployed tether, 4. To take a picture of the Earth as a secondary mission objective." />
-		<property name="isPartOf" ref="satellites"/>
+		<constructor-arg index="0" name="ID" value="ESTCUBE" />
+		<constructor-arg index="1" name="name" value="ESTCube-1" />		
+		<property name="description" value="The mission objectives of the ESTCube-1 mission are: 1. To test the deployment of a 10 meter Hoytether as a part of the development work of the Electric solar wind sail. http://www.electric-sailing.com/, 2. To measure the electric sail force, interacting with the tether, 3. To take a picture of the deployed tether, 4. To take a picture of the Earth as a secondary mission objective." />
 	</bean>
 
-	<bean id="cdhs" class="org.hbird.business.core.CommandablePart">
+	<bean id="cdhs" class="org.hbird.business.core.CommandableEntity">
 		<constructor-arg index="0" value="CDHS" />
-		<constructor-arg index="1" value="Command and Data Handling System (On board flight computer)" />
-		<property name="isPartOf" ref="estcube"/>
+		<constructor-arg index="1" value="CDHS" />
+		<property name="description" value="Command and Data Handling System (On board flight computer)" />
 	</bean>
 
-	<bean id="pl" class="org.hbird.business.core.CommandablePart">
-		<constructor-arg index="0" value="PL" />
-		<constructor-arg index="1" value="Payload (electrical solar sail)" />
-		<property name="isPartOf" ref="estcube"/>
+	<bean id="pl" class="org.hbird.business.core.CommandableEntity">
+		<constructor-arg index="0" value="PL" />		
+		<constructor-arg index="1" value="Payload" />
+		<property name="description" value="Payload (electrical solar sail)" />
 	</bean>
 
-	<bean id="adcs" class="org.hbird.business.core.CommandablePart">
+	<bean id="adcs" class="org.hbird.business.core.CommandableEntity">
 		<constructor-arg index="0" value="ADCS" />
 		<constructor-arg index="1" value="Attitude Determination and Control System" />
-		<property name="isPartOf" ref="estcube"/>
+		<property name="description" value="The Attitude Determination and Control System (ADCS)" />
 	</bean>
 
-	<bean id="sys" class="org.hbird.business.core.CommandablePart">
+	<bean id="sys" class="org.hbird.business.core.CommandableEntity">
 		<constructor-arg index="0" value="SYS" />
-		<constructor-arg index="1" value="Systems Engineering (hmm, not sure what this is about)" />
-		<property name="isPartOf" ref="estcube"/>
+		<constructor-arg index="1" value="System Engineering" />
+		<property name="description" value="Systems Engineering (hmm, not sure what this is about)" />
 	</bean>
 
-	<bean id="eps" class="org.hbird.business.core.CommandablePart">
+	<bean id="eps" class="org.hbird.business.core.CommandableEntity">
 		<constructor-arg index="0" value="EPS" />
 		<constructor-arg index="1" value="Electrical Power System" />
-		<property name="isPartOf" ref="estcube"/>
+		<property name="description" value="The Electrical Power System (EPS)" />
 	</bean>
 
-	<bean id="cam" class="org.hbird.business.core.CommandablePart">
+	<bean id="cam" class="org.hbird.business.core.CommandableEntity">
 		<constructor-arg index="0" value="CAM" />
 		<constructor-arg index="1" value="Onboard Camera" />
-		<property name="isPartOf" ref="estcube"/>
+		<property name="description" value="The Onboard Camera (CAM)" />
 	</bean>
 
-	<bean id="ths" class="org.hbird.business.core.CommandablePart">
+	<bean id="ths" class="org.hbird.business.core.CommandableEntity">
 		<constructor-arg index="0" value="THS" />
 		<constructor-arg index="1" value="Thermal control system" />
-		<property name="isPartOf" ref="estcube"/>
+		<property name="description" value="The Thermal control system (THS)" />
 	</bean>
 
-	<bean id="com" class="org.hbird.business.core.CommandablePart">
+	<bean id="com" class="org.hbird.business.core.CommandableEntity">
 		<constructor-arg index="0" value="COM" />
-		<constructor-arg index="1" value="The communication system" />
-		<property name="isPartOf" ref="estcube"/>
-	</bean>
-
-	<bean id="parser" class="org.hbird.estcube.mibreader.Parser" init-method="parse">
-		<property name="parts">
-        	<list>
- 		       	<ref bean="cdhs"/>
- 		       	<ref bean="pl"/>
- 		       	<ref bean="sys"/>
- 		       	<ref bean="adcs"/>        	
- 		       	<ref bean="eps"/>
-            	<ref bean="cam" />
-            	<ref bean="ths" />
-            	<ref bean="com"/>
-         	</list>
-	    </property>
+		<constructor-arg index="1" value="Communication System" />
+		<property name="description" value="The communication system (COM)" />
 	</bean>
 
 </beans>

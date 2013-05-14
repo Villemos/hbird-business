@@ -9,21 +9,33 @@
        http://camel.apache.org/schema/spring
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-
 	<import resource="core-parts.xml" />
 
-	<!-- Create the components and assign them to the Mission Operation Centre ('moc') part imported from 'core-parts.xml' -->
-	<bean id="websocket" class="org.hbird.business.websockets.WebsocketInterfaceComponent">
-		<constructor-arg index="0" value="WEB_INTERFACE" />
-	</bean>
+	<!-- String issuedBy, String name, String type, String description, Double p1, Double p2, Double p3 -->
+	<bean id="location" class="org.hbird.exchange.core.D3Vector">
+		<constructor-arg index="0" value="GS_DARMSTADT_LOCATION"/>
+		<constructor-arg index="1" value="Darmstadt Location"/>
+		<property name="description" value="The geo location of the Darmstadt ground station."/>
+		<property name="p1" value="49.87" />
+		<property name="p2" value="8.64" />
+		<property name="p3" value="59.0" />
+	</bean>	
 	
+	<!-- D3Vector geoLocation, Antenna antenna -->
+	<bean id="gsDarmstadt" class="org.hbird.exchange.groundstation.GroundStation">
+		<constructor-arg index="0" value="GS_DARMSTADT" />
+		<constructor-arg index="1" value="Ground Station Darmstadt" />
+		<property name="geoLocation" ref="location" />
+	</bean>
+
 	<bean id="starter" class="org.hbird.business.metadatapublisher.NamedObjectPublisher" init-method="start">
 		<constructor-arg index="0" value="SystemCore"/>
 		<constructor-arg index="1">
 			<list>
-				<ref bean="websocket" />
+				<ref bean="location" />
+				<ref bean="gsDarmstadt" />
 			</list>
 		</constructor-arg>
 	</bean>
-	
+				
 </beans>

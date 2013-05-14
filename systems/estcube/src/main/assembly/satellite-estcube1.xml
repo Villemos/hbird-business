@@ -2,46 +2,117 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
-       http://www.springframework.org/schema/beans 
-       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-       http://www.springframework.org/schema/context 
-       http://www.springframework.org/schema/context/spring-context-2.5.xsd
-       http://camel.apache.org/schema/spring 
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://camel.apache.org/schema/spring
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
 	<import resource="satellite-estcube1-parts.xml" />
+
+
+	<!-- Battery Temperature, SOFT LIMIT -->
+	<bean id="limit.batterytemp.soft.def" class="org.hbird.exchange.validation.Limit">
+		<constructor-arg index="0" value="LIM_BATTERY_TEMP_SOFT_DEF"/>
+		<constructor-arg index="1" value="LIM_BATTERY_TEMP_SOFT_DEF"/>
+		<property name="type" value="Upper"/>
+		<property name="limitOfParameter" value="BATTERY_TEMPERATURE"/>
+		<property name="doubleValue" value="50d"/>
+		<property name="stateName" value="Soft Limit Battery Temperature"/>
+		<property name="description" value="The soft limit of the battery temperature"/>		
+	</bean>
 	
-	<!-- String name, String limitName, eLimitType type, String ofParameter, Number value, String stateName, String stateDescription -->
-	<!-- String ID, String name, String limitName, eLimitType type, String ofParameter, Double value, String stateName, String stateDescription	 -->
+	<bean id="limit.batterytemp.soft" class="org.hbird.business.validation.LimitCheckComponent">
+		<constructor-arg index="0" value="LIM_SOFT_BATTERY_TEMP"/>
+		<constructor-arg index="1" value="LIM_SOFT_BATTERY_TEMP"/>
+		<property name="limit" ref="limit.batterytemp.soft.def"/>
+	</bean>
+
+
+	<!-- Battery Temperature, HARD LIMIT -->
+	<bean id="limit.batterytemp.hard.def" class="org.hbird.exchange.validation.Limit">
+		<constructor-arg index="0" value="LIM_BATTERY_TEMP_HARD_DEF"/>
+		<constructor-arg index="1" value="LIM_BATTERY_TEMP_HARD_DEF"/>
+		<property name="type" value="Upper"/>
+		<property name="limitOfParameter" value="BATTERY_TEMPERATURE"/>
+		<property name="doubleValue" value="70d"/>
+		<property name="stateName" value="Hard Limit Battery Temperature"/>
+		<property name="description" value="The hard limit of the battery temperature"/>		
+	</bean>
+	
+	<bean id="limit.batterytemp.hard" class="org.hbird.business.validation.LimitCheckComponent">
+		<constructor-arg index="0" value="LIM_HARD_BATTERY_TEMP"/>
+		<constructor-arg index="1" value="LIM_HARD_BATTERY_TEMP"/>
+		<property name="limit" ref="limit.batterytemp.hard.def"/>
+	</bean>
+
+
+	<!-- Battery Temperature, HARD LIMIT -->
+	<bean id="limit.batterytemp.crit.def" class="org.hbird.exchange.validation.Limit">
+		<constructor-arg index="0" value="LIM_BATTERY_TEMP_CRIT_DEF"/>
+		<constructor-arg index="1" value="LIM_BATTERY_TEMP_CRIT_DEF"/>
+		<property name="type" value="Upper"/>
+		<property name="limitOfParameter" value="BATTERY_TEMPERATURE"/>
+		<property name="doubleValue" value="78d"/>
+		<property name="stateName" value="Critical Limit Battery Temperature"/>
+		<property name="description" value="The critical limit of the battery temperature"/>		
+	</bean>
+	
+	<bean id="limit.batterytemp.crit" class="org.hbird.business.validation.LimitCheckComponent">
+		<constructor-arg index="0" value="LIM_CRIT_BATTERY_TEMP"/>
+		<constructor-arg index="1" value="LIM_CRIT_BATTERY_TEMP"/>
+		<property name="limit" ref="limit.batterytemp.crit.def"/>
+	</bean>
+
+	<bean id="limit.LowerRechargeRate.def" class="org.hbird.exchange.validation.Limit">
+		<constructor-arg index="0" value="LIM_LOWER_BATTERY_CURRENT_DEF"/>
+		<constructor-arg index="1" value="LIM_LOWER_BATTERY_CURRENT_DEF"/>
+		<property name="type" value="Lower"/>
+		<property name="limitOfParameter" value="Battery Charge Rate Current"/>
+		<property name="doubleValue" value="9.6d"/>
+		<property name="unit" value="Volt"/>
+		<property name="stateName" value="To Low Recharge Rate"/>
+		<property name="description" value="The lower limit of the Battery Charge Rate Current"/>		
+	</bean>
+	
 	<bean id="limit.LowerRechargeRate" class="org.hbird.business.validation.LimitCheckComponent">
 		<constructor-arg index="0" value="LIM_LOWER_BATTERY_CURRENT"/>
 		<constructor-arg index="1" value="LIM_LOWER_BATTERY_CURRENT"/>
-		<constructor-arg index="2" value="LIM_LOWER_BATTERY_CURRENT"/>
-		<constructor-arg index="3" value="Lower"/>
-		<constructor-arg index="4" value="Battery Charge Rate Current"/>
-		<constructor-arg index="5" value="9.6"/>
-		<constructor-arg index="6" value="To Low Recharge Rate"/>
-		<constructor-arg index="7" value="The lower limit of the Battery Charge Rate Current"/>
+		<property name="limit" ref="limit.LowerRechargeRate.def"/>
+	</bean>
+
+
+	<bean id="syntheticParameter.batteryRechargeTime.out" class="org.hbird.exchange.core.Parameter">
+		<constructor-arg index="0" value="BATTERY_RECHARGE_TIME"/>
+		<constructor-arg index="1" value="Battery Recharge Time"/>
+		<property name="description" value="The time until the battery is fully recharged."/>
+		<property name="unit" value="Seconds"/>
 	</bean>
 	
 	<!-- String componentname, String scriptname, String paraName, String paraDescription, String paraUnit, String bindings -->
 	<bean id="syntheticParameter.batteryRechargeTime" class="org.hbird.business.scripting.ScriptComponent">
 		<constructor-arg index="0" value="SCRIPT_BATTERY_RECHARGE_TIME"/>
-		<constructor-arg index="1" value="SCRIPT_BATTERY_RECHARGE_TIME"/>
-		<constructor-arg index="2" value="BatteryRechargeTime"/>
-		<constructor-arg index="3" value="Battery Recharge Time"/>
-		<constructor-arg index="4" value="The time until the battery is fully recharged."/>
-		<constructor-arg index="5" value="Seconds"/>
-		<constructor-arg index="6" value="Battery Capacity=capacity:Charging Efficiency=lostCharge:Battery Charge Rate Current=chargerOutput"/>	
+		<constructor-arg index="1" value="Battery Recharge Time Calculator"/>
+		<property name="scriptName" value="BatteryRechargeTime"/>
+		<property name="output" ref="syntheticParameter.batteryRechargeTime.out"/>
+		<property name="binding">	
+			<map>
+				<entry key="BATTERY_CAPACITY" value="capacity"/>
+				<entry key="CHARGE_EFFICIENCY" value="lostCharge"/>
+				<entry key="BATTERY_CHARGE_RATE_CURRENT" value="chargerOutput"/>
+			</map>
+		</property>
 	</bean>
 
 		<!-- String issuedBy, String name, Satellite satellite, String tleLine1, String tleLine2 -->
 	<bean id="tle" class="org.hbird.exchange.navigation.TleOrbitalParameters">
-		<constructor-arg index="0" value="CoreSystem"/>
-		<constructor-arg index="1" value="Tle Parameters of ESTCube-1"/>			
-		<constructor-arg index="2" ref="estcube"/>
-		<constructor-arg index="3" value="1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478"/>
-		<constructor-arg index="4" value="2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935"/>		
+		<constructor-arg index="0" value="ESTCUBE/TLE"/>
+		<constructor-arg index="1" value="TLE/ESTcube-1"/>			
+		<property name="description" value="Tle Parameters of ESTCube-1"/>			
+		<property name="satellite" value="ESTCUBE"/>
+		<property name="tleLine1" value="1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478"/>
+		<property name="tleLine2" value="2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935"/>		
 	</bean>
 
 		
@@ -51,7 +122,12 @@
         	<list>
  		       	<ref bean="tle"/>
             	<ref bean="estcube" />
+            	
             	<ref bean="limit.LowerRechargeRate" />
+            	<ref bean="limit.batterytemp.soft" />            	
+            	<ref bean="limit.batterytemp.hard" />
+            	<ref bean="limit.batterytemp.crit" />            	            	
+            	
             	<ref bean="syntheticParameter.batteryRechargeTime"/>
          	</list>
 	    </constructor-arg>

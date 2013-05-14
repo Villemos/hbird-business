@@ -3,9 +3,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
        http://camel.apache.org/schema/spring
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
@@ -15,30 +15,39 @@
 	     The configurator is the component that initializes and starts the drivers of all other components. 
 	     Calling the init method will create a configurator driver, and the routes to receive StartComponent 
 	     requests through ActiveMQ. -->	
-	<bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponent" init-method="init"/>
+	<bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponent" init-method="start"/>
 
 
 	<!-- Create the components and assign them to the Mission Operation Centre ('moc') part imported from 'core-parts.xml' -->
 	<bean id="monitoring" class="org.hbird.business.systemmonitoring.SystemMonitorComponent">
-		<property name="isPartOf" ref="moc" />
+		<constructor-arg index="0" name="ID" value="Monitor" />
 	</bean>
 	
 	<bean id="archive" class="org.hbird.business.archive.ArchiveComponent">
-		<property name="isPartOf" ref="moc" />
+		<constructor-arg index="0" name="ID" value="Archive" />
 	</bean>
 
 	<bean id="taskExecutor" class="org.hbird.business.taskexecutor.TaskExecutionComponent">
-		<property name="isPartOf" ref="moc" />	
+		<constructor-arg index="0" name="ID" value="TaskExecutor" />
 	</bean>
 
 	<bean id="commanding" class="org.hbird.business.commanding.CommandingComponent">
-		<property name="isPartOf" ref="moc" />
+		<constructor-arg index="0" name="ID" value="CommandingChain" />
 	</bean>
 
-	<bean id="navigation" class="org.hbird.business.navigation.NavigationComponent">
-		<property name="isPartOf" ref="moc" />
+	<bean id="propagation" class="org.hbird.business.navigation.OrbitPropagationComponent">
+		<constructor-arg index="0" name="ID" value="OrbitPropagation" />
+		<property name="satellite" value="ESTCUBE" />
 	</bean>
 
+	<bean id="contactevents" class="org.hbird.business.navigation.ContactEventComponent">
+		<constructor-arg index="0" name="ID" value="ContactEvents" />
+		<property name="satellite" value="ESTCUBE" />
+	</bean>
+
+	<bean id="celestrack" class="org.hbird.business.celestrack.CelestrackComponent">
+		<constructor-arg index="0" name="ID" value="Celestrack" />
+	</bean>
 
 	<!-- Create a component to publish the parts we have created. The init-method will trigger the publication to ActiveMQ.
 	
@@ -57,7 +66,9 @@
 				<ref bean="archive" />
 				<ref bean="taskExecutor" />
 				<ref bean="commanding" />
-				<ref bean="navigation" />
+				<ref bean="propagation" />
+				<ref bean="contactevents" />
+				<ref bean="celestrack" />
 			</list>
 		</constructor-arg>
 	</bean>
