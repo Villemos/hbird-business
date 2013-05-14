@@ -46,7 +46,7 @@ public class HamlibRadioPartTest {
 
     @Before
     public void setup() {
-        part = new HamlibRadioPart(new Part("root", ""), NAME, config);
+        part = new HamlibRadioPart("root", NAME, config);
         inOrder = Mockito.inOrder(config);
     }
 

@@ -31,7 +31,6 @@ import java.util.List;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.netty.NettyConfiguration;
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.groundstation.base.DefaultPointingDataOptimizer;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
@@ -43,7 +42,7 @@ import org.hbird.business.groundstation.hamlib.protocol.HamlibErrorLogger;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibLineDecoder;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibResponseBufferer;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
-import org.hbird.exchange.interfaces.IPart;
+import org.hbird.exchange.interfaces.IStartablePart;
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.junit.Before;
@@ -93,7 +92,7 @@ public class HamlibDriverTest {
 
             @Override
             protected TrackingSupport<GroundStationDriverConfiguration> createTrackingSupport(GroundStationDriverConfiguration config, ICatalogue catalogue,
-                    IOrbitPrediction prediction, IPointingDataOptimizer<GroundStationDriverConfiguration> optimizer) {
+                    IPointingDataOptimizer<GroundStationDriverConfiguration> optimizer) {
                 return null;
             }
 
@@ -103,7 +102,7 @@ public class HamlibDriverTest {
             }
 
             @Override
-            protected DriverContext<GroundStationDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IPart part) {
+            protected DriverContext<GroundStationDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IStartablePart part) {
                 return null;
             }
         };

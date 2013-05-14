@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Park;
@@ -75,9 +74,6 @@ public class HamlibRotatorTrackerTest {
     private IPointingDataOptimizer<RotatorDriverConfiguration> optimizer;
 
     @Mock
-    private IOrbitPrediction orbitPrediction;
-
-    @Mock
     private Stop stop;
 
     @Mock
@@ -112,9 +108,9 @@ public class HamlibRotatorTrackerTest {
      */
     @Before
     public void setUp() throws Exception {
-        tracker = new HamlibRotatorTracker(configuration, catalogue, orbitPrediction, optimizer);
+        tracker = new HamlibRotatorTracker(configuration, catalogue, optimizer);
         pointingData = Arrays.asList(pd1, pd2, pd3);
-        inOrder = inOrder(configuration, catalogue, optimizer, orbitPrediction, stop, track, gs, sat, pd1, pd2, pd3, contact);
+        inOrder = inOrder(configuration, catalogue, optimizer, stop, track, gs, sat, pd1, pd2, pd3, contact);
         when(pd1.getAzimuth()).thenReturn(AZIMUTH_1);
         when(pd1.getElevation()).thenReturn(ELEVATION_1);
         when(pd1.getTimestamp()).thenReturn(NOW + 1);

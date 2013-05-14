@@ -51,8 +51,8 @@ public class HamlibNativeCommandTest {
         assertEquals(NOW, command.getExecutionTime());
         assertEquals(DERIVED_FROM, command.getDerivedfrom());
         assertEquals(HamlibNativeCommand.STAGE_POST_TRACKING, command.getStage());
-        assertNotNull(command.getCommandid());
-        UUID.fromString(command.getCommandid());
+        assertNotNull(command.getID());
+        UUID.fromString(command.getID());
     }
 
     @Test
@@ -104,11 +104,11 @@ public class HamlibNativeCommandTest {
 
     @Test
     public void testSetCommandid() throws Exception {
-        assertNotNull(command.getCommandid());
-        UUID.fromString(command.getCommandid());
-        command.setCommandid("ID-1");
-        assertEquals("ID-1", command.getCommandid());
-        command.setCommandid("ID-2");
-        assertEquals("ID-2", command.getCommandid());
+        assertNotNull(command.getID());
+        UUID.fromString(command.getID());
+        command.setID("ID-1");
+        assertEquals("ID-1", command.getID());
+        command.setID("ID-2");
+        assertEquals("ID-2", command.getID());
     }
 }

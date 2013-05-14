@@ -21,8 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
+import org.hbird.business.navigation.orekit.NavigationUtilities;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandBase;
 import org.hbird.exchange.groundstation.GroundStation;
@@ -51,8 +51,6 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
 
     protected final ICatalogue catalogue;
 
-    protected final IOrbitPrediction orbitPrediction;
-
     protected final IPointingDataOptimizer<C> optimizer;
 
     /**
@@ -62,11 +60,9 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
      * @param orbitPrediction
      * @param optimizer
      */
-    public TrackingSupport(C configuration, ICatalogue catalogue, IOrbitPrediction orbitPrediction,
-            IPointingDataOptimizer<C> optimizer) {
+    public TrackingSupport(C configuration, ICatalogue catalogue, IPointingDataOptimizer<C> optimizer) {
         this.configuration = configuration;
         this.catalogue = catalogue;
-        this.orbitPrediction = orbitPrediction;
         this.optimizer = optimizer;
     }
 
@@ -121,7 +117,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
 
         List<PointingData> pointingData = null;
         try {
-            pointingData = orbitPrediction.requestPointingDataFor(contact, groundStation, satellite, configuration.getCommandInterval());
+        	pointingData = NavigationUtilities.calculateContactData(contact, groundStation, configuration.getCommandInterval());
         }
         catch (Exception e) {
             LOG.error("Failed to calculate pointing data for the overpass; ground station: {}; satellite: {}; over pass start time: {}; Exception: ",

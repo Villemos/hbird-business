@@ -27,7 +27,7 @@ import java.util.List;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
 import org.hbird.exchange.interfaces.IEntityInstance;
-import org.hbird.exchange.interfaces.IPart;
+import org.hbird.exchange.interfaces.IStartablePart;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +49,7 @@ public class ResponseHandlersMapTest {
     private ResponseKeyExtractor<String, String> keyExtractor;
 
     @Mock
-    private IPart part;
+    private IStartablePart part;
 
     @Mock
     private DriverContext<GroundStationDriverConfiguration, String, String> driverContext;

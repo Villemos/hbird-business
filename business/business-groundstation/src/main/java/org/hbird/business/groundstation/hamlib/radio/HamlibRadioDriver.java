@@ -37,7 +37,6 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
@@ -116,7 +115,7 @@ public class HamlibRadioDriver extends HamlibDriver<RadioDriverConfiguration> {
      */
     @Override
     protected TrackingSupport<RadioDriverConfiguration> createTrackingSupport(RadioDriverConfiguration config, ICatalogue catalogue,
-            IOrbitPrediction prediction, IPointingDataOptimizer<RadioDriverConfiguration> optimizer) {
-        return new HamlibRadioTracker(config, catalogue, prediction, optimizer);
+            IPointingDataOptimizer<RadioDriverConfiguration> optimizer) {
+        return new HamlibRadioTracker(config, catalogue, optimizer);
     }
 }

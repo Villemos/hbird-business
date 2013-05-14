@@ -49,7 +49,7 @@ public class HamlibRotatorPartTest {
      */
     @Before
     public void setUp() throws Exception {
-        hamlibRotatorPart = new HamlibRotatorPart(new Part("root", ""), NAME, configuration);
+        hamlibRotatorPart = new HamlibRotatorPart("root", NAME, configuration);
         inOrder = inOrder(configuration);
     }
 

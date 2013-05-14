@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetFrequency;
@@ -79,9 +78,6 @@ public class HamlibRadioTrackerTest {
     private ICatalogue catalogue;
 
     @Mock
-    private IOrbitPrediction prediction;
-
-    @Mock
     private IPointingDataOptimizer<RadioDriverConfiguration> optimizer;
 
     @Mock
@@ -113,9 +109,9 @@ public class HamlibRadioTrackerTest {
      */
     @Before
     public void setUp() throws Exception {
-        tracker = new HamlibRadioTracker(config, catalogue, prediction, optimizer);
+        tracker = new HamlibRadioTracker(config, catalogue, optimizer);
         pointingData = Arrays.asList(pd1, pd2, pd3);
-        inOrder = inOrder(satellite, track, config, catalogue, prediction, optimizer, pd1, pd2, pd3, stop, contact);
+        inOrder = inOrder(satellite, track, config, catalogue, optimizer, pd1, pd2, pd3, stop, contact);
         when(satellite.getUplinkFrequency()).thenReturn(UPLINK_FREQUENCY);
         when(satellite.getDownlinkFrequency()).thenReturn(DOWNLINK_FREQUENCY);
         when(track.getID()).thenReturn(ID);

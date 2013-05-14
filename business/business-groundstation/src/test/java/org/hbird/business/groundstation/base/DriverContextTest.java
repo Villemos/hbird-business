@@ -22,7 +22,7 @@ import static org.mockito.Mockito.inOrder;
 import org.apache.camel.TypeConverter;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
 import org.hbird.business.groundstation.device.response.ResponseKeyExtractor;
-import org.hbird.exchange.interfaces.IPart;
+import org.hbird.exchange.interfaces.IStartablePart;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class DriverContextTest {
     private ResponseKeyExtractor<Object, Object> keyExtractor;
 
     @Mock
-    private IPart part;
+    private IStartablePart part;
 
     @Mock
     private TypeConverter typeConverter;

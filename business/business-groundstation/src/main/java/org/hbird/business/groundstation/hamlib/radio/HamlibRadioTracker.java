@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IOrbitPrediction;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
@@ -40,9 +39,9 @@ import org.hbird.exchange.navigation.Satellite;
  */
 public class HamlibRadioTracker extends TrackingSupport<RadioDriverConfiguration> {
 
-    public HamlibRadioTracker(RadioDriverConfiguration configuration, ICatalogue catalogue, IOrbitPrediction prediction,
+    public HamlibRadioTracker(RadioDriverConfiguration configuration, ICatalogue catalogue,
             IPointingDataOptimizer<RadioDriverConfiguration> optimizer) {
-        super(configuration, catalogue, prediction, optimizer);
+        super(configuration, catalogue, optimizer);
     }
 
     /**
