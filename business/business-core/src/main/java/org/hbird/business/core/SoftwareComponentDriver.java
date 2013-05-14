@@ -124,11 +124,11 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
      * @return The string to be used as selector
      */
     protected String addDestinationSelector(String destination) {
-        return "selector=destination='" + destination + "'";
+        return "selector=" + StandardArguments.DESTINATION + "='" + destination + "'";
     }
 
     protected String addDestinationSelector() {
-        return "selector=destination='" + part.getName() + "'";
+        return "selector=" + StandardArguments.DESTINATION + "='" + part.getName() + "'";
     }
 
     /**
@@ -138,7 +138,11 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
      * @return The string to be used as selector
      */
     protected String addNameSelector(String name) {
-        return "selector=name='" + name + "'";
+        return "selector=" + StandardArguments.NAME + "='" + name + "'";
+    }
+
+    protected String addIdSelector(String id) {
+        return "selector=" + StandardArguments.ENTITY_ID + "='" + id + "'";
     }
 
     public IStartablePart getPart() {

@@ -16,6 +16,7 @@
  */
 package org.hbird.business.navigation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.business.navigation.orekit.ContactEventComponentDriver;
@@ -59,5 +60,10 @@ public class ContactEventComponent extends NavigationComponent {
 	 */
 	public void setLocations(List<String> locations) {
 		this.locations = locations;
+	}
+	
+	public void setLocation(String location) {
+		this.locations = new ArrayList<String>();
+		locations.add(location);
 	}
 }

@@ -32,13 +32,13 @@ public class ScriptComponentDriver extends SoftwareComponentDriver {
     @Override
     protected void doConfigure() {
 
-        ScriptExecutor executor = new ScriptExecutor(((ScriptComponent) command.getPart()).getRequest());
+        ScriptExecutor executor = new ScriptExecutor((ScriptComponent) command.getPart());
 
         /** Iterate over each dependency needed by this script. */
         for (String dependency : executor.getDependencies()) {
 
             /** Create the routes for receiving the data needed by the script. */
-            ProcessorDefinition<?> route = from(StandardEndpoints.MONITORING + "?" + addNameSelector(dependency)).bean(executor, "calculate");
+            ProcessorDefinition<?> route = from(StandardEndpoints.MONITORING + "?" + addIdSelector(dependency)).bean(executor, "calculate");
             addInjectionRoute(route);
         }
         

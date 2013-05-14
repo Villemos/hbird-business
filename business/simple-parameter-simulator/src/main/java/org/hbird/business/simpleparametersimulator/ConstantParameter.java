@@ -33,6 +33,7 @@ public class ConstantParameter extends BaseParameter {
 	
 	public ConstantParameter(String ID, String issuedBy, String name, String description, String unit, Double value) {
 		super(issuedBy, name, description, value, unit);
+		this.ID = ID;
 	}
 
 	/* (non-Javadoc)
@@ -40,7 +41,7 @@ public class ConstantParameter extends BaseParameter {
 	 */
 	@Handler
 	public Parameter process() {
-		LOG.debug("Sending new constant value with name '" + name + "' and value .");
+		LOG.debug("Sending new constant value with ID '" + ID + "' and value " + value + ".");
 		
 		Parameter newParameter = new Parameter(ID, name);
 		newParameter.setIssuedBy(issuedBy);

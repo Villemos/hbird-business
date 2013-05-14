@@ -74,16 +74,17 @@ public class HeapMemoryUsageMonitor extends Monitor {
     @Handler
     public Parameter[] check() {
     	
-    	Parameter heap = new Parameter(componentId + "/heapmemory", parameterNameHeapMemory);
-    	heap.setDescription("The heap memory usage");
-    	heap.setValue(ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());
-    	heap.setUnit("Byte");
+    	Parameter parameter = new Parameter(componentId + "/heapmemory", parameterNameHeapMemory);
+    	parameter.setDescription("The heap memory usage");
+    	parameter.setValue(ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());
+    	parameter.setUnit("Byte");
+    	parameter.setIssuedBy(componentId);
 
     	Parameter nonHeap = new Parameter(componentId + "/nonheapmemory", parameterNameNonHeapMemory);
     	nonHeap.setDescription("The nom heap memory usage");
     	nonHeap.setValue(ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage().getUsed());
     	nonHeap.setUnit("Byte");
        
-    	return new Parameter[] {heap, nonHeap};
+    	return new Parameter[] {parameter, nonHeap};
     }
 }

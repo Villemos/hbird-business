@@ -21,7 +21,8 @@ public class OsMonitor extends Monitor {
 		Label label = new Label(componentId + "/osMonitor", parameterName);
 		label.setDescription("OS information");
 		label.setValue(HostInfo.getHostInfo());
-
+    	label.setIssuedBy(componentId);
+    	
 		return label;
 	}
 }

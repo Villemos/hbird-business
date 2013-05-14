@@ -69,6 +69,7 @@ public class ThreadCountMonitor extends Monitor {
     	parameter.setDescription("The number of threads used.");
     	parameter.setValue(ManagementFactory.getThreadMXBean().getThreadCount());
     	parameter.setUnit("Count");
+    	parameter.setIssuedBy(componentId);
     	
     	return parameter;
     }

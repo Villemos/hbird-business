@@ -24,34 +24,34 @@ import javax.script.*;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.hbird.business.scripting.ScriptComponent;
 import org.hbird.exchange.core.EntityInstance;
-import org.hbird.exchange.scripting.ScriptExecutionRequest;
 
 /** 
  * The script executor will evaluate scripts. 
  * 
- * The executor receives the script as a request.
+ * The executor receives the script as a component.
  */
 public class ScriptExecutor {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(ScriptExecutor.class);
 
 	/** The configuration request defining the script to be executed. */
-	protected ScriptExecutionRequest request = null;
+	protected ScriptComponent component = null;
 
 	/** The script engine that will execute the script.*/
 	protected ScriptEngine engine = null;
 
-	public ScriptExecutor(ScriptExecutionRequest request) {
-		this.request = request;
+	public ScriptExecutor(ScriptComponent component) {
+		this.component = component;
 
 		ScriptEngineManager factory = new ScriptEngineManager();
-		engine = factory.getEngineByName(request.format); 	
+		engine = factory.getEngineByName(component.format); 	
 
-		engine.put("output", request.output);
+		engine.put("output", component.output);
 
 		/** */
-		if (request.script == null || request.script.equals("") == true) {
+		if (component.script == null || component.script.equals("") == true) {
 
 			/** Default root is the the resource folder of the current project. */
 			String root = "src/main/resources/library/";
@@ -62,14 +62,14 @@ public class ScriptExecutor {
 				}
 			}			
 
-			File file = new File(root + request.name + ".js");
+			File file = new File(root + component.getScriptName() + ".js");
 			if (file.exists() == false) {
 				LOG.error("Failed to find script file '" + file.getAbsolutePath() + "'.");
 				LOG.error("Use the runtime system property '-Dhbird.scriptlibrary=[path]' to point to the script library. Script will not be evaluated.");
 			}
 			else {
 				try {
-					request.script = FileUtils.readFileToString(file);
+					component.script = FileUtils.readFileToString(file);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -86,27 +86,28 @@ public class ScriptExecutor {
 	 */
 	public EntityInstance calculate(EntityInstance in) {
 
-		LOG.debug("Script '" + request.name + "': received dependent object '" + in.getName() + "' with timestamp '.");
+		LOG.debug("Script '" + component.getName() + "': received dependent object '" + in.getID() + "' with timestamp '.");
 
 		EntityInstance returnValue = null;
 
 		try {
 			/** Bind the parameter to the script. */
-			if (request.inputBinding.get(in.getName()) == null) {
-				LOG.error("Script '" + request.name + "': Error in binding of parameters. The runtime parameter '" + in.getName() + "' was received, but has not been bound to any script parameter.");
+			if (component.inputBinding.get(in.getID()) == null) {
+				LOG.error("Script '" + component.getID() + "': Error in binding of parameters. The runtime parameter '" + in.getID() + "' was received, but has not been bound to any script parameter.");
 			}
 			else {
-				engine.put(request.inputBinding.get(in.getName()), in);
+				engine.put(component.inputBinding.get(in.getID()), in);
 
 				/** Check if a binding has been created for all needed parameters. */
 				if (ready()) {
-					LOG.info("Script '" + request.name + "': All dependent values set. Evaluating script that will create object '" + request.output.getName() + "'");
-					engine.eval(request.script);
+					LOG.info("Script '" + component.getID() + "': All dependent values set. Evaluating script that will create object '" + component.output.getID() + "'");
+					engine.eval(component.script);
 
 					/** The request output object has been bound to the engine. The script can
 					 * thus update it directly. Only the timestamp and uuid should also be set. */
-					returnValue = request.output;
+					returnValue = component.output;
 					returnValue.setTimestamp(System.currentTimeMillis());
+					returnValue.setIssuedBy(this.component.getName());
 				}
 			}
 		} catch (Exception e) {
@@ -123,9 +124,9 @@ public class ScriptExecutor {
 	 * @return True if all input parameters have been bound to the engine. Else false.
 	 */
 	protected boolean ready() {
-		for (String parameter : request.inputBinding.values()) {
+		for (String parameter : component.inputBinding.values()) {
 			if (engine.getBindings(ScriptContext.ENGINE_SCOPE).containsKey(parameter) == false) {
-				LOG.debug("Script '" + request.name + "' Still missing dependency '" + parameter + "'.");
+				LOG.debug("Script '" + component.getName() + "' Still missing dependency '" + parameter + "'.");
 				return false;
 			}
 		}
@@ -134,6 +135,6 @@ public class ScriptExecutor {
 	}
 
 	public Set<String> getDependencies() {
-		return request.inputBinding.keySet();
+		return component.inputBinding.keySet();
 	}
 }

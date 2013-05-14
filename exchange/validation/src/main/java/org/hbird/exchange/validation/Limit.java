@@ -52,6 +52,8 @@ public class Limit extends Parameter {
     /** The name of the parameter being checker. */
     protected String limitOfParameter = null;
 
+    protected String stateName = "";
+    
 	/**
 	 * @return the type
 	 */
@@ -106,5 +108,19 @@ public class Limit extends Parameter {
 	 */
 	public void setLimitOfParameter(String limitOfParameter) {
 		this.limitOfParameter = limitOfParameter;
+	}
+
+	/**
+	 * @return the stateName
+	 */
+	public String getStateName() {
+		return stateName;
+	}
+
+	/**
+	 * @param stateName the stateName to set
+	 */
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
 	}
 }

@@ -119,10 +119,11 @@ public abstract class BaseLimitChecker {
 		State state = null;
 
 		if (isEnabled() == true && isReady()) {
-			state = new State(limit.getName(), limit.getName());
+			state = new State(parameter.getID() + "/" + limit.getID(), limit.getStateName());
 			state.setDescription(limit.getDescription());
 			state.setIsStateOf(parameter.getID());
 			state.setState(checkLimit(parameter));
+			state.setIssuedBy(limit.getID());
 		}
 		
 		return state;
