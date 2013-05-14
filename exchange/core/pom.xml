@@ -3,7 +3,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>core</artifactId>
-    <name>Exchange - Core Module</name>
+    <name>HBird :: Exchange - Core Module</name>
     <description>The exchange tier core module contains the basic types of the system, such as Parameter, StateParameter, Task and Command.</description>
 
     <parent>

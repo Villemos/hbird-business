@@ -6,7 +6,7 @@
     <version>0.8.0-SNAPSHOT</version>
   </parent>
   <artifactId>scripting</artifactId>
-  <name>Exchange - Scripting Service</name>
+  <name>HBird :: Exchange - Scripting Service</name>
 
 
   <dependencies>

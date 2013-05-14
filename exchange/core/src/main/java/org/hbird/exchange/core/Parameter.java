@@ -61,6 +61,10 @@ public class Parameter extends EntityInstance {
         return value;
     }
 
+    public void setDoubleValue(double value) {
+    	this.value = value;
+    }
+    
     public double asDouble() {
         return value.doubleValue();
     }

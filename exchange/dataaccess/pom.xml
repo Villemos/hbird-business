@@ -7,7 +7,7 @@
     <relativePath>..</relativePath>
   </parent>
   <artifactId>dataaccess</artifactId>
-  <name>Exchange - Data Access Service</name>
+  <name>HBird :: Exchange - Data Access Service</name>
 
   <dependencies>
     <dependency>

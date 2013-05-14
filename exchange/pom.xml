@@ -23,7 +23,6 @@ The transfer between the presentation tier and the business tier likewise use th
         <module>core</module>
 
         <module>cfdp</module>
-        <module>commandqueuemanagement</module>
         <module>commandcontainer</module>
         <module>configurator</module>
         <module>movementcontrol</module>
