@@ -8,7 +8,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>business-systemtest</artifactId>
-    <name>Business - System Tests</name>
+    <name>HBird :: Business - System Tests</name>
     <description>This project contains all test cases that can only be run within a working system setup; ActiveMQ and SOLR must be available.</description>
 
     <dependencies>

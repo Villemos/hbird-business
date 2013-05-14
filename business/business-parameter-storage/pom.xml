@@ -2,7 +2,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>business-parameter-storage</artifactId>
-    <name>Business - Parameter Storage</name>
+    <name>HBird :: Business - Parameter Storage</name>
     <description>This module can store/retrieve Parameters in/from a database and has a component to make storage in a file easier.</description>
 
     <parent>

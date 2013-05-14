@@ -7,5 +7,5 @@
     <relativePath>..</relativePath>
   </parent>
   <artifactId>cfdp</artifactId>
-  <name>Exchange - CFDP</name>
+  <name>HBird :: Exchange - CFDP</name>
 </project>

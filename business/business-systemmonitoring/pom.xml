@@ -8,7 +8,7 @@
   </parent>
 
   <artifactId>business-systemmonitoring</artifactId>
-  <name>Business - System Monitoring</name>
+  <name>HBird :: Business - System Monitoring</name>
   <description>Module containing beans for generating system monitoring parameters such as memory usage and thread usage.</description>
 
   <dependencies>

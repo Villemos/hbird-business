@@ -8,7 +8,7 @@
         <version>0.8.0-SNAPSHOT</version>
     </parent>
     <artifactId>business-navigation</artifactId>
-    <name>Business - Navigation Orekit</name>
+    <name>HBird :: Business - Navigation Orekit</name>
     <description>This module is an implementation of a Hummingbird navigation module based on the OREKIT open source library.</description>
 
     <properties>

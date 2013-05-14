@@ -8,7 +8,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>business-taskexecutor</artifactId>
-    <name>Business - Task Executor</name>
+    <name>HBird :: Business - Task Executor</name>
 
     <dependencies>
 

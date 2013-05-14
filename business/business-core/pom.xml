@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>business-core</artifactId>
-    <name>Business - Core Library</name>
+    <name>HBird :: Business - Core Library</name>
 
     <dependencies>
 

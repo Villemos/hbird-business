@@ -8,7 +8,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>business-archive</artifactId>
-    <name>Business - SOLR</name>
+    <name>HBird :: Business - SOLR</name>
     <description>An archive based on the Apache SOLR storage engine.</description>
 
     <dependencies>

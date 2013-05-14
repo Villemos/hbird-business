@@ -8,7 +8,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>business-celestrack</artifactId>
-    <name>Business - Celestrack Integration</name>
+    <name>HBird :: Business - Celestrack Integration</name>
 
     <dependencies>
 

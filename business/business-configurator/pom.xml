@@ -9,7 +9,7 @@
         <version>0.8.0-SNAPSHOT</version>
     </parent>
     <artifactId>business-configurator</artifactId>
-    <name>Business - Configurator</name>
+    <name>HBird :: Business - Configurator</name>
 
     <dependencies>
 

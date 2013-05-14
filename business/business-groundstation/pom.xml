@@ -8,7 +8,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>business-groundstation</artifactId>
-    <name>Business - Groundstation</name>
+    <name>HBird :: Business - Groundstation</name>
 
     <dependencies>
 

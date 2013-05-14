@@ -10,7 +10,7 @@
 
     <artifactId>business-validation</artifactId>
     <packaging>jar</packaging>
-    <name>Business - Validation Module</name>
+    <name>HBird :: Business - Validation Module</name>
     <description>Library containing the logic for validation parameters.</description>
 
     <dependencies>

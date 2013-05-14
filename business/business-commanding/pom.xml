@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>business-commanding</artifactId>
     <packaging>jar</packaging>
-    <name>Business - Command Chain</name>
+    <name>HBird :: Business - Command Chain</name>
     <description>The full commanding chain of the Hummingbird mission control system.</description>
 
     <url>https://github.com/JohannesKlug/hummingbird/wiki</url>

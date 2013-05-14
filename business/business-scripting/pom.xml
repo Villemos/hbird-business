@@ -8,7 +8,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>business-scripting</artifactId>
-  <name>Business - Scripting Module</name>
+  <name>HBird :: Business - Scripting Module</name>
   <description>Component for calculating derived parameters, based on scripts.</description>
 
   <url>https://github.com/JohannesKlug/hummingbird/wiki</url>

@@ -8,7 +8,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>business-queuemanagement</artifactId>
-    <name>business - Queue Management</name>
+    <name>HBird :: business - Queue Management</name>
 
     <dependencies>
 
