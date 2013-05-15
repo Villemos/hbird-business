@@ -66,7 +66,7 @@ public class HeapMemoryUsageMonitor extends Monitor {
     @Handler
     public Parameter[] check() {
 
-        Parameter heap = new Parameter(naming.buildId(componentId, PARAMETER_RELATIVE_NAME_HEAP_MEMORY), PARAMETER_RELATIVE_NAME_HEAP_MEMORY);
+        Parameter parameter = new Parameter(naming.buildId(componentId, PARAMETER_RELATIVE_NAME_HEAP_MEMORY), PARAMETER_RELATIVE_NAME_HEAP_MEMORY);
     	parameter.setDescription("The heap memory usage");
     	parameter.setValue(ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());
     	parameter.setUnit("Byte");

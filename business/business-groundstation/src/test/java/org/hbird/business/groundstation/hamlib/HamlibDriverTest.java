@@ -41,7 +41,6 @@ import org.hbird.business.groundstation.hamlib.protocol.HamlibCommandEncoder;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibErrorLogger;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibLineDecoder;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibResponseBufferer;
-import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
 import org.hbird.exchange.interfaces.IStartableEntity;
 import org.jboss.netty.channel.ChannelHandler;
@@ -52,6 +51,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.hbird.business.api.IPointingData;
 
 /**
  *
@@ -93,7 +93,7 @@ public class HamlibDriverTest {
 
             @Override
             protected TrackingSupport<GroundStationDriverConfiguration> createTrackingSupport(GroundStationDriverConfiguration config, ICatalogue catalogue,
-                    PointingDataCalculator calculator, IPointingDataOptimizer<GroundStationDriverConfiguration> optimizer) {
+                    IPointingData calculator, IPointingDataOptimizer<GroundStationDriverConfiguration> optimizer) {
                 return null;
             }
 

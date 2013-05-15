@@ -29,8 +29,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
-import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandBase;
 import org.hbird.exchange.groundstation.GroundStation;
@@ -61,7 +61,7 @@ public class TrackingSupportTest {
     private GroundStationDriverConfiguration configuration;
 
     @Mock
-    private PointingDataCalculator calculator;
+    private IPointingData calculator;
 
     @Mock
     private CommandBase command1;

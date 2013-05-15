@@ -110,7 +110,7 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
     }
 
     protected String addUniqueId(String prefix) {
-        return prefix + entity.getName();
+        return prefix + entity.getID();
     }
 
     protected String addOptions() {
@@ -128,7 +128,7 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
     }
 
     protected String addDestinationSelector() {
-        return "selector=" + StandardArguments.DESTINATION + "='" + part.getName() + "'";
+        return "selector=" + StandardArguments.DESTINATION + "='" + entity.getID() + "'";
     }
 
     /**

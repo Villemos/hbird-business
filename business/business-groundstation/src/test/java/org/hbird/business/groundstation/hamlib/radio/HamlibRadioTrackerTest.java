@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetFrequency;
@@ -100,7 +101,7 @@ public class HamlibRadioTrackerTest {
     private LocationContactEvent contact;
 
     @Mock
-    private PointingDataCalculator calculator;
+    private IPointingData calculator;
 
     private List<PointingData> pointingData;
 

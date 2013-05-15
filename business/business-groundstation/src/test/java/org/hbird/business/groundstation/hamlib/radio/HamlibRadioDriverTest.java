@@ -29,6 +29,7 @@ import java.util.List;
 import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;
 import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
@@ -37,7 +38,6 @@ import org.hbird.business.groundstation.hamlib.protocol.HamlibResponseKeyExtract
 import org.hbird.business.groundstation.hamlib.radio.protocol.GetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetVfo;
-import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,7 +68,7 @@ public class HamlibRadioDriverTest {
     private ICatalogue catalogue;
 
     @Mock
-    private PointingDataCalculator calculator;
+    private IPointingData calculator;
 
     @Mock
     private IPointingDataOptimizer<RadioDriverConfiguration> optimizer;

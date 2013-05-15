@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Park;
@@ -99,7 +100,7 @@ public class HamlibRotatorTrackerTest {
     private LocationContactEvent contact;
 
     @Mock
-    private PointingDataCalculator calculator;
+    private IPointingData calculator;
 
     private List<PointingData> pointingData;
 

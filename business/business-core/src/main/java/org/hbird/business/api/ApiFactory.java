@@ -35,7 +35,8 @@ public class ApiFactory {
 	static protected String queueManagementClass = System.getProperty("hbird.queuemanagement.class", "org.hbird.business.queuemanagement.api.QueueManagerApi");
 	static protected String partmanagerClass = System.getProperty("hbird.partmanager.class", "org.hbird.business.archive.api.PartManager");
 	static protected String archiveManagerClass = System.getProperty("hbird.archivemanager.class", "org.hbird.business.archive.api.ArchiveManagement");
-	
+	static protected String orbitDataClass = System.getProperty("hbird.orbitdata.class", "org.hbird.business.navigation.orekit.OrbitDataApi");
+
 	static public synchronized IDataAccess getDataAccessApi(String issuedBy) {
 		return (IDataAccess) createInstance(dataAccessClass, issuedBy);
 	}
@@ -58,6 +59,10 @@ public class ApiFactory {
 
 	static public synchronized IArchiveManagement getArchiveManagerApi(String issuedBy) {
 		return (IArchiveManagement) createInstance(archiveManagerClass, issuedBy);
+	}
+
+	static public synchronized IPointingData getOrbitDataApi(String issuedBy) {
+		return (IPointingData) createInstance(orbitDataClass, issuedBy);
 	}
 
 	static protected synchronized Object createInstance(String clazz, String issuedBy) {
@@ -95,6 +100,10 @@ public class ApiFactory {
 
 	static public synchronized IArchiveManagement getArchiveManagerApi(String issuedBy, CamelContext context) {
 		return (IArchiveManagement) createInstance(archiveManagerClass, issuedBy, context);
+	}
+
+	static public synchronized IPointingData getOrbitDataApi(String issuedBy, CamelContext context) {
+		return (IPointingData) createInstance(orbitDataClass, issuedBy, context);
 	}
 
 	static protected synchronized Object createInstance(String clazz, String issuedBy, CamelContext context) {

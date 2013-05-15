@@ -37,6 +37,7 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
@@ -117,7 +118,7 @@ public class HamlibRotatorDriver extends HamlibDriver<RotatorDriverConfiguration
      */
     @Override
     protected TrackingSupport<RotatorDriverConfiguration> createTrackingSupport(RotatorDriverConfiguration config, ICatalogue catalogue,
-            PointingDataCalculator calculator, IPointingDataOptimizer<RotatorDriverConfiguration> optimizer) {
+            IPointingData calculator, IPointingDataOptimizer<RotatorDriverConfiguration> optimizer) {
         return new HamlibRotatorTracker(config, catalogue, calculator, optimizer);
     }
 }
