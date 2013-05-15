@@ -1,5 +1,5 @@
 
-Lists of 56 third-party dependencies.
+Lists of 57 third-party dependencies.
      (Public Domain) AOP alliance (aopalliance:aopalliance:1.0 - http://aopalliance.sourceforge.net)
      (GNU LESSER GENERAL PUBLIC LICENSE) c3p0:JDBC DataSources/Resource Pools (c3p0:c3p0:0.9.1.1 - http://c3p0.sourceforge.net)
      (The Apache Software License, Version 2.0) Guava: Google Core Libraries for Java (com.google.guava:guava:14.0.1 - http://code.google.com/p/guava-libraries/guava)
@@ -42,6 +42,7 @@ Lists of 56 third-party dependencies.
      (The Apache Software License, Version 2.0) HBird :: Exchange - Task Scheduling Service (org.hbird.exchange:tasking:0.8.0-SNAPSHOT - http://hbird.de/tasking)
      (The Apache Software License, Version 2.0) HBird :: Exchange - Validation (org.hbird.exchange:validation:0.8.0-SNAPSHOT - http://hbird.de/validation)
      (The Apache Software License, Version 2.0) JASYPT: Java Simplified Encryption (org.jasypt:jasypt:1.9.0 - http://www.jasypt.org)
+     (The MIT License) Mockito (org.mockito:mockito-all:1.9.0 - http://www.mockito.org)
      (The Apache Software License, Version 2.0) ORbit Extrapolation KIT (org.orekit:orekit:5.0.3 - http://www.orekit.org/)
      (Apache 2.0) Quartz Enterprise Job Scheduler (org.quartz-scheduler:quartz:2.1.7 - http://quartz-scheduler.org/quartz/)
      (Massachusetts Institute of Technology License (MIT)) SLF4J API Module (org.slf4j:slf4j-api:1.6.6 - http://www.slf4j.org)

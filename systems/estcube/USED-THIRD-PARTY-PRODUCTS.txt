@@ -93,7 +93,7 @@ Lists of 132 third-party dependencies.
      (The Apache Software License, Version 2.0) HBird :: Business - Scripting Module (org.hbird.business:business-scripting:0.8.0-SNAPSHOT - https://github.com/JohannesKlug/hummingbird/wiki)
      (The Apache Software License, Version 2.0) HBird :: Business - System Monitoring (org.hbird.business:business-systemmonitoring:0.8.0-SNAPSHOT - http://hbird.de/business-systemmonitoring)
      (The Apache Software License, Version 2.0) HBird :: Business - Task Executor (org.hbird.business:business-taskexecutor:0.8.0-SNAPSHOT - http://hbird.de/business-taskexecutor)
-     (The Apache Software License, Version 2.0) HBird :: Business - Antenna Control (org.hbird.business:business-tracking:0.8.0-SNAPSHOT - http://hbird.de/business-tracking)
+     (The Apache Software License, Version 2.0) HBird :: Business - Tracking (org.hbird.business:business-tracking:0.8.0-SNAPSHOT - http://hbird.de/business-tracking)
      (The Apache Software License, Version 2.0) HBird :: Business - Validation Module (org.hbird.business:business-validation:0.8.0-SNAPSHOT - http://hbird.de/business-validation)
      (The Apache Software License, Version 2.0) HBird :: Business - Websockets (org.hbird.business:business-websockets:0.8.0-SNAPSHOT - http://hbird.de/business-websockets)
      (The Apache Software License, Version 2.0) Business - Simple Parameter Simulator Module (org.hbird.business:simple-parameter-simulator:0.8.0-SNAPSHOT - https://github.com/JohannesKlug/hummingbird/wiki)
