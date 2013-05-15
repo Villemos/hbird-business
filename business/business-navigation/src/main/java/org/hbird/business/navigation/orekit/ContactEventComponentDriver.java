@@ -31,7 +31,7 @@ public class ContactEventComponentDriver extends SoftwareComponentDriver {
     @Override
     public void doConfigure() {
 
-    	ContactEventComponent com = (ContactEventComponent) part;
+    	ContactEventComponent com = (ContactEventComponent) entity;
     	ContactEventBean bean = new ContactEventBean(com);
 		
         ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute");

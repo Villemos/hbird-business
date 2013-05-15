@@ -38,6 +38,7 @@ import org.hbird.business.groundstation.hamlib.rotator.protocol.GetPosition;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Park;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Reset;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.SetPosition;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,6 +71,9 @@ public class HamlibRotatorDriverTest {
     @Mock
     private IPointingDataOptimizer<RotatorDriverConfiguration> optimizer;
 
+    @Mock
+    private PointingDataCalculator calculator;
+
     private HamlibRotatorDriver driver;
 
     private InOrder inOrder;
@@ -80,7 +84,7 @@ public class HamlibRotatorDriverTest {
     @Before
     public void setUp() throws Exception {
         driver = new HamlibRotatorDriver();
-        inOrder = inOrder(camelContext, part, driverConfig, catalogue, optimizer, converter);
+        inOrder = inOrder(camelContext, part, driverConfig, catalogue, optimizer, converter, calculator);
         when(camelContext.getTypeConverter()).thenReturn(converter);
         when(part.getConfiguration()).thenReturn(driverConfig);
     }
@@ -114,7 +118,7 @@ public class HamlibRotatorDriverTest {
 
     @Test
     public void testCreateTrackingSupport() throws Exception {
-        TrackingSupport<RotatorDriverConfiguration> tracking = driver.createTrackingSupport(driverConfig, catalogue, optimizer);
+        TrackingSupport<RotatorDriverConfiguration> tracking = driver.createTrackingSupport(driverConfig, catalogue, calculator, optimizer);
         assertNotNull(tracking);
         inOrder.verifyNoMoreInteractions();
     }

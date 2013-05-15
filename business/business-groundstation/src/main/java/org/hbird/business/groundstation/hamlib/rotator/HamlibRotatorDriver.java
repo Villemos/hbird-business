@@ -49,8 +49,9 @@ import org.hbird.business.groundstation.hamlib.rotator.protocol.GetPosition;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Park;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Reset;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.SetPosition;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +72,7 @@ public class HamlibRotatorDriver extends HamlibDriver<RotatorDriverConfiguration
         LOG.debug("Setting up hamlib rotator position poll using timeout {} ms and address '{}'", config.getDevicePollInterval(), config.getAddress());
 
         long interval = config.getDevicePollInterval();
-        String name = part.getName();
+        String name = entity.getName();
 
         /** Configure the monitoring routes. */
         // @formatter:off
@@ -84,7 +85,8 @@ public class HamlibRotatorDriver extends HamlibDriver<RotatorDriverConfiguration
 
     /**
      * @see org.hbird.business.groundstation.base.HamlibDriver#createResponseHandlers()
--     */
+     *      -
+     */
     @Override
     protected List<ResponseHandler<RotatorDriverConfiguration, String, String>> createResponseHandlers() {
         List<ResponseHandler<RotatorDriverConfiguration, String, String>> list = new ArrayList<ResponseHandler<RotatorDriverConfiguration, String, String>>(4);
@@ -99,7 +101,7 @@ public class HamlibRotatorDriver extends HamlibDriver<RotatorDriverConfiguration
      * @see org.hbird.business.groundstation.hamlib.HamlibDriver#createDriverContext(org.hbird.exchange.interfaces.IPart)
      */
     @Override
-    protected DriverContext<RotatorDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IStartablePart part) {
+    protected DriverContext<RotatorDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IStartableEntity part) {
         HamlibRotatorPart rotator = (HamlibRotatorPart) part;
         ResponseKeyExtractor<String, String> keyExtractor = new HamlibResponseKeyExtractor();
         RotatorState deviceState = new RotatorState();
@@ -115,7 +117,7 @@ public class HamlibRotatorDriver extends HamlibDriver<RotatorDriverConfiguration
      */
     @Override
     protected TrackingSupport<RotatorDriverConfiguration> createTrackingSupport(RotatorDriverConfiguration config, ICatalogue catalogue,
-            IPointingDataOptimizer<RotatorDriverConfiguration> optimizer) {
-        return new HamlibRotatorTracker(config, catalogue, optimizer);
+            PointingDataCalculator calculator, IPointingDataOptimizer<RotatorDriverConfiguration> optimizer) {
+        return new HamlibRotatorTracker(config, catalogue, calculator, optimizer);
     }
 }

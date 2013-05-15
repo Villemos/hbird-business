@@ -45,7 +45,7 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
     protected List<OrbitalState> states = new ArrayList<OrbitalState>();
 
     protected IPublish publisher = null;
-    
+
     public OrbitalStateCollector(String satelliteId, String derivedFrom, IPublish publisher) {
         this.satelliteId = satelliteId;
         this.derivedFrom = derivedFrom;
@@ -60,7 +60,7 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
     public void handleStep(SpacecraftState currentState, boolean isLast) throws PropagationException {
 
         OrbitalState state = NavigationUtilities.toOrbitalState(currentState, satelliteId, derivedFrom);
-        state.setEntityID(satelliteId + "/orbitalstate");
+        state.setID(satelliteId + "/orbitalstate");
 
         states.add(state);
         if (publisher != null) {
@@ -72,26 +72,26 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
     public List<OrbitalState> getDataSet() {
         return states;
     }
-    
+
     public OrbitalState getLatestState() {
         return states.isEmpty() ? null : states.get(states.size() - 1);
     }
 
     public void clearDataSet() {
-    	states.clear();
+        states.clear();
     }
 
-	/**
-	 * @return the publisher
-	 */
-	public IPublish getPublisher() {
-		return publisher;
-	}
+    /**
+     * @return the publisher
+     */
+    public IPublish getPublisher() {
+        return publisher;
+    }
 
-	/**
-	 * @param publisher the publisher to set
-	 */
-	public void setPublisher(IPublish publisher) {
-		this.publisher = publisher;
-	}
+    /**
+     * @param publisher the publisher to set
+     */
+    public void setPublisher(IPublish publisher) {
+        this.publisher = publisher;
+    }
 }

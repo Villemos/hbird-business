@@ -17,23 +17,23 @@
 package org.hbird.business.systemmonitoring.bean;
 
 import org.hbird.business.core.naming.DefaultNaming;
-import org.hbird.business.core.naming.Naming;
+import org.hbird.business.core.naming.INaming;
 
 public class Monitor {
 
     protected String componentId;
 
-    protected Naming naming = new DefaultNaming();
+    protected INaming naming = new DefaultNaming();
 
     public Monitor(String componentId) {
         this.componentId = componentId;
     }
 
-    public void setNaming(Naming naming) {
+    public void setNaming(INaming naming) {
         this.naming = naming;
     }
 
-    public Naming getNaming() {
+    public INaming getNaming() {
         return this.naming;
     }
 }

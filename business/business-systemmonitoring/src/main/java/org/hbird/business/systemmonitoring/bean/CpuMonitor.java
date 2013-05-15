@@ -20,18 +20,14 @@ import java.lang.management.ManagementFactory;
 import java.net.UnknownHostException;
 
 import org.apache.camel.Handler;
-import org.hbird.business.core.naming.Base;
 import org.hbird.exchange.core.Parameter;
 
 public class CpuMonitor extends Monitor {
 
     public static final String PARAMETER_RELATIVE_NAME = "Load Average";
 
-    private final String parameterName;
-
     public CpuMonitor(String componentId) {
         super(componentId);
-        parameterName = naming.createAbsoluteName(Base.HOST, HostInfo.getHostName(), PARAMETER_RELATIVE_NAME);
     }
 
     /**
@@ -43,12 +39,11 @@ public class CpuMonitor extends Monitor {
      */
     @Handler
     public Parameter check() {
-    	Parameter parameter = new Parameter(componentId + "/CPU", parameterName);
-    	parameter.setDescription("The average CPU usage the last minute.");
-    	parameter.setValue(ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage());
-    	parameter.setUnit("Percentage/CPU");
+        Parameter parameter = new Parameter(naming.buildId(componentId, PARAMETER_RELATIVE_NAME), PARAMETER_RELATIVE_NAME);
+        parameter.setDescription("The load average of CPU during the last minute.");
+        parameter.setValue(ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage());
+        parameter.setUnit("Load Avg");
     	parameter.setIssuedBy(componentId);
-    	
-    	return parameter;
+        return parameter;
     }
 }

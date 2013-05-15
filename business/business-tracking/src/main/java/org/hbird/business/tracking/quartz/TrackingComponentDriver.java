@@ -1,7 +1,6 @@
 package org.hbird.business.tracking.quartz;
 
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.model.RouteDefinition;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
@@ -9,7 +8,6 @@ import org.hbird.business.core.cache.EntityCache;
 import org.hbird.business.core.cache.SatelliteResolver;
 import org.hbird.business.core.cache.TleResolver;
 import org.hbird.business.tracking.TrackingComponent;
-import org.hbird.business.tracking.timer.TrackingControlBean;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.quartz.Scheduler;
@@ -23,8 +21,8 @@ public class TrackingComponentDriver extends SoftwareComponentDriver {
     @Override
     protected void doConfigure() {
 
-        String name = part.getName();
-        TrackingDriverConfiguration config = ((TrackingComponent) part).getConfiguration();
+        String name = entity.getName();
+        TrackingDriverConfiguration config = ((TrackingComponent) entity).getConfiguration();
         IDataAccess dao = ApiFactory.getDataAccessApi(name);
         EntityCache<Satellite> satelliteCache = new EntityCache<Satellite>(new SatelliteResolver(dao));
         EntityCache<TleOrbitalParameters> tleCache = new EntityCache<TleOrbitalParameters>(new TleResolver(dao));
@@ -34,7 +32,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver {
         Scheduler scheduler;
         try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
-            JobFactory factory = new TrackCommandCreationJobFactory(dao, producer, TRACK_COMMAND_INJECTOR, satelliteCache, tleCache, part);
+            JobFactory factory = new TrackCommandCreationJobFactory(entity, dao, producer, TRACK_COMMAND_INJECTOR, satelliteCache, tleCache);
             scheduler.setJobFactory(factory);
             scheduler.start();
         }
@@ -62,7 +60,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver {
             .to("direct:scheduleContact");
         
         
-        from(addTimer(name, config.getArchivePollIntervall()))
+        from(addTimer(name, config.getArchivePollInterval()))
             .bean(archivePoller)
             .split(body())
             .to("seda:eventHandler");

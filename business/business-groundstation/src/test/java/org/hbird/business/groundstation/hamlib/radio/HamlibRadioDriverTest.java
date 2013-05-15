@@ -37,6 +37,7 @@ import org.hbird.business.groundstation.hamlib.protocol.HamlibResponseKeyExtract
 import org.hbird.business.groundstation.hamlib.radio.protocol.GetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetVfo;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,6 +68,9 @@ public class HamlibRadioDriverTest {
     private ICatalogue catalogue;
 
     @Mock
+    private PointingDataCalculator calculator;
+
+    @Mock
     private IPointingDataOptimizer<RadioDriverConfiguration> optimizer;
 
     private HamlibRadioDriver driver;
@@ -79,7 +83,7 @@ public class HamlibRadioDriverTest {
     @Before
     public void setUp() throws Exception {
         driver = new HamlibRadioDriver();
-        inOrder = inOrder(camelContext, part, driverConfig, catalogue, optimizer, converter);
+        inOrder = inOrder(camelContext, part, driverConfig, catalogue, optimizer, converter, calculator);
         when(camelContext.getTypeConverter()).thenReturn(converter);
         when(part.getConfiguration()).thenReturn(driverConfig);
     }
@@ -113,7 +117,7 @@ public class HamlibRadioDriverTest {
 
     @Test
     public void testCreateTrackingSupport() throws Exception {
-        TrackingSupport<RadioDriverConfiguration> tracking = driver.createTrackingSupport(driverConfig, catalogue, optimizer);
+        TrackingSupport<RadioDriverConfiguration> tracking = driver.createTrackingSupport(driverConfig, catalogue, calculator, optimizer);
         assertNotNull(tracking);
         inOrder.verifyNoMoreInteractions();
     }

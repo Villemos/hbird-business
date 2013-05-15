@@ -19,16 +19,21 @@ package org.hbird.business.tracking.quartz;
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
+import org.quartz.Job;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.simpl.SimpleJobFactory;
 import org.quartz.spi.TriggerFiredBundle;
-import org.springframework.scheduling.quartz.AdaptableJobFactory;
 
 /**
  *
  */
-public class TrackCommandCreationJobFactory extends AdaptableJobFactory {
+public class TrackCommandCreationJobFactory extends SimpleJobFactory {
+
+    private final IStartableEntity part;
 
     private final IDataAccess dao;
 
@@ -40,8 +45,10 @@ public class TrackCommandCreationJobFactory extends AdaptableJobFactory {
 
     private final EntityCache<TleOrbitalParameters> tleCache;
 
-    public TrackCommandCreationJobFactory(IDataAccess dao, ProducerTemplate producer, String endPoint, EntityCache<Satellite> satelliteCache,
-            EntityCache<TleOrbitalParameters> tleCache, IStartablePart part) {
+    public TrackCommandCreationJobFactory(IStartableEntity part, IDataAccess dao, ProducerTemplate producer, String endPoint,
+            EntityCache<Satellite> satelliteCache,
+            EntityCache<TleOrbitalParameters> tleCache) {
+        this.part = part;
         this.dao = dao;
         this.producer = producer;
         this.endPoint = endPoint;
@@ -50,20 +57,26 @@ public class TrackCommandCreationJobFactory extends AdaptableJobFactory {
     }
 
     /**
-     * @see org.springframework.scheduling.quartz.AdaptableJobFactory#createJobInstance(org.quartz.spi.TriggerFiredBundle)
+     * @see org.quartz.simpl.SimpleJobFactory#newJob(org.quartz.spi.TriggerFiredBundle, org.quartz.Scheduler)
      */
     @Override
-    protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
-        Object job = bundle.getJobDetail().getJobClass().newInstance();
+    public Job newJob(TriggerFiredBundle bundle, Scheduler scheduler) throws SchedulerException {
+        Job job = super.newJob(bundle, scheduler);
         if (job instanceof TrackCommandCreationJob) {
-            TrackCommandCreationJob commandCreator = (TrackCommandCreationJob) job;
-            commandCreator.setDataAccess(dao);
-            commandCreator.setProducerTemplate(producer);
-            commandCreator.setEndpoint(endPoint);
-            commandCreator.setSatelliteCache(satelliteCache);
-            commandCreator.setTleCache(tleCache);
+            initialise((TrackCommandCreationJob) job);
         }
         return job;
     }
 
+    /**
+     * @param job
+     */
+    void initialise(TrackCommandCreationJob commandCreator) {
+        commandCreator.setPart(part);
+        commandCreator.setDataAccess(dao);
+        commandCreator.setProducerTemplate(producer);
+        commandCreator.setEndpoint(endPoint);
+        commandCreator.setSatelliteCache(satelliteCache);
+        commandCreator.setTleCache(tleCache);
+    }
 }

@@ -48,8 +48,9 @@ import org.hbird.business.groundstation.hamlib.protocol.HamlibResponseKeyExtract
 import org.hbird.business.groundstation.hamlib.radio.protocol.GetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetVfo;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,7 @@ public class HamlibRadioDriver extends HamlibDriver<RadioDriverConfiguration> {
         LOG.debug("Setting up Hamlib radio frequency poll using timeout {} ms and address '{}'", config.getDevicePollInterval(), config.getAddress());
 
         long interval = config.getDevicePollInterval();
-        String name = part.getName();
+        String name = entity.getName();
 
         /** Configure the monitoring routes. */
         // @formatter:off
@@ -99,12 +100,13 @@ public class HamlibRadioDriver extends HamlibDriver<RadioDriverConfiguration> {
      * @see org.hbird.business.groundstation.hamlib.HamlibDriver#createDriverContext(org.hbird.exchange.interfaces.IPart)
      */
     @Override
-    protected DriverContext<RadioDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IStartablePart part) {
+    protected DriverContext<RadioDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IStartableEntity part) {
         HamlibRadioPart radio = (HamlibRadioPart) part;
         RadioDriverConfiguration config = radio.getConfiguration();
         ResponseKeyExtractor<String, String> keyExtractor = new HamlibResponseKeyExtractor();
         RadioState deviceState = new RadioState();
-        DriverContext<RadioDriverConfiguration, String, String> context = new DriverContext<RadioDriverConfiguration, String, String>(part, config, keyExtractor, camelContext.getTypeConverter(), deviceState);
+        DriverContext<RadioDriverConfiguration, String, String> context = new DriverContext<RadioDriverConfiguration, String, String>(part, config,
+                keyExtractor, camelContext.getTypeConverter(), deviceState);
         return context;
     }
 
@@ -115,7 +117,7 @@ public class HamlibRadioDriver extends HamlibDriver<RadioDriverConfiguration> {
      */
     @Override
     protected TrackingSupport<RadioDriverConfiguration> createTrackingSupport(RadioDriverConfiguration config, ICatalogue catalogue,
-            IPointingDataOptimizer<RadioDriverConfiguration> optimizer) {
-        return new HamlibRadioTracker(config, catalogue, optimizer);
+            PointingDataCalculator calculator, IPointingDataOptimizer<RadioDriverConfiguration> optimizer) {
+        return new HamlibRadioTracker(config, catalogue, calculator, optimizer);
     }
 }

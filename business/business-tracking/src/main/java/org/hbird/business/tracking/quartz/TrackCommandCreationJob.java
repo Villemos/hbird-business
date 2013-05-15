@@ -20,6 +20,7 @@ import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.groundstation.Track;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -42,6 +43,8 @@ public class TrackCommandCreationJob implements Job {
 
     private static final Logger LOG = LoggerFactory.getLogger(TrackCommandCreationJob.class);
 
+    private IStartableEntity part;
+
     private IDataAccess dao;
 
     private ProducerTemplate producer;
@@ -51,6 +54,10 @@ public class TrackCommandCreationJob implements Job {
     private EntityCache<Satellite> satelliteCache;
 
     private EntityCache<TleOrbitalParameters> tleCache;
+
+    public void setPart(IStartableEntity part) {
+        this.part = part;
+    }
 
     public void setDataAccess(IDataAccess dao) {
         this.dao = dao;
@@ -93,9 +100,9 @@ public class TrackCommandCreationJob implements Job {
                 String tleId = event.getDerivedFrom();
                 TleOrbitalParameters eventTle = getTle(tleCache, tleId);
                 if (eventTle != null) {
-                    TleOrbitalParameters latestTle = getLatestTle(dao, sat);
+                    TleOrbitalParameters latestTle = getLatestTle(dao, satId);
                     if (latestTle == null || areEqual(eventTle, latestTle)) {
-                        Track command = createTrackCommand(event, sat);
+                        Track command = createTrackCommand(part, event, sat);
                         LOG.info("Issuing Track command for the {}", event.prettyPrint());
                         producer.asyncSendBody(endPoint, command);
                     }
@@ -129,14 +136,16 @@ public class TrackCommandCreationJob implements Job {
         return tleCache.getById(tleId);
     }
 
-    TleOrbitalParameters getLatestTle(IDataAccess dao, Satellite sat) {
-        return dao.getTleFor(sat.getID());
+    TleOrbitalParameters getLatestTle(IDataAccess dao, String satelliteId) {
+        return dao.getTleFor(satelliteId);
     }
 
-    Track createTrackCommand(LocationContactEvent event, Satellite satellite) {
-    	Track track = new Track(satellite.getID());
-    	track.setDestination(event.getGroundStationId());
-    	track.setSatellite(satellite);
+    Track createTrackCommand(IStartableEntity part, LocationContactEvent event, Satellite satellite) {
+        Track track = new Track(satellite.getID());
+        track.setIssuedBy(part.getID());
+        track.setDestination(event.getGroundStationId());
+        track.setSatellite(satellite);
+        track.setLocationContactEvent(event);
         return track;
     }
 

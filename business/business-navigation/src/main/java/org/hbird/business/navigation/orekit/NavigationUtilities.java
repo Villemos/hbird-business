@@ -1,16 +1,9 @@
 package org.hbird.business.navigation.orekit;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.commons.math.geometry.Vector3D;
 import org.hbird.exchange.core.D3Vector;
-import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.GeoLocation;
-import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
-import org.hbird.exchange.navigation.PointingData;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
 import org.orekit.frames.LocalOrbitalFrame;
@@ -18,7 +11,6 @@ import org.orekit.frames.LocalOrbitalFrame.LOFType;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.frames.Transform;
 import org.orekit.orbits.CartesianOrbit;
-import org.orekit.orbits.KeplerianOrbit;
 import org.orekit.orbits.Orbit;
 import org.orekit.propagation.Propagator;
 import org.orekit.propagation.SpacecraftState;
@@ -33,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Gert Villemos
- *
+ * 
  */
 public class NavigationUtilities {
 
@@ -116,47 +108,6 @@ public class NavigationUtilities {
         GeodeticPoint center = Constants.earth.transform(p, Constants.earth.getBodyFrame(), date);
         GeoLocation geoLocation = new GeoLocation(Math.toDegrees(center.getLatitude()), Math.toDegrees(center.getLongitude()), center.getAltitude());
         return geoLocation;
-    }
-
-    public static List<PointingData> calculateContactData(LocationContactEvent locationContactEvent,
-            GroundStation groundStation, long contactDataStepSize) throws OrekitException {
-        List<PointingData> data = new ArrayList<PointingData>();
-
-        long startTime = locationContactEvent.getStartTime();
-        long endTime = locationContactEvent.getEndTime();
-
-        D3Vector location = groundStation.getGeoLocation();
-        GeodeticPoint point = new GeodeticPoint(location.getP1(), location.getP2(), location.getP3());
-        TopocentricFrame locationOnEarth = new TopocentricFrame(Constants.earth, point, groundStation.getName());
-
-        OrbitalState startState = locationContactEvent.getSatelliteStateAtStart();
-        PVCoordinates coord = toPVCoordinates(startState.getPosition(), startState.getVelocity());
-
-        AbsoluteDate date = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());
-        // TODO - 01.05.2013, kimmell - use Cartesian instead of Keplerian here?
-        // TODO - 01.05.2013, kimmell - which frame to use here?
-        Orbit initialOrbit = new KeplerianOrbit(coord, Constants.FRAME, date, Constants.MU);
-        Propagator propagator = new KeplerianPropagator(initialOrbit);
-        String satelliteId = locationContactEvent.getSatelliteId();
-        String gsId = groundStation.getGroundStationId();
-        double timeSift = contactDataStepSize / 1000D; // shift has to be in seconds
-
-        /** Calculate contact data. */
-        for (int i = 0; startTime + contactDataStepSize * i < endTime; i++) {
-            SpacecraftState newState = propagator.propagate(date);
-            coord = newState.getPVCoordinates();
-            double azimuth = calculateAzimuth(coord, locationOnEarth, date);
-            double elevation = calculateElevation(coord, locationOnEarth, date);
-            double doppler = calculateDoppler(coord, locationOnEarth, date);
-            long time = date.toDate(TimeScalesFactory.getUTC()).getTime();
-            PointingData entry = new PointingData(time, azimuth, elevation, doppler, satelliteId, gsId);
-            LOG.debug(entry.prettyPrint());
-            data.add(entry);
-            /* New target date */
-            date = date.shiftedBy(timeSift);
-        }
-
-        return data;
     }
 
     protected static double calculateAzimuth(PVCoordinates state, TopocentricFrame locationOnEarth, AbsoluteDate absoluteDate) throws OrekitException {

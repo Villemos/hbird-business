@@ -20,7 +20,7 @@ import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.constants.StandardArguments;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,10 +39,10 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
     private static Logger LOG = LoggerFactory.getLogger(SoftwareComponentDriver.class);
 
     /** The Start request of the component. */
-    protected StartComponent command = null;
+    protected StartComponent command;
 
     /** The part that this driver starts. */
-    protected IStartablePart part = null;
+    protected IStartableEntity entity;
 
     /**
      * Sets the command which this builder use to create the component.
@@ -60,19 +60,19 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
 
         /** Get the part specification from the start request. */
         if (command != null) {
-            part = command.getPart();
+            entity = command.getEntity();
         }
 
-        if (part != null) {
-            String qName = part.getID();
-            long heartbeat = part.getHeartbeat();
-            LOG.info("Starting driver for part '{}'.", qName);
+        if (entity != null) {
+            String id = entity.getID();
+            long heartbeat = entity.getHeartbeat();
+            LOG.info("Starting driver for part '{}'.", id);
 
             /** Setup the component specific services. */
             doConfigure();
 
             /** Setup the BusinessCard */
-            ProcessorDefinition<?> route = from(addTimer("businesscard-", heartbeat)).bean(part, "getBusinessCard");
+            ProcessorDefinition<?> route = from(addTimer("businesscard-", heartbeat)).bean(entity, "getBusinessCard");
             addInjectionRoute(route);
         }
         else {
@@ -110,7 +110,7 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
     }
 
     protected String addUniqueId(String prefix) {
-        return prefix + part.getName();
+        return prefix + entity.getName();
     }
 
     protected String addOptions() {
@@ -145,11 +145,11 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
         return "selector=" + StandardArguments.ENTITY_ID + "='" + id + "'";
     }
 
-    public IStartablePart getPart() {
-        return part;
+    public IStartableEntity getPart() {
+        return entity;
     }
 
-    public void setPart(IStartablePart part) {
-        this.part = part;
+    public void setPart(IStartableEntity part) {
+        this.entity = part;
     }
 }

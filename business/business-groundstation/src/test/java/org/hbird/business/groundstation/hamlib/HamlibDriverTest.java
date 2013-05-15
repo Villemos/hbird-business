@@ -41,8 +41,9 @@ import org.hbird.business.groundstation.hamlib.protocol.HamlibCommandEncoder;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibErrorLogger;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibLineDecoder;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibResponseBufferer;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.junit.Before;
@@ -92,7 +93,7 @@ public class HamlibDriverTest {
 
             @Override
             protected TrackingSupport<GroundStationDriverConfiguration> createTrackingSupport(GroundStationDriverConfiguration config, ICatalogue catalogue,
-                    IPointingDataOptimizer<GroundStationDriverConfiguration> optimizer) {
+                    PointingDataCalculator calculator, IPointingDataOptimizer<GroundStationDriverConfiguration> optimizer) {
                 return null;
             }
 
@@ -102,7 +103,7 @@ public class HamlibDriverTest {
             }
 
             @Override
-            protected DriverContext<GroundStationDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IStartablePart part) {
+            protected DriverContext<GroundStationDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IStartableEntity part) {
                 return null;
             }
         };

@@ -22,11 +22,15 @@ import java.util.List;
 import org.apache.camel.Handler;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.navigation.LocationContactEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class ArchivePoller {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ArchivePoller.class);
 
     private final TrackingDriverConfiguration config;
 
@@ -46,7 +50,11 @@ public class ArchivePoller {
         for (String satelliteId : satellites) {
             LocationContactEvent event = dao.getNextLocationContactEventFor(groundStationId, satelliteId);
             if (event != null) {
+                LOG.debug("Found {}", event.prettyPrint());
                 result.add(event);
+            }
+            else {
+                LOG.debug("Didn't found any LocationContactEvent for GS '{}' and satellite '{}'", groundStationId, satelliteId);
             }
         }
         return result;

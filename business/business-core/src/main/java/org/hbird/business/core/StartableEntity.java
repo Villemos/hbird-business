@@ -39,47 +39,27 @@ import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 
 /**
  * @author Gert Villemos
  * 
  */
-public class StartableEntity extends CommandableEntity implements IStartablePart {
+public class StartableEntity extends CommandableEntity implements IStartableEntity {
+
+    private static final long serialVersionUID = 8396148214309147407L;
 
     /** Default heart beat interval in millis. */
     public static final long DEFAULT_HEARTBEAT = 5000L;
 
-    /**
-	 * 
-	 */
-    private static final long serialVersionUID = 8396148214309147407L;
-
     /** The class name of the driver that can 'execute' this part. */
-    protected String driverName = null;
-
-    /** The location (name of a Configurator) where the component should be started. */
-    protected String configurator = null;
+    protected String driverName;
 
     protected long heartbeat = DEFAULT_HEARTBEAT;
 
     protected BusinessCard card;
 
-	protected CamelContext context = null;	
-
-	/**
-	 * @return the context
-	 */
-	public CamelContext getContext() {
-		return context;
-	}
-
-	/**
-	 * @param context the context to set
-	 */
-	public void setContext(CamelContext context) {
-		this.context = context;
-	}
+    protected CamelContext context;
 
     /**
      * @param name
@@ -89,10 +69,26 @@ public class StartableEntity extends CommandableEntity implements IStartablePart
         super(ID, name);
     }
 
+    /**
+     * @return the context
+     */
+    @Override
+    public CamelContext getContext() {
+        return context;
+    }
+
+    /**
+     * @param context the context to set
+     */
+    @Override
+    public void setContext(CamelContext context) {
+        this.context = context;
+    }
+
     @Override
     public BusinessCard getBusinessCard() {
         if (card == null) {
-            card = createBusinessCard(getName(), getHeartbeat(), getCommands(), getDescription());
+            card = createBusinessCard(getID(), getName(), getHeartbeat(), getCommands(), getDescription());
         }
         return card.touch();
     }
@@ -108,16 +104,6 @@ public class StartableEntity extends CommandableEntity implements IStartablePart
     }
 
     @Override
-    public String getConfigurator() {
-        return configurator;
-    }
-
-    @Override
-    public void setConfigurator(String configurator) {
-        this.configurator = configurator;
-    }
-
-    @Override
     public long getHeartbeat() {
         return heartbeat;
     }
@@ -127,9 +113,7 @@ public class StartableEntity extends CommandableEntity implements IStartablePart
         this.heartbeat = heartbeat;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
      * @see org.hbird.business.core.CommandablePart#createCommandList()
      */
     @Override
@@ -139,12 +123,12 @@ public class StartableEntity extends CommandableEntity implements IStartablePart
         return commands;
     }
 
-    protected BusinessCard createBusinessCard(String name, long heartBeat, List<Command> commands, String description) {
+    protected BusinessCard createBusinessCard(String id, String name, long heartBeat, List<Command> commands, String description) {
         BusinessCard card = new BusinessCard(name, name);
         card.setPeriod(heartBeat);
         card.setCommandsIn(commands);
         card.setDescription(description);
-        card.setIssuedBy(ID);
+        card.setIssuedBy(id);
         return card;
     }
 }

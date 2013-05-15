@@ -42,7 +42,7 @@ public class TrackingDriverConfiguration extends GroundStationConfigurationBase 
     protected long scheduleDelta = DEFAULT_SCHEDULE_DELTA;
 
     @Value("${archive.poll.interval:60000}")
-    protected long archivePollIntervall = DEFAULT_ARCHIVE_POLL_INTERVAL;
+    protected long archivePollInterval = DEFAULT_ARCHIVE_POLL_INTERVAL;
 
     public TrackingDriverConfiguration() {
         super();
@@ -79,14 +79,14 @@ public class TrackingDriverConfiguration extends GroundStationConfigurationBase 
     /**
      * @return the archivePollIntervall
      */
-    public long getArchivePollIntervall() {
-        return archivePollIntervall;
+    public long getArchivePollInterval() {
+        return archivePollInterval;
     }
 
     /**
      * @param archivePollIntervall the archivePollIntervall to set
      */
-    public void setArchivePollIntervall(long archivePollIntervall) {
-        this.archivePollIntervall = archivePollIntervall;
+    public void setArchivePollInterval(long archivePollInterval) {
+        this.archivePollInterval = archivePollInterval;
     }
 }

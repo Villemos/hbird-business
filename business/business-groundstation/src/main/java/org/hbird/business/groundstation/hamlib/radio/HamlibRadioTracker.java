@@ -25,6 +25,7 @@ import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetVfo;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.core.CommandBase;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
@@ -39,9 +40,9 @@ import org.hbird.exchange.navigation.Satellite;
  */
 public class HamlibRadioTracker extends TrackingSupport<RadioDriverConfiguration> {
 
-    public HamlibRadioTracker(RadioDriverConfiguration configuration, ICatalogue catalogue,
+    public HamlibRadioTracker(RadioDriverConfiguration configuration, ICatalogue catalogue, PointingDataCalculator calculator,
             IPointingDataOptimizer<RadioDriverConfiguration> optimizer) {
-        super(configuration, catalogue, optimizer);
+        super(configuration, catalogue, calculator, optimizer);
     }
 
     /**

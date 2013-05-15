@@ -46,6 +46,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class GroundStationPartTest {
 
+    private static final String ID = "ID";
     private static final String DESCRIPTION = "description";
     private static final String DRIVER_NAME = "driver";
     private static final String NAME = "name";
@@ -63,7 +64,7 @@ public class GroundStationPartTest {
      */
     @Before
     public void setUp() throws Exception {
-        part = new GroundStationPart<GroundStationDriverConfiguration>("", NAME, DESCRIPTION, DRIVER_NAME, configuration);
+        part = new GroundStationPart<GroundStationDriverConfiguration>(ID, NAME, DESCRIPTION, DRIVER_NAME, configuration);
         inOrder = inOrder(configuration);
     }
 
@@ -102,7 +103,7 @@ public class GroundStationPartTest {
         when(configuration.getHeartBeatInterval()).thenReturn(HEARTBEAT_INTERVAL);
         BusinessCard card = part.getBusinessCard();
         assertEquals(NAME, card.getName());
-        assertEquals(NAME, card.getIssuedBy());
+        assertEquals(ID, card.getIssuedBy());
         assertEquals(HEARTBEAT_INTERVAL, card.getPeriod());
         Map<String, Command> commands = card.getCommandsIn();
         assertEquals(4, commands.size());

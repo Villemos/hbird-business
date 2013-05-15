@@ -60,8 +60,10 @@ public class SetFrequency implements ResponseHandler<RadioDriverConfiguration, S
             String linkName = GetFrequency.getLinkName(driverContext);
             String name = String.format("%s Target Frequency", linkName);
             String description = String.format("%s Target Frequency for the radio", linkName);
-                        
-            Parameter param = new Parameter(driverContext.getPart().getID() + "/" + name, name);
+
+            String id = driverContext.getPart().getID();
+            Parameter param = new Parameter(id + "/" + name, name);
+            param.setIssuedBy(id);
             param.setDescription(description);
             param.setValue(converter.convertTo(Long.class, HamlibProtocolHelper.toMap(response).get(KEY)));
             param.setUnit("Hz");

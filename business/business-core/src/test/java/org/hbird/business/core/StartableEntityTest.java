@@ -35,7 +35,6 @@ import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.BusinessCard;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.Part;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,8 +47,8 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class StartablePartTest {
-	
+public class StartableEntityTest {
+
     public static final String ID = "ID";
     public static final String NAME = "name";
     public static final String ISSUED_BY = "issuer";
@@ -66,7 +65,7 @@ public class StartablePartTest {
     @Mock
     private Command cmd2;
 
-    private StartableEntity part;
+    private StartableEntity entity;
 
     private List<Command> commands;
 
@@ -80,10 +79,10 @@ public class StartablePartTest {
         commands = new ArrayList<Command>();
         commands.add(cmd1);
         commands.add(cmd2);
-        part = new StartableEntity(ID, NAME);
-        part.setIssuedBy(ISSUED_BY);
-        part.setDescription(DESCRIPTION);
-        part.setDriverName(DRIVER_NAME);
+        entity = new StartableEntity(ID, NAME);
+        entity.setIssuedBy(ISSUED_BY);
+        entity.setDescription(DESCRIPTION);
+        entity.setDriverName(DRIVER_NAME);
         inOrder = inOrder(cmd1, cmd2);
         when(cmd1.getName()).thenReturn(CMD_1);
         when(cmd2.getName()).thenReturn(CMD_2);
@@ -101,12 +100,12 @@ public class StartablePartTest {
      */
     @Test
     public void testStartablePartIssuedBy() {
-        assertEquals(NAME, part.getName());
-        assertEquals(ISSUED_BY, part.getIssuedBy());
-        assertNull(part.getConfigurator());
-        assertEquals(DESCRIPTION, part.getDescription());
-        assertEquals(DRIVER_NAME, part.getDriverName());
-        assertEquals(StartableEntity.DEFAULT_HEARTBEAT, part.getHeartbeat());
+        assertEquals(NAME, entity.getName());
+        assertEquals(ISSUED_BY, entity.getIssuedBy());
+        // assertNull(entity.getConfigurator());
+        assertEquals(DESCRIPTION, entity.getDescription());
+        assertEquals(DRIVER_NAME, entity.getDriverName());
+        assertEquals(StartableEntity.DEFAULT_HEARTBEAT, entity.getHeartbeat());
     }
 
     /**
@@ -122,30 +121,30 @@ public class StartablePartTest {
      */
     @Test
     public void testSetDriverName() {
-        assertEquals(DRIVER_NAME, part.getDriverName());
-        part.setDriverName(null);
-        assertNull(part.getDriverName());
-        part.setDriverName(DRIVER_NAME + DRIVER_NAME);
-        assertEquals(DRIVER_NAME + DRIVER_NAME, part.getDriverName());
+        assertEquals(DRIVER_NAME, entity.getDriverName());
+        entity.setDriverName(null);
+        assertNull(entity.getDriverName());
+        entity.setDriverName(DRIVER_NAME + DRIVER_NAME);
+        assertEquals(DRIVER_NAME + DRIVER_NAME, entity.getDriverName());
     }
 
-    /**
-     * Test method for {@link org.hbird.business.core.StartableEntity#getConfigurator()}.
-     */
-    @Test
-    public void testGetConfigurator() {
-        testSetConfigurator();
-    }
+    // /**
+    // * Test method for {@link org.hbird.business.core.StartableEntity#getConfigurator()}.
+    // */
+    // @Test
+    // public void testGetConfigurator() {
+    // testSetConfigurator();
+    // }
 
-    /**
-     * Test method for {@link org.hbird.business.core.StartableEntity#setConfigurator(java.lang.String)}.
-     */
-    @Test
-    public void testSetConfigurator() {
-        assertNull(part.getConfigurator());
-        part.setConfigurator(CONFIGURATOR);
-        assertEquals(CONFIGURATOR, part.getConfigurator());
-    }
+    // /**
+    // * Test method for {@link org.hbird.business.core.StartableEntity#setConfigurator(java.lang.String)}.
+    // */
+    // @Test
+    // public void testSetConfigurator() {
+    // assertNull(entity.getConfigurator());
+    // entity.setConfigurator(CONFIGURATOR);
+    // assertEquals(CONFIGURATOR, entity.getConfigurator());
+    // }
 
     /**
      * Test method for {@link org.hbird.business.core.StartableEntity#getHeartbeat()}.
@@ -160,11 +159,11 @@ public class StartablePartTest {
      */
     @Test
     public void testSetHeartbeat() {
-        assertEquals(StartableEntity.DEFAULT_HEARTBEAT, part.getHeartbeat());
-        part.setHeartbeat(0);
-        assertEquals(0, part.getHeartbeat());
-        part.setHeartbeat(-1 * StartableEntity.DEFAULT_HEARTBEAT);
-        assertEquals(-1 * StartableEntity.DEFAULT_HEARTBEAT, part.getHeartbeat());
+        assertEquals(StartableEntity.DEFAULT_HEARTBEAT, entity.getHeartbeat());
+        entity.setHeartbeat(0);
+        assertEquals(0, entity.getHeartbeat());
+        entity.setHeartbeat(-1 * StartableEntity.DEFAULT_HEARTBEAT);
+        assertEquals(-1 * StartableEntity.DEFAULT_HEARTBEAT, entity.getHeartbeat());
     }
 
     /**
@@ -172,10 +171,10 @@ public class StartablePartTest {
      */
     @Test
     public void testCreateBusinessCard() {
-        BusinessCard card = part.createBusinessCard(NAME, PERIOD, commands, DESCRIPTION);
+        BusinessCard card = entity.createBusinessCard(ID, NAME, PERIOD, commands, DESCRIPTION);
         assertNotNull(card);
         assertEquals(NAME, card.getName());
-        assertEquals(NAME, card.getIssuedBy());
+        assertEquals(ID, card.getIssuedBy());
         assertEquals(PERIOD, card.getPeriod());
         assertEquals(DESCRIPTION, card.getDescription());
         Map<String, Command> map = card.getCommandsIn();
@@ -194,11 +193,11 @@ public class StartablePartTest {
      */
     @Test
     public void testGetBusinessCard() {
-        assertNull(part.card);
-        BusinessCard card = part.getBusinessCard();
+        assertNull(entity.card);
+        BusinessCard card = entity.getBusinessCard();
         assertNotNull(card);
         assertEquals(NAME, card.getName());
-        assertEquals(NAME, card.getIssuedBy());
+        assertEquals(ID, card.getIssuedBy());
         assertEquals(StartableEntity.DEFAULT_HEARTBEAT, card.getPeriod());
         Map<String, Command> map = card.getCommandsIn();
         assertNotNull(map);
@@ -207,7 +206,7 @@ public class StartablePartTest {
         assertNotNull(map.get(StartComponent.class.getSimpleName()));
         assertTrue(map.containsKey(StopComponent.class.getSimpleName()));
         assertNotNull(map.get(StopComponent.class.getSimpleName()));
-        assertEquals(card, part.card);
-        assertEquals(card, part.getBusinessCard());
+        assertEquals(card, entity.card);
+        assertEquals(card, entity.getBusinessCard());
     }
 }

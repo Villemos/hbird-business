@@ -18,6 +18,8 @@ package org.hbird.business.systemmonitoring.bean;
 
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.core.SoftwareComponentDriver;
+import org.hbird.business.core.naming.DefaultNaming;
+import org.hbird.business.core.naming.INaming;
 
 /**
  * Component builder to create a system monitoring component.
@@ -29,15 +31,19 @@ public class SystemMonitorComponentDriver extends SoftwareComponentDriver {
 
     @Override
     public void doConfigure() {
+
+        INaming naming = new DefaultNaming();
+        String baseName = naming.buildId(command.getID(), HostInfo.getHostName());
+
         from(addTimer("systemmonitor", 10000)).multicast().to("seda:heap", "seda:thread",
                 "seda:cpu", "seda:harddisk", "seda:os", "seda:uptime");
 
-        from("seda:heap").bean(new HeapMemoryUsageMonitor(part.getID())).split(simple("${body}")).to("seda:out");
-        from("seda:thread").bean(new ThreadCountMonitor(part.getID())).to("seda:out");
-        from("seda:cpu").bean(new CpuMonitor(part.getID())).to("seda:out");
-        from("seda:harddisk").bean(new HarddiskMonitor(part.getID())).split(simple("${body}")).to("seda:out");
-        from("seda:os").bean(new OsMonitor(part.getID())).to("seda:out");
-        from("seda:uptime").bean(new UptimeMonitor(part.getID())).to("seda:out");
+        from("seda:heap").bean(new HeapMemoryUsageMonitor(baseName)).split(simple("${body}")).to("seda:out");
+        from("seda:thread").bean(new ThreadCountMonitor(baseName)).to("seda:out");
+        from("seda:cpu").bean(new CpuMonitor(baseName)).to("seda:out");
+        from("seda:harddisk").bean(new HarddiskMonitor(baseName)).split(simple("${body}")).to("seda:out");
+        from("seda:os").bean(new OsMonitor(baseName)).to("seda:out");
+        from("seda:uptime").bean(new UptimeMonitor(baseName)).to("seda:out");
 
         ProcessorDefinition<?> route = from("seda:out");
         addInjectionRoute(route);

@@ -58,10 +58,11 @@ import org.hbird.business.groundstation.hamlib.protocol.HamlibErrorLogger;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibLineDecoder;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibProtocolConstants;
 import org.hbird.business.groundstation.hamlib.protocol.HamlibResponseBufferer;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
-import org.hbird.exchange.interfaces.IStartablePart;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.slf4j.Logger;
@@ -87,15 +88,15 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
     @Override
     public void doConfigure() {
 
-        if (part == null) {
+        if (entity == null) {
             throw new IllegalStateException("No IPart definition available");
         }
 
         CamelContext camelContext = getContext();
 
-        driverContext = createDriverContext(camelContext, part);
+        driverContext = createDriverContext(camelContext, entity);
 
-        String name = part.getName();
+        String name = entity.getName();
         C config = driverContext.getConfiguration();
 
         NettyComponent nettyComponent = camelContext.getComponent("netty", NettyComponent.class);
@@ -131,9 +132,10 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
          * The NativeCommands are at their execution time read through the EXECUTION below.
          */
 
-        ICatalogue catalogue = ApiFactory.getCatalogueApi(part.getID());
+        ICatalogue catalogue = ApiFactory.getCatalogueApi(entity.getID());
+        PointingDataCalculator calulator = new PointingDataCalculator();
         IPointingDataOptimizer<C> optimizer = createOptimizer(config.getPointingDataOptimzerClassName()); // can be null
-        TrackingSupport<C> tracker = createTrackingSupport(config, catalogue, optimizer);    
+        TrackingSupport<C> tracker = createTrackingSupport(config, catalogue, calulator, optimizer);    
         GroundStationCommandFilter commandFilter = new GroundStationCommandFilter(config);
         
          from(StandardEndpoints.COMMANDS + "?selector=name='Track'")
@@ -275,11 +277,11 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
         return handlerMap;
     }
 
-    protected abstract DriverContext<C, String, String> createDriverContext(CamelContext camelContext, IStartablePart part);
+    protected abstract DriverContext<C, String, String> createDriverContext(CamelContext camelContext, IStartableEntity part);
 
     protected abstract List<ResponseHandler<C, String, String>> createResponseHandlers();
 
-    protected abstract TrackingSupport<C> createTrackingSupport(C config, ICatalogue catalogue,
+    protected abstract TrackingSupport<C> createTrackingSupport(C config, ICatalogue catalogue, PointingDataCalculator calculator,
             IPointingDataOptimizer<C> optimizer);
 
 }

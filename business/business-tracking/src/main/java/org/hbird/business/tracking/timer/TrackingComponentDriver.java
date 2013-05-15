@@ -69,7 +69,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver {
         
         // @formatter:on
 
-        TrackingControlBean controller = new TrackingControlBean(part.getName(), ((TrackingComponent) part).getLocation(), ((TrackingComponent) part).getSatellite());
+        TrackingControlBean controller = new TrackingControlBean(entity.getName(), ((TrackingComponent) entity).getLocation(), ((TrackingComponent) entity).getSatellite());
 
         /** Create the route for triggering the calculation. */
         RouteDefinition route = from(addTimer("antennacontrol", 60000l)).bean(controller, "process");

@@ -47,23 +47,23 @@ public class ConfiguratorComponent extends StartableEntity implements Applicatio
 
     protected ApplicationContext applicationContext;
 
-	/**
-	 * Default constructor.
-	 */
-	public ConfiguratorComponent() {
-		super(DEFAULT_ID, DEFAULT_NAME);
-		setDescription(DEFAULT_DESCRIPTION);
-		setDriverName(DEFAULT_DRIVER);
-	}
+    /**
+     * Default constructor.
+     */
+    public ConfiguratorComponent() {
+        super(DEFAULT_ID, DEFAULT_NAME);
+        setDescription(DEFAULT_DESCRIPTION);
+        setDriverName(DEFAULT_DRIVER);
+    }
 
-	/**
-	 * Default constructor.
-	 */
-	public ConfiguratorComponent(String ID) {
-		super(ID, DEFAULT_NAME);
-		setDescription(DEFAULT_DESCRIPTION);
-		setDriverName(DEFAULT_DRIVER);
-	}
+    /**
+     * Default constructor.
+     */
+    public ConfiguratorComponent(String ID) {
+        super(ID, DEFAULT_NAME);
+        setDescription(DEFAULT_DESCRIPTION);
+        setDriverName(DEFAULT_DRIVER);
+    }
 
     /**
      * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.

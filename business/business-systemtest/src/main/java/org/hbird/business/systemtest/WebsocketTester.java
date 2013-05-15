@@ -40,7 +40,7 @@ import org.hbird.exchange.constants.StandardMissionEvents;
 
 /**
  * @author Admin
- *
+ * 
  */
 public class WebsocketTester extends SystemTest {
 
@@ -52,31 +52,31 @@ public class WebsocketTester extends SystemTest {
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
 
-    	/** Issue request to start the websockets. */
+        /** Issue request to start the websockets. */
         StartComponent request = new StartComponent("SystemTest");
-        request.setPart(new WebsocketInterfaceComponent("WEBSOCKET"));
-    	publishApi.publish(request);
-    	
-    	boolean state = true;
-    	
-    	/** Circle and insert log messages and parameters... */
-    	for (double value = 0; value < 20; value++) {
-    		publishApi.publishParameter("PARA1", "PARA1", "A test parameter", value, "Celcius");
-    		publishApi.publishParameter("PARA2", "PARA2", "Another test parameter", value, "Radians");
-    		publishApi.publishParameter("PARA3", "PARA3", "Another test parameter", value, "MHerz");
-    		
-    		LOG.info("Publishing parameter 'PARA1' with value " + value);
-    		
-    		LOG.warn("A warning");
-    		LOG.error("An error");
-    		
-    		publishApi.publish(StandardMissionEvents.CONTROL_REESTABLISHED.cloneEntity());
+        request.setEntity(new WebsocketInterfaceComponent("WEBSOCKET"));
+        publishApi.publish(request);
 
-    		publishApi.publishState("STATE2", "STATE2", "The lower limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", true);
-    		publishApi.publishState("STATE1", "STATE1", "The upper limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", state);
-    		state = !state;    		
-    		
-    		Thread.sleep(1000);
-    	}
-    }    
+        boolean state = true;
+
+        /** Circle and insert log messages and parameters... */
+        for (double value = 0; value < 20; value++) {
+            publishApi.publishParameter("PARA1", "PARA1", "A test parameter", value, "Celcius");
+            publishApi.publishParameter("PARA2", "PARA2", "Another test parameter", value, "Radians");
+            publishApi.publishParameter("PARA3", "PARA3", "Another test parameter", value, "MHerz");
+
+            LOG.info("Publishing parameter 'PARA1' with value " + value);
+
+            LOG.warn("A warning");
+            LOG.error("An error");
+
+            publishApi.publish(StandardMissionEvents.CONTROL_REESTABLISHED.cloneEntity());
+
+            publishApi.publishState("STATE2", "STATE2", "The lower limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", true);
+            publishApi.publishState("STATE1", "STATE1", "The upper limit of PARA1 (test)", "/groundstation/TARTU/Rotator/Temperature", state);
+            state = !state;
+
+            Thread.sleep(1000);
+        }
+    }
 }

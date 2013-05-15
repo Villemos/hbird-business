@@ -19,7 +19,6 @@ package org.hbird.business.systemmonitoring.bean;
 import java.lang.management.ManagementFactory;
 
 import org.apache.camel.Handler;
-import org.hbird.business.core.naming.Base;
 import org.hbird.exchange.core.Parameter;
 
 /**
@@ -50,11 +49,8 @@ public class ThreadCountMonitor extends Monitor {
 
     public static final String PARAMETER_RELATIVE_NAME = "Thread Count";
 
-    private final String parameterName;
-
     public ThreadCountMonitor(String componentId) {
         super(componentId);
-        parameterName = naming.createAbsoluteName(Base.HOST, HostInfo.getHostName(), PARAMETER_RELATIVE_NAME);
     }
 
     /**
@@ -65,12 +61,12 @@ public class ThreadCountMonitor extends Monitor {
      */
     @Handler
     public Parameter check() {
-    	Parameter parameter = new Parameter(componentId + "/threadcount", parameterName);
-    	parameter.setDescription("The number of threads used.");
-    	parameter.setValue(ManagementFactory.getThreadMXBean().getThreadCount());
-    	parameter.setUnit("Count");
+        Parameter parameter = new Parameter(naming.buildId(componentId, PARAMETER_RELATIVE_NAME), PARAMETER_RELATIVE_NAME);
+        parameter.setDescription("The number of threads used.");
+        parameter.setValue(ManagementFactory.getThreadMXBean().getThreadCount());
+        parameter.setUnit("Count");
     	parameter.setIssuedBy(componentId);
-    	
-    	return parameter;
+
+        return parameter;
     }
 }

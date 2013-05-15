@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandBase;
 import org.hbird.exchange.groundstation.GroundStation;
@@ -58,6 +59,9 @@ public class TrackingSupportTest {
 
     @Mock
     private GroundStationDriverConfiguration configuration;
+
+    @Mock
+    private PointingDataCalculator calculator;
 
     @Mock
     private CommandBase command1;
@@ -125,8 +129,7 @@ public class TrackingSupportTest {
      */
     @Before
     public void setUp() throws Exception {
-        trackingDevice = new TrackingSupport<GroundStationDriverConfiguration>(configuration, catalogue,
-                optimizer) {
+        trackingDevice = new TrackingSupport<GroundStationDriverConfiguration>(configuration, catalogue, calculator, optimizer) {
 
             @Override
             protected List<CommandBase> createContactCommands(GroundStation gs, Satellite sat, List<PointingData> pointingData,
@@ -202,12 +205,8 @@ public class TrackingSupportTest {
 
         exception = new RuntimeException("Mutchos problemos");
 
-        // inOrder = inOrder(configuration, command1, command2, command3, command4, command5, command6, gs, sat1, sat2,
-        // trackCommand, pd1, pd2, start, end,
-        // prediction, catalogue, optimizer);
-
         inOrder = inOrder(configuration, command1, command2, command3, command4, command5, command6, gs, sat1, sat2, trackCommand, pd1, pd2, contact,
-                catalogue, optimizer);
+                catalogue, optimizer, calculator);
     }
 
     @Test
@@ -323,6 +322,7 @@ public class TrackingSupportTest {
         when(catalogue.getGroundStationByName(GS_NAME)).thenReturn(gs);
         when(contact.getStartTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(configuration.getCommandInterval()).thenReturn(STEP);
+        when(calculator.calculateContactData(contact, gs, STEP)).thenThrow(exception);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
         inOrder.verify(trackCommand, times(1)).checkArguments();
         inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
@@ -331,6 +331,7 @@ public class TrackingSupportTest {
         inOrder.verify(catalogue, times(1)).getGroundStationByName(GS_NAME);
         inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verify(configuration, times(1)).getCommandInterval();
+        inOrder.verify(calculator, times(1)).calculateContactData(contact, gs, STEP);
         inOrder.verify(gs, times(1)).getGroundStationId();
         inOrder.verify(sat1, times(1)).getSatelliteId();
         inOrder.verify(contact, times(1)).getStartTime();
@@ -346,6 +347,7 @@ public class TrackingSupportTest {
         when(catalogue.getGroundStationByName(GS_NAME)).thenReturn(gs);
         when(contact.getStartTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(configuration.getCommandInterval()).thenReturn(STEP);
+        when(calculator.calculateContactData(contact, gs, STEP)).thenReturn(pointingData);
         when(optimizer.optimize(pointingData, configuration)).thenReturn(pointingData);
         when(command1.getExecutionTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(command6.getExecutionTime()).thenReturn(NOW + 1000L * 60 * 61);
@@ -367,6 +369,7 @@ public class TrackingSupportTest {
         inOrder.verify(catalogue, times(1)).getGroundStationByName(GS_NAME);
         inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verify(configuration, times(1)).getCommandInterval();
+        inOrder.verify(calculator, times(1)).calculateContactData(contact, gs, STEP);
         inOrder.verify(optimizer, times(1)).optimize(pointingData, configuration);
         inOrder.verify(command1, times(1)).getExecutionTime();
         inOrder.verify(command6, times(1)).getExecutionTime();
@@ -405,7 +408,7 @@ public class TrackingSupportTest {
 
     @Test
     public void testDefaultImplementation() {
-        trackingDevice = new TrackingSupport<GroundStationDriverConfiguration>(configuration, catalogue, optimizer) {
+        trackingDevice = new TrackingSupport<GroundStationDriverConfiguration>(configuration, catalogue, calculator, optimizer) {
 
             @Override
             protected List<CommandBase> createContactCommands(GroundStation gs, Satellite sat, List<PointingData> pointingData,

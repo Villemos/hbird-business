@@ -18,8 +18,6 @@ package org.hbird.exchange.core;
 
 import java.util.Map;
 
-import org.hbird.exchange.interfaces.IApplicableTo;
-
 /**
  * Class for metadata to another Named object. The object 'points' to the subject through the
  * 'subject' field. Currently the metadata can only be applicable to a single other obejct.
@@ -27,14 +25,11 @@ import org.hbird.exchange.interfaces.IApplicableTo;
  * @author Gert Villemos
  * 
  */
-public class Metadata extends EntityInstance implements IApplicableTo {
+public class Metadata extends ApplicableTo {
 
-    private static final long serialVersionUID = -8631540528917564301L;
+    private static final long serialVersionUID = 2902106707298107988L;
 
     public static final String DESCRIPTION = "Metadata applicable to another Named object.";
-
-    /** The identifier of the object that this is applicable too. */
-    protected String applicableTo = null;
 
     /** The metadata itself. Can be any type, keyed on string. */
     protected Map<String, Object> metadata = null;
@@ -51,11 +46,6 @@ public class Metadata extends EntityInstance implements IApplicableTo {
         super(ID, name);
     }
 
-    @Override
-    public String applicableTo() {
-        return applicableTo;
-    }
-
     /**
      * @return the metadata
      */
@@ -69,11 +59,4 @@ public class Metadata extends EntityInstance implements IApplicableTo {
     public void setMetadata(Map<String, Object> metadata) {
         this.metadata = metadata;
     }
-
-	/**
-	 * @param id
-	 */
-	public void setApplicableTo(String id) {
-		this.applicableTo = id;
-	}
-} 
+}

@@ -48,7 +48,7 @@ public class OrbitPropagationComponentDriver extends SoftwareComponentDriver {
 	@Override
 	protected void doConfigure() {
 		
-		OrbitPropagationComponent com = (OrbitPropagationComponent) part;
+		OrbitPropagationComponent com = (OrbitPropagationComponent) entity;
 		OrbitPropagationBean bean = new OrbitPropagationBean(com);
 		
         ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute");

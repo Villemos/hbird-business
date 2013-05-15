@@ -31,6 +31,7 @@ import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetVfo;
+import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.core.CommandBase;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
@@ -98,6 +99,9 @@ public class HamlibRadioTrackerTest {
     @Mock
     private LocationContactEvent contact;
 
+    @Mock
+    private PointingDataCalculator calculator;
+
     private List<PointingData> pointingData;
 
     private HamlibRadioTracker tracker;
@@ -109,9 +113,9 @@ public class HamlibRadioTrackerTest {
      */
     @Before
     public void setUp() throws Exception {
-        tracker = new HamlibRadioTracker(config, catalogue, optimizer);
+        tracker = new HamlibRadioTracker(config, catalogue, calculator, optimizer);
         pointingData = Arrays.asList(pd1, pd2, pd3);
-        inOrder = inOrder(satellite, track, config, catalogue, optimizer, pd1, pd2, pd3, stop, contact);
+        inOrder = inOrder(satellite, track, config, catalogue, optimizer, pd1, pd2, pd3, stop, contact, calculator);
         when(satellite.getUplinkFrequency()).thenReturn(UPLINK_FREQUENCY);
         when(satellite.getDownlinkFrequency()).thenReturn(DOWNLINK_FREQUENCY);
         when(track.getID()).thenReturn(ID);

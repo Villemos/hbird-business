@@ -36,7 +36,7 @@ public class LimitCheckComponentDriver extends SoftwareComponentDriver {
 	@Override
 	public void doConfigure() {
 
-		LimitCheckComponent request = (LimitCheckComponent) part;
+		LimitCheckComponent request = (LimitCheckComponent) entity;
 		Limit limit = request.getLimit();
 
 		String componentID = request.getID();
@@ -53,7 +53,7 @@ public class LimitCheckComponentDriver extends SoftwareComponentDriver {
 		}
 		else if (limit.getType() == eLimitType.Differential) {
 			DifferentialLimitChecker checker = new DifferentialLimitChecker(limit);
-			checker.setApi(ApiFactory.getDataAccessApi(part.getName()));
+			checker.setApi(ApiFactory.getDataAccessApi(entity.getName()));
 			createRoute(limit.getLimitOfParameter(), checker, componentID, limitValueName);
 		}
 

@@ -18,6 +18,7 @@ package org.hbird.business.groundstation.hamlib;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.UUID;
 
@@ -45,7 +46,7 @@ public class HamlibNativeCommandTest {
 
     @Test
     public void testHamlibNativeCommand() throws Exception {
-        assertEquals("", command.getIssuedBy());
+        assertNull(command.getIssuedBy());
         assertEquals(HamlibNativeCommand.class.getSimpleName(), command.getName());
         assertEquals(HamlibNativeCommand.DESCRIPTION, command.getDescription());
         assertEquals(NOW, command.getExecutionTime());
