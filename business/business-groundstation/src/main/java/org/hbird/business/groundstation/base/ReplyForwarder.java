@@ -38,29 +38,29 @@ import org.hbird.exchange.core.State;
 
 /**
  * @author Admin
- *
+ * 
  */
 public class ReplyForwarder {
 
-	protected String sourceName;
-	
-	public ReplyForwarder(String name) {
-		this.sourceName = name;
-	}
-	
-	@Handler
-	public State handle(Exchange exchange) {
+    protected String sourceName;
 
-		String message = (String) exchange.getOut().getBody();		
+    public ReplyForwarder(String name) {
+        this.sourceName = name;
+    }
+
+    @Handler
+    public State handle(Exchange exchange) {
+
+        String message = (String) exchange.getOut().getBody();
         String[] messageSplit = message.split("\n");
         String[] name = messageSplit[0].split(":");
 
         State state = new State("ExecutionState", "ExecutionState");
         state.setIssuedBy(sourceName);
         state.setDescription("Raw response from Hamlib");
-        state.setState(message.contains("RPRT 0"));
-        state.setIsStateOf(name[0]);
-        
+        state.setValue(message.contains("RPRT 0"));
+        state.setApplicableTo(name[0]);
+
         return state;
-	}
+    }
 }

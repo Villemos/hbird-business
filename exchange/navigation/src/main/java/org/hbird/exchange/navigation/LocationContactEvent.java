@@ -94,7 +94,7 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
      * @param description A description of the event.
      * @param timestamp The time that this event occured or is predicted to occure.
      * @param location The location to which contact has been established / lost.
-     * @param satellite The satellite to which contact has been established / lost.
+     * @param satelliteId The satellite to which contact has been established / lost.
      */
     public LocationContactEvent(String ID) {
         super(ID, LocationContactEvent.class.getSimpleName());
@@ -280,59 +280,57 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
         this.satelliteStateAtStart = satelliteStateAtStart;
     }
 
-    
-    
     /**
-	 * @return the derivedFromId
-	 */
-	public String getDerivedFromId() {
-		return derivedFromId;
-	}
+     * @return the derivedFromId
+     */
+    public String getDerivedFromId() {
+        return derivedFromId;
+    }
 
-	/**
-	 * @param derivedFromId the derivedFromId to set
-	 */
-	public void setDerivedFromId(String derivedFromId) {
-		this.derivedFromId = derivedFromId;
-	}
+    /**
+     * @param derivedFromId the derivedFromId to set
+     */
+    public void setDerivedFromId(String derivedFromId) {
+        this.derivedFromId = derivedFromId;
+    }
 
-	/**
-	 * @param startTime the startTime to set
-	 */
-	public void setStartTime(long startTime) {
-		this.startTime = startTime;
-	}
+    /**
+     * @param startTime the startTime to set
+     */
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
 
-	/**
-	 * @param endTime the endTime to set
-	 */
-	public void setEndTime(long endTime) {
-		this.endTime = endTime;
-	}
+    /**
+     * @param endTime the endTime to set
+     */
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
 
-	/**
-	 * @param groundStationId the groundStationId to set
-	 */
-	public void setGroundStationId(String groundStationId) {
-		this.groundStationId = groundStationId;
-	}
+    /**
+     * @param groundStationId the groundStationId to set
+     */
+    public void setGroundStationId(String groundStationId) {
+        this.groundStationId = groundStationId;
+    }
 
-	/**
-	 * @param satelliteId the satelliteId to set
-	 */
-	public void setSatelliteId(String satelliteId) {
-		this.satelliteId = satelliteId;
-	}
+    /**
+     * @param satelliteId the satelliteId to set
+     */
+    public void setSatelliteId(String satelliteId) {
+        this.satelliteId = satelliteId;
+    }
 
-	/**
-	 * @param orbitNumber the orbitNumber to set
-	 */
-	public void setOrbitNumber(long orbitNumber) {
-		this.orbitNumber = orbitNumber;
-	}
+    /**
+     * @param orbitNumber the orbitNumber to set
+     */
+    public void setOrbitNumber(long orbitNumber) {
+        this.orbitNumber = orbitNumber;
+    }
 
-	@Override
-    public String prettyPrint() {
+    @Override
+    public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
         builder.append("eventId", getID());
         builder.append("timestamp", getTimestamp());

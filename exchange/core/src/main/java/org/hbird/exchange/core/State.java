@@ -16,6 +16,8 @@
  */
 package org.hbird.exchange.core;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hbird.exchange.interfaces.IState;
 
 /**
@@ -26,20 +28,12 @@ import org.hbird.exchange.interfaces.IState;
  * 
  * @author Gert Villemos
  */
-public class State extends EntityInstance implements IState {
+public class State extends ApplicableTo implements IState {
 
-    /** The unique UID. */
-    private static final long serialVersionUID = 3658873252806807331L;
-
-    /**
-     * The ID of the Named object that this state parameter is the state of.
-     * 
-     * The attribute has the format; [name]:[type]:[timestamp].
-     */
-    protected String isStateOf;
+    private static final long serialVersionUID = 5139362988505657954L;
 
     /** The value of the state. */
-    protected Boolean state = true;
+    protected Boolean value = true;
 
     /**
      * Constructor of the state parameter. The timestamp will be set to the current time.
@@ -53,15 +47,6 @@ public class State extends EntityInstance implements IState {
         super(ID, name);
     }
 
-    @Override
-    public String getIsStateOf() {
-        return isStateOf;
-    }
-
-    public void setIsStateOf(String isStateOf) {
-        this.isStateOf = isStateOf;
-    }
-
     /**
      * Method similar to the Parameter::getValue(), where the return value is
      * case to a Booolean. The StateParameter value must be a Boolean value.
@@ -70,17 +55,7 @@ public class State extends EntityInstance implements IState {
      */
     @Override
     public Boolean getValue() {
-        return state;
-    }
-
-    @Override
-    public void setValid() {
-        state = true;
-    }
-
-    @Override
-    public void setInvalid() {
-        state = false;
+        return value;
     }
 
     /**
@@ -91,37 +66,17 @@ public class State extends EntityInstance implements IState {
      * @param Object The value to be set. Must be a Boolean.
      */
     public void setValue(Boolean value) {
-        this.state = value;
+        this.value = value;
     }
 
     @Override
-    public String prettyPrint() {
-        return String.format("State {ID=%s, name=%s, state=%s, isStateOf=%s, timestamp=%s}", name, getInstanceID(), state, isStateOf, timestamp);
+    public String toString() {
+        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        builder.append("ID", getInstanceID());
+        builder.append("name", name);
+        builder.append("state", value);
+        builder.append("applicableTo", applicableTo);
+        builder.append("issuedBy", issuedBy);
+        return builder.build();
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.hbird.exchange.interfaces.IIsStateOf#setIsStateOf(org.hbird.exchange.core.Named)
-     */
-    @Override
-    public void setIsStateOf(EntityInstance isStateOf) {
-        this.isStateOf = isStateOf == null ? null : isStateOf.getID();
-    }
-
-	/**
-	 * @return the state
-	 */
-	public Boolean getState() {
-		return state;
-	}
-
-	/**
-	 * @param state the state to set
-	 */
-	public void setState(Boolean state) {
-		this.state = state;
-	}
-    
-    
 }

@@ -70,17 +70,18 @@ public class NavigationTester extends SystemTest {
         orbCom.setFrom(1355385448149l);
         orbCom.setTo(1355385448149l + 2 * 60 * 60 * 1000);
         orbCom.setExecutionDelay(0l);
-                
-        ContactEventComponent conCom = new ContactEventComponent("ESTCUBE_ES5EC_CONTACT_PREDICTOR");              estcubeLocationComponent.setSatellite(estcube1.getID());
+
+        ContactEventComponent conCom = new ContactEventComponent("ESTCUBE_ES5EC_CONTACT_PREDICTOR");
+        estcubeLocationComponent.setSatellite(estcube1.getID());
         conCom.setLocations(locations);
         conCom.setSatellite(estcube1.getID());
         orbCom.setFrom(1355385448149l);
         orbCom.setTo(1355385448149l + 2 * 60 * 60 * 1000);
         orbCom.setExecutionDelay(0l);
-        
+
         partmanagerApi.start(orbCom);
         partmanagerApi.start(conCom);
-        
+
         int totalSleep = 0;
         while (totalSleep < 120000 && orbitalStateListener.elements.size() != 121) {
             Thread.sleep(2000);
@@ -146,7 +147,7 @@ public class NavigationTester extends SystemTest {
             }
             else if (element instanceof LocationContactEvent) {
                 LocationContactEvent event = (LocationContactEvent) element;
-                System.out.println(event.prettyPrint());
+                System.out.println(event.toString());
             }
         }
     }

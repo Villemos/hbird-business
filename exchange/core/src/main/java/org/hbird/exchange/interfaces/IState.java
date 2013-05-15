@@ -32,21 +32,12 @@
  */
 package org.hbird.exchange.interfaces;
 
-import org.hbird.exchange.core.EntityInstance;
-
 /**
  * @author Gert Villemos
- *
+ * 
  */
-public interface IState extends IEntityInstance {
-
-    public String getIsStateOf();
-
-    public void setIsStateOf(EntityInstance isStateOf);
+public interface IState extends IApplicableTo {
 
     public Boolean getValue();
 
-    public void setValid();
-
-    public void setInvalid();
 }

@@ -17,15 +17,14 @@
 package org.hbird.exchange.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.inOrder;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -46,14 +45,11 @@ public class LabelTest {
 
     private Label label;
 
-    private InOrder inOrder;
-
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        inOrder = inOrder(template);
         label = new Label(ID, NAME);
         label.setIssuedBy(ISSUED_BY);
         label.setDescription(DESCRIPTION);
@@ -61,11 +57,18 @@ public class LabelTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.Label#prettyPrint()}.
+     * Test method for {@link org.hbird.exchange.core.Label#toString()}.
      */
     @Test
-    public void testPrettyPrint() {
-        assertNotNull(label.prettyPrint());
+    public void testToString() {
+        String s = label.toString();
+        assertNotNull(s);
+        assertTrue(s.contains(ID));
+        assertTrue(s.contains(NAME));
+        assertTrue(s.contains(ISSUED_BY));
+        assertFalse(s.contains(DESCRIPTION));
+        assertTrue(s.contains(VALUE));
+        assertTrue(s.contains(String.valueOf(label.getTimestamp())));
     }
 
     /**

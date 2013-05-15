@@ -28,66 +28,67 @@ import org.hbird.exchange.core.State;
 
 public class StateArchivalTester extends SystemTest {
 
-	private static org.apache.log4j.Logger LOG = Logger.getLogger(StateArchivalTester.class);
-	
-    public void process(CamelContext context) throws InterruptedException {
-    	        
-		LOG.info("------------------------------------------------------------------------------------------------------------");
-    	LOG.info("Starting");
-    	
-    	IDataAccess api = ApiFactory.getDataAccessApi("SystemTest");
-    	
-    	startMonitoringArchive();
-		
-		Thread.sleep(2000);
+    private static org.apache.log4j.Logger LOG = Logger.getLogger(StateArchivalTester.class);
 
-    	/** Store states. */
+    public void process(CamelContext context) throws InterruptedException {
+
+        LOG.info("------------------------------------------------------------------------------------------------------------");
+        LOG.info("Starting");
+
+        IDataAccess api = ApiFactory.getDataAccessApi("SystemTest");
+
+        startMonitoringArchive();
+
+        Thread.sleep(2000);
+
+        /** Store states. */
         publishApi.publishState("STATE1", "STATE1", "A test description", "COMMAND1:Command:*", true);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE2", "STATE2", "A test description", "COMMAND1:Command:*", true);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE3", "STATE3", "A test description", "COMMAND1:Command:*", false);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE4", "STATE4", "A test description", "COMMAND1:Command:*", true);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE5", "STATE5", "A test description", "COMMAND1:Command:*", true);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE6", "STATE6", "A test description", "COMMAND1:Command:*", false);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE7", "STATE7", "A test description", "COMMAND1:Command:*", true);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE1", "STATE1", "A test description", "COMMAND2:Command:*", true);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE2", "STATE2", "A test description", "COMMAND2:Command:*", true);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE3", "STATE3", "A test description", "COMMAND2:Command:*", false);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE4", "STATE4", "A test description", "COMMAND2:Command:*", true);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE5", "STATE5", "A test description", "COMMAND2:Command:*", true);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE1", "STATE1", "A test description", "COMMAND3:Command:*", true);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE2", "STATE2", "A test description", "COMMAND3:Command:*", true);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE3", "STATE3", "A test description", "COMMAND3:Command:*", true);
-		Thread.sleep(1);
+        Thread.sleep(1);
         publishApi.publishState("STATE4", "STATE4", "A test description", "COMMAND3:Command:*", true);
 
         Thread.sleep(2000);
-        
+
         forceCommit();
-		
+
         /** Test retrieval. */
-		//Object respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE, "COMMAND1"));
-		Object respond = api.getState("COMMAND1:Command:*");
-		azzert(respond != null, "Received a response.");
-        
+        // Object respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE,
+        // "COMMAND1"));
+        Object respond = api.getState("COMMAND1:Command:*");
+        azzert(respond != null, "Received a response.");
+
         Map<String, State> states = new HashMap<String, State>();
         for (State state : (List<State>) respond) {
-        	states.put(state.getName(), state);
+            states.put(state.getName(), state);
         }
-        
+
         azzert(states.get("STATE1").getValue() == true, "STATE1 should be 'true'");
         azzert(states.get("STATE2").getValue() == true, "STATE2 should be 'true'");
         azzert(states.get("STATE3").getValue() == false, "STATE3 should be 'false'");
@@ -96,7 +97,7 @@ public class StateArchivalTester extends SystemTest {
         azzert(states.get("STATE6").getValue() == false, "STATE6 should be 'false'");
         azzert(states.get("STATE7").getValue() == true, "STATE7 should be 'true'");
 
-    	/** Store a new set of states. Notice that STATE1 and STATE3 doesnt change. */
+        /** Store a new set of states. Notice that STATE1 and STATE3 doesnt change. */
         publishApi.publishState("STATE2", "STATE2", "A test description", "COMMAND1:Command:*", true);
         publishApi.publishState("STATE4", "STATE4", "A test description", "COMMAND1:Command:*", true);
         publishApi.publishState("STATE5", "STATE5", "A test description", "COMMAND1:Command:*", false);
@@ -104,18 +105,19 @@ public class StateArchivalTester extends SystemTest {
         publishApi.publishState("STATE7", "STATE7", "A test description", "COMMAND1:Command:*", true);
 
         Thread.sleep(2000);
-        
-		/** Send command to commit all changes. */
-		forceCommit();
-		
+
+        /** Send command to commit all changes. */
+        forceCommit();
+
         /** Test retrieval. */
-		// respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE, "COMMAND1"));
-		respond = api.getState("COMMAND1:Command:*");
-		azzert(respond != null, "Received a response.");
+        // respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE,
+        // "COMMAND1"));
+        respond = api.getState("COMMAND1:Command:*");
+        azzert(respond != null, "Received a response.");
 
         states = new HashMap<String, State>();
         for (State state : (List<State>) respond) {
-        	states.put(state.getName(), state);
+            states.put(state.getName(), state);
         }
         azzert(states.get("STATE1").getValue() == true);
         azzert(states.get("STATE2").getValue() == true);
@@ -125,6 +127,6 @@ public class StateArchivalTester extends SystemTest {
         azzert(states.get("STATE6").getValue() == true);
         azzert(states.get("STATE7").getValue() == true);
 
-		LOG.info("Finished");
+        LOG.info("Finished");
     }
 }

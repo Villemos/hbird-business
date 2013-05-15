@@ -16,6 +16,9 @@
  */
 package org.hbird.exchange.core;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * @author Gert Villemos
  * 
@@ -23,7 +26,7 @@ package org.hbird.exchange.core;
  *         calibrated value describing something as 'ON' or 'OFF'.
  * 
  */
-public class Label extends EntityInstance {
+public class Label extends ApplicableTo {
 
     private static final long serialVersionUID = 6064865233847879877L;
 
@@ -52,7 +55,14 @@ public class Label extends EntityInstance {
     }
 
     @Override
-    public String prettyPrint() {
-        return String.format("Label[name=%s, value=%s, timestamp=%s]", name, value, timestamp);
+    public String toString() {
+        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        builder.append("ID", getInstanceID());
+        builder.append("name", name);
+        builder.append("value", value);
+        builder.append("timestamp", timestamp);
+        builder.append("applicableTo", applicableTo);
+        builder.append("issuedBy", issuedBy);
+        return builder.build();
     }
 }

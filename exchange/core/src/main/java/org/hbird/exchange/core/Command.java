@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * @TITLE Command Definition
  *        This object represents a command.
@@ -136,8 +139,13 @@ public class Command extends CommandBase {
     // }
 
     @Override
-    public String prettyPrint() {
-        return String.format("%s{name=%s, timestamp=%s, issuedBy=%s, destination=%s}", getClass().getSimpleName(), name, timestamp, issuedBy, destination);
+    public String toString() {
+        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        builder.append("ID", getInstanceID());
+        builder.append("name", name);
+        builder.append("issuedBy", issuedBy);
+        builder.append("destination", destination);
+        return builder.build();
     }
 
     /**
@@ -247,6 +255,5 @@ public class Command extends CommandBase {
     public void addArgument(CommandArgument argument) {
         this.arguments.put(argument.getName(), argument);
     }
-    
-    
+
 }

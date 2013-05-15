@@ -16,6 +16,8 @@
  */
 package org.hbird.exchange.navigation;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.interfaces.IDerivedFrom;
@@ -64,7 +66,7 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
      * @param name The name of the orbital state.
      * @param description A description of the state.
      * @param timestamp The timestamp at which the orbital state is relevant.
-     * @param satellite
+     * @param satelliteId
      * @param position The position of the orbit.
      * @param velocity The velocity of the orbit.
      */
@@ -126,9 +128,12 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
     }
 
     @Override
-    public String prettyPrint() {
-        return String.format("%s[ID=%s, name=%s, timestamp=%s, satellite=%s]", this.getClass().getSimpleName(), getInstanceID(), getName(), timestamp,
-                satelliteId);
+    public String toString() {
+        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        builder.append("ID", getInstanceID());
+        builder.append("name", getName());
+        builder.append("satelliteId", satelliteId);
+        return builder.build();
     }
 
     /**
@@ -139,19 +144,18 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
         return derivedFrom;
     }
 
-	/**
-	 * @param satelliteId the satelliteId to set
-	 */
-	public void setSatelliteId(String satelliteId) {
-		this.satelliteId = satelliteId;
-	}
+    /**
+     * @param satelliteId the satelliteId to set
+     */
+    public void setSatelliteId(String satelliteId) {
+        this.satelliteId = satelliteId;
+    }
 
-	/**
-	 * @param derivedFrom the derivedFrom to set
-	 */
-	public void setDerivedFrom(String derivedFrom) {
-		this.derivedFrom = derivedFrom;
-	}
-    
-    
+    /**
+     * @param derivedFrom the derivedFrom to set
+     */
+    public void setDerivedFrom(String derivedFrom) {
+        this.derivedFrom = derivedFrom;
+    }
+
 }

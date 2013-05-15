@@ -143,7 +143,6 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID);
         inOrder.verify(event, times(1)).getSatelliteId();
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
-        inOrder.verify(event, times(1)).prettyPrint();
     }
 
     @Test
@@ -161,7 +160,6 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
         inOrder.verify(event, times(1)).getDerivedFrom();
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
-        inOrder.verify(event, times(1)).prettyPrint();
     }
 
     @Test
@@ -183,7 +181,6 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
         inOrder.verify(tle1, times(1)).getTimestamp();
         inOrder.verify(tle2, times(1)).getTimestamp();
-        inOrder.verify(event, times(1)).prettyPrint();
     }
 
     @Test
@@ -204,7 +201,6 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
         inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
         inOrder.verify(event, times(1)).getGroundStationId();
-        inOrder.verify(event, times(1)).prettyPrint();
         ArgumentCaptor<Track> captor = ArgumentCaptor.forClass(Track.class);
         inOrder.verify(producerTemplate, times(1)).asyncSendBody(eq(ENDPOINT), captor.capture());
         Track t = captor.getValue();
@@ -236,7 +232,6 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(tle1, times(1)).getTimestamp();
         inOrder.verify(tle2, times(1)).getTimestamp();
         inOrder.verify(event, times(1)).getGroundStationId();
-        inOrder.verify(event, times(1)).prettyPrint();
         ArgumentCaptor<Track> captor = ArgumentCaptor.forClass(Track.class);
         inOrder.verify(producerTemplate, times(1)).asyncSendBody(eq(ENDPOINT), captor.capture());
         Track t = captor.getValue();

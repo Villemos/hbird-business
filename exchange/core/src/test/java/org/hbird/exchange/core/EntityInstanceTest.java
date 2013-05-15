@@ -105,7 +105,7 @@ public class EntityInstanceTest implements Serializable {
     @Test
     public void testPrettyPrint() throws Exception {
         long ts = entity.getTimestamp();
-        String s = entity.prettyPrint();
+        String s = entity.toString();
         assertNotNull(s);
         assertTrue(s.contains(ID + EntityInstance.INSTANCE_ID_SEPARATOR + ts));
         assertTrue(s.contains(entity.getClass().getSimpleName()));

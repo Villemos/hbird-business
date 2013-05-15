@@ -514,7 +514,7 @@ public class SolrProducer extends DefaultProducer {
      */
     protected void insert(EntityInstance io) throws Exception {
 
-        LOG.info("Storing object: " + io.prettyPrint());
+        LOG.info("Storing object: {}", io.toString());
 
         /** The document we will be storing. */
         SolrInputDocument document = new SolrInputDocument();
@@ -543,7 +543,7 @@ public class SolrProducer extends DefaultProducer {
         }
         else if (io instanceof State) {
             State parameter = (State) io;
-            document.addField(StandardArguments.IS_STATE_OF, parameter.getIsStateOf());
+            document.addField(StandardArguments.IS_STATE_OF, parameter.getApplicableTo());
             encodeValue(StandardArguments.STATE, parameter.getValue(), document);
         }
         else if (io instanceof CommandRequest) {

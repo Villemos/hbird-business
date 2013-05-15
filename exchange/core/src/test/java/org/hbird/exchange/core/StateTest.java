@@ -21,15 +21,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -44,26 +39,19 @@ public class StateTest {
     private static final String DESCRIPTION = "description";
     private static final String STATE_OF = "zoe";
     private static final boolean STATE = true;
-    private static final long NOW = System.currentTimeMillis();
-
-    @Mock
-    private EntityInstance isStateOf;
 
     private State state;
-
-    private InOrder inOrder;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        inOrder = inOrder(isStateOf);
         state = new State(ID, NAME);
         state.setIssuedBy(ISSUED_BY);
         state.setDescription(DESCRIPTION);
-        state.setIsStateOf(STATE_OF);
-        state.setState(STATE);
+        state.setApplicableTo(STATE_OF);
+        state.setValue(STATE);
     }
 
     /**
@@ -74,12 +62,21 @@ public class StateTest {
         assertEquals(NAME, state.getName());
     }
 
-    /**-
-     * Test method for {@link org.hbird.exchange.core.State#prettyPrint()}.
+    /**
+     * -
+     * Test method for {@link org.hbird.exchange.core.State#toString}.
      */
     @Test
-    public void testPrettyPrint() {
-        assertNotNull(state.prettyPrint());
+    public void testToString() {
+        String s = state.toString();
+        assertNotNull(s);
+        assertTrue(s.contains(ID));
+        assertTrue(s.contains(NAME));
+        assertTrue(s.contains(ISSUED_BY));
+        assertFalse(s.contains(DESCRIPTION));
+        assertTrue(s.contains(STATE_OF));
+        assertTrue(s.contains(String.valueOf(STATE)));
+        assertTrue(s.contains(String.valueOf(state.getTimestamp())));
     }
 
     /**
@@ -92,7 +89,7 @@ public class StateTest {
         assertEquals(ISSUED_BY, state.getIssuedBy());
         assertEquals(NAME, state.getName());
         assertEquals(DESCRIPTION, state.getDescription());
-        assertEquals(STATE_OF, state.getIsStateOf());
+        assertEquals(STATE_OF, state.getApplicableTo());
         assertEquals(NAME, state.getName());
         long diff = System.currentTimeMillis() - state.getTimestamp();
         assertTrue("diff=" + diff, diff >= 0 && diff < 1000L * 30);
@@ -113,11 +110,11 @@ public class StateTest {
      */
     @Test
     public void testSetIsStateOfString() {
-        assertEquals(STATE_OF, state.getIsStateOf());
-        state.setIsStateOf((String) null);
-        assertNull(state.getIsStateOf());
-        state.setIsStateOf(STATE_OF + STATE_OF);
-        assertEquals(STATE_OF + STATE_OF, state.getIsStateOf());
+        assertEquals(STATE_OF, state.getApplicableTo());
+        state.setApplicableTo(null);
+        assertNull(state.getApplicableTo());
+        state.setApplicableTo(STATE_OF + STATE_OF);
+        assertEquals(STATE_OF + STATE_OF, state.getApplicableTo());
     }
 
     /**
@@ -129,58 +126,16 @@ public class StateTest {
     }
 
     /**
-     * Test method for {@link org.hbird.exchange.core.State#setValid()}.
-     */
-    @Test
-    public void testSetValid() {
-        assertTrue(state.getValue());
-        state.setValue(false);
-        assertFalse(state.getValue());
-        state.setValid();
-        assertTrue(state.getValue());
-    }
-
-    /**
-     * Test method for {@link org.hbird.exchange.core.State#setInvalid()}.
-     */
-    @Test
-    public void testSetInvalid() {
-        assertTrue(state.getValue());
-        state.setInvalid();
-        assertFalse(state.getValue());
-    }
-
-    /**
-     * Test method for {@link org.hbird.exchange.core.State#setValue(java.lang.Boolean)}.
+     * Test method for {@link org.hbird.exchange.core.State#setValue()}.
      */
     @Test
     public void testSetValue() {
         assertTrue(state.getValue());
-        state.setValue(Boolean.FALSE);
+        state.setValue(false);
         assertFalse(state.getValue());
-        state.setValue(true);
+        state.setValue(null);
+        assertNull(state.getValue());
+        state.setValue(Boolean.TRUE);
         assertTrue(state.getValue());
-    }
-
-    /**
-     * Test method for {@link org.hbird.exchange.core.State#setIsStateOf(org.hbird.exchange.core.EntityInstance)}.
-     */
-    @Test
-    public void testSetIsStateOfNamed() {
-        when(isStateOf.getID()).thenReturn(ID);
-        state.setIsStateOf(isStateOf);
-        assertEquals(ID, state.getIsStateOf());
-        inOrder.verify(isStateOf, times(1)).getID();
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    /**
-     * Test method for {@link org.hbird.exchange.core.State#setIsStateOf(org.hbird.exchange.core.EntityInstance)}.
-     */
-    @Test
-    public void testSetIsStateOfNamedNull() {
-        assertEquals(STATE_OF, state.getIsStateOf());
-        state.setIsStateOf((EntityInstance) null);
-        assertNull(state.getIsStateOf());
     }
 }

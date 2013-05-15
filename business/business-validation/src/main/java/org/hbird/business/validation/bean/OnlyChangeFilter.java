@@ -24,43 +24,44 @@ import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
 import org.hbird.exchange.core.State;
 
-/** 
+/**
  * This class implements a filter, ensuring that only changes to a state will be issued.
- *  
+ * 
  * */
 public class OnlyChangeFilter {
 
-	/** The class logger. */
-	private static org.apache.log4j.Logger logger = Logger.getLogger(OnlyChangeFilter.class);
+    /** The class logger. */
+    private static org.apache.log4j.Logger logger = Logger.getLogger(OnlyChangeFilter.class);
 
-	/** Map of the current states. Used to detect changes in state. */
-	protected Map<String, Boolean> currentState = new HashMap<String, Boolean>();
+    /** Map of the current states. Used to detect changes in state. */
+    protected Map<String, Boolean> currentState = new HashMap<String, Boolean>();
 
-	/**
-	 * Method to detect whether a change has occurred. If no change has occurred, then
-	 * the route is stopped.
-	 * 
-	 * @param exchange The exchange containing the new state. */
-	 public void process(Exchange exchange, @Body State state) throws Exception {
-				 
-		/** If we know this state already... */
-		if (currentState.containsKey(state.getName()) == true) {
-			
-			/** If the state has changed.  */
-			if (currentState.get(state.getName()) != (Boolean) state.getValue()) {
-				logger.debug("Setting state " + state.getName() + " to " + state + " as it has changed.");
-				currentState.put(state.getName(), (Boolean) state.getValue());
-			}
-			/** If the state hasnt changed, then stop the route. */
-			else {
-				logger.info("State change filtered out as not delta change.");
-				exchange.setProperty(Exchange.ROUTE_STOP, true);
-			}
-		}
-		/** New state. Register it.*/
-		else {
-			logger.debug("Setting state " + state.getName() + " to " + state + " as it is new.");
-			currentState.put(state.getName(), (Boolean) state.getValue());
-		}
-	}
+    /**
+     * Method to detect whether a change has occurred. If no change has occurred, then
+     * the route is stopped.
+     * 
+     * @param exchange The exchange containing the new state.
+     */
+    public void process(Exchange exchange, @Body State state) throws Exception {
+
+        /** If we know this state already... */
+        if (currentState.containsKey(state.getName()) == true) {
+
+            /** If the state has changed. */
+            if (currentState.get(state.getName()) != state.getValue()) {
+                logger.debug("Setting state " + state.getName() + " to " + state + " as it has changed.");
+                currentState.put(state.getName(), state.getValue());
+            }
+            /** If the state hasnt changed, then stop the route. */
+            else {
+                logger.info("State change filtered out as not delta change.");
+                exchange.setProperty(Exchange.ROUTE_STOP, true);
+            }
+        }
+        /** New state. Register it. */
+        else {
+            logger.debug("Setting state " + state.getName() + " to " + state + " as it is new.");
+            currentState.put(state.getName(), state.getValue());
+        }
+    }
 }

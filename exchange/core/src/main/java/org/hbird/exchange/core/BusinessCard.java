@@ -45,7 +45,7 @@ import org.hbird.exchange.util.LocalHostNameResolver;
  * @author Gert Villemos
  * 
  */
-public class BusinessCard extends EntityInstance {
+public class BusinessCard extends ApplicableTo {
 
     private static final long serialVersionUID = -4619331399009932893L;
 
@@ -69,7 +69,7 @@ public class BusinessCard extends EntityInstance {
 
     public BusinessCard(String ID, String name) {
         super(ID, name);
-        
+
         this.host = LocalHostNameResolver.getLocalHostName();
     }
 
@@ -130,7 +130,7 @@ public class BusinessCard extends EntityInstance {
     public void setCommandsIn(List<Command> commandsIn) {
         this.commandsIn = new HashMap<String, Command>();
         for (Command command : commandsIn) {
-        	this.commandsIn.put(command.getName(), command);
+            this.commandsIn.put(command.getName(), command);
         }
     }
 

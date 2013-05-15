@@ -18,6 +18,8 @@ package org.hbird.exchange.core;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hbird.exchange.interfaces.IEntity;
 
 /**
@@ -119,5 +121,17 @@ public class Entity implements IEntity, Serializable {
      */
     public void setID(String ID) {
         this.ID = ID;
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        builder.append("ID", ID);
+        builder.append("name", name);
+        builder.append("issuedBy", issuedBy);
+        return builder.build();
     }
 }

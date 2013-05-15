@@ -50,7 +50,7 @@ public class ApplicableTo extends EntityInstance implements IApplicableTo {
     }
 
     @Override
-    public String prettyPrint() {
+    public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
         builder.append("ID", getInstanceID());
         builder.append("name", getName());

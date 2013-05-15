@@ -19,6 +19,9 @@ package org.hbird.exchange.core;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * A NUMERICAL parameter. The parameter type is at the core of the information model. It
  * is used to describe a name-value pair, attaching the meta-data for description
@@ -28,7 +31,7 @@ import java.math.BigInteger;
  * a new parameter is simply the creation of a Parameter with a new name.
  * 
  */
-public class Parameter extends EntityInstance {
+public class Parameter extends ApplicableTo {
 
     /** The unique UID. */
     private static final long serialVersionUID = 889400984561961325L;
@@ -98,8 +101,6 @@ public class Parameter extends EntityInstance {
     public void setUnit(String unit) {
         this.unit = unit;
     }
-    
-    
 
     /*
      * (non-Javadoc)
@@ -148,7 +149,7 @@ public class Parameter extends EntityInstance {
             }
             else
             {
-                String message = String.format("Failed to compare values of %s and %s; value types are %s and %s", this.prettyPrint(), rhs.prettyPrint(),
+                String message = String.format("Failed to compare values of %s and %s; value types are %s and %s", this.toString(), rhs.toString(),
                         this.value != null ? this.value.getClass() : "null", rhs.value != null ? rhs.value.getClass() : "null");
                 throw new RuntimeException(message);
             }
@@ -158,7 +159,13 @@ public class Parameter extends EntityInstance {
     }
 
     @Override
-    public String prettyPrint() {
-        return String.format("%s[ID=%s, issuedBy=%s, name=%s, value=%s, timestamp=%s]", this.getClass().getSimpleName(), getID(), issuedBy, name, value, timestamp);
+    public String toString() {
+        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        builder.append("ID", getInstanceID());
+        builder.append("name", name);
+        builder.append("value", value);
+        builder.append("issuedBy", issuedBy);
+        builder.append("applicableTo", applicableTo);
+        return builder.build();
     }
 }

@@ -107,7 +107,7 @@ public class TlePropagationRequest extends DataRequest {
 	}
 	
 	/**
-	 * @param satellite
+	 * @param satelliteId
 	 */
 	public void setLocation(String location) {
 		List<String> names = new ArrayList<String>();
@@ -116,7 +116,7 @@ public class TlePropagationRequest extends DataRequest {
 	}
 	
 	/**
-	 * @param satellite
+	 * @param satelliteId
 	 */
 	public void setLocations(List<String> locations) {
         setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);

@@ -83,10 +83,12 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
         return (T) newInstance;
     }
 
-    public String prettyPrint() {
+    @Override
+    public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
         builder.append("ID", getInstanceID());
         builder.append("name", getName());
+        builder.append("issuedBy", issuedBy);
         return builder.build();
     }
 

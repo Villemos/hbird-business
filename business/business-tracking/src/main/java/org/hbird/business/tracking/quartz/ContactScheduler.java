@@ -56,7 +56,7 @@ public class ContactScheduler {
         long jobStartTime = getScheduleTime(event, config, now);
         if (jobStartTime == TOO_LATE) {
             LOG.warn("Too late to issue Track command for {}; Current time {}; configured schedule delta {}",
-                    new Object[] { event.prettyPrint(), Dates.toDefaultDateFormat(now), config.getScheduleDelta() });
+                    new Object[] { event.toString(), Dates.toDefaultDateFormat(now), config.getScheduleDelta() });
             return;
         }
 
@@ -69,7 +69,7 @@ public class ContactScheduler {
             scheduler.scheduleJob(job, trigger);
         }
         catch (SchedulerException e) {
-            LOG.error("Failed to schedule Track command creation for the {}", event.prettyPrint(), e);
+            LOG.error("Failed to schedule Track command creation for the {}", event.toString(), e);
         }
     }
 

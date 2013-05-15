@@ -26,52 +26,54 @@ import org.hbird.exchange.core.State;
  */
 public class BooleanParameter {
 
-	/** The class logger. */
-	protected static Logger LOG = Logger.getLogger(BooleanParameter.class);
+    /** The class logger. */
+    protected static Logger LOG = Logger.getLogger(BooleanParameter.class);
 
-	protected String ID;
-	protected String issuedBy;
-	protected String name;
-	protected String description;
-	protected Boolean value;
-	protected String isStateOf;
-	
-	/**
-	 * Basic constructor, setting the initial value and the name of the boolean
-	 * parameter.  
-	 * 
-	 * @param value The initial value of the parameter.
-	 * @param name The name of the parameter to be generated.
-	 */
-	public BooleanParameter(String ID, String issuedBy, String name, String description, Boolean value, String isStateOf) {
-		this.ID = ID;
-		this.issuedBy = issuedBy;
-		this.name = name;
-		this.description = description;
-		this.value = value;
-		this.isStateOf = isStateOf;
-	}
+    protected String ID;
+    protected String issuedBy;
+    protected String name;
+    protected String description;
+    protected Boolean value;
+    protected String isStateOf;
 
-	/* (non-Javadoc)
-	 * @see org.hbird.simpleparametersimulator.BaseParameter#process(org.apache.camel.Exchange)
-	 */
-	@Handler
-	public State process() {
-		try {
-			LOG.debug("Sending new boolean value with name '" + name + "'.");
-			this.value = new Boolean(!(Boolean)value);
-		} 
-		catch (Exception e) {
-			LOG.error("Courght exception " + e);
-			e.printStackTrace();
-		}
-		
-		State newState = new State(ID, name);
-		newState.setIssuedBy(issuedBy);
-		newState.setDescription(description);
-		newState.setIsStateOf(isStateOf);
-		newState.setValue(value);
-		
-		return newState;
-	}
+    /**
+     * Basic constructor, setting the initial value and the name of the boolean
+     * parameter.
+     * 
+     * @param value The initial value of the parameter.
+     * @param name The name of the parameter to be generated.
+     */
+    public BooleanParameter(String ID, String issuedBy, String name, String description, Boolean value, String isStateOf) {
+        this.ID = ID;
+        this.issuedBy = issuedBy;
+        this.name = name;
+        this.description = description;
+        this.value = value;
+        this.isStateOf = isStateOf;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.simpleparametersimulator.BaseParameter#process(org.apache.camel.Exchange)
+     */
+    @Handler
+    public State process() {
+        try {
+            LOG.debug("Sending new boolean value with name '" + name + "'.");
+            this.value = new Boolean(!(Boolean) value);
+        }
+        catch (Exception e) {
+            LOG.error("Courght exception " + e);
+            e.printStackTrace();
+        }
+
+        State newState = new State(ID, name);
+        newState.setIssuedBy(issuedBy);
+        newState.setDescription(description);
+        newState.setApplicableTo(isStateOf);
+        newState.setValue(value);
+
+        return newState;
+    }
 }

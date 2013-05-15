@@ -52,7 +52,7 @@ public class ScriptTester extends SystemTest {
         Parameter parameter = new Parameter("SYN1", "SYN1");
         parameter.setDescription("A test script parameter.");
         parameter.setUnit("Volt");
-        
+
         ScriptComponent com = createScriptComponent("SCRIPT1", script, scriptName, binding, parameter);
         partmanagerApi.start(com);
         Thread.sleep(2000);
@@ -66,7 +66,7 @@ public class ScriptTester extends SystemTest {
 
         /** Send the other parameter. Should trigger the script. */
         publishApi.publishParameter("PARA4", "PARA4", "A parameter", 5d, "Volt");
-        
+
         Thread.sleep(2000);
 
         azzert(parameterListener.lastReceived.getName().equals("SYN1") == true);
@@ -83,15 +83,15 @@ public class ScriptTester extends SystemTest {
         binding.put("PARA5", "in1");
 
         State state = new State("SYN_STATE_1", "SYN_STATE_1");
-        state.setIsStateOf("PARA2");
-        
+        state.setApplicableTo("PARA2");
+
         com = createScriptComponent("SCRIPT2", script, scriptName, binding, state);
         partmanagerApi.start(com);
 
         Thread.sleep(2000);
 
         publishApi.publishParameter("PARA5", "PARA5", "A parameter", 5d, "Volt");
-        
+
         Thread.sleep(2000);
 
         azzert(stateListener.lastReceived.getName().equals("SYN_STATE_1") == true);
@@ -117,13 +117,12 @@ public class ScriptTester extends SystemTest {
 
         parameter = new Parameter("SYN2", "SYN2");
         parameter.setDescription("Temperature in CELCIUS.");
-        parameter.setValue( new Double(0));
+        parameter.setValue(new Double(0));
         parameter.setUnit("Celsius");
-        
+
         com = createScriptComponent("SCRIPT3", script, scriptName, binding, parameter);
         partmanagerApi.start(com);
 
-        
         Thread.sleep(2000);
 
         publishApi.publishParameter("PARA6", "PARA6", "The temperature in FAHRENHEIT.", 200d, "Fahrenheit");
@@ -142,11 +141,11 @@ public class ScriptTester extends SystemTest {
 
         script = null;
         scriptName = "OnOffSpline";
-        
+
         Label label = new Label("SYN3", "SYN3");
         label.setDescription("Whether the battery is ON or OFF");
         label.setValue("ON");
-        
+
         com = createScriptComponent("SCRIPT4", script, scriptName, binding, label);
         partmanagerApi.start(com);
 
@@ -154,7 +153,7 @@ public class ScriptTester extends SystemTest {
 
         publishApi.publishParameter("PARA7", "PARA7", "The ON / OFF threshold.", 300d, "Volt");
         publishApi.publishParameter("PARA8", "PARA8", "Dont know.", 200d, "Volt");
-        
+
         Thread.sleep(2000);
 
         azzert(labelListener.lastReceived.getName().equals("SYN3") == true);
@@ -163,7 +162,7 @@ public class ScriptTester extends SystemTest {
         azzert(out5.getValue().equals("OFF"));
 
         publishApi.publishParameter("PARA8", "PARA8", "Dont know.", 300d, "Volt");
-        
+
         Thread.sleep(2000);
 
         azzert(labelListener.lastReceived.getName().equals("SYN3") == true);
@@ -180,13 +179,13 @@ public class ScriptTester extends SystemTest {
 
         LOG.info("Finished");
     }
-    
-    public ScriptComponent createScriptComponent(String componentName, String script,  String scriptName, Map<String, String> binding, EntityInstance obj) {
-    	ScriptComponent component = new ScriptComponent(componentName, componentName);
-    	component.setScript(script);
-    	component.setScriptName(scriptName);
-    	component.setBinding(binding);
-    	component.setReturnType(obj);
-    	return component;
+
+    public ScriptComponent createScriptComponent(String componentName, String script, String scriptName, Map<String, String> binding, EntityInstance obj) {
+        ScriptComponent component = new ScriptComponent(componentName, componentName);
+        component.setScript(script);
+        component.setScriptName(scriptName);
+        component.setBinding(binding);
+        component.setReturnType(obj);
+        return component;
     }
 }

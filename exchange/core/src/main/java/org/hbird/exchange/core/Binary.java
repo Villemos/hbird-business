@@ -22,7 +22,7 @@ package org.hbird.exchange.core;
  * @author Gert Villemos
  * 
  */
-public class Binary extends EntityInstance {
+public class Binary extends ApplicableTo {
 
     private static final long serialVersionUID = -6631068705173628757L;
 

@@ -56,8 +56,7 @@ public class ApplicableToTest {
     @Test
     public void testPrettyPrint() throws Exception {
         applicable.setApplicableTo(APPLICABLE_TO);
-        String s = applicable.prettyPrint();
-        System.out.println(s);
+        String s = applicable.toString();
         assertNotNull(s);
         assertTrue(s.contains(ApplicableTo.class.getSimpleName()));
         assertTrue(s.contains(ID));

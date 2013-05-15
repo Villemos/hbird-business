@@ -7,8 +7,9 @@ import org.junit.Test;
 public class ParameterTest {
 
     @Test
-    public void testPrettyPrint() {
+    public void testToString() {
         Parameter parameter = new Parameter("ID", "A name");
-        assertNotNull(parameter.prettyPrint());
+        String s = parameter.toString();
+        assertNotNull(s);
     }
 }

@@ -115,7 +115,8 @@ public class PointingData implements ISatelliteSpecific, IGroundStationSpecific 
         this.timestamp = timestamp;
     }
 
-    public String prettyPrint() {
+    @Override
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .append("time", Dates.toDefaultDateFormat(timestamp))
                 .append("azimuth", azimuth)

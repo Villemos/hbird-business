@@ -50,7 +50,7 @@ public class ArchivePoller {
         for (String satelliteId : satellites) {
             LocationContactEvent event = dao.getNextLocationContactEventFor(groundStationId, satelliteId);
             if (event != null) {
-                LOG.debug("Found {}", event.prettyPrint());
+                LOG.debug("Found {}", event.toString());
                 result.add(event);
             }
             else {

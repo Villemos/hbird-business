@@ -103,19 +103,19 @@ public class TrackCommandCreationJob implements Job {
                     TleOrbitalParameters latestTle = getLatestTle(dao, satId);
                     if (latestTle == null || areEqual(eventTle, latestTle)) {
                         Track command = createTrackCommand(part, event, sat);
-                        LOG.info("Issuing Track command for the {}", event.prettyPrint());
+                        LOG.info("Issuing Track command for the {}", event.toString());
                         producer.asyncSendBody(endPoint, command);
                     }
                     else {
-                        LOG.info("LocationContactEvent is out dated; Track command is not issued for the {}", event.prettyPrint());
+                        LOG.info("LocationContactEvent is out dated; Track command is not issued for the {}", event.toString());
                     }
                 }
                 else {
-                    LOG.error("Failed to resolve TLE for ID {}; Track command is not issued for the {}", tleId, event.prettyPrint());
+                    LOG.error("Failed to resolve TLE for ID {}; Track command is not issued for the {}", tleId, event.toString());
                 }
             }
             else {
-                LOG.error("Failed to resolve Satellite for the ID {}; Track command is not issued for the {}", satId, event.prettyPrint());
+                LOG.error("Failed to resolve Satellite for the ID {}; Track command is not issued for the {}", satId, event.toString());
             }
         }
         else {

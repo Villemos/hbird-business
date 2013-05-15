@@ -68,7 +68,7 @@ public class PointingDataCalculator {
         String gsId = groundStation.getGroundStationId();
         double timeSift = contactDataStepSize / 1000D; // shift has to be in seconds
 
-        /** Calculate contact data. */
+        /* Calculate contact data. */
         for (int i = 0; startTime + contactDataStepSize * i < endTime; i++) {
             SpacecraftState newState = propagator.propagate(date);
             coord = newState.getPVCoordinates();
@@ -77,7 +77,7 @@ public class PointingDataCalculator {
             double doppler = NavigationUtilities.calculateDoppler(coord, locationOnEarth, date);
             long time = date.toDate(TimeScalesFactory.getUTC()).getTime();
             PointingData entry = new PointingData(time, azimuth, elevation, doppler, satelliteId, gsId);
-            LOG.debug(entry.prettyPrint());
+            LOG.debug(entry.toString());
             data.add(entry);
             /* New target date */
             date = date.shiftedBy(timeSift);

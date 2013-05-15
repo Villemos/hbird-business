@@ -72,7 +72,8 @@ public class ContactEventCollector extends ElevationDetector {
      * @param location The location to which contact has been established / lost if this event occurs.
      * @param contactDataStepSize
      */
-    public ContactEventCollector(double elevation, TopocentricFrame topo, String satelliteId, String groundStationId, TleOrbitalParameters parameters, IPublish publisher) {
+    public ContactEventCollector(double elevation, TopocentricFrame topo, String satelliteId, String groundStationId, TleOrbitalParameters parameters,
+            IPublish publisher) {
         super(maxcheck, elevation, topo);
         this.satelliteId = satelliteId;
         this.groundStationId = groundStationId;
@@ -96,7 +97,7 @@ public class ContactEventCollector extends ElevationDetector {
             LocationContactEvent event = createEvent(groundStationId, satelliteId, tleParameters, lastStartState, state);
             events.add(event);
             if (publisher != null) {
-                LOG.info("Injecting new LocationContactEvent {}", event.prettyPrint());
+                LOG.info("Injecting new LocationContactEvent {}", event.toString());
                 publisher.publish(event);
             }
             lastStartState = null;
@@ -126,8 +127,7 @@ public class ContactEventCollector extends ElevationDetector {
         event.setStartTime(startTime);
         event.setEndTime(endTime);
         event.setOrbitNumber(orbitNumber);
-        
-        
+
         event.setSatelliteStateAtStart(NavigationUtilities.toOrbitalState(startState, satelliteId, tleInstanceId));
         return event;
     }
