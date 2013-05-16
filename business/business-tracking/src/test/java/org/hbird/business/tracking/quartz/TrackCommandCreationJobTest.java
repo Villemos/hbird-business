@@ -112,7 +112,7 @@ public class TrackCommandCreationJobTest {
         when(quartzContext.getMergedJobDataMap()).thenReturn(jobData);
         when(jobData.getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID)).thenReturn(CONTACT_INSTANCE_ID);
         when(event.getSatelliteId()).thenReturn(SATELLITE_ID);
-        when(event.getDerivedFrom()).thenReturn(TLE_ID);
+        when(event.getDerivedFromId()).thenReturn(TLE_ID);
         when(event.getGroundStationId()).thenReturn(GS_ID);
         when(tle1.getTimestamp()).thenReturn(NOW - 2);
         when(tle2.getTimestamp()).thenReturn(NOW - 1);
@@ -150,7 +150,7 @@ public class TrackCommandCreationJobTest {
         when(dao.resolve(CONTACT_INSTANCE_ID)).thenReturn(event);
         when(event.getSatelliteId()).thenReturn(SATELLITE_ID);
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
-        when(event.getDerivedFrom()).thenReturn(TLE_ID);
+        when(event.getDerivedFromId()).thenReturn(TLE_ID);
         when(tleCache.getById(TLE_ID)).thenReturn(null);
         job.execute(quartzContext);
         inOrder.verify(quartzContext, times(1)).getMergedJobDataMap();
@@ -158,7 +158,7 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID);
         inOrder.verify(event, times(1)).getSatelliteId();
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
-        inOrder.verify(event, times(1)).getDerivedFrom();
+        inOrder.verify(event, times(1)).getDerivedFromId();
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
     }
 
@@ -167,7 +167,7 @@ public class TrackCommandCreationJobTest {
         when(dao.resolve(CONTACT_INSTANCE_ID)).thenReturn(event);
         when(event.getSatelliteId()).thenReturn(SATELLITE_ID);
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
-        when(event.getDerivedFrom()).thenReturn(TLE_ID);
+        when(event.getDerivedFromId()).thenReturn(TLE_ID);
         when(tleCache.getById(TLE_ID)).thenReturn(tle1);
         when(dao.getTleFor(SATELLITE_ID)).thenReturn(tle2);
         job.execute(quartzContext);
@@ -176,7 +176,7 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID);
         inOrder.verify(event, times(1)).getSatelliteId();
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
-        inOrder.verify(event, times(1)).getDerivedFrom();
+        inOrder.verify(event, times(1)).getDerivedFromId();
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
         inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
         inOrder.verify(tle1, times(1)).getTimestamp();
@@ -188,7 +188,7 @@ public class TrackCommandCreationJobTest {
         when(dao.resolve(CONTACT_INSTANCE_ID)).thenReturn(event);
         when(event.getSatelliteId()).thenReturn(SATELLITE_ID);
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
-        when(event.getDerivedFrom()).thenReturn(TLE_ID);
+        when(event.getDerivedFromId()).thenReturn(TLE_ID);
         when(tleCache.getById(TLE_ID)).thenReturn(tle1);
         when(dao.getTleFor(SATELLITE_ID)).thenReturn(null);
         job.execute(quartzContext);
@@ -197,7 +197,7 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID);
         inOrder.verify(event, times(1)).getSatelliteId();
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
-        inOrder.verify(event, times(1)).getDerivedFrom();
+        inOrder.verify(event, times(1)).getDerivedFromId();
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
         inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
         inOrder.verify(event, times(1)).getGroundStationId();
@@ -215,7 +215,7 @@ public class TrackCommandCreationJobTest {
         when(dao.resolve(CONTACT_INSTANCE_ID)).thenReturn(event);
         when(event.getSatelliteId()).thenReturn(SATELLITE_ID);
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
-        when(event.getDerivedFrom()).thenReturn(TLE_ID);
+        when(event.getDerivedFromId()).thenReturn(TLE_ID);
         when(tleCache.getById(TLE_ID)).thenReturn(tle1);
         when(dao.getTleFor(SATELLITE_ID)).thenReturn(tle2);
         when(tle1.getTimestamp()).thenReturn(NOW - 1);
@@ -226,7 +226,7 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID);
         inOrder.verify(event, times(1)).getSatelliteId();
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
-        inOrder.verify(event, times(1)).getDerivedFrom();
+        inOrder.verify(event, times(1)).getDerivedFromId();
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
         inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
         inOrder.verify(tle1, times(1)).getTimestamp();

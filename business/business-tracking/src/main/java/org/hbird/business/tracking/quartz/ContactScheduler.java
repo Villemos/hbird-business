@@ -88,7 +88,7 @@ public class ContactScheduler {
                 .withIdentity(createJobName(event), groupName)
                 .usingJobData(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID, event.getInstanceID())
                 .usingJobData(TrackCommandCreationJob.JOB_DATA_EVENT_ID, event.getID())
-                .usingJobData(TrackCommandCreationJob.JOB_DATA_TLE_ID, event.getDerivedFrom())
+                .usingJobData(TrackCommandCreationJob.JOB_DATA_TLE_ID, event.getDerivedFromId())
                 .usingJobData(TrackCommandCreationJob.JOB_DATA_START_TIME, event.getStartTime())
                 .build();
         return job;

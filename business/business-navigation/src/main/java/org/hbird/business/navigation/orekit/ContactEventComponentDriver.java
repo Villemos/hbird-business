@@ -16,8 +16,15 @@
  */
 package org.hbird.business.navigation.orekit;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPublish;
 import org.hbird.business.core.SoftwareComponentDriver;
+import org.hbird.business.core.naming.DefaultNaming;
+import org.hbird.business.core.naming.INaming;
 import org.hbird.business.navigation.ContactEventComponent;
 
 /**
@@ -31,9 +38,16 @@ public class ContactEventComponentDriver extends SoftwareComponentDriver {
     @Override
     public void doConfigure() {
 
-    	ContactEventComponent com = (ContactEventComponent) entity;
-    	ContactEventBean bean = new ContactEventBean(com);
-		
+        ContactEventComponent com = (ContactEventComponent) entity;
+        String id = com.getID();
+        CamelContext camelContext = com.getContext();
+
+        IDataAccess dao = ApiFactory.getDataAccessApi(id, camelContext);
+        IPublish publish = ApiFactory.getPublishApi(id, camelContext);
+        INaming naming = new DefaultNaming();
+        ICatalogue catalogue = ApiFactory.getCatalogueApi(id, camelContext);
+        ContactEventBean bean = new ContactEventBean(com, dao, publish, naming, catalogue);
+
         ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute");
         addInjectionRoute(route);
     }

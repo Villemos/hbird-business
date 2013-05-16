@@ -23,13 +23,15 @@ import org.orekit.frames.FramesFactory;
 
 /**
  * @author Gert Villemos
- *
+ * 
  */
 public class Constants {
 
     /** Equatorial radius of Earth in meters. */
     public static final double EQUATORIAL_RADIUS_OF_THE_EARTH = org.orekit.utils.Constants.WGS84_EARTH_EQUATORIAL_RADIUS;
-
+    public static final double EQUATORIAL_RADIUS_OF_SUN = org.orekit.utils.Constants.SUN_RADIUS; // was 696000000. in
+                                                                                                 // ESTCube. Not exactly
+                                                                                                 // the same value ...
     /** Earth flattening */
     public static final double FLATTEING_OF_THE_ERATH_ON_POLES = org.orekit.utils.Constants.WGS84_EARTH_FLATTENING;
 

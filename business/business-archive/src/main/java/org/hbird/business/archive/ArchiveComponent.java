@@ -37,9 +37,6 @@ import org.hbird.exchange.dataaccess.TleRequest;
  */
 public class ArchiveComponent extends StartableEntity {
 
-    /**
-	 * 
-	 */
     private static final long serialVersionUID = 2145124224125316877L;
 
     public static final String ARCHIVE_NAME = "Archive";

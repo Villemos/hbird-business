@@ -97,7 +97,7 @@ public class TrackCommandCreationJob implements Job {
             String satId = event.getSatelliteId();
             Satellite sat = getSatellite(satelliteCache, satId);
             if (sat != null) {
-                String tleId = event.getDerivedFrom();
+                String tleId = event.getDerivedFromId();
                 TleOrbitalParameters eventTle = getTle(tleCache, tleId);
                 if (eventTle != null) {
                     TleOrbitalParameters latestTle = getLatestTle(dao, satId);

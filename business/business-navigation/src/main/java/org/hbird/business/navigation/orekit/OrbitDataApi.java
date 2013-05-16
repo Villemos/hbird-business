@@ -18,32 +18,52 @@ package org.hbird.business.navigation.orekit;
 
 import java.util.List;
 
+import org.apache.camel.CamelContext;
 import org.hbird.business.api.IPointingData;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
 import org.orekit.errors.OrekitException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Admin
- *
+ * 
  */
 public class OrbitDataApi implements IPointingData {
 
-	protected PointingDataCalculator pointingDataCalculator = new PointingDataCalculator();
-	
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.IOrbitData#calculateContactData(org.hbird.exchange.navigation.LocationContactEvent, org.hbird.exchange.groundstation.GroundStation, long)
-	 */
-	@Override
-	public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent, GroundStation groundStation, long contactDataStepSize) {
-		List<PointingData> data = null;
-		try {
-			data = pointingDataCalculator.calculateContactData(locationContactEvent, groundStation, contactDataStepSize);
-		} catch (OrekitException e) {
-			e.printStackTrace();
-		}
-		
-		return data;
-	}
+    private static final Logger LOG = LoggerFactory.getLogger(OrbitDataApi.class);
+
+    protected PointingDataCalculator pointingDataCalculator = new PointingDataCalculator();
+
+    protected String issuedBy;
+
+    protected CamelContext camelContext;
+
+    public OrbitDataApi(String issuedBy) {
+        this(issuedBy, null);
+    }
+
+    public OrbitDataApi(String issuedBy, CamelContext camelContext) {
+        this.issuedBy = issuedBy;
+        this.camelContext = camelContext;
+    }
+
+    /**
+     * @see org.hbird.business.api.IOrbitData#calculateContactData(org.hbird.exchange.navigation.LocationContactEvent,
+     *      org.hbird.exchange.groundstation.GroundStation, long)
+     */
+    @Override
+    public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent, GroundStation groundStation, long contactDataStepSize) {
+        List<PointingData> data = null;
+        try {
+            data = pointingDataCalculator.calculateContactData(locationContactEvent, groundStation, contactDataStepSize);
+        }
+        catch (OrekitException e) {
+            LOG.error("Failed to calculate contact data for LocationContactEvent '{}'", locationContactEvent.getInstanceID(), e);
+        }
+
+        return data;
+    }
 }

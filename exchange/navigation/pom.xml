@@ -1,21 +1,25 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>navigation</artifactId>
-  <name>HBird :: Exchange - Orbit and Contact Prediction</name>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>navigation</artifactId>
+    <name>HBird :: Exchange - Orbit and Contact Prediction</name>
 
-  <parent>
-    <artifactId>hummingbird-exchange</artifactId>
-    <groupId>org.hbird.exchange</groupId>
-    <version>0.8.0-SNAPSHOT</version>
-  </parent>
-
-  <dependencies>
-
-    <dependency>
+    <parent>
+        <artifactId>hummingbird-exchange</artifactId>
         <groupId>org.hbird.exchange</groupId>
-          <artifactId>core</artifactId>
-      </dependency>
+        <version>0.8.0-SNAPSHOT</version>
+    </parent>
 
-  </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>

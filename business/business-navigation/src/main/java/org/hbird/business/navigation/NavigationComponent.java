@@ -22,124 +22,123 @@ import org.hbird.business.core.StartableEntity;
  * Abstract class, acting as a base for all navigation components.
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public abstract class NavigationComponent extends StartableEntity {
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = -2451309271151513203L;
+    private static final long serialVersionUID = -2451309271151513203L;
 
-	/** The Entity ID of the satellite that this navigation component manages. */
-	protected String satellite;
-	
-	/**
-	 * The interval (ms) for which propagation should be available. The controller will ensure that there
-	 * is always orbital data available for the period
-	 * <li>[NOW] to [NOW] + lead time + execution delay. </li>
-	 */
-	protected long leadTime = 6 * 60 * 60 * 1000;
+    /** The Entity ID of the satellite that this navigation component manages. */
+    protected String satelliteId;
 
-	/** The interval between propagations */
-	protected long executionDelay = 5 * 60 * 1000;
+    /**
+     * The interval (ms) for which propagation should be available. The controller will ensure that there
+     * is always orbital data available for the period <li>[NOW] to [NOW] + lead time + execution delay.</li>
+     */
+    protected long leadTime = 6 * 60 * 60 * 1000L;
 
-	/** The size of the steps in calculating the orbital state, measured in Seconds */
-	protected long stepSize = 60l;
-	
-	protected long from = 0l;
-	
-	protected long to = 0l;
-	
-	/**
-	 * @param ID
-	 * @param name
-	 */
-	public NavigationComponent(String ID, String name) {
-		super(ID, name);
-	}
+    /** The interval between propagations */
+    protected long executionDelay = 5 * 60 * 1000L;
 
-	/**
-	 * @return the satellite
-	 */
-	public String getSatellite() {
-		return satellite;
-	}
+    /** The size of the steps in calculating the orbital state, measured in Seconds */
+    protected long stepSize = 60L;
 
-	/**
-	 * @param satellite the satellite to set
-	 */
-	public void setSatellite(String satellite) {
-		this.satellite = satellite;
-	}
+    protected long from = 0L;
 
-	/**
-	 * @return the leadTime
-	 */
-	public long getLeadTime() {
-		return leadTime;
-	}
+    protected long to = 0L;
 
-	/**
-	 * @param leadTime the leadTime to set
-	 */
-	public void setLeadTime(long leadTime) {
-		this.leadTime = leadTime;
-	}
+    /**
+     * @param ID
+     * @param name
+     */
+    public NavigationComponent(String ID, String name) {
+        super(ID, name);
+    }
 
-	/**
-	 * @return the executionDelay
-	 */
-	public long getExecutionDelay() {
-		return executionDelay;
-	}
+    /**
+     * @return the satellite
+     */
+    public String getSatelliteId() {
+        return satelliteId;
+    }
 
-	/**
-	 * @param executionDelay the executionDelay to set
-	 */
-	public void setExecutionDelay(long executionDelay) {
-		this.executionDelay = executionDelay;
-	}
+    /**
+     * @param satelliteId the satellite to set
+     */
+    public void setSatelliteId(String satelliteId) {
+        this.satelliteId = satelliteId;
+    }
 
-	/**
-	 * @return the stepSize
-	 */
-	public long getStepSize() {
-		return stepSize;
-	}
+    /**
+     * @return the leadTime
+     */
+    public long getLeadTime() {
+        return leadTime;
+    }
 
-	/**
-	 * @param stepSize the stepSize to set
-	 */
-	public void setStepSize(long stepSize) {
-		this.stepSize = stepSize;
-	}
+    /**
+     * @param leadTime the leadTime to set
+     */
+    public void setLeadTime(long leadTime) {
+        this.leadTime = leadTime;
+    }
 
-	/**
-	 * @return the from
-	 */
-	public long getFrom() {
-		return from;
-	}
+    /**
+     * @return the executionDelay
+     */
+    public long getExecutionDelay() {
+        return executionDelay;
+    }
 
-	/**
-	 * @param from the from to set
-	 */
-	public void setFrom(long from) {
-		this.from = from;
-	}
+    /**
+     * @param executionDelay the executionDelay to set
+     */
+    public void setExecutionDelay(long executionDelay) {
+        this.executionDelay = executionDelay;
+    }
 
-	/**
-	 * @return the to
-	 */
-	public long getTo() {
-		return to;
-	}
+    /**
+     * @return the stepSize
+     */
+    public long getStepSize() {
+        return stepSize;
+    }
 
-	/**
-	 * @param to the to to set
-	 */
-	public void setTo(long to) {
-		this.to = to;
-	}
+    /**
+     * @param stepSize the stepSize to set
+     */
+    public void setStepSize(long stepSize) {
+        this.stepSize = stepSize;
+    }
+
+    /**
+     * @return the from
+     */
+    public long getFrom() {
+        return from;
+    }
+
+    /**
+     * @param from the from to set
+     */
+    public void setFrom(long from) {
+        this.from = from;
+    }
+
+    /**
+     * @return the to
+     */
+    public long getTo() {
+        return to;
+    }
+
+    /**
+     * @param to the to to set
+     */
+    public void setTo(long to) {
+        this.to = to;
+    }
 }

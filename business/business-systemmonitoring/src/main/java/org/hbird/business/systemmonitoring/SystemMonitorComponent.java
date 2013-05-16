@@ -37,22 +37,19 @@ import org.hbird.business.systemmonitoring.bean.SystemMonitorComponentDriver;
 
 /**
  * @author Gert Villemos
- *
+ * 
  */
 public class SystemMonitorComponent extends StartableEntity {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3066458562440110882L;
+    private static final long serialVersionUID = -3066458562440110882L;
 
     public static final String SYSTEM_MONITORING_NAME = "SystemMonitoring";
     public static final String SYSTEM_MONITORING_DESC = "Component for monitoring the system resources, such as CPU and memory usages.";
-	public static final String DEFAULT_DRIVER = SystemMonitorComponentDriver.class.getName();
-	
-	public SystemMonitorComponent(String ID) {
-		super(ID, SYSTEM_MONITORING_NAME);
-		setDescription(SYSTEM_MONITORING_DESC);
-		setDriverName(DEFAULT_DRIVER);
-	}
+    public static final String DEFAULT_DRIVER = SystemMonitorComponentDriver.class.getName();
+
+    public SystemMonitorComponent(String ID) {
+        super(ID, SYSTEM_MONITORING_NAME);
+        setDescription(SYSTEM_MONITORING_DESC);
+        setDriverName(DEFAULT_DRIVER);
+    }
 }

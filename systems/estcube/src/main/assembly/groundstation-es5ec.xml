@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
        http://www.springframework.org/schema/beans 
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/context 
@@ -9,10 +9,14 @@
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<import resource="groundstation-es5ec-parts.xml" />
-    
+    <import resource="groundstation-es5ec-parts.xml" />
+
+    <!-- Configurator -->
     <bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponent" init-method="start">
         <constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations/ES5EC/Configuator"/>
+    </bean>
+
+    <!-- Tracking -->
     <bean id="trackingConfig" class="org.hbird.business.tracking.quartz.TrackingDriverConfiguration">
         <property name="groundstationId" value="/ESTCUBE/GroundStations/ES5EC"/>
         <property name="satelliteIds">
@@ -21,27 +25,63 @@
             </list>
         </property>
     </bean>
-        
+
     <bean id="tracking" class="org.hbird.business.tracking.TrackingComponent">
         <constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations/ES5EC/Tracking" />
         <property name="description" value="The component automating the track of ESTCube-1 by ES5EC." />
         <property name="configuration" ref="trackingConfig"/>
         <property name="driverName" value="org.hbird.business.tracking.quartz.TrackingComponentDriver"/>
     </bean>
-			
-	<!-- Publish the parts of the ground station -->
-	<bean id="starter" class="org.hbird.business.metadatapublisher.NamedObjectPublisher" init-method="start">
-		<constructor-arg index="0" name="name" value="/ESTCUBE/GroundStations/ES5EC/Setup"/>
+
+    <!-- Contact prediction -->
+    <bean id="contactPredictorConfig" class="org.hbird.business.navigation.configuration.ContactPredictionConfiguration">
+        <property name="satelliteId" value="/ESTCUBE/Satellites/ESTCube-1"/>
+        <property name="predictionInterval" value="60000"/>
+        <property name="serviceId" value="/ESTCUBE/GroundStations/ES5EC/ContactPredictor"/>
+        <property name="groundStationsIds">
+            <list>
+                <value>/ESTCUBE/GroundStations/ES5EC</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="contactPredictor" class="org.hbird.business.navigation.PredictionComponent">
+        <constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations/ES5EC/ContactPredictor" />
+        <constructor-arg index="1" name="name" value="ESTCube-1 Contact Predictor" />
+        <property name="configuration" ref="contactPredictorConfig"/>
+        <property name="driverName" value="org.hbird.business.navigation.orekit.ContactPredictionDriver"/>
+    </bean>
+
+    <!-- Contact prediction -->
+    <bean id="orbitPredictorConfig" class="org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration">
+        <property name="satelliteId" value="/ESTCUBE/Satellites/ESTCube-1"/>
+        <property name="predictionInterval" value="60000"/>
+        <property name="serviceId" value="/ESTCUBE/GroundStations/ES5EC/OrbitPredictor"/>
+    </bean>
+
+    <bean id="orbitPredictor" class="org.hbird.business.navigation.PredictionComponent">
+        <constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations/ES5EC/OrbitPredictor" />
+        <constructor-arg index="1" name="name" value="ESTCube-1 Orbit Predictor" />
+        <property name="configuration" ref="orbitPredictorConfig"/>
+        <property name="driverName" value="org.hbird.business.navigation.orekit.OrbitalStatePredictionDriver"/>
+    </bean>
+
+
+    <!-- Publish the parts of the ground station -->
+    <bean id="starter" class="org.hbird.business.metadatapublisher.NamedObjectPublisher" init-method="start">
+        <constructor-arg index="0" name="name" value="/ESTCUBE/GroundStations/ES5EC/Setup"/>
         <constructor-arg index="1" name="destination" value="/ESTCUBE/GroundStations/ES5EC/Configuator"/>
-		<constructor-arg index="2" name="objects">
-			<list>
-				<ref bean="antenna" />
-				<ref bean="es5ec" />
-				<ref bean="rotator" />
-				<ref bean="radio" />
+        <constructor-arg index="2" name="objects">
+            <list>
+                <ref bean="antenna" />
+                <ref bean="es5ec" />
+                <ref bean="rotator" />
+                <ref bean="radio" />
                 <ref bean="tracking"/>
-			</list>
-		</constructor-arg>
-	</bean>
-			
+                <ref bean="orbitPredictor"/>
+                <ref bean="contactPredictor"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
 </beans>

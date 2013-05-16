@@ -55,10 +55,17 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
     /** Momentum measured in TODO */
     protected D3Vector momentum;
 
-    /** GeoLocation on the Earth. */
+    /** GeoLocation on the Earth. Suitable information for ground track construction. */
     protected GeoLocation geoLocation;
 
-    protected String derivedFrom;
+    /** ID of Entity used to calculate this OrbitalState. For example ID of the TLE. */
+    protected String derivedFromId;
+
+    /** Flag to show if satellite is in sun light or not. */
+    protected boolean inSunLight;
+
+    /** Radio visibility range of the satellite. In meters. */
+    protected double range;
 
     /**
      * Constructor of an orbital state.
@@ -117,6 +124,20 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
         this.geoLocation = geoLocation;
     }
 
+    /**
+     * @return the inSunLight
+     */
+    public boolean isInSunLight() {
+        return inSunLight;
+    }
+
+    /**
+     * @param inSunLight the inSunLight to set
+     */
+    public void setInSunLight(boolean inSunLight) {
+        this.inSunLight = inSunLight;
+    }
+
     @Override
     public long getGenerationTime() {
         return generationTime;
@@ -140,8 +161,8 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
      * @see org.hbird.exchange.interfaces.IDerivedFrom#getDerivedFrom()
      */
     @Override
-    public String getDerivedFrom() {
-        return derivedFrom;
+    public String getDerivedFromId() {
+        return derivedFromId;
     }
 
     /**
@@ -154,8 +175,21 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
     /**
      * @param derivedFrom the derivedFrom to set
      */
-    public void setDerivedFrom(String derivedFrom) {
-        this.derivedFrom = derivedFrom;
+    public void setDerivedFromId(String derivedFromId) {
+        this.derivedFromId = derivedFromId;
     }
 
+    /**
+     * @return the range
+     */
+    public double getRange() {
+        return range;
+    }
+
+    /**
+     * @param range the range to set
+     */
+    public void setRange(double range) {
+        this.range = range;
+    }
 }

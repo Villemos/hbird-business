@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://camel.apache.org/schema/spring 
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <import resource="core-parts.xml" />
+
+    <!-- Configurator -->
+    <bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponent" init-method="start">
+        <constructor-arg index="0" name="ID" value="/ESTCUBE/MCS/Configuator"/>
+        <property name="name" value="ESTCUBE Configurator"/>
+    </bean>
+
+    <bean id="monitoring" class="org.hbird.business.systemmonitoring.SystemMonitorComponent">
+        <constructor-arg index="0" name="ID" value="/ESTCUBE/MCS/Monitoring" />
+        <property name="name" value="MCS Monitoring"/>
+    </bean>
+
+    <bean id="archive" class="org.hbird.business.archive.ArchiveComponent">
+        <constructor-arg index="0" name="ID" value="/ESTCUBE/MCS/Archive" />
+        <property name="name" value="MCS Archive"/>
+    </bean>
+
+    <!-- Publish the parts of the ground station -->
+    <bean id="starter" class="org.hbird.business.metadatapublisher.NamedObjectPublisher" init-method="start">
+        <constructor-arg index="0" name="name" value="/ESTCUBE/MCS/Setup"/>
+        <constructor-arg index="1" name="destination" value="/ESTCUBE/MCS/Configuator"/>
+        <constructor-arg index="2" name="objects">
+            <list>
+                <ref bean="monitoring"/>
+                <ref bean="archive"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+</beans>

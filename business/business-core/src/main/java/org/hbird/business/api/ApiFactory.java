@@ -17,105 +17,106 @@
 package org.hbird.business.api;
 
 import org.apache.camel.CamelContext;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Factory class for creating API implementations. 
+ * Factory class for creating API implementations.
  * 
  * Different implementations may exist, depending on the underlying technologies used.
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class ApiFactory {
 
-	static protected String dataAccessClass = System.getProperty("hbird.dataaccess.class", "org.hbird.business.archive.api.DataAccess");
-	static protected String publishClass = System.getProperty("hbird.publish.class", "org.hbird.business.archive.api.Publish");
-	static protected String catalogueClass = System.getProperty("hbird.catalogue.class", "org.hbird.business.archive.api.Catalogue");
-	static protected String queueManagementClass = System.getProperty("hbird.queuemanagement.class", "org.hbird.business.queuemanagement.api.QueueManagerApi");
-	static protected String partmanagerClass = System.getProperty("hbird.partmanager.class", "org.hbird.business.archive.api.PartManager");
-	static protected String archiveManagerClass = System.getProperty("hbird.archivemanager.class", "org.hbird.business.archive.api.ArchiveManagement");
-	static protected String orbitDataClass = System.getProperty("hbird.orbitdata.class", "org.hbird.business.navigation.orekit.OrbitDataApi");
+    protected static String dataAccessClass = System.getProperty("hbird.dataaccess.class", "org.hbird.business.archive.api.DataAccess");
+    protected static String publishClass = System.getProperty("hbird.publish.class", "org.hbird.business.archive.api.Publish");
+    protected static String catalogueClass = System.getProperty("hbird.catalogue.class", "org.hbird.business.archive.api.Catalogue");
+    protected static String queueManagementClass = System.getProperty("hbird.queuemanagement.class", "org.hbird.business.queuemanagement.api.QueueManagerApi");
+    protected static String partmanagerClass = System.getProperty("hbird.partmanager.class", "org.hbird.business.archive.api.PartManager");
+    protected static String archiveManagerClass = System.getProperty("hbird.archivemanager.class", "org.hbird.business.archive.api.ArchiveManagement");
+    protected static String orbitDataClass = System.getProperty("hbird.orbitdata.class", "org.hbird.business.navigation.orekit.OrbitDataApi");
 
-	static public synchronized IDataAccess getDataAccessApi(String issuedBy) {
-		return (IDataAccess) createInstance(dataAccessClass, issuedBy);
-	}
+    private static final Logger LOG = LoggerFactory.getLogger(ApiFactory.class);
 
-	static public synchronized IPublish getPublishApi(String issuedBy) {
-		return (IPublish) createInstance(publishClass, issuedBy);
-	}
+    public static synchronized IDataAccess getDataAccessApi(String issuedBy) {
+        return (IDataAccess) createInstance(dataAccessClass, issuedBy);
+    }
 
-	static public synchronized ICatalogue getCatalogueApi(String issuedBy) {
-		return (ICatalogue) createInstance(catalogueClass, issuedBy);
-	}
+    public static synchronized IPublish getPublishApi(String issuedBy) {
+        return (IPublish) createInstance(publishClass, issuedBy);
+    }
 
-	static public synchronized IQueueManagement getQueueManagementApi(String issuedBy) {
-		return (IQueueManagement) createInstance(queueManagementClass, issuedBy);
-	}
+    public static synchronized ICatalogue getCatalogueApi(String issuedBy) {
+        return (ICatalogue) createInstance(catalogueClass, issuedBy);
+    }
 
-	static public synchronized IPartManager getPartManagerApi(String issuedBy) {
-		return (IPartManager) createInstance(partmanagerClass, issuedBy);
-	}
+    public static synchronized IQueueManagement getQueueManagementApi(String issuedBy) {
+        return (IQueueManagement) createInstance(queueManagementClass, issuedBy);
+    }
 
-	static public synchronized IArchiveManagement getArchiveManagerApi(String issuedBy) {
-		return (IArchiveManagement) createInstance(archiveManagerClass, issuedBy);
-	}
+    public static synchronized IPartManager getPartManagerApi(String issuedBy) {
+        return (IPartManager) createInstance(partmanagerClass, issuedBy);
+    }
 
-	static public synchronized IPointingData getOrbitDataApi(String issuedBy) {
-		return (IPointingData) createInstance(orbitDataClass, issuedBy);
-	}
+    public static synchronized IArchiveManagement getArchiveManagerApi(String issuedBy) {
+        return (IArchiveManagement) createInstance(archiveManagerClass, issuedBy);
+    }
 
-	static protected synchronized Object createInstance(String clazz, String issuedBy) {
-		Object api = null;
-		
-		try {
-			api = Class.forName(clazz).getConstructor(String.class).newInstance(issuedBy);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return api;
-	}
+    public static synchronized IPointingData getOrbitDataApi(String issuedBy) {
+        return (IPointingData) createInstance(orbitDataClass, issuedBy);
+    }
 
-	
-	static public synchronized IDataAccess getDataAccessApi(String issuedBy, CamelContext context) {
-		return (IDataAccess) createInstance(dataAccessClass, issuedBy, context);
-	}
+    protected static synchronized Object createInstance(String clazz, String issuedBy) {
+        Object api = null;
 
-	static public synchronized IPublish getPublishApi(String issuedBy, CamelContext context) {
-		return (IPublish) createInstance(publishClass, issuedBy, context);
-	}
+        try {
+            api = Class.forName(clazz).getConstructor(String.class).newInstance(issuedBy);
+        }
+        catch (Exception e) {
+            LOG.error("Failed to create new instance of {}", clazz, e);
+        }
 
-	static public synchronized ICatalogue getCatalogueApi(String issuedBy, CamelContext context) {
-		return (ICatalogue) createInstance(catalogueClass, issuedBy, context);
-	}
+        return api;
+    }
 
-	static public synchronized IQueueManagement getQueueManagementApi(String issuedBy, CamelContext context) {
-		return (IQueueManagement) createInstance(queueManagementClass, issuedBy, context);
-	}
+    public static synchronized IDataAccess getDataAccessApi(String issuedBy, CamelContext context) {
+        return (IDataAccess) createInstance(dataAccessClass, issuedBy, context);
+    }
 
-	static public synchronized IPartManager getPartManagerApi(String issuedBy, CamelContext context) {
-		return (IPartManager) createInstance(partmanagerClass, issuedBy, context);
-	}
+    public static synchronized IPublish getPublishApi(String issuedBy, CamelContext context) {
+        return (IPublish) createInstance(publishClass, issuedBy, context);
+    }
 
-	static public synchronized IArchiveManagement getArchiveManagerApi(String issuedBy, CamelContext context) {
-		return (IArchiveManagement) createInstance(archiveManagerClass, issuedBy, context);
-	}
+    public static synchronized ICatalogue getCatalogueApi(String issuedBy, CamelContext context) {
+        return (ICatalogue) createInstance(catalogueClass, issuedBy, context);
+    }
 
-	static public synchronized IPointingData getOrbitDataApi(String issuedBy, CamelContext context) {
-		return (IPointingData) createInstance(orbitDataClass, issuedBy, context);
-	}
+    public static synchronized IQueueManagement getQueueManagementApi(String issuedBy, CamelContext context) {
+        return (IQueueManagement) createInstance(queueManagementClass, issuedBy, context);
+    }
 
-	static protected synchronized Object createInstance(String clazz, String issuedBy, CamelContext context) {
-		Object api = null;
-		
-		try {
-			api = Class.forName(clazz).getConstructor(String.class, CamelContext.class).newInstance(issuedBy, context);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return api;
-	}
+    public static synchronized IPartManager getPartManagerApi(String issuedBy, CamelContext context) {
+        return (IPartManager) createInstance(partmanagerClass, issuedBy, context);
+    }
 
+    public static synchronized IArchiveManagement getArchiveManagerApi(String issuedBy, CamelContext context) {
+        return (IArchiveManagement) createInstance(archiveManagerClass, issuedBy, context);
+    }
+
+    public static synchronized IPointingData getOrbitDataApi(String issuedBy, CamelContext context) {
+        return (IPointingData) createInstance(orbitDataClass, issuedBy, context);
+    }
+
+    protected static synchronized Object createInstance(String clazz, String issuedBy, CamelContext context) {
+        Object api = null;
+        try {
+            api = Class.forName(clazz).getConstructor(String.class, CamelContext.class).newInstance(issuedBy, context);
+        }
+        catch (Exception e) {
+            LOG.error("Failed to create new instance of class {}", clazz, e);
+        }
+        return api;
+    }
 }

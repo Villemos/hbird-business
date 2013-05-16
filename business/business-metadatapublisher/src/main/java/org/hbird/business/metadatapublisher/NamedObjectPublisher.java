@@ -88,5 +88,14 @@ public class NamedObjectPublisher {
                 api.publish(object);
             }
         }
+
+        LOG.debug("Publisher finished; disposing IPublish object in '{}'...", name);
+        try {
+            api.dispose();
+            LOG.info("IPublisher disposed in '{}'. NamedObjectPublisher should stop now", name);
+        }
+        catch (Exception e) {
+            LOG.error("Failed to dispose IPublisher in '{}'", name, e);
+        }
     }
 }

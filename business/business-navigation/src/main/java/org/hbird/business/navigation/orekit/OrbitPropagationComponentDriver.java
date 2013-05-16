@@ -32,26 +32,39 @@
  */
 package org.hbird.business.navigation.orekit;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPublish;
 import org.hbird.business.core.SoftwareComponentDriver;
+import org.hbird.business.core.naming.DefaultNaming;
+import org.hbird.business.core.naming.INaming;
 import org.hbird.business.navigation.OrbitPropagationComponent;
 
 /**
  * @author Gert Villemos
- *
+ * 
  */
 public class OrbitPropagationComponentDriver extends SoftwareComponentDriver {
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
-	 */
-	@Override
-	protected void doConfigure() {
-		
-		OrbitPropagationComponent com = (OrbitPropagationComponent) entity;
-		OrbitPropagationBean bean = new OrbitPropagationBean(com);
-		
+    /**
+     * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
+     */
+    @Override
+    protected void doConfigure() {
+
+        OrbitPropagationComponent com = (OrbitPropagationComponent) entity;
+        String id = com.getID();
+        CamelContext camelContext = com.getContext();
+
+        IDataAccess dao = ApiFactory.getDataAccessApi(id, camelContext);
+        IPublish publish = ApiFactory.getPublishApi(id, camelContext);
+        INaming naming = new DefaultNaming();
+
+        OrbitPropagationBean bean = new OrbitPropagationBean(com, dao, publish, naming);
+
         ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute");
         addInjectionRoute(route);
-	}
+    }
 }

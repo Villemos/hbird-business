@@ -56,15 +56,15 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
     protected long endTime;
 
     /** The location that contact has been established /lost with. */
-    protected String groundStationId;
+    protected final String groundStationId;
 
     /** The satellite that contact has been established /lost with. */
-    protected String satelliteId;
+    protected final String satelliteId;
 
     /** ID of calculation source. Eg ID of TLE. */
     protected String derivedFromId;
 
-    protected long orbitNumber;
+    protected final long orbitNumber;
 
     protected boolean inSunLigth;
 
@@ -96,9 +96,28 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
      * @param location The location to which contact has been established / lost.
      * @param satelliteId The satellite to which contact has been established / lost.
      */
-    public LocationContactEvent(String ID) {
-        super(ID, LocationContactEvent.class.getSimpleName());
+    public LocationContactEvent(String groundStationId, String satelliteId, long orbitNumber) {
+        super(new StringBuilder()
+                .append(groundStationId)
+                .append(INSTANCE_ID_SEPARATOR)
+                .append(satelliteId)
+                .toString(), LocationContactEvent.class.getSimpleName());
+        this.groundStationId = groundStationId;
+        this.satelliteId = satelliteId;
+        this.orbitNumber = orbitNumber;
         setDescription(DESCRIPTION);
+    }
+
+    /**
+     * @see org.hbird.exchange.core.EntityInstance#getInstanceID()
+     */
+    @Override
+    public String getInstanceID() {
+        return new StringBuilder()
+                .append(ID)
+                .append(INSTANCE_ID_SEPARATOR)
+                .append(orbitNumber)
+                .toString();
     }
 
     @Override
@@ -259,14 +278,6 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
     }
 
     /**
-     * @see org.hbird.exchange.interfaces.IDerivedFrom#getDerivedFrom()
-     */
-    @Override
-    public String getDerivedFrom() {
-        return derivedFromId;
-    }
-
-    /**
      * @return the satelliteStateAtStart
      */
     public OrbitalState getSatelliteStateAtStart() {
@@ -283,6 +294,7 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
     /**
      * @return the derivedFromId
      */
+    @Override
     public String getDerivedFromId() {
         return derivedFromId;
     }
@@ -308,31 +320,10 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
         this.endTime = endTime;
     }
 
-    /**
-     * @param groundStationId the groundStationId to set
-     */
-    public void setGroundStationId(String groundStationId) {
-        this.groundStationId = groundStationId;
-    }
-
-    /**
-     * @param satelliteId the satelliteId to set
-     */
-    public void setSatelliteId(String satelliteId) {
-        this.satelliteId = satelliteId;
-    }
-
-    /**
-     * @param orbitNumber the orbitNumber to set
-     */
-    public void setOrbitNumber(long orbitNumber) {
-        this.orbitNumber = orbitNumber;
-    }
-
     @Override
     public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-        builder.append("eventId", getID());
+        builder.append("eventId", getInstanceID());
         builder.append("timestamp", getTimestamp());
         builder.append("start", Dates.toDefaultDateFormat(startTime));
         builder.append("end", Dates.toDefaultDateFormat(endTime));

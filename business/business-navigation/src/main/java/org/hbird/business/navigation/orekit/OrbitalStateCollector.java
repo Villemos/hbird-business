@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.business.api.IPublish;
+import org.hbird.business.core.naming.INaming;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.orekit.errors.PropagationException;
 import org.orekit.propagation.SpacecraftState;
@@ -36,7 +37,9 @@ import org.orekit.propagation.sampling.OrekitFixedStepHandler;
  */
 public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
-    private static final long serialVersionUID = 7292599962670447718L;
+    private static final long serialVersionUID = 360477995422051510L;
+
+    public static final String ORBITAL_STATE = "orbitalstate";
 
     protected final String satelliteId;
 
@@ -44,12 +47,15 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
     protected List<OrbitalState> states = new ArrayList<OrbitalState>();
 
-    protected IPublish publisher = null;
+    protected IPublish publisher;
 
-    public OrbitalStateCollector(String satelliteId, String derivedFrom, IPublish publisher) {
+    protected final INaming naming;
+
+    public OrbitalStateCollector(String satelliteId, String derivedFrom, IPublish publisher, INaming naming) {
         this.satelliteId = satelliteId;
         this.derivedFrom = derivedFrom;
         this.publisher = publisher;
+        this.naming = naming;
     }
 
     /**
@@ -58,15 +64,14 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
      */
     @Override
     public void handleStep(SpacecraftState currentState, boolean isLast) throws PropagationException {
-
         OrbitalState state = NavigationUtilities.toOrbitalState(currentState, satelliteId, derivedFrom);
-        state.setID(satelliteId + "/orbitalstate");
+        String id = naming.buildId(satelliteId, ORBITAL_STATE);
+        state.setID(id);
 
         states.add(state);
         if (publisher != null) {
             publisher.publish(state);
         }
-
     }
 
     public List<OrbitalState> getDataSet() {

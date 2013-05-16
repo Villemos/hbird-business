@@ -18,9 +18,9 @@ package org.hbird.exchange.interfaces;
 
 /**
  * @author Admin
- *
+ * 
  */
 public interface IDerivedFrom {
 
-	public String getDerivedFrom();
+    public String getDerivedFromId();
 }

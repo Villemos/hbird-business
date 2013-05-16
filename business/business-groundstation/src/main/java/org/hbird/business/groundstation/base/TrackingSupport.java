@@ -20,11 +20,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
-import org.hbird.business.navigation.orekit.NavigationUtilities;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandBase;
 import org.hbird.exchange.groundstation.GroundStation;
@@ -56,7 +54,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
     protected final IPointingDataOptimizer<C> optimizer;
 
     protected IPointingData orbitDataCalculator;
-    
+
     /**
      * @param configuration
      * @param failOldRequests
@@ -122,7 +120,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
 
         List<PointingData> pointingData = null;
         try {
-        	pointingData = orbitDataCalculator.calculateContactData(contact, groundStation, configuration.getCommandInterval());
+            pointingData = orbitDataCalculator.calculateContactData(contact, groundStation, configuration.getCommandInterval());
         }
         catch (Exception e) {
             LOG.error("Failed to calculate pointing data for the overpass; ground station: {}; satellite: {}; over pass start time: {}; Exception: ",

@@ -4,6 +4,7 @@ import org.apache.commons.math.geometry.Vector3D;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.navigation.GeoLocation;
 import org.hbird.exchange.navigation.OrbitalState;
+import org.orekit.bodies.CelestialBodyFactory;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
 import org.orekit.frames.LocalOrbitalFrame;
@@ -88,7 +89,14 @@ public class NavigationUtilities {
         result.setPosition(position);
         result.setVelocity(velocity);
         result.setMomentum(momentum);
-        result.setDerivedFrom(derivedFrom);
+        result.setDerivedFromId(derivedFrom);
+
+        try {
+            result.setInSunLight(inSunLight(state));
+        }
+        catch (OrekitException e) {
+            LOG.error("Failed to calculate inSunLight from the SpaceCraftState", e);
+        }
 
         try {
             GeoLocation geoLocation = toGeoLocation(state);
@@ -97,6 +105,10 @@ public class NavigationUtilities {
         catch (OrekitException e) {
             LOG.error("Failed to calculate GeoLocation from the SpaceCraftState", e);
         }
+
+        // TODO - 16.05.2013, kimmell - add range
+        // result.setRange(range);
+
         return result;
     }
 
@@ -161,5 +173,23 @@ public class NavigationUtilities {
                 + tle.getMeanAnomaly() / (Math.PI * 2))
                 + tle.getRevolutionNumberAtEpoch() - 1);
         return orbitNum;
+    }
+
+    public static boolean inSunLight(SpacecraftState s) throws OrekitException {
+        return calculateEclipse(s) > 0.0D;
+    }
+
+    public static double calculateEclipse(SpacecraftState s) throws OrekitException {
+        double occultedRadius = Constants.EQUATORIAL_RADIUS_OF_SUN;
+        double occultingRadius = Constants.EQUATORIAL_RADIUS_OF_THE_EARTH;
+        final Vector3D pted = CelestialBodyFactory.getSun().getPVCoordinates(s.getDate(), s.getFrame()).getPosition();
+        final Vector3D ping = CelestialBodyFactory.getEarth().getPVCoordinates(s.getDate(), s.getFrame()).getPosition();
+        final Vector3D psat = s.getPVCoordinates().getPosition();
+        final Vector3D ps = pted.subtract(psat);
+        final Vector3D po = ping.subtract(psat);
+        final double angle = Vector3D.angle(ps, po);
+        final double rs = Math.asin(occultedRadius / ps.getNorm());
+        final double ro = Math.asin(occultingRadius / po.getNorm());
+        return angle - ro - rs;
     }
 }

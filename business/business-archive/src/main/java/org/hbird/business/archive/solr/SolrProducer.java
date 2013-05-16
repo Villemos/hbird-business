@@ -587,7 +587,7 @@ public class SolrProducer extends DefaultProducer {
             document.addField("applicableTo", ((IApplicableTo) io).getApplicableTo());
         }
         if (io instanceof IDerivedFrom) {
-            document.addField("derivedFrom", ((IDerivedFrom) io).getDerivedFrom());
+            document.addField("derivedFrom", ((IDerivedFrom) io).getDerivedFromId());
         }
 
         /** Insert the serialization. */

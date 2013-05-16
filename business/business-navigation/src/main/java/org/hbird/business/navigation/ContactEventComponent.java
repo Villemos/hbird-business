@@ -37,33 +37,28 @@ public class ContactEventComponent extends NavigationComponent {
     public static final String DEFAULT_DRIVER = ContactEventComponentDriver.class.getName();
 
     /** The locations for which to calculate contact events. */
-    protected List<String> locations = null;
-    
-	/**
-	 * Default constructor.
-	 */
-	public ContactEventComponent(String ID) {
-		super(ID, DEFAULT_NAME);
-		setDescription(DEFAULT_DESCRIPTION);
-		setDriverName(DEFAULT_DRIVER);
-	}
+    protected List<String> locations = new ArrayList<String>();
 
-	/**
-	 * @return the locations
-	 */
-	public List<String> getLocations() {
-		return locations;
-	}
+    /**
+     * Default constructor.
+     */
+    public ContactEventComponent(String ID) {
+        super(ID, DEFAULT_NAME);
+        setDescription(DEFAULT_DESCRIPTION);
+        setDriverName(DEFAULT_DRIVER);
+    }
 
-	/**
-	 * @param locations the locations to set
-	 */
-	public void setLocations(List<String> locations) {
-		this.locations = locations;
-	}
-	
-	public void setLocation(String location) {
-		this.locations = new ArrayList<String>();
-		locations.add(location);
-	}
+    /**
+     * @return the locations
+     */
+    public List<String> getLocations() {
+        return locations;
+    }
+
+    /**
+     * @param locations the locations to set
+     */
+    public void setLocations(List<String> locations) {
+        this.locations = locations;
+    }
 }

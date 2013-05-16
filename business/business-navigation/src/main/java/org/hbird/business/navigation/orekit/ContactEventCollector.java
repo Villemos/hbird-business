@@ -119,16 +119,23 @@ public class ContactEventCollector extends ElevationDetector {
         TLE tle = new TLE(tleParameters.getTleLine1(), tleParameters.getTleLine2());
         long orbitNumber = NavigationUtilities.calculateOrbitNumber(tle, startDate);
         String tleInstanceId = tleParameters.getInstanceID();
-        LocationContactEvent event = new LocationContactEvent(groundStationId + "/" + satelliteId);
+        LocationContactEvent event = new LocationContactEvent(groundStationId, satelliteId, orbitNumber);
         event.setTimestamp(startTime);
-        event.setSatelliteId(satelliteId);
-        event.setGroundStationId(groundStationId);
         event.setDerivedFromId(tleInstanceId);
         event.setStartTime(startTime);
         event.setEndTime(endTime);
-        event.setOrbitNumber(orbitNumber);
-
         event.setSatelliteStateAtStart(NavigationUtilities.toOrbitalState(startState, satelliteId, tleInstanceId));
+        // TODO - 16.05.2013, kimmell - set missing event properties
+        // event.setAzimuth(azimuth);
+        // event.setDownlinkDoppler(downlinkDoppler);
+        // event.setDownlinkSignalLoss(downlinkSignalLoss);
+        // event.setElevation(elevation);
+        // event.setInSunLigth(inSunLigth);
+        // event.setIssuedBy(issuedBy);
+        // event.setRange(range);
+        // event.setSignalDelay(signalDelay);
+        // event.setUplinkDoppler(uplinkDoppler)
+        // event.setUplinkSignalLoss(uplinkSignalLoss);
         return event;
     }
 }

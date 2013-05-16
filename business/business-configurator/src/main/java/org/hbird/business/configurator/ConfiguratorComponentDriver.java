@@ -80,14 +80,14 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
     public void start(ConfiguratorComponent part) throws Exception {
         this.entity = part;
         CamelContext context = createContext(applicationContext);
-        LOG.info("Starting ConfiguratorComponent '{}'; CamelContext {};", new Object[] { part.getName(), context.getName() });
+        LOG.info("Starting ConfiguratorComponent '{}'; CamelContext '{}'", part.getName(), context.getName());
         try {
             context.addRoutes(this);
             context.start();
             LOG.info("ConfiguratorComponent '{}' started", part.getName());
         }
         catch (Exception e) {
-            LOG.error("Failed to start ConfiguatorComponentDriver", e);
+            LOG.error("Failed to start ConfiguatorComponentDriver for '{}'", part.getID(), e);
         }
     }
 
@@ -117,7 +117,8 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
         String name = entity.getName();
         String driverName = entity.getDriverName();
         entity.setContext(context);
-        LOG.info("Received start request for IStartableEntity ID={}, name={}. Will use driver '{}' and CamelContex '{}'.", new Object[] { id, name, driverName,
+        LOG.info("Received start request for IStartableEntity ID: '{}', name: '{}'. Will use driver '{}' and CamelContex '{}'.", new Object[] { id, name,
+                driverName,
                 context.getName() });
 
         if (components.containsKey(id)) {

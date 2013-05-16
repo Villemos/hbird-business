@@ -1,5 +1,6 @@
 package org.hbird.business.tracking.quartz;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
@@ -23,11 +24,12 @@ public class TrackingComponentDriver extends SoftwareComponentDriver {
 
         String name = entity.getName();
         TrackingDriverConfiguration config = ((TrackingComponent) entity).getConfiguration();
-        IDataAccess dao = ApiFactory.getDataAccessApi(name);
+        CamelContext context = entity.getContext();
+        IDataAccess dao = ApiFactory.getDataAccessApi(name, context);
         EntityCache<Satellite> satelliteCache = new EntityCache<Satellite>(new SatelliteResolver(dao));
         EntityCache<TleOrbitalParameters> tleCache = new EntityCache<TleOrbitalParameters>(new TleResolver(dao));
 
-        ProducerTemplate producer = getContext().createProducerTemplate();
+        ProducerTemplate producer = context.createProducerTemplate();
 
         Scheduler scheduler;
         try {

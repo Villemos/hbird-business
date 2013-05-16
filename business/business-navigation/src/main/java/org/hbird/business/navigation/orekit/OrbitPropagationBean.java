@@ -16,29 +16,37 @@
  */
 package org.hbird.business.navigation.orekit;
 
-import org.hbird.business.navigation.OrbitPropagationComponent;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPublish;
+import org.hbird.business.core.naming.INaming;
+import org.hbird.business.navigation.NavigationComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author Gert Villemos
- *
+ * 
  */
 public class OrbitPropagationBean extends NavigationBean {
 
-	protected static final Logger LOG = LoggerFactory.getLogger(OrbitPropagationBean.class);
+    /**
+     * @param configuration
+     * @param dao
+     * @param publisher
+     * @param naming
+     */
+    public OrbitPropagationBean(NavigationComponent configuration, IDataAccess dao, IPublish publisher, INaming naming) {
+        super(configuration, dao, publisher, naming);
+    }
 
-	/**
-	 * @param configuration
-	 */
-	public OrbitPropagationBean(OrbitPropagationComponent configuration) {
-		super(configuration);
-	}
+    protected static final Logger LOG = LoggerFactory.getLogger(OrbitPropagationBean.class);
 
-
-	/* (non-Javadoc)
-	 * @see org.hbird.business.navigation.NavigationBean#prePropagation()
-	 */
-	@Override
-	public void preparePropagator() {}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.business.navigation.NavigationBean#prePropagation()
+     */
+    @Override
+    public void preparePropagator() {
+    }
 }

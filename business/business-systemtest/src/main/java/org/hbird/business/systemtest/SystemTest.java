@@ -279,15 +279,15 @@ public abstract class SystemTest {
         gsNewYork.addAntenna(antenna);
         //
         estcubePropagationComponent = new OrbitPropagationComponent("ESTCUBE_ORBIT_PROPAGATOR");
-        estcubePropagationComponent.setSatellite(estcube1.getID());
+        estcubePropagationComponent.setSatelliteId(estcube1.getID());
 
         List<String> locations = new ArrayList<String>();
         locations.add(es5ec.getName());
         locations.add(gsDarmstadt.getName());
         estcubeLocationComponent = new ContactEventComponent("ESTCUBE_ES5EC_CONTACT_PREDICTOR");
-        estcubeLocationComponent.setSatellite(estcube1.getID());
+        estcubeLocationComponent.setSatelliteId(estcube1.getID());
         estcubeLocationComponent.setLocations(locations);
-        estcubeLocationComponent.setSatellite(estcube1.getID());
+        estcubeLocationComponent.setSatelliteId(estcube1.getID());
         // registerPart(estcubePropagationComponent);
 
     }

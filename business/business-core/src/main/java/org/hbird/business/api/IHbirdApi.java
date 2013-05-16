@@ -18,16 +18,17 @@ package org.hbird.business.api;
 
 /**
  * @author Gert Villemos
- *
+ * 
  */
 public interface IHbirdApi {
 
-	public String getIssuedBy();
-	
-	public void setIssuedBy(String issuedBy);
-	
-	public String getDestination();
-	
-	public void setDestination(String destination);
-	
+    public String getIssuedBy();
+
+    public void setIssuedBy(String issuedBy);
+
+    public String getDestination();
+
+    public void setDestination(String destination);
+
+    public void dispose() throws Exception;
 }

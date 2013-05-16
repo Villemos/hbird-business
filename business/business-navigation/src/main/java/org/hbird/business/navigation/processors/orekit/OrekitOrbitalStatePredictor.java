@@ -1,0 +1,78 @@
+/**
+ * Licensed to the Hummingbird Foundation (HF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The HF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.hbird.business.navigation.processors.orekit;
+
+import java.util.Date;
+import java.util.List;
+
+import org.apache.camel.Handler;
+import org.hbird.business.api.IPublish;
+import org.hbird.business.core.naming.INaming;
+import org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration;
+import org.hbird.business.navigation.orekit.IPropagatorProvider;
+import org.hbird.business.navigation.orekit.OrbitalStateCollector;
+import org.hbird.business.navigation.request.PredictionRequest;
+import org.hbird.exchange.navigation.OrbitalState;
+import org.hbird.exchange.navigation.TleOrbitalParameters;
+import org.orekit.errors.OrekitException;
+import org.orekit.propagation.Propagator;
+import org.orekit.time.AbsoluteDate;
+import org.orekit.time.TimeScalesFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ *
+ */
+public class OrekitOrbitalStatePredictor {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OrekitContactPredictor.class);
+
+    private final IPublish publisher;
+    private final IPropagatorProvider propagatorProvider;
+    private final INaming naming;
+
+    public OrekitOrbitalStatePredictor(IPropagatorProvider propagatorProvider, IPublish publisher, INaming naming) {
+        this.propagatorProvider = propagatorProvider;
+        this.publisher = publisher;
+        this.naming = naming;
+    }
+
+    @Handler
+    public PredictionRequest<OrbitalStatePredictionConfiguration> predict(PredictionRequest<OrbitalStatePredictionConfiguration> request)
+            throws OrekitException {
+        Propagator propagator = propagatorProvider.getPropagator(request);
+        OrbitalStatePredictionConfiguration conf = request.getConfiguration();
+        TleOrbitalParameters tleParameters = request.getTleParameters();
+        String satelliteId = conf.getSatelliteId();
+        double predictionStep = conf.getPredictionStep() / 1000.0D; // from milliseconds to seconds
+        OrbitalStateCollector collector = new OrbitalStateCollector(satelliteId, tleParameters.getInstanceID(), publisher, naming);
+        propagator.setMasterMode(predictionStep, collector);
+
+        long end = request.getEndTime();
+        AbsoluteDate endDate = new AbsoluteDate(new Date(end), TimeScalesFactory.getUTC());
+        LOG.debug("Predicting orbital states for the satelliteId '{}'", satelliteId);
+        long startPredcition = System.currentTimeMillis();
+        propagator.propagate(endDate);
+        long endPredcition = System.currentTimeMillis();
+        List<OrbitalState> result = collector.getDataSet();
+        request.setResult(result);
+        LOG.debug("Prediciont completed in {} ms; calculated {} OrbitalStates", (endPredcition - startPredcition), result.size());
+
+        return request;
+    }
+}

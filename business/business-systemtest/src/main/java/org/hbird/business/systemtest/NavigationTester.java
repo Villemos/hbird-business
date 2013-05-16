@@ -66,15 +66,15 @@ public class NavigationTester extends SystemTest {
 
         /** Send a TLE request for a satellite and a subset of locations */
         OrbitPropagationComponent orbCom = new OrbitPropagationComponent("ESTCUBE_ORBIT_PROPAGATOR");
-        orbCom.setSatellite(estcube1.getID());
+        orbCom.setSatelliteId(estcube1.getID());
         orbCom.setFrom(1355385448149l);
         orbCom.setTo(1355385448149l + 2 * 60 * 60 * 1000);
         orbCom.setExecutionDelay(0l);
 
         ContactEventComponent conCom = new ContactEventComponent("ESTCUBE_ES5EC_CONTACT_PREDICTOR");
-        estcubeLocationComponent.setSatellite(estcube1.getID());
+        estcubeLocationComponent.setSatelliteId(estcube1.getID());
         conCom.setLocations(locations);
-        conCom.setSatellite(estcube1.getID());
+        conCom.setSatelliteId(estcube1.getID());
         orbCom.setFrom(1355385448149l);
         orbCom.setTo(1355385448149l + 2 * 60 * 60 * 1000);
         orbCom.setExecutionDelay(0l);
