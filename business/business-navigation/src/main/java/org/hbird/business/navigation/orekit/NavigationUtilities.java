@@ -58,7 +58,7 @@ public class NavigationUtilities {
 
         Vector3D pvcPosition = state.getOrbit().getPVCoordinates().getPosition();
         Vector3D pvcVelocity = state.getOrbit().getPVCoordinates().getVelocity();
-        Vector3D pvcMomoentum = state.getOrbit().getPVCoordinates().getMomentum();
+        Vector3D pvcMomentum = state.getOrbit().getPVCoordinates().getMomentum();
 
         /* Create position vector. */
         D3Vector position = new D3Vector("", "Position");
@@ -77,9 +77,9 @@ public class NavigationUtilities {
         /* Create momentum vector. */
         D3Vector momentum = new D3Vector("", "Momentum");
         momentum.setDescription("The orbital momentum of the satellite at the given time.");
-        momentum.setP1(pvcMomoentum.getX());
-        momentum.setP2(pvcMomoentum.getY());
-        momentum.setP3(pvcMomoentum.getZ());
+        momentum.setP1(pvcMomentum.getX());
+        momentum.setP2(pvcMomentum.getY());
+        momentum.setP3(pvcMomentum.getZ());
 
         OrbitalState result = new OrbitalState(satelliteId + "/OrbitalState", OrbitalState.class.getSimpleName());
         result.setDescription("Orbital state of satellite");
