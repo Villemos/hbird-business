@@ -20,6 +20,7 @@ import java.lang.management.ManagementFactory;
 import java.net.UnknownHostException;
 
 import org.apache.camel.Handler;
+import org.hbird.business.api.IdBuilder;
 import org.hbird.exchange.core.Parameter;
 
 /**
@@ -51,9 +52,11 @@ public class HeapMemoryUsageMonitor extends Monitor {
 
     public static final String PARAMETER_RELATIVE_NAME_HEAP_MEMORY = "Heap Memory";
     public static final String PARAMETER_RELATIVE_NAME_NON_HEAP_MEMORY = "Non Heap Memory";
+    public static final String DESCRIPTION_NON_HEAP_MEMORY_USAGE = "The non heap memory usage";
+    public static final String DESCRIPTION_HEAP_MEMORY_USAGE = "The heap memory usage";
 
-    public HeapMemoryUsageMonitor(String componentId) {
-        super(componentId);
+    public HeapMemoryUsageMonitor(String componentId, IdBuilder idBuilder) {
+        super(componentId, idBuilder);
     }
 
     /**
@@ -66,17 +69,20 @@ public class HeapMemoryUsageMonitor extends Monitor {
     @Handler
     public Parameter[] check() {
 
-        Parameter parameter = new Parameter(naming.buildId(componentId, PARAMETER_RELATIVE_NAME_HEAP_MEMORY), PARAMETER_RELATIVE_NAME_HEAP_MEMORY);
-    	parameter.setDescription("The heap memory usage");
-    	parameter.setValue(ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());
-    	parameter.setUnit("Byte");
-    	parameter.setIssuedBy(componentId);
+        Parameter parameter = new Parameter(idBuilder.buildID(componentId, PARAMETER_RELATIVE_NAME_HEAP_MEMORY), PARAMETER_RELATIVE_NAME_HEAP_MEMORY);
+        parameter.setDescription(DESCRIPTION_HEAP_MEMORY_USAGE);
+        parameter.setValue(ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());
+        parameter.setUnit(UNIT_BYTE);
+        parameter.setIssuedBy(componentId);
+        parameter.setApplicableTo(componentId);
 
-        Parameter nonHeap = new Parameter(naming.buildId(componentId, PARAMETER_RELATIVE_NAME_NON_HEAP_MEMORY), PARAMETER_RELATIVE_NAME_NON_HEAP_MEMORY);
-        nonHeap.setDescription("The nom heap memory usage");
+        Parameter nonHeap = new Parameter(idBuilder.buildID(componentId, PARAMETER_RELATIVE_NAME_NON_HEAP_MEMORY), PARAMETER_RELATIVE_NAME_NON_HEAP_MEMORY);
+        nonHeap.setDescription(DESCRIPTION_NON_HEAP_MEMORY_USAGE);
         nonHeap.setValue(ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage().getUsed());
-        nonHeap.setUnit("Byte");
+        nonHeap.setUnit(UNIT_BYTE);
+        nonHeap.setIssuedBy(componentId);
+        nonHeap.setApplicableTo(componentId);
 
-    	return new Parameter[] {parameter, nonHeap};
+        return new Parameter[] { parameter, nonHeap };
     }
 }

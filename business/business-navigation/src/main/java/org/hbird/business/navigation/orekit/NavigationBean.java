@@ -20,7 +20,7 @@ import java.util.Date;
 
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublish;
-import org.hbird.business.core.naming.INaming;
+import org.hbird.business.api.IdBuilder;
 import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.errors.OrekitException;
@@ -54,18 +54,15 @@ public abstract class NavigationBean {
 
     protected final IPublish publisher;
 
-    protected final INaming naming;
+    protected final IdBuilder idBuilder;
 
     protected OrbitalStateCollector orbitalStateCollector;
 
-    public NavigationBean(NavigationComponent configuration, IDataAccess dao, IPublish publisher, INaming naming) {
+    public NavigationBean(NavigationComponent configuration, IDataAccess dao, IPublish publisher, IdBuilder idBuilder) {
         this.conf = configuration;
         this.dao = dao;
         this.publisher = publisher;
-        this.naming = naming;
-
-        // dao = ApiFactory.getDataAccessApi(conf.getName(), conf.getContext());
-        // publisher = ApiFactory.getPublishApi(conf.getName(), conf.getContext());
+        this.idBuilder = idBuilder;
     }
 
     public synchronized void execute() throws OrekitException {
@@ -133,7 +130,7 @@ public abstract class NavigationBean {
             PVCoordinates initialOrbitalState = TLEPropagator.selectExtrapolator(tle).getPVCoordinates(startDate);
             Orbit initialOrbit = new KeplerianOrbit(initialOrbitalState, Constants.FRAME, startDate, Constants.MU);
 
-            orbitalStateCollector = new OrbitalStateCollector(conf.getSatelliteId(), tleParameters.getInstanceID(), publisher, naming);
+            orbitalStateCollector = new OrbitalStateCollector(conf.getSatelliteId(), tleParameters.getInstanceID(), publisher, idBuilder);
 
             propagator = new KeplerianPropagator(initialOrbit);
             propagator.setMasterMode(conf.getStepSize(), orbitalStateCollector);

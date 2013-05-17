@@ -22,9 +22,8 @@ import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
-import org.hbird.business.core.naming.DefaultNaming;
-import org.hbird.business.core.naming.INaming;
 import org.hbird.business.navigation.ContactEventComponent;
 
 /**
@@ -44,9 +43,9 @@ public class ContactEventComponentDriver extends SoftwareComponentDriver {
 
         IDataAccess dao = ApiFactory.getDataAccessApi(id, camelContext);
         IPublish publish = ApiFactory.getPublishApi(id, camelContext);
-        INaming naming = new DefaultNaming();
+        IdBuilder idBuilder = ApiFactory.getIdBuilder();
         ICatalogue catalogue = ApiFactory.getCatalogueApi(id, camelContext);
-        ContactEventBean bean = new ContactEventBean(com, dao, publish, naming, catalogue);
+        ContactEventBean bean = new ContactEventBean(com, dao, publish, idBuilder, catalogue);
 
         ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute");
         addInjectionRoute(route);

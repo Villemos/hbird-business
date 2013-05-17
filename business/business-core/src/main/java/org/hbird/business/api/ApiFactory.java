@@ -37,8 +37,15 @@ public class ApiFactory {
     protected static String partmanagerClass = System.getProperty("hbird.partmanager.class", "org.hbird.business.archive.api.PartManager");
     protected static String archiveManagerClass = System.getProperty("hbird.archivemanager.class", "org.hbird.business.archive.api.ArchiveManagement");
     protected static String orbitDataClass = System.getProperty("hbird.orbitdata.class", "org.hbird.business.navigation.orekit.OrbitDataApi");
+    protected static String idBuilderClass = System.getProperty("hbird.idbuilder.class", "org.hbird.business.api.impl.DefaultIdBuilder");
 
     private static final Logger LOG = LoggerFactory.getLogger(ApiFactory.class);
+
+    /**
+     * Default private constructor to avoid instance creation.
+     */
+    private ApiFactory() {
+    }
 
     public static synchronized IDataAccess getDataAccessApi(String issuedBy) {
         return (IDataAccess) createInstance(dataAccessClass, issuedBy);
@@ -68,19 +75,6 @@ public class ApiFactory {
         return (IPointingData) createInstance(orbitDataClass, issuedBy);
     }
 
-    protected static synchronized Object createInstance(String clazz, String issuedBy) {
-        Object api = null;
-
-        try {
-            api = Class.forName(clazz).getConstructor(String.class).newInstance(issuedBy);
-        }
-        catch (Exception e) {
-            LOG.error("Failed to create new instance of {}", clazz, e);
-        }
-
-        return api;
-    }
-
     public static synchronized IDataAccess getDataAccessApi(String issuedBy, CamelContext context) {
         return (IDataAccess) createInstance(dataAccessClass, issuedBy, context);
     }
@@ -107,6 +101,32 @@ public class ApiFactory {
 
     public static synchronized IPointingData getOrbitDataApi(String issuedBy, CamelContext context) {
         return (IPointingData) createInstance(orbitDataClass, issuedBy, context);
+    }
+
+    public static synchronized IdBuilder getIdBuilder() {
+        return (IdBuilder) createInstance(idBuilderClass);
+    }
+
+    protected static synchronized Object createInstance(String clazz) {
+        Object api = null;
+        try {
+            api = Class.forName(clazz).newInstance();
+        }
+        catch (Exception e) {
+            LOG.error("Failed to create new instance of {}", clazz, e);
+        }
+        return api;
+    }
+
+    protected static synchronized Object createInstance(String clazz, String issuedBy) {
+        Object api = null;
+        try {
+            api = Class.forName(clazz).getConstructor(String.class).newInstance(issuedBy);
+        }
+        catch (Exception e) {
+            LOG.error("Failed to create new instance of {}", clazz, e);
+        }
+        return api;
     }
 
     protected static synchronized Object createInstance(String clazz, String issuedBy, CamelContext context) {

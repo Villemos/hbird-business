@@ -21,7 +21,7 @@ import java.util.List;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublish;
-import org.hbird.business.core.naming.INaming;
+import org.hbird.business.api.IdBuilder;
 import org.hbird.business.navigation.ContactEventComponent;
 import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.core.D3Vector;
@@ -42,12 +42,11 @@ public class ContactEventBean extends NavigationBean {
      * @param configuration
      * @param dao
      * @param publisher
-     * @param naming
+     * @param idBuilder
      */
-    public ContactEventBean(NavigationComponent configuration, IDataAccess dao, IPublish publisher, INaming naming, ICatalogue catalogue) {
-        super(configuration, dao, publisher, naming);
+    public ContactEventBean(NavigationComponent configuration, IDataAccess dao, IPublish publisher, IdBuilder idBuilder, ICatalogue catalogue) {
+        super(configuration, dao, publisher, idBuilder);
         this.catalogue = catalogue;
-        // this.catalogue = ApiFactory.getCatalogueApi(conf.getName(), conf.getContext());
     }
 
     /**

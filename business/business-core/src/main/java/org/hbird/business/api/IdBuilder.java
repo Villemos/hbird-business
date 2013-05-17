@@ -14,12 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.core.naming;
+package org.hbird.business.api;
 
 /**
- *
+ * Interface to provide ID building functionality.
+ * For example can be used to build dynamic parameter ID if applicable Entity ID and parameter name are known.
+ * 
  */
-public interface INaming {
+public interface IdBuilder {
 
-    public String buildId(String base, String name);
+    /**
+     * Builds dynamic ID.<br />
+     * 
+     * Top level ID is ID of some Entity the new ID should be related. Relative name is relative part of the new ID.
+     * 
+     * @param base top level ID
+     * @param name relative name
+     * @return new ID from top level ID and relative name
+     */
+    public String buildID(String base, String name);
 }

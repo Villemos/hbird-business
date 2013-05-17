@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.apache.camel.Handler;
 import org.hbird.business.api.IPublish;
-import org.hbird.business.core.naming.INaming;
+import org.hbird.business.api.IdBuilder;
 import org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration;
 import org.hbird.business.navigation.orekit.IPropagatorProvider;
 import org.hbird.business.navigation.orekit.OrbitalStateCollector;
@@ -44,12 +44,12 @@ public class OrekitOrbitalStatePredictor {
 
     private final IPublish publisher;
     private final IPropagatorProvider propagatorProvider;
-    private final INaming naming;
+    private final IdBuilder idBuilder;
 
-    public OrekitOrbitalStatePredictor(IPropagatorProvider propagatorProvider, IPublish publisher, INaming naming) {
+    public OrekitOrbitalStatePredictor(IPropagatorProvider propagatorProvider, IPublish publisher, IdBuilder idBuilder) {
         this.propagatorProvider = propagatorProvider;
         this.publisher = publisher;
-        this.naming = naming;
+        this.idBuilder = idBuilder;
     }
 
     @Handler
@@ -60,7 +60,7 @@ public class OrekitOrbitalStatePredictor {
         TleOrbitalParameters tleParameters = request.getTleParameters();
         String satelliteId = conf.getSatelliteId();
         double predictionStep = conf.getPredictionStep() / 1000.0D; // from milliseconds to seconds
-        OrbitalStateCollector collector = new OrbitalStateCollector(satelliteId, tleParameters.getInstanceID(), publisher, naming);
+        OrbitalStateCollector collector = new OrbitalStateCollector(satelliteId, tleParameters.getInstanceID(), publisher, idBuilder);
         propagator.setMasterMode(predictionStep, collector);
 
         long end = request.getEndTime();

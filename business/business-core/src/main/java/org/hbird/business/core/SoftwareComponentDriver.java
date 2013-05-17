@@ -66,7 +66,7 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
         if (entity != null) {
             String id = entity.getID();
             long heartbeat = entity.getHeartbeat();
-            LOG.info("Starting driver for part '{}'.", id);
+            LOG.info("Starting driver for '{}'.", id);
 
             /** Setup the component specific services. */
             doConfigure();
@@ -76,7 +76,7 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
             addInjectionRoute(route);
         }
         else {
-            LOG.error("No part has been defined for this driver. Cannot start nothing...");
+            LOG.error("No entity has been defined for this driver. Cannot start nothing ...");
         }
 
         LOG.info("Configuration done in {}", getClass().getSimpleName());

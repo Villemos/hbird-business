@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.business.api.IPublish;
-import org.hbird.business.core.naming.INaming;
+import org.hbird.business.api.IdBuilder;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.orekit.errors.PropagationException;
 import org.orekit.propagation.SpacecraftState;
@@ -49,13 +49,13 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
     protected IPublish publisher;
 
-    protected final INaming naming;
+    protected final IdBuilder idBuilder;
 
-    public OrbitalStateCollector(String satelliteId, String derivedFrom, IPublish publisher, INaming naming) {
+    public OrbitalStateCollector(String satelliteId, String derivedFrom, IPublish publisher, IdBuilder idBuilder) {
         this.satelliteId = satelliteId;
         this.derivedFrom = derivedFrom;
         this.publisher = publisher;
-        this.naming = naming;
+        this.idBuilder = idBuilder;
     }
 
     /**
@@ -65,7 +65,7 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
     @Override
     public void handleStep(SpacecraftState currentState, boolean isLast) throws PropagationException {
         OrbitalState state = NavigationUtilities.toOrbitalState(currentState, satelliteId, derivedFrom);
-        String id = naming.buildId(satelliteId, ORBITAL_STATE);
+        String id = idBuilder.buildID(satelliteId, ORBITAL_STATE);
         state.setID(id);
 
         states.add(state);

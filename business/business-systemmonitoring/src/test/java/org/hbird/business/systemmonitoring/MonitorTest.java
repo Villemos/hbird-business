@@ -1,38 +1,36 @@
 package org.hbird.business.systemmonitoring;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
-import org.hbird.business.core.naming.DefaultNaming;
-import org.hbird.business.core.naming.INaming;
+import org.hbird.business.api.IdBuilder;
 import org.hbird.business.systemmonitoring.bean.Monitor;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class MonitorTest {
 
-    private INaming naming;
+    @Mock
+    private IdBuilder idBuilder;
 
     private Monitor monitor;
 
+    private InOrder inOrder;
+
     @Before
     public void setUp() throws Exception {
-        monitor = new Monitor("test");
-        naming = new DefaultNaming();
+        monitor = new Monitor("test", idBuilder);
+        inOrder = Mockito.inOrder(idBuilder);
     }
 
     @Test
-    public void testSetNaming() {
-        assertNotNull(monitor.getNaming());
-        monitor.setNaming(naming);
-        assertEquals(naming, monitor.getNaming());
-        monitor.setNaming(null);
-        assertNull(monitor.getNaming());
-    }
-
-    @Test
-    public void testGetNaming() {
-        testSetNaming();
+    public void testGetIdBuilder() {
+        assertEquals(idBuilder, monitor.getIdBuilder());
+        inOrder.verifyNoMoreInteractions();
     }
 }

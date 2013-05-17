@@ -46,10 +46,27 @@ public class SystemMonitorComponent extends StartableEntity {
     public static final String SYSTEM_MONITORING_NAME = "SystemMonitoring";
     public static final String SYSTEM_MONITORING_DESC = "Component for monitoring the system resources, such as CPU and memory usages.";
     public static final String DEFAULT_DRIVER = SystemMonitorComponentDriver.class.getName();
+    public static final long DEFAULT_MONITORING_INTERVAL = 1000 * 10;
+
+    protected long monitoringInterval = DEFAULT_MONITORING_INTERVAL;
 
     public SystemMonitorComponent(String ID) {
         super(ID, SYSTEM_MONITORING_NAME);
         setDescription(SYSTEM_MONITORING_DESC);
         setDriverName(DEFAULT_DRIVER);
+    }
+
+    /**
+     * @return the monitoringInterval
+     */
+    public long getMonitoringInterval() {
+        return monitoringInterval;
+    }
+
+    /**
+     * @param monitoringInterval the monitoringInterval to set
+     */
+    public void setMonitoringInterval(long monitoringInterval) {
+        this.monitoringInterval = monitoringInterval;
     }
 }

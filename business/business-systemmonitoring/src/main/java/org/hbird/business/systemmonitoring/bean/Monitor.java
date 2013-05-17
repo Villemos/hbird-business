@@ -16,24 +16,26 @@
  */
 package org.hbird.business.systemmonitoring.bean;
 
-import org.hbird.business.core.naming.DefaultNaming;
-import org.hbird.business.core.naming.INaming;
+import org.hbird.business.api.IdBuilder;
 
 public class Monitor {
 
+    public static final String UNIT_PERCENTAGE = "%";
+    public static final String UNIT_BYTE = "Byte";
+    public static final String UNIT_COUNT = "Count";
+    public static final String UNIT_MILLISECONDS = "ms";
+    public static final String UNIT_LOAD_AVG = "Load Avg.";
+
     protected String componentId;
 
-    protected INaming naming = new DefaultNaming();
+    protected final IdBuilder idBuilder;
 
-    public Monitor(String componentId) {
+    public Monitor(String componentId, IdBuilder idBuilder) {
         this.componentId = componentId;
+        this.idBuilder = idBuilder;
     }
 
-    public void setNaming(INaming naming) {
-        this.naming = naming;
-    }
-
-    public INaming getNaming() {
-        return this.naming;
+    public IdBuilder getIdBuilder() {
+        return this.idBuilder;
     }
 }

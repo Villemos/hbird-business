@@ -21,9 +21,8 @@ import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
-import org.hbird.business.core.naming.DefaultNaming;
-import org.hbird.business.core.naming.INaming;
 import org.hbird.business.navigation.PredictionComponent;
 import org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration;
 import org.hbird.business.navigation.processors.PredictionRequestCreator;
@@ -52,13 +51,13 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver {
         IDataAccess dao = ApiFactory.getDataAccessApi(serviceId, ctx);
         IPublish publisher = ApiFactory.getPublishApi(serviceId, ctx);
         IPropagatorProvider propagatorProvider = new KeplerianTlePropagatorProvider();
-        INaming naming = new DefaultNaming();
+        IdBuilder idBuilder = ApiFactory.getIdBuilder();
 
         // processors
         PredictionRequestCreator<OrbitalStatePredictionConfiguration> requestCreator = new PredictionRequestCreator<OrbitalStatePredictionConfiguration>(config);
         TleResolver tleResolver = new TleResolver(dao);
         TimeRangeCalulator timeRangeCalculator = new TimeRangeCalulator();
-        OrekitOrbitalStatePredictor predictor = new OrekitOrbitalStatePredictor(propagatorProvider, publisher, naming);
+        OrekitOrbitalStatePredictor predictor = new OrekitOrbitalStatePredictor(propagatorProvider, publisher, idBuilder);
         ResultExctractor extractor = new ResultExctractor();
 
         // actual route

@@ -37,9 +37,8 @@ import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
-import org.hbird.business.core.naming.DefaultNaming;
-import org.hbird.business.core.naming.INaming;
 import org.hbird.business.navigation.OrbitPropagationComponent;
 
 /**
@@ -60,7 +59,7 @@ public class OrbitPropagationComponentDriver extends SoftwareComponentDriver {
 
         IDataAccess dao = ApiFactory.getDataAccessApi(id, camelContext);
         IPublish publish = ApiFactory.getPublishApi(id, camelContext);
-        INaming naming = new DefaultNaming();
+        IdBuilder naming = ApiFactory.getIdBuilder();
 
         OrbitPropagationBean bean = new OrbitPropagationBean(com, dao, publish, naming);
 
