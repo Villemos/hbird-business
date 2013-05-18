@@ -33,56 +33,56 @@ import org.hbird.exchange.validation.Limit.eLimitType;
  */
 public class LimitCheckComponentDriver extends SoftwareComponentDriver {
 
-	@Override
-	public void doConfigure() {
+    @Override
+    public void doConfigure() {
 
-		LimitCheckComponent request = (LimitCheckComponent) entity;
-		Limit limit = request.getLimit();
+        LimitCheckComponent request = (LimitCheckComponent) entity;
+        Limit limit = request.getLimit();
 
-		String componentID = request.getID();
-		String limitValueName = componentID + "/" + "LimitValue";
-		
-		if (limit.getType() == eLimitType.Lower) {
-			createRoute(limit.getLimitOfParameter(), new LowerLimitChecker(limit), componentID, limitValueName);
-		}
-		else if (limit.getType() == eLimitType.Upper) {
-			createRoute(limit.getLimitOfParameter(), new UpperLimitChecker(limit), componentID, limitValueName);
-		}
-		else if (limit.getType() == eLimitType.Static) {
-			createRoute(limit.getLimitOfParameter(), new StaticLimitChecker(limit), componentID, limitValueName);
-		}
-		else if (limit.getType() == eLimitType.Differential) {
-			DifferentialLimitChecker checker = new DifferentialLimitChecker(limit);
-			checker.setApi(ApiFactory.getDataAccessApi(entity.getName()));
-			createRoute(limit.getLimitOfParameter(), checker, componentID, limitValueName);
-		}
+        String componentID = request.getID();
+        String limitValueName = componentID + "/" + "LimitValue";
 
-		addCommandHandler();
-	}
+        if (limit.getType() == eLimitType.Lower) {
+            createRoute(limit.getLimitOfParameter(), new LowerLimitChecker(limit), componentID, limitValueName);
+        }
+        else if (limit.getType() == eLimitType.Upper) {
+            createRoute(limit.getLimitOfParameter(), new UpperLimitChecker(limit), componentID, limitValueName);
+        }
+        else if (limit.getType() == eLimitType.Static) {
+            createRoute(limit.getLimitOfParameter(), new StaticLimitChecker(limit), componentID, limitValueName);
+        }
+        else if (limit.getType() == eLimitType.Differential) {
+            DifferentialLimitChecker checker = new DifferentialLimitChecker(limit);
+            checker.setApi(ApiFactory.getDataAccessApi(entity.getName()));
+            createRoute(limit.getLimitOfParameter(), checker, componentID, limitValueName);
+        }
 
-	/**
-	 * Method to create the limit bean and the routes that will route data into and out of the bean
-	 * 
-	 * @param parameter The name of the parameter being validated
-	 * @param limit The limit to be applied
-	 * @param componentname The name of this component
-	 * @param limitValueName The name of the value defining the limit
-	 */
-	protected void createRoute(String parameter, BaseLimitChecker limit, String componentid, String limitValueName) {
+        addCommandHandler();
+    }
 
-		/** Create the route for limit checking. */
-		ProcessorDefinition<?> route = from(StandardEndpoints.MONITORING + "?selector=" + StandardArguments.ENTITY_ID + "='" + parameter + "'")
-				.bean(limit, "processParameter");
-		addInjectionRoute(route);
+    /**
+     * Method to create the limit bean and the routes that will route data into and out of the bean
+     * 
+     * @param parameter The name of the parameter being validated
+     * @param limit The limit to be applied
+     * @param componentname The name of this component
+     * @param limitValueName The name of the value defining the limit
+     */
+    protected void createRoute(String parameter, BaseLimitChecker limit, String componentid, String limitValueName) {
 
-		/** Create the route for enabling/disabling limit checking. */
-		route = from(StandardEndpoints.MONITORING + "?selector=isStateOf='" + componentid + "'")
-				.bean(limit, "processEnabled");
-		addInjectionRoute(route);
+        /** Create the route for limit checking. */
+        ProcessorDefinition<?> route = from(StandardEndpoints.MONITORING + "?selector=" + StandardArguments.ENTITY_ID + "='" + parameter + "'")
+                .bean(limit, "processParameter");
+        addInjectionRoute(route);
 
-		/** Create the route for changing the limit value. */
-		route = from(StandardEndpoints.MONITORING + "?selector=name='" + limitValueName + "'")
-				.bean(limit, "processLimit");
-		addInjectionRoute(route);
-	}
+        /** Create the route for enabling/disabling limit checking. */
+        route = from(StandardEndpoints.MONITORING + "?selector=" + StandardArguments.APPLICABLE_TO + "='" + componentid + "'")
+                .bean(limit, "processEnabled");
+        addInjectionRoute(route);
+
+        /** Create the route for changing the limit value. */
+        route = from(StandardEndpoints.MONITORING + "?selector=" + StandardArguments.NAME + "='" + limitValueName + "'")
+                .bean(limit, "processLimit");
+        addInjectionRoute(route);
+    }
 }

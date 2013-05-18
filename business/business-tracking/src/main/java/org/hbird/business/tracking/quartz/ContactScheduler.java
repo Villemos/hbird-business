@@ -103,7 +103,7 @@ public class ContactScheduler {
     }
 
     String createGroupName(LocationContactEvent event) {
-        return String.format("%s/%s", event.getGroundStationId(), event.getSatelliteId());
+        return String.format("%s/%s", event.getGroundStationID(), event.getSatelliteID());
     }
 
     long getScheduleTime(LocationContactEvent event, TrackingDriverConfiguration config, long now) {

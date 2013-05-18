@@ -22,9 +22,9 @@ import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Binary;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Label;
 import org.hbird.exchange.core.Metadata;
-import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -34,44 +34,48 @@ import org.hbird.exchange.tasking.Task;
  * API Interface for publishing data to the system.
  * 
  * The API should be used by any element which needs to publish data that shall be distributed through
- * the hummingbird system. The API will create the data object and publish it to the underlying 
+ * the hummingbird system. The API will create the data object and publish it to the underlying
  * protocol, typically being activemq. The further distribution of the object depends on the
  * assembly of the system.
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public interface IPublish extends IHbirdApi {
 
-	/**
-	 * Method to force a commit of all data. Any process should flush buffers and cashes.
-	 */
-	public void commit(String ID);
+    /**
+     * Method to force a commit of all data. Any process should flush buffers and cashes.
+     */
+    public void commit(String ID);
 
-	public EntityInstance publish(EntityInstance object);
-	
-	public Parameter publishParameter(String ID, String name, String description, Number value, String unit);
-	public Parameter publishParameter(String ID, String name, String description, Number value, String unit, long timestamp);
-	
-	public State publishState(String ID, String name, String description, String isStateOf, Boolean state);
-	public State publishState(String ID, String name, String description, String isStateOf, Boolean state, long timestamp);
-	
-	public Label publishLabel(String ID, String name, String description, String value);
+    public EntityInstance publish(EntityInstance object);
 
-	public Binary publishBinary(String ID, String name, String description, byte[] rawdata);
+    public Parameter publishParameter(String ID, String name, String description, Number value, String unit);
 
-	public Command publishCommand(String ID, String name, String description, List<CommandArgument> arguments);
-	public CommandRequest publishCommandRequest(String ID, String name, String description, Command command);
-	public CommandRequest publishCommandRequest(String ID, String name, String description, Command command, List<String> lockStates, List<Task> tasks);
-	
-	/**
-	 * Method to create and publish a piece of metadata associated to a Named object.
-	 * 
-	 * @param subject The subject of this metadata, i.e. the Named object being described.
-	 * @param key The key of the metadata.
-	 * @param metadata The value of the metadata
-	 */
-	public Metadata publishMetadata(String ID, String name, EntityInstance subject, String key, String metadata);
+    public Parameter publishParameter(String ID, String name, String description, Number value, String unit, long timestamp);
 
-	public TleOrbitalParameters publishTleParameters(String ID, String name, String satellite, String tle1, String tle2);
+    public State publishState(String ID, String name, String description, String applicableTo, Boolean state);
+
+    public State publishState(String ID, String name, String description, String applicableTo, Boolean state, long timestamp);
+
+    public Label publishLabel(String ID, String name, String description, String value);
+
+    public Binary publishBinary(String ID, String name, String description, byte[] rawdata);
+
+    public Command publishCommand(String ID, String name, String description, List<CommandArgument> arguments);
+
+    public CommandRequest publishCommandRequest(String ID, String name, String description, Command command);
+
+    public CommandRequest publishCommandRequest(String ID, String name, String description, Command command, List<String> lockStates, List<Task> tasks);
+
+    /**
+     * Method to create and publish a piece of metadata associated to a Named object.
+     * 
+     * @param subject The subject of this metadata, i.e. the Named object being described.
+     * @param key The key of the metadata.
+     * @param metadata The value of the metadata
+     */
+    public Metadata publishMetadata(String ID, String name, EntityInstance subject, String key, String metadata);
+
+    public TleOrbitalParameters publishTleParameters(String ID, String name, String satellite, String tle1, String tle2);
 }

@@ -32,7 +32,7 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
 public class Arguments {
 
     public static final CommandArgument APPLICABLE_TO = new CommandArgument(StandardArguments.APPLICABLE_TO,
-            "The Named object the metadata must be appliable to.", String.class, false);
+            "The ID of IEntity the the IApplicableTo must be applicale.", String.class, false);
 
     public static final CommandArgument CLASS = new CommandArgument(StandardArguments.CLASS, "The class of the Named object.", String.class, false);
 
@@ -55,11 +55,11 @@ public class Arguments {
     public static final CommandArgument FROM = new CommandArgument(StandardArguments.FROM, "The start of a range search on timestamp. Default to '*'.",
             Long.class, "Seconds", null, false);
 
-    public static final CommandArgument GROUND_STATION_NAME = new CommandArgument(StandardArguments.GROUND_STATION_NAME, "The name of ground station.",
-            String.class, "Name", null, true);
+    public static final CommandArgument GROUND_STATION_ID = new CommandArgument(StandardArguments.GROUND_STATION_ID, "The ID of the ground station.",
+            String.class, "ID", null, true);
 
-    public static final CommandArgument GROUND_STATION_NAMES = new CommandArgument(StandardArguments.GROUND_STATION_NAMES,
-            "The name of the location(s) to which contact shall be calculated.", List.class, true);
+    public static final CommandArgument GROUND_STATION_IDS = new CommandArgument(StandardArguments.GROUND_STATION_IDS,
+            "The list of ground station IDs to which contact shall be calculated.", List.class, true);
 
     public static final CommandArgument INCLUDE_STATES = new CommandArgument(StandardArguments.INCLUDE_STATES,
             "Flag defining that all states applicable to the named objects should also be retrieved", Boolean.class, "", Boolean.FALSE, true);
@@ -72,13 +72,14 @@ public class Arguments {
             "If set to true, then the value below the 'to' time of each named object matching the search criterions will be retrieved.", Boolean.class, "",
             Boolean.FALSE, true);
 
-    public static final CommandArgument IS_STATE_OF = new CommandArgument(StandardArguments.IS_STATE_OF, "Name of the object which this is the state of.",
-            String.class, false);
-
     public static final CommandArgument NAMES = new CommandArgument(StandardArguments.NAMES, "List of names of named objects to be retrieved.", List.class,
             false);
 
     public static final CommandArgument ENTITY_ID = new CommandArgument(StandardArguments.ENTITY_ID, "The entity ID of the entry.", String.class,
+            false);
+
+    public static final CommandArgument ENTITY_INSTANCE_ID = new CommandArgument(StandardArguments.ENTITY_INSTANCE_ID, "The entity instance ID of the entry.",
+            String.class,
             false);
 
     public static final CommandArgument PUBLISH = new CommandArgument(StandardArguments.PUBLISH,
@@ -88,8 +89,8 @@ public class Arguments {
     public static final CommandArgument ROWS = new CommandArgument(StandardArguments.ROWS, "The maximum number of rows to be retrieved.", Integer.class, "",
             1000, true);
 
-    public static final CommandArgument SATELLITE_NAME = new CommandArgument(StandardArguments.SATELLITE_NAME,
-            "The name of satellite comming / leaving contact.", String.class, "Name", null, false);
+    public static final CommandArgument SATELLITE_ID = new CommandArgument(StandardArguments.SATELLITE_ID,
+            "The ID of the satellite making the contact.", String.class, "ID", null, false);
 
     public static final CommandArgument SORT = new CommandArgument(StandardArguments.SORT, "The sort field. Default is timestamp.", String.class, "",
             StandardArguments.TIMESTAMP, true);

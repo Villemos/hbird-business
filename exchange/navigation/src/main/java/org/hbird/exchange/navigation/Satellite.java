@@ -70,7 +70,7 @@ public class Satellite extends Part implements ISatelliteSpecific {
     }
 
     @Override
-    public String getSatelliteId() {
+    public String getSatelliteID() {
         return name;
     }
 

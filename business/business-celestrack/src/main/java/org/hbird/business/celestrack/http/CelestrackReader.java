@@ -99,10 +99,13 @@ public class CelestrackReader {
 
                 for (int index = 0; index < elements.length; index += 3) {
                     Satellite satellite = null;
-                    Object object = catalogueApi.getSatelliteByName(elements[index].trim());
+                    String name = elements[index].trim();
+                    Object object = catalogueApi.getSatelliteByName(name);
                     if (object == null) {
-                        /** Satellite unknown. Create placeholder object. */
-                        satellite = new Satellite(elements[index].trim(), "Satellite in Celestrack");
+                        /* Satellite unknown. Create placeholder object. */
+                        // TODO - 18.05.2013, kimmell - create proper entity ID here
+                        String entityID = name;
+                        satellite = new Satellite(entityID, name);
                         api.publish(satellite);
                     }
                     else {

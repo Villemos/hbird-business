@@ -80,7 +80,7 @@ public class ToJsonProcessor {
             this.description = state.getDescription();
             this.issuedBy = state.getIssuedBy();
             this.value = state.getValue().toString();
-            this.isStateOf = state.getApplicableTo();
+            this.applicableTo = state.getApplicableTo();
         }
 
         public String id = UUID.randomUUID().toString();
@@ -88,7 +88,7 @@ public class ToJsonProcessor {
         public long timestamp;
         public String issuedBy;
         public String value;
-        public String isStateOf;
+        public String applicableTo;
         public String description;
     }
 

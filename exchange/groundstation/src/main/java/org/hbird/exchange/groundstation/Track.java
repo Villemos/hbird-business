@@ -66,7 +66,7 @@ public class Track extends Command {
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
         args.add(new CommandArgument(StandardArguments.CONTACT, "The contact to track", LocationContactEvent.class, "", null, true));
-        args.add(new CommandArgument(StandardArguments.SATELLITE, "The satellite", Satellite.class, "", null, true));
+        args.add(new CommandArgument(StandardArguments.SATELLITE_ID, "The satellite", Satellite.class, "", null, true));
         return args;
     }
 
@@ -75,15 +75,14 @@ public class Track extends Command {
     }
 
     public Satellite getSatellite() {
-        return getArgumentValue(StandardArguments.SATELLITE, Satellite.class);
+        return getArgumentValue(StandardArguments.SATELLITE_ID, Satellite.class);
     }
-    
+
     public void setLocationContactEvent(LocationContactEvent event) {
-    	setArgumentValue(StandardArguments.CONTACT, event);
+        setArgumentValue(StandardArguments.CONTACT, event);
     }
 
     public void setSatellite(Satellite satellite) {
-        setArgumentValue(StandardArguments.SATELLITE, satellite);
+        setArgumentValue(StandardArguments.SATELLITE_ID, satellite);
     }
-
 }

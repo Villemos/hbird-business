@@ -60,10 +60,10 @@ public class GroundStation extends Part implements IGroundStationSpecific {
     }
 
     /**
-     * @see org.hbird.exchange.interfaces.IGroundStationSpecific#getGroundStationId()
+     * @see org.hbird.exchange.interfaces.IGroundStationSpecific#getGroundStationID()
      */
     @Override
-    public String getGroundStationId() {
+    public String getGroundStationID() {
         return getID();
     }
 

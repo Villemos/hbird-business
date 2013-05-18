@@ -23,6 +23,7 @@
 	<bean id="groundstationpart.listener" class="org.hbird.business.systemtest.Listener" />
 	<bean id="inmemorytest.listener" class="org.hbird.business.systemtest.Listener" />
 	<bean id="event.listener" class="org.hbird.business.systemtest.Listener" />
+	<bean id="message.listener" class="org.hbird.business.systemtest.MessageListener" />
 											
 	<bean id="testerTemplate" abstract="true" class="org.hbird.business.systemtest.Tester">
 		<property name="monitoringListener" ref="monitoring.listener" />
@@ -37,10 +38,12 @@
 		<property name="groundStationPartListener" ref="groundstationpart.listener"/>
 		<property name="inMemoryTestListener" ref="inmemorytest.listener"/>
 		<property name="eventListener" ref="event.listener"/>
+		<property name="messageListener" ref="message.listener"/>
 		<property name="context" ref="basic"/>
 	</bean>
 
 	<bean id="starter" class="org.hbird.business.systemtest.Starter" parent="testerTemplate"/>
+	<bean id="routing" class="org.hbird.business.systemtest.RoutingTest" parent="testerTemplate"/>
 	<bean id="businesscard" class="org.hbird.business.systemtest.BusinessCardTester" parent="testerTemplate"/>
 	<bean id="parameterarchive" class="org.hbird.business.systemtest.ParameterArchivalTester" parent="testerTemplate"/>
 	<bean id="statearchive" class="org.hbird.business.systemtest.StateArchivalTester" parent="testerTemplate"/>
@@ -70,20 +73,21 @@
 		<route id="testing">
 			<from uri="timer:initator?repeatCount=1" />
 				<to uri="bean:starter" />
-<!-- 				<to uri="bean:catalogueapi" /> -->
-<!--                 <to uri="bean:event" /> -->
-<!--  				<to uri="bean:businesscard" />  -->
-<!-- 				<to uri="bean:parameterarchive" /> -->
-<!-- 				<to uri="bean:statearchive" /> -->
-<!-- 	 			<to uri="bean:dataaccessapi" /> -->
-<!-- 				<to uri="bean:limitcheck" /> -->
-<!-- 				<to uri="bean:scripting" /> -->
-<!-- 		 		<to uri="bean:tasking" /> -->
-<!-- 	 			<to uri="bean:commanding" /> -->
-<!-- 	 	 		<to uri="bean:websockettester" /> -->
+				<to uri="bean:catalogueapi" />
+				<to uri="bean:routing" />
+                <to uri="bean:event" />
+ 				<to uri="bean:businesscard" /> 
+				<to uri="bean:parameterarchive" />
+				<to uri="bean:statearchive" />
+	 			<to uri="bean:dataaccessapi" />
+				<to uri="bean:limitcheck" />
+				<to uri="bean:scripting" />
+		 		<to uri="bean:tasking" />
+	 			<to uri="bean:commanding" />
+	 	 		<to uri="bean:websockettester" />
 	 			<to uri="bean:parsecontroller" />
-<!-- 				<to uri="bean:inmemoryscheduler" /> -->
-<!-- 	 			<to uri="bean:celestrack" /> -->
+				<to uri="bean:inmemoryscheduler" />
+	 			<to uri="bean:celestrack" />
 	 			<to uri="bean:finisher" />
 
 <!-- NOT USED -->
@@ -107,8 +111,8 @@
 			
 			<choice>
 	            <when>
-	                <simple>${in.body} is 'org.hbird.exchange.core.State'</simple>
-	      			<setHeader headerName="isStateOf"><simple>${in.body.isStateOf}</simple></setHeader>
+	                <simple>${in.body} is 'org.hbird.exchange.core.ApplicableTo'</simple>
+	      			<setHeader headerName="applicableTo"><simple>${in.body.applicableTo}</simple></setHeader>
 	            </when>
 	            <when>
 	                <simple>${in.body} is 'org.hbird.exchange.core.Command'</simple>
@@ -202,6 +206,7 @@
 		<route id="events">
 			<from uri="activemq:topic:hbird.events" />
 			<to uri="bean:event.listener" />
+			<to uri="bean:message.listener" />
 		</route>
 
 		<route id="inmemorytest">

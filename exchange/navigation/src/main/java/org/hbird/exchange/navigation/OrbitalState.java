@@ -98,7 +98,7 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
     }
 
     @Override
-    public String getSatelliteId() {
+    public String getSatelliteID() {
         return satelliteId;
     }
 

@@ -16,7 +16,7 @@
  */
 package org.hbird.exchange.dataaccess;
 
-import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_NAME;
+import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_ID;
 import static org.hbird.exchange.dataaccess.Arguments.create;
 
 import java.util.List;
@@ -47,15 +47,15 @@ public class TleRequest extends DataRequest {
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
         args = super.getArgumentDefinitions(args);
-        args.add(create(SATELLITE_NAME));
+        args.add(create(SATELLITE_ID));
         return args;
     }
 
-    public void setSatelliteName(String satellite) {
-        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+    public void setSatelliteID(String satelliteID) {
+        setArgumentValue(StandardArguments.SATELLITE_ID, satelliteID);
     }
 
-    public String getSatelliteName() {
-        return getArgumentValue(StandardArguments.SATELLITE_NAME, String.class);
+    public String getSatelliteID() {
+        return getArgumentValue(StandardArguments.SATELLITE_ID, String.class);
     }
 }

@@ -16,7 +16,21 @@
  */
 package org.hbird.exchange.dataaccess;
 
-import static org.hbird.exchange.dataaccess.Arguments.*;
+import static org.hbird.exchange.dataaccess.Arguments.APPLICABLE_TO;
+import static org.hbird.exchange.dataaccess.Arguments.CLASS;
+import static org.hbird.exchange.dataaccess.Arguments.DERIVED_FROM;
+import static org.hbird.exchange.dataaccess.Arguments.ENTITY_ID;
+import static org.hbird.exchange.dataaccess.Arguments.ENTITY_INSTANCE_ID;
+import static org.hbird.exchange.dataaccess.Arguments.FROM;
+import static org.hbird.exchange.dataaccess.Arguments.INCLUDE_STATES;
+import static org.hbird.exchange.dataaccess.Arguments.INITIALIZATION;
+import static org.hbird.exchange.dataaccess.Arguments.ISSUED_BY;
+import static org.hbird.exchange.dataaccess.Arguments.NAMES;
+import static org.hbird.exchange.dataaccess.Arguments.ROWS;
+import static org.hbird.exchange.dataaccess.Arguments.SORT;
+import static org.hbird.exchange.dataaccess.Arguments.SORT_ORDER;
+import static org.hbird.exchange.dataaccess.Arguments.TO;
+import static org.hbird.exchange.dataaccess.Arguments.create;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +38,7 @@ import java.util.List;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.interfaces.IEntityInstance;
@@ -36,7 +51,6 @@ public class DataRequest extends Command {
 
     public DataRequest(String ID, String name) {
         super(ID, name);
-
     }
 
     public DataRequest(String ID) {
@@ -50,9 +64,10 @@ public class DataRequest extends Command {
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
         args.add(create(CLASS));
         args.add(create(ENTITY_ID));
+        args.add(create(ENTITY_INSTANCE_ID));
         args.add(create(FROM));
         args.add(create(TO));
-        args.add(create(IS_STATE_OF));
+        args.add(create(APPLICABLE_TO));
         args.add(create(NAMES));
         args.add(create(INCLUDE_STATES));
         args.add(create(SORT_ORDER));
@@ -84,8 +99,8 @@ public class DataRequest extends Command {
         }
     }
 
-    public void setIsStateOf(String isStateOf) {
-        setArgumentValue(StandardArguments.IS_STATE_OF, isStateOf);
+    public void setApplicableTo(String applicableTo) {
+        setArgumentValue(StandardArguments.APPLICABLE_TO, applicableTo);
     }
 
     public void setIsInitialization(Boolean isInitialization) {
@@ -105,10 +120,16 @@ public class DataRequest extends Command {
             if (!hasArgumentValue(StandardArguments.NAMES)) {
                 setArgumentValue(StandardArguments.NAMES, new ArrayList<String>());
             }
+            @SuppressWarnings("unchecked")
             List<String> names = getArgumentValue(StandardArguments.NAMES, List.class);
 
             names.add(name);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> getNames() {
+        return getArgumentValue(StandardArguments.NAMES, List.class);
     }
 
     public void retrieveParameter(long from, long to, String parameter) {
@@ -118,12 +139,12 @@ public class DataRequest extends Command {
         addName(parameter);
     }
 
-    public void retrieveState(long from, long to, String state, String isStateOf) {
+    public void retrieveState(long from, long to, String state, String applicableTo) {
         setClass(State.class.getSimpleName());
         setFrom(from);
         setTo(to);
         addName(state);
-        setIsStateOf(isStateOf);
+        setApplicableTo(applicableTo);
     }
 
     public void setIncludeStates(boolean includeStates) {
@@ -178,29 +199,36 @@ public class DataRequest extends Command {
         return getArgumentValue(StandardArguments.SORT_ORDER, String.class);
     }
 
+    @Override
     public void setID(String ID) {
-    	if (ID.contains(":")) {
-    		setEntityInstanceID(ID);
-    	}
-    	else {
-    		setEntityID(ID);
-    	}
+        if (ID.contains(EntityInstance.INSTANCE_ID_SEPARATOR)) {
+            setEntityInstanceID(ID);
+        }
+        else {
+            setEntityID(ID);
+        }
     }
-    
+
     public void setEntityID(String entityID) {
         setArgumentValue(StandardArguments.ENTITY_ID, entityID);
     }
 
     public void setEntityInstanceID(String entityInstanceID) {
-        if (ID != null) {
-            String[] elements = ID.split(":");
-            setEntityID(elements[0]);
-            setAt(Long.parseLong(elements[1]));
+        if (entityInstanceID != null) {
+            if (entityInstanceID.contains(EntityInstance.INSTANCE_ID_SEPARATOR)) {
+                String[] elements = entityInstanceID.split(EntityInstance.INSTANCE_ID_SEPARATOR);
+                setEntityID(elements[0]);
+                setAt(Long.parseLong(elements[1]));
+                setArgumentValue(StandardArguments.ENTITY_INSTANCE_ID, entityInstanceID);
+            }
+            else {
+                setEntityID(entityInstanceID);
+            }
         }
     }
-    
+
     public void setAt(Long at) {
-    	setFrom(at);
-    	setTo(at);
+        setFrom(at);
+        setTo(at);
     }
 }

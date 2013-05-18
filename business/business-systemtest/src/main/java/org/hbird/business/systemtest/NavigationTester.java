@@ -99,7 +99,7 @@ public class NavigationTester extends SystemTest {
 
         /** Retrieve the next set of TARTU events and check them. */
         IDataAccess dataApi = ApiFactory.getDataAccessApi("SystemTest");
-        LocationContactEvent contactEvent = dataApi.getNextLocationContactEventForLocation(es5ec.getID(), 1355385522265l);
+        LocationContactEvent contactEvent = dataApi.getNextLocationContactEventForGroundStation(es5ec.getID(), 1355385522265l);
 
         azzert(contactEvent != null);
         azzert(contactEvent.getStartTime() == 1355390676020l);
@@ -109,7 +109,7 @@ public class NavigationTester extends SystemTest {
          * Check the contact events with Aalborg. Notice that there is one LOST contact event first. The retrieval
          * should NOT get this.
          */
-        contactEvent = dataApi.getNextLocationContactEventForLocation(gsAalborg.getID(), 1355385522265l);
+        contactEvent = dataApi.getNextLocationContactEventForGroundStation(gsAalborg.getID(), 1355385522265l);
 
         azzert(contactEvent != null);
         azzert(contactEvent.getStartTime() == 1355390809139l);

@@ -22,11 +22,14 @@ package org.hbird.exchange.constants;
 /**
  * Constant names of command arguments in Hummingbird based systems.
  */
+// TODO - 18.05.2013, kimmell - check code before changing constant values; most likely some of them are used in xml
+// config or camel route definitions; use grep -i -r "the value you are changing" * | grep -v "/target/" to search all
+// occurrences.
 public class StandardArguments {
 
     public static final String ANGLE = "Angle";
 
-    public static final String APPLICABLE_TO = "applicableto";
+    public static final String APPLICABLE_TO = "applicableTo";
 
     public static final String ARGUMENTS_LENGTH = "argumentsLength";
 
@@ -34,6 +37,7 @@ public class StandardArguments {
 
     public static final String CLASS = "class";
 
+    // TODO - 18.05.2013, kimmell - change to componentName
     public static final String COMPONENT_NAME = "componentname";
 
     public static final String CONTACT = "contact";
@@ -50,7 +54,7 @@ public class StandardArguments {
 
     public static final String DELTA_PROPAGATION = "deltaPropagation";
 
-    public static final String DERIVED_FROM = "derivedfrom";
+    public static final String DERIVED_FROM = "derivedFrom";
 
     public static final String DESCRIPTION = "description";
 
@@ -72,9 +76,9 @@ public class StandardArguments {
 
     public static final String FREQUENCY = "frequency";
 
-    public static final String GROUND_STATION_NAME = "location";
+    public static final String GROUND_STATION_ID = "groundStationId";
 
-    public static final String GROUND_STATION_NAMES = "locations";
+    public static final String GROUND_STATION_IDS = "groundStationIds";
 
     public static final String HAS_URI = "hasUri";
 
@@ -86,11 +90,10 @@ public class StandardArguments {
 
     public static final String INCLUDE_STATES = "includeStates";
 
+    // TODO - 18.05.2013, kimmell - change to initialState
     public static final String INITIAL_STATE = "initialstate";
 
     public static final String INITIALIZATION = "initialization";
-
-    public static final String IS_STATE_OF = "isStateOf";
 
     public static final String ISSUED_BY = "issuedBy";
 
@@ -98,9 +101,8 @@ public class StandardArguments {
 
     public static final String LIMIT = "limit";
 
+    // TODO - 18.05.2013, kimmell - change to limitValue
     public static final String LIMIT_VALUE = "limitvalue";
-
-    public static final String LOCATION = "location";
 
     public static final String NAME = "name";
 
@@ -114,24 +116,26 @@ public class StandardArguments {
 
     public static final String PUBLISH = "publish";
 
+    // TODO - 18.05.2013, kimmell - change to queueName
     public static final String QUEUE_NAME = "queuename";
 
     public static final String ROWS = "rows";
 
+    // TODO - 18.05.2013, kimmell - change to scriptDefinition
     public static final String SCRIPT_DEFINITION = "scriptdefinition";
 
-    public static final String SATELLITE = "satellite";
-
-    public static final String SATELLITE_NAME = "satellite";
+    public static final String SATELLITE_ID = "satelliteId";
 
     public static final String SORT = "sort";
 
+    // TODO - 18.05.2013, kimmell - change to sortOrder
     public static final String SORT_ORDER = "sortorder";
 
     public static final String SOURCE = "source";
 
     public static final String START = "start";
 
+    // TODO - 18.05.2013, kimmell - change to startTime
     public static final String START_TIME = "starttime";
 
     public static final String STATE = "state";
@@ -140,6 +144,7 @@ public class StandardArguments {
 
     public static final String TIMESTAMP = "timestamp";
 
+    // TODO - 18.05.2013, kimmell - change to tleParameters
     public static final String TLE_PARAMETERS = "tleparameters";
 
     public static final String TO = "to";
@@ -154,10 +159,13 @@ public class StandardArguments {
 
     public static final String VALUE_HAS_CHANGED = "valueHasChanged";
 
+    // TODO - 18.05.2013, kimmell - change to valueParameter
     public static final String VALUE_PARAMETER = "valueparameter";
 
     public static final String VISIBILITY = "visibility";
 
+    // TODO - 18.05.2013, kimmell - change to isPartOf
+    // TODO - 18.05.2013, kimmell - check if needed any more
     public static final String IS_PART_OF = "ispartof";
 
     public static final String PART = "part";

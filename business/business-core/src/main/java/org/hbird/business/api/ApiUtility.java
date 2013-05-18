@@ -34,15 +34,15 @@ public class ApiUtility {
 		 * the parameter instance they are the state of. The elements will be ordered as;
 		 * 
 		 * Parameter / State               Time
-		 * PARA1                           A
-		 * State1 (isStateOf PARA1)        A
-		 * State2 (isStateOf PARA1)        A
-		 * PARA2                           B
-		 * PARA2                           C
-		 * State3 (isStateOf PARA2)        C
-		 * PARA1                           D
-		 * State1 (isStateOf PARA1)        D
-		 * State2 (isStateOf PARA1)        D
+		 * PARA1                              A
+		 * State1 (applicableTo PARA1)        A
+		 * State2 (applicableTo PARA1)        A
+		 * PARA2                              B
+		 * PARA2                              C
+		 * State3 (applicableTo PARA2)        C
+		 * PARA1                              D
+		 * State1 (applicableTo PARA1)        D
+		 * State2 (applicableTo PARA1)        D
 		 * ...
 		 * 
 		 * Where A < B < C < D

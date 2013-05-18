@@ -77,7 +77,7 @@ public class ScriptTester extends SystemTest {
         azzert((Double) out.getValue() == 25d);
 
         /** Test the creation of a state parameter based on a script. */
-        script = "if (in1.asInt() == 4) {output.setValid()} else {output.setInvalid()}\n";
+        script = "if (in1.asInt() == 4) {output.setValue(true)} else {output.setValue(false)}\n";
 
         binding = new HashMap<String, String>();
         binding.put("PARA5", "in1");

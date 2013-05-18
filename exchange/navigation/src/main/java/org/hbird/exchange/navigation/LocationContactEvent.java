@@ -121,12 +121,12 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
     }
 
     @Override
-    public String getGroundStationId() {
+    public String getGroundStationID() {
         return groundStationId;
     }
 
     @Override
-    public String getSatelliteId() {
+    public String getSatelliteID() {
         return satelliteId;
     }
 

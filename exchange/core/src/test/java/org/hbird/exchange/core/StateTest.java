@@ -97,19 +97,13 @@ public class StateTest {
         assertEquals(STATE, state.getValue());
     }
 
-    /**
-     * Test method for {@link org.hbird.exchange.core.State#getIsStateOf()}.
-     */
     @Test
-    public void testGetIsStateOf() {
-        testSetIsStateOfString();
+    public void testGetApplicableTo() {
+        testSetApplicableTo();
     }
 
-    /**
-     * Test method for {@link org.hbird.exchange.core.State#setIsStateOf(java.lang.String)}.
-     */
     @Test
-    public void testSetIsStateOfString() {
+    public void testSetApplicableTo() {
         assertEquals(STATE_OF, state.getApplicableTo());
         state.setApplicableTo(null);
         assertNull(state.getApplicableTo());

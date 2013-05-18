@@ -34,7 +34,7 @@ public class BooleanParameter {
     protected String name;
     protected String description;
     protected Boolean value;
-    protected String isStateOf;
+    protected String applicableTo;
 
     /**
      * Basic constructor, setting the initial value and the name of the boolean
@@ -43,13 +43,13 @@ public class BooleanParameter {
      * @param value The initial value of the parameter.
      * @param name The name of the parameter to be generated.
      */
-    public BooleanParameter(String ID, String issuedBy, String name, String description, Boolean value, String isStateOf) {
+    public BooleanParameter(String ID, String issuedBy, String name, String description, Boolean value, String applicableTo) {
         this.ID = ID;
         this.issuedBy = issuedBy;
         this.name = name;
         this.description = description;
         this.value = value;
-        this.isStateOf = isStateOf;
+        this.applicableTo = applicableTo;
     }
 
     /*
@@ -71,7 +71,7 @@ public class BooleanParameter {
         State newState = new State(ID, name);
         newState.setIssuedBy(issuedBy);
         newState.setDescription(description);
-        newState.setApplicableTo(isStateOf);
+        newState.setApplicableTo(applicableTo);
         newState.setValue(value);
 
         return newState;

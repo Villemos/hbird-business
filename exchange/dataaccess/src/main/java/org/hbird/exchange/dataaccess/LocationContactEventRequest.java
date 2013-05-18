@@ -1,7 +1,7 @@
 package org.hbird.exchange.dataaccess;
 
-import static org.hbird.exchange.dataaccess.Arguments.GROUND_STATION_NAME;
-import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_NAME;
+import static org.hbird.exchange.dataaccess.Arguments.GROUND_STATION_ID;
+import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_ID;
 import static org.hbird.exchange.dataaccess.Arguments.create;
 
 import java.util.List;
@@ -28,24 +28,24 @@ public class LocationContactEventRequest extends DataRequest {
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
         args = super.getArgumentDefinitions(args);
-        args.add(create(SATELLITE_NAME));
-        args.add(create(GROUND_STATION_NAME));
+        args.add(create(SATELLITE_ID));
+        args.add(create(GROUND_STATION_ID));
         return args;
     }
 
-    public void setSatelliteName(String satellite) {
-        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
+    public void setSatelliteID(String satelliteID) {
+        setArgumentValue(StandardArguments.SATELLITE_ID, satelliteID);
     }
 
-    public void setLocation(String location) {
-        setArgumentValue(StandardArguments.GROUND_STATION_NAME, location);
+    public void setGroundStationID(String groundStationID) {
+        setArgumentValue(StandardArguments.GROUND_STATION_ID, groundStationID);
     }
 
-    public String getSatelliteName() {
-        return getArgumentValue(StandardArguments.SATELLITE_NAME, String.class);
+    public String getSatelliteID() {
+        return getArgumentValue(StandardArguments.SATELLITE_ID, String.class);
     }
 
-    public String getGroundStationName() {
-        return getArgumentValue(StandardArguments.GROUND_STATION_NAME, String.class);
+    public String getGroundStationID() {
+        return getArgumentValue(StandardArguments.GROUND_STATION_ID, String.class);
     }
 }

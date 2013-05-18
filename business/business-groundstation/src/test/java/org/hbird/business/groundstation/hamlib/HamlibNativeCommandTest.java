@@ -50,7 +50,7 @@ public class HamlibNativeCommandTest {
         assertEquals(HamlibNativeCommand.class.getSimpleName(), command.getName());
         assertEquals(HamlibNativeCommand.DESCRIPTION, command.getDescription());
         assertEquals(NOW, command.getExecutionTime());
-        assertEquals(DERIVED_FROM, command.getDerivedfrom());
+        assertEquals(DERIVED_FROM, command.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_POST_TRACKING, command.getStage());
         assertNotNull(command.getID());
         UUID.fromString(command.getID());
@@ -85,17 +85,17 @@ public class HamlibNativeCommandTest {
     }
 
     @Test
-    public void testGetDerivedfrom() throws Exception {
-        testSetDerivedfrom();
+    public void testGetDerivedFrom() throws Exception {
+        testSetDerivedFrom();
     }
 
     @Test
-    public void testSetDerivedfrom() throws Exception {
-        assertEquals(DERIVED_FROM, command.getDerivedfrom());
-        command.setDerivedfrom("Halt");
-        assertEquals("Halt", command.getDerivedfrom());
-        command.setDerivedfrom("Stop");
-        assertEquals("Stop", command.getDerivedfrom());
+    public void testSetDerivedFrom() throws Exception {
+        assertEquals(DERIVED_FROM, command.getDerivedFrom());
+        command.setDerivedFrom("Halt");
+        assertEquals("Halt", command.getDerivedFrom());
+        command.setDerivedFrom("Stop");
+        assertEquals("Stop", command.getDerivedFrom());
     }
 
     @Test

@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import org.apache.camel.Body;
 import org.apache.log4j.Logger;
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.State;
 
@@ -31,8 +32,8 @@ public class InMemoryParameterBuffer {
     /** Semantic parameter. */
     protected Map<String, List<EntityInstance>> latestParameterValueSemantic = new HashMap<String, List<EntityInstance>>();
 
-    protected Pattern parameterName = Pattern.compile("name=(.+)");
-    protected Pattern isStateOf = Pattern.compile("isStateOf=(.+)");
+    protected Pattern parameterName = Pattern.compile(StandardArguments.NAME + "=(.+)");
+    protected Pattern applicableTo = Pattern.compile(StandardArguments.APPLICABLE_TO + "=(.+)");
 
     /**
      * Method to retrieve a parameter value based on the parameter name.
@@ -48,9 +49,9 @@ public class InMemoryParameterBuffer {
             return latestParameterValue.get(name.group(1));
         }
 
-        Matcher stateOf = isStateOf.matcher(query);
-        if (stateOf.find()) {
-            return latestParameterValueSemantic.get(stateOf.group(1));
+        Matcher applicable = applicableTo.matcher(query);
+        if (applicable.find()) {
+            return latestParameterValueSemantic.get(applicable.group(1));
         }
 
         return null;

@@ -60,7 +60,7 @@ public class HamlibNativeCommand extends CommandBase {
 
     protected String commandToExecute = "";
 
-    protected String derivedfrom = "";
+    protected String derivedFrom = "";
 
     protected String stage = "";
 
@@ -69,7 +69,7 @@ public class HamlibNativeCommand extends CommandBase {
         this.description = DESCRIPTION;
         this.commandToExecute = commandToExecute;
         this.executionTime = executionTime;
-        this.derivedfrom = derivedFrom;
+        this.derivedFrom = derivedFrom;
         this.stage = stage;
     }
 
@@ -89,11 +89,11 @@ public class HamlibNativeCommand extends CommandBase {
         this.stage = stage;
     }
 
-    public String getDerivedfrom() {
-        return derivedfrom;
+    public String getDerivedFrom() {
+        return derivedFrom;
     }
 
-    public void setDerivedfrom(String derivedfrom) {
-        this.derivedfrom = derivedfrom;
+    public void setDerivedFrom(String derivedFrom) {
+        this.derivedFrom = derivedFrom;
     }
 }

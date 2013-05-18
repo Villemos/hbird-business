@@ -48,7 +48,7 @@ public class TleOrbitalParameters extends EntityInstance implements ISatelliteSp
     }
 
     @Override
-    public String getSatelliteId() {
+    public String getSatelliteID() {
         return satelliteId;
     }
 

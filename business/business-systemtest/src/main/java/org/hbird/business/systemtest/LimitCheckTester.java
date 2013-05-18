@@ -17,14 +17,15 @@
 package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
-import org.apache.log4j.Logger;
 import org.hbird.business.validation.LimitCheckComponent;
 import org.hbird.exchange.validation.Limit;
 import org.hbird.exchange.validation.Limit.eLimitType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LimitCheckTester extends SystemTest {
 
-    private static org.apache.log4j.Logger LOG = Logger.getLogger(LimitCheckTester.class);
+    private static Logger LOG = LoggerFactory.getLogger(LimitCheckTester.class);
 
     @Handler
     public void process() throws InterruptedException {
@@ -38,10 +39,11 @@ public class LimitCheckTester extends SystemTest {
         LOG.info("Issuing commands for starting two lower limit limitcheckers.");
 
         LimitCheckComponent com = createLimitCheckComponent("LIMIT_CHECKER_1", "PARA1_LOWER_SOFTLIMIT", eLimitType.Lower, "PARA1", 2d,
-                "The first lower limit of PARA1");
+                "The first lower limit of PARA1", "PARA1_LOWER_SOFTLIMIT");
         partmanagerApi.start(com);
 
-        com = createLimitCheckComponent("LIMIT_CHECKER_2", "PARA1_LOWER_HARDLIMIT", eLimitType.Lower, "PARA1", 0d, "The second lower limit of PARA1");
+        com = createLimitCheckComponent("LIMIT_CHECKER_2", "PARA1_LOWER_HARDLIMIT", eLimitType.Lower, "PARA1", 0d, "The second lower limit of PARA1",
+                "PARA1_LOWER_HARDLIMIT");
         partmanagerApi.start(com);
 
         Thread.sleep(2000);
@@ -59,10 +61,12 @@ public class LimitCheckTester extends SystemTest {
         /** Start a limit checker. */
         LOG.info("Issuing commands for starting two upper limit limitcheckers.");
 
-        com = createLimitCheckComponent("LIMIT_CHECKER_3", "PARA1_UPPER_SOFTLIMIT", eLimitType.Upper, "PARA1", 10.5d, "The first upper limit of PARA1");
+        com = createLimitCheckComponent("LIMIT_CHECKER_3", "PARA1_UPPER_SOFTLIMIT", eLimitType.Upper, "PARA1", 10.5d, "The first upper limit of PARA1",
+                "PARA1_UPPER_SOFTLIMIT");
         partmanagerApi.start(com);
 
-        com = createLimitCheckComponent("LIMIT_CHECKER_4", "PARA1_UPPER_HARDLIMIT", eLimitType.Upper, "PARA1", 15d, "The second upper limit of PARA1");
+        com = createLimitCheckComponent("LIMIT_CHECKER_4", "PARA1_UPPER_HARDLIMIT", eLimitType.Upper, "PARA1", 15d, "The second upper limit of PARA1",
+                "PARA1_UPPER_HARDLIMIT");
         partmanagerApi.start(com);
 
         Thread.sleep(2000);
@@ -94,7 +98,7 @@ public class LimitCheckTester extends SystemTest {
     }
 
     protected LimitCheckComponent createLimitCheckComponent(String componentName, String limitName, eLimitType type, String parameterId, Double value,
-            String description) {
+            String description, String stateName) {
 
         LimitCheckComponent component = new LimitCheckComponent(componentName, componentName);
 
@@ -103,6 +107,7 @@ public class LimitCheckTester extends SystemTest {
         limit.setValue(value);
         limit.setDescription(description);
         limit.setType(type);
+        limit.setStateName(stateName);
 
         component.setLimit(limit);
 
@@ -117,6 +122,12 @@ public class LimitCheckTester extends SystemTest {
         Thread.sleep(2000);
 
         /** Check that the states were calculated and distributed. */
+
+        LOG.warn("soft: {}, hard: {}", soft, hard);
+        for (String key : stateListener.states.keySet()) {
+            LOG.warn(" found: '{}'", key);
+        }
+
         azzert(stateListener.states.get(soft).getValue() == expectedSoft, "Received soft limit with value " + expectedSoft);
         azzert(stateListener.states.get(hard).getValue() == expectedHard, "Received hard limit with value " + expectedHard);
     }

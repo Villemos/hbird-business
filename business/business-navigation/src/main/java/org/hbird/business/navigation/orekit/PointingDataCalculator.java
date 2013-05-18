@@ -64,8 +64,8 @@ public class PointingDataCalculator {
         // TODO - 01.05.2013, kimmell - which frame to use here?
         Orbit initialOrbit = new KeplerianOrbit(coord, Constants.FRAME, date, Constants.MU);
         Propagator propagator = new KeplerianPropagator(initialOrbit);
-        String satelliteId = locationContactEvent.getSatelliteId();
-        String gsId = groundStation.getGroundStationId();
+        String satelliteId = locationContactEvent.getSatelliteID();
+        String gsId = groundStation.getGroundStationID();
         double timeSift = contactDataStepSize / 1000D; // shift has to be in seconds
 
         /* Calculate contact data. */

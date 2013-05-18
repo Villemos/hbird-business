@@ -94,7 +94,7 @@ public class TrackCommandCreationJob implements Job {
         String contactInstanceId = context.getMergedJobDataMap().getString(JOB_DATA_KEY_CONTACT_INSTANCE_ID);
         LocationContactEvent event = getEvent(dao, contactInstanceId);
         if (event != null) {
-            String satId = event.getSatelliteId();
+            String satId = event.getSatelliteID();
             Satellite sat = getSatellite(satelliteCache, satId);
             if (sat != null) {
                 String tleId = event.getDerivedFromId();
@@ -143,7 +143,7 @@ public class TrackCommandCreationJob implements Job {
     Track createTrackCommand(IStartableEntity part, LocationContactEvent event, Satellite satellite) {
         Track track = new Track(satellite.getID());
         track.setIssuedBy(part.getID());
-        track.setDestination(event.getGroundStationId());
+        track.setDestination(event.getGroundStationID());
         track.setSatellite(satellite);
         track.setLocationContactEvent(event);
         return track;

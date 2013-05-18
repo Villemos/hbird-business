@@ -14,29 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.hbird.business.systemtest;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.Processor;
+
 /**
- * 
+ *
  */
-package org.hbird.exchange.dataaccess;
+public class MessageListener implements Processor {
 
-import org.hbird.exchange.constants.StandardArguments;
+    private List<Message> messages;
 
-/**
- * 
- */
-public class GroundStationRequest extends DataRequest {
-
-    public static final String DESCRIPTION = "A request for the definition of ground stations.";
-
-    private static final long serialVersionUID = -2463827175606652486L;
-
-    public GroundStationRequest(String ID) {
-        super(ID, GroundStationRequest.class.getSimpleName());
-        setDescription(DESCRIPTION);
-        setIsInitialization(true);
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        if (messages != null) {
+            Message in = exchange.getIn();
+            messages.add(in);
+        }
     }
 
-    public void setGroundStationID(String groundStationID) {
-        setArgumentValue(StandardArguments.GROUND_STATION_ID, groundStationID);
+    public void start() {
+        if (messages != null) {
+            messages.clear();
+        }
+        else {
+            messages = new ArrayList<Message>();
+        }
+    }
+
+    public void stop() {
+        messages.clear();
+        messages = null;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
     }
 }

@@ -20,6 +20,8 @@
 package org.hbird.exchange.dataaccess;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.hbird.exchange.constants.StandardArguments;
@@ -50,9 +52,11 @@ public class DataRequestTest {
     @Test
     public void testArguments() {
         assertTrue(dataRequest.hasArgument(StandardArguments.CLASS));
+        assertTrue(dataRequest.hasArgument(StandardArguments.ENTITY_ID));
+        assertTrue(dataRequest.hasArgument(StandardArguments.ENTITY_INSTANCE_ID));
         assertTrue(dataRequest.hasArgument(StandardArguments.FROM));
         assertTrue(dataRequest.hasArgument(StandardArguments.TO));
-        assertTrue(dataRequest.hasArgument(StandardArguments.IS_STATE_OF));
+        assertTrue(dataRequest.hasArgument(StandardArguments.APPLICABLE_TO));
         assertTrue(dataRequest.hasArgument(StandardArguments.NAMES));
         assertTrue(dataRequest.hasArgument(StandardArguments.INCLUDE_STATES));
         assertTrue(dataRequest.hasArgument(StandardArguments.SORT_ORDER));
@@ -60,7 +64,8 @@ public class DataRequestTest {
         assertTrue(dataRequest.hasArgument(StandardArguments.ROWS));
         assertTrue(dataRequest.hasArgument(StandardArguments.INITIALIZATION));
         assertTrue(dataRequest.hasArgument(StandardArguments.DERIVED_FROM));
-        assertEquals(13, dataRequest.getArguments().size());
+        assertTrue(dataRequest.hasArgument(StandardArguments.ISSUED_BY));
+        assertEquals(14, dataRequest.getArguments().size());
     }
 
     @Test
@@ -75,4 +80,32 @@ public class DataRequestTest {
         dataRequest.setRows(-1011);
         assertEquals(new Integer(-1011), dataRequest.getRows());
     }
+
+    @Test
+    public void testSetEntityInstanceIDNull() {
+        dataRequest.setEntityInstanceID(null);
+        assertNull(dataRequest.getFrom());
+        assertNull(dataRequest.getTo());
+        assertFalse(dataRequest.hasArgumentValue(StandardArguments.ENTITY_ID));
+        assertFalse(dataRequest.hasArgumentValue(StandardArguments.ENTITY_INSTANCE_ID));
+    }
+
+    @Test
+    public void testSetEntityInstanceID() {
+        dataRequest.setEntityInstanceID("ID:12345");
+        assertEquals(new Long(12345), dataRequest.getFrom());
+        assertEquals(new Long(12345), dataRequest.getTo());
+        assertEquals("ID", dataRequest.getArgumentValue(StandardArguments.ENTITY_ID, String.class));
+        assertEquals("ID:12345", dataRequest.getArgumentValue(StandardArguments.ENTITY_INSTANCE_ID, String.class));
+    }
+
+    @Test
+    public void testSetEntityInstanceIDNoTimestamp() {
+        dataRequest.setEntityInstanceID("ID");
+        assertNull(dataRequest.getFrom());
+        assertNull(dataRequest.getTo());
+        assertEquals("ID", dataRequest.getArgumentValue(StandardArguments.ENTITY_ID, String.class));
+        assertFalse(dataRequest.hasArgumentValue(StandardArguments.ENTITY_INSTANCE_ID));
+    }
+
 }

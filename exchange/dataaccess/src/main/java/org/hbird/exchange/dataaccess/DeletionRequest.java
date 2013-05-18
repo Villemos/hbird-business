@@ -23,9 +23,8 @@ import static org.hbird.exchange.dataaccess.Arguments.DELTA_PROPAGATION;
 import static org.hbird.exchange.dataaccess.Arguments.DERIVED_FROM;
 import static org.hbird.exchange.dataaccess.Arguments.FROM;
 import static org.hbird.exchange.dataaccess.Arguments.ISSUED_BY;
-import static org.hbird.exchange.dataaccess.Arguments.IS_STATE_OF;
 import static org.hbird.exchange.dataaccess.Arguments.NAMES;
-import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_NAME;
+import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_ID;
 import static org.hbird.exchange.dataaccess.Arguments.TO;
 import static org.hbird.exchange.dataaccess.Arguments.create;
 
@@ -58,9 +57,8 @@ public class DeletionRequest extends DataRequest {
         args.add(create(DERIVED_FROM));
         args.add(create(ISSUED_BY));
         args.add(create(FROM));
-        args.add(create(IS_STATE_OF));
         args.add(create(NAMES));
-        args.add(create(SATELLITE_NAME));
+        args.add(create(SATELLITE_ID));
         args.add(create(TO));
         return args;
     }

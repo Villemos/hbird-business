@@ -26,7 +26,6 @@ import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
-import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
@@ -54,10 +53,12 @@ import org.hbird.exchange.groundstation.Antenna;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class SystemTest {
 
-    private static org.apache.log4j.Logger LOG = Logger.getLogger(SystemTest.class);
+    private static Logger LOG = LoggerFactory.getLogger(SystemTest.class);
 
     protected boolean exitOnFailure = true;
 
@@ -87,6 +88,8 @@ public abstract class SystemTest {
     protected Listener inMemoryTestListener = null;
 
     protected Listener eventListener = null;
+
+    protected MessageListener messageListener = null;
 
     protected CamelContext context = null;
 
@@ -298,7 +301,7 @@ public abstract class SystemTest {
 
     protected void azzert(boolean assertion) {
         if (assertion == false) {
-            LOG.error("FAILED.");
+            LOG.error("FAILED in {}.", getClass().getSimpleName());
             if (exitOnFailure) {
                 System.exit(1);
             }
@@ -307,13 +310,13 @@ public abstract class SystemTest {
 
     protected void azzert(boolean assertion, String message) {
         if (assertion == false) {
-            LOG.error("SYSTEM TEST: " + message + " (FAILED)");
+            LOG.error("SYSTEM TEST: {} (FAILED) in {}", message, getClass().getSimpleName());
             if (exitOnFailure) {
                 System.exit(1);
             }
         }
         else {
-            LOG.info("SYSTEM TEST: " + message + " (OK)");
+            LOG.info("SYSTEM TEST: {} (OK)", message);
         }
     }
 
@@ -698,5 +701,13 @@ public abstract class SystemTest {
 
     public void setEventListener(Listener eventListener) {
         this.eventListener = eventListener;
+    }
+
+    public MessageListener getMessageListener() {
+        return messageListener;
+    }
+
+    public void setMessageListener(MessageListener messageListener) {
+        this.messageListener = messageListener;
     }
 }

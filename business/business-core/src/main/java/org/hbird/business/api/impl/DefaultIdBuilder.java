@@ -3,6 +3,11 @@ package org.hbird.business.api.impl;
 import org.hbird.business.api.IdBuilder;
 import org.springframework.stereotype.Component;
 
+/**
+ * Default IdBuilder implementation.
+ * 
+ * Uses '/' (slash) as separator in final ID.
+ */
 @Component
 public class DefaultIdBuilder implements IdBuilder {
 

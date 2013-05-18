@@ -63,6 +63,7 @@ import com.thoughtworks.xstream.XStream;
  * 
  * @author Gert Villemos
  */
+// TODO - 18.05.2013, kimmell - refactor & extract constants
 public class SolrProducer extends DefaultProducer {
 
     private static final transient Logger LOG = LoggerFactory.getLogger(SolrProducer.class);
@@ -122,7 +123,7 @@ public class SolrProducer extends DefaultProducer {
                             && dataRequest.getArgumentValue(StandardArguments.INITIALIZATION, Boolean.class)) {
                         LOG.info("Received Data Request ('{}') from '{}'. Initializing.", body.getClass().getSimpleName(), dataRequest.getIssuedBy());
 
-                        String request = createRequest((DataRequest) body);
+                        String request = createRequest(dataRequest);
                         LOG.info("Search string = " + request);
                         List<EntityInstance> results = doInitializationRequest(dataRequest, request);
 
@@ -132,7 +133,7 @@ public class SolrProducer extends DefaultProducer {
                     else {
                         LOG.info("Received Data Request ('{}') from '{}'. Retrieving.", body.getClass().getSimpleName(), dataRequest.getIssuedBy());
 
-                        String request = createRequest((DataRequest) body);
+                        String request = createRequest(dataRequest);
                         LOG.info("Search string = {}.", request);
 
                         SolrQuery query = createQuery(dataRequest, request);
@@ -165,7 +166,6 @@ public class SolrProducer extends DefaultProducer {
         String sourcePart = null;
         String namePart = null;
         String idPart = null;
-        String isStateOfPart = null;
         String ofSatellitePart = null;
         String locationPart = null;
         String derivedFromPart = null;
@@ -177,57 +177,57 @@ public class SolrProducer extends DefaultProducer {
         if (body.hasArgumentValue(StandardArguments.CLASS)) {
 
             if (body.shallIncludeStates()) {
-                classPart = "(class:" + body.getArgumentValue(StandardArguments.CLASS, String.class) + " OR class:State)";
+                classPart = "(" + StandardArguments.CLASS + ":" + body.getArgumentValue(StandardArguments.CLASS, String.class) + " OR "
+                        + StandardArguments.CLASS + ":State)";
             }
             else {
-                classPart = "class:" + body.getArgumentValue(StandardArguments.CLASS, String.class);
+                classPart = StandardArguments.CLASS + ":" + body.getArgumentValue(StandardArguments.CLASS, String.class);
             }
         }
 
         /** Set the type of data we are retrieving. */
         if (body.hasArgumentValue(StandardArguments.ISSUED_BY)) {
-            sourcePart = "issuedBy:\"" + body.getArgumentValue(StandardArguments.ISSUED_BY, String.class) + "\"";
+            sourcePart = StandardArguments.ISSUED_BY + ":\"" + body.getArgumentValue(StandardArguments.ISSUED_BY, String.class) + "\"";
         }
 
         /** Set the Names, if there. */
         if (body.hasArgumentValue(StandardArguments.NAMES)) {
             namePart = "";
             for (String name : (List<String>) body.getArgumentValue(StandardArguments.NAMES, List.class)) {
-                namePart = namePart.equals("") ? "name:\"" + name + "\"" : namePart + " OR name:\"" + name + "\"";
+                namePart = namePart.equals("") ? StandardArguments.NAME + ":\"" + name + "\"" : namePart + " OR " + StandardArguments.NAME + ":\"" + name
+                        + "\"";
 
                 /** Include states if required to */
                 if (body.shallIncludeStates() == true) {
-                    namePart += "OR isStateOf:\"" + name + "\"";
+                    // XXX - 18.05.2013, kimmell - using isStateOf for backwards compatibility
+                    namePart += " OR isStateOf:\"" + name + "\"";
+                    namePart += " OR " + StandardArguments.APPLICABLE_TO + ":\"" + name + "\"";
                 }
             }
         }
 
         /** Set the type of data we are retrieving. */
         if (body.hasArgumentValue(StandardArguments.ENTITY_ID)) {
-            sourcePart = "entityID:\"" + body.getArgumentValue(StandardArguments.ENTITY_ID, String.class) + "\"";
-        }
-
-        /** Set the isStateOf, if there. */
-        if (body.hasArgumentValue(StandardArguments.IS_STATE_OF)) {
-            isStateOfPart = "isStateOf:\"" + body.getArgumentValue(StandardArguments.IS_STATE_OF, String.class) + "\"";
+            sourcePart = StandardArguments.ENTITY_ID + ":\"" + body.getArgumentValue(StandardArguments.ENTITY_ID, String.class) + "\"";
         }
 
         if (body.hasArgumentValue(StandardArguments.DERIVED_FROM)) {
             String id = body.getArgumentValue(StandardArguments.DERIVED_FROM, String.class);
-            derivedFromPart = "derivedFrom:\"" + id + "\"";
+            derivedFromPart = StandardArguments.DERIVED_FROM + ":\"" + id + "\"";
         }
 
         if (body.hasArgumentValue(StandardArguments.APPLICABLE_TO)) {
             String id = body.getArgumentValue(StandardArguments.APPLICABLE_TO, String.class);
-            applicableToPart = "applicableTo:\"" + id + "\"";
+            // XXX - 18.05.2013, kimmell - using isStateOfor backwards compatibility
+            applicableToPart = "(" + StandardArguments.APPLICABLE_TO + ":\"" + id + "\" OR isStateOf: \"" + id + "\")";
         }
 
-        if (body.hasArgumentValue(StandardArguments.SATELLITE_NAME)) {
-            ofSatellitePart = "ofSatellite:\"" + body.getArgumentValue(StandardArguments.SATELLITE_NAME, String.class) + "\"";
+        if (body.hasArgumentValue(StandardArguments.SATELLITE_ID)) {
+            ofSatellitePart = "ofSatellite:\"" + body.getArgumentValue(StandardArguments.SATELLITE_ID, String.class) + "\"";
         }
 
-        if (body.hasArgumentValue(StandardArguments.GROUND_STATION_NAME)) {
-            locationPart = "ofLocation:\"" + body.getArgumentValue(StandardArguments.GROUND_STATION_NAME, String.class) + "\"";
+        if (body.hasArgumentValue(StandardArguments.GROUND_STATION_ID)) {
+            locationPart = "ofLocation:\"" + body.getArgumentValue(StandardArguments.GROUND_STATION_ID, String.class) + "\"";
         }
 
         if (body.hasArgumentValue(StandardArguments.VISIBILITY)) {
@@ -250,22 +250,18 @@ public class SolrProducer extends DefaultProducer {
             request += request.equals("") ? "(" + derivedFromPart + ")" : " AND (" + derivedFromPart + ")";
         }
 
-        if (applicableToPart != null) {
-            request += request.equals("") ? "(" + applicableToPart + ")" : " AND (" + applicableToPart + ")";
-        }
-
         if (visibilityPart != null) {
             request += request.equals("") ? visibilityPart : " AND " + visibilityPart;
         }
 
-        if (namePart != null && isStateOfPart != null) {
-            request += request.equals("") ? "(" + namePart + " OR " + isStateOfPart + ")" : " AND (" + namePart + " OR " + isStateOfPart + ")";
+        if (namePart != null && applicableToPart != null) {
+            request += request.equals("") ? "(" + namePart + " OR " + applicableToPart + ")" : " AND (" + namePart + " OR " + applicableToPart + ")";
         }
-        else if (namePart != null && isStateOfPart == null) {
+        else if (namePart != null && applicableToPart == null) {
             request += request.equals("") ? "(" + namePart + ")" : " AND (" + namePart + ")";
         }
-        else if (namePart == null && isStateOfPart != null) {
-            request += request.equals("") ? "(" + isStateOfPart + ")" : " AND (" + isStateOfPart + ")";
+        else if (namePart == null && applicableToPart != null) {
+            request += request.equals("") ? "(" + applicableToPart + ")" : " AND (" + applicableToPart + ")";
         }
 
         if (ofSatellitePart != null) {
@@ -289,25 +285,27 @@ public class SolrProducer extends DefaultProducer {
         String timePart = null;
         if (from != null && to != null) {
             if (from == to) {
-                timePart = "timestamp:" + to;
+                timePart = StandardArguments.TIMESTAMP + ":" + to;
             }
             else {
-                timePart = "timestamp:[" + from + " TO " + to + "]";
+                timePart = StandardArguments.TIMESTAMP + ":[" + from + " TO " + to + "]";
 
             }
         }
         else if (from == null && to != null) {
-            timePart = "timestamp:[* TO " + to + "]";
+            timePart = StandardArguments.TIMESTAMP + ":[* TO " + to + "]";
         }
         else if (from != null && to == null) {
-            timePart = "timestamp:[" + from + " TO *]";
+            timePart = StandardArguments.TIMESTAMP + ":[" + from + " TO *]";
         }
 
         return timePart == null ? "" : " AND " + timePart;
     }
 
-    protected String createIsStateOfElement(String isStateOf) {
-        return isStateOf == null || isStateOf.equals("") ? "" : " AND isStateOf:\"" + isStateOf + "\"";
+    protected String createIsApplicableToElement(String applicableTo) {
+        // XXX - 18.05.2013, kimmell - using isStateOf for backwards compatibility
+        return applicableTo == null || applicableTo.equals("") ? "" : " AND (isStateOf:\"" + applicableTo + "\" OR " + StandardArguments.APPLICABLE_TO + ":\""
+                + applicableTo + "\")";
     }
 
     private List<EntityInstance> doInitializationRequest(DataRequest body, String request) {
@@ -349,13 +347,13 @@ public class SolrProducer extends DefaultProducer {
 
                         for (Count count : facetfield.getValues()) {
 
-                            String isStateOf = "";
-                            if (body.hasArgumentValue(StandardArguments.IS_STATE_OF)) {
-                                isStateOf = body.getArgumentValue(StandardArguments.IS_STATE_OF, String.class);
+                            String applicableTo = "";
+                            if (body.hasArgumentValue(StandardArguments.APPLICABLE_TO)) {
+                                applicableTo = body.getArgumentValue(StandardArguments.APPLICABLE_TO, String.class);
                             }
 
                             SolrQuery sampleQuery = new SolrQuery("name:\"" + count.getName() + "\"" + createTimestampElement(body.getFrom(), body.getTo())
-                                    + createIsStateOfElement(isStateOf));
+                                    + createIsApplicableToElement(applicableTo));
                             LOG.info("Using sample query '" + sampleQuery + "' to get facet " + count.getName());
                             sampleQuery.setRows(body.getRows());
                             sampleQuery.setSortField(StandardArguments.TIMESTAMP, ORDER.desc);
@@ -543,7 +541,6 @@ public class SolrProducer extends DefaultProducer {
         }
         else if (io instanceof State) {
             State parameter = (State) io;
-            document.addField(StandardArguments.IS_STATE_OF, parameter.getApplicableTo());
             encodeValue(StandardArguments.STATE, parameter.getValue(), document);
         }
         else if (io instanceof CommandRequest) {
@@ -578,16 +575,16 @@ public class SolrProducer extends DefaultProducer {
             document.addField("generationTimestamp", ((IGenerationTimestamped) io).getGenerationTime());
         }
         if (io instanceof ISatelliteSpecific) {
-            document.addField("ofSatellite", ((ISatelliteSpecific) io).getSatelliteId());
+            document.addField("ofSatellite", ((ISatelliteSpecific) io).getSatelliteID());
         }
         if (io instanceof IGroundStationSpecific) {
-            document.addField("ofLocation", ((IGroundStationSpecific) io).getGroundStationId());
+            document.addField("ofLocation", ((IGroundStationSpecific) io).getGroundStationID());
         }
         if (io instanceof IApplicableTo) {
-            document.addField("applicableTo", ((IApplicableTo) io).getApplicableTo());
+            document.addField(StandardArguments.APPLICABLE_TO, ((IApplicableTo) io).getApplicableTo());
         }
         if (io instanceof IDerivedFrom) {
-            document.addField("derivedFrom", ((IDerivedFrom) io).getDerivedFromId());
+            document.addField(StandardArguments.DERIVED_FROM, ((IDerivedFrom) io).getDerivedFromId());
         }
 
         /** Insert the serialization. */
@@ -606,7 +603,7 @@ public class SolrProducer extends DefaultProducer {
     public void submit() {
         synchronized (batch) {
             if (batch.isEmpty() == false) {
-                LOG.info("Submitting '" + batch.size() + "' documents for storage.");
+                LOG.info("Submitting '{}' documents for storage.", batch.size());
                 UpdateResponse response = null;
                 try {
                     response = endpoint.getServer().add(batch);
@@ -615,7 +612,7 @@ public class SolrProducer extends DefaultProducer {
                     }
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    LOG.error("Failed to handle submit ", e);
                 }
                 finally {
                     /** Always clear. */

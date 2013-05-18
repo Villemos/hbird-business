@@ -3,6 +3,8 @@ package org.hbird.exchange.dataaccess;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hbird.exchange.navigation.Satellite;
 
 public class SatelliteRequest extends DataRequest {
@@ -31,4 +33,16 @@ public class SatelliteRequest extends DataRequest {
         satellites.add(satellite);
         addNames(satellites);
     }
+
+    @Override
+    public String toString() {
+        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        builder.append("ID", getInstanceID());
+        builder.append("name", name);
+        builder.append("issuedBy", issuedBy);
+        builder.append("destination", destination);
+        builder.append("satelliteNames", getNames());
+        return builder.build();
+    }
+
 }

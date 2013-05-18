@@ -469,29 +469,26 @@ public interface IDataAccess extends IHbirdApi {
      * (parameter samples and applicable states)</li> <li>Starting from the last received sample of the parameter</li>
      * <li>and sorted on timestamp in DECENDING order</li>
      * 
-     * @param isStateOf The name of the Named object that the state must be a state of
+     * @param applicableTo The ID of Entity that the state must be applicable
      * @return A list of all states applicable to the named object
      */
-    public List<State> getState(String isStateOf);
+    public List<State> getState(String applicableTo);
 
     /**
      * Method to retrieve all states applicable to a Named object (such as a Parameter). <li>All state samples</li> <li>
      * With a sample timestamp between 'from' and 'to'</li> <li>and sorted on timestamp in ASCENDING order</li>
      * 
-     * @param isStateOf The name of the Named object that the state must be a state of
+     * @param applicableTo The ID of Entity that the state must be applicable
      * @param from The earliest time (Java time).
      * @param to The latest time (Java time)
      * @return A list of all states applicable to the Named object
      */
-    public List<State> getState(String isStateOf, long from, long to);
+    public List<State> getState(String applicableTo, long from, long to);
 
     /**
      * Method to retrieve the current value of a set of states. <li>All state samples</li> <li>With a sample timestamp
      * between 'from' and 'to'</li> <li>and sorted on timestamp in ASCENDING order</li>
      * 
-     * @param isStateOf The name of the Named object that the state must be a state of
-     * @param from The earliest time (Java time).
-     * @param to The latest time (Java time)
      * @return A list of all states applicable to the Named object
      */
     public List<State> getStates(List<String> states);
@@ -500,115 +497,116 @@ public interface IDataAccess extends IHbirdApi {
      * Method to retrieve the last orbital state of a satellite as derived from the last TLE. The method will return <li>
      * The last orbital state sample applicable to the satellite, derived from the last TLE parameters.</li>
      * 
-     * @param satellite The name of the satellite
+     * @param satelliteID The ID of the satellite
      */
-    public OrbitalState getOrbitalStateFor(String satellite);
+    public OrbitalState getOrbitalStateFor(String satelliteID);
 
     /**
      * Method to retrieve the orbital state of a satellite, identified throughs its name, within
      * a given interval. The method will return <li>All orbital state samples applicable to the satellite</li> <li>With
      * a sample timestamp between 'from' and 'to'</li> <li>and sorted on timestamp in ASCENDING order</li>
      * 
-     * @param satellite Unique name of the satellite
+     * @param satelliteID ID of the satellite
      * @param from The earliest time (Java time).
      * @param to The latest time (Java time)
      * @return A list of all orbital states applicable to the satellites
      */
-    public List<OrbitalState> getOrbitalStatesFor(String satellite, long from, long to);
+    public List<OrbitalState> getOrbitalStatesFor(String satelliteID, long from, long to);
 
     /**
      * Method to retrieve the TLE of a satellite, identified throughs its name. The method will return <li>The TLE (if
      * existent) of the satellite</li> <li>With the latest timestamp</li>
      * 
-     * @param satellite Unique name of the satellite
+     * @param satelliteID ID of the satellite
      * @return A list of all orbital states applicable to the satellites
      */
-    public TleOrbitalParameters getTleFor(String satellite);
+    public TleOrbitalParameters getTleFor(String satelliteID);
 
     /**
      * Method to retrieve the orbital state of a satellite, identified throughs its name, within
      * a given interval. The method will return <li>All orbital state samples applicable to the satellite</li> <li>With
      * a sample timestamp between 'from' and 'to'</li> <li>and sorted on timestamp in ASCENDING order</li>
      * 
-     * @param satellite Unique name of the satellite
+     * @param satelliteID ID of the satellite
      * @param from The earliest time (Java time).
      * @param to The latest time (Java time)
      * @return A list of all orbital states applicable to the satellites
      */
-    public List<TleOrbitalParameters> getTleFor(String satellite, long from, long to);
+    public List<TleOrbitalParameters> getTleFor(String satelliteID, long from, long to);
 
     /**
      * Method to retrieve the next location contact event.
      * 
-     * @param location
+     * @param groundStationID ID of the ground station
      * @return
      */
-    public LocationContactEvent getNextLocationContactEventForLocation(String location);
+    public LocationContactEvent getNextLocationContactEventForGroundStation(String groundStationID);
 
     /**
      * Method to retrieve the next location contact event.
      * 
-     * @param location
+     * @param groundStationID ID of the ground station
      * @return
      */
-    public LocationContactEvent getNextLocationContactEventForLocation(String location, long from);
+    public LocationContactEvent getNextLocationContactEventForGroundStation(String groundStationID, long from);
 
     /**
      * Method to retrieve the next location contact event.
      * 
-     * @param location
+     * @param groundStationID ID of the ground station
+     * @param satelliteID ID of the satellite
      * @return
      */
-    public LocationContactEvent getNextLocationContactEventFor(String location, String satellite);
+    public LocationContactEvent getNextLocationContactEventFor(String groundStationID, String satelliteID);
 
     /**
      * Method to retrieve the next location contact event.
      * 
-     * @param location
+     * @param groundStationID ID of the ground station
+     * @param satelliteID ID of the satellite
      * @return
      */
-    public LocationContactEvent getNextLocationContactEventFor(String location, String satellite, long from);
+    public LocationContactEvent getNextLocationContactEventFor(String groundStationID, String satelliteID, long from);
 
     /**
      * Method to retrieve the next pointing data to a specific satellite. The method will return <li>All contact data
      * related to the next set of contact events (start-end of contact).</li> <li>Of the specified location</li> <li>And
      * ANY satellite</li> <li>Sorted ASCENDING on timestamp</li>
      * 
-     * @param location The location for which to retrieve the contact data for.
+     * @param groundStationID The ID of the ground station for which to retrieve the contact data for.
      * 
      * @return List containing the next set of contact data
      */
-    public List<PointingData> getNextLocationPointingDataForLocation(String location);
+    public List<PointingData> getNextLocationPointingDataForGroundStation(String groundStationID);
 
     /**
-     * @param satellite
+     * @param satelliteID ID of the satellite
      * @return
      */
-    public List<PointingData> getNextLocationPointingDataForSatellite(String satellite);
+    public List<PointingData> getNextLocationPointingDataForSatellite(String satelliteID);
 
     /**
      * Method to retrieve the next pointing data to a specific satellite. The method will return <li>All contact data
      * related to the next set of contact events (start-end of contact).</li> <li>Of the specified location</li> <li>And
      * the specified satellite</li> <li>Sorted ASCENDING on timestamp</li>
      * 
-     * @param location The location for which to retrieve the contact data for.
-     * @param satellite The name of the satellite
+     * @param groundStationID ID of the ground station
+     * @param satelliteID ID of the satellite
      * 
      * @return List containing the next set of contact data
      */
-    public List<PointingData> getNextLocationPointingDataFor(String location, String satellite);
+    public List<PointingData> getNextLocationPointingDataFor(String groundStationID, String satelliteID);
 
     /**
      * Method to retrieve the next pointing data to a specific satellite. The method will return <li>All contact data
      * related to the set of contact events (start-end of contact).</li> <li>Lying in the from-to period.</li> <li>Of
      * the specified location</li> <li>And the specified satellite</li> <li>Sorted ASCENDING on timestamp</li>
      * 
-     * @param location The location for which to retrieve the contact data for.
-     * @param satellite The name of the satellite
+     * @param groundStationID ID of the ground station
      * 
      * @return List containing the next set of contact data
      */
-    public List<PointingData> getLocationPointingDataFor(String location, long from, long to);
+    public List<PointingData> getLocationPointingDataFor(String groundStationID, long from, long to);
 
     /**
      * Method to retrieve the metadata of an object.

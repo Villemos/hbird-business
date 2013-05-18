@@ -74,8 +74,8 @@ public class LocationContactEventTest {
     @Test
     public void testLocationContactEvent() {
         assertEquals(GS_ID + EntityInstance.INSTANCE_ID_SEPARATOR + SAT_ID, event.getID());
-        assertEquals(GS_ID, event.getGroundStationId());
-        assertEquals(SAT_ID, event.getSatelliteId());
+        assertEquals(GS_ID, event.getGroundStationID());
+        assertEquals(SAT_ID, event.getSatelliteID());
         assertEquals(ORBIT_NUMBER, event.getOrbitNumber());
         assertTrue(NOW <= event.getTimestamp());
         assertTrue(event.getTimestamp() <= System.currentTimeMillis());
@@ -98,12 +98,12 @@ public class LocationContactEventTest {
 
     @Test
     public void testGetGroundStationId() {
-        assertEquals(GS_ID, event.getGroundStationId());
+        assertEquals(GS_ID, event.getGroundStationID());
     }
 
     @Test
     public void testGetSatelliteId() {
-        assertEquals(SAT_ID, event.getSatelliteId());
+        assertEquals(SAT_ID, event.getSatelliteID());
     }
 
     @Test

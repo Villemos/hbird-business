@@ -145,7 +145,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
              .split()
                  .method(tracker, "track")
                  .setHeader("stage", simple("${body.stage}"))
-                 .setHeader("derivedfrom", simple("${body.derivedfrom}"))
+                 .setHeader(StandardArguments.DERIVED_FROM, simple("${body.derivedfrom}"))
                  .setHeader("commandid", simple("${body.commandid}"))
                  .setHeader("executiontime", simple("${body.executionTime}"))
              .bean(verifier, "register")
@@ -182,7 +182,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
          */
          from(inMemoryScheduler.getInjectUrl())
              .setHeader("stage", simple("${body.stage}"))
-             .setHeader("derivedfrom", simple("${body.derivedfrom}"))
+             .setHeader(StandardArguments.DERIVED_FROM, simple("${body.derivedfrom}"))
              .setHeader("commandid", simple("${body.commandid}"))
              .setHeader("executiontime", simple("${body.executionTime}"))
              .bean(new NativeCommandExtractor())

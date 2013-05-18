@@ -25,36 +25,35 @@ import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.navigation.OrbitalState;
 
 /**
- * API for management of the archive component. Support
- * <li>Deletion of Data.</li>
+ * API for management of the archive component. Support <li>Deletion of Data.</li>
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class ArchiveManagement extends HbirdApi implements IArchiveManagement {
 
-	/**
-	 * Constructor. 
-	 * 
-	 * @param issuedBy The name/ID of the component that is using the API to send requests.
-	 */
-	public ArchiveManagement(String issuedBy) {
-		super(issuedBy, ArchiveComponent.ARCHIVE_NAME);
-	}
+    /**
+     * Constructor.
+     * 
+     * @param issuedBy The name/ID of the component that is using the API to send requests.
+     */
+    public ArchiveManagement(String issuedBy) {
+        super(issuedBy, ArchiveComponent.ARCHIVE_NAME);
+    }
 
-	public ArchiveManagement(String issuedBy, CamelContext context) {
-		super(issuedBy, ArchiveComponent.ARCHIVE_NAME, context);
-	}
+    public ArchiveManagement(String issuedBy, CamelContext context) {
+        super(issuedBy, ArchiveComponent.ARCHIVE_NAME, context);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.IArchiveManagement#deleteOrbitalStates(java.lang.String)
-	 */
-	@Override
-	public void deleteOrbitalStates(String satellite) {
-		DeletionRequest request = new DeletionRequest(issuedBy);
-		request.setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
-		request.setArgumentValue(StandardArguments.CLASS, OrbitalState.class.getSimpleName());
-		request.setDeleteAll(false);
-		executeRequestRespond(request);
-	}
+    /**
+     * @see org.hbird.business.api.IArchiveManagement#deleteOrbitalStates(java.lang.String)
+     */
+    @Override
+    public void deleteOrbitalStates(String satellite) {
+        DeletionRequest request = new DeletionRequest(issuedBy);
+        request.setArgumentValue(StandardArguments.SATELLITE_ID, satellite);
+        request.setArgumentValue(StandardArguments.CLASS, OrbitalState.class.getSimpleName());
+        request.setDeleteAll(false);
+        executeRequestRespond(request);
+    }
 }

@@ -87,7 +87,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
         if (!validateArgument(contact, StandardArguments.START)) {
             return NO_COMMANDS;
         }
-        if (!validateArgument(satellite, StandardArguments.SATELLITE)) {
+        if (!validateArgument(satellite, StandardArguments.SATELLITE_ID)) {
             return NO_COMMANDS;
         }
 
@@ -125,8 +125,8 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
         catch (Exception e) {
             LOG.error("Failed to calculate pointing data for the overpass; ground station: {}; satellite: {}; over pass start time: {}; Exception: ",
                     new Object[] {
-                            groundStation.getGroundStationId(),
-                            satellite.getSatelliteId(),
+                            groundStation.getGroundStationID(),
+                            satellite.getSatelliteID(),
                             Dates.toIso8601DateFormat(contact.getStartTime()),
                             e
                     });

@@ -32,7 +32,6 @@ import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetFrequency;
 import org.hbird.business.groundstation.hamlib.radio.protocol.SetVfo;
-import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.core.CommandBase;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
@@ -146,25 +145,25 @@ public class HamlibRadioTrackerTest {
         HamlibNativeCommand cmd = (HamlibNativeCommand) commands.get(0);
         assertEquals(SetVfo.createCommand(UPLINK_VFO), cmd.getCommandToExecute());
         assertEquals(NOW + 1, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(STAGE, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(1);
         assertEquals(SetFrequency.createCommand(UPLINK_FREQUENCY, DOPPLER_1), cmd.getCommandToExecute());
         assertEquals(NOW + 1 + DELAY, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(STAGE, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(2);
         assertEquals(SetVfo.createCommand(DOWNLINK_VFO), cmd.getCommandToExecute());
         assertEquals(NOW + 1 + DELAY * 2, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(STAGE, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(3);
         assertEquals(SetFrequency.createCommand(DOWNLINK_FREQUENCY, DOPPLER_1), cmd.getCommandToExecute());
         assertEquals(NOW + 1 + DELAY * 3, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(STAGE, cmd.getStage());
 
         inOrder.verify(pd1, times(1)).getTimestamp();
@@ -201,25 +200,25 @@ public class HamlibRadioTrackerTest {
         HamlibNativeCommand cmd = (HamlibNativeCommand) commands.get(0);
         assertEquals(SetVfo.createCommand(UPLINK_VFO), cmd.getCommandToExecute());
         assertEquals(NOW + 1, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_PRE_TRACKING, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(1);
         assertEquals(SetFrequency.createCommand(UPLINK_FREQUENCY, DOPPLER_1), cmd.getCommandToExecute());
         assertEquals(NOW + 1 + DELAY, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_PRE_TRACKING, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(2);
         assertEquals(SetVfo.createCommand(DOWNLINK_VFO), cmd.getCommandToExecute());
         assertEquals(NOW + 1 + DELAY * 2, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_PRE_TRACKING, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(3);
         assertEquals(SetFrequency.createCommand(DOWNLINK_FREQUENCY, DOPPLER_1), cmd.getCommandToExecute());
         assertEquals(NOW + 1 + DELAY * 3, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_PRE_TRACKING, cmd.getStage());
 
         inOrder.verify(config, times(1)).getDelayInCommandGroup();
@@ -245,49 +244,49 @@ public class HamlibRadioTrackerTest {
         HamlibNativeCommand cmd = (HamlibNativeCommand) commands.get(0);
         assertEquals(SetVfo.createCommand(UPLINK_VFO), cmd.getCommandToExecute());
         assertEquals(NOW + 2, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_TRACKING, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(1);
         assertEquals(SetFrequency.createCommand(UPLINK_FREQUENCY, DOPPLER_2), cmd.getCommandToExecute());
         assertEquals(NOW + 2 + DELAY, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_TRACKING, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(2);
         assertEquals(SetVfo.createCommand(DOWNLINK_VFO), cmd.getCommandToExecute());
         assertEquals(NOW + 2 + DELAY * 2, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_TRACKING, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(3);
         assertEquals(SetFrequency.createCommand(DOWNLINK_FREQUENCY, DOPPLER_2), cmd.getCommandToExecute());
         assertEquals(NOW + 2 + DELAY * 3, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_TRACKING, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(4);
         assertEquals(SetVfo.createCommand(UPLINK_VFO), cmd.getCommandToExecute());
         assertEquals(NOW + 3, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_TRACKING, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(5);
         assertEquals(SetFrequency.createCommand(UPLINK_FREQUENCY, DOPPLER_3), cmd.getCommandToExecute());
         assertEquals(NOW + 3 + DELAY, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_TRACKING, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(6);
         assertEquals(SetVfo.createCommand(DOWNLINK_VFO), cmd.getCommandToExecute());
         assertEquals(NOW + 3 + DELAY * 2, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_TRACKING, cmd.getStage());
 
         cmd = (HamlibNativeCommand) commands.get(7);
         assertEquals(SetFrequency.createCommand(DOWNLINK_FREQUENCY, DOPPLER_3), cmd.getCommandToExecute());
         assertEquals(NOW + 3 + DELAY * 3, cmd.getExecutionTime());
-        assertEquals(ID, cmd.getDerivedfrom());
+        assertEquals(ID, cmd.getDerivedFrom());
         assertEquals(HamlibNativeCommand.STAGE_TRACKING, cmd.getStage());
 
         inOrder.verify(config, times(1)).getDelayInCommandGroup();

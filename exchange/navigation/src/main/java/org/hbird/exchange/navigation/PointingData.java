@@ -98,12 +98,12 @@ public class PointingData implements ISatelliteSpecific, IGroundStationSpecific 
     }
 
     @Override
-    public String getSatelliteId() {
+    public String getSatelliteID() {
         return satelliteName;
     }
 
     @Override
-    public String getGroundStationId() {
+    public String getGroundStationID() {
         return groundStationName;
     }
 

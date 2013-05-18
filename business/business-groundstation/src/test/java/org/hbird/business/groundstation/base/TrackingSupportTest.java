@@ -201,7 +201,7 @@ public class TrackingSupportTest {
         missingArguments = new ArrayList<String>();
         missingArguments.add(StandardArguments.START);
         missingArguments.add(StandardArguments.END);
-        missingArguments.add(StandardArguments.SATELLITE);
+        missingArguments.add(StandardArguments.SATELLITE_ID);
 
         exception = new RuntimeException("Mutchos problemos");
 
@@ -332,8 +332,8 @@ public class TrackingSupportTest {
         inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verify(configuration, times(1)).getCommandInterval();
         inOrder.verify(calculator, times(1)).calculateContactData(contact, gs, STEP);
-        inOrder.verify(gs, times(1)).getGroundStationId();
-        inOrder.verify(sat1, times(1)).getSatelliteId();
+        inOrder.verify(gs, times(1)).getGroundStationID();
+        inOrder.verify(sat1, times(1)).getSatelliteID();
         inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verifyNoMoreInteractions();
     }

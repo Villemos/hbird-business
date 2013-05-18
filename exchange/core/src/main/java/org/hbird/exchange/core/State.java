@@ -18,13 +18,14 @@ package org.hbird.exchange.core;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hbird.exchange.interfaces.IEntity;
 import org.hbird.exchange.interfaces.IState;
 
 /**
  * The state of an .
  * 
- * Any other type may have a (set of) states associated. The association is
- * not through direct dependency, but through the states 'isstateOff' field.
+ * Any other type may have a (set of) {@link IEntity}'s associated. The association is
+ * not through direct dependency, but through the value of 'applicableTo' field.
  * 
  * @author Gert Villemos
  */
@@ -38,10 +39,6 @@ public class State extends ApplicableTo implements IState {
     /**
      * Constructor of the state parameter. The timestamp will be set to the current time.
      * 
-     * @param stateName the name of this state.
-     * @param description A description of this state.
-     * @param isStateOff The object that this state is a state off.
-     * @param state The current state.
      */
     public State(String ID, String name) {
         super(ID, name);

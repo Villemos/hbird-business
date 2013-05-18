@@ -18,9 +18,9 @@ package org.hbird.exchange.dataaccess;
 
 import static org.hbird.exchange.dataaccess.Arguments.CONTACT_DATA_STEP_SIZE;
 import static org.hbird.exchange.dataaccess.Arguments.DELTA_PROPAGATION;
-import static org.hbird.exchange.dataaccess.Arguments.GROUND_STATION_NAMES;
+import static org.hbird.exchange.dataaccess.Arguments.GROUND_STATION_IDS;
 import static org.hbird.exchange.dataaccess.Arguments.PUBLISH;
-import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_NAME;
+import static org.hbird.exchange.dataaccess.Arguments.SATELLITE_ID;
 import static org.hbird.exchange.dataaccess.Arguments.START_TIME;
 import static org.hbird.exchange.dataaccess.Arguments.STEP_SIZE;
 import static org.hbird.exchange.dataaccess.Arguments.TLE_PARAMETERS;
@@ -51,9 +51,9 @@ public class TlePropagationRequest extends DataRequest {
     @Override
     protected List<CommandArgument> getArgumentDefinitions(List<CommandArgument> args) {
         args = super.getArgumentDefinitions(args);
-        args.add(create(SATELLITE_NAME));
+        args.add(create(SATELLITE_ID));
         args.add(create(START_TIME));
-        args.add(create(GROUND_STATION_NAMES));
+        args.add(create(GROUND_STATION_IDS));
         args.add(create(DELTA_PROPAGATION));
         args.add(create(STEP_SIZE));
         args.add(create(CONTACT_DATA_STEP_SIZE));
@@ -63,7 +63,7 @@ public class TlePropagationRequest extends DataRequest {
     }
 
     public String getSatelliteId() {
-        return getArgumentValue(StandardArguments.SATELLITE_NAME, String.class);
+        return getArgumentValue(StandardArguments.SATELLITE_ID, String.class);
     }
 
     public Long getContactDataStepSize() {
@@ -87,8 +87,8 @@ public class TlePropagationRequest extends DataRequest {
     }
 
     @SuppressWarnings("unchecked")
-    public List<String> getLocations() {
-        return getArgumentValue(StandardArguments.GROUND_STATION_NAMES, List.class);
+    public List<String> getGroundStationIDs() {
+        return getArgumentValue(StandardArguments.GROUND_STATION_IDS, List.class);
     }
 
     public TleOrbitalParameters getTleParameters() {
@@ -99,26 +99,32 @@ public class TlePropagationRequest extends DataRequest {
         return getArgumentValue(StandardArguments.PUBLISH, Boolean.class);
     }
 
-	/**
-	 * @param satellite
-	 */
-	public void setSatellite(String satellite) {
-        setArgumentValue(StandardArguments.SATELLITE_NAME, satellite);
-	}
-	
-	/**
-	 * @param satelliteId
-	 */
-	public void setLocation(String location) {
-		List<String> names = new ArrayList<String>();
-		names.add(location);
-        setArgumentValue(StandardArguments.GROUND_STATION_NAMES, names);
-	}
-	
-	/**
-	 * @param satelliteId
-	 */
-	public void setLocations(List<String> locations) {
-        setArgumentValue(StandardArguments.GROUND_STATION_NAMES, locations);
-	}	
+    /**
+     * @param satellite
+     */
+    public void setSatelliteID(String satelliteID) {
+        setArgumentValue(StandardArguments.SATELLITE_ID, satelliteID);
+    }
+
+    /**
+     * @param satelliteId
+     */
+    public void addGroundStationID(String groundStationID) {
+        List<String> names;
+        if (hasArgumentValue(StandardArguments.GROUND_STATION_IDS)) {
+            names = getGroundStationIDs();
+        }
+        else {
+            names = new ArrayList<String>();
+        }
+        names.add(groundStationID);
+        setArgumentValue(StandardArguments.GROUND_STATION_IDS, names);
+    }
+
+    /**
+     * @param satelliteId
+     */
+    public void setGroundStationIDs(List<String> groundStationIDs) {
+        setArgumentValue(StandardArguments.GROUND_STATION_IDS, groundStationIDs);
+    }
 }

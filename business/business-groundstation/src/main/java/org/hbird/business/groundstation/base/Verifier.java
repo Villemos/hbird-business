@@ -41,6 +41,7 @@ import java.util.Map.Entry;
 
 import org.apache.camel.Body;
 import org.apache.camel.Header;
+import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +75,8 @@ public class Verifier {
         stageDescription.put("PostTracking", "The verification of the cleanup after a track.");
     }
 
-    public synchronized void register(@Header("stage") String stage, @Header("derivedfrom") String derivedFrom, @Header("commandid") String commandid,
+    public synchronized void register(@Header("stage") String stage, @Header(StandardArguments.DERIVED_FROM) String derivedFrom,
+            @Header("commandid") String commandid,
             @Header("executiontime") Long executiontime) {
         LOG.debug("Stage '" + stage + "' depends on nativecommand '" + commandid + "'.");
 
@@ -96,7 +98,7 @@ public class Verifier {
         }
     }
 
-    public synchronized State verify(@Body String response, @Header("stage") String stage, @Header("derivedfrom") String derivedFrom,
+    public synchronized State verify(@Body String response, @Header("stage") String stage, @Header(StandardArguments.DERIVED_FROM) String derivedFrom,
             @Header("commandid") String commandid) {
         State state = null;
 

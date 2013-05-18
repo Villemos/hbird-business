@@ -58,16 +58,22 @@ public class Publish extends HbirdApi implements IPublish {
         super(issuedBy, ArchiveComponent.ARCHIVE_NAME, context);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
      * @see org.hbird.business.api.IPublish#publish(org.hbird.exchange.core.Named)
      */
     @Override
     public EntityInstance publish(EntityInstance object) {
-        object.setIssuedBy(issuedBy);
-        if (object instanceof Command && ((Command) object).getDestination() == null) {
-            ((Command) object).setDestination(destination);
+        // set issuedBy if missing
+        if (object.getIssuedBy() == null) {
+            object.setIssuedBy(issuedBy);
+        }
+
+        if (object instanceof Command) {
+            // set destination if missing
+            Command cmd = (Command) object;
+            if (cmd.getDestination() == null) {
+                cmd.setDestination(destination);
+            }
         }
 
         template.sendBody(inject, object);
@@ -110,15 +116,15 @@ public class Publish extends HbirdApi implements IPublish {
      * java.lang.Boolean)
      */
     @Override
-    public State publishState(String ID, String name, String description, String isStateOf, Boolean state) {
-        return publishState(ID, name, description, isStateOf, state, System.currentTimeMillis());
+    public State publishState(String ID, String name, String description, String applicableTo, Boolean state) {
+        return publishState(ID, name, description, applicableTo, state, System.currentTimeMillis());
     }
 
     @Override
-    public State publishState(String ID, String name, String description, String isStateOf, Boolean state, long timestamp) {
+    public State publishState(String ID, String name, String description, String applicableTo, Boolean state, long timestamp) {
         State newState = new State(ID, name);
         newState.setDescription(description);
-        newState.setApplicableTo(isStateOf);
+        newState.setApplicableTo(applicableTo);
         newState.setValue(state);
         newState.setTimestamp(timestamp);
 

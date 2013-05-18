@@ -18,5 +18,5 @@ package org.hbird.exchange.interfaces;
 
 public interface ISatelliteSpecific {
 
-    public String getSatelliteId();
+    public String getSatelliteID();
 }
