@@ -31,11 +31,15 @@ import org.hbird.business.navigation.processors.ResultExctractor;
 import org.hbird.business.navigation.processors.TimeRangeCalulator;
 import org.hbird.business.navigation.processors.TleResolver;
 import org.hbird.business.navigation.processors.orekit.OrekitContactPredictor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class ContactPredictionDriver extends SoftwareComponentDriver {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ContactPredictionDriver.class);
 
     /**
      * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
@@ -48,23 +52,28 @@ public class ContactPredictionDriver extends SoftwareComponentDriver {
         ContactPredictionConfiguration config = (ContactPredictionConfiguration) component.getConfiguration();
 
         // dependencies
-        String serviceId = config.getServiceId();
+        String componentId = component.getID();
         CamelContext ctx = component.getContext();
-        IDataAccess dao = ApiFactory.getDataAccessApi(serviceId, ctx);
-        ICatalogue catalogue = ApiFactory.getCatalogueApi(serviceId, ctx);
-        IPublish publisher = ApiFactory.getPublishApi(serviceId, ctx);
+        IDataAccess dao = ApiFactory.getDataAccessApi(componentId, ctx);
+        ICatalogue catalogue = ApiFactory.getCatalogueApi(componentId, ctx);
+        IPublish publisher = ApiFactory.getPublishApi(componentId, ctx);
         IPropagatorProvider propagatorProvider = new KeplerianTlePropagatorProvider();
+        IFrameProvider frameProvider = new Cirf2000FrameProvider();
+        long predictionInterval = config.getPredictionInterval();
 
         // processors
         ContactPredictionRequestCreator requestCreator = new ContactPredictionRequestCreator(config);
         TleResolver tleResolver = new TleResolver(dao);
         GroundStationResolver gsResolver = new GroundStationResolver(dao, catalogue);
         TimeRangeCalulator timeRangeCalculator = new TimeRangeCalulator();
-        OrekitContactPredictor predictor = new OrekitContactPredictor(propagatorProvider, publisher);
+        OrekitContactPredictor predictor = new OrekitContactPredictor(componentId, propagatorProvider, publisher, frameProvider);
         ResultExctractor extractor = new ResultExctractor();
 
+        LOG.info("Starting {}; using '{}' and '{}' with interval {} ms", new Object[] { getClass().getSimpleName(),
+                propagatorProvider.getClass().getSimpleName(), frameProvider.getClass().getSimpleName(), predictionInterval });
+
         // actual route
-        ProcessorDefinition<?> route = from(addTimer(config.getServiceId(), config.getPredictionInterval()))
+        ProcessorDefinition<?> route = from(addTimer(componentId, predictionInterval))
                 .bean(requestCreator)
                 .bean(tleResolver)
                 .bean(gsResolver)

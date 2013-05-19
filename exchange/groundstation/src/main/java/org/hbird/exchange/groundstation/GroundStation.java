@@ -22,9 +22,9 @@ package org.hbird.exchange.groundstation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.IGroundStationSpecific;
+import org.hbird.exchange.navigation.GeoLocation;
 
 /**
  * An object representing a ground station.
@@ -47,7 +47,7 @@ public class GroundStation extends Part implements IGroundStationSpecific {
     public static final String DESCRIPTION = "A groundstation.";
 
     /** The geo location of the ground station. */
-    protected D3Vector geoLocation;
+    protected GeoLocation geoLocation;
 
     protected List<Antenna> antennas = new ArrayList<Antenna>();
 
@@ -67,11 +67,11 @@ public class GroundStation extends Part implements IGroundStationSpecific {
         return getID();
     }
 
-    public D3Vector getGeoLocation() {
+    public GeoLocation getGeoLocation() {
         return geoLocation;
     }
 
-    public void setGeoLocation(D3Vector geoLocation) {
+    public void setGeoLocation(GeoLocation geoLocation) {
         this.geoLocation = geoLocation;
     }
 

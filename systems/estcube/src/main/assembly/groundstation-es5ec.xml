@@ -73,7 +73,7 @@
         <constructor-arg index="1" name="destination" value="/ESTCUBE/GroundStations/ES5EC/Configuator"/>
         <constructor-arg index="2" name="objects">
             <list>
-                <ref bean="antenna" />
+<!--                 <ref bean="antenna" /> -->
                 <ref bean="es5ec" />
                 <ref bean="rotator" />
                 <ref bean="radio" />

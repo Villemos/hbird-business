@@ -58,6 +58,7 @@ public class TrackingDriverConfigurationTest {
         inOrder.verifyNoMoreInteractions();
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testTrackingDriverConfig() {
         assertEquals(TrackingDriverConfiguration.DEFAULT_ARCHIVE_POLL_INTERVAL, config.getArchivePollInterval());

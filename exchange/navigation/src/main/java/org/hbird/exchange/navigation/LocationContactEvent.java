@@ -28,7 +28,7 @@ import org.hbird.exchange.util.Dates;
  * The ground station control will, based on the mission timeline, orchestra the ground station.
  * 
  * The specific commands are generated in the drivers. The station control will trigger the actions
- * of the drivers as necesarry.
+ * of the drivers as necessary.
  * 
  * The ground station will
  * - Retrieve the mission timeline, in particular the assigned contact events.
@@ -36,7 +36,7 @@ import org.hbird.exchange.util.Dates;
  * seconds prior to/after contact.
  * - Execute activities.
  * 
- * An event, signalising the establishment or loss of contact between a satellite and
+ * An event, signaling the establishment or loss of contact between a satellite and
  * a location on earth. The location would typically be a ground station, but could also
  * be a ship, or anything else.
  * 
@@ -72,9 +72,7 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
 
     protected ExtendedContactParameterRange elevation;
 
-    protected ContactParameterRange uplinkDoppler;
-
-    protected ContactParameterRange downlinkDoppler;
+    protected ContactParameterRange doppler;
 
     protected ExtendedContactParameterRange uplinkSignalLoss;
 
@@ -175,29 +173,15 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
     /**
      * @return the uplinkDoppler
      */
-    public ContactParameterRange getUplinkDoppler() {
-        return uplinkDoppler;
+    public ContactParameterRange getDoppler() {
+        return doppler;
     }
 
     /**
      * @param uplinkDoppler the uplinkDoppler to set
      */
-    public void setUplinkDoppler(ContactParameterRange uplinkDoppler) {
-        this.uplinkDoppler = uplinkDoppler;
-    }
-
-    /**
-     * @return the downlinkDoppler
-     */
-    public ContactParameterRange getDownlinkDoppler() {
-        return downlinkDoppler;
-    }
-
-    /**
-     * @param downlinkDoppler the downlinkDoppler to set
-     */
-    public void setDownlinkDoppler(ContactParameterRange downlinkDoppler) {
-        this.downlinkDoppler = downlinkDoppler;
+    public void setDoppler(ContactParameterRange doppler) {
+        this.doppler = doppler;
     }
 
     /**

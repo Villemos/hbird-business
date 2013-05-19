@@ -30,11 +30,15 @@ import org.hbird.business.navigation.processors.ResultExctractor;
 import org.hbird.business.navigation.processors.TimeRangeCalulator;
 import org.hbird.business.navigation.processors.TleResolver;
 import org.hbird.business.navigation.processors.orekit.OrekitOrbitalStatePredictor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class OrbitalStatePredictionDriver extends SoftwareComponentDriver {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OrbitalStatePredictionDriver.class);
 
     /**
      * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
@@ -46,12 +50,13 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver {
         OrbitalStatePredictionConfiguration config = (OrbitalStatePredictionConfiguration) component.getConfiguration();
 
         // dependencies
-        String serviceId = config.getServiceId();
+        String componentId = component.getID();
         CamelContext ctx = component.getContext();
-        IDataAccess dao = ApiFactory.getDataAccessApi(serviceId, ctx);
-        IPublish publisher = ApiFactory.getPublishApi(serviceId, ctx);
+        IDataAccess dao = ApiFactory.getDataAccessApi(componentId, ctx);
+        IPublish publisher = ApiFactory.getPublishApi(componentId, ctx);
         IPropagatorProvider propagatorProvider = new KeplerianTlePropagatorProvider();
         IdBuilder idBuilder = ApiFactory.getIdBuilder();
+        long predictionInterval = config.getPredictionInterval();
 
         // processors
         PredictionRequestCreator<OrbitalStatePredictionConfiguration> requestCreator = new PredictionRequestCreator<OrbitalStatePredictionConfiguration>(config);
@@ -60,8 +65,11 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver {
         OrekitOrbitalStatePredictor predictor = new OrekitOrbitalStatePredictor(propagatorProvider, publisher, idBuilder);
         ResultExctractor extractor = new ResultExctractor();
 
+        LOG.info("Starting {}; using '{}' with interval {} ms", new Object[] { getClass().getSimpleName(), propagatorProvider.getClass().getSimpleName(),
+                predictionInterval });
+
         // actual route
-        ProcessorDefinition<?> route = from(addTimer(config.getServiceId(), config.getPredictionInterval()))
+        ProcessorDefinition<?> route = from(addTimer(componentId, predictionInterval))
                 .bean(requestCreator)
                 .bean(tleResolver)
                 .bean(timeRangeCalculator)

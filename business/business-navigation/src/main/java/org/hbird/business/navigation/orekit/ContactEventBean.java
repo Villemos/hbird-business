@@ -24,9 +24,11 @@ import org.hbird.business.api.IPublish;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.navigation.ContactEventComponent;
 import org.hbird.business.navigation.NavigationComponent;
-import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.groundstation.GroundStation;
+import org.hbird.exchange.navigation.GeoLocation;
 import org.orekit.bodies.GeodeticPoint;
+import org.orekit.errors.OrekitException;
+import org.orekit.frames.FramesFactory;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.propagation.events.EventDetector;
 
@@ -53,7 +55,7 @@ public class ContactEventBean extends NavigationBean {
      * @see org.hbird.business.navigation.NavigationBean#prePropagation()
      */
     @Override
-    public void preparePropagator() {
+    public void preparePropagator() throws OrekitException {
 
         List<GroundStation> locations;
 
@@ -70,10 +72,11 @@ public class ContactEventBean extends NavigationBean {
 
         /* Register the visibility events for the requested locations. */
         for (GroundStation groundStation : locations) {
-            D3Vector location = groundStation.getGeoLocation();
-            GeodeticPoint point = new GeodeticPoint(location.getP1(), location.getP2(), location.getP3());
-            TopocentricFrame sta1Frame = new TopocentricFrame(Constants.earth, point, location.getName());
-            EventDetector sta1Visi = new ContactEventCollector(0, sta1Frame, conf.getSatelliteId(), groundStation.getID(), tleParameters, publisher);
+            GeoLocation location = groundStation.getGeoLocation();
+            GeodeticPoint point = NavigationUtilities.toGeodeticPoint(location);
+            TopocentricFrame sta1Frame = new TopocentricFrame(Constants.earth, point, groundStation.getName());
+            EventDetector sta1Visi = new ContactEventCollector(conf.getID(), 0, sta1Frame, conf.getSatelliteId(), groundStation.getID(), tleParameters,
+                    publisher, FramesFactory.getCIRF2000(), 1000L * 30);
             propagator.addEventDetector(sta1Visi);
         }
 

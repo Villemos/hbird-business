@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +36,7 @@ public class RotatorDriverConfigurationTest {
     @Autowired(required = true)
     private RotatorDriverConfiguration config;
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testConfig() {
         assertNotNull(config);

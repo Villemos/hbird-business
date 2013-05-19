@@ -25,14 +25,17 @@ import org.hbird.business.api.IPublish;
 import org.hbird.business.navigation.configuration.ContactPredictionConfiguration;
 import org.hbird.business.navigation.orekit.Constants;
 import org.hbird.business.navigation.orekit.ContactEventCollector;
+import org.hbird.business.navigation.orekit.IFrameProvider;
 import org.hbird.business.navigation.orekit.IPropagatorProvider;
+import org.hbird.business.navigation.orekit.NavigationUtilities;
 import org.hbird.business.navigation.request.ContactPredictionRequest;
-import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.interfaces.IEntityInstance;
+import org.hbird.exchange.navigation.GeoLocation;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
+import org.orekit.frames.Frame;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.propagation.Propagator;
 import org.orekit.propagation.events.EventDetector;
@@ -50,12 +53,16 @@ public class OrekitContactPredictor {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrekitContactPredictor.class);
 
+    private final String issuerId;
     private final IPublish publisher;
     private final IPropagatorProvider propagatorProvider;
+    private final IFrameProvider frameProvider;
 
-    public OrekitContactPredictor(IPropagatorProvider propagatorProvider, IPublish publisher) {
+    public OrekitContactPredictor(String issuerId, IPropagatorProvider propagatorProvider, IPublish publisher, IFrameProvider frameProvider) {
+        this.issuerId = issuerId;
         this.propagatorProvider = propagatorProvider;
         this.publisher = publisher;
+        this.frameProvider = frameProvider;
     }
 
     @Handler
@@ -65,14 +72,17 @@ public class OrekitContactPredictor {
         List<GroundStation> gsList = request.getGroundStations();
         TleOrbitalParameters tleParameters = request.getTleParameters();
         String satelliteId = conf.getSatelliteId();
+        Frame inertrialFrame = frameProvider.getInertialFrame();
+        long calculationStep = conf.getDetailsCalculationStep();
         for (GroundStation gs : gsList) {
             String gsId = gs.getID();
             String gsName = gs.getName();
             int elevation = 0; // TODO - 16.05.2013, kimmell - make it configurable
-            D3Vector location = gs.getGeoLocation();
-            GeodeticPoint point = new GeodeticPoint(location.getP1(), location.getP2(), location.getP3());
+            GeoLocation location = gs.getGeoLocation();
+            GeodeticPoint point = NavigationUtilities.toGeodeticPoint(location);
             TopocentricFrame frame = new TopocentricFrame(Constants.earth, point, gsName);
-            EventDetector detector = new ContactEventCollector(elevation, frame, satelliteId, gsId, tleParameters, publisher);
+            EventDetector detector = new ContactEventCollector(issuerId, elevation, frame, satelliteId, gsId, tleParameters, publisher, inertrialFrame,
+                    calculationStep);
             propagator.addEventDetector(detector);
         }
 

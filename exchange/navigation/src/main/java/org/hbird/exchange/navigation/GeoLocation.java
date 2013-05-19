@@ -22,7 +22,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- *
+ * Although there is no restriction it is assumed latitude and longitude have values in degrees.
  */
 public class GeoLocation implements Serializable {
 

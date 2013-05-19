@@ -20,6 +20,7 @@ import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublish;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.navigation.NavigationComponent;
+import org.orekit.errors.OrekitException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,6 @@ public class OrbitPropagationBean extends NavigationBean {
      * @see org.hbird.business.navigation.NavigationBean#prePropagation()
      */
     @Override
-    public void preparePropagator() {
+    public void preparePropagator() throws OrekitException {
     }
 }

@@ -44,6 +44,7 @@ public class GroundStationDriverConfigurationTest {
      * {@link org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration#GroundStationDriverConfiguration(java.lang.String, java.lang.String, int, java.lang.String, java.lang.String, java.lang.String, int, java.lang.String, java.lang.Long, int, int, long, long)}
      * .
      */
+    @SuppressWarnings("deprecation")
     @Test
     public void testGroundStationDriverConfigurationStringStringIntStringStringStringIntStringLongIntIntLongLong() {
         config = new GroundStationDriverConfiguration("SERVICE-ID", "BETA-VERSION", 4000L, "GS-ID", "DEVICE-NAME", "DEVICE-TYPE", 3002, "localhost",

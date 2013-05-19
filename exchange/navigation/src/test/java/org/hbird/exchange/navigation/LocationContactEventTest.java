@@ -164,27 +164,15 @@ public class LocationContactEventTest {
     }
 
     @Test
-    public void testGetUplinkDoppler() {
-        testSetUplinkDoppler();
+    public void testGetDoppler() {
+        testSetDoppler();
     }
 
     @Test
-    public void testSetUplinkDoppler() {
-        assertNull(event.getUplinkDoppler());
-        event.setUplinkDoppler(range);
-        assertEquals(range, event.getUplinkDoppler());
-    }
-
-    @Test
-    public void testGetDownlinkDoppler() {
-        testSetDownlinkDoppler();
-    }
-
-    @Test
-    public void testSetDownlinkDoppler() {
-        assertNull(event.getDownlinkDoppler());
-        event.setDownlinkDoppler(range);
-        assertEquals(range, event.getDownlinkDoppler());
+    public void testSetDoppler() {
+        assertNull(event.getDoppler());
+        event.setDoppler(range);
+        assertEquals(range, event.getDoppler());
     }
 
     @Test

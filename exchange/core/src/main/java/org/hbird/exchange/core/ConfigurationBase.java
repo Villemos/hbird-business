@@ -23,6 +23,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hbird.exchange.interfaces.IEntity;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -59,6 +60,8 @@ public class ConfigurationBase implements Serializable {
     /** Default value for the heart beat interval. */
     public static final long DEFAULT_HEART_BEAT_INTERVAL = 5000L;
 
+    /** @deprecated use {@link IEntity#getID()}. */
+    @Deprecated
     @Value("${service.id}")
     protected String serviceId;
 
@@ -79,14 +82,18 @@ public class ConfigurationBase implements Serializable {
 
     /**
      * @return the serviceId
+     * @deprecated use {@link IEntity#getID()} instead
      */
+    @Deprecated
     public String getServiceId() {
         return serviceId;
     }
 
     /**
      * @param serviceId the serviceId to set
+     * @deprecated use {@link Entity#setID(String)} instead
      */
+    @Deprecated
     public void setServiceId(String serviceId) {
         this.serviceId = serviceId;
     }

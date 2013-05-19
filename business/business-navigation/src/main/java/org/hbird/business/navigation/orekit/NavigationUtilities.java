@@ -1,21 +1,14 @@
 package org.hbird.business.navigation.orekit;
 
 import org.apache.commons.math.geometry.Vector3D;
+import org.hbird.business.navigation.processors.orekit.EclipseCalculator;
 import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.navigation.GeoLocation;
 import org.hbird.exchange.navigation.OrbitalState;
-import org.orekit.bodies.CelestialBodyFactory;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
-import org.orekit.frames.LocalOrbitalFrame;
-import org.orekit.frames.LocalOrbitalFrame.LOFType;
-import org.orekit.frames.TopocentricFrame;
 import org.orekit.frames.Transform;
-import org.orekit.orbits.CartesianOrbit;
-import org.orekit.orbits.Orbit;
-import org.orekit.propagation.Propagator;
 import org.orekit.propagation.SpacecraftState;
-import org.orekit.propagation.analytical.KeplerianPropagator;
 import org.orekit.time.AbsoluteDate;
 import org.orekit.time.TimeScalesFactory;
 import org.orekit.time.UTCScale;
@@ -92,7 +85,7 @@ public class NavigationUtilities {
         result.setDerivedFromId(derivedFrom);
 
         try {
-            result.setInSunLight(inSunLight(state));
+            result.setInSunLight(EclipseCalculator.inSunLight(state));
         }
         catch (OrekitException e) {
             LOG.error("Failed to calculate inSunLight from the SpaceCraftState", e);
@@ -118,32 +111,15 @@ public class NavigationUtilities {
         Transform t = state.getFrame().getTransformTo(Constants.earth.getBodyFrame(), date);
         Vector3D p = t.transformPosition(pvInert.getPosition());
         GeodeticPoint center = Constants.earth.transform(p, Constants.earth.getBodyFrame(), date);
-        GeoLocation geoLocation = new GeoLocation(Math.toDegrees(center.getLatitude()), Math.toDegrees(center.getLongitude()), center.getAltitude());
-        return geoLocation;
+        return toGeoLocation(center);
     }
 
-    protected static double calculateAzimuth(PVCoordinates state, TopocentricFrame locationOnEarth, AbsoluteDate absoluteDate) throws OrekitException {
-        return Math.toDegrees(locationOnEarth.getAzimuth(state.getPosition(), Constants.FRAME, absoluteDate));
+    public static GeoLocation toGeoLocation(GeodeticPoint gp) {
+        return new GeoLocation(Math.toDegrees(gp.getLatitude()), Math.toDegrees(gp.getLongitude()), gp.getAltitude());
     }
 
-    protected static double calculateElevation(PVCoordinates state, TopocentricFrame locationOnEarth, AbsoluteDate absoluteDate) throws OrekitException {
-        return Math.toDegrees(locationOnEarth.getElevation(state.getPosition(), Constants.FRAME, absoluteDate));
-    }
-
-    protected static double calculateDoppler(PVCoordinates state, TopocentricFrame locationOnEarth, AbsoluteDate absoluteDate) throws OrekitException {
-
-        // an orbit defined by the position and the velocity of the satellite in the inertial FRAME at the date.
-        // TODO - 01.05.2013, kimmell - which Orbit and Frame to use here?
-        Orbit initialOrbit = new CartesianOrbit(state, Constants.FRAME, absoluteDate, Constants.MU);
-
-        // as a propagator, we consider a simple KeplerianPropagator.
-        Propagator propagator = new KeplerianPropagator(initialOrbit);
-
-        // local orbital FRAME.
-        LocalOrbitalFrame lof = new LocalOrbitalFrame(Constants.FRAME, LOFType.QSW, propagator, "QSW");
-
-        PVCoordinates pv = locationOnEarth.getTransformTo(lof, absoluteDate).transformPVCoordinates(PVCoordinates.ZERO);
-        return Vector3D.dotProduct(pv.getPosition(), pv.getVelocity()) / pv.getPosition().getNorm();
+    public static GeodeticPoint toGeodeticPoint(GeoLocation gl) {
+        return new GeodeticPoint(Math.toRadians(gl.getLatitude()), Math.toRadians(gl.getLongitude()), gl.getAltitude());
     }
 
     public static double calculateDopplerShift(double doppler, double frequency) {
@@ -173,23 +149,5 @@ public class NavigationUtilities {
                 + tle.getMeanAnomaly() / (Math.PI * 2))
                 + tle.getRevolutionNumberAtEpoch() - 1);
         return orbitNum;
-    }
-
-    public static boolean inSunLight(SpacecraftState s) throws OrekitException {
-        return calculateEclipse(s) > 0.0D;
-    }
-
-    public static double calculateEclipse(SpacecraftState s) throws OrekitException {
-        double occultedRadius = Constants.EQUATORIAL_RADIUS_OF_SUN;
-        double occultingRadius = Constants.EQUATORIAL_RADIUS_OF_THE_EARTH;
-        final Vector3D pted = CelestialBodyFactory.getSun().getPVCoordinates(s.getDate(), s.getFrame()).getPosition();
-        final Vector3D ping = CelestialBodyFactory.getEarth().getPVCoordinates(s.getDate(), s.getFrame()).getPosition();
-        final Vector3D psat = s.getPVCoordinates().getPosition();
-        final Vector3D ps = pted.subtract(psat);
-        final Vector3D po = ping.subtract(psat);
-        final double angle = Vector3D.angle(ps, po);
-        final double rs = Math.asin(occultedRadius / ps.getNorm());
-        final double ro = Math.asin(occultingRadius / po.getNorm());
-        return angle - ro - rs;
     }
 }

@@ -45,12 +45,12 @@ import org.hbird.business.taskexecutor.TaskExecutionComponent;
 import org.hbird.business.tracking.TrackingComponent;
 import org.hbird.business.tracking.quartz.TrackingDriverConfiguration;
 import org.hbird.business.websockets.WebsocketInterfaceComponent;
-import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.groundstation.Antenna;
 import org.hbird.exchange.groundstation.GroundStation;
+import org.hbird.exchange.navigation.GeoLocation;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.slf4j.Logger;
@@ -149,12 +149,8 @@ public abstract class SystemTest {
         // Part groundstations = new Part(mission, "Ground Station", "Ground Station",
         // "The groundstation(s) of the mission");
         // registerPart(groundstations);
-        //
-        D3Vector geoLocationTartu = new D3Vector("TARTU", "TARTU");
-        geoLocationTartu.setDescription("Tartu, Tähe 4");
-        geoLocationTartu.setP1(Math.toRadians(58.3000D));
-        geoLocationTartu.setP2(Math.toRadians(26.7330D));
-        geoLocationTartu.setP3(59.0D);
+
+        GeoLocation geoLocationTartu = new GeoLocation(58.37D, 26.73D, 59.0D);
 
         es5ec = new GroundStation("ES5EC", "ES5EC");
         es5ec.setDescription("The main control centre");
@@ -241,22 +237,16 @@ public abstract class SystemTest {
         // Part eGs = new Part(external, "GroundStations_EXT", "Ground Stations", "External ground stations.");
         // registerPart(eGs);
         //
-        D3Vector geoLocationAalborg = new D3Vector("AALBORG_LOC", "AALBORG_LOC");
-        geoLocationAalborg.setP1(Math.toRadians(55.659306D));
-        geoLocationAalborg.setP2(Math.toRadians(12.587585D));
-        geoLocationAalborg.setP3(59.0D);
+
+        GeoLocation geoLocationAalborg = new GeoLocation(55.659306D, 12.587585D, 59.0D);
         gsAalborg = new GroundStation("AALBORG_GS", "AALBORG_GS");
         gsAalborg.setDescription("Supportive antenna from Aalborg university");
         gsAalborg.setGeoLocation(geoLocationAalborg);
         registerPart(gsAalborg);
         gsAalborg.addAntenna(antenna);
-        //
-        // // D3Vector geoLocationDarmstadt = new D3Vector("SystemTest", "GeoLocation", D3Vector.class.getSimpleName(),
-        // // "Darmstadt", Math.toRadians(49.831605D), Math.toRadians(8.673706D), 59.0D);
-        D3Vector geoLocationDarmstadt = new D3Vector("DARMSTADT_LOC", "DARMSTADT_LOC");
-        geoLocationDarmstadt.setP1(Math.toRadians(49.87D));
-        geoLocationDarmstadt.setP2(Math.toRadians(8.64D));
-        geoLocationDarmstadt.setP3(59.0D);
+
+        GeoLocation geoLocationDarmstadt = new GeoLocation(49.87D, 8.64D, 59.0D);
+
         gsDarmstadt = new GroundStation("DARMSTADT_GS", "DARMSTADT_GS");
         gsDarmstadt.setDescription("Supportive antenna from Darmstadt university");
         gsDarmstadt.setGeoLocation(geoLocationDarmstadt);
@@ -270,11 +260,8 @@ public abstract class SystemTest {
         // registerPart(darmstadtRadio);
         // registerPart(darmstadtRotator);
         gsDarmstadt.addAntenna(darmstadtAntenna);
-        //
-        D3Vector geoLocationNewYork = new D3Vector("NY_LOC", "NY_LOC");
-        geoLocationNewYork.setP1(Math.toRadians(40.66564D));
-        geoLocationNewYork.setP2(Math.toRadians(-74.036865D));
-        geoLocationNewYork.setP3(59.0D);
+
+        GeoLocation geoLocationNewYork = new GeoLocation(40.66564D, -74.036865D, 59.0D);
         gsNewYork = new GroundStation("NY_GS", "NY_GS");
         gsNewYork.setDescription("Supportive antenna from NewYork university");
         gsNewYork.setGeoLocation(geoLocationNewYork);

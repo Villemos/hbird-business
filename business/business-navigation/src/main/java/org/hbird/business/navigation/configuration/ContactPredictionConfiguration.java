@@ -19,6 +19,7 @@ package org.hbird.business.navigation.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,10 +28,31 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContactPredictionConfiguration extends PredictionConfigurationBase {
 
-    private static final long serialVersionUID = 8672401284051717970L;
+    private static final long serialVersionUID = 3783672950051045639L;
+
+    /** Default value for calculation step. */
+    public static final long DEFAULT_DETAILS_CALCULATION_STEP = 1000L * 30;
+
+    /** Calculation step used for contact detail calculations. For example used to calculate maximum elevation etc. */
+    @Value("${details.calculation.step}")
+    protected long detailsCalculationStep = DEFAULT_DETAILS_CALCULATION_STEP;
 
     /** List of ground stations to use in prediction. */
     protected List<String> groundStationsIds = new ArrayList<String>();
+
+    /**
+     * @return the detailsCalculationStep
+     */
+    public long getDetailsCalculationStep() {
+        return detailsCalculationStep;
+    }
+
+    /**
+     * @param detailsCalculationStep the detailsCalculationStep to set
+     */
+    public void setDetailsCalculationStep(long detailsCalculationStep) {
+        this.detailsCalculationStep = detailsCalculationStep;
+    }
 
     /**
      * @return the groundStationsIds

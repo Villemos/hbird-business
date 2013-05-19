@@ -140,5 +140,5 @@ public abstract class NavigationBean {
         propagator.propagate(new AbsoluteDate(startDate, (to - from) / 1000));
     }
 
-    public abstract void preparePropagator();
+    public abstract void preparePropagator() throws OrekitException;
 }

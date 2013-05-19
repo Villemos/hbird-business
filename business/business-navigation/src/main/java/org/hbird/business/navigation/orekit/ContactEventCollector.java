@@ -20,10 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.business.api.IPublish;
+import org.hbird.business.navigation.processors.orekit.AzimuthCalculator;
+import org.hbird.business.navigation.processors.orekit.DopplerCalculator;
+import org.hbird.business.navigation.processors.orekit.EclipseCalculator;
+import org.hbird.business.navigation.processors.orekit.ElevationCalculator;
+import org.hbird.business.navigation.processors.orekit.IContactDetailCalculator;
+import org.hbird.business.navigation.processors.orekit.RangeCalculator;
+import org.hbird.business.navigation.processors.orekit.SignalDelayCalculator;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.errors.OrekitException;
+import org.orekit.frames.Frame;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.propagation.SpacecraftState;
 import org.orekit.propagation.events.ElevationDetector;
@@ -49,6 +57,8 @@ public class ContactEventCollector extends ElevationDetector {
 
     private static final Logger LOG = LoggerFactory.getLogger(ContactEventCollector.class);
 
+    protected final String issuerId;
+
     /** The ground station / location that comes into contact. */
     protected final String groundStationId;
 
@@ -59,9 +69,13 @@ public class ContactEventCollector extends ElevationDetector {
 
     protected final TleOrbitalParameters tleParameters;
 
+    protected final Frame inertialFrame;
+
     protected List<EntityInstance> events = new ArrayList<EntityInstance>();
 
     protected SpacecraftState lastStartState;
+
+    protected List<IContactDetailCalculator> detailCalculators;
 
     /**
      * COnstructor of an injector of location contact events.
@@ -72,13 +86,29 @@ public class ContactEventCollector extends ElevationDetector {
      * @param location The location to which contact has been established / lost if this event occurs.
      * @param contactDataStepSize
      */
-    public ContactEventCollector(double elevation, TopocentricFrame topo, String satelliteId, String groundStationId, TleOrbitalParameters parameters,
-            IPublish publisher) {
+    public ContactEventCollector(String issuerId, double elevation, TopocentricFrame topo, String satelliteId, String groundStationId,
+            TleOrbitalParameters parameters,
+            IPublish publisher, Frame inertialFrame, long calculationStep) {
         super(maxcheck, elevation, topo);
+        this.issuerId = issuerId;
         this.satelliteId = satelliteId;
         this.groundStationId = groundStationId;
         this.tleParameters = parameters;
         this.publisher = publisher;
+        this.inertialFrame = inertialFrame;
+        this.detailCalculators = getDetailCalculators(calculationStep / 1000D); // from millis to seconds
+    }
+
+    List<IContactDetailCalculator> getDetailCalculators(double calculationStep) {
+        List<IContactDetailCalculator> detailCalculators = new ArrayList<IContactDetailCalculator>();
+        detailCalculators.add(new AzimuthCalculator());
+        detailCalculators.add(new ElevationCalculator(calculationStep));
+        detailCalculators.add(new DopplerCalculator());
+        detailCalculators.add(new RangeCalculator(calculationStep));
+        detailCalculators.add(new SignalDelayCalculator());
+        detailCalculators.add(new EclipseCalculator());
+        // TODO - 19.05.2013, kimmell - missing signal loss calculator
+        return detailCalculators;
     }
 
     /**
@@ -94,7 +124,19 @@ public class ContactEventCollector extends ElevationDetector {
         }
         else if (!increasing && lastStartState != null) {
             // we have both - start & end; create new LocationContactEvent
-            LocationContactEvent event = createEvent(groundStationId, satelliteId, tleParameters, lastStartState, state);
+            LocationContactEvent event = createEvent(issuerId, groundStationId, satelliteId, tleParameters, lastStartState, state);
+
+            // calculate contact details
+            for (IContactDetailCalculator calculator : detailCalculators) {
+                try {
+                    calculator.calculate(lastStartState, state, getTopocentricFrame(), inertialFrame, event);
+                }
+                catch (OrekitException e) {
+                    LOG.warn("Contact detail calulation failure in {}; some contact details will be missing", calculator.getClass().getSimpleName());
+                    LOG.warn("   Stack trace", e);
+                }
+            }
+
             events.add(event);
             if (publisher != null) {
                 LOG.info("Injecting new LocationContactEvent {}", event.toString());
@@ -111,7 +153,8 @@ public class ContactEventCollector extends ElevationDetector {
         return events;
     }
 
-    LocationContactEvent createEvent(String groundStationId, String satelliteId, TleOrbitalParameters tleParameters, SpacecraftState startState,
+    LocationContactEvent createEvent(String issuerId, String groundStationId, String satelliteId, TleOrbitalParameters tleParameters,
+            SpacecraftState startState,
             SpacecraftState endState) throws OrekitException {
         AbsoluteDate startDate = startState.getDate();
         long startTime = startDate.toDate(TimeScalesFactory.getUTC()).getTime();
@@ -120,22 +163,13 @@ public class ContactEventCollector extends ElevationDetector {
         long orbitNumber = NavigationUtilities.calculateOrbitNumber(tle, startDate);
         String tleInstanceId = tleParameters.getInstanceID();
         LocationContactEvent event = new LocationContactEvent(groundStationId, satelliteId, orbitNumber);
+        event.setIssuedBy(issuerId);
         event.setTimestamp(startTime);
         event.setDerivedFromId(tleInstanceId);
         event.setStartTime(startTime);
         event.setEndTime(endTime);
         event.setSatelliteStateAtStart(NavigationUtilities.toOrbitalState(startState, satelliteId, tleInstanceId));
-        // TODO - 16.05.2013, kimmell - set missing event properties
-        // event.setAzimuth(azimuth);
-        // event.setDownlinkDoppler(downlinkDoppler);
-        // event.setDownlinkSignalLoss(downlinkSignalLoss);
-        // event.setElevation(elevation);
-        // event.setInSunLigth(inSunLigth);
-        // event.setIssuedBy(issuedBy);
-        // event.setRange(range);
-        // event.setSignalDelay(signalDelay);
-        // event.setUplinkDoppler(uplinkDoppler)
-        // event.setUplinkSignalLoss(uplinkSignalLoss);
         return event;
     }
+
 }

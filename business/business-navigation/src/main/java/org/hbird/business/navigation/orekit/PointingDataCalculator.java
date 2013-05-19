@@ -20,13 +20,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hbird.exchange.core.D3Vector;
+import org.hbird.business.navigation.processors.orekit.AzimuthCalculator;
+import org.hbird.business.navigation.processors.orekit.DopplerCalculator;
+import org.hbird.business.navigation.processors.orekit.ElevationCalculator;
 import org.hbird.exchange.groundstation.GroundStation;
+import org.hbird.exchange.navigation.GeoLocation;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.PointingData;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
+import org.orekit.frames.Frame;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.orbits.KeplerianOrbit;
 import org.orekit.orbits.Orbit;
@@ -52,8 +56,8 @@ public class PointingDataCalculator {
         long startTime = locationContactEvent.getStartTime();
         long endTime = locationContactEvent.getEndTime();
 
-        D3Vector location = groundStation.getGeoLocation();
-        GeodeticPoint point = new GeodeticPoint(location.getP1(), location.getP2(), location.getP3());
+        GeoLocation location = groundStation.getGeoLocation();
+        GeodeticPoint point = NavigationUtilities.toGeodeticPoint(location);
         TopocentricFrame locationOnEarth = new TopocentricFrame(Constants.earth, point, groundStation.getName());
 
         OrbitalState startState = locationContactEvent.getSatelliteStateAtStart();
@@ -62,7 +66,8 @@ public class PointingDataCalculator {
         AbsoluteDate date = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());
         // TODO - 01.05.2013, kimmell - use Cartesian instead of Keplerian here?
         // TODO - 01.05.2013, kimmell - which frame to use here?
-        Orbit initialOrbit = new KeplerianOrbit(coord, Constants.FRAME, date, Constants.MU);
+        Frame inertialFrame = Constants.FRAME; // TODO - 19.05.2013, kimmell - check this!
+        Orbit initialOrbit = new KeplerianOrbit(coord, inertialFrame, date, Constants.MU);
         Propagator propagator = new KeplerianPropagator(initialOrbit);
         String satelliteId = locationContactEvent.getSatelliteID();
         String gsId = groundStation.getGroundStationID();
@@ -72,9 +77,9 @@ public class PointingDataCalculator {
         for (int i = 0; startTime + contactDataStepSize * i < endTime; i++) {
             SpacecraftState newState = propagator.propagate(date);
             coord = newState.getPVCoordinates();
-            double azimuth = NavigationUtilities.calculateAzimuth(coord, locationOnEarth, date);
-            double elevation = NavigationUtilities.calculateElevation(coord, locationOnEarth, date);
-            double doppler = NavigationUtilities.calculateDoppler(coord, locationOnEarth, date);
+            double azimuth = AzimuthCalculator.calculateAzimuth(newState, locationOnEarth, inertialFrame);
+            double elevation = ElevationCalculator.calculateElevation(newState, locationOnEarth, inertialFrame);
+            double doppler = DopplerCalculator.calculateDoppler(newState, locationOnEarth, inertialFrame);
             long time = date.toDate(TimeScalesFactory.getUTC()).getTime();
             PointingData entry = new PointingData(time, azimuth, elevation, doppler, satelliteId, gsId);
             LOG.debug(entry.toString());
