@@ -57,7 +57,7 @@ public class HarddiskMonitorTest {
         assertEquals(roots.length * 3, result.length);
         for (int i = 0; i < result.length; i++) {
             Parameter p = result[i];
-            String rootName = roots[i / roots.length].getPath();
+            String rootName = roots[i / 3].getPath();
             assertNotNull(p);
             assertNotNull(p.getValue());
             assertEquals(BASE_ID, p.getIssuedBy());
