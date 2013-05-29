@@ -18,7 +18,7 @@ package org.hbird.exchange.navigation;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hbird.exchange.core.D3Vector;
+import org.apache.commons.math.geometry.Vector3D;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.interfaces.IDerivedFrom;
 import org.hbird.exchange.interfaces.IGenerationTimestamped;
@@ -47,13 +47,13 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
     protected String satelliteId;
 
     /** Position measured in TODO */
-    protected D3Vector position;
+    protected Vector3D position;
 
     /** Velocity measured in meters / second. */
-    protected D3Vector velocity;
+    protected Vector3D velocity;
 
     /** Momentum measured in TODO */
-    protected D3Vector momentum;
+    protected Vector3D momentum;
 
     /** GeoLocation on the Earth. Suitable information for ground track construction. */
     protected GeoLocation geoLocation;
@@ -81,19 +81,19 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
         super(ID, name);
     }
 
-    public D3Vector getPosition() {
+    public Vector3D getPosition() {
         return position;
     }
 
-    public void setPosition(D3Vector position) {
+    public void setPosition(Vector3D position) {
         this.position = position;
     }
 
-    public D3Vector getVelocity() {
+    public Vector3D getVelocity() {
         return velocity;
     }
 
-    public void setVelocity(D3Vector velocity) {
+    public void setVelocity(Vector3D velocity) {
         this.velocity = velocity;
     }
 
@@ -102,11 +102,11 @@ public class OrbitalState extends EntityInstance implements IGenerationTimestamp
         return satelliteId;
     }
 
-    public D3Vector getMomentum() {
+    public Vector3D getMomentum() {
         return momentum;
     }
 
-    public void setMomentum(D3Vector momentum) {
+    public void setMomentum(Vector3D momentum) {
         this.momentum = momentum;
     }
 

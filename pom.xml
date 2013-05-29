@@ -68,7 +68,7 @@
 
     </repositories>
 
-    <!-- Properties can be overridden in ~/.m2/settings.xml to configure environment
+    <!-- Properties can be overridden in ~/.m2/settings.xml to configure environment 
         specific values. -->
     <properties>
         <hbird.version>0.8.0-SNAPSHOT</hbird.version>
@@ -76,7 +76,7 @@
         <distribution.url.snapshots>http://www.villemos.com:8080/artifactory/libs-snapshot-local</distribution.url.snapshots>
         <distribution.url.releases>http://www.villemos.com:8080/artifactory/libs-release-local</distribution.url.releases>
 
-        <version.java>1.6</version.java> <!-- Not using java.version here; it will override system property java.version referencing
+        <version.java>1.6</version.java> <!-- Not using java.version here; it will override system property java.version referencing 
             running JVM version. -->
         <rxtx.version>2.1.7</rxtx.version>
         <log4j.version>1.2.17</log4j.version>
@@ -108,6 +108,7 @@
         <guava.version>14.0.1</guava.version>
         <joda.version>2.2</joda.version>
         <quartz.version>2.1.7</quartz.version>
+        <commons-math.version>2.1</commons-math.version>
 
         <!-- TODO - clear this mess -->
 
@@ -728,6 +729,11 @@
                 <version>${commons.collections.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math</artifactId>
+                <version>${commons-math.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -785,12 +791,29 @@
                 <configuration>
                     <useMissingFile>true</useMissingFile>
                     <licenseMerges>
-                        <licenseMerge>The Apache Software License, Version 2.0|Apache 2|Apache License|Apache License, Version 2.0</licenseMerge>
-                        <licenseMerge>Berkley Software Distribution (BSD) Style|Aduna BSD license|BSD License|BSD license|BSD|BSD-style license|Berkeley Source Distribution (BSD)|The BSD License|mstor License|ICU License|BSD Style</licenseMerge>
-                        <licenseMerge>Common Development and Distribution License (CDDL), version 1.0|Common Development and Distribution License (CDDL) v1.0|CDDL License|COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0</licenseMerge>
-                        <licenseMerge>Common Public License (CPL), Version 1.0|Common Public License Version 1.0|Common Public License</licenseMerge>
-                        <licenseMerge>GNU Lesser General Public License (LGPL), Version 2.1 (or later)|GNU Library or Lesser General Public License (LGPL)|GNU Lesser General Public License</licenseMerge>
-                        <licenseMerge>Massachusetts Institute of Technology License (MIT)|MIT License|Bouncy Castle Licence|MIT license|The MIT license</licenseMerge>
+                        <licenseMerge>The Apache Software License, Version
+                            2.0|Apache 2|Apache License|Apache License, Version
+                            2.0</licenseMerge>
+                        <licenseMerge>Berkley Software Distribution (BSD)
+                            Style|Aduna BSD license|BSD License|BSD
+                            license|BSD|BSD-style license|Berkeley Source
+                            Distribution (BSD)|The BSD License|mstor License|ICU
+                            License|BSD Style</licenseMerge>
+                        <licenseMerge>Common Development and Distribution
+                            License (CDDL), version 1.0|Common Development and
+                            Distribution License (CDDL) v1.0|CDDL License|COMMON
+                            DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version
+                            1.0</licenseMerge>
+                        <licenseMerge>Common Public License (CPL), Version
+                            1.0|Common Public License Version 1.0|Common Public
+                            License</licenseMerge>
+                        <licenseMerge>GNU Lesser General Public License (LGPL),
+                            Version 2.1 (or later)|GNU Library or Lesser General
+                            Public License (LGPL)|GNU Lesser General Public
+                            License</licenseMerge>
+                        <licenseMerge>Massachusetts Institute of Technology
+                            License (MIT)|MIT License|Bouncy Castle Licence|MIT
+                            license|The MIT license</licenseMerge>
                     </licenseMerges>
                     <!-- default location is ${basedir}/target/generated-sources/license -->
                     <!--<outputDirectory>${basedir}/target</outputDirectory> -->
@@ -811,7 +834,8 @@
 
         <pluginManagement>
             <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <!--This plugin's configuration is used to store Eclipse m2e settings 
+                    only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>

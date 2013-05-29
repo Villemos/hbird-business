@@ -2,7 +2,6 @@ package org.hbird.business.navigation.orekit;
 
 import org.apache.commons.math.geometry.Vector3D;
 import org.hbird.business.navigation.processors.orekit.EclipseCalculator;
-import org.hbird.exchange.core.D3Vector;
 import org.hbird.exchange.navigation.GeoLocation;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.orekit.bodies.GeodeticPoint;
@@ -40,48 +39,25 @@ public class NavigationUtilities {
         return scale;
     }
 
-    public static PVCoordinates toPVCoordinates(D3Vector pos, D3Vector vel) {
-
-        Vector3D position = new Vector3D(pos.getP1(), pos.getP2(), pos.getP3());
-        Vector3D velocity = new Vector3D(vel.getP1(), vel.getP2(), vel.getP3());
-
+    public static PVCoordinates toPVCoordinates(Vector3D position, Vector3D velocity) {
         return new PVCoordinates(position, velocity);
     }
 
     public static synchronized OrbitalState toOrbitalState(SpacecraftState state, String satelliteId, String derivedFrom) {
 
-        Vector3D pvcPosition = state.getOrbit().getPVCoordinates().getPosition();
-        Vector3D pvcVelocity = state.getOrbit().getPVCoordinates().getVelocity();
-        Vector3D pvcMomentum = state.getOrbit().getPVCoordinates().getMomentum();
+        PVCoordinates pvCoordinates = state.getOrbit().getPVCoordinates();
+        Vector3D pvcPosition = pvCoordinates.getPosition();
+        Vector3D pvcVelocity = pvCoordinates.getVelocity();
+        Vector3D pvcMomentum = pvCoordinates.getMomentum();
 
-        /* Create position vector. */
-        D3Vector position = new D3Vector("", "Position");
-        position.setDescription("The orbital position of the satellite at the given time.");
-        position.setP1(pvcPosition.getX());
-        position.setP2(pvcPosition.getY());
-        position.setP3(pvcPosition.getZ());
-
-        /* Create velocity vector. */
-        D3Vector velocity = new D3Vector("", "Velocity");
-        velocity.setDescription("The orbital velocity of the satellite at the given time.");
-        velocity.setP1(pvcVelocity.getX());
-        velocity.setP2(pvcVelocity.getY());
-        velocity.setP3(pvcVelocity.getZ());
-
-        /* Create momentum vector. */
-        D3Vector momentum = new D3Vector("", "Momentum");
-        momentum.setDescription("The orbital momentum of the satellite at the given time.");
-        momentum.setP1(pvcMomentum.getX());
-        momentum.setP2(pvcMomentum.getY());
-        momentum.setP3(pvcMomentum.getZ());
-
+        // TODO - 20.05.2013, kimmell - use IdBuilder here!
         OrbitalState result = new OrbitalState(satelliteId + "/OrbitalState", OrbitalState.class.getSimpleName());
         result.setDescription("Orbital state of satellite");
         result.setTimestamp(state.getDate().toDate(getScale()).getTime());
         result.setSatelliteId(satelliteId);
-        result.setPosition(position);
-        result.setVelocity(velocity);
-        result.setMomentum(momentum);
+        result.setPosition(pvcPosition);
+        result.setVelocity(pvcVelocity);
+        result.setMomentum(pvcMomentum);
         result.setDerivedFromId(derivedFrom);
 
         try {
