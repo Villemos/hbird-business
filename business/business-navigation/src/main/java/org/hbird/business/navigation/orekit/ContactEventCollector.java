@@ -20,14 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.business.api.IPublish;
-import org.hbird.business.navigation.processors.orekit.AzimuthCalculator;
-import org.hbird.business.navigation.processors.orekit.DopplerCalculator;
-import org.hbird.business.navigation.processors.orekit.EclipseCalculator;
-import org.hbird.business.navigation.processors.orekit.ElevationCalculator;
-import org.hbird.business.navigation.processors.orekit.IContactDetailCalculator;
-import org.hbird.business.navigation.processors.orekit.RangeCalculator;
-import org.hbird.business.navigation.processors.orekit.SignalDelayCalculator;
-import org.hbird.exchange.core.EntityInstance;
+import org.hbird.business.navigation.request.orekit.ContactData;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.errors.OrekitException;
@@ -71,11 +64,9 @@ public class ContactEventCollector extends ElevationDetector {
 
     protected final Frame inertialFrame;
 
-    protected List<EntityInstance> events = new ArrayList<EntityInstance>();
+    protected List<ContactData> events = new ArrayList<ContactData>();
 
     protected SpacecraftState lastStartState;
-
-    protected List<IContactDetailCalculator> detailCalculators;
 
     /**
      * COnstructor of an injector of location contact events.
@@ -87,8 +78,7 @@ public class ContactEventCollector extends ElevationDetector {
      * @param contactDataStepSize
      */
     public ContactEventCollector(String issuerId, double elevation, TopocentricFrame topo, String satelliteId, String groundStationId,
-            TleOrbitalParameters parameters,
-            IPublish publisher, Frame inertialFrame, long calculationStep) {
+            TleOrbitalParameters parameters, IPublish publisher, Frame inertialFrame) {
         super(maxcheck, elevation, topo);
         this.issuerId = issuerId;
         this.satelliteId = satelliteId;
@@ -96,19 +86,6 @@ public class ContactEventCollector extends ElevationDetector {
         this.tleParameters = parameters;
         this.publisher = publisher;
         this.inertialFrame = inertialFrame;
-        this.detailCalculators = getDetailCalculators(calculationStep / 1000D); // from millis to seconds
-    }
-
-    List<IContactDetailCalculator> getDetailCalculators(double calculationStep) {
-        List<IContactDetailCalculator> detailCalculators = new ArrayList<IContactDetailCalculator>();
-        detailCalculators.add(new AzimuthCalculator());
-        detailCalculators.add(new ElevationCalculator(calculationStep));
-        detailCalculators.add(new DopplerCalculator());
-        detailCalculators.add(new RangeCalculator(calculationStep));
-        detailCalculators.add(new SignalDelayCalculator());
-        detailCalculators.add(new EclipseCalculator());
-        // TODO - 19.05.2013, kimmell - missing signal loss calculator
-        return detailCalculators;
     }
 
     /**
@@ -125,19 +102,9 @@ public class ContactEventCollector extends ElevationDetector {
         else if (!increasing && lastStartState != null) {
             // we have both - start & end; create new LocationContactEvent
             LocationContactEvent event = createEvent(issuerId, groundStationId, satelliteId, tleParameters, lastStartState, state);
+            ContactData data = createContactData(lastStartState, state, getTopocentricFrame(), inertialFrame, event);
 
-            // calculate contact details
-            for (IContactDetailCalculator calculator : detailCalculators) {
-                try {
-                    calculator.calculate(lastStartState, state, getTopocentricFrame(), inertialFrame, event);
-                }
-                catch (OrekitException e) {
-                    LOG.warn("Contact detail calulation failure in {}; some contact details will be missing", calculator.getClass().getSimpleName());
-                    LOG.warn("   Stack trace", e);
-                }
-            }
-
-            events.add(event);
+            events.add(data);
             if (publisher != null) {
                 LOG.info("Injecting new LocationContactEvent {}", event.toString());
                 publisher.publish(event);
@@ -149,13 +116,17 @@ public class ContactEventCollector extends ElevationDetector {
         return CONTINUE;
     }
 
-    public List<EntityInstance> getDataSet() {
+    public List<ContactData> getDataSet() {
         return events;
     }
 
+    ContactData createContactData(SpacecraftState startState, SpacecraftState endState, TopocentricFrame locationOnEarth, Frame inertialFrame,
+            LocationContactEvent event) {
+        return new ContactData(startState, endState, locationOnEarth, inertialFrame, event);
+    }
+
     LocationContactEvent createEvent(String issuerId, String groundStationId, String satelliteId, TleOrbitalParameters tleParameters,
-            SpacecraftState startState,
-            SpacecraftState endState) throws OrekitException {
+            SpacecraftState startState, SpacecraftState endState) throws OrekitException {
         AbsoluteDate startDate = startState.getDate();
         long startTime = startDate.toDate(TimeScalesFactory.getUTC()).getTime();
         long endTime = endState.getDate().toDate(TimeScalesFactory.getUTC()).getTime();
@@ -171,5 +142,4 @@ public class ContactEventCollector extends ElevationDetector {
         event.setSatelliteStateAtStart(NavigationUtilities.toOrbitalState(startState, satelliteId, tleInstanceId));
         return event;
     }
-
 }

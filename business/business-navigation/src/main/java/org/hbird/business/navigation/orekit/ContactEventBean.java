@@ -76,7 +76,7 @@ public class ContactEventBean extends NavigationBean {
             GeodeticPoint point = NavigationUtilities.toGeodeticPoint(location);
             TopocentricFrame sta1Frame = new TopocentricFrame(Constants.earth, point, groundStation.getName());
             EventDetector sta1Visi = new ContactEventCollector(conf.getID(), 0, sta1Frame, conf.getSatelliteId(), groundStation.getID(), tleParameters,
-                    publisher, FramesFactory.getCIRF2000(), 1000L * 30);
+                    publisher, FramesFactory.getCIRF2000());
             propagator.addEventDetector(sta1Visi);
         }
 

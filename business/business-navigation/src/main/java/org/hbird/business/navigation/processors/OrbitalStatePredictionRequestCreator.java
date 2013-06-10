@@ -17,8 +17,8 @@
 package org.hbird.business.navigation.processors;
 
 import org.apache.camel.Handler;
-import org.hbird.business.navigation.configuration.ContactPredictionConfiguration;
-import org.hbird.business.navigation.request.ContactPredictionRequest;
+import org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration;
+import org.hbird.business.navigation.request.OrbitalStatePredictionRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,22 +28,22 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class ContactPredictionRequestCreator {
+public class OrbitalStatePredictionRequestCreator {
 
-    public static final Logger LOG = LoggerFactory.getLogger(ContactPredictionRequestCreator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrbitalStatePredictionRequestCreator.class);
 
     @Autowired
-    private final ContactPredictionConfiguration config;
+    private final OrbitalStatePredictionConfiguration config;
 
-    public ContactPredictionRequestCreator(ContactPredictionConfiguration config) {
+    public OrbitalStatePredictionRequestCreator(OrbitalStatePredictionConfiguration config) {
         this.config = config;
     }
 
     @Handler
-    public ContactPredictionRequest create() {
-        ContactPredictionRequest request = new ContactPredictionRequest();
+    public OrbitalStatePredictionRequest create() {
+        OrbitalStatePredictionRequest request = new OrbitalStatePredictionRequest(System.currentTimeMillis());
         request.setConfiguration(config);
-        LOG.debug("Created new ContactPredictionRequest");
+        LOG.debug("Created new OrbitalStatePredictionRequest");
         return request;
     }
 }

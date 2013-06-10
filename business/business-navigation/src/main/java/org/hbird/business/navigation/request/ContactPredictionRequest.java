@@ -24,10 +24,19 @@ import org.hbird.exchange.groundstation.GroundStation;
 /**
  *
  */
-public class ContactPredictionRequest extends PredictionRequest<ContactPredictionConfiguration> {
+public class ContactPredictionRequest<T> extends PredictionRequest<ContactPredictionConfiguration> {
 
     /** List of resolved ground stations. */
     protected List<GroundStation> groundStations;
+
+    protected List<T> predictedEvents;
+
+    /**
+     * @param startTime
+     */
+    public ContactPredictionRequest(long startTime) {
+        super(startTime);
+    }
 
     /**
      * @return the groundStations
@@ -41,5 +50,19 @@ public class ContactPredictionRequest extends PredictionRequest<ContactPredictio
      */
     public void setGroundStations(List<GroundStation> groundStations) {
         this.groundStations = groundStations;
+    }
+
+    /**
+     * @return the predictedEvents
+     */
+    public List<T> getPredictedEvents() {
+        return predictedEvents;
+    }
+
+    /**
+     * @param predictedEvents the predictedEvents to set
+     */
+    public void setPredictedEvents(List<T> predictedEvents) {
+        this.predictedEvents = predictedEvents;
     }
 }

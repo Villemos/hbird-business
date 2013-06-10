@@ -25,11 +25,13 @@ import org.orekit.frames.TopocentricFrame;
 import org.orekit.propagation.SpacecraftState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  *
  */
-public class SignalDelayCalculator implements IContactDetailCalculator {
+@Component
+public class SignalDelayCalculator extends AbstractContactDetailCalculator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SignalDelayCalculator.class);
 

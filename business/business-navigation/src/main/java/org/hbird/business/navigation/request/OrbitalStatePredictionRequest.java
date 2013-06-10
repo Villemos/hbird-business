@@ -14,23 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.navigation.processors;
+package org.hbird.business.navigation.request;
 
 import java.util.List;
 
-import org.apache.camel.Handler;
-import org.hbird.business.navigation.request.PredictionRequest;
-import org.hbird.exchange.interfaces.IEntityInstance;
-import org.springframework.stereotype.Component;
+import org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration;
+import org.hbird.exchange.navigation.OrbitalState;
 
 /**
  *
  */
-@Component
-public class ResultExctractor {
+public class OrbitalStatePredictionRequest extends PredictionRequest<OrbitalStatePredictionConfiguration> {
 
-    @Handler
-    public List<? extends IEntityInstance> extract(PredictionRequest<?> request) {
-        return request.getResult();
+    protected List<OrbitalState> result;
+
+    /**
+     * @param startTime
+     */
+    public OrbitalStatePredictionRequest(long startTime) {
+        super(startTime);
+    }
+
+    /**
+     * @return the result
+     */
+    public List<OrbitalState> getResult() {
+        return result;
+    }
+
+    /**
+     * @param result the result to set
+     */
+    public void setResult(List<OrbitalState> result) {
+        this.result = result;
     }
 }

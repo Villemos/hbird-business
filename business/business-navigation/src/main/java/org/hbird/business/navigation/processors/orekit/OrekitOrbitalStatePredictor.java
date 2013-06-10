@@ -25,7 +25,7 @@ import org.hbird.business.api.IdBuilder;
 import org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration;
 import org.hbird.business.navigation.orekit.IPropagatorProvider;
 import org.hbird.business.navigation.orekit.OrbitalStateCollector;
-import org.hbird.business.navigation.request.PredictionRequest;
+import org.hbird.business.navigation.request.OrbitalStatePredictionRequest;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.errors.OrekitException;
@@ -53,8 +53,7 @@ public class OrekitOrbitalStatePredictor {
     }
 
     @Handler
-    public PredictionRequest<OrbitalStatePredictionConfiguration> predict(PredictionRequest<OrbitalStatePredictionConfiguration> request)
-            throws OrekitException {
+    public OrbitalStatePredictionRequest predict(OrbitalStatePredictionRequest request) throws OrekitException {
         Propagator propagator = propagatorProvider.getPropagator(request);
         OrbitalStatePredictionConfiguration conf = request.getConfiguration();
         TleOrbitalParameters tleParameters = request.getTleParameters();

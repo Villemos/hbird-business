@@ -24,11 +24,13 @@ import org.orekit.frames.Frame;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.propagation.SpacecraftState;
 import org.orekit.time.AbsoluteDate;
+import org.springframework.stereotype.Component;
 
 /**
  *
  */
-public class RangeCalculator implements IContactDetailCalculator {
+@Component
+public class RangeCalculator extends AbstractContactDetailCalculator {
 
     private final double calculationStep;
 

@@ -25,8 +25,8 @@ import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.PredictionComponent;
 import org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration;
-import org.hbird.business.navigation.processors.PredictionRequestCreator;
-import org.hbird.business.navigation.processors.ResultExctractor;
+import org.hbird.business.navigation.processors.OrbitalStateExtractor;
+import org.hbird.business.navigation.processors.OrbitalStatePredictionRequestCreator;
 import org.hbird.business.navigation.processors.TimeRangeCalulator;
 import org.hbird.business.navigation.processors.TleResolver;
 import org.hbird.business.navigation.processors.orekit.OrekitOrbitalStatePredictor;
@@ -59,11 +59,11 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver {
         long predictionInterval = config.getPredictionInterval();
 
         // processors
-        PredictionRequestCreator<OrbitalStatePredictionConfiguration> requestCreator = new PredictionRequestCreator<OrbitalStatePredictionConfiguration>(config);
+        OrbitalStatePredictionRequestCreator requestCreator = new OrbitalStatePredictionRequestCreator(config);
         TleResolver tleResolver = new TleResolver(dao);
         TimeRangeCalulator timeRangeCalculator = new TimeRangeCalulator();
         OrekitOrbitalStatePredictor predictor = new OrekitOrbitalStatePredictor(propagatorProvider, publisher, idBuilder);
-        ResultExctractor extractor = new ResultExctractor();
+        OrbitalStateExtractor extractor = new OrbitalStateExtractor();
 
         LOG.info("Starting {}; using '{}' with interval {} ms", new Object[] { getClass().getSimpleName(), propagatorProvider.getClass().getSimpleName(),
                 predictionInterval });

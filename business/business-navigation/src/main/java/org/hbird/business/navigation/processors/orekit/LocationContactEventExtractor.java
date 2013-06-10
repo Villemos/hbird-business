@@ -14,36 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.navigation.processors;
+package org.hbird.business.navigation.processors.orekit;
 
 import org.apache.camel.Handler;
-import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
-import org.hbird.business.navigation.request.PredictionRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hbird.business.navigation.request.orekit.ContactData;
+import org.hbird.exchange.navigation.LocationContactEvent;
 import org.springframework.stereotype.Component;
 
 /**
  *
  */
 @Component
-public class PredictionRequestCreator<C extends PredictionConfigurationBase> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PredictionRequestCreator.class);
-
-    @Autowired
-    private final C config;
-
-    public PredictionRequestCreator(C config) {
-        this.config = config;
-    }
+public class LocationContactEventExtractor {
 
     @Handler
-    public PredictionRequest<C> create() {
-        PredictionRequest<C> request = new PredictionRequest<C>();
-        request.setConfiguration(config);
-        LOG.debug("Created new PredictionRequest for {}", config.getClass().getSimpleName());
-        return request;
+    public LocationContactEvent extract(ContactData data) {
+        return data.getEvent();
     }
 }

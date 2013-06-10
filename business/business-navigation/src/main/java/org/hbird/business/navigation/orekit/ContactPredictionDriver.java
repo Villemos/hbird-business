@@ -25,12 +25,19 @@ import org.hbird.business.api.IPublish;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.PredictionComponent;
 import org.hbird.business.navigation.configuration.ContactPredictionConfiguration;
-import org.hbird.business.navigation.processors.ContactPredictionRequestCreator;
 import org.hbird.business.navigation.processors.GroundStationResolver;
-import org.hbird.business.navigation.processors.ResultExctractor;
 import org.hbird.business.navigation.processors.TimeRangeCalulator;
 import org.hbird.business.navigation.processors.TleResolver;
+import org.hbird.business.navigation.processors.orekit.AzimuthCalculator;
+import org.hbird.business.navigation.processors.orekit.ContactDataExtractor;
+import org.hbird.business.navigation.processors.orekit.ContactPredictionRequestCreator;
+import org.hbird.business.navigation.processors.orekit.DopplerCalculator;
+import org.hbird.business.navigation.processors.orekit.EclipseCalculator;
+import org.hbird.business.navigation.processors.orekit.ElevationCalculator;
+import org.hbird.business.navigation.processors.orekit.LocationContactEventExtractor;
 import org.hbird.business.navigation.processors.orekit.OrekitContactPredictor;
+import org.hbird.business.navigation.processors.orekit.RangeCalculator;
+import org.hbird.business.navigation.processors.orekit.SignalDelayCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +67,7 @@ public class ContactPredictionDriver extends SoftwareComponentDriver {
         IPropagatorProvider propagatorProvider = new KeplerianTlePropagatorProvider();
         IFrameProvider frameProvider = new Cirf2000FrameProvider();
         long predictionInterval = config.getPredictionInterval();
+        double calculationStep = config.getDetailsCalculationStep() / 1000D; // from millis to seconds
 
         // processors
         ContactPredictionRequestCreator requestCreator = new ContactPredictionRequestCreator(config);
@@ -67,21 +75,39 @@ public class ContactPredictionDriver extends SoftwareComponentDriver {
         GroundStationResolver gsResolver = new GroundStationResolver(dao, catalogue);
         TimeRangeCalulator timeRangeCalculator = new TimeRangeCalulator();
         OrekitContactPredictor predictor = new OrekitContactPredictor(componentId, propagatorProvider, publisher, frameProvider);
-        ResultExctractor extractor = new ResultExctractor();
+        ContactDataExtractor dataExtractor = new ContactDataExtractor();
+        LocationContactEventExtractor eventExtractor = new LocationContactEventExtractor();
+
+        AzimuthCalculator azimuthCalculator = new AzimuthCalculator();
+        ElevationCalculator elevationCalculator = new ElevationCalculator(calculationStep);
+        DopplerCalculator dopplerCalculator = new DopplerCalculator();
+        RangeCalculator rangeCalculator = new RangeCalculator(calculationStep);
+        SignalDelayCalculator signalDelayCalculator = new SignalDelayCalculator();
+        EclipseCalculator eclipseCalculator = new EclipseCalculator();
+        // TODO - 30.05.2013, kimmell - missing signal loss calculator
 
         LOG.info("Starting {}; using '{}' and '{}' with interval {} ms", new Object[] { getClass().getSimpleName(),
                 propagatorProvider.getClass().getSimpleName(), frameProvider.getClass().getSimpleName(), predictionInterval });
 
         // actual route
-        ProcessorDefinition<?> route = from(addTimer(componentId, predictionInterval))
-                .bean(requestCreator)
-                .bean(tleResolver)
-                .bean(gsResolver)
-                .bean(timeRangeCalculator)
-                .bean(predictor)
-                .bean(extractor)
-                .split(body())
-                .to("log:org.hbird.prediction.contact.stats?level=DEBUG&groupInterval=60000&groupDelay=60000&groupActiveOnly=false");
+        // @formatter:off
+        ProcessorDefinition<?> route = from(addTimer(componentId, predictionInterval)) // execute using timer
+                .bean(requestCreator)               // create request object
+                .bean(tleResolver)                  // resolve TLE for the satellite
+                .bean(gsResolver)                   // resolve ground stations from IDs
+                .bean(timeRangeCalculator)          // calculate time ranges
+                .bean(predictor)                    // predict the contacts
+                .bean(dataExtractor)                // extract ContactData objects
+                .split(body())                      // process each contact data object separately
+                    .bean(azimuthCalculator)        // calculate azimuth
+                    .bean(elevationCalculator)      // calculate elevation
+                    .bean(dopplerCalculator)        // calculate Doppler
+                    .bean(rangeCalculator)          // calculate range
+                    .bean(signalDelayCalculator)    // calculate signal delay
+                    .bean(eclipseCalculator)        // calculate eclipse
+                    .bean(eventExtractor)           // extract LocationContactEvent objects
+                    .to("log:org.hbird.prediction.contact.stats?level=DEBUG&groupInterval=60000&groupDelay=60000&groupActiveOnly=false");
+        // @formatter:on
 
         addInjectionRoute(route);
     }

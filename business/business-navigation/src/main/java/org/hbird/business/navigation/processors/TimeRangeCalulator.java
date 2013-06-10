@@ -40,9 +40,8 @@ public class TimeRangeCalulator {
         PredictionConfigurationBase config = request.getConfiguration();
         int period = config.getPredictionPeriod();
 
-        long now = System.currentTimeMillis();
-
-        DateTime start = new DateTime(now, DateTimeZone.UTC).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0);
+        long startTime = request.getStartTime();
+        DateTime start = new DateTime(startTime, DateTimeZone.UTC).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0);
         DateTime end = start.plusHours(period);
         LOG.info("Prediction period {}h; from {} to {}",
                 new Object[] { period, start.toString(Dates.ISO_8601_DATE_FORMATTER), end.toString(Dates.ISO_8601_DATE_FORMATTER) });

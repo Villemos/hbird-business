@@ -32,11 +32,13 @@ import org.orekit.propagation.SpacecraftState;
 import org.orekit.propagation.analytical.KeplerianPropagator;
 import org.orekit.time.AbsoluteDate;
 import org.orekit.utils.PVCoordinates;
+import org.springframework.stereotype.Component;
 
 /**
  *
  */
-public class DopplerCalculator implements IContactDetailCalculator {
+@Component
+public class DopplerCalculator extends AbstractContactDetailCalculator {
 
     /**
      * @see org.hbird.business.navigation.processors.orekit.IContactDetailCalculator#calculate(org.orekit.propagation.SpacecraftState,

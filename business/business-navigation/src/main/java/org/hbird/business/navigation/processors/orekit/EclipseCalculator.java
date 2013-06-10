@@ -24,11 +24,13 @@ import org.orekit.errors.OrekitException;
 import org.orekit.frames.Frame;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.propagation.SpacecraftState;
+import org.springframework.stereotype.Component;
 
 /**
  *
  */
-public class EclipseCalculator implements IContactDetailCalculator {
+@Component
+public class EclipseCalculator extends AbstractContactDetailCalculator {
 
     /**
      * @see org.hbird.business.navigation.processors.orekit.IContactDetailCalculator#calculate(org.orekit.propagation.SpacecraftState,

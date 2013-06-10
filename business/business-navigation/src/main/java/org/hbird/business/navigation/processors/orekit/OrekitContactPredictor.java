@@ -29,8 +29,8 @@ import org.hbird.business.navigation.orekit.IFrameProvider;
 import org.hbird.business.navigation.orekit.IPropagatorProvider;
 import org.hbird.business.navigation.orekit.NavigationUtilities;
 import org.hbird.business.navigation.request.ContactPredictionRequest;
+import org.hbird.business.navigation.request.orekit.ContactData;
 import org.hbird.exchange.groundstation.GroundStation;
-import org.hbird.exchange.interfaces.IEntityInstance;
 import org.hbird.exchange.navigation.GeoLocation;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.bodies.GeodeticPoint;
@@ -66,14 +66,13 @@ public class OrekitContactPredictor {
     }
 
     @Handler
-    public ContactPredictionRequest predict(ContactPredictionRequest request) throws OrekitException {
+    public ContactPredictionRequest<ContactData> predict(ContactPredictionRequest<ContactData> request) throws OrekitException {
         Propagator propagator = propagatorProvider.getPropagator(request);
         ContactPredictionConfiguration conf = request.getConfiguration();
         List<GroundStation> gsList = request.getGroundStations();
         TleOrbitalParameters tleParameters = request.getTleParameters();
         String satelliteId = conf.getSatelliteId();
         Frame inertrialFrame = frameProvider.getInertialFrame();
-        long calculationStep = conf.getDetailsCalculationStep();
         for (GroundStation gs : gsList) {
             String gsId = gs.getID();
             String gsName = gs.getName();
@@ -81,8 +80,7 @@ public class OrekitContactPredictor {
             GeoLocation location = gs.getGeoLocation();
             GeodeticPoint point = NavigationUtilities.toGeodeticPoint(location);
             TopocentricFrame frame = new TopocentricFrame(Constants.earth, point, gsName);
-            EventDetector detector = new ContactEventCollector(issuerId, elevation, frame, satelliteId, gsId, tleParameters, publisher, inertrialFrame,
-                    calculationStep);
+            EventDetector detector = new ContactEventCollector(issuerId, elevation, frame, satelliteId, gsId, tleParameters, publisher, inertrialFrame);
             propagator.addEventDetector(detector);
         }
 
@@ -93,14 +91,14 @@ public class OrekitContactPredictor {
         propagator.propagate(endDate);
         long endPredcition = System.currentTimeMillis();
 
-        ArrayList<IEntityInstance> result = new ArrayList<IEntityInstance>();
+        ArrayList<ContactData> result = new ArrayList<ContactData>();
         for (EventDetector ed : propagator.getEventsDetectors()) {
             ContactEventCollector cec = (ContactEventCollector) ed;
             result.addAll(cec.getDataSet());
         }
         LOG.debug("Prediciont completed in {} ms; calculated {} LocationContactEvents", (endPredcition - startPredcition), result.size());
 
-        request.setResult(result);
+        request.setPredictedEvents(result);
         return request;
     }
 }

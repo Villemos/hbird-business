@@ -16,16 +16,13 @@
  */
 package org.hbird.business.navigation.request;
 
-import java.util.List;
-
 import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
-import org.hbird.exchange.interfaces.IEntityInstance;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 /**
  *
  */
-public class PredictionRequest<T extends PredictionConfigurationBase> {
+public abstract class PredictionRequest<T extends PredictionConfigurationBase> {
 
     /** Prediction configuration to use. */
     protected T configuration;
@@ -39,8 +36,9 @@ public class PredictionRequest<T extends PredictionConfigurationBase> {
     /** Prediction end time. */
     protected long endTime;
 
-    /** List of prediction results. */
-    protected List<? extends IEntityInstance> result;
+    public PredictionRequest(long startTime) {
+        this.startTime = startTime;
+    }
 
     /**
      * @return the configuration
@@ -96,19 +94,5 @@ public class PredictionRequest<T extends PredictionConfigurationBase> {
      */
     public void setEndTime(long endTime) {
         this.endTime = endTime;
-    }
-
-    /**
-     * @return the result
-     */
-    public List<? extends IEntityInstance> getResult() {
-        return result;
-    }
-
-    /**
-     * @param result the result to set
-     */
-    public void setResult(List<? extends IEntityInstance> result) {
-        this.result = result;
     }
 }

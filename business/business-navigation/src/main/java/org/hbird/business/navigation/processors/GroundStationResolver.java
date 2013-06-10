@@ -44,7 +44,7 @@ public class GroundStationResolver {
         this.catalogue = catalogue;
     }
 
-    public ContactPredictionRequest resolve(ContactPredictionRequest request) {
+    public <T> ContactPredictionRequest<T> resolve(ContactPredictionRequest<T> request) {
         ContactPredictionConfiguration config = request.getConfiguration();
         List<String> ids = config.getGroundStationsIds();
         List<GroundStation> gsList;
