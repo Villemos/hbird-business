@@ -39,6 +39,7 @@ import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.GeoLocation;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -128,6 +129,11 @@ public class OrekitContactPredictorTest {
     private OrekitContactPredictor predictor;
 
     private InOrder inOrder;
+
+    @BeforeClass
+    public static void beforeClass() {
+        System.setProperty("orekit.data.path", "src/main/resources/orekit-data.zip");
+    }
 
     /**
      * @throws java.lang.Exception
