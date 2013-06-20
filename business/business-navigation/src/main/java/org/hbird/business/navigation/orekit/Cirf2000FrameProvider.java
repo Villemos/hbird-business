@@ -19,6 +19,7 @@ package org.hbird.business.navigation.orekit;
 import org.orekit.errors.OrekitException;
 import org.orekit.frames.Frame;
 import org.orekit.frames.FramesFactory;
+import org.orekit.frames.Predefined;
 
 /**
  *
@@ -30,6 +31,7 @@ public class Cirf2000FrameProvider implements IFrameProvider {
      */
     @Override
     public Frame getInertialFrame() throws OrekitException {
-        return FramesFactory.getCIRF2000();
+        // TODO - 20.06.2013, kimmell - or CIRF_2000_CONV_2010?
+        return FramesFactory.getFrame(Predefined.CIRF_2000_CONV_2003);
     }
 }

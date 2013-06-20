@@ -213,13 +213,28 @@ public class DataRequest extends Command {
         setArgumentValue(StandardArguments.ENTITY_ID, entityID);
     }
 
+    /**
+     * Sets the Entity instance ID.
+     * 
+     * In case of invalid input assigns the value to the Entity ID.
+     * 
+     * @param entityInstanceID
+     */
     public void setEntityInstanceID(String entityInstanceID) {
         if (entityInstanceID != null) {
             if (entityInstanceID.contains(EntityInstance.INSTANCE_ID_SEPARATOR)) {
-                String[] elements = entityInstanceID.split(EntityInstance.INSTANCE_ID_SEPARATOR);
-                setEntityID(elements[0]);
-                setAt(Long.parseLong(elements[1]));
-                setArgumentValue(StandardArguments.ENTITY_INSTANCE_ID, entityInstanceID);
+                int index = entityInstanceID.lastIndexOf(EntityInstance.INSTANCE_ID_SEPARATOR);
+                String id = entityInstanceID.substring(0, index); // from beginning to last separator
+                String timestampPart = entityInstanceID.substring(index + 1); // from last separator + 1 to the end
+                try {
+                    long timestamp = Long.parseLong(timestampPart);
+                    setEntityID(id);
+                    setAt(timestamp);
+                    setArgumentValue(StandardArguments.ENTITY_INSTANCE_ID, entityInstanceID);
+                }
+                catch (NumberFormatException nfe) {
+                    setEntityID(entityInstanceID);
+                }
             }
             else {
                 setEntityID(entityInstanceID);

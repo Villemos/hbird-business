@@ -17,6 +17,7 @@
 package org.hbird.business.navigation.request;
 
 import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
+import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 /**
@@ -27,7 +28,7 @@ public abstract class PredictionRequest<T extends PredictionConfigurationBase> {
     /** Prediction configuration to use. */
     protected T configuration;
 
-    /** Resolved TLE parameters. */
+    /** Resolved {@link TleOrbitalParameters}. */
     protected TleOrbitalParameters tleParameters;
 
     /** Prediction start time. */
@@ -35,6 +36,9 @@ public abstract class PredictionRequest<T extends PredictionConfigurationBase> {
 
     /** Prediction end time. */
     protected long endTime;
+
+    /** Resolved {@link Satellite}. */
+    protected Satellite satellite;
 
     public PredictionRequest(long startTime) {
         this.startTime = startTime;
@@ -94,5 +98,19 @@ public abstract class PredictionRequest<T extends PredictionConfigurationBase> {
      */
     public void setEndTime(long endTime) {
         this.endTime = endTime;
+    }
+
+    /**
+     * @return the satellite
+     */
+    public Satellite getSatellite() {
+        return satellite;
+    }
+
+    /**
+     * @param satellite the satellite to set
+     */
+    public void setSatellite(Satellite satellite) {
+        this.satellite = satellite;
     }
 }

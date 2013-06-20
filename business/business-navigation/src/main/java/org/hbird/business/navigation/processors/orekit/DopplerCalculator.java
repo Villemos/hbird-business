@@ -16,14 +16,14 @@
  */
 package org.hbird.business.navigation.processors.orekit;
 
-import org.apache.commons.math.geometry.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.hbird.business.navigation.orekit.Constants;
 import org.hbird.exchange.navigation.ContactParameterRange;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.orekit.errors.OrekitException;
 import org.orekit.frames.Frame;
+import org.orekit.frames.LOFType;
 import org.orekit.frames.LocalOrbitalFrame;
-import org.orekit.frames.LocalOrbitalFrame.LOFType;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.orbits.CartesianOrbit;
 import org.orekit.orbits.Orbit;

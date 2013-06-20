@@ -84,11 +84,13 @@ public class OrekitContactPredictor {
             propagator.addEventDetector(detector);
         }
 
+        long start = request.getStartTime();
         long end = request.getEndTime();
+        AbsoluteDate startDate = new AbsoluteDate(new Date(start), TimeScalesFactory.getUTC());
         AbsoluteDate endDate = new AbsoluteDate(new Date(end), TimeScalesFactory.getUTC());
         LOG.debug("Predicting contacts for satelliteId '{}' and {} ground stations", satelliteId, gsList.size());
         long startPredcition = System.currentTimeMillis();
-        propagator.propagate(endDate);
+        propagator.propagate(startDate, endDate);
         long endPredcition = System.currentTimeMillis();
 
         ArrayList<ContactData> result = new ArrayList<ContactData>();

@@ -28,7 +28,6 @@ import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.GeoLocation;
 import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
-import org.orekit.frames.FramesFactory;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.propagation.events.EventDetector;
 
@@ -76,7 +75,7 @@ public class ContactEventBean extends NavigationBean {
             GeodeticPoint point = NavigationUtilities.toGeodeticPoint(location);
             TopocentricFrame sta1Frame = new TopocentricFrame(Constants.earth, point, groundStation.getName());
             EventDetector sta1Visi = new ContactEventCollector(conf.getID(), 0, sta1Frame, conf.getSatelliteId(), groundStation.getID(), tleParameters,
-                    publisher, FramesFactory.getCIRF2000());
+                    publisher, new Cirf2000FrameProvider().getInertialFrame());
             propagator.addEventDetector(sta1Visi);
         }
 

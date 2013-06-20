@@ -25,6 +25,7 @@ import org.hbird.exchange.navigation.OrbitalState;
 import org.orekit.errors.PropagationException;
 import org.orekit.propagation.SpacecraftState;
 import org.orekit.propagation.sampling.OrekitFixedStepHandler;
+import org.orekit.time.AbsoluteDate;
 
 /**
  * Callback class of the orekit propagator. The propagator will call the
@@ -36,8 +37,6 @@ import org.orekit.propagation.sampling.OrekitFixedStepHandler;
  * @author Gert Villemos
  */
 public class OrbitalStateCollector implements OrekitFixedStepHandler {
-
-    private static final long serialVersionUID = 360477995422051510L;
 
     public static final String ORBITAL_STATE = "orbitalstate";
 
@@ -98,5 +97,14 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
      */
     public void setPublisher(IPublish publisher) {
         this.publisher = publisher;
+    }
+
+    /**
+     * @see org.orekit.propagation.sampling.OrekitFixedStepHandler#init(org.orekit.propagation.SpacecraftState,
+     *      org.orekit.time.AbsoluteDate)
+     */
+    @Override
+    public void init(SpacecraftState s0, AbsoluteDate t) throws PropagationException {
+        // TODO - 20.06.2013, kimmell - just ignore ?
     }
 }

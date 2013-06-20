@@ -19,6 +19,7 @@ package org.hbird.business.navigation.processors;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.camel.Handler;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.navigation.configuration.ContactPredictionConfiguration;
@@ -44,19 +45,20 @@ public class GroundStationResolver {
         this.catalogue = catalogue;
     }
 
+    @Handler
     public <T> ContactPredictionRequest<T> resolve(ContactPredictionRequest<T> request) {
         ContactPredictionConfiguration config = request.getConfiguration();
         List<String> ids = config.getGroundStationsIds();
         List<GroundStation> gsList;
         if (ids == null || ids.isEmpty()) {
-            LOG.debug("No ground stations configured; using all availables");
+            LOG.debug("No GroundStations configured; using all availables");
             gsList = getAllGroundStations(catalogue);
         }
         else {
-            LOG.debug("Resolving {} ground stations", ids.size());
+            LOG.debug("Resolving {} GroundStations", ids.size());
             gsList = resolveGroundStations(dao, ids);
         }
-        LOG.debug("Resolved {} ground stations", gsList.size());
+        LOG.debug("Resolved {} GroundStations", gsList.size());
         request.setGroundStations(gsList);
         return request;
     }
@@ -71,15 +73,15 @@ public class GroundStationResolver {
             try {
                 GroundStation gs = (GroundStation) dao.resolve(id);
                 if (gs == null) {
-                    LOG.error("No ground station found for the ID '{}'", id);
+                    LOG.error("No GroundStation found for the ID '{}'", id);
                 }
                 else {
-                    LOG.debug("Resolved ground station for the ID '{}'", id);
+                    LOG.debug("Resolved GroundStation for the ID '{}'", id);
                     result.add(gs);
                 }
             }
             catch (Exception e) {
-                LOG.error("Failed to resolve ground station for the ID '{}'", id, e);
+                LOG.error("Failed to resolve GroundStation for the ID '{}'", id, e);
             }
         }
         return result;

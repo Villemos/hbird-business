@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
+import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.junit.After;
 import org.junit.Before;
@@ -46,6 +47,9 @@ public class PredictionRequestTest {
     @Mock
     private TleOrbitalParameters tleParameters;
 
+    @Mock
+    private Satellite sat;
+
     private InOrder inOrder;
 
     private PredictionRequest<PredictionConfigurationBase> request;
@@ -57,7 +61,7 @@ public class PredictionRequestTest {
     public void setUp() throws Exception {
         request = new PredictionRequest<PredictionConfigurationBase>(NOW) {
         };
-        inOrder = Mockito.inOrder(configuration, tleParameters);
+        inOrder = Mockito.inOrder(configuration, tleParameters, sat);
     }
 
     @After
@@ -111,5 +115,17 @@ public class PredictionRequestTest {
         assertEquals(0L, request.getEndTime());
         request.setEndTime(END);
         assertEquals(END, request.getEndTime());
+    }
+
+    @Test
+    public void testGetSatellite() {
+        testSetSatellite();
+    }
+
+    @Test
+    public void testSetSatellite() {
+        assertNull(request.getSatellite());
+        request.setSatellite(sat);
+        assertEquals(sat, request.getSatellite());
     }
 }

@@ -26,6 +26,7 @@ import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.PredictionComponent;
 import org.hbird.business.navigation.configuration.ContactPredictionConfiguration;
 import org.hbird.business.navigation.processors.GroundStationResolver;
+import org.hbird.business.navigation.processors.SatelliteResolver;
 import org.hbird.business.navigation.processors.TimeRangeCalulator;
 import org.hbird.business.navigation.processors.TleResolver;
 import org.hbird.business.navigation.processors.orekit.AzimuthCalculator;
@@ -64,13 +65,14 @@ public class ContactPredictionDriver extends SoftwareComponentDriver {
         IDataAccess dao = ApiFactory.getDataAccessApi(componentId, ctx);
         ICatalogue catalogue = ApiFactory.getCatalogueApi(componentId, ctx);
         IPublish publisher = ApiFactory.getPublishApi(componentId, ctx);
-        IPropagatorProvider propagatorProvider = new KeplerianTlePropagatorProvider();
+        IPropagatorProvider propagatorProvider = new TlePropagatorProvider();
         IFrameProvider frameProvider = new Cirf2000FrameProvider();
         long predictionInterval = config.getPredictionInterval();
         double calculationStep = config.getDetailsCalculationStep() / 1000D; // from millis to seconds
 
         // processors
         ContactPredictionRequestCreator requestCreator = new ContactPredictionRequestCreator(config);
+        SatelliteResolver satelliteResolver = new SatelliteResolver(dao);
         TleResolver tleResolver = new TleResolver(dao);
         GroundStationResolver gsResolver = new GroundStationResolver(dao, catalogue);
         TimeRangeCalulator timeRangeCalculator = new TimeRangeCalulator();
@@ -93,6 +95,7 @@ public class ContactPredictionDriver extends SoftwareComponentDriver {
         // @formatter:off
         ProcessorDefinition<?> route = from(addTimer(componentId, predictionInterval)) // execute using timer
                 .bean(requestCreator)               // create request object
+                .bean(satelliteResolver)            // resolve satellite
                 .bean(tleResolver)                  // resolve TLE for the satellite
                 .bean(gsResolver)                   // resolve ground stations from IDs
                 .bean(timeRangeCalculator)          // calculate time ranges

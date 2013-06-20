@@ -27,6 +27,7 @@ import org.hbird.business.navigation.PredictionComponent;
 import org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration;
 import org.hbird.business.navigation.processors.OrbitalStateExtractor;
 import org.hbird.business.navigation.processors.OrbitalStatePredictionRequestCreator;
+import org.hbird.business.navigation.processors.SatelliteResolver;
 import org.hbird.business.navigation.processors.TimeRangeCalulator;
 import org.hbird.business.navigation.processors.TleResolver;
 import org.hbird.business.navigation.processors.orekit.OrekitOrbitalStatePredictor;
@@ -54,13 +55,14 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver {
         CamelContext ctx = component.getContext();
         IDataAccess dao = ApiFactory.getDataAccessApi(componentId, ctx);
         IPublish publisher = ApiFactory.getPublishApi(componentId, ctx);
-        IPropagatorProvider propagatorProvider = new KeplerianTlePropagatorProvider();
+        IPropagatorProvider propagatorProvider = new TlePropagatorProvider();
         IdBuilder idBuilder = ApiFactory.getIdBuilder();
         long predictionInterval = config.getPredictionInterval();
 
         // processors
         OrbitalStatePredictionRequestCreator requestCreator = new OrbitalStatePredictionRequestCreator(config);
         TleResolver tleResolver = new TleResolver(dao);
+        SatelliteResolver satelliteResolver = new SatelliteResolver(dao);
         TimeRangeCalulator timeRangeCalculator = new TimeRangeCalulator();
         OrekitOrbitalStatePredictor predictor = new OrekitOrbitalStatePredictor(propagatorProvider, publisher, idBuilder);
         OrbitalStateExtractor extractor = new OrbitalStateExtractor();
@@ -71,6 +73,7 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver {
         // actual route
         ProcessorDefinition<?> route = from(addTimer(componentId, predictionInterval))
                 .bean(requestCreator)
+                .bean(satelliteResolver)
                 .bean(tleResolver)
                 .bean(timeRangeCalculator)
                 .bean(predictor)

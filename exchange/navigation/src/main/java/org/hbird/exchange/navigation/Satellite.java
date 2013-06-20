@@ -33,6 +33,9 @@ public class Satellite extends Part implements ISatelliteSpecific {
      */
     public static final long DEFAULT_RADIO_FREQUENCY = 145000000L;
 
+    /** Default satellite mass in grams. */
+    public static final long DEFAULT_SATELLITE_MASS = 1000L;
+
     protected String designator;
 
     protected String satelliteNumber;
@@ -42,6 +45,9 @@ public class Satellite extends Part implements ISatelliteSpecific {
 
     /** Satellite down-link frequency in Hz. From satellite to ground. */
     protected long downlinkFrequency = DEFAULT_RADIO_FREQUENCY;
+
+    /** Satellite mass in grams. */
+    protected long satelliteMass = DEFAULT_SATELLITE_MASS;
 
     /**
      * Constructor.
@@ -94,5 +100,19 @@ public class Satellite extends Part implements ISatelliteSpecific {
      */
     public void setDownlinkFrequency(long downlinkFrequency) {
         this.downlinkFrequency = downlinkFrequency;
+    }
+
+    /**
+     * @return the satelliteMass
+     */
+    public long getSatelliteMass() {
+        return satelliteMass;
+    }
+
+    /**
+     * @param satelliteMass the satelliteMass to set
+     */
+    public void setSatelliteMass(long satelliteMass) {
+        this.satelliteMass = satelliteMass;
     }
 }

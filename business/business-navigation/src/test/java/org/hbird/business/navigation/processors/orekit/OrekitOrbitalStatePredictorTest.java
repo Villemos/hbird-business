@@ -96,6 +96,7 @@ public class OrekitOrbitalStatePredictorTest {
         when(config.getSatelliteId()).thenReturn(SAT_ID);
         when(config.getPredictionStep()).thenReturn(PREDICTION_STEP);
         when(tleParameters.getInstanceID()).thenReturn(TLE_ID);
+        when(request.getStartTime()).thenReturn(NOW);
         when(request.getEndTime()).thenReturn(END_TIME);
     }
 
@@ -114,9 +115,14 @@ public class OrekitOrbitalStatePredictorTest {
         OrbitalStateCollector collector = collectorCaptor.getValue();
         assertNotNull(collector);
         assertEquals(publisher, collector.getPublisher());
+        inOrder.verify(request, times(1)).getStartTime();
         inOrder.verify(request, times(1)).getEndTime();
+        ArgumentCaptor<AbsoluteDate> startTimeCaptor = ArgumentCaptor.forClass(AbsoluteDate.class);
         ArgumentCaptor<AbsoluteDate> endTimeCaptor = ArgumentCaptor.forClass(AbsoluteDate.class);
-        inOrder.verify(propagator, times(1)).propagate(endTimeCaptor.capture());
+        inOrder.verify(propagator, times(1)).propagate(startTimeCaptor.capture(), endTimeCaptor.capture());
+        AbsoluteDate startTime = startTimeCaptor.getValue();
+        assertNotNull(startTime);
+        assertEquals(new AbsoluteDate(new Date(NOW), TimeScalesFactory.getUTC()), startTime);
         AbsoluteDate endTime = endTimeCaptor.getValue();
         assertNotNull(endTime);
         assertEquals(new AbsoluteDate(new Date(END_TIME), TimeScalesFactory.getUTC()), endTime);

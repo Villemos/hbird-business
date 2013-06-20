@@ -16,7 +16,7 @@
  */
 package org.hbird.business.navigation.processors.orekit;
 
-import org.apache.commons.math.geometry.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.hbird.business.navigation.orekit.Constants;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.orekit.bodies.CelestialBodyFactory;

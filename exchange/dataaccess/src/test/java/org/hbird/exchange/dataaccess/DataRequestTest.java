@@ -108,4 +108,21 @@ public class DataRequestTest {
         assertFalse(dataRequest.hasArgumentValue(StandardArguments.ENTITY_INSTANCE_ID));
     }
 
+    @Test
+    public void testSetEntityInstanceIDMultipleSeparators() {
+        dataRequest.setEntityInstanceID("ID:12345:67890");
+        assertEquals(new Long(67890), dataRequest.getFrom());
+        assertEquals(new Long(67890), dataRequest.getTo());
+        assertEquals("ID:12345", dataRequest.getArgumentValue(StandardArguments.ENTITY_ID, String.class));
+        assertEquals("ID:12345:67890", dataRequest.getArgumentValue(StandardArguments.ENTITY_INSTANCE_ID, String.class));
+    }
+
+    @Test
+    public void testSetEntityInstanceIDMultipleSeparatorsInvalidTimestamp() {
+        dataRequest.setEntityInstanceID("ID:12345:67890A");
+        assertNull(dataRequest.getFrom());
+        assertNull(dataRequest.getTo());
+        assertEquals("ID:12345:67890A", dataRequest.getArgumentValue(StandardArguments.ENTITY_ID, String.class));
+        assertFalse(dataRequest.hasArgumentValue(StandardArguments.ENTITY_INSTANCE_ID));
+    }
 }

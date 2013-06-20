@@ -44,6 +44,8 @@ public class TrackingComponentDriver extends SoftwareComponentDriver {
 
         ArchivePoller archivePoller = new ArchivePoller(config, dao);
         ContactScheduler contactScheduler = new ContactScheduler(config, scheduler);
+        ContactRescheduler contactRescheduler = new ContactRescheduler(config, scheduler);
+        EventAnalyzer analyzer = new EventAnalyzer(config, scheduler);
 
         // @formatter:off
         
@@ -54,13 +56,20 @@ public class TrackingComponentDriver extends SoftwareComponentDriver {
             .to("log:scheduledContact-log?level=DEBUG");
         
         from("direct:rescheduleContact")
+            .bean(contactRescheduler)
             .to("log:REscheduleContact-log?level=DEBUG");
         
         from("seda:eventHandler")
             .to("log:handler-log?level=DEBUG")
-            // TODO - 30.04.2013, kimmell - add filtering and choose what to do with the event
-            .to("direct:scheduleContact");
-        
+            .process(analyzer)
+            .choice()
+                .when(header(EventAnalyzer.HEADER_KEY_EVENT_TYPE).isEqualTo(EventAnalyzer.HEADER_VALUE_NEW_EVENT))
+                    .to("direct:scheduleContact")
+                .when(header(EventAnalyzer.HEADER_KEY_EVENT_TYPE).isEqualTo(EventAnalyzer.HEADER_VALUE_UPDATED_EVENT))
+                    .to("direct:rescheduleContact")
+                .otherwise()
+                    .log("LocationContacEvent " + body().toString() + " already scheduled")
+                ;
         
         from(addTimer(name, config.getArchivePollInterval()))
             .bean(archivePoller)

@@ -186,7 +186,6 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
              .setHeader("commandid", simple("${body.commandid}"))
              .setHeader("executiontime", simple("${body.executionTime}"))
              .bean(new NativeCommandExtractor())
-//             .log(LoggingLevel.INFO, "Sending command '" + simple("${body}").getText() + "' to " + name)
              .log(LoggingLevel.INFO, asRoute("Sending command '%s' to %s", simple("${body}").getText(), name))
              .to(asRoute("seda:toHamlib-%s", name));
              
@@ -209,7 +208,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
              .bean(new OnChange())
              .choice()
                  .when(header(StandardArguments.VALUE_HAS_CHANGED).isEqualTo(false))
-                     .log(LoggingLevel.DEBUG, asRoute("Value of '%s' not changed; skipping update",  simple("${in.body.name}").getText()))
+                     .log(LoggingLevel.TRACE, asRoute("Value of '%s' not changed; skipping update",  simple("${in.body.name}").getText()))
                  .otherwise()
                      .to(asRoute("direct:publish-%s", name));
          

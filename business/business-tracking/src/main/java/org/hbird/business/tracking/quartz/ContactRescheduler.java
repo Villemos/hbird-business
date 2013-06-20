@@ -16,51 +16,52 @@
  */
 package org.hbird.business.tracking.quartz;
 
-import java.util.Date;
-
 import org.apache.camel.Body;
 import org.apache.camel.Handler;
 import org.hbird.exchange.navigation.LocationContactEvent;
-import org.hbird.exchange.util.Dates;
-import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
  */
-public class ContactScheduler extends SchedulingBase {
+public class ContactRescheduler extends ContactScheduler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ContactScheduler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContactRescheduler.class);
 
-    public ContactScheduler(TrackingDriverConfiguration config, Scheduler scheduler) {
+    /**
+     * @param config
+     * @param scheduler
+     */
+    public ContactRescheduler(TrackingDriverConfiguration config, Scheduler scheduler) {
         super(config, scheduler);
     }
 
+    /**
+     * @see org.hbird.business.tracking.quartz.ContactScheduler#handle(org.hbird.exchange.navigation.LocationContactEvent)
+     */
+    @Override
     @Handler
     public void handle(@Body LocationContactEvent event) {
-        long now = System.currentTimeMillis();
-        long jobStartTime = getScheduleTime(event, config, now);
-        if (jobStartTime == TOO_LATE) {
-            LOG.warn("Too late to issue Track command for {}; Current time {}; configured schedule delta {}",
-                    new Object[] { event.toString(), Dates.toDefaultDateFormat(now), config.getScheduleDelta() });
-            return;
-        }
-
+        // TODO - remove old job & trigger
         String groupName = createGroupName(event);
-        Date startTime = new Date(jobStartTime);
-        JobDetail job = createJob(event, groupName);
-        Trigger trigger = createTrigger(event, groupName, startTime);
-
+        String jobName = createJobName(event);
+        JobKey jobKey = new JobKey(jobName, groupName);
         try {
-            scheduler.scheduleJob(job, trigger);
-            LOG.info("Scheduled {}", event);
+            boolean result = scheduler.deleteJob(jobKey);
+            if (result) {
+                LOG.info("Removed outdated job for {}", event);
+            }
+            else {
+                LOG.warn("No outdated job found for {}. This should not happen. Needs investigation", event);
+            }
+            super.handle(event);
         }
         catch (SchedulerException e) {
-            LOG.error("Failed to schedule Track command creation for the {}", event.toString(), e);
+            LOG.error("Failed to reschedule {}", event, e);
         }
     }
 }

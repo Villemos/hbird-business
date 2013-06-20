@@ -1,6 +1,6 @@
 package org.hbird.business.navigation.orekit;
 
-import org.apache.commons.math.geometry.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.hbird.business.navigation.processors.orekit.EclipseCalculator;
 import org.hbird.exchange.navigation.GeoLocation;
 import org.hbird.exchange.navigation.OrbitalState;
@@ -8,10 +8,10 @@ import org.orekit.bodies.GeodeticPoint;
 import org.orekit.errors.OrekitException;
 import org.orekit.frames.Transform;
 import org.orekit.propagation.SpacecraftState;
+import org.orekit.propagation.analytical.tle.TLE;
 import org.orekit.time.AbsoluteDate;
 import org.orekit.time.TimeScalesFactory;
 import org.orekit.time.UTCScale;
-import org.orekit.tle.TLE;
 import org.orekit.utils.PVCoordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

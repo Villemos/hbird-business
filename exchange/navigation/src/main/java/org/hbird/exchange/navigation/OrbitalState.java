@@ -18,7 +18,7 @@ package org.hbird.exchange.navigation;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.math.geometry.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.interfaces.IDerivedFrom;
 import org.hbird.exchange.interfaces.IGenerationTimestamped;

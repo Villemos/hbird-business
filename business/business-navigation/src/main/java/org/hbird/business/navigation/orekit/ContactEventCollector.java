@@ -27,10 +27,10 @@ import org.orekit.errors.OrekitException;
 import org.orekit.frames.Frame;
 import org.orekit.frames.TopocentricFrame;
 import org.orekit.propagation.SpacecraftState;
+import org.orekit.propagation.analytical.tle.TLE;
 import org.orekit.propagation.events.ElevationDetector;
 import org.orekit.time.AbsoluteDate;
 import org.orekit.time.TimeScalesFactory;
-import org.orekit.tle.TLE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +93,7 @@ public class ContactEventCollector extends ElevationDetector {
      *      boolean)
      */
     @Override
-    public int eventOccurred(final SpacecraftState state, final boolean increasing) throws OrekitException {
+    public Action eventOccurred(final SpacecraftState state, final boolean increasing) throws OrekitException {
 
         if (increasing) {
             // we have new start state; store it
@@ -113,7 +113,7 @@ public class ContactEventCollector extends ElevationDetector {
         }
 
         // Continue listening for events.
-        return CONTINUE;
+        return Action.CONTINUE;
     }
 
     public List<ContactData> getDataSet() {

@@ -167,6 +167,7 @@ public class OrekitContactPredictorTest {
         when(gs2.getID()).thenReturn(GS_ID_2);
         when(gs2.getName()).thenReturn(GS_NAME_2);
         when(gs2.getGeoLocation()).thenReturn(location2);
+        when(request.getStartTime()).thenReturn(NOW);
         when(request.getEndTime()).thenReturn(END);
         when(propagator.getEventsDetectors()).thenReturn(detectors);
         when(detector1.getDataSet()).thenReturn(results1);
@@ -188,8 +189,13 @@ public class OrekitContactPredictorTest {
         inOrder.verify(gs2, times(1)).getName();
         inOrder.verify(gs2, times(1)).getGeoLocation();
         inOrder.verify(propagator, times(1)).addEventDetector(any(ContactEventCollector.class));
+        inOrder.verify(request, times(1)).getStartTime();
+        inOrder.verify(request, times(1)).getEndTime();
+        ArgumentCaptor<AbsoluteDate> startDateCaptor = ArgumentCaptor.forClass(AbsoluteDate.class);
         ArgumentCaptor<AbsoluteDate> endDateCaptor = ArgumentCaptor.forClass(AbsoluteDate.class);
-        inOrder.verify(propagator, times(1)).propagate(endDateCaptor.capture());
+        inOrder.verify(propagator, times(1)).propagate(startDateCaptor.capture(), endDateCaptor.capture());
+        assertNotNull(startDateCaptor.getValue());
+        assertEquals(NOW, startDateCaptor.getValue().toDate(TimeScalesFactory.getUTC()).getTime());
         assertNotNull(endDateCaptor.getValue());
         assertEquals(END, endDateCaptor.getValue().toDate(TimeScalesFactory.getUTC()).getTime());
         inOrder.verify(propagator, times(1)).getEventsDetectors();

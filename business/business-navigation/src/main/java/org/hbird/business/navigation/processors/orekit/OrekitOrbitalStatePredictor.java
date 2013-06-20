@@ -62,11 +62,13 @@ public class OrekitOrbitalStatePredictor {
         OrbitalStateCollector collector = new OrbitalStateCollector(satelliteId, tleParameters.getInstanceID(), publisher, idBuilder);
         propagator.setMasterMode(predictionStep, collector);
 
+        long start = request.getStartTime();
         long end = request.getEndTime();
+        AbsoluteDate startDate = new AbsoluteDate(new Date(start), TimeScalesFactory.getUTC());
         AbsoluteDate endDate = new AbsoluteDate(new Date(end), TimeScalesFactory.getUTC());
         LOG.debug("Predicting orbital states for the satelliteId '{}'", satelliteId);
         long startPredcition = System.currentTimeMillis();
-        propagator.propagate(endDate);
+        propagator.propagate(startDate, endDate);
         long endPredcition = System.currentTimeMillis();
         List<OrbitalState> result = collector.getDataSet();
         request.setResult(result);
