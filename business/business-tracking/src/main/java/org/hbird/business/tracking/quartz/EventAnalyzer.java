@@ -63,14 +63,14 @@ public class EventAnalyzer extends SchedulingBase implements Processor {
         String triggerName = createTriggerName(event);
         String groupName = createGroupName(event);
         TriggerKey triggerKey = new TriggerKey(triggerName, groupName);
-        LOG.debug("Looking for trigger {}", triggerKey);
+        LOG.trace("Looking for trigger {}", triggerKey);
         Trigger trigger = scheduler.getTrigger(triggerKey);
         if (trigger == null) {
-            LOG.debug("Trigger not found for the event {}; result: {}", event.getInstanceID(), HEADER_VALUE_NEW_EVENT);
+            LOG.trace("Trigger not found for the event {}; result: {}", event.getInstanceID(), HEADER_VALUE_NEW_EVENT);
             out.setHeader(HEADER_KEY_EVENT_TYPE, HEADER_VALUE_NEW_EVENT);
         }
         else {
-            LOG.debug("Trigger FOUND for the key {}", triggerKey);
+            LOG.trace("Trigger FOUND for the key {}", triggerKey);
             String jobName = createJobName(event);
             JobKey jobKey = new JobKey(jobName, groupName);
             JobDetail job = scheduler.getJobDetail(jobKey);
@@ -78,7 +78,7 @@ public class EventAnalyzer extends SchedulingBase implements Processor {
             long startTimeFromJob = map.getLong(TrackCommandCreationJob.JOB_DATA_START_TIME);
             String type = startTimeFromJob == event.getStartTime() ? HEADER_VALUE_KNOWN_EVENT
                     : HEADER_VALUE_UPDATED_EVENT;
-            LOG.debug("Comparing {} and {}; result: {}", new Object[] { startTimeFromJob, event.getStartTime(), type });
+            LOG.trace("Comparing {} and {}; result: {}", new Object[] { startTimeFromJob, event.getStartTime(), type });
             out.setHeader(HEADER_KEY_EVENT_TYPE, type);
         }
     }

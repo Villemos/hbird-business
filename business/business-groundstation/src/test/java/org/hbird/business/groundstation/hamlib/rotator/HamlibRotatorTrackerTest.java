@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
@@ -69,7 +69,7 @@ public class HamlibRotatorTrackerTest {
     private RotatorDriverConfiguration configuration;
 
     @Mock
-    private ICatalogue catalogue;
+    private IDataAccess dao;
 
     @Mock
     private IPointingDataOptimizer<RotatorDriverConfiguration> optimizer;
@@ -112,9 +112,9 @@ public class HamlibRotatorTrackerTest {
      */
     @Before
     public void setUp() throws Exception {
-        tracker = new HamlibRotatorTracker(configuration, catalogue, calculator, optimizer);
+        tracker = new HamlibRotatorTracker(configuration, dao, calculator, optimizer);
         pointingData = Arrays.asList(pd1, pd2, pd3);
-        inOrder = inOrder(configuration, catalogue, optimizer, stop, track, gs, sat, pd1, pd2, pd3, contact, calculator);
+        inOrder = inOrder(configuration, dao, optimizer, stop, track, gs, sat, pd1, pd2, pd3, contact, calculator);
         when(pd1.getAzimuth()).thenReturn(AZIMUTH_1);
         when(pd1.getElevation()).thenReturn(ELEVATION_1);
         when(pd1.getTimestamp()).thenReturn(NOW + 1);

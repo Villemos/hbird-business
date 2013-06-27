@@ -16,8 +16,9 @@
  */
 package org.hbird.business.tracking.quartz;
 
-import org.apache.camel.Body;
-import org.apache.camel.Handler;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.Processor;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -28,25 +29,28 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class ContactRescheduler extends ContactScheduler {
+public class ContactUnscheduler extends SchedulingBase implements Processor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ContactRescheduler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContactUnscheduler.class);
 
     /**
      * @param config
      * @param scheduler
      */
-    public ContactRescheduler(TrackingDriverConfiguration config, Scheduler scheduler) {
+    public ContactUnscheduler(TrackingDriverConfiguration config, Scheduler scheduler) {
         super(config, scheduler);
     }
 
     /**
-     * @see org.hbird.business.tracking.quartz.ContactScheduler#handle(org.hbird.exchange.navigation.LocationContactEvent)
+     * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
      */
     @Override
-    @Handler
-    public void handle(@Body LocationContactEvent event) {
-        // TODO - remove old job & trigger
+    public void process(Exchange exchange) throws Exception {
+        Message in = exchange.getIn();
+        Message out = exchange.getOut();
+        out.copyFrom(in);
+
+        LocationContactEvent event = in.getBody(LocationContactEvent.class);
         String groupName = createGroupName(event);
         String jobName = createJobName(event);
         JobKey jobKey = new JobKey(jobName, groupName);
@@ -58,10 +62,11 @@ public class ContactRescheduler extends ContactScheduler {
             else {
                 LOG.warn("No outdated job found for {}. This should not happen. Needs investigation", event);
             }
-            super.handle(event);
         }
         catch (SchedulerException e) {
-            LOG.error("Failed to reschedule {}", event, e);
+            LOG.error("Failed to reschedule {}; stop processing the message", event, e);
+            // failed to delete the job; no point to continue; drop the exchange
+            exchange.setProperty(Exchange.ROUTE_STOP, Boolean.TRUE);
         }
     }
 }

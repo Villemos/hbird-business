@@ -42,7 +42,7 @@ import org.apache.camel.component.netty.NettyComponent;
 import org.apache.camel.component.netty.NettyConfiguration;
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
 import org.hbird.business.core.InMemoryScheduler;
 import org.hbird.business.core.SoftwareComponentDriver;
@@ -81,7 +81,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
     protected Verifier verifier = new Verifier();
 
     // TODO - 28.04.2013, kimmell - replace with java.util.concurrent.ScheduledExecutorService
-    protected InMemoryScheduler inMemoryScheduler = new InMemoryScheduler(getContext().createProducerTemplate());
+    protected InMemoryScheduler inMemoryScheduler;
 
     protected DriverContext<C, String, String> driverContext;
 
@@ -105,10 +105,13 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
 
         LOG.info("Configuring '{}'", name);
 
+        inMemoryScheduler = new InMemoryScheduler(camelContext.createProducerTemplate());
         inMemoryScheduler.setInjectUrl(asRoute("direct://inject-%s", name));
 
         // @formatter:off
         from(asRoute("seda:toHamlib-%s", name))
+            .startupOrder(4)
+
 //            .to("log:" + name + "-toHamlib?level=DEBUG&showAll=true")
             .doTry()
                 .inOut(asRoute("netty:tcp://%s:%s", config.getDeviceHost(), config.getDevicePort()))
@@ -120,6 +123,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
         ResponseHandlersMap<C, String, String> handlers = getResponseHandlerMap(driverContext);
         
         from(asRoute("seda:fromHamlib-%s", name))
+            .startupOrder(3)
 //            .to("log:" + name + ".fromHamlib?level=DEBUG&showAll=true")
             .bean(handlers)
             .split(body())
@@ -133,21 +137,20 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
          * The NativeCommands are at their execution time read through the EXECUTION below.
          */
 
-        ICatalogue catalogue = ApiFactory.getCatalogueApi(entityId, camelContext);
+        IDataAccess dao = ApiFactory.getDataAccessApi(entityId, camelContext);
         IPointingData calulator = ApiFactory.getOrbitDataApi(entityId, camelContext);
         IPointingDataOptimizer<C> optimizer = createOptimizer(config.getPointingDataOptimzerClassName()); // can be null
-        TrackingSupport<C> tracker = createTrackingSupport(config, catalogue, calulator, optimizer);    
+        TrackingSupport<C> tracker = createTrackingSupport(config, dao, calulator, optimizer);    
         GroundStationCommandFilter commandFilter = new GroundStationCommandFilter(config);
+        SetHamlibNativeCommandHeaders setHeaders = new SetHamlibNativeCommandHeaders();
         
          from(StandardEndpoints.COMMANDS + "?selector=name='Track'")
+             .startupOrder(6)
              .filter().method(commandFilter, "acceptTrack")
              .log(asRoute("Received 'Track' command from '%s'. Will generate Hamlib commands for '%s'", simple("${body.issuedBy}").getText(), name))
              .split()
                  .method(tracker, "track")
-                 .setHeader("stage", simple("${body.stage}"))
-                 .setHeader(StandardArguments.DERIVED_FROM, simple("${body.derivedfrom}"))
-                 .setHeader("commandid", simple("${body.commandid}"))
-                 .setHeader("executiontime", simple("${body.executionTime}"))
+                 .process(setHeaders)
              .bean(verifier, "register")
              .bean(inMemoryScheduler, "add")
              .routeId(asRoute("%s: Command injection", name));
@@ -181,10 +184,8 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
          * this thread route but in a separate route.
          */
          from(inMemoryScheduler.getInjectUrl())
-             .setHeader("stage", simple("${body.stage}"))
-             .setHeader(StandardArguments.DERIVED_FROM, simple("${body.derivedfrom}"))
-             .setHeader("commandid", simple("${body.commandid}"))
-             .setHeader("executiontime", simple("${body.executionTime}"))
+             .startupOrder(5)
+             .process(setHeaders)
              .bean(new NativeCommandExtractor())
              .log(LoggingLevel.INFO, asRoute("Sending command '%s' to %s", simple("${body}").getText(), name))
              .to(asRoute("seda:toHamlib-%s", name));
@@ -201,10 +202,12 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
         // .routeId(name + ": Cleanup");
         //
 
-         ProcessorDefinition<?> publish = from(asRoute("direct:publish-%s", name));
+         ProcessorDefinition<?> publish = from(asRoute("direct:publish-%s", name))
+                                             .startupOrder(1);
          addInjectionRoute(publish);
          
          from(asRoute("direct:parameters-%s", name))
+             .startupOrder(2)
              .bean(new OnChange())
              .choice()
                  .when(header(StandardArguments.VALUE_HAS_CHANGED).isEqualTo(false))
@@ -281,7 +284,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
 
     protected abstract List<ResponseHandler<C, String, String>> createResponseHandlers();
 
-    protected abstract TrackingSupport<C> createTrackingSupport(C config, ICatalogue catalogue, IPointingData calculator,
+    protected abstract TrackingSupport<C> createTrackingSupport(C config, IDataAccess dao, IPointingData calculator,
             IPointingDataOptimizer<C> optimizer);
 
 }

@@ -30,7 +30,8 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.netty.NettyConfiguration;
-import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.base.DefaultPointingDataOptimizer;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
@@ -51,7 +52,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.hbird.business.api.IPointingData;
 
 /**
  *
@@ -92,18 +92,18 @@ public class HamlibDriverTest {
         driver = new HamlibDriver<GroundStationDriverConfiguration>() {
 
             @Override
-            protected TrackingSupport<GroundStationDriverConfiguration> createTrackingSupport(GroundStationDriverConfiguration config, ICatalogue catalogue,
-                    IPointingData calculator, IPointingDataOptimizer<GroundStationDriverConfiguration> optimizer) {
-                return null;
-            }
-
-            @Override
             protected List<ResponseHandler<GroundStationDriverConfiguration, String, String>> createResponseHandlers() {
                 return handlers;
             }
 
             @Override
             protected DriverContext<GroundStationDriverConfiguration, String, String> createDriverContext(CamelContext camelContext, IStartableEntity part) {
+                return null;
+            }
+
+            @Override
+            protected TrackingSupport<GroundStationDriverConfiguration> createTrackingSupport(GroundStationDriverConfiguration config, IDataAccess dao,
+                    IPointingData calculator, IPointingDataOptimizer<GroundStationDriverConfiguration> optimizer) {
                 return null;
             }
         };

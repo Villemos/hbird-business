@@ -18,9 +18,12 @@ package org.hbird.business.tracking.quartz;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.camel.Handler;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.exchange.core.EntityInstance;
+import org.hbird.exchange.dataaccess.LocationContactEventRequest;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,11 +49,17 @@ public class ArchivePoller {
         List<String> satellites = config.getSatelliteIds();
         List<LocationContactEvent> result = new ArrayList<LocationContactEvent>(satellites.size());
         String groundStationId = config.getGroundstationId();
+        long now = System.currentTimeMillis();
 
         for (String satelliteId : satellites) {
-            LocationContactEvent event = dao.getNextLocationContactEventFor(groundStationId, satelliteId);
+            // XXX - 25.06.2013, kimmell - this is more complicated than it should be
+            // waits for IDataAccess and ICatalogue refactoring / update
+            // should work with single request to data access layer instead of this
+            LocationContactEventRequest request = createRequest(groundStationId, satelliteId);
+            List<EntityInstance> events = getEvents(dao, request);
+            LocationContactEvent event = getNextEvent(events, now);
             if (event != null) {
-                LOG.debug("Found {}", event.toString());
+                LOG.trace("Found {}", event.toString());
                 result.add(event);
             }
             else {
@@ -58,5 +67,54 @@ public class ArchivePoller {
             }
         }
         return result;
+    }
+
+    LocationContactEventRequest createRequest(String groundStationId, String satelliteId) {
+        LocationContactEventRequest request = new LocationContactEventRequest(UUID.randomUUID().toString());
+        request.setGroundStationID(groundStationId);
+        request.setSatelliteID(satelliteId);
+        request.setFrom(1L);
+        return request;
+    }
+
+    List<EntityInstance> getEvents(IDataAccess dao, LocationContactEventRequest request) {
+        return dao.getData(request);
+    }
+
+    LocationContactEvent getNextEvent(List<EntityInstance> list, long now) {
+        LocationContactEvent next = null;
+        for (EntityInstance entity : list) {
+            if (entity instanceof LocationContactEvent) {
+                LocationContactEvent event = (LocationContactEvent) entity;
+                // LOG.debug("  now: {} vs {}", Dates.toDefaultDateFormat(now), event);
+                next = compare(next, event, now);
+            }
+            else {
+                LOG.warn("Not a LocationContactEvent {}; there is something wrong with the dao; skipping the value ...", entity);
+            }
+        }
+        return next;
+    }
+
+    LocationContactEvent compare(LocationContactEvent oldValue, LocationContactEvent newValue, long now) {
+        long newStart = newValue.getStartTime();
+        if (oldValue == null) {
+            return newStart > now ? newValue : null;
+        }
+        long oldStart = oldValue.getStartTime();
+
+        if (oldStart <= now && newStart <= now) {
+            return null;
+        }
+        if (oldStart > now && newStart <= now) {
+            return oldValue;
+        }
+        if (oldStart <= now && newStart > now) {
+            return newValue;
+        }
+        if (oldStart > now && newStart > now) {
+            return newStart < oldStart ? newValue : oldValue;
+        }
+        return null;
     }
 }

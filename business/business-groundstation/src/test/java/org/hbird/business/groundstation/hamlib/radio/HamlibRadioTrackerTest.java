@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
@@ -76,7 +76,7 @@ public class HamlibRadioTrackerTest {
     private RadioDriverConfiguration config;
 
     @Mock
-    private ICatalogue catalogue;
+    private IDataAccess dao;
 
     @Mock
     private IPointingDataOptimizer<RadioDriverConfiguration> optimizer;
@@ -113,9 +113,9 @@ public class HamlibRadioTrackerTest {
      */
     @Before
     public void setUp() throws Exception {
-        tracker = new HamlibRadioTracker(config, catalogue, calculator, optimizer);
+        tracker = new HamlibRadioTracker(config, dao, calculator, optimizer);
         pointingData = Arrays.asList(pd1, pd2, pd3);
-        inOrder = inOrder(satellite, track, config, catalogue, optimizer, pd1, pd2, pd3, stop, contact, calculator);
+        inOrder = inOrder(satellite, track, config, dao, optimizer, pd1, pd2, pd3, stop, contact, calculator);
         when(satellite.getUplinkFrequency()).thenReturn(UPLINK_FREQUENCY);
         when(satellite.getDownlinkFrequency()).thenReturn(DOWNLINK_FREQUENCY);
         when(track.getID()).thenReturn(ID);

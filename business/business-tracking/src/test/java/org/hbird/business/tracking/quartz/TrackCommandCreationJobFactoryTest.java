@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.interfaces.IStartableEntity;
 import org.hbird.exchange.navigation.Satellite;
@@ -78,6 +79,9 @@ public class TrackCommandCreationJobFactoryTest {
     @Mock
     private Scheduler scheduler;
 
+    @Mock
+    private IdBuilder idBuilder;
+
     private TrackCommandCreationJobFactory factory;
 
     private InOrder inOrder;
@@ -89,8 +93,8 @@ public class TrackCommandCreationJobFactoryTest {
      */
     @Before
     public void setUp() throws Exception {
-        factory = new TrackCommandCreationJobFactory(part, dao, producer, END_POINT, satelliteCache, tleCache);
-        inOrder = inOrder(dao, producer, satelliteCache, tleCache, bundle, jobDetail, job, scheduler, part);
+        factory = new TrackCommandCreationJobFactory(part, dao, producer, END_POINT, satelliteCache, tleCache, idBuilder);
+        inOrder = inOrder(dao, producer, satelliteCache, tleCache, bundle, jobDetail, job, scheduler, part, idBuilder);
         when(bundle.getJobDetail()).thenReturn(jobDetail);
     }
 
@@ -107,6 +111,7 @@ public class TrackCommandCreationJobFactoryTest {
         inOrder.verify(job, times(1)).setEndpoint(END_POINT);
         inOrder.verify(job, times(1)).setSatelliteCache(satelliteCache);
         inOrder.verify(job, times(1)).setTleCache(tleCache);
+        inOrder.verify(job, times(1)).setIdBuilder(idBuilder);
     }
 
     @Test

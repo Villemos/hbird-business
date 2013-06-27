@@ -77,8 +77,8 @@ public class PointingDataCalculator {
         for (int i = 0; startTime + contactDataStepSize * i < endTime; i++) {
             SpacecraftState newState = propagator.propagate(date);
             coord = newState.getPVCoordinates();
-            double azimuth = AzimuthCalculator.calculateAzimuth(newState, locationOnEarth, inertialFrame);
-            double elevation = ElevationCalculator.calculateElevation(newState, locationOnEarth, inertialFrame);
+            double azimuth = Math.toDegrees(AzimuthCalculator.calculateAzimuth(newState, locationOnEarth, inertialFrame));
+            double elevation = Math.toDegrees(ElevationCalculator.calculateElevation(newState, locationOnEarth, inertialFrame));
             double doppler = DopplerCalculator.calculateDoppler(newState, locationOnEarth, inertialFrame);
             long time = date.toDate(TimeScalesFactory.getUTC()).getTime();
             PointingData entry = new PointingData(time, azimuth, elevation, doppler, satelliteId, gsId);

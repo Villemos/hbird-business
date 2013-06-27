@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;
-import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
@@ -65,7 +65,7 @@ public class HamlibRadioDriverTest {
     private RadioDriverConfiguration driverConfig;
 
     @Mock
-    private ICatalogue catalogue;
+    private IDataAccess dao;
 
     @Mock
     private IPointingData calculator;
@@ -83,7 +83,7 @@ public class HamlibRadioDriverTest {
     @Before
     public void setUp() throws Exception {
         driver = new HamlibRadioDriver();
-        inOrder = inOrder(camelContext, part, driverConfig, catalogue, optimizer, converter, calculator);
+        inOrder = inOrder(camelContext, part, driverConfig, dao, optimizer, converter, calculator);
         when(camelContext.getTypeConverter()).thenReturn(converter);
         when(part.getConfiguration()).thenReturn(driverConfig);
     }
@@ -117,7 +117,7 @@ public class HamlibRadioDriverTest {
 
     @Test
     public void testCreateTrackingSupport() throws Exception {
-        TrackingSupport<RadioDriverConfiguration> tracking = driver.createTrackingSupport(driverConfig, catalogue, calculator, optimizer);
+        TrackingSupport<RadioDriverConfiguration> tracking = driver.createTrackingSupport(driverConfig, dao, calculator, optimizer);
         assertNotNull(tracking);
         inOrder.verifyNoMoreInteractions();
     }

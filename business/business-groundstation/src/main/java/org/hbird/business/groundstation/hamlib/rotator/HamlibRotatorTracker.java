@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
@@ -41,9 +41,9 @@ import org.hbird.exchange.navigation.Satellite;
  */
 public class HamlibRotatorTracker extends TrackingSupport<RotatorDriverConfiguration> {
 
-    public HamlibRotatorTracker(RotatorDriverConfiguration config, ICatalogue catalogue, IPointingData calculator,
+    public HamlibRotatorTracker(RotatorDriverConfiguration config, IDataAccess dao, IPointingData calculator,
             IPointingDataOptimizer<RotatorDriverConfiguration> optimizer) {
-        super(config, catalogue, calculator, optimizer);
+        super(config, dao, calculator, optimizer);
     }
 
     /**

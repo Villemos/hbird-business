@@ -18,6 +18,7 @@ package org.hbird.business.tracking.quartz;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
@@ -26,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.interfaces.IStartableEntity;
@@ -57,6 +59,7 @@ public class TrackCommandCreationJobTest {
     private static final String PART_ID = "Tracking";
     private static final String GS_ID = "gs-0";
     private static final long NOW = System.currentTimeMillis();
+    private static final String TRACK_COMMAND_ID = "/Command/Track";
 
     @Mock
     private IStartableEntity part;
@@ -89,6 +92,9 @@ public class TrackCommandCreationJobTest {
     private TleOrbitalParameters tle2;
 
     @Mock
+    private IdBuilder idBuilder;
+
+    @Mock
     private JobDataMap jobData;
 
     private TrackCommandCreationJob job;
@@ -107,7 +113,8 @@ public class TrackCommandCreationJobTest {
         job.setProducerTemplate(producerTemplate);
         job.setSatelliteCache(satelliteCache);
         job.setTleCache(tleCache);
-        inOrder = inOrder(dao, producerTemplate, satelliteCache, tleCache, quartzContext, event, satellite, tle1, tle2, jobData, part);
+        job.setIdBuilder(idBuilder);
+        inOrder = inOrder(dao, producerTemplate, satelliteCache, tleCache, quartzContext, event, satellite, tle1, tle2, jobData, part, idBuilder);
         when(part.getID()).thenReturn(PART_ID);
         when(quartzContext.getMergedJobDataMap()).thenReturn(jobData);
         when(jobData.getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID)).thenReturn(CONTACT_INSTANCE_ID);
@@ -116,6 +123,8 @@ public class TrackCommandCreationJobTest {
         when(event.getGroundStationID()).thenReturn(GS_ID);
         when(tle1.getTimestamp()).thenReturn(NOW - 2);
         when(tle2.getTimestamp()).thenReturn(NOW - 1);
+        when(satellite.getID()).thenReturn(SATELLITE_ID);
+        when(idBuilder.buildID(SATELLITE_ID, Track.class.getSimpleName())).thenReturn(TRACK_COMMAND_ID);
     }
 
     @After
@@ -231,10 +240,14 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
         inOrder.verify(tle1, times(1)).getTimestamp();
         inOrder.verify(tle2, times(1)).getTimestamp();
+        inOrder.verify(satellite, times(1)).getID();
+        inOrder.verify(idBuilder, times(1)).buildID(SATELLITE_ID, Track.class.getSimpleName());
+        inOrder.verify(part, times(1)).getID();
         inOrder.verify(event, times(1)).getGroundStationID();
         ArgumentCaptor<Track> captor = ArgumentCaptor.forClass(Track.class);
         inOrder.verify(producerTemplate, times(1)).asyncSendBody(eq(ENDPOINT), captor.capture());
         Track t = captor.getValue();
+        assertEquals(TRACK_COMMAND_ID, t.getID());
         assertEquals(PART_ID, t.getIssuedBy());
         assertEquals(GS_ID, t.getDestination());
         assertEquals(satellite, t.getSatellite());
@@ -280,5 +293,21 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(tle1, times(1)).getTimestamp();
         inOrder.verify(tle2, times(2)).getTimestamp();
         inOrder.verify(tle1, times(1)).getTimestamp();
+    }
+
+    @Test
+    public void createTrackCommand() {
+        Track track = job.createTrackCommand(idBuilder, part, event, satellite);
+        assertNotNull(track);
+        assertEquals(TRACK_COMMAND_ID, track.getID());
+        assertEquals(PART_ID, track.getIssuedBy());
+        assertEquals(GS_ID, track.getDestination());
+        assertEquals(satellite, track.getSatellite());
+        assertEquals(event, track.getLocationContactEvent());
+        inOrder.verify(satellite, times(1)).getID();
+        inOrder.verify(idBuilder, times(1)).buildID(SATELLITE_ID, Track.class.getSimpleName());
+        inOrder.verify(part, times(1)).getID();
+        inOrder.verify(event, times(1)).getGroundStationID();
+        inOrder.verifyNoMoreInteractions();
     }
 }

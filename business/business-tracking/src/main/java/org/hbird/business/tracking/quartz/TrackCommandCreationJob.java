@@ -18,6 +18,7 @@ package org.hbird.business.tracking.quartz;
 
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.interfaces.IStartableEntity;
@@ -55,6 +56,8 @@ public class TrackCommandCreationJob implements Job {
 
     private EntityCache<TleOrbitalParameters> tleCache;
 
+    private IdBuilder idBuilder;
+
     public void setPart(IStartableEntity part) {
         this.part = part;
     }
@@ -86,11 +89,17 @@ public class TrackCommandCreationJob implements Job {
     }
 
     /**
+     * @param idBuilder the idBuilder to set
+     */
+    public void setIdBuilder(IdBuilder idBuilder) {
+        this.idBuilder = idBuilder;
+    }
+
+    /**
      * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
      */
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-
         String contactInstanceId = context.getMergedJobDataMap().getString(JOB_DATA_KEY_CONTACT_INSTANCE_ID);
         LocationContactEvent event = getEvent(dao, contactInstanceId);
         if (event != null) {
@@ -102,7 +111,7 @@ public class TrackCommandCreationJob implements Job {
                 if (eventTle != null) {
                     TleOrbitalParameters latestTle = getLatestTle(dao, satId);
                     if (latestTle == null || areEqual(eventTle, latestTle)) {
-                        Track command = createTrackCommand(part, event, sat);
+                        Track command = createTrackCommand(idBuilder, part, event, sat);
                         LOG.info("Issuing Track command for the {}", event.toString());
                         producer.asyncSendBody(endPoint, command);
                     }
@@ -140,8 +149,9 @@ public class TrackCommandCreationJob implements Job {
         return dao.getTleFor(satelliteId);
     }
 
-    Track createTrackCommand(IStartableEntity part, LocationContactEvent event, Satellite satellite) {
-        Track track = new Track(satellite.getID());
+    Track createTrackCommand(IdBuilder idBuilder, IStartableEntity part, LocationContactEvent event, Satellite satellite) {
+        String id = idBuilder.buildID(satellite.getID(), Track.class.getSimpleName());
+        Track track = new Track(id);
         track.setIssuedBy(part.getID());
         track.setDestination(event.getGroundStationID());
         track.setSatellite(satellite);

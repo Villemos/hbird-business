@@ -57,7 +57,7 @@ public class ContactScheduler extends SchedulingBase {
 
         try {
             scheduler.scheduleJob(job, trigger);
-            LOG.info("Scheduled {}", event);
+            LOG.info("{} - Scheduled {}", Dates.toDefaultDateFormat(jobStartTime), event);
         }
         catch (SchedulerException e) {
             LOG.error("Failed to schedule Track command creation for the {}", event.toString(), e);

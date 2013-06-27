@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
 import org.hbird.exchange.constants.StandardArguments;
@@ -29,6 +29,8 @@ import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
 import org.hbird.exchange.groundstation.ITrackingDevice;
 import org.hbird.exchange.groundstation.Track;
+import org.hbird.exchange.navigation.ContactParameterRange;
+import org.hbird.exchange.navigation.ExtendedContactParameterRange;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.Satellite;
@@ -49,7 +51,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
 
     protected final C configuration;
 
-    protected final ICatalogue catalogue;
+    protected final IDataAccess dao;
 
     protected final IPointingDataOptimizer<C> optimizer;
 
@@ -62,9 +64,9 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
      * @param orbitPrediction
      * @param optimizer
      */
-    public TrackingSupport(C configuration, ICatalogue catalogue, IPointingData orbitDataCalculator, IPointingDataOptimizer<C> optimizer) {
+    public TrackingSupport(C configuration, IDataAccess dao, IPointingData orbitDataCalculator, IPointingDataOptimizer<C> optimizer) {
         this.configuration = configuration;
-        this.catalogue = catalogue;
+        this.dao = dao;
         this.optimizer = optimizer;
         this.orbitDataCalculator = orbitDataCalculator;
     }
@@ -77,7 +79,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
         LOG.debug("Creating tracking commands ...");
         List<String> missing = command.checkArguments();
         if (!missing.isEmpty()) {
-            LOG.error("Missing command arguments for command {} - {}; tracking not possible", command.getClass().getSimpleName(), missing);
+            LOG.error("Missing command arguments for the command '{}' - '{}'; tracking not possible", command.getClass().getSimpleName(), missing);
             return NO_COMMANDS;
         }
 
@@ -94,21 +96,22 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
         String groundStationId = configuration.getGroundstationId();
         GroundStation groundStation = null;
         try {
-            groundStation = catalogue.getGroundStationByName(groundStationId);
+            groundStation = (GroundStation) dao.resolve(groundStationId);
         }
         catch (Exception e) {
-            LOG.error("Failed to resolve groundstation from ID {}", groundStationId, e);
+            LOG.error("Failed to resolve groundstation for the ID '{}'", groundStationId, e);
             return NO_COMMANDS;
         }
 
         if (groundStation == null) {
-            LOG.error("GroundStation not found for ID {}", groundStationId);
+            LOG.error("GroundStation not found for the ID '{}'", groundStationId);
             return NO_COMMANDS;
         }
 
         long now = System.currentTimeMillis();
+        long contactStartTime = contact.getStartTime();
 
-        if (!validateByTime(contact.getStartTime(), now, configuration.isSkipOutDatedCommands())) {
+        if (!validateByTime(contactStartTime, now, configuration.isSkipOutDatedCommands())) {
             return NO_COMMANDS;
         }
 
@@ -116,18 +119,25 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
             return NO_COMMANDS;
         }
 
-        LOG.info("Creating tracking commands for satellite %s in ground station %s", satellite, groundStation);
+        ContactParameterRange azimuth = contact.getAzimuth();
+        ExtendedContactParameterRange elevation = contact.getElevation();
+        ContactParameterRange doppler = contact.getDoppler();
+        LOG.info("Creating tracking commands for the satellite '{}' in the ground station '{}'", satellite, groundStation);
+        LOG.info("   Contact - start: {}; end: {}", Dates.toDefaultDateFormat(contactStartTime), Dates.toDefaultDateFormat(contact.getEndTime()));
+        LOG.info("   Azimuth - start: {}; end: {}", azimuth.getStart(), azimuth.getEnd());
+        LOG.info("   Elevation - max: {}", elevation.getMax());
+        LOG.info("   Doppler - start: {}; end: {}", doppler.getStart(), doppler.getEnd());
 
         List<PointingData> pointingData = null;
         try {
             pointingData = orbitDataCalculator.calculateContactData(contact, groundStation, configuration.getCommandInterval());
         }
         catch (Exception e) {
-            LOG.error("Failed to calculate pointing data for the overpass; ground station: {}; satellite: {}; over pass start time: {}; Exception: ",
+            LOG.error("Failed to calculate pointing data for the contact; ground station: '{}'; satellite: '{}'; contact start time: '{}'; Exception: ",
                     new Object[] {
                             groundStation.getGroundStationID(),
                             satellite.getSatelliteID(),
-                            Dates.toIso8601DateFormat(contact.getStartTime()),
+                            Dates.toIso8601DateFormat(contactStartTime),
                             e
                     });
             return NO_COMMANDS;
@@ -145,7 +155,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
         int size = commands.size();
         String firstCommand = new DateTime(commands.get(0).getExecutionTime()).toString(ISODateTimeFormat.dateTime());
         String lastCommand = new DateTime(commands.get(size - 1).getExecutionTime()).toString(ISODateTimeFormat.dateTime());
-        LOG.info("Created %s tracking commands for the satellite %s in groundstation %s; first command at %s; last command at %s", new Object[] { size,
+        LOG.info("Created {} tracking commands for the satellite '{}' in groundstation '{}'; first command at {}; last command at {}", new Object[] { size,
                 satellite, groundStation, firstCommand, lastCommand });
 
         return commands;
@@ -179,7 +189,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
      */
     protected boolean validateByTime(long commandTimestamp, long now, boolean failOldRequests) {
         if (commandTimestamp < now && failOldRequests) {
-            LOG.info("Start event timestamp ({}) is before current moment ({}) and failOldRequests is set to {}; skipping the overpass",
+            LOG.info("Start event timestamp ({}) is before current moment ({}) and failOldRequests is set to {}; skipping the contact",
                     new Object[] { Dates.toIso8601DateFormat(commandTimestamp), Dates.toIso8601DateFormat(now), failOldRequests });
             return false;
         }
@@ -206,7 +216,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
 
     protected boolean validateArgument(Object arg, String name) {
         if (arg == null) {
-            LOG.error("Command argument {} is null; tracking not possible", name);
+            LOG.error("Command argument '{}' is null; tracking not possible", name);
             return false;
         }
         return true;
@@ -220,7 +230,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
             return optimizer.optimize(pointingData, configuration);
         }
         catch (Exception e) {
-            LOG.error("Optimizre {} failed; using unoptimized pointing data for tracking; {}", optimizer.getClass().getName(), e);
+            LOG.error("Optimizre '{}' failed; using unoptimized pointing data for tracking", optimizer.getClass().getName(), e);
             return pointingData;
         }
     }

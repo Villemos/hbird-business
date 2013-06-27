@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;
-import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
@@ -39,7 +39,6 @@ import org.hbird.business.groundstation.hamlib.rotator.protocol.GetPosition;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Park;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.Reset;
 import org.hbird.business.groundstation.hamlib.rotator.protocol.SetPosition;
-import org.hbird.business.navigation.orekit.PointingDataCalculator;
 import org.hbird.exchange.groundstation.IPointingDataOptimizer;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,7 +66,7 @@ public class HamlibRotatorDriverTest {
     private RotatorDriverConfiguration driverConfig;
 
     @Mock
-    private ICatalogue catalogue;
+    private IDataAccess dao;
 
     @Mock
     private IPointingDataOptimizer<RotatorDriverConfiguration> optimizer;
@@ -85,7 +84,7 @@ public class HamlibRotatorDriverTest {
     @Before
     public void setUp() throws Exception {
         driver = new HamlibRotatorDriver();
-        inOrder = inOrder(camelContext, part, driverConfig, catalogue, optimizer, converter, calculator);
+        inOrder = inOrder(camelContext, part, driverConfig, dao, optimizer, converter, calculator);
         when(camelContext.getTypeConverter()).thenReturn(converter);
         when(part.getConfiguration()).thenReturn(driverConfig);
     }
@@ -119,7 +118,7 @@ public class HamlibRotatorDriverTest {
 
     @Test
     public void testCreateTrackingSupport() throws Exception {
-        TrackingSupport<RotatorDriverConfiguration> tracking = driver.createTrackingSupport(driverConfig, catalogue, calculator, optimizer);
+        TrackingSupport<RotatorDriverConfiguration> tracking = driver.createTrackingSupport(driverConfig, dao, calculator, optimizer);
         assertNotNull(tracking);
         inOrder.verifyNoMoreInteractions();
     }
