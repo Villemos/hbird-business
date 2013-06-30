@@ -4,7 +4,7 @@
     <parent>
         <artifactId>hummingbird-business</artifactId>
         <groupId>org.hbird.business</groupId>
-        <version>0.9.0-SNAPSHOT</version>
+        <version>0.9.0</version>
     </parent>
     <artifactId>business-metadatapublisher</artifactId>
     <name>HBird :: Business - Metadata Publisher</name>
