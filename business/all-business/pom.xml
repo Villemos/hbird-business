@@ -1,93 +1,93 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<artifactId>hummingbird-business</artifactId>
-		<groupId>org.hbird.business</groupId>
-		<version>0.8.0-SNAPSHOT</version>
-		<relativePath>..</relativePath>
-	</parent>
-	<artifactId>all-business</artifactId>
+    <parent>
+        <artifactId>hummingbird-business</artifactId>
+        <groupId>org.hbird.business</groupId>
+        <version>0.9.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+    <artifactId>all-business</artifactId>
     <name>HBird :: Business - All Business</name>
 
-	<dependencies>
+    <dependencies>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-commanding</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-commanding</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-queuemanagement</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-queuemanagement</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-core</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-core</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-metadatapublisher</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-metadatapublisher</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-navigation</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-navigation</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-parameter-storage</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-parameter-storage</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-scripting</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-scripting</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-systemmonitoring</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-systemmonitoring</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-taskexecutor</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-taskexecutor</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-validation</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-validation</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-archive</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-archive</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-tracking</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-tracking</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-groundstation</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-groundstation</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-websockets</artifactId>			
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-websockets</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.hbird.business</groupId>
-			<artifactId>business-celestrack</artifactId>			
-		</dependency>
+        <dependency>
+            <groupId>org.hbird.business</groupId>
+            <artifactId>business-celestrack</artifactId>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 </project>
