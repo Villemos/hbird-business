@@ -5,7 +5,7 @@
     <parent>
         <artifactId>hummingbird-business</artifactId>
         <groupId>org.hbird.business</groupId>
-        <version>0.9.0</version>
+        <version>0.10.0-SNAPSHOT</version>
     </parent>
     <artifactId>business-navigation</artifactId>
     <name>HBird :: Business - Navigation Orekit</name>
