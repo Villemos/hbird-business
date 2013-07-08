@@ -121,8 +121,8 @@ public class TrackCommandCreationJobTest {
         when(event.getSatelliteID()).thenReturn(SATELLITE_ID);
         when(event.getDerivedFromId()).thenReturn(TLE_ID);
         when(event.getGroundStationID()).thenReturn(GS_ID);
-        when(tle1.getTimestamp()).thenReturn(NOW - 2);
-        when(tle2.getTimestamp()).thenReturn(NOW - 1);
+        when(tle1.getVersion()).thenReturn(NOW - 2);
+        when(tle2.getVersion()).thenReturn(NOW - 1);
         when(satellite.getID()).thenReturn(SATELLITE_ID);
         when(idBuilder.buildID(SATELLITE_ID, Track.class.getSimpleName())).thenReturn(TRACK_COMMAND_ID);
     }
@@ -188,8 +188,8 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(event, times(1)).getDerivedFromId();
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
         inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
-        inOrder.verify(tle1, times(1)).getTimestamp();
-        inOrder.verify(tle2, times(1)).getTimestamp();
+        inOrder.verify(tle1, times(1)).getVersion();
+        inOrder.verify(tle2, times(1)).getVersion();
     }
 
     @Test
@@ -227,8 +227,8 @@ public class TrackCommandCreationJobTest {
         when(event.getDerivedFromId()).thenReturn(TLE_ID);
         when(tleCache.getById(TLE_ID)).thenReturn(tle1);
         when(dao.getTleFor(SATELLITE_ID)).thenReturn(tle2);
-        when(tle1.getTimestamp()).thenReturn(NOW - 1);
-        when(tle2.getTimestamp()).thenReturn(NOW - 1);
+        when(tle1.getVersion()).thenReturn(NOW - 1);
+        when(tle2.getVersion()).thenReturn(NOW - 1);
         job.execute(quartzContext);
         inOrder.verify(quartzContext, times(1)).getMergedJobDataMap();
         inOrder.verify(jobData, times(1)).getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
@@ -238,8 +238,8 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(event, times(1)).getDerivedFromId();
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
         inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
-        inOrder.verify(tle1, times(1)).getTimestamp();
-        inOrder.verify(tle2, times(1)).getTimestamp();
+        inOrder.verify(tle1, times(1)).getVersion();
+        inOrder.verify(tle2, times(1)).getVersion();
         inOrder.verify(satellite, times(1)).getID();
         inOrder.verify(idBuilder, times(1)).buildID(SATELLITE_ID, Track.class.getSimpleName());
         inOrder.verify(part, times(1)).getID();
@@ -288,11 +288,11 @@ public class TrackCommandCreationJobTest {
         assertTrue(job.areEqual(tle2, tle2));
         assertFalse(job.areEqual(tle1, tle2));
         assertFalse(job.areEqual(tle2, tle1));
-        inOrder.verify(tle1, times(2)).getTimestamp();
-        inOrder.verify(tle2, times(2)).getTimestamp();
-        inOrder.verify(tle1, times(1)).getTimestamp();
-        inOrder.verify(tle2, times(2)).getTimestamp();
-        inOrder.verify(tle1, times(1)).getTimestamp();
+        inOrder.verify(tle1, times(2)).getVersion();
+        inOrder.verify(tle2, times(2)).getVersion();
+        inOrder.verify(tle1, times(1)).getVersion();
+        inOrder.verify(tle2, times(2)).getVersion();
+        inOrder.verify(tle1, times(1)).getVersion();
     }
 
     @Test

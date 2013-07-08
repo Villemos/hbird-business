@@ -55,6 +55,7 @@ public class AddHeadersTest {
     private static final String GS_ID = "GS ID";
     private static final String SAT_ID = "SAT ID";
     private static final String DESTINATION = "DESTINATION";
+    private static final long VERSION = (long) (Math.random() * 10000000L);
 
     @Mock
     private Exchange exchange;
@@ -136,6 +137,7 @@ public class AddHeadersTest {
         when(entityInstance.getName()).thenReturn(NAME);
         when(entityInstance.getIssuedBy()).thenReturn(ISSUED_BY);
         when(entityInstance.getInstanceID()).thenReturn(ENTITY_INSTANCE_ID);
+        when(entityInstance.getVersion()).thenReturn(VERSION);
         when(entityInstance.getTimestamp()).thenReturn(NOW);
         addHeaders.process(exchange);
         inOrder.verify(exchange, times(1)).getIn();
@@ -147,6 +149,7 @@ public class AddHeadersTest {
         inOrder.verify(out, times(1)).setHeader(StandardArguments.NAME, NAME);
         inOrder.verify(out, times(1)).setHeader(StandardArguments.ISSUED_BY, ISSUED_BY);
         inOrder.verify(out, times(1)).setHeader(StandardArguments.ENTITY_INSTANCE_ID, ENTITY_INSTANCE_ID);
+        inOrder.verify(out, times(1)).setHeader(StandardArguments.VERSION, VERSION);
         inOrder.verify(out, times(1)).setHeader(StandardArguments.TIMESTAMP, NOW);
         inOrder.verifyNoMoreInteractions();
     }
@@ -158,6 +161,7 @@ public class AddHeadersTest {
         when(applicableTo.getName()).thenReturn(NAME);
         when(applicableTo.getIssuedBy()).thenReturn(ISSUED_BY);
         when(applicableTo.getInstanceID()).thenReturn(ENTITY_INSTANCE_ID);
+        when(applicableTo.getVersion()).thenReturn(VERSION);
         when(applicableTo.getTimestamp()).thenReturn(NOW);
         when(applicableTo.getApplicableTo()).thenReturn(APPLICABLE_TO);
         addHeaders.process(exchange);
@@ -170,6 +174,7 @@ public class AddHeadersTest {
         inOrder.verify(out, times(1)).setHeader(StandardArguments.NAME, NAME);
         inOrder.verify(out, times(1)).setHeader(StandardArguments.ISSUED_BY, ISSUED_BY);
         inOrder.verify(out, times(1)).setHeader(StandardArguments.ENTITY_INSTANCE_ID, ENTITY_INSTANCE_ID);
+        inOrder.verify(out, times(1)).setHeader(StandardArguments.VERSION, VERSION);
         inOrder.verify(out, times(1)).setHeader(StandardArguments.TIMESTAMP, NOW);
         inOrder.verify(out, times(1)).setHeader(StandardArguments.APPLICABLE_TO, APPLICABLE_TO);
         inOrder.verifyNoMoreInteractions();
@@ -182,6 +187,7 @@ public class AddHeadersTest {
         when(command.getName()).thenReturn(NAME);
         when(command.getIssuedBy()).thenReturn(ISSUED_BY);
         when(command.getInstanceID()).thenReturn(ENTITY_INSTANCE_ID);
+        when(command.getVersion()).thenReturn(VERSION);
         when(command.getTimestamp()).thenReturn(NOW);
         when(command.getDestination()).thenReturn(DESTINATION);
         when(command.getTransferTime()).thenReturn(NOW - 10000);
@@ -195,6 +201,7 @@ public class AddHeadersTest {
         inOrder.verify(out, times(1)).setHeader(StandardArguments.NAME, NAME);
         inOrder.verify(out, times(1)).setHeader(StandardArguments.ISSUED_BY, ISSUED_BY);
         inOrder.verify(out, times(1)).setHeader(StandardArguments.ENTITY_INSTANCE_ID, ENTITY_INSTANCE_ID);
+        inOrder.verify(out, times(1)).setHeader(StandardArguments.VERSION, VERSION);
         inOrder.verify(out, times(1)).setHeader(StandardArguments.TIMESTAMP, NOW);
         inOrder.verify(out, times(1)).setHeader(StandardArguments.DESTINATION, DESTINATION);
         inOrder.verify(out, times(1)).setHeader(AddHeaders.AMQ_SCHEDULED_DELAY, IScheduled.IMMEDIATE);

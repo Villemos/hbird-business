@@ -63,6 +63,7 @@ public class BinaryTest {
         assertEquals(NAME, binary.getName());
         assertTrue(Arrays.equals(DATA, binary.getRawData()));
         assertTrue(binary.getTimestamp() <= System.currentTimeMillis() && binary.getTimestamp() > System.currentTimeMillis() - 3 * 1000L);
+        assertEquals(binary.getTimestamp(), binary.getVersion());
         assertNotNull(binary.getID());
     }
 

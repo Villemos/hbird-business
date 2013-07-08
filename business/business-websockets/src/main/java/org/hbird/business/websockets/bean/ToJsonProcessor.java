@@ -41,6 +41,7 @@ public class ToJsonProcessor {
 
         public ParameterEntry(Parameter parameter) {
             this.name = parameter.getName();
+            this.version = parameter.getVersion();
             this.timestamp = parameter.getTimestamp();
             this.value = parameter.getValue().toString();
             this.unit = parameter.getUnit();
@@ -49,6 +50,7 @@ public class ToJsonProcessor {
         }
 
         public String name;
+        public long version;
         public long timestamp;
         public String value;
         public String unit;
@@ -60,6 +62,7 @@ public class ToJsonProcessor {
 
         public EventEntry(Event event) {
             this.name = event.getName();
+            this.version = event.getVersion();
             this.timestamp = event.getTimestamp();
             this.description = event.getDescription();
             this.issuedBy = event.getIssuedBy();
@@ -67,6 +70,7 @@ public class ToJsonProcessor {
 
         public String id = UUID.randomUUID().toString();
         public String name;
+        public long version;
         public long timestamp;
         public String issuedBy;
         public String description;
@@ -76,6 +80,7 @@ public class ToJsonProcessor {
 
         public StateEntry(State state) {
             this.name = state.getName();
+            this.version = state.getVersion();
             this.timestamp = state.getTimestamp();
             this.description = state.getDescription();
             this.issuedBy = state.getIssuedBy();
@@ -85,6 +90,7 @@ public class ToJsonProcessor {
 
         public String id = UUID.randomUUID().toString();
         public String name;
+        public long version;
         public long timestamp;
         public String issuedBy;
         public String value;

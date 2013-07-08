@@ -157,6 +157,7 @@
    <field name="qualifiedname" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
    <field name="class" type="string" indexed="true" stored="true" multiValued="true" required="false" omitNorms="true"/>
    <field name="description" type="text" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
+   <field name="version" type="slong" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
    <field name="timestamp" type="slong" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
    <field name="datasetidentifier" type="string" indexed="true" stored="true" multiValued="false" required="false" omitNorms="true"/>
 

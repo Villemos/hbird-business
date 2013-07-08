@@ -94,7 +94,7 @@ public abstract class NavigationBean {
         }
 
         /** Check if the TLE has changed. */
-        if (tleParameters != null && newTleParameters.getTimestamp() != tleParameters.getTimestamp()) {
+        if (tleParameters != null && newTleParameters.getVersion() != tleParameters.getVersion()) {
             /** Reset. */
             propagator = null;
             orbitalStateCollector = null;
@@ -105,7 +105,7 @@ public abstract class NavigationBean {
         /** Calculate the time we need to propagate */
         long from = 0;
         long to = 0;
-        long now = (new Date()).getTime();
+        long now = System.currentTimeMillis();
 
         if (conf.getFrom() != 0) {
             from = conf.getFrom();

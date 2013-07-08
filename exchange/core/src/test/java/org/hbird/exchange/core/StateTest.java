@@ -76,7 +76,7 @@ public class StateTest {
         assertFalse(s.contains(DESCRIPTION));
         assertTrue(s.contains(STATE_OF));
         assertTrue(s.contains(String.valueOf(STATE)));
-        assertTrue(s.contains(String.valueOf(state.getTimestamp())));
+        assertTrue(s.contains(String.valueOf(state.getVersion())));
     }
 
     /**
@@ -93,6 +93,7 @@ public class StateTest {
         assertEquals(NAME, state.getName());
         long diff = System.currentTimeMillis() - state.getTimestamp();
         assertTrue("diff=" + diff, diff >= 0 && diff < 1000L * 30);
+        assertEquals(state.getTimestamp(), state.getVersion());
         assertNotNull(state.getID());
         assertEquals(STATE, state.getValue());
     }

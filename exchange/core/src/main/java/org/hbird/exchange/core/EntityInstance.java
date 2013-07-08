@@ -35,11 +35,13 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
 
     public static final String INSTANCE_ID_SEPARATOR = ":";
 
+    protected long version;
+
     /**
      * The time at which this object represented a valid state of the system. Default value is the
      * time of creation.
      */
-    protected long timestamp = 0;
+    protected long timestamp;
 
     /**
      * Constructor of a Named object. The timestamp will be set to the creation time.
@@ -49,7 +51,9 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
      */
     public EntityInstance(String ID, String name) {
         super(ID, name);
-        this.timestamp = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
+        this.version = now;
+        this.timestamp = now;
     }
 
     /**
@@ -67,12 +71,27 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
         this.timestamp = timestamp;
     }
 
+    /**
+     * @return the version
+     */
+    @Override
+    public long getVersion() {
+        return version;
+    }
+
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(long version) {
+        this.version = version;
+    }
+
     @Override
     public String getInstanceID() {
         return new StringBuilder()
                 .append(ID)
                 .append(INSTANCE_ID_SEPARATOR)
-                .append(timestamp)
+                .append(version)
                 .toString();
     }
 
@@ -92,9 +111,7 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
         return builder.build();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override

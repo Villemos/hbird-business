@@ -160,6 +160,6 @@ public class TrackCommandCreationJob implements Job {
     }
 
     boolean areEqual(TleOrbitalParameters tle1, TleOrbitalParameters tle2) {
-        return tle1.getTimestamp() == tle2.getTimestamp();
+        return tle1.getVersion() == tle2.getVersion();
     }
 }

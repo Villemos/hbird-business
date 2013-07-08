@@ -109,7 +109,9 @@ public class BusinessCard extends ApplicableTo {
      */
     @Handler
     public BusinessCard touch() {
-        timestamp = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
+        version = now;
+        timestamp = now;
         return this;
     }
 

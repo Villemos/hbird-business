@@ -77,6 +77,7 @@ public class LocationContactEventTest {
         assertEquals(GS_ID, event.getGroundStationID());
         assertEquals(SAT_ID, event.getSatelliteID());
         assertEquals(ORBIT_NUMBER, event.getOrbitNumber());
+        assertEquals(event.getVersion(), event.getOrbitNumber());
         assertTrue(NOW <= event.getTimestamp());
         assertTrue(event.getTimestamp() <= System.currentTimeMillis());
         assertEquals(LocationContactEvent.DESCRIPTION, event.getDescription());
@@ -287,5 +288,10 @@ public class LocationContactEventTest {
         assertTrue(s.contains(String.valueOf(ORBIT_NUMBER)));
         assertTrue(s.contains(Dates.toDefaultDateFormat(NOW - 1)));
         assertTrue(s.contains(Dates.toDefaultDateFormat(NOW + 1)));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testSetVersion() {
+        event.setVersion(1L);
     }
 }

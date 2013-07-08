@@ -524,6 +524,7 @@ public class SolrProducer extends DefaultProducer {
         document.addField(StandardArguments.DESCRIPTION, io.getDescription());
         document.addField(StandardArguments.ISSUED_BY, ((IEntityInstance) io).getIssuedBy());
         document.addField(StandardArguments.TIMESTAMP, ((IEntityInstance) io).getTimestamp());
+        document.addField(StandardArguments.VERSION, ((IEntityInstance) io).getVersion());
 
         /**
          * TODO Gert; find a nice way of managing subclassing. For now we put the class as generic 'Part' as well as

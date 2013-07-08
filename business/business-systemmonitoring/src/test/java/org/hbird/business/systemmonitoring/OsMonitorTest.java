@@ -45,6 +45,7 @@ public class OsMonitorTest {
         assertEquals(BASE_ID + OsMonitor.PARAMETER_RELATIVE_NAME, info.getID());
         assertEquals(HostInfo.getHostInfo(), info.getValue());
         assertTrue(info.getTimestamp() <= System.currentTimeMillis());
+        assertEquals(info.getTimestamp(), info.getVersion());
         assertEquals(OsMonitor.DESCRIPTION_OS_INFORMATION, info.getDescription());
         assertEquals(BASE_ID, info.getIssuedBy());
         assertEquals(BASE_ID, info.getApplicableTo());

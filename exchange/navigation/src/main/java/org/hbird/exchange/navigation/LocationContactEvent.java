@@ -103,19 +103,8 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
         this.groundStationId = groundStationId;
         this.satelliteId = satelliteId;
         this.orbitNumber = orbitNumber;
+        this.version = orbitNumber;
         setDescription(DESCRIPTION);
-    }
-
-    /**
-     * @see org.hbird.exchange.core.EntityInstance#getInstanceID()
-     */
-    @Override
-    public String getInstanceID() {
-        return new StringBuilder()
-                .append(ID)
-                .append(INSTANCE_ID_SEPARATOR)
-                .append(orbitNumber)
-                .toString();
     }
 
     @Override
@@ -126,6 +115,17 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
     @Override
     public String getSatelliteID() {
         return satelliteId;
+    }
+
+    /**
+     * @see org.hbird.exchange.core.EntityInstance#setVersion(long)
+     */
+    @Override
+    public void setVersion(long version) {
+        // to keep version and orbitNumber same
+        // It's not the best solution. It is possible to override this method in sub classes or use the reflection
+        // to change the version.
+        throw new UnsupportedOperationException("Can't set the version of the " + getClass().getSimpleName());
     }
 
     /**

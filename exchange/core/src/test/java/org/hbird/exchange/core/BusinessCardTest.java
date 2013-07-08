@@ -50,8 +50,6 @@ public class BusinessCardTest {
     private static final String ISSUED_BY = "issuer";
     private static final String HOST = "host";
     private static final long PERIOD = 12345L;
-    private static final String CMD_1 = "Command-1";
-    private static final String CMD_2 = "Command-2";
 
     @Mock
     private Map<String, Command> commands;
@@ -151,10 +149,13 @@ public class BusinessCardTest {
     @Test
     public void testTouch() {
         long timestamp1 = card.getTimestamp();
+        long version1 = card.getVersion();
         BusinessCard touched = card.touch();
         long timestamp2 = touched.getTimestamp();
+        long version2 = touched.getVersion();
         assertEquals(card, touched);
         assertNotSame(timestamp1, timestamp2);
+        assertNotSame(version1, version2);
     }
 
     /**

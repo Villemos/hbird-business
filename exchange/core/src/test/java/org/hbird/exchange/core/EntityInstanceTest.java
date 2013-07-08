@@ -55,8 +55,10 @@ public class EntityInstanceTest implements Serializable {
         assertEquals(ID, entity.getID());
         assertEquals(NAME, entity.getName());
         long ts = entity.getTimestamp();
+        long version = entity.getVersion();
         long now = System.currentTimeMillis();
-        assertEquals(ID + EntityInstance.INSTANCE_ID_SEPARATOR + ts, entity.getInstanceID());
+        assertEquals(ts, version);
+        assertEquals(ID + EntityInstance.INSTANCE_ID_SEPARATOR + version, entity.getInstanceID());
         assertTrue(ts <= now);
         assertTrue(ts > now - 1000L * 30);
     }
@@ -82,11 +84,13 @@ public class EntityInstanceTest implements Serializable {
 
     @Test
     public void testGetInstanceID() throws Exception {
-        long ts = entity.getTimestamp();
-        assertEquals(ID + EntityInstance.INSTANCE_ID_SEPARATOR + ts, entity.getInstanceID());
-        entity.setTimestamp(-1010L);
+        long version = entity.getVersion();
+        assertEquals(ID + EntityInstance.INSTANCE_ID_SEPARATOR + version, entity.getInstanceID());
+        entity.setVersion(-1010L);
         assertEquals(ID + EntityInstance.INSTANCE_ID_SEPARATOR + "-1010", entity.getInstanceID());
-        entity.setTimestamp(-0L);
+        entity.setVersion(-0L);
+        assertEquals(ID + EntityInstance.INSTANCE_ID_SEPARATOR + "0", entity.getInstanceID());
+        entity.setTimestamp(100001L);
         assertEquals(ID + EntityInstance.INSTANCE_ID_SEPARATOR + "0", entity.getInstanceID());
     }
 
@@ -98,16 +102,17 @@ public class EntityInstanceTest implements Serializable {
         assertEquals(entity.getClass(), e1.getClass());
         assertEquals(entity.getDescription(), e1.getDescription());
         assertEquals(entity.getIssuedBy(), e1.getIssuedBy());
+        assertEquals(entity.getVersion(), e1.getVersion());
         assertNotSame(entity.getTimestamp(), e1.getTimestamp());
         assertNotSame(entity.getInstanceID(), e1.getInstanceID());
     }
 
     @Test
     public void testPrettyPrint() throws Exception {
-        long ts = entity.getTimestamp();
+        long version = entity.getVersion();
         String s = entity.toString();
         assertNotNull(s);
-        assertTrue(s.contains(ID + EntityInstance.INSTANCE_ID_SEPARATOR + ts));
+        assertTrue(s.contains(ID + EntityInstance.INSTANCE_ID_SEPARATOR + version));
         assertTrue(s.contains(entity.getClass().getSimpleName()));
         assertTrue(s.contains(NAME));
     }
@@ -125,6 +130,25 @@ public class EntityInstanceTest implements Serializable {
         assertFalse(e2.equals(entity));
         assertFalse(e2.equals(e1));
         assertTrue(e2.equals(e2));
+    }
+
+    @Test
+    public void testGetVersion() {
+        testSetVersion();
+    }
+
+    @Test
+    public void testSetVersion() {
+        long version = entity.getVersion();
+        long now = System.currentTimeMillis();
+        assertTrue(version <= now);
+        assertTrue(version > now - 1000L * 30);
+        entity.setVersion(-1L);
+        assertEquals(-1L, entity.getVersion());
+        entity.setVersion(0L);
+        assertEquals(0L, entity.getVersion());
+        entity.setVersion(1L);
+        assertEquals(1L, entity.getVersion());
     }
 
     public static class TestEntity extends EntityInstance {

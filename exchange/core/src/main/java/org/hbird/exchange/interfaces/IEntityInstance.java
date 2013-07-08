@@ -16,25 +16,45 @@
  */
 package org.hbird.exchange.interfaces;
 
+import org.hbird.exchange.core.Parameter;
+
 /**
  * The base class for all data in the system.
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public interface IEntityInstance extends IEntity {
 
-	public long getTimestamp();
+    /**
+     * Returns timestamp of the {@link IEntityInstance}.
+     * 
+     * {@link IEntityInstance} is valid at given point in time.
+     * For example {@link Parameter} timestamp shows the moment when the value was measured.
+     * 
+     * @return {@link IEntityInstance} timestamp
+     */
+    public long getTimestamp();
 
-	/**
-	 * The Instance ID is a unique string for an object. The ID identifies the entity being referenced
-	 * (for example the Parameter) not the instance (a parameter value at a specific time).
-	 * 
-	 * At any given time there may exist many objects with the same ID, but different timestamps. These
-	 * are related; Each represent the same entity (a Parameter), at different points on the timeline (
-	 * value at time X, value at time Y, ...). 
-	 * 
-	 * @return The ID
-	 */
-	public String getInstanceID();
+    /**
+     * Returns version of the {@link IEntityInstance}.
+     * 
+     * Two entity instances can have same ID. To compare instances version is used.
+     * If two {@link IEntityInstance} are compared higher version shows newer instance.
+     * 
+     * @return version of the {@link IEntityInstance}
+     */
+    public long getVersion();
+
+    /**
+     * The Instance ID is a unique string for an object. The ID identifies the entity being referenced
+     * (for example the Parameter) not the instance (a parameter value at a specific time).
+     * 
+     * At any given time there may exist many objects with the same ID, but different versions. These
+     * are related; Each represent the same entity (a Parameter), at different points on the timeline (
+     * value at time X, value at time Y, ...).
+     * 
+     * @return The instance ID
+     */
+    public String getInstanceID();
 }

@@ -18,34 +18,34 @@ package org.hbird.exchange.interfaces;
 
 /**
  * @author Gert Villemos
- *
+ * 
  */
 public interface IEntity {
-	public void setName(String name);
-	
-	public String getDescription();
+    public void setName(String name);
 
-	public String getIssuedBy();	
-	
-	/**
-	 * Method to return the name of the object. The name of the object is a logical
-	 * label of the object. 
-	 * 
-	 * The name is not (necessarily) unique within the complete system.
-	 * 
-	 * @return
-	 */
-	public String getName();
+    public String getDescription();
 
-	/**
-	 * The ID is a unique string for an entity. The ID identifies the entity being referenced
-	 * (for example the Parameter) not the instance (a parameter value at a specific time).
-	 * 
-	 * At any given time there may exist many objects with the same ID, but different timestamps. These
-	 * are related; Each represent the same entity (a Parameter), at different points on the timeline (
-	 * value at time X, value at time Y, ...). 
-	 * 
-	 * @return The ID
-	 */
-	public String getID();
+    public String getIssuedBy();
+
+    /**
+     * Method to return the name of the object. The name of the object is a logical
+     * label of the object.
+     * 
+     * The name is not (necessarily) unique within the complete system.
+     * 
+     * @return
+     */
+    public String getName();
+
+    /**
+     * The ID is a unique string for an entity. The ID identifies the entity being referenced
+     * (for example the Parameter) not the instance (a parameter value at a specific time).
+     * 
+     * At any given time there may exist many objects with the same ID, but different timestamps. These
+     * are related; Each represent the same entity (a Parameter), at different points on the timeline (
+     * value at time X, value at time Y, ...).
+     * 
+     * @return The ID
+     */
+    public String getID();
 }

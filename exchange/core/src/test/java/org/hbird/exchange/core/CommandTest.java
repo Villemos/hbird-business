@@ -106,7 +106,7 @@ public class CommandTest {
         assertTrue(s.contains(ISSUER));
         assertTrue(s.contains(DESTINATION));
         assertFalse(s.contains(DESCRIPTION));
-        assertTrue(s.contains(String.valueOf(command.getTimestamp())));
+        assertTrue(s.contains(String.valueOf(command.getVersion())));
     }
 
     /**

@@ -49,8 +49,9 @@ public class ApplicableToTest {
         assertEquals(ID, applicable.getID());
         assertEquals(NAME, applicable.getName());
         assertTrue(applicable.getTimestamp() <= System.currentTimeMillis());
+        assertEquals(applicable.getTimestamp(), applicable.getVersion());
         assertNull(applicable.getApplicableTo());
-        assertEquals(ID + ":" + applicable.getTimestamp(), applicable.getInstanceID());
+        assertEquals(ID + ":" + applicable.getVersion(), applicable.getInstanceID());
     }
 
     @Test

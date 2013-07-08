@@ -104,6 +104,7 @@ public class Publish extends HbirdApi implements IPublish {
         parameter.setValue(value);
         parameter.setUnit(unit);
         parameter.setTimestamp(timestamp);
+        parameter.setVersion(timestamp);
 
         return (Parameter) publish(parameter);
 
@@ -127,6 +128,7 @@ public class Publish extends HbirdApi implements IPublish {
         newState.setApplicableTo(applicableTo);
         newState.setValue(state);
         newState.setTimestamp(timestamp);
+        newState.setVersion(timestamp);
 
         return (State) publish(newState);
     }

@@ -162,6 +162,8 @@ public class StandardArguments {
     // TODO - 18.05.2013, kimmell - change to valueParameter
     public static final String VALUE_PARAMETER = "valueparameter";
 
+    public static final String VERSION = "version";
+
     public static final String VISIBILITY = "visibility";
 
     // TODO - 18.05.2013, kimmell - change to isPartOf

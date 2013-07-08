@@ -68,7 +68,7 @@ public class LabelTest {
         assertTrue(s.contains(ISSUED_BY));
         assertFalse(s.contains(DESCRIPTION));
         assertTrue(s.contains(VALUE));
-        assertTrue(s.contains(String.valueOf(label.getTimestamp())));
+        assertTrue(s.contains(String.valueOf(label.getVersion())));
     }
 
     /**
@@ -85,6 +85,7 @@ public class LabelTest {
         assertEquals(NAME, label.getName());
         long diff = System.currentTimeMillis() - label.getTimestamp();
         assertTrue("diff=" + diff, diff >= 0 && diff < 1000L * 30);
+        assertEquals(label.getTimestamp(), label.getVersion());
         assertNotNull(label.getID());
     }
 

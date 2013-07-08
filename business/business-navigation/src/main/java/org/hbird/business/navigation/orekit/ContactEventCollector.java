@@ -135,7 +135,6 @@ public class ContactEventCollector extends ElevationDetector {
         String tleInstanceId = tleParameters.getInstanceID();
         LocationContactEvent event = new LocationContactEvent(groundStationId, satelliteId, orbitNumber);
         event.setIssuedBy(issuerId);
-        event.setTimestamp(orbitNumber);
         event.setDerivedFromId(tleInstanceId);
         event.setStartTime(startTime);
         event.setEndTime(endTime);

@@ -25,13 +25,8 @@ import org.junit.Test;
  */
 public class EventTest {
 
-    private static final String ISSUER1 = "issuer";
-    private static final String ISSUER2 = "issuer";
     private static final String ID = "ID";
     private static final String NAME = "name";
-    private static final String DESCRIPTION = "description";
-    private static final Long NOW = System.currentTimeMillis();
-    private static final Long NOW_PLUS_ONE = NOW + 1;
 
     /**
      * Test method for
@@ -44,5 +39,4 @@ public class EventTest {
         assertEquals(ID, event.getID());
         assertEquals(NAME, event.getName());
     }
-
 }

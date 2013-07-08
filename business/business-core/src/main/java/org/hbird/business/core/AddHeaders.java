@@ -72,6 +72,7 @@ public class AddHeaders implements Processor {
         if (body instanceof IEntityInstance) {
             IEntityInstance instance = (IEntityInstance) body;
             out.setHeader(StandardArguments.ENTITY_INSTANCE_ID, instance.getInstanceID());
+            out.setHeader(StandardArguments.VERSION, instance.getVersion());
             out.setHeader(StandardArguments.TIMESTAMP, instance.getTimestamp());
         }
 
