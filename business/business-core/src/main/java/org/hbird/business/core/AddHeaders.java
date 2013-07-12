@@ -29,9 +29,14 @@ import org.hbird.exchange.interfaces.IGroundStationSpecific;
 import org.hbird.exchange.interfaces.ISatelliteSpecific;
 import org.hbird.exchange.interfaces.IScheduled;
 import org.hbird.exchange.interfaces.ITransferable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
+ * 
  */
+@Component
 public class AddHeaders implements Processor {
 
     // XXX - 17.05.2013, kimmell - this constant has to be defined in some other place actually; no time to look at the
@@ -42,6 +47,8 @@ public class AddHeaders implements Processor {
     // moment
     public static final String DELIVERYTIME = "deliverytime";
 
+    private static final Logger LOG = LoggerFactory.getLogger(AddHeaders.class);
+
     /**
      * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
      */
@@ -51,6 +58,7 @@ public class AddHeaders implements Processor {
         Object body = in.getBody();
 
         if (body == null) {
+            LOG.warn("Exchange body is null; stop processing of the message");
             // body is null; no point to continue; drop the exchange
             exchange.setProperty(Exchange.ROUTE_STOP, Boolean.TRUE);
             return;
