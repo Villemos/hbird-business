@@ -42,7 +42,6 @@ public class ConfigurationBaseTest {
     /**
      * Test method for {@link org.hbird.exchange.core.ConfigurationBase#ConfigurationBase(String, String, long)}.
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testConfigurationBase() {
         config = new ConfigurationBase("SERVICE-ID", "V2.0", 10000L);
@@ -62,7 +61,6 @@ public class ConfigurationBaseTest {
     /**
      * Test method for {@link org.hbird.exchange.core.ConfigurationBase#setServiceId(java.lang.String)}.
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testSetServiceId() {
         assertNull(config.getServiceId());
@@ -70,6 +68,20 @@ public class ConfigurationBaseTest {
         assertEquals("ID", config.getServiceId());
         config.setServiceId("ASAP");
         assertEquals("ASAP", config.getServiceId());
+    }
+
+    @Test
+    public void testGetServiceName() {
+        testSetServiceName();
+    }
+
+    @Test
+    public void testSetServiceName() {
+        assertNull(config.getServiceName());
+        config.setServiceName("NAME");
+        assertEquals("NAME", config.getServiceName());
+        config.setServiceName("NONAME");
+        assertEquals("NONAME", config.getServiceName());
     }
 
     /**

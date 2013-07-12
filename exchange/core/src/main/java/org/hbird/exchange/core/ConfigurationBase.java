@@ -24,6 +24,7 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hbird.exchange.interfaces.IEntity;
+import org.hbird.exchange.interfaces.IStartableEntity;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -60,13 +61,28 @@ public class ConfigurationBase implements Serializable {
     /** Default value for the heart beat interval. */
     public static final long DEFAULT_HEART_BEAT_INTERVAL = 5000L;
 
-    /** @deprecated use {@link IEntity#getID()}. */
-    @Deprecated
+    /**
+     * In case {@link IStartableEntity} is not used this field can store the ID of service / {@link IEntity}.
+     * 
+     * Note - {@link IStartableEntity} is preferred.
+     * 
+     * @see IEntity#getID()
+     */
     @Value("${service.id}")
     protected String serviceId;
 
     @Value("${service.version}")
     protected String serviceVersion;
+
+    /**
+     * In case {@link IStartableEntity} is not used this field can store the name of service / {@link IEntity}.
+     * 
+     * Note - {@link IStartableEntity} is preferred.
+     * 
+     * @see IEntity#getName()
+     */
+    @Value("${service.name}")
+    protected String serviceName;
 
     @Value("${heart.beat.interval:5000}")
     protected long heartBeatInterval = DEFAULT_HEART_BEAT_INTERVAL;
@@ -82,20 +98,30 @@ public class ConfigurationBase implements Serializable {
 
     /**
      * @return the serviceId
-     * @deprecated use {@link IEntity#getID()} instead
      */
-    @Deprecated
     public String getServiceId() {
         return serviceId;
     }
 
     /**
      * @param serviceId the serviceId to set
-     * @deprecated use {@link Entity#setID(String)} instead
      */
-    @Deprecated
     public void setServiceId(String serviceId) {
         this.serviceId = serviceId;
+    }
+
+    /**
+     * @return the serviceName
+     */
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    /**
+     * @param serviceName the serviceName to set
+     */
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 
     /**
