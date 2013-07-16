@@ -20,6 +20,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hbird.exchange.interfaces.IEntityInstance;
+import org.springframework.data.annotation.Id;
 
 /**
  * The super class of all types being exchanged. Contains a name and a description.
@@ -42,7 +43,18 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
      * time of creation.
      */
     protected long timestamp;
-
+    
+    @Id
+    protected String instanceID;
+    
+    private void updateInstanceID() {
+    	instanceID = new StringBuilder()
+    						.append(ID)
+    						.append(INSTANCE_ID_SEPARATOR)
+    						.append(version)
+    						.toString();
+    }
+    
     /**
      * Constructor of a Named object. The timestamp will be set to the creation time.
      * 
@@ -54,7 +66,26 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
         long now = System.currentTimeMillis();
         this.version = now;
         this.timestamp = now;
+        
+        updateInstanceID();
     }
+    
+    @Override
+    public void setID(String ID) {
+    	super.setID(ID);
+    	
+    	updateInstanceID();
+    }
+    
+    /*@PersistenceConstructor
+    public EntityInstance(String ID, String name, long version, long timestamp) {
+    	super(ID, name);
+    	
+    	this.version = version;
+    	this.timestamp = timestamp;
+    	
+    	updateInstanceID();
+    } */
 
     /**
      * @return the timestamp
@@ -84,15 +115,18 @@ public abstract class EntityInstance extends Entity implements IEntityInstance, 
      */
     public void setVersion(long version) {
         this.version = version;
+        
+        updateInstanceID();
     }
 
     @Override
     public String getInstanceID() {
-        return new StringBuilder()
+        /*return new StringBuilder()
                 .append(ID)
                 .append(INSTANCE_ID_SEPARATOR)
                 .append(version)
-                .toString();
+                .toString(); */
+    	return instanceID;
     }
 
     @SuppressWarnings("unchecked")

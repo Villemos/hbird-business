@@ -12,7 +12,7 @@
     <description>An archive based on the Apache SOLR storage engine.</description>
 
     <dependencies>
-
+        
         <dependency>
             <groupId>org.hbird.business</groupId>
             <artifactId>business-core</artifactId>
@@ -64,6 +64,13 @@
             <groupId>org.hbird.exchange</groupId>
             <artifactId>all-exchange</artifactId>
         </dependency>
+
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<!--  <version>1.1.0.RELEASE</version> -->
+			<version>LATEST</version>
+		</dependency>
 
     </dependencies>
 </project>
