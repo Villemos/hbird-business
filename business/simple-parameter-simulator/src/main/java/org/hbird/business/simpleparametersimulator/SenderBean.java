@@ -37,6 +37,10 @@ public class SenderBean {
     @Handler
     public synchronized void send(@Body EntityInstance entry) {
         LOG.debug("Publishing object '{}'", entry.toString());
-        pApi.publish(entry);
+        try {
+        	pApi.publish(entry);
+        } catch(Exception e) {
+        	LOG.error("Failed to publish object " + entry, e);
+        }
     }
 }

@@ -71,22 +71,26 @@ public class NamedObjectPublisher {
         IPublish api = ApiFactory.getPublishApi(name);
 
         for (EntityInstance object : objects) {
-            if (object instanceof IStartableEntity) {
-                LOG.info("Creating StartComponent command for part '{}' to destination '{}'.", object.getID(), destination);
-                if (destination == null) {
-                    LOG.warn("The destination is null; most likely the start command will be ignored. Check your application setup configuration");
-                }
-
-                StartComponent startCommand = new StartComponent(object.getID() + "/StartRequest");
-                startCommand.setEntity((IStartableEntity) object);
-
-                startCommand.setDestination(destination);
-                api.publish(startCommand);
-            }
-            else {
-                LOG.info("Publishing Named object '" + object.getID() + "'.");
-                api.publish(object);
-            }
+        	try {
+	            if (object instanceof IStartableEntity) {
+	                LOG.info("Creating StartComponent command for part '{}' to destination '{}'.", object.getID(), destination);
+	                if (destination == null) {
+	                    LOG.warn("The destination is null; most likely the start command will be ignored. Check your application setup configuration");
+	                }
+	
+	                StartComponent startCommand = new StartComponent(object.getID() + "/StartRequest");
+	                startCommand.setEntity((IStartableEntity) object);
+	
+	                startCommand.setDestination(destination);
+	                api.publish(startCommand);
+	            }
+	            else {
+	                LOG.info("Publishing Named object '" + object.getID() + "'.");
+	                api.publish(object);
+	            }
+	        } catch(Exception e) {
+	        	LOG.error("Failed to publish " + object, e);
+	        }
         }
 
         LOG.debug("Publisher finished; disposing IPublish object in '{}'...", name);

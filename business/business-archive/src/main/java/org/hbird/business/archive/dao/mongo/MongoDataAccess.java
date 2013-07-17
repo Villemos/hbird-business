@@ -3,7 +3,7 @@ package org.hbird.business.archive.dao.mongo;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import org.hbird.business.archive.dao.DataAccess;
+import org.hbird.business.api.dao.DataAccess;
 import org.hbird.exchange.interfaces.IEntityInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

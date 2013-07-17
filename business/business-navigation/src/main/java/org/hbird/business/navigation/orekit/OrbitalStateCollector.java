@@ -26,6 +26,8 @@ import org.orekit.errors.PropagationException;
 import org.orekit.propagation.SpacecraftState;
 import org.orekit.propagation.sampling.OrekitFixedStepHandler;
 import org.orekit.time.AbsoluteDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Callback class of the orekit propagator. The propagator will call the
@@ -37,6 +39,7 @@ import org.orekit.time.AbsoluteDate;
  * @author Gert Villemos
  */
 public class OrbitalStateCollector implements OrekitFixedStepHandler {
+	private static final Logger LOG = LoggerFactory.getLogger(OrbitalStateCollector.class);
 
     public static final String ORBITAL_STATE = "orbitalstate";
 
@@ -69,7 +72,11 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
         states.add(state);
         if (publisher != null) {
-            publisher.publish(state);
+            try {
+				publisher.publish(state);
+			} catch (Exception e) {
+				LOG.error("Failed to publish current state", e);
+			}
         }
     }
 

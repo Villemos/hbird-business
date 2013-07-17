@@ -107,7 +107,11 @@ public class ContactEventCollector extends ElevationDetector {
             events.add(data);
             if (publisher != null) {
                 LOG.info("Injecting new LocationContactEvent {}", event.toString());
-                publisher.publish(event);
+                try {
+                	publisher.publish(event);
+                } catch(Exception e) {
+                	LOG.error("Failed to publish LocationContactEvent", e);
+                }
             }
             lastStartState = null;
         }

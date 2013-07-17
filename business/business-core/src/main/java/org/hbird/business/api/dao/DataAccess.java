@@ -1,4 +1,4 @@
-package org.hbird.business.archive.dao;
+package org.hbird.business.api.dao;
 
 import java.util.List;
 
@@ -11,7 +11,5 @@ public interface DataAccess {
 	
 	public <T> List<T> getAll(Class<T> clazz) throws Exception;
 	
-	// XXX: if two Entities (having no timestamp) are saved, should they
-	// both be in DB? Same with EntityInstances having the same instance id
 	public Object save(Object o) throws Exception;
 }
