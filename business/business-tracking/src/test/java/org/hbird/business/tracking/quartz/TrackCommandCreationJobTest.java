@@ -26,8 +26,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 import org.apache.camel.ProducerTemplate;
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IdBuilder;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.interfaces.IStartableEntity;
@@ -134,29 +134,29 @@ public class TrackCommandCreationJobTest {
 
     @Test
     public void testExecuteEventNotFound() throws JobExecutionException {
-        when(dao.resolve(CONTACT_INSTANCE_ID)).thenReturn(null);
+        when(dao.resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class)).thenReturn(null);
         job.execute(quartzContext);
         inOrder.verify(quartzContext, times(1)).getMergedJobDataMap();
         inOrder.verify(jobData, times(1)).getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
-        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID);
+        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class);
     }
 
     @Test
     public void testExecuteSatNotFound() throws JobExecutionException {
-        when(dao.resolve(CONTACT_INSTANCE_ID)).thenReturn(event);
+        when(dao.resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class)).thenReturn(event);
         when(event.getSatelliteID()).thenReturn(SATELLITE_ID);
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(null);
         job.execute(quartzContext);
         inOrder.verify(quartzContext, times(1)).getMergedJobDataMap();
         inOrder.verify(jobData, times(1)).getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
-        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID);
+        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class);
         inOrder.verify(event, times(1)).getSatelliteID();
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
     }
 
     @Test
     public void testExecuteTleNotFound() throws JobExecutionException {
-        when(dao.resolve(CONTACT_INSTANCE_ID)).thenReturn(event);
+        when(dao.resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class)).thenReturn(event);
         when(event.getSatelliteID()).thenReturn(SATELLITE_ID);
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
         when(event.getDerivedFromId()).thenReturn(TLE_ID);
@@ -164,7 +164,7 @@ public class TrackCommandCreationJobTest {
         job.execute(quartzContext);
         inOrder.verify(quartzContext, times(1)).getMergedJobDataMap();
         inOrder.verify(jobData, times(1)).getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
-        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID);
+        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class);
         inOrder.verify(event, times(1)).getSatelliteID();
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
         inOrder.verify(event, times(1)).getDerivedFromId();
@@ -173,7 +173,7 @@ public class TrackCommandCreationJobTest {
 
     @Test
     public void testExecuteTlesDontMatch() throws JobExecutionException {
-        when(dao.resolve(CONTACT_INSTANCE_ID)).thenReturn(event);
+        when(dao.resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class)).thenReturn(event);
         when(event.getSatelliteID()).thenReturn(SATELLITE_ID);
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
         when(event.getDerivedFromId()).thenReturn(TLE_ID);
@@ -182,7 +182,7 @@ public class TrackCommandCreationJobTest {
         job.execute(quartzContext);
         inOrder.verify(quartzContext, times(1)).getMergedJobDataMap();
         inOrder.verify(jobData, times(1)).getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
-        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID);
+        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class);
         inOrder.verify(event, times(1)).getSatelliteID();
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
         inOrder.verify(event, times(1)).getDerivedFromId();
@@ -194,7 +194,7 @@ public class TrackCommandCreationJobTest {
 
     @Test
     public void testExecuteLatestTlesNotFound() throws JobExecutionException {
-        when(dao.resolve(CONTACT_INSTANCE_ID)).thenReturn(event);
+        when(dao.resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class)).thenReturn(event);
         when(event.getSatelliteID()).thenReturn(SATELLITE_ID);
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
         when(event.getDerivedFromId()).thenReturn(TLE_ID);
@@ -203,7 +203,7 @@ public class TrackCommandCreationJobTest {
         job.execute(quartzContext);
         inOrder.verify(quartzContext, times(1)).getMergedJobDataMap();
         inOrder.verify(jobData, times(1)).getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
-        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID);
+        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class);
         inOrder.verify(event, times(1)).getSatelliteID();
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
         inOrder.verify(event, times(1)).getDerivedFromId();
@@ -221,7 +221,7 @@ public class TrackCommandCreationJobTest {
 
     @Test
     public void testExecute() throws JobExecutionException {
-        when(dao.resolve(CONTACT_INSTANCE_ID)).thenReturn(event);
+        when(dao.resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class)).thenReturn(event);
         when(event.getSatelliteID()).thenReturn(SATELLITE_ID);
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
         when(event.getDerivedFromId()).thenReturn(TLE_ID);
@@ -232,7 +232,7 @@ public class TrackCommandCreationJobTest {
         job.execute(quartzContext);
         inOrder.verify(quartzContext, times(1)).getMergedJobDataMap();
         inOrder.verify(jobData, times(1)).getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
-        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID);
+        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class);
         inOrder.verify(event, times(1)).getSatelliteID();
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
         inOrder.verify(event, times(1)).getDerivedFromId();
@@ -256,9 +256,9 @@ public class TrackCommandCreationJobTest {
 
     @Test
     public void testGetEvent() {
-        when(dao.resolve(CONTACT_INSTANCE_ID)).thenReturn(event);
+        when(dao.resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class)).thenReturn(event);
         assertEquals(event, job.getEvent(dao, CONTACT_INSTANCE_ID));
-        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID);
+        inOrder.verify(dao, times(1)).resolve(CONTACT_INSTANCE_ID, LocationContactEvent.class);
     }
 
     @Test

@@ -17,7 +17,7 @@
 package org.hbird.business.navigation.processors;
 
 import org.apache.camel.Handler;
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
 import org.hbird.business.navigation.request.PredictionRequest;
 import org.hbird.exchange.navigation.Satellite;
@@ -44,7 +44,8 @@ public class SatelliteResolver {
         PredictionConfigurationBase config = request.getConfiguration();
         String satelliteId = config.getSatelliteId();
         try {
-            Satellite satellite = (Satellite) dao.resolve(satelliteId);
+            //Satellite satellite = (Satellite) dao.resolve(satelliteId);
+        	Satellite satellite = dao.resolve(satelliteId, Satellite.class);
             if (satellite == null) {
                 LOG.error("No Satellite found for the ID '{}'", satelliteId);
             }

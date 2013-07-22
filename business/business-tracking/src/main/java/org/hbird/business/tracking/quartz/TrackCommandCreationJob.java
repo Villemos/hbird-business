@@ -17,8 +17,8 @@
 package org.hbird.business.tracking.quartz;
 
 import org.apache.camel.ProducerTemplate;
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IdBuilder;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.interfaces.IStartableEntity;
@@ -133,7 +133,8 @@ public class TrackCommandCreationJob implements Job {
     }
 
     LocationContactEvent getEvent(IDataAccess dao, String eventInstanceId) {
-        LocationContactEvent event = (LocationContactEvent) dao.resolve(eventInstanceId);
+        //LocationContactEvent event = (LocationContactEvent) dao.resolve(eventInstanceId);
+    	LocationContactEvent event = dao.resolve(eventInstanceId, LocationContactEvent.class);
         return event;
     }
 

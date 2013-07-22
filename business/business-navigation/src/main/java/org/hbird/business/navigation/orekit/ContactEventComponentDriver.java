@@ -20,9 +20,9 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublish;
 import org.hbird.business.api.IdBuilder;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.ContactEventComponent;
 

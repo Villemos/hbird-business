@@ -16,7 +16,7 @@
  */
 package org.hbird.business.validation.bean;
 
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.validation.Limit;
 

@@ -3,7 +3,7 @@ package org.hbird.business.tracking.timer;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.model.RouteDefinition;
 import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.business.core.cache.SatelliteResolver;

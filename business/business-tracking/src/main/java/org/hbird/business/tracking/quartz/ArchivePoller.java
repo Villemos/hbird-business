@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.camel.Handler;
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.dataaccess.LocationContactEventRequest;
 import org.hbird.exchange.navigation.LocationContactEvent;
@@ -49,27 +49,27 @@ public class ArchivePoller {
         List<String> satellites = config.getSatelliteIds();
         List<LocationContactEvent> result = new ArrayList<LocationContactEvent>(satellites.size());
         String groundStationId = config.getGroundstationId();
-        long now = System.currentTimeMillis();
+        //long now = System.currentTimeMillis();
 
         for (String satelliteId : satellites) {
             // XXX - 25.06.2013, kimmell - this is more complicated than it should be
             // waits for IDataAccess and ICatalogue refactoring / update
             // should work with single request to data access layer instead of this
-            LocationContactEventRequest request = createRequest(groundStationId, satelliteId);
-            List<EntityInstance> events = getEvents(dao, request);
-            LocationContactEvent event = getNextEvent(events, now);
-            if (event != null) {
-                LOG.trace("Found {}", event.toString());
+            //LocationContactEventRequest request = createRequest(groundStationId, satelliteId);
+            
+        	try {
+        		LocationContactEvent event = dao.getNextLocationContactEventFor(groundStationId, satelliteId);
+            
+            	LOG.trace("Found {}", event.toString());
                 result.add(event);
-            }
-            else {
-                LOG.debug("Didn't found any LocationContactEvent for GS '{}' and satellite '{}'", groundStationId, satelliteId);
+        	} catch(Exception e) {
+        		LOG.warn("Couldn't find next contact event for groundstation " + groundStationId + " and satellite " + satelliteId , e);
             }
         }
         return result;
     }
 
-    LocationContactEventRequest createRequest(String groundStationId, String satelliteId) {
+    /*LocationContactEventRequest createRequest(String groundStationId, String satelliteId) {
         LocationContactEventRequest request = new LocationContactEventRequest(UUID.randomUUID().toString());
         request.setGroundStationID(groundStationId);
         request.setSatelliteID(satelliteId);
@@ -80,7 +80,7 @@ public class ArchivePoller {
     List<EntityInstance> getEvents(IDataAccess dao, LocationContactEventRequest request) {
         return dao.getData(request);
     }
-
+    
     LocationContactEvent getNextEvent(List<EntityInstance> list, long now) {
         LocationContactEvent next = null;
         for (EntityInstance entity : list) {
@@ -116,5 +116,5 @@ public class ArchivePoller {
             return newStart < oldStart ? newValue : oldValue;
         }
         return null;
-    }
+    } */
 }

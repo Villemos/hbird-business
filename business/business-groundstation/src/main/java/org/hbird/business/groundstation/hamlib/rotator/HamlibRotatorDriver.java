@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;

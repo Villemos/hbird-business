@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api;
+package org.hbird.business.api.deprecated;
 
 import java.util.List;
 import java.util.Map;
 
+import org.hbird.business.api.IHbirdApi;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Event;
 import org.hbird.exchange.core.Metadata;
@@ -114,11 +115,13 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
  * @author Gert Villemos
  * 
  */
+@Deprecated
 public interface IDataAccess extends IHbirdApi {
 
     public List<EntityInstance> getData(DataRequest request);
 
-    public EntityInstance resolve(String ID);
+    //public EntityInstance resolve(String ID);
+    public <T extends EntityInstance> T resolve(String ID, Class<T> clazz); // XXX: Maybe throw exception?
 
     /**
      * Method to retrieve the last sample of a single parameter. The method will return <li>One parameter sample</li>
@@ -136,7 +139,7 @@ public interface IDataAccess extends IHbirdApi {
      * @param name The name of the parameter
      * @return The parameter sample. May be 'null' if no parameter sample was found.
      */
-    public Parameter getParameter(String source, String name);
+    //public Parameter getParameter(String source, String name); // XXX: Not used
 
     /**
      * Method to retrieve the last samples of a single parameter. The method will return <li>A maximum of 'rows' entries
@@ -147,7 +150,7 @@ public interface IDataAccess extends IHbirdApi {
      * @param rows The maximum number of entries to be retrieved
      * @return List of parameter samples
      */
-    public List<Parameter> getParameter(String name, int rows);
+    //public List<Parameter> getParameter(String name, int rows); // XXX: Not used
 
     /**
      * Method to retrieve the last samples of a single parameter. The method will return <li>A maximum of 'rows' entries
@@ -158,7 +161,7 @@ public interface IDataAccess extends IHbirdApi {
      * @param rows The maximum number of entries to be retrieved
      * @return List of parameter samples
      */
-    public List<Parameter> getParameter(String source, String name, int rows);
+    //public List<Parameter> getParameter(String source, String name, int rows); // XXX: Not used
 
 /**
 	 * Method to retrieve the samples of a single parameter. The method will return
@@ -172,7 +175,7 @@ public interface IDataAccess extends IHbirdApi {
 	 * @param at Java time which the sample value must be less than
 	 * @return The parameter sample. May be 'null' if no parameter sample was found.
 	 */
-    public Parameter getParameterAt(String name, long at);
+    //public Parameter getParameterAt(String name, long at); // XXX: Not used
 
 /**
 	 * Method to retrieve the samples of a single parameter. The method will return
@@ -186,7 +189,7 @@ public interface IDataAccess extends IHbirdApi {
 	 * @param at Java time which the sample value must be less than
 	 * @return The parameter sample. May be 'null' if no parameter sample was found.
 	 */
-    public Parameter getParameterAt(String source, String name, long at);
+    //public Parameter getParameterAt(String source, String name, long at); // XXX: Not used
 
     /**
      * Method to retrieve a set of samples of a single parameter. The retrieval will be <li>A maximum of 'rows' entries</li>
@@ -197,7 +200,7 @@ public interface IDataAccess extends IHbirdApi {
      * @param rows The maximum number of entries to be retrieved
      * @return List of parameter samples
      */
-    public List<Parameter> getParameterAt(String name, long at, int rows);
+    //public List<Parameter> getParameterAt(String name, long at, int rows); // XXX
 
     /**
      * Method to retrieve a set of samples of a single parameter. The retrieval will be <li>A maximum of 'rows' entries</li>
@@ -208,7 +211,7 @@ public interface IDataAccess extends IHbirdApi {
      * @param rows The maximum number of entries to be retrieved
      * @return List of parameter samples
      */
-    public List<Parameter> getParameterAt(String source, String name, long at, int rows);
+    //public List<Parameter> getParameterAt(String source, String name, long at, int rows);
 
     /**
      * Method to retrieve the last sample of a single parameter. The method will return <li>One parameter sample</li>
@@ -217,7 +220,7 @@ public interface IDataAccess extends IHbirdApi {
      * @param names The names of the parameters
      * @return List of parameter samples
      */
-    public List<Parameter> getParameters(List<String> names);
+    //public List<Parameter> getParameters(List<String> names); // XXX
 
     /**
      * Method to retrieve the last samples of a single parameter. The method will return <li>A maximum of 'rows' entries
@@ -228,7 +231,7 @@ public interface IDataAccess extends IHbirdApi {
      * @param rows The maximum number of entries to be retrieved
      * @return List of parameter samples
      */
-    public List<Parameter> getParameters(List<String> names, int rows);
+    //public List<Parameter> getParameters(List<String> names, int rows); // XXX
 
 /**
 	 * Method to retrieve the samples of a single parameter. The method will return
@@ -242,7 +245,7 @@ public interface IDataAccess extends IHbirdApi {
 	 * @param at Java time which the sample value must be less than
 	 * @return List of parameter samples
 	 */
-    public List<Parameter> getParametersAt(List<String> names, long at);
+    //public List<Parameter> getParametersAt(List<String> names, long at); // XXX
 
     /**
      * Method to retrieve a set of samples of a single parameter. The retrieval will be <li>A maximum of 'rows' entries</li>
@@ -253,7 +256,7 @@ public interface IDataAccess extends IHbirdApi {
      * @param rows The maximum number of entries to be retrieved
      * @return List of parameter samples
      */
-    public List<Parameter> getParametersAt(List<String> name, long at, int rows);
+    //public List<Parameter> getParametersAt(List<String> name, long at, int rows);
 
     /**
      * Method to retrieve the last sample and all states of a single parameter. The method will return <li>One parameter
@@ -263,7 +266,7 @@ public interface IDataAccess extends IHbirdApi {
      * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific
      *         sample.
      */
-    public Map<Parameter, List<State>> getParameterAndStates(String name);
+    //public Map<Parameter, List<State>> getParameterAndStates(String name); // XXX
 
     /**
      * Method to retrieve the last samples and all states and all states of a single parameter. The method will return
@@ -275,7 +278,7 @@ public interface IDataAccess extends IHbirdApi {
      * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific
      *         sample.
      */
-    public Map<Parameter, List<State>> getParameterAndStates(String name, int rows);
+    //public Map<Parameter, List<State>> getParameterAndStates(String name, int rows); // XXX
 
 /**
 	 * Method to retrieve the samples and all states of a single parameter. The method will return
@@ -289,7 +292,7 @@ public interface IDataAccess extends IHbirdApi {
 	 * @param at Java time which the sample value must be less than
 	 * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific sample.
 	 */
-    public Map<Parameter, List<State>> getParameterAndStatesAt(String name, long at);
+    //public Map<Parameter, List<State>> getParameterAndStatesAt(String name, long at); // XXX
 
     /**
      * Method to retrieve a set of samples and all states of a single parameter. The retrieval will be <li>A maximum of
@@ -301,7 +304,7 @@ public interface IDataAccess extends IHbirdApi {
      * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific
      *         sample.
      */
-    public Map<Parameter, List<State>> getParameterAndStatesAt(String name, long at, int rows);
+    //public Map<Parameter, List<State>> getParameterAndStatesAt(String name, long at, int rows);
 
     /**
      * Method to retrieve the last sample and all states of a set of parameters. The method will return <li>One
@@ -311,7 +314,7 @@ public interface IDataAccess extends IHbirdApi {
      * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific
      *         sample.
      */
-    public Map<Parameter, List<State>> getParametersAndStates(List<String> names);
+    //public Map<Parameter, List<State>> getParametersAndStates(List<String> names); // XXX
 
     /**
      * Method to retrieve the last samples and all states of a set of parameters. The method will return <li>A maximum
@@ -323,7 +326,7 @@ public interface IDataAccess extends IHbirdApi {
      * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific
      *         sample.
      */
-    public Map<Parameter, List<State>> getParametersAndStates(List<String> names, int rows);
+    //public Map<Parameter, List<State>> getParametersAndStates(List<String> names, int rows); // XXX
 
 /**
 	 * Method to retrieve the samples and all states of a set of parameters. The method will return
@@ -337,7 +340,7 @@ public interface IDataAccess extends IHbirdApi {
 	 * @param at Java time which the sample value must be less than
 	 * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific sample.
 	 */
-    public Map<Parameter, List<State>> getParametersAndStateAt(List<String> names, long at);
+    //public Map<Parameter, List<State>> getParametersAndStateAt(List<String> names, long at); // XXX
 
     /**
      * Method to retrieve a set of samples and all states of a set of parameters. The retrieval will be <li>A maximum of
@@ -349,7 +352,7 @@ public interface IDataAccess extends IHbirdApi {
      * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific
      *         sample.
      */
-    public Map<Parameter, List<State>> getParametersAndStateAt(List<String> name, long at, int rows);
+    //public Map<Parameter, List<State>> getParametersAndStateAt(List<String> name, long at, int rows);
 
     /**
      * Method to retrieve the samples of a single parameter. The retrieval will be <li>All samples</li> <li>With a
@@ -360,7 +363,7 @@ public interface IDataAccess extends IHbirdApi {
      * @param to The latest time (Java time)
      * @return List<Parameter> of Parameter samples. May be empty if no samples matching the criterions were found.
      */
-    public List<Parameter> getParameter(String name, long from, long to);
+    public List<Parameter> getParameter(String name, long from, long to); // XXX
 
     /**
      * Method to retrieve the samples of a single parameter. The retrieval will be <li>A maximum of 'rows' samples</li>
@@ -375,7 +378,7 @@ public interface IDataAccess extends IHbirdApi {
      * @param to The latest time (Java time)
      * @return List<Parameter> of Parameter samples. May be empty if no samples matching the criterions were found.
      */
-    public List<Parameter> getParameter(String name, long from, long to, int rows);
+    //public List<Parameter> getParameter(String name, long from, long to, int rows); // XXX
 
     /**
      * Method to retrieve the samples of a set of parameters. The retrieval will be <li>All samples</li> <li>With a
@@ -386,7 +389,7 @@ public interface IDataAccess extends IHbirdApi {
      * @param to The latest time (Java time)
      * @return List<Parameter> of Parameter samples. May be empty if no samples matching the criterions were found.
      */
-    public List<Parameter> getParameters(List<String> names, long from, long to);
+    //public List<Parameter> getParameters(List<String> names, long from, long to); // XXX
 
     /**
      * Method to retrieve the samples of a set of parameters. The retrieval will be <li>A maximum of 'rows' parameter
@@ -402,7 +405,7 @@ public interface IDataAccess extends IHbirdApi {
      * @param to The latest time (Java time)
      * @return List<Parameter> of Parameter samples. May be empty if no samples matching the criterions were found.
      */
-    public List<Parameter> getParameters(List<String> names, long from, long to, int rows);
+    //public List<Parameter> getParameters(List<String> names, long from, long to, int rows);
 
     /**
      * Method to retrieve the samples of a single parameter and all states applicable to each sample. The method will
@@ -415,7 +418,7 @@ public interface IDataAccess extends IHbirdApi {
      * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific
      *         sample.
      */
-    public Map<Parameter, List<State>> getParameterAndStates(String name, long from, long to);
+    //public Map<Parameter, List<State>> getParameterAndStates(String name, long from, long to);
 
     /**
      * Method to retrieve the samples of a single parameter and all states applicable to each sample. The method will
@@ -432,7 +435,7 @@ public interface IDataAccess extends IHbirdApi {
      * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific
      *         sample.
      */
-    public Map<Parameter, List<State>> getParameterAndStates(String name, long from, long to, int rows);
+    //public Map<Parameter, List<State>> getParameterAndStates(String name, long from, long to, int rows);
 
     /**
      * Method to retrieve the samples of a set of parameters and all states applicable to each sample. The method will
@@ -445,7 +448,7 @@ public interface IDataAccess extends IHbirdApi {
      * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific
      *         sample.
      */
-    public Map<Parameter, List<State>> getParametersAndStates(List<String> names, long from, long to);
+    //public Map<Parameter, List<State>> getParametersAndStates(List<String> names, long from, long to);
 
     /**
      * Method to retrieve the samples of a set of parameters and all states applicable to each sample. The method will
@@ -462,7 +465,7 @@ public interface IDataAccess extends IHbirdApi {
      * @return Map keyed on the parameter sample and containing as key a list of states applicable to the specific
      *         sample.
      */
-    public Map<Parameter, List<State>> getParametersAndStates(List<String> names, long from, long to, int rows);
+    //public Map<Parameter, List<State>> getParametersAndStates(List<String> names, long from, long to, int rows);
 
     /**
      * Method to retrieve all states applicable to a Named object (such as a Parameter). <li>A maximum of 1000 entries
@@ -623,5 +626,5 @@ public interface IDataAccess extends IHbirdApi {
      * @param to End time of request (null means 'no upper bound')
      * @return
      */
-    public List<Event> getEvents(Long from, Long to);
+    //public List<Event> getEvents(Long from, Long to);
 }

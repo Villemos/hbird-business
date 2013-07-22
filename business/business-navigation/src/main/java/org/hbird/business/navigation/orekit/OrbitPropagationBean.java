@@ -16,9 +16,9 @@
  */
 package org.hbird.business.navigation.orekit;
 
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublish;
 import org.hbird.business.api.IdBuilder;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.navigation.NavigationComponent;
 import org.orekit.errors.OrekitException;
 import org.slf4j.Logger;

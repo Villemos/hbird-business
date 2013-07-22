@@ -25,7 +25,7 @@ import org.apache.camel.Handler;
 import org.apache.camel.Headers;
 import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.State;
 

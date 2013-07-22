@@ -33,8 +33,6 @@ public class Publish extends AbstractHbirdApi implements IPublish{
 
 	@Override
 	public EntityInstance publish(EntityInstance object) throws Exception {
-		dao.save(object);
-		
 		if(object.getIssuedBy() == null) {
 			object.setIssuedBy(getIssuedBy());
 		}
@@ -45,6 +43,8 @@ public class Publish extends AbstractHbirdApi implements IPublish{
 				comm.setDestination(getDestination());
 			}
 		}
+		
+		dao.save(object);
 		
 		return object;
 	}

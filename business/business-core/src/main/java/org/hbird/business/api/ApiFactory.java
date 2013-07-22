@@ -17,6 +17,7 @@
 package org.hbird.business.api;
 
 import org.apache.camel.CamelContext;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

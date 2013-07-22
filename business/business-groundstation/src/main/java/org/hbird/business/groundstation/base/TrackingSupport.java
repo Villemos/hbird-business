@@ -20,8 +20,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandBase;
@@ -96,7 +96,8 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
         String groundStationId = configuration.getGroundstationId();
         GroundStation groundStation = null;
         try {
-            groundStation = (GroundStation) dao.resolve(groundStationId);
+            //groundStation = (GroundStation) dao.resolve(groundStationId);
+            groundStation = dao.resolve(groundStationId, GroundStation.class);
         }
         catch (Exception e) {
             LOG.error("Failed to resolve groundstation for the ID '{}'", groundStationId, e);

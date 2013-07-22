@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.apache.camel.Handler;
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.navigation.configuration.ContactPredictionConfiguration;
 import org.hbird.business.navigation.request.ContactPredictionRequest;
 import org.hbird.exchange.groundstation.GroundStation;
@@ -71,7 +71,8 @@ public class GroundStationResolver {
         List<GroundStation> result = new ArrayList<GroundStation>(ids.size());
         for (String id : ids) {
             try {
-                GroundStation gs = (GroundStation) dao.resolve(id);
+                //GroundStation gs = (GroundStation) dao.resolve(id);
+                GroundStation gs = dao.resolve(id, GroundStation.class);
                 if (gs == null) {
                     LOG.error("No GroundStation found for the ID '{}'", id);
                 }

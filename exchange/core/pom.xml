@@ -50,10 +50,9 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
 			<!--  <version>1.1.0.RELEASE</version> -->
-			<version>LATEST</version>
+			<version>1.2.1.RELEASE</version>
 		</dependency>
 		
-		<!--  XXX: Needed for DAO annotations - remove if decided not to use -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-commons</artifactId>

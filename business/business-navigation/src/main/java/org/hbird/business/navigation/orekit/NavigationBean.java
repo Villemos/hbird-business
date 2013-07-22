@@ -18,9 +18,9 @@ package org.hbird.business.navigation.orekit;
 
 import java.util.Date;
 
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublish;
 import org.hbird.business.api.IdBuilder;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.errors.OrekitException;

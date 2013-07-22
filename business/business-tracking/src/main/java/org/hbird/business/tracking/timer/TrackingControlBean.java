@@ -18,7 +18,7 @@ package org.hbird.business.tracking.timer;
 
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.Track;
@@ -114,13 +114,14 @@ public class TrackingControlBean {
 
 				/** Get the definition of the satellite. */
 				if (satellite == null) {
-					Object named = ApiFactory.getDataAccessApi(this.name, context).resolve(satelliteId);
+					//Object named = ApiFactory.getDataAccessApi(this.name, context).resolve(satelliteId);
+					Satellite named = ApiFactory.getDataAccessApi(this.name, context).resolve(satelliteId, Satellite.class);
 					if (named == null) {
 						LOG.error("No Satellite available for the name {}", satelliteId);
 						return command;
 					}
 					else {
-						satellite = (Satellite) named;
+						satellite = named;
 					}
 				}
 

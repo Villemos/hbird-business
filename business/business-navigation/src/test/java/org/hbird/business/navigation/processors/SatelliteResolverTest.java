@@ -21,7 +21,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
 import org.hbird.business.navigation.request.PredictionRequest;
 import org.hbird.exchange.navigation.Satellite;
@@ -72,32 +72,32 @@ public class SatelliteResolverTest {
 
     @Test
     public void testResolve() throws Exception {
-        when(dao.resolve(SAT_ID)).thenReturn(sat);
+        when(dao.resolve(SAT_ID, Satellite.class)).thenReturn(sat);
         assertEquals(request, resolver.resolve(request));
         inOrder.verify(request, times(1)).getConfiguration();
         inOrder.verify(config, times(1)).getSatelliteId();
-        inOrder.verify(dao, times(1)).resolve(SAT_ID);
+        inOrder.verify(dao, times(1)).resolve(SAT_ID, Satellite.class);
         inOrder.verify(request, times(1)).setSatellite(sat);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testResolveSatNotFound() throws Exception {
-        when(dao.resolve(SAT_ID)).thenReturn(null);
+        when(dao.resolve(SAT_ID, Satellite.class)).thenReturn(null);
         assertEquals(request, resolver.resolve(request));
         inOrder.verify(request, times(1)).getConfiguration();
         inOrder.verify(config, times(1)).getSatelliteId();
-        inOrder.verify(dao, times(1)).resolve(SAT_ID);
+        inOrder.verify(dao, times(1)).resolve(SAT_ID, Satellite.class);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testResolveWithException() throws Exception {
-        when(dao.resolve(SAT_ID)).thenThrow(exception);
+        when(dao.resolve(SAT_ID, Satellite.class)).thenThrow(exception);
         assertEquals(request, resolver.resolve(request));
         inOrder.verify(request, times(1)).getConfiguration();
         inOrder.verify(config, times(1)).getSatelliteId();
-        inOrder.verify(dao, times(1)).resolve(SAT_ID);
+        inOrder.verify(dao, times(1)).resolve(SAT_ID, Satellite.class);
         inOrder.verifyNoMoreInteractions();
     }
 }

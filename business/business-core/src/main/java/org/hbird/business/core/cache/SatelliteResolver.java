@@ -16,7 +16,7 @@
  */
 package org.hbird.business.core.cache;
 
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.exchange.navigation.Satellite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,8 @@ public class SatelliteResolver implements CacheResolver<Satellite> {
     @Override
     public Satellite resolveById(String id) {
         try {
-            return (Satellite) dao.resolve(id);
+            //return (Satellite) dao.resolve(id);
+            return dao.resolve(id, Satellite.class);
         }
         catch (Exception e) {
             LOG.warn("Failed to resolve Satellite for ID {}", id, e);
