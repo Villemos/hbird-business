@@ -3,7 +3,7 @@ package org.hbird.business.api.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hbird.business.api.dao.DataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Parameter;
@@ -13,7 +13,7 @@ import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
-class InMemoryStore implements DataAccess {
+class InMemoryStore implements IDataAccess {
 	private List<EntityInstance> entities;
 	
 	public InMemoryStore() {

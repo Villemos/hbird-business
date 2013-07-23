@@ -7,8 +7,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.dao.DataAccess;
-import org.hbird.exchange.core.EntityInstance;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.core.State;
@@ -21,9 +20,9 @@ import org.slf4j.LoggerFactory;
 public class Catalogue extends AbstractHbirdApi implements ICatalogue {
 	private final static Logger LOG = LoggerFactory.getLogger(Catalogue.class);
 	
-	private DataAccess dao;
+	private IDataAccess dao;
 	
-	public Catalogue(String issuedBy, String destination, DataAccess dao) {
+	public Catalogue(String issuedBy, String destination, IDataAccess dao) {
 		super(issuedBy, destination);
 		
 		this.dao = dao;

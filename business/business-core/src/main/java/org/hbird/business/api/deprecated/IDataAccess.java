@@ -17,11 +17,8 @@
 package org.hbird.business.api.deprecated;
 
 import java.util.List;
-import java.util.Map;
-
 import org.hbird.business.api.IHbirdApi;
 import org.hbird.exchange.core.EntityInstance;
-import org.hbird.exchange.core.Event;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;

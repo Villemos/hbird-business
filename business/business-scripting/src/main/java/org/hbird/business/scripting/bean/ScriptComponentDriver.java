@@ -27,12 +27,12 @@ import org.hbird.exchange.configurator.StandardEndpoints;
  * @author Gert Villemos
  * 
  */
-public class ScriptComponentDriver extends SoftwareComponentDriver {
+public class ScriptComponentDriver extends SoftwareComponentDriver<ScriptComponent> {
 
     @Override
     protected void doConfigure() {
 
-        ScriptExecutor executor = new ScriptExecutor((ScriptComponent) command.getEntity());
+    	ScriptExecutor executor = new ScriptExecutor(getPart());
 
         /** Iterate over each dependency needed by this script. */
         for (String dependency : executor.getDependencies()) {

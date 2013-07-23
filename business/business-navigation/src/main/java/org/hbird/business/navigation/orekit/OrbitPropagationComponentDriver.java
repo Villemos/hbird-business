@@ -35,7 +35,7 @@ package org.hbird.business.navigation.orekit;
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
@@ -45,20 +45,19 @@ import org.hbird.business.navigation.OrbitPropagationComponent;
  * @author Gert Villemos
  * 
  */
-public class OrbitPropagationComponentDriver extends SoftwareComponentDriver {
+public class OrbitPropagationComponentDriver extends SoftwareComponentDriver<OrbitPropagationComponent> {
 
     /**
      * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
      */
     @Override
     protected void doConfigure() {
-
-        OrbitPropagationComponent com = (OrbitPropagationComponent) entity;
+        OrbitPropagationComponent com = entity;
         String id = com.getID();
         CamelContext camelContext = com.getContext();
 
         IDataAccess dao = ApiFactory.getDataAccessApi(id, camelContext);
-        IPublish publish = ApiFactory.getPublishApi(id, camelContext);
+        IPublisher publish = ApiFactory.getPublishApi(id, camelContext);
         IdBuilder naming = ApiFactory.getIdBuilder();
 
         OrbitPropagationBean bean = new OrbitPropagationBean(com, dao, publish, naming);

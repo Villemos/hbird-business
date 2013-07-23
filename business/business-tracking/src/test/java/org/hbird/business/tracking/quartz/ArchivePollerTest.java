@@ -18,7 +18,6 @@ package org.hbird.business.tracking.quartz;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
@@ -26,14 +25,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
-
 import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.exchange.core.EntityInstance;
-import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.LocationContactEventRequest;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.junit.Before;

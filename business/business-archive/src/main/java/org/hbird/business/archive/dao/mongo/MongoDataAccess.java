@@ -4,7 +4,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.hbird.business.api.dao.DataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Parameter;
@@ -25,10 +25,8 @@ import com.mongodb.Mongo;
 import static org.springframework.data.mongodb.core.query.Query.query;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-public class MongoDataAccess implements DataAccess {
+public class MongoDataAccess implements IDataAccess {
 	public static final String DEFAULT_DATABASE_NAME = "hbird";
-	
-	private static Logger LOG = LoggerFactory.getLogger(MongoDataAccess.class);
 	
 	private static final String VERSION_FIELD = "version";
 	private static final String TIMESTAMP_FIELD = "timestamp";
@@ -101,10 +99,6 @@ public class MongoDataAccess implements DataAccess {
 						where(TIMESTAMP_FIELD).lte(to)))
 						.with(sortByTimestampAsc);
 	}
-	
-	private <T extends IEntityInstance> List<T> getByField(String field, String value, Class<T> clazz) throws Exception {
-		return getByFieldInRange(field, value, clazz, Long.MIN_VALUE, Long.MAX_VALUE);
-	}
 
 	private <T extends IEntityInstance> List<T> getByFieldInRange(String field, String value,
 			Class<T> clazz, long from, long to) throws Exception {
@@ -117,10 +111,6 @@ public class MongoDataAccess implements DataAccess {
 	private <T extends IEntityInstance> T getLastVersionByField(Class<T> clazz, String field, String value) {
 		Query query = new Query(Criteria.where(field).is(value)).with(sortByVersionDesc).limit(1);
 		return template.findOne(query, clazz);
-	}
-	
-	private Criteria fromTo(long from, long to) {
-		return where(TIMESTAMP_FIELD).gte(from).and(TIMESTAMP_FIELD).lte(to);
 	}
 
 	@Override

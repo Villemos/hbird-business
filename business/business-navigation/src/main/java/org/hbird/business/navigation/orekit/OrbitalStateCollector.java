@@ -19,7 +19,7 @@ package org.hbird.business.navigation.orekit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.orekit.errors.PropagationException;
@@ -49,11 +49,11 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
     protected List<OrbitalState> states = new ArrayList<OrbitalState>();
 
-    protected IPublish publisher;
+    protected IPublisher publisher;
 
     protected final IdBuilder idBuilder;
 
-    public OrbitalStateCollector(String satelliteId, String derivedFrom, IPublish publisher, IdBuilder idBuilder) {
+    public OrbitalStateCollector(String satelliteId, String derivedFrom, IPublisher publisher, IdBuilder idBuilder) {
         this.satelliteId = satelliteId;
         this.derivedFrom = derivedFrom;
         this.publisher = publisher;
@@ -95,14 +95,14 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
     /**
      * @return the publisher
      */
-    public IPublish getPublisher() {
+    public IPublisher getPublisher() {
         return publisher;
     }
 
     /**
      * @param publisher the publisher to set
      */
-    public void setPublisher(IPublish publisher) {
+    public void setPublisher(IPublisher publisher) {
         this.publisher = publisher;
     }
 

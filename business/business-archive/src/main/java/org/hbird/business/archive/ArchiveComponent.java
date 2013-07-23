@@ -45,7 +45,7 @@ public class ArchiveComponent extends StartableEntity {
 
     /** Default driver name (SOLR) */
     public static final String DEFAULT_DRIVER = ArchiveComponentDriver.class.getName();
-
+    
     /**
      * Default constructor.
      */

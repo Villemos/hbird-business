@@ -2,9 +2,6 @@ package org.hbird.business.api.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import org.hbird.exchange.core.Entity;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.Satellite;

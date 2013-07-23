@@ -1,4 +1,4 @@
-package org.hbird.business.api.dao;
+package org.hbird.business.api;
 
 import java.util.List;
 
@@ -9,10 +9,9 @@ import org.hbird.exchange.core.State;
 import org.hbird.exchange.interfaces.IEntityInstance;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
-import org.hbird.exchange.navigation.PointingData;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
-public interface DataAccess {
+public interface IDataAccess {
 	public <T extends IEntityInstance> T getById(String id, Class<T> clazz) throws Exception; // TODO: Specify exception types
 	
 	// Returns last VERSION of an entity with a given id

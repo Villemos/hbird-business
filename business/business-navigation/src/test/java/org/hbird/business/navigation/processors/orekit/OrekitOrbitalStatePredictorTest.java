@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 import java.util.Date;
 import java.util.List;
 
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration;
 import org.hbird.business.navigation.orekit.IPropagatorProvider;
@@ -64,7 +64,7 @@ public class OrekitOrbitalStatePredictorTest {
     private IPropagatorProvider propagatorProvider;
 
     @Mock
-    private IPublish publisher;
+    private IPublisher publisher;
 
     @Mock
     private OrbitalStatePredictionRequest request;

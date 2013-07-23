@@ -18,7 +18,7 @@ package org.hbird.business.navigation.orekit;
 
 import java.util.Date;
 
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.navigation.NavigationComponent;
@@ -52,13 +52,13 @@ public abstract class NavigationBean {
 
     protected final IDataAccess dao;
 
-    protected final IPublish publisher;
+    protected final IPublisher publisher;
 
     protected final IdBuilder idBuilder;
 
     protected OrbitalStateCollector orbitalStateCollector;
 
-    public NavigationBean(NavigationComponent configuration, IDataAccess dao, IPublish publisher, IdBuilder idBuilder) {
+    public NavigationBean(NavigationComponent configuration, IDataAccess dao, IPublisher publisher, IdBuilder idBuilder) {
         this.conf = configuration;
         this.dao = dao;
         this.publisher = publisher;

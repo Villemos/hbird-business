@@ -17,6 +17,7 @@
 package org.hbird.business.commanding.bean;
 
 import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.commanding.CommandingComponent;
 import org.hbird.business.core.FieldBasedSplitter;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.exchange.configurator.StandardEndpoints;
@@ -27,7 +28,7 @@ import org.hbird.exchange.constants.StandardArguments;
  * 
  * @author Gert Villemos
  */
-public class CommandingComponentDriver extends SoftwareComponentDriver {
+public class CommandingComponentDriver extends SoftwareComponentDriver<CommandingComponent> {
 
     @Override
     public void doConfigure() {

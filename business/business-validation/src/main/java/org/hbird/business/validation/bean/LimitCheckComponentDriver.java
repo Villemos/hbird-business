@@ -31,12 +31,12 @@ import org.hbird.exchange.validation.Limit.eLimitType;
  * @author Gert Villemos
  * 
  */
-public class LimitCheckComponentDriver extends SoftwareComponentDriver {
+public class LimitCheckComponentDriver extends SoftwareComponentDriver<LimitCheckComponent> {
 
     @Override
     public void doConfigure() {
 
-        LimitCheckComponent request = (LimitCheckComponent) entity;
+        LimitCheckComponent request = entity;
         Limit limit = request.getLimit();
 
         String componentID = request.getID();

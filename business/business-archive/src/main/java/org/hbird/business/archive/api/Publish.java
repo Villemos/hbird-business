@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.HbirdApi;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.archive.ArchiveComponent;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Binary;
@@ -43,7 +43,7 @@ import org.hbird.exchange.tasking.Task;
  * @author Gert Villemos
  * 
  */
-public class Publish extends HbirdApi implements IPublish {
+public class Publish extends HbirdApi implements IPublisher {
 
     /**
      * Constructor.
@@ -59,7 +59,7 @@ public class Publish extends HbirdApi implements IPublish {
     }
 
     /**
-     * @see org.hbird.business.api.IPublish#publish(org.hbird.exchange.core.Named)
+     * @see org.hbird.business.api.IPublisher#publish(org.hbird.exchange.core.Named)
      */
     @Override
     public EntityInstance publish(EntityInstance object) {

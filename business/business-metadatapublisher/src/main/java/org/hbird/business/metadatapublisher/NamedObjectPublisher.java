@@ -19,7 +19,7 @@ package org.hbird.business.metadatapublisher;
 import java.util.List;
 
 import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.interfaces.IStartableEntity;
@@ -45,7 +45,7 @@ public class NamedObjectPublisher {
     protected String destination;
 
     protected List<EntityInstance> objects = null;
-
+    
     public NamedObjectPublisher(String name, List<EntityInstance> objects) {
         this(name, DEFAULT_CONFIGURATOR_NAME, objects);
     }
@@ -68,7 +68,7 @@ public class NamedObjectPublisher {
      * @return A list of messages, carrying as the body a command definition.
      */
     public void start() {
-        IPublish api = ApiFactory.getPublishApi(name);
+        IPublisher api = ApiFactory.getPublishApi(name);
 
         for (EntityInstance object : objects) {
         	try {

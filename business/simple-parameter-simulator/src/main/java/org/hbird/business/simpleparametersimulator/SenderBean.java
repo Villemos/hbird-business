@@ -19,7 +19,7 @@ package org.hbird.business.simpleparametersimulator;
 import org.apache.camel.Body;
 import org.apache.camel.Handler;
 import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.exchange.core.EntityInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class SenderBean {
 
     protected static Logger LOG = LoggerFactory.getLogger(SenderBean.class);
 
-    protected IPublish pApi = ApiFactory.getPublishApi("Simulator");
+    protected IPublisher pApi = ApiFactory.getPublishApi("Simulator");
 
     @Handler
     public synchronized void send(@Body EntityInstance entry) {

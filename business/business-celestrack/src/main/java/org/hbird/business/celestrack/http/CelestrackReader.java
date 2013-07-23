@@ -31,9 +31,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
-import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.celestrack.CelestrackComponent;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -54,14 +53,19 @@ public class CelestrackReader {
 
     /** The Part that this bean is the implementation of. Holds the configuration variables. */
     protected CelestrackComponent part = null;
+    
+    private IPublisher publisher;
+    private ICatalogue catalogue;
 
     /**
      * Constructor registering the Part that this bean is implementing.
      * 
      * @param part The part that this bean is the implementation of
      */
-    public CelestrackReader(CelestrackComponent part) {
+    public CelestrackReader(CelestrackComponent part, IPublisher publisher, ICatalogue catalogue) {
         this.part = part;
+        this.publisher = publisher;
+        this.catalogue = catalogue;
     }
 
     /**
@@ -84,10 +88,6 @@ public class CelestrackReader {
             client.setRoutePlanner(routePlanner);
         }
 
-        IPublish api = ApiFactory.getPublishApi(part.getName());
-
-        ICatalogue catalogueApi = ApiFactory.getCatalogueApi(part.getName());
-
         long now = System.currentTimeMillis();
 
         for (String uri : part.getElements().split(":")) {
@@ -100,13 +100,13 @@ public class CelestrackReader {
                 for (int index = 0; index < elements.length; index += 3) {
                     Satellite satellite = null;
                     String name = elements[index].trim();
-                    Object object = catalogueApi.getSatelliteByName(name);
+                    Object object = catalogue.getSatelliteByName(name);
                     if (object == null) {
                         /* Satellite unknown. Create placeholder object. */
                         // TODO - 18.05.2013, kimmell - create proper entity ID here
                         String entityID = name;
                         satellite = new Satellite(entityID, name);
-                        api.publish(satellite);
+                        publisher.publish(satellite);
                     }
                     else {
                         satellite = (Satellite) object;
@@ -116,7 +116,7 @@ public class CelestrackReader {
                     parameters.setSatelliteId(satellite.getID());
                     parameters.setTleLine1(elements[index + 1].trim());
                     parameters.setTleLine2(elements[index + 2].trim());
-                    api.publish(parameters);
+                    publisher.publish(parameters);
                 }
             }
         }

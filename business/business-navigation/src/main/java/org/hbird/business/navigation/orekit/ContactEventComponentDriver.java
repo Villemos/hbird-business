@@ -20,7 +20,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
@@ -32,17 +32,17 @@ import org.hbird.business.navigation.ContactEventComponent;
  * @author Gert Villemos
  * 
  */
-public class ContactEventComponentDriver extends SoftwareComponentDriver {
+public class ContactEventComponentDriver extends SoftwareComponentDriver<ContactEventComponent> {
 
     @Override
     public void doConfigure() {
 
-        ContactEventComponent com = (ContactEventComponent) entity;
+        ContactEventComponent com = entity;
         String id = com.getID();
         CamelContext camelContext = com.getContext();
 
         IDataAccess dao = ApiFactory.getDataAccessApi(id, camelContext);
-        IPublish publish = ApiFactory.getPublishApi(id, camelContext);
+        IPublisher publish = ApiFactory.getPublishApi(id, camelContext);
         IdBuilder idBuilder = ApiFactory.getIdBuilder();
         ICatalogue catalogue = ApiFactory.getCatalogueApi(id, camelContext);
         ContactEventBean bean = new ContactEventBean(com, dao, publish, idBuilder, catalogue);

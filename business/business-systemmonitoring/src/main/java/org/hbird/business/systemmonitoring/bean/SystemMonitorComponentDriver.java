@@ -30,14 +30,14 @@ import org.slf4j.LoggerFactory;
  * @author Gert Villemos
  * 
  */
-public class SystemMonitorComponentDriver extends SoftwareComponentDriver {
+public class SystemMonitorComponentDriver extends SoftwareComponentDriver<SystemMonitorComponent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SystemMonitorComponentDriver.class);
 
     @Override
     public void doConfigure() {
 
-        SystemMonitorComponent component = (SystemMonitorComponent) entity;
+        SystemMonitorComponent component = entity;
         IdBuilder idBuilder = ApiFactory.getIdBuilder();
         String entityId = component.getID();
         String baseName = idBuilder.buildID(entityId, HostInfo.getHostName());

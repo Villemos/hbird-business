@@ -39,6 +39,7 @@ import org.hbird.exchange.core.Event;
 import org.hbird.exchange.interfaces.IStartableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -48,194 +49,195 @@ import org.springframework.context.ApplicationContext;
  * @author Gert Villemos
  * 
  */
-public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
+public class ConfiguratorComponentDriver extends SoftwareComponentDriver<ConfiguratorComponent> {
 
-    protected static final String ENDPOINT_TO_EVENTS = "direct:toEvents";
+	protected static final String ENDPOINT_TO_EVENTS = "direct:toEvents";
 
-    private static final Logger LOG = LoggerFactory.getLogger(ConfiguratorComponentDriver.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ConfiguratorComponentDriver.class);
 
-    /** A list of components and the routes of the component. */
-    protected Map<String, RoutesDefinition> components = new HashMap<String, RoutesDefinition>();
+	/** A list of components and the routes of the component. */
+	protected Map<String, RoutesDefinition> components = new HashMap<String, RoutesDefinition>();
 
-    protected ApplicationContext applicationContext;
+	protected ApplicationContext applicationContext;
 
-    /**
-     * Default constructor.
-     */
-    public ConfiguratorComponentDriver() {
-        this(null);
-        LOG.warn("Started ConfigurationComponentDriver without applcation context. Bean registry will not be available in started components!");
-    }
+	/**
+	 * Default constructor.
+	 */
+	public ConfiguratorComponentDriver() {
+		this(null);
+		LOG.warn("Started ConfigurationComponentDriver without applcation context. Bean registry will not be available in started components!");
+	}
 
-    public ConfiguratorComponentDriver(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
+	public ConfiguratorComponentDriver(ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
+	}
 
-    /**
-     * Method to start the configurator part.
-     * 
-     * @param part The configurator component to be started
-     * @throws Exception
-     */
-    public void start(ConfiguratorComponent part) throws Exception {
-        this.entity = part;
-        CamelContext context = createContext(applicationContext);
-        LOG.info("Starting ConfiguratorComponent '{}'; CamelContext '{}'", part.getName(), context.getName());
-        try {
-            context.addRoutes(this);
-            context.start();
-            LOG.info("ConfiguratorComponent '{}' started", part.getName());
-        }
-        catch (Exception e) {
-            LOG.error("Failed to start ConfiguatorComponentDriver for '{}'", part.getID(), e);
-        }
-    }
+	/**
+	 * Method to start the configurator part.
+	 * 
+	 * @param part The configurator component to be started
+	 * @throws Exception
+	 */
+	public void start(ConfiguratorComponent part) throws Exception {
+		this.entity = part;
+		CamelContext context = createContext(applicationContext);
+		LOG.info("Starting ConfiguratorComponent '{}'; CamelContext '{}'", part.getName(), context.getName());
+		try {
+			context.addRoutes(this);
+			context.start();
+			LOG.info("ConfiguratorComponent '{}' started", part.getName());
+		}
+		catch (Exception e) {
+			LOG.error("Failed to start ConfiguatorComponentDriver for '{}'", part.getID(), e);
+		}
+	}
 
-    CamelContext createContext(ApplicationContext applicationContext) {
-        CamelContext camelContext;
-        if (applicationContext == null) {
-            camelContext = getContext();
-            LOG.warn("No Spring ApplicationContext available; using default CamelContext '{}' without bean registry", camelContext.getName());
-        }
-        else {
-            camelContext = new DefaultCamelContext(new ApplicationContextRegistry(applicationContext));
-            LOG.info("Created new CamelContext '{}' using Spring ApplicationContext; bean registry should be availabel", camelContext.getName());
-        }
-        return camelContext;
-    }
+	CamelContext createContext(ApplicationContext applicationContext) {
+		CamelContext camelContext;
+		if (applicationContext == null) {
+			camelContext = getContext();
+			LOG.warn("No Spring ApplicationContext available; using default CamelContext '{}' without bean registry", camelContext.getName());
+		}
+		else {
+			camelContext = new DefaultCamelContext(new ApplicationContextRegistry(applicationContext));
+			LOG.info("Created new CamelContext '{}' using Spring ApplicationContext; bean registry should be available", camelContext.getName());
+		}
+		return camelContext;
+	}
 
-    /**
-     * Request to start a component.
-     * 
-     * @param command The start component request
-     * @param context The camel context in which the component is running.
-     * @throws Exception
-     */
-    public synchronized void startComponent(@Body StartComponent command, CamelContext context) throws Exception {
-        IStartableEntity entity = command.getEntity();
-        String id = entity.getID();
-        String name = entity.getName();
-        String driverName = entity.getDriverName();
-        entity.setContext(context);
-        LOG.info("Received start request for IStartableEntity ID: '{}', name: '{}'. Will use driver '{}' and CamelContex '{}'.", new Object[] { id, name,
-                driverName,
-                context.getName() });
+	/**
+	 * Request to start a component.
+	 * 
+	 * @param command The start component request
+	 * @param context The camel context in which the component is running.
+	 * @throws Exception
+	 */
+	public synchronized void startComponent(@Body StartComponent command, CamelContext context) throws Exception {
+		IStartableEntity entity = command.getEntity();
+		String id = entity.getID();
+		String name = entity.getName();
+		String driverName = entity.getDriverName();
+		entity.setContext(context);
+		LOG.info("Received start request for IStartableEntity ID: '{}', name: '{}'. Will use driver '{}' and CamelContex '{}'.", new Object[] { id, name,
+				driverName,
+				context.getName() });
 
-        if (components.containsKey(id)) {
-            LOG.error("Received second request for start of the same IStartableEntity - '{}'.", id);
-        }
-        else {
-            /* Find the component builder and get it to setup and start the component. */
-            if (driverName == null) {
-                LOG.error("Cannot start IStartableEntity '{}'. No driver set.", id);
-            }
-            else {
-                try {
-                    SoftwareComponentDriver builder = (SoftwareComponentDriver) Class.forName(driverName).newInstance();
-                    builder.setCommand(command);
-                    builder.setContext((ModelCamelContext) context);
-                    context.addRoutes(builder);
+		if (components.containsKey(id)) {
+			LOG.error("Received second request for start of the same IStartableEntity - '{}'.", id);
+		}
+		else {
+			/* Find the component builder and get it to setup and start the component. */
+			if (driverName == null) {
+				LOG.error("Cannot start IStartableEntity '{}'. No driver set.", id);
+			}
+			else {
+				try {
+					AutowireCapableBeanFactory factory = applicationContext.getAutowireCapableBeanFactory();
+					SoftwareComponentDriver<?> builder = (SoftwareComponentDriver<?>)factory.autowire(Class.forName(driverName), AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, false);
+					builder.setCommand(command);
+					builder.setContext((ModelCamelContext) context);
+					context.addRoutes(builder);
 
-                    /* Register component in list of components maintained by this configurator. */
-                    components.put(id, builder.getRouteCollection());
-                    context.createProducerTemplate().asyncSendBody(ENDPOINT_TO_EVENTS, createStartEvent(this.entity.getID(), id));
-                }
-                catch (Exception e) {
-                    LOG.error("Failed to start IStartableEntity '{}'", id, e);
-                }
-            }
-        }
-    }
+					/* Register component in list of components maintained by this configurator. */
+					components.put(id, builder.getRouteCollection());
+					context.createProducerTemplate().asyncSendBody(ENDPOINT_TO_EVENTS, createStartEvent(this.entity.getID(), id));
+				}
+				catch (Exception e) {
+					LOG.error("Failed to start IStartableEntity '{}'", id, e);
+				}
+			}
+		}
+	}
 
-    /**
-     * A request to stop a component.
-     * 
-     * @param command The request to stop a component
-     * @param context The camel context in which the component is running.
-     * @throws Exception
-     */
-    public synchronized void stopComponent(@Body StopComponent command, CamelContext context) throws Exception {
-        String id = command.getEntityID();
-        if (components.containsKey(id)) {
-            LOG.info("Stopping part '{}'", id);
-            for (RouteDefinition route : components.get(id).getRoutes()) {
-                String routeId = route.getId();
-                LOG.info("Stopping route '{}' of part '{}'.", routeId, id);
-                context.stopRoute(routeId);
-            }
+	/**
+	 * A request to stop a component.
+	 * 
+	 * @param command The request to stop a component
+	 * @param context The camel context in which the component is running.
+	 * @throws Exception
+	 */
+	public synchronized void stopComponent(@Body StopComponent command, CamelContext context) throws Exception {
+		String id = command.getEntityID();
+		if (components.containsKey(id)) {
+			LOG.info("Stopping part '{}'", id);
+			for (RouteDefinition route : components.get(id).getRoutes()) {
+				String routeId = route.getId();
+				LOG.info("Stopping route '{}' of part '{}'.", routeId, id);
+				context.stopRoute(routeId);
+			}
 
-            /* Deregister. */
-            components.remove(id);
-            getContext().createProducerTemplate().asyncSendBody(ENDPOINT_TO_EVENTS, createStopEvent(entity.getID(), id));
-        }
-    }
+			/* Deregister. */
+			components.remove(id);
+			getContext().createProducerTemplate().asyncSendBody(ENDPOINT_TO_EVENTS, createStopEvent(entity.getID(), id));
+		}
+	}
 
-    public synchronized Map<String, String> reportStatus(@Body ReportStatus request) {
-        Map<String, String> values = new HashMap<String, String>();
-        Iterator<Entry<String, RoutesDefinition>> it = components.entrySet().iterator();
-        while (it.hasNext()) {
-            Entry<String, RoutesDefinition> entry = it.next();
-            values.put(entry.getKey(), entry.getValue().toString());
-        }
-        return values;
-    }
+	public synchronized Map<String, String> reportStatus(@Body ReportStatus request) {
+		Map<String, String> values = new HashMap<String, String>();
+		Iterator<Entry<String, RoutesDefinition>> it = components.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<String, RoutesDefinition> entry = it.next();
+			values.put(entry.getKey(), entry.getValue().toString());
+		}
+		return values;
+	}
 
-    /**
-     * @see org.hbird.business.core.SoftwareComponentDriver#configure()
-     */
-    @Override
-    public void configure() throws Exception {
-        String id = entity.getID();
-        LOG.info("Accepting Commands with destination '{}'", id);
+	/**
+	 * @see org.hbird.business.core.SoftwareComponentDriver#configure()
+	 */
+	@Override
+	public void configure() throws Exception {
+		String id = entity.getID();
+		LOG.info("Accepting Commands with destination '{}'", id);
 
-        /* Setup route to receive commands. */
-        from(StandardEndpoints.COMMANDS + "?" + addDestinationSelector(id))
-                .choice()
-                .when(body().isInstanceOf(StartComponent.class))
-                .bean(this, "startComponent")
-                .when(body().isInstanceOf(StopComponent.class))
-                .bean(this, "stopComponent")
-                .when(body().isInstanceOf(ReportStatus.class))
-                .bean(this, "reportStatus")
-                .end();
+		/* Setup route to receive commands. */
+		from(StandardEndpoints.COMMANDS + "?" + addDestinationSelector(id))
+		.choice()
+		.when(body().isInstanceOf(StartComponent.class))
+		.bean(this, "startComponent")
+		.when(body().isInstanceOf(StopComponent.class))
+		.bean(this, "stopComponent")
+		.when(body().isInstanceOf(ReportStatus.class))
+		.bean(this, "reportStatus")
+		.end();
 
-        /* Setup the BusinessCard */
-        long heartbeat = entity.getHeartbeat();
+		/* Setup the BusinessCard */
+		long heartbeat = entity.getHeartbeat();
 
-        ProcessorDefinition<?> route = from(addTimer("businesscard", heartbeat)).bean(entity, "getBusinessCard");
-        addInjectionRoute(route);
+		ProcessorDefinition<?> route = from(addTimer("businesscard", heartbeat)).bean(entity, "getBusinessCard");
+		addInjectionRoute(route);
 
-        ProcessorDefinition<?> toEvents = from(ENDPOINT_TO_EVENTS);
-        addInjectionRoute(toEvents);
-    }
+		ProcessorDefinition<?> toEvents = from(ENDPOINT_TO_EVENTS);
+		addInjectionRoute(toEvents);
+	}
 
-    /**
-     * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
-     */
-    @Override
-    protected void doConfigure() {
-        /** Do null */
-    }
+	/**
+	 * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
+	 */
+	@Override
+	protected void doConfigure() {
+		/** Do null */
+	}
 
-    /**
-     * @param qualifiedName
-     * @return
-     */
-    protected Event createStartEvent(String issuedBy, String applicableTo) {
-        Event event = StandardMissionEvents.COMPONENT_START.cloneEntity();
-        event.setIssuedBy(issuedBy);
-        event.setApplicableTo(applicableTo);
-        return event;
-    }
+	/**
+	 * @param qualifiedName
+	 * @return
+	 */
+	protected Event createStartEvent(String issuedBy, String applicableTo) {
+		Event event = StandardMissionEvents.COMPONENT_START.cloneEntity();
+		event.setIssuedBy(issuedBy);
+		event.setApplicableTo(applicableTo);
+		return event;
+	}
 
-    /**
-     * @param qualifiedName
-     * @return
-     */
-    protected Event createStopEvent(String issuedBy, String applicableTo) {
-        Event event = StandardMissionEvents.COMPONENT_STOP.cloneEntity();
-        event.setIssuedBy(issuedBy);
-        event.setApplicableTo(applicableTo);
-        return event;
-    }
+	/**
+	 * @param qualifiedName
+	 * @return
+	 */
+	protected Event createStopEvent(String issuedBy, String applicableTo) {
+		Event event = StandardMissionEvents.COMPONENT_STOP.cloneEntity();
+		event.setIssuedBy(issuedBy);
+		event.setApplicableTo(applicableTo);
+		return event;
+	}
 }

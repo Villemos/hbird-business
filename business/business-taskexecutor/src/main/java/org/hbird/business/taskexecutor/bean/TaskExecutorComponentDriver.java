@@ -18,6 +18,7 @@ package org.hbird.business.taskexecutor.bean;
 
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.core.SoftwareComponentDriver;
+import org.hbird.business.taskexecutor.TaskExecutionComponent;
 import org.hbird.exchange.configurator.StandardEndpoints;
 
 /**
@@ -26,7 +27,7 @@ import org.hbird.exchange.configurator.StandardEndpoints;
  * @author Gert Villemos
  * 
  */
-public class TaskExecutorComponentDriver extends SoftwareComponentDriver {
+public class TaskExecutorComponentDriver extends SoftwareComponentDriver<TaskExecutionComponent> {
 
     @Override
     public void doConfigure() {

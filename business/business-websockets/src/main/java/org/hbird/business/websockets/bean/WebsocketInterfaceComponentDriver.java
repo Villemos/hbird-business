@@ -36,13 +36,14 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.component.websocket.WebsocketComponent;
 import org.apache.camel.component.websocket.WebsocketConstants;
 import org.hbird.business.core.SoftwareComponentDriver;
+import org.hbird.business.websockets.WebsocketInterfaceComponent;
 
 /**
  * @author Lauri Kimmel
  * @author Gert Villemos (adaptation)
  *
  */
-public class WebsocketInterfaceComponentDriver extends SoftwareComponentDriver {
+public class WebsocketInterfaceComponentDriver extends SoftwareComponentDriver<WebsocketInterfaceComponent> {
 
 	protected int webSocketPort = 9292;
 

@@ -41,7 +41,7 @@ import org.hbird.exchange.tasking.Task;
  * @author Gert Villemos
  * 
  */
-public interface IPublish extends IHbirdApi {
+public interface IPublisher extends IHbirdApi {
 
     /**
      * Method to force a commit of all data. Any process should flush buffers and cashes.

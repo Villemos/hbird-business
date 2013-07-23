@@ -3,7 +3,7 @@ package org.hbird.business.api.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.Label;
@@ -11,15 +11,15 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class PublishTest {
+public class PublisherTest {
 	private final static String COMPONENT_NAME = "Publish";
 	
 	private InMemoryStore dao;
-	private IPublish publish;
+	private IPublisher publish;
 	
-	public PublishTest() {
+	public PublisherTest() {
 		dao = new InMemoryStore();
-		publish = new Publish(COMPONENT_NAME, COMPONENT_NAME, dao);
+		publish = new Publisher(COMPONENT_NAME, COMPONENT_NAME, dao);
 	}
 
 	@Test

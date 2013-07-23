@@ -16,7 +16,7 @@
  */
 package org.hbird.business.navigation.orekit;
 
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.navigation.NavigationComponent;
@@ -36,7 +36,7 @@ public class OrbitPropagationBean extends NavigationBean {
      * @param publisher
      * @param naming
      */
-    public OrbitPropagationBean(NavigationComponent configuration, IDataAccess dao, IPublish publisher, IdBuilder naming) {
+    public OrbitPropagationBean(NavigationComponent configuration, IDataAccess dao, IPublisher publisher, IdBuilder naming) {
         super(configuration, dao, publisher, naming);
     }
 

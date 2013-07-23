@@ -3,8 +3,8 @@ package org.hbird.business.api.impl;
 import java.util.Collections;
 import java.util.List;
 
-import org.hbird.business.api.IPublish;
-import org.hbird.business.api.dao.DataAccess;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPublisher;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.Binary;
 import org.hbird.exchange.core.Command;
@@ -17,10 +17,10 @@ import org.hbird.exchange.core.State;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.hbird.exchange.tasking.Task;
 
-public class Publish extends AbstractHbirdApi implements IPublish{
-	private DataAccess dao;
+public class Publisher extends AbstractHbirdApi implements IPublisher{
+	private IDataAccess dao;
 	
-	public Publish(String issuedBy, String destination, DataAccess dao) {
+	public Publisher(String issuedBy, String destination, IDataAccess dao) {
 		super(issuedBy, destination);
 		
 		this.dao = dao;

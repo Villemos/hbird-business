@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Gert Villemos
  * 
  */
-public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
+public abstract class SoftwareComponentDriver<T extends IStartableEntity> extends HbirdRouteBuilder {
 
     private static Logger LOG = LoggerFactory.getLogger(SoftwareComponentDriver.class);
 
@@ -42,7 +42,7 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
     protected StartComponent command;
 
     /** The part that this driver starts. */
-    protected IStartableEntity entity;
+    protected T entity;
 
     /**
      * Sets the command which this builder use to create the component.
@@ -60,7 +60,8 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
 
         /** Get the part specification from the start request. */
         if (command != null) {
-            entity = command.getEntity();
+            //entity = (T)command.getEntity(); 
+            setPart((T) command.getEntity()); // XXX: Add type check
         }
 
         if (entity != null) {
@@ -145,11 +146,11 @@ public abstract class SoftwareComponentDriver extends HbirdRouteBuilder {
         return "selector=" + StandardArguments.ENTITY_ID + "='" + id + "'";
     }
 
-    public IStartableEntity getPart() {
+    public T getPart() {
         return entity;
     }
 
-    public void setPart(IStartableEntity part) {
+    public void setPart(T part) {
         this.entity = part;
     }
 }

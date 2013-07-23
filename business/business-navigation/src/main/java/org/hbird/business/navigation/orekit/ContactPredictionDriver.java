@@ -20,7 +20,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.PredictionComponent;
@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class ContactPredictionDriver extends SoftwareComponentDriver {
+public class ContactPredictionDriver extends SoftwareComponentDriver<PredictionComponent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ContactPredictionDriver.class);
 
@@ -56,7 +56,7 @@ public class ContactPredictionDriver extends SoftwareComponentDriver {
     protected void doConfigure() {
 
         // setup from component
-        PredictionComponent component = (PredictionComponent) entity;
+        PredictionComponent component = entity;
         ContactPredictionConfiguration config = (ContactPredictionConfiguration) component.getConfiguration();
 
         // dependencies
@@ -64,7 +64,7 @@ public class ContactPredictionDriver extends SoftwareComponentDriver {
         CamelContext ctx = component.getContext();
         IDataAccess dao = ApiFactory.getDataAccessApi(componentId, ctx);
         ICatalogue catalogue = ApiFactory.getCatalogueApi(componentId, ctx);
-        IPublish publisher = ApiFactory.getPublishApi(componentId, ctx);
+        IPublisher publisher = ApiFactory.getPublishApi(componentId, ctx);
         IPropagatorProvider propagatorProvider = new TlePropagatorProvider();
         IFrameProvider frameProvider = new Cirf2000FrameProvider();
         long predictionInterval = config.getPredictionInterval();

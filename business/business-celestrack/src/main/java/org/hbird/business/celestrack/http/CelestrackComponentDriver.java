@@ -32,8 +32,11 @@
  */
 package org.hbird.business.celestrack.http;
 
+import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.celestrack.CelestrackComponent;
 import org.hbird.business.core.SoftwareComponentDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The driver of the celestract component. Will create the beans and routes required to
@@ -42,13 +45,21 @@ import org.hbird.business.core.SoftwareComponentDriver;
  * @author Gert Villemos
  *
  */
-public class CelestrackComponentDriver extends SoftwareComponentDriver {
+public class CelestrackComponentDriver extends SoftwareComponentDriver<CelestrackComponent> {
+	private IPublisher publisher;
+	private ICatalogue catalogue;
+	
+	@Autowired
+	public CelestrackComponentDriver(IPublisher publisher, ICatalogue catalogue) {
+		this.publisher = publisher;
+		this.catalogue = catalogue;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
 	 */
 	@Override
 	protected void doConfigure() {
-        from(addTimer("celestrack", ((CelestrackComponent)entity).getPeriod())).bean(new CelestrackReader((CelestrackComponent) entity), "read");
+        from(addTimer("celestrack", entity.getPeriod())).bean(new CelestrackReader(entity, publisher, catalogue), "read");
 	}
 }

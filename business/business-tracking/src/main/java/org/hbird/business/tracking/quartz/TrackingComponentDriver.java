@@ -16,7 +16,7 @@ import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.spi.JobFactory;
 
-public class TrackingComponentDriver extends SoftwareComponentDriver {
+public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingComponent> {
 
     public static final String TRACK_COMMAND_INJECTOR = "seda:track-commands";
 
@@ -24,7 +24,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver {
     protected void doConfigure() {
 
         String name = entity.getName();
-        TrackingDriverConfiguration config = ((TrackingComponent) entity).getConfiguration();
+        TrackingDriverConfiguration config = entity.getConfiguration();
         CamelContext context = entity.getContext();
         IDataAccess dao = ApiFactory.getDataAccessApi(name, context);
         EntityCache<Satellite> satelliteCache = new EntityCache<Satellite>(new SatelliteResolver(dao));
