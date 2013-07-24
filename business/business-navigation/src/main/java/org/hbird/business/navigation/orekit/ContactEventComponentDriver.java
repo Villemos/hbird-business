@@ -18,13 +18,13 @@ package org.hbird.business.navigation.orekit;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
-import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
-import org.hbird.business.api.deprecated.IDataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.ContactEventComponent;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Component builder to create a Navigation Component
@@ -33,6 +33,18 @@ import org.hbird.business.navigation.ContactEventComponent;
  * 
  */
 public class ContactEventComponentDriver extends SoftwareComponentDriver<ContactEventComponent> {
+	protected IDataAccess dao;
+	protected IdBuilder idBuilder;
+	protected ICatalogue catalogue;
+	protected IPublisher publisher;
+	
+	@Autowired
+	public ContactEventComponentDriver(IDataAccess dao, IPublisher publisher, IdBuilder idBuilder, ICatalogue catalogue) {
+		this.dao = dao;
+		this.idBuilder = idBuilder;
+		this.catalogue = catalogue;
+		this.publisher = publisher;
+	}
 
     @Override
     public void doConfigure() {
@@ -41,11 +53,7 @@ public class ContactEventComponentDriver extends SoftwareComponentDriver<Contact
         String id = com.getID();
         CamelContext camelContext = com.getContext();
 
-        IDataAccess dao = ApiFactory.getDataAccessApi(id, camelContext);
-        IPublisher publish = ApiFactory.getPublishApi(id, camelContext);
-        IdBuilder idBuilder = ApiFactory.getIdBuilder();
-        ICatalogue catalogue = ApiFactory.getCatalogueApi(id, camelContext);
-        ContactEventBean bean = new ContactEventBean(com, dao, publish, idBuilder, catalogue);
+        ContactEventBean bean = new ContactEventBean(com, dao, publisher, idBuilder, catalogue);
 
         ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute");
         addInjectionRoute(route);

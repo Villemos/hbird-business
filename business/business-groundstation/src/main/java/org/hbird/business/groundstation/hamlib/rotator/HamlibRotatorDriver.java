@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
-import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
@@ -54,6 +54,7 @@ import org.hbird.exchange.groundstation.IPointingDataOptimizer;
 import org.hbird.exchange.interfaces.IStartableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Admin
@@ -61,7 +62,13 @@ import org.slf4j.LoggerFactory;
  */
 public class HamlibRotatorDriver extends HamlibDriver<RotatorDriverConfiguration> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HamlibRotatorDriver.class);
+	private static final Logger LOG = LoggerFactory.getLogger(HamlibRotatorDriver.class);
+
+	@Autowired
+    public HamlibRotatorDriver(IDataAccess dao, IPointingData calculator) {
+		super(dao, calculator);
+	}
+
 
     @Override
     public void doConfigure() {

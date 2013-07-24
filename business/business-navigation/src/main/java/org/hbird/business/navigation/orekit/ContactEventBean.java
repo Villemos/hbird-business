@@ -21,7 +21,7 @@ import java.util.List;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
-import org.hbird.business.api.deprecated.IDataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.navigation.ContactEventComponent;
 import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.groundstation.GroundStation;

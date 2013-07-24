@@ -30,8 +30,8 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.netty.NettyConfiguration;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
-import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.groundstation.base.DefaultPointingDataOptimizer;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
@@ -63,6 +63,12 @@ public class HamlibDriverTest {
     private static final int PORT = 4532;
     private static final String KEY1 = "set_freq";
     private static final String KEY2 = "set_pos";
+    
+    @Mock
+    private IDataAccess dao;
+    
+    @Mock
+    private IPointingData calculator;
 
     @Mock
     private DriverContext<GroundStationDriverConfiguration, String, String> driverContext;
@@ -75,7 +81,7 @@ public class HamlibDriverTest {
 
     @Mock
     private ResponseHandler<GroundStationDriverConfiguration, String, String> handler2;
-
+    
     private List<ResponseHandler<GroundStationDriverConfiguration, String, String>> handlers;
 
     private HamlibDriver<GroundStationDriverConfiguration> driver;
@@ -89,7 +95,7 @@ public class HamlibDriverTest {
     @Before
     public void setUp() throws Exception {
         handlers = Arrays.asList(handler1, handler2);
-        driver = new HamlibDriver<GroundStationDriverConfiguration>() {
+        driver = new HamlibDriver<GroundStationDriverConfiguration>(dao, calculator) {
 
             @Override
             protected List<ResponseHandler<GroundStationDriverConfiguration, String, String>> createResponseHandlers() {

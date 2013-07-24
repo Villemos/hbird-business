@@ -26,7 +26,8 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.hbird.business.api.deprecated.IDataAccess;
+
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.dataaccess.LocationContactEventRequest;
 import org.hbird.exchange.navigation.LocationContactEvent;
@@ -88,7 +89,7 @@ public class ArchivePollerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testPoll() {
+    public void testPoll() throws Exception {
         when(config.getGroundstationId()).thenReturn(GS_ID);
         when(config.getSatelliteIds()).thenReturn(satelliteIds);
         //when(dao.getData(any(LocationContactEventRequest.class))).thenReturn(events, events, Collections.<EntityInstance> emptyList());

@@ -17,7 +17,7 @@
 package org.hbird.business.navigation.processors;
 
 import org.apache.camel.Handler;
-import org.hbird.business.api.deprecated.IDataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
 import org.hbird.business.navigation.request.PredictionRequest;
 import org.hbird.exchange.navigation.TleOrbitalParameters;

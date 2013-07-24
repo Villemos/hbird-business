@@ -28,8 +28,8 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
-import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
@@ -82,7 +82,7 @@ public class HamlibRadioDriverTest {
      */
     @Before
     public void setUp() throws Exception {
-        driver = new HamlibRadioDriver();
+        driver = new HamlibRadioDriver(dao, calculator);
         inOrder = inOrder(camelContext, part, driverConfig, dao, optimizer, converter, calculator);
         when(camelContext.getTypeConverter()).thenReturn(converter);
         when(part.getConfiguration()).thenReturn(driverConfig);

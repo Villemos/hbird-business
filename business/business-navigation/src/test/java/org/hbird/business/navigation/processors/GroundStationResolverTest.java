@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.deprecated.IDataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.navigation.configuration.ContactPredictionConfiguration;
 import org.hbird.business.navigation.request.ContactPredictionRequest;
 import org.hbird.exchange.groundstation.GroundStation;
@@ -98,13 +98,13 @@ public class GroundStationResolverTest {
     @Test
     public void testResolveWithIds() throws Exception {
         when(config.getGroundStationsIds()).thenReturn(groundStationIds);
-        when(dao.resolve(ID_1, GroundStation.class)).thenReturn(gs1);
-        when(dao.resolve(ID_2, GroundStation.class)).thenReturn(gs2);
+        when(dao.getById(ID_1, GroundStation.class)).thenReturn(gs1);
+        when(dao.getById(ID_2, GroundStation.class)).thenReturn(gs2);
         assertEquals(request, resolver.resolve(request));
         inOrder.verify(request, times(1)).getConfiguration();
         inOrder.verify(config, times(1)).getGroundStationsIds();
-        inOrder.verify(dao, times(1)).resolve(ID_1, GroundStation.class);
-        inOrder.verify(dao, times(1)).resolve(ID_2, GroundStation.class);
+        inOrder.verify(dao, times(1)).getById(ID_1, GroundStation.class);
+        inOrder.verify(dao, times(1)).getById(ID_2, GroundStation.class);
         ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
         inOrder.verify(request, times(1)).setGroundStations(captor.capture());
         assertEquals(2, captor.getValue().size());
@@ -155,41 +155,41 @@ public class GroundStationResolverTest {
 
     @Test
     public void testResolveGroundStations() throws Exception {
-        when(dao.resolve(ID_1, GroundStation.class)).thenReturn(gs1);
-        when(dao.resolve(ID_2, GroundStation.class)).thenReturn(gs2);
+        when(dao.getById(ID_1, GroundStation.class)).thenReturn(gs1);
+        when(dao.getById(ID_2, GroundStation.class)).thenReturn(gs2);
         List<GroundStation> result = resolver.resolveGroundStations(dao, groundStationIds);
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals(gs1, result.get(0));
         assertEquals(gs2, result.get(1));
-        inOrder.verify(dao, times(1)).resolve(ID_1, GroundStation.class);
-        inOrder.verify(dao, times(1)).resolve(ID_2, GroundStation.class);
+        inOrder.verify(dao, times(1)).getById(ID_1, GroundStation.class);
+        inOrder.verify(dao, times(1)).getById(ID_2, GroundStation.class);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testResolveGroundStationsNotFound() throws Exception {
-        when(dao.resolve(ID_1, GroundStation.class)).thenReturn(gs1);
-        when(dao.resolve(ID_2, GroundStation.class)).thenReturn(null);
+        when(dao.getById(ID_1, GroundStation.class)).thenReturn(gs1);
+        when(dao.getById(ID_2, GroundStation.class)).thenReturn(null);
         List<GroundStation> result = resolver.resolveGroundStations(dao, groundStationIds);
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(gs1, result.get(0));
-        inOrder.verify(dao, times(1)).resolve(ID_1, GroundStation.class);
-        inOrder.verify(dao, times(1)).resolve(ID_2, GroundStation.class);
+        inOrder.verify(dao, times(1)).getById(ID_1, GroundStation.class);
+        inOrder.verify(dao, times(1)).getById(ID_2, GroundStation.class);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testResolveGroundStationsWithException() throws Exception {
-        doThrow(exception).when(dao).resolve(ID_1, GroundStation.class);
-        when(dao.resolve(ID_2, GroundStation.class)).thenReturn(gs2);
+        doThrow(exception).when(dao).getById(ID_1, GroundStation.class);
+        when(dao.getById(ID_2, GroundStation.class)).thenReturn(gs2);
         List<GroundStation> result = resolver.resolveGroundStations(dao, groundStationIds);
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(gs2, result.get(0));
-        inOrder.verify(dao, times(1)).resolve(ID_1, GroundStation.class);
-        inOrder.verify(dao, times(1)).resolve(ID_2, GroundStation.class);
+        inOrder.verify(dao, times(1)).getById(ID_1, GroundStation.class);
+        inOrder.verify(dao, times(1)).getById(ID_2, GroundStation.class);
         inOrder.verifyNoMoreInteractions();
     }
 }

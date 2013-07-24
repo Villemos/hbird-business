@@ -16,7 +16,7 @@
  */
 package org.hbird.business.core.cache;
 
-import org.hbird.business.api.deprecated.IDataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +40,7 @@ public class TleResolver implements CacheResolver<TleOrbitalParameters> {
     @Override
     public TleOrbitalParameters resolveById(String id) {
         try {
-            //return (TleOrbitalParameters) dao.resolve(id);
-        	return dao.resolve(id, TleOrbitalParameters.class);
+        	return dao.getById(id, TleOrbitalParameters.class);
         }
         catch (Exception e) {
             LOG.error("Failed to resolve TLE for ID {}", id, e);

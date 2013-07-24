@@ -2,9 +2,8 @@ package org.hbird.business.tracking.quartz;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
-import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IdBuilder;
-import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.business.core.cache.SatelliteResolver;
@@ -15,21 +14,31 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.spi.JobFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingComponent> {
 
     public static final String TRACK_COMMAND_INJECTOR = "seda:track-commands";
 
+    private IDataAccess dao;
+    private IdBuilder idBuilder;
+    
+    @Autowired
+    public TrackingComponentDriver(IDataAccess dao, IdBuilder idBuilder) {
+    	this.dao = dao;
+    	this.idBuilder = idBuilder;
+    }
+    
     @Override
     protected void doConfigure() {
 
         String name = entity.getName();
         TrackingDriverConfiguration config = entity.getConfiguration();
         CamelContext context = entity.getContext();
-        IDataAccess dao = ApiFactory.getDataAccessApi(name, context);
+        //IDataAccess dao = ApiFactory.getDataAccessApi(name, context);
         EntityCache<Satellite> satelliteCache = new EntityCache<Satellite>(new SatelliteResolver(dao));
         EntityCache<TleOrbitalParameters> tleCache = new EntityCache<TleOrbitalParameters>(new TleResolver(dao));
-        IdBuilder idBuilder = ApiFactory.getIdBuilder();
+        //IdBuilder idBuilder = ApiFactory.getIdBuilder();
 
         ProducerTemplate producer = context.createProducerTemplate();
 

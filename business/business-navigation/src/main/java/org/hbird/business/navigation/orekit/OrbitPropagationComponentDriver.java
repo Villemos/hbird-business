@@ -32,20 +32,29 @@
  */
 package org.hbird.business.navigation.orekit;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
-import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
-import org.hbird.business.api.deprecated.IDataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.OrbitPropagationComponent;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Gert Villemos
  * 
  */
 public class OrbitPropagationComponentDriver extends SoftwareComponentDriver<OrbitPropagationComponent> {
+	protected IDataAccess dao;
+	protected IPublisher publisher;
+	protected IdBuilder naming;
+	
+	@Autowired
+	public OrbitPropagationComponentDriver(IDataAccess dao, IPublisher publisher, IdBuilder naming) {
+		this.dao = dao;
+		this.publisher = publisher;
+		this.naming = naming;
+	}
 
     /**
      * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
@@ -54,13 +63,8 @@ public class OrbitPropagationComponentDriver extends SoftwareComponentDriver<Orb
     protected void doConfigure() {
         OrbitPropagationComponent com = entity;
         String id = com.getID();
-        CamelContext camelContext = com.getContext();
 
-        IDataAccess dao = ApiFactory.getDataAccessApi(id, camelContext);
-        IPublisher publish = ApiFactory.getPublishApi(id, camelContext);
-        IdBuilder naming = ApiFactory.getIdBuilder();
-
-        OrbitPropagationBean bean = new OrbitPropagationBean(com, dao, publish, naming);
+        OrbitPropagationBean bean = new OrbitPropagationBean(com, dao, publisher, naming);
 
         ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute");
         addInjectionRoute(route);

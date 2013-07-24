@@ -13,8 +13,6 @@ import org.hbird.exchange.interfaces.IEntityInstance;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -212,7 +210,5 @@ public class MongoDataAccess implements IDataAccess {
 		
 		return template.find(query, Metadata.class);
 	}
-
-	
 
 }

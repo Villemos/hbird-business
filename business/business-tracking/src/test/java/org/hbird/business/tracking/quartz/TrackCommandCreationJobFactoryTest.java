@@ -24,8 +24,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 import org.apache.camel.ProducerTemplate;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IdBuilder;
-import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.interfaces.IStartableEntity;
 import org.hbird.exchange.navigation.Satellite;

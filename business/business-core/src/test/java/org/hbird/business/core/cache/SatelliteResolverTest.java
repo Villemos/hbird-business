@@ -22,7 +22,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-import org.hbird.business.api.deprecated.IDataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.navigation.Satellite;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,25 +63,25 @@ public class SatelliteResolverTest {
 
     @Test
     public void testResolveById() throws Exception {
-        when(dao.resolve(ID, Satellite.class)).thenReturn(sat);
+        when(dao.getById(ID, Satellite.class)).thenReturn(sat);
         assertEquals(sat, satelliteResolver.resolveById(ID));
-        inOrder.verify(dao, times(1)).resolve(ID, Satellite.class);
+        inOrder.verify(dao, times(1)).getById(ID, Satellite.class);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testResolveByIdNotFound() throws Exception {
-        when(dao.resolve(ID, Satellite.class)).thenReturn(null);
+        when(dao.getById(ID, Satellite.class)).thenReturn(null);
         assertNull(satelliteResolver.resolveById(ID));
-        inOrder.verify(dao, times(1)).resolve(ID, Satellite.class);
+        inOrder.verify(dao, times(1)).getById(ID, Satellite.class);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testResolveByIdWithException() throws Exception {
-        when(dao.resolve(ID, Satellite.class)).thenThrow(exception);
+        when(dao.getById(ID, Satellite.class)).thenThrow(exception);
         assertNull(satelliteResolver.resolveById(ID));
-        inOrder.verify(dao, times(1)).resolve(ID, Satellite.class);
+        inOrder.verify(dao, times(1)).getById(ID, Satellite.class);
         inOrder.verifyNoMoreInteractions();
     }
 }

@@ -41,9 +41,8 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.component.netty.NettyComponent;
 import org.apache.camel.component.netty.NettyConfiguration;
 import org.apache.camel.model.ProcessorDefinition;
-import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
-import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.core.InMemoryScheduler;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.groundstation.base.DriverContext;
@@ -67,6 +66,7 @@ import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract base class for device drivers.
@@ -84,6 +84,16 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
     protected InMemoryScheduler inMemoryScheduler;
 
     protected DriverContext<C, String, String> driverContext;
+    
+    protected IDataAccess dao;
+    
+    protected IPointingData calculator;
+    
+    @Autowired
+    public HamlibDriver(IDataAccess dao, IPointingData calculator) {
+    	this.dao = dao;
+    	this.calculator = calculator;
+    }
 
     @Override
     public void doConfigure() {
@@ -137,10 +147,8 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
          * The NativeCommands are at their execution time read through the EXECUTION below.
          */
 
-        IDataAccess dao = ApiFactory.getDataAccessApi(entityId, camelContext);
-        IPointingData calulator = ApiFactory.getOrbitDataApi(entityId, camelContext);
         IPointingDataOptimizer<C> optimizer = createOptimizer(config.getPointingDataOptimzerClassName()); // can be null
-        TrackingSupport<C> tracker = createTrackingSupport(config, dao, calulator, optimizer);    
+        TrackingSupport<C> tracker = createTrackingSupport(config, dao, calculator, optimizer);    
         GroundStationCommandFilter commandFilter = new GroundStationCommandFilter(config);
         SetHamlibNativeCommandHeaders setHeaders = new SetHamlibNativeCommandHeaders();
         

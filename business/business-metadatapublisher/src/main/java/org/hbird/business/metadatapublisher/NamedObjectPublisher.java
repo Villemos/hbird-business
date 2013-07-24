@@ -18,8 +18,8 @@ package org.hbird.business.metadatapublisher;
 
 import java.util.List;
 
-import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IPublisher;
+import org.hbird.business.api.Injector;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.interfaces.IStartableEntity;
@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class NamedObjectPublisher {
-
     public static final String DEFAULT_CONFIGURATOR_NAME = "Configurator"; // has to be same as
                                                                            // ConfiguratorComponent.CONFIGURATOR_NAME
 
@@ -46,8 +45,10 @@ public class NamedObjectPublisher {
 
     protected List<EntityInstance> objects = null;
     
-    public NamedObjectPublisher(String name, List<EntityInstance> objects) {
-        this(name, DEFAULT_CONFIGURATOR_NAME, objects);
+    protected IPublisher publisher;
+    
+    public NamedObjectPublisher(String name, List<EntityInstance> objects, IPublisher publisher) {
+        this(name, DEFAULT_CONFIGURATOR_NAME, objects, publisher);
     }
 
     /**
@@ -55,10 +56,11 @@ public class NamedObjectPublisher {
      * 
      * @param filename Name of the file to be read at intervals.
      */
-    public NamedObjectPublisher(String name, String destination, List<EntityInstance> objects) {
+    public NamedObjectPublisher(String name, String destination, List<EntityInstance> objects, IPublisher publisher) {
         this.name = name;
         this.destination = destination;
         this.objects = objects;
+        this.publisher = publisher;
     }
 
     /**
@@ -68,7 +70,7 @@ public class NamedObjectPublisher {
      * @return A list of messages, carrying as the body a command definition.
      */
     public void start() {
-        IPublisher api = ApiFactory.getPublishApi(name);
+        Injector injector = new Injector(name, destination);
 
         for (EntityInstance object : objects) {
         	try {
@@ -82,21 +84,23 @@ public class NamedObjectPublisher {
 	                startCommand.setEntity((IStartableEntity) object);
 	
 	                startCommand.setDestination(destination);
-	                api.publish(startCommand);
+	                injector.inject(startCommand);
 	            }
 	            else {
 	                LOG.info("Publishing Named object '" + object.getID() + "'.");
-	                api.publish(object);
+	                publisher.publish(object);
 	            }
 	        } catch(Exception e) {
 	        	LOG.error("Failed to publish " + object, e);
 	        }
         }
 
-        LOG.debug("Publisher finished; disposing IPublish object in '{}'...", name);
+        LOG.debug("Publisher finished; disposing API objects in '{}'...", name);
         try {
-            api.dispose();
-            LOG.info("IPublisher disposed in '{}'. NamedObjectPublisher should stop now", name);
+            publisher.dispose();
+            injector.dispose();
+
+            LOG.info("APIs disposed in '{}'. NamedObjectPublisher should stop now", name);
         }
         catch (Exception e) {
             LOG.error("Failed to dispose IPublisher in '{}'", name, e);

@@ -456,5 +456,18 @@ public class MongoDataAccessTest {
 		data = dao.getMetadata(sat);
 		assertEquals(0, data.size());
 	}
+	
+	/* @Test
+	public void testGetBySuperclass() throws Exception {
+	    GroundStation gs = new GroundStation("GS1", "GS1");
+	    Satellite sat = new Satellite("SAT1", "SAT1");
+	    
+	    dao.save(gs);
+	    dao.save(sat);
+	    
+	    List<Part> parts = dao.getAll(Part.class);
+	    
+	    assertEquals(2, parts.size());
+	} */
 
 }

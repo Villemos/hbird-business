@@ -17,8 +17,7 @@
 package org.hbird.business.tracking.timer;
 
 import org.apache.camel.CamelContext;
-import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.deprecated.IDataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.Track;
@@ -75,10 +74,11 @@ public class TrackingControlBean {
 	 * @param satelliteName The satellite that the controller manages the schedule for.
 	 * @param queueName The name of the queue into which the antenna control commands shall be injected.
 	 */
-	public TrackingControlBean(String name, String groundStationName, String satelliteName) {
+	public TrackingControlBean(String name, String groundStationName, String satelliteName, IDataAccess api) {
 		this.name = name;
 		this.groundStationId = groundStationName;
 		this.satelliteId = satelliteName;
+		this.api = api;
 	}
 
 	/**
@@ -94,15 +94,10 @@ public class TrackingControlBean {
 	 */
 	public Command process(CamelContext context) throws OrekitException {
 		Track command = null;
-		if (api == null) {
-			api = ApiFactory.getDataAccessApi(this.name, context);
-		}
 
-		/** Retrieve the next set of contact events (start-end) for this station. */
-		LocationContactEvent contactEvents = api.getNextLocationContactEventFor(groundStationId, satelliteId);
-
-		/** If there are contact events. */
-		if (contactEvents != null) {
+		try {
+			/** Retrieve the next set of contact events (start-end) for this station. */
+			LocationContactEvent contactEvents = api.getNextLocationContactEventFor(groundStationId, satelliteId);
 
 			/** Check if we already have events. If yes; see if they are different. */
 			if (nextContactEvents == null || nextContactEvents.getTimestamp() != contactEvents.getTimestamp()) {
@@ -114,14 +109,11 @@ public class TrackingControlBean {
 
 				/** Get the definition of the satellite. */
 				if (satellite == null) {
-					//Object named = ApiFactory.getDataAccessApi(this.name, context).resolve(satelliteId);
-					Satellite named = ApiFactory.getDataAccessApi(this.name, context).resolve(satelliteId, Satellite.class);
-					if (named == null) {
-						LOG.error("No Satellite available for the name {}", satelliteId);
+					try {
+						satellite = api.getById(satelliteId, Satellite.class);
+					} catch(Exception e ) {
+						LOG.error("Error retrieving satellite " + satelliteId, e);
 						return command;
-					}
-					else {
-						satellite = named;
 					}
 				}
 
@@ -134,10 +126,10 @@ public class TrackingControlBean {
 				
 				LOG.info("Creating Track command for ground station '" + groundStationId + "' to track satellite '" + satelliteId + "'");
 			}
-		}
-		else {
+		} catch(Exception e) {
 			LOG.info("Did not find start/stop location contact events for groundstation '" + groundStationId +
 					"' and satellite '" + satelliteId + "'.");
+			LOG.info("Reason: ", e);
 		}
 
 		/** Return command for scheduling. */

@@ -17,13 +17,14 @@
 package org.hbird.business.validation.bean;
 
 import org.apache.camel.model.ProcessorDefinition;
-import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.validation.LimitCheckComponent;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.validation.Limit;
 import org.hbird.exchange.validation.Limit.eLimitType;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Component builder to create a Limit component
@@ -32,6 +33,13 @@ import org.hbird.exchange.validation.Limit.eLimitType;
  * 
  */
 public class LimitCheckComponentDriver extends SoftwareComponentDriver<LimitCheckComponent> {
+	
+	private IDataAccess dao;
+	
+	@Autowired
+	public LimitCheckComponentDriver(IDataAccess dao) {
+		this.dao = dao;
+	}
 
     @Override
     public void doConfigure() {
@@ -52,8 +60,8 @@ public class LimitCheckComponentDriver extends SoftwareComponentDriver<LimitChec
             createRoute(limit.getLimitOfParameter(), new StaticLimitChecker(limit), componentID, limitValueName);
         }
         else if (limit.getType() == eLimitType.Differential) {
-            DifferentialLimitChecker checker = new DifferentialLimitChecker(limit);
-            checker.setApi(ApiFactory.getDataAccessApi(entity.getName()));
+            DifferentialLimitChecker checker = new DifferentialLimitChecker(limit, dao);
+            //checker.setApi(ApiFactory.getDataAccessApi(entity.getName()));
             createRoute(limit.getLimitOfParameter(), checker, componentID, limitValueName);
         }
 

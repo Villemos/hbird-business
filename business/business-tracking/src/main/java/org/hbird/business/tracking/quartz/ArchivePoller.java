@@ -19,7 +19,7 @@ package org.hbird.business.tracking.quartz;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.camel.Handler;
-import org.hbird.business.api.deprecated.IDataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

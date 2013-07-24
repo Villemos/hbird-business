@@ -17,12 +17,12 @@
 package org.hbird.business.systemmonitoring.bean;
 
 import org.apache.camel.model.ProcessorDefinition;
-import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.systemmonitoring.SystemMonitorComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Component builder to create a system monitoring component.
@@ -33,12 +33,18 @@ import org.slf4j.LoggerFactory;
 public class SystemMonitorComponentDriver extends SoftwareComponentDriver<SystemMonitorComponent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SystemMonitorComponentDriver.class);
+    
+    private IdBuilder idBuilder;
+    
+    @Autowired
+    public SystemMonitorComponentDriver(IdBuilder idBuilder) {
+    	this.idBuilder = idBuilder;
+    }
 
     @Override
     public void doConfigure() {
 
         SystemMonitorComponent component = entity;
-        IdBuilder idBuilder = ApiFactory.getIdBuilder();
         String entityId = component.getID();
         String baseName = idBuilder.buildID(entityId, HostInfo.getHostName());
         long interval = component.getMonitoringInterval();

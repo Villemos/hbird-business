@@ -20,7 +20,7 @@ import java.util.Date;
 
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
-import org.hbird.business.api.deprecated.IDataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.errors.OrekitException;
@@ -85,11 +85,12 @@ public abstract class NavigationBean {
         LOG.info("Propagating orbit of satellite '" + conf.getSatelliteId() + "'.");
 
         /** Get the latest TLE parameters. */
-        TleOrbitalParameters newTleParameters = dao.getTleFor(conf.getSatelliteId());
-
-        /** If there are no TLE parameters, then we cant do anything */
-        if (newTleParameters == null) {
-            LOG.error("Failed to find TLE for satellite '" + conf.getSatelliteId() + "'. Cannot propagate orbital state, sorry.");
+        TleOrbitalParameters newTleParameters = null;
+        
+        try {
+        	newTleParameters = dao.getTleFor(conf.getSatelliteId());
+        } catch(Exception e) {
+            LOG.error("Failed to find TLE for satellite '" + conf.getSatelliteId() + "'. Cannot propagate orbital state, sorry.", e);
             return;
         }
 

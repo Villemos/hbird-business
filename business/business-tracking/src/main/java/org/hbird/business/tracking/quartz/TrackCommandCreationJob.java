@@ -17,8 +17,8 @@
 package org.hbird.business.tracking.quartz;
 
 import org.apache.camel.ProducerTemplate;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IdBuilder;
-import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.interfaces.IStartableEntity;
@@ -132,10 +132,15 @@ public class TrackCommandCreationJob implements Job {
         }
     }
 
+    // TODO: Maybe refactor the code to handle exceptions directly, but then there
+    // is a mismatch between dao and cache contracts
     LocationContactEvent getEvent(IDataAccess dao, String eventInstanceId) {
-        //LocationContactEvent event = (LocationContactEvent) dao.resolve(eventInstanceId);
-    	LocationContactEvent event = dao.resolve(eventInstanceId, LocationContactEvent.class);
-        return event;
+    	try {
+    		return dao.getByInstanceId(eventInstanceId, LocationContactEvent.class);
+    	} catch(Exception e) {
+    		LOG.info("Error resolving contact event by instance id " + eventInstanceId, e);
+    		return null;
+    	}
     }
 
     Satellite getSatellite(EntityCache<Satellite> cache, String satelliteId) {
@@ -147,7 +152,12 @@ public class TrackCommandCreationJob implements Job {
     }
 
     TleOrbitalParameters getLatestTle(IDataAccess dao, String satelliteId) {
-        return dao.getTleFor(satelliteId);
+        try {
+			return dao.getTleFor(satelliteId);
+		} catch (Exception e) {
+			LOG.info("Error retrieving latest TLE for satellite " + satelliteId, e);
+			return null;
+		}
     }
 
     Track createTrackCommand(IdBuilder idBuilder, IStartableEntity part, LocationContactEvent event, Satellite satellite) {
