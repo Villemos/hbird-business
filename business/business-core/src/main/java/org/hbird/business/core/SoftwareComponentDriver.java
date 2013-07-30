@@ -17,12 +17,14 @@
 package org.hbird.business.core;
 
 import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.api.IPublisher;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.interfaces.IStartableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Base classs for all software component drivers.
@@ -43,6 +45,13 @@ public abstract class SoftwareComponentDriver<T extends IStartableEntity> extend
 
     /** The part that this driver starts. */
     protected T entity;
+    
+    protected IPublisher publisher;
+    
+    @Autowired
+    public SoftwareComponentDriver(IPublisher publisher) {
+    	this.publisher = publisher;
+    }
 
     /**
      * Sets the command which this builder use to create the component.
@@ -73,8 +82,7 @@ public abstract class SoftwareComponentDriver<T extends IStartableEntity> extend
             doConfigure();
 
             /** Setup the BusinessCard */
-            ProcessorDefinition<?> route = from(addTimer("businesscard-", heartbeat)).bean(entity, "getBusinessCard");
-            addInjectionRoute(route);
+            from(addTimer("businesscard-", heartbeat)).bean(entity, "getBusinessCard").bean(publisher, "publish");
         }
         else {
             LOG.error("No entity has been defined for this driver. Cannot start nothing ...");

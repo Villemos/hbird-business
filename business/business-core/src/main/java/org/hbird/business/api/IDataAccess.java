@@ -20,10 +20,6 @@ public interface IDataAccess {
 	// Returns all entity instances of a class <clazz>
 	public <T extends IEntityInstance> List<T> getAll(Class<T> clazz) throws Exception;
 	
-	// NB: Resulting list is in ascending order
-	// XXX: Sort of unsafe - field name depends of how the underlying serialization works
-	//public <T extends IEntityInstance> List<T> getByFieldInRange(String field, String value, Class<T> clazz, long from, long to) throws Exception;
-	
 	public Object save(Object o) throws Exception;
 	
 	/**

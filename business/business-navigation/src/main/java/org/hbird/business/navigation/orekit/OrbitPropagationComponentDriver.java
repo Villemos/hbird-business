@@ -46,13 +46,13 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class OrbitPropagationComponentDriver extends SoftwareComponentDriver<OrbitPropagationComponent> {
 	protected IDataAccess dao;
-	protected IPublisher publisher;
 	protected IdBuilder naming;
 	
 	@Autowired
 	public OrbitPropagationComponentDriver(IDataAccess dao, IPublisher publisher, IdBuilder naming) {
+		super(publisher);
+		
 		this.dao = dao;
-		this.publisher = publisher;
 		this.naming = naming;
 	}
 
@@ -66,7 +66,6 @@ public class OrbitPropagationComponentDriver extends SoftwareComponentDriver<Orb
 
         OrbitPropagationBean bean = new OrbitPropagationBean(com, dao, publisher, naming);
 
-        ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute");
-        addInjectionRoute(route);
+        from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute").bean(publisher, "publish");
     }
 }

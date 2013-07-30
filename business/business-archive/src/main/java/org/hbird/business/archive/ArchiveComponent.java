@@ -17,8 +17,6 @@
 package org.hbird.business.archive;
 
 import java.util.List;
-
-import org.hbird.business.archive.solr.ArchiveComponentDriver;
 import org.hbird.business.core.StartableEntity;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.dataaccess.CommitRequest;
@@ -45,10 +43,7 @@ public class ArchiveComponent extends StartableEntity {
 
     /** Default driver name (SOLR) */
     public static final String DEFAULT_DRIVER = ArchiveComponentDriver.class.getName();
-    
-    /**
-     * Default constructor.
-     */
+
     public ArchiveComponent(String ID) {
         super(ID, ARCHIVE_NAME);
         setDescription(ARCHIVE_DESC);

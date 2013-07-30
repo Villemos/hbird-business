@@ -29,7 +29,11 @@ public class PublisherTest {
 		String description = "baz";
 		String value = "foobarbaz";
 		
-		Label lbl = publish.publishLabel(id, name, description, value);
+		Label lbl = new Label(id, name);
+		lbl.setDescription(description);
+		lbl.setValue(value);
+
+		lbl = (Label)publish.publish(lbl);
 		
 		assertEquals(id, lbl.getID());
 		assertEquals(name, lbl.getName());
@@ -61,7 +65,11 @@ public class PublisherTest {
 		
 		args.add(arg1);
 		
-		Command comm = publish.publishCommand(id, name, description, args);
+		Command comm = new Command(id, name);
+		comm.setDescription(description);
+		comm.setArgumentList(args);
+		
+		comm = (Command) publish.publish(comm);
 		
 		assertEquals(id, comm.getID());
 		assertEquals(name, comm.getName());

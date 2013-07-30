@@ -23,8 +23,11 @@ import java.util.Map;
 
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.State;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Listener {
+	Logger LOG = LoggerFactory.getLogger(Listener.class);
 
 	public List<EntityInstance> elements = new ArrayList<EntityInstance>();
 
@@ -34,7 +37,6 @@ public class Listener {
 
 	public void process(EntityInstance named) {
 		synchronized (elements) {
-
 			elements.add(named);
 			lastReceived = named;
 

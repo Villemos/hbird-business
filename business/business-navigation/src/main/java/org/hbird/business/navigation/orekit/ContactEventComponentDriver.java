@@ -36,14 +36,14 @@ public class ContactEventComponentDriver extends SoftwareComponentDriver<Contact
 	protected IDataAccess dao;
 	protected IdBuilder idBuilder;
 	protected ICatalogue catalogue;
-	protected IPublisher publisher;
 	
 	@Autowired
 	public ContactEventComponentDriver(IDataAccess dao, IPublisher publisher, IdBuilder idBuilder, ICatalogue catalogue) {
+		super(publisher);
+		
 		this.dao = dao;
 		this.idBuilder = idBuilder;
 		this.catalogue = catalogue;
-		this.publisher = publisher;
 	}
 
     @Override
@@ -54,8 +54,7 @@ public class ContactEventComponentDriver extends SoftwareComponentDriver<Contact
         CamelContext camelContext = com.getContext();
 
         ContactEventBean bean = new ContactEventBean(com, dao, publisher, idBuilder, catalogue);
-
-        ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute");
-        addInjectionRoute(route);
+        
+        ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute").bean(publisher, "publish");
     }
 }

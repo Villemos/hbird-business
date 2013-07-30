@@ -32,15 +32,8 @@
  */
 package org.hbird.business.systemtest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.groundstation.hamlib.radio.HamlibRadioPart;
-import org.hbird.business.groundstation.hamlib.rotator.HamlibRotatorPart;
-import org.hbird.exchange.configurator.StartComponent;
-import org.hbird.exchange.groundstation.Antenna;
 
 /**
  * @author Admin

@@ -2,6 +2,7 @@ package org.hbird.business.tracking.timer;
 
 import org.apache.camel.model.RouteDefinition;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.tracking.TrackingComponent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,9 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
     private IDataAccess dao;
     
     @Autowired
-    public TrackingComponentDriver(IDataAccess dao) {
+    public TrackingComponentDriver(IPublisher publisher, IDataAccess dao) {
+    	super(publisher);
+    	
     	this.dao = dao;
     }
 
@@ -69,7 +72,6 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
         TrackingControlBean controller = new TrackingControlBean(entity.getName(), entity.getLocation(), entity.getSatellite(), dao);
 
         /** Create the route for triggering the calculation. */
-        RouteDefinition route = from(addTimer("antennacontrol", 60000l)).bean(controller, "process");
-        addInjectionRoute(route);
+        from(addTimer("antennacontrol", 60000l)).bean(controller, "process").bean(publisher, "publish");
     }
 }

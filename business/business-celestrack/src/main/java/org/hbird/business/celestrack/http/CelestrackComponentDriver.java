@@ -46,12 +46,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  */
 public class CelestrackComponentDriver extends SoftwareComponentDriver<CelestrackComponent> {
-	private IPublisher publisher;
 	private ICatalogue catalogue;
 	
 	@Autowired
 	public CelestrackComponentDriver(IPublisher publisher, ICatalogue catalogue) {
-		this.publisher = publisher;
+		super(publisher);
+
 		this.catalogue = catalogue;
 	}
 

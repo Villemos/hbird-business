@@ -31,9 +31,9 @@ import org.hbird.exchange.tasking.Task;
 public class CommandingTester extends SystemTest {
 
     private static org.apache.log4j.Logger LOG = Logger.getLogger(CommandingTester.class);
-
+    
     @Handler
-    public void process() throws InterruptedException {
+    public void process() throws Exception {
 
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
@@ -47,7 +47,7 @@ public class CommandingTester extends SystemTest {
         Command command = new Command("COM2", "COM2");
 
         /** Send a simple command request. */
-        publishApi.publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, null, null);
+        publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, null, null);
         
         
         
@@ -60,7 +60,7 @@ public class CommandingTester extends SystemTest {
         Date now = new Date();
         command.setTransferTime(now.getTime() + 2000);
 
-        publishApi.publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, null, null);
+        publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, null, null);
 
         Thread.sleep(2000);
 
@@ -99,16 +99,16 @@ public class CommandingTester extends SystemTest {
 
         /** Set the values of the states. */
 
-        publishApi.publishState("COM2/STATE1", "COM2/STATE1", "A test description,", "COM2:Command:*", true);
-        publishApi.publishState("COM2/STATE2", "COM2/STATE2", "A test description,", "COM2:Command:*", true);
-        publishApi.publishState("COM2/STATE3", "COM2/STATE3", "A test description,", "COM2:Command:*", false);
-        publishApi.publishState("COM2/STATE4", "COM2/STATE4", "A test description,", "COM2:Command:*", true);
+        publishState("COM2/STATE1", "COM2/STATE1", "A test description,", "COM2:Command:*", true);
+        publishState("COM2/STATE2", "COM2/STATE2", "A test description,", "COM2:Command:*", true);
+        publishState("COM2/STATE3", "COM2/STATE3", "A test description,", "COM2:Command:*", false);
+        publishState("COM2/STATE4", "COM2/STATE4", "A test description,", "COM2:Command:*", true);
 
         /** Send command to commit all changes. */
         forceCommit();
 
         /** The command should fail, as one of the states is 'false'. */
-        publishApi.publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, states, tasks);
+        publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, states, tasks);
 
         Thread.sleep(2000);
 
@@ -116,29 +116,32 @@ public class CommandingTester extends SystemTest {
         failedCommandRequestListener.lastReceived = null;
 
         /** Update state to make the command succeed. */
-        publishApi.publishState("COM2/STATE3", "COM2/STATE3", "A test description,", "COM2:Command:*", true);
+        publishState("COM2/STATE3", "COM2/STATE3", "A test description,", "COM2:Command:*", true);
 
         /** Send command to commit all changes. */
         forceCommit();
 
         /** The command should fail, as one of the states is 'false'. */
-        publishApi.publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, states, tasks);
+        publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, states, tasks);
 
         Thread.sleep(2000);
 
-        azzert(failedCommandRequestListener.lastReceived.getName().equals("COMREQ1"));
+        // XXX: Why should it even be here? The command didn't fail
+        //azzert(failedCommandRequestListener.lastReceived != null, "Failed command request received");
+        //azzert(failedCommandRequestListener.lastReceived.getName().equals("COMREQ1"));
+        azzert(failedCommandRequestListener.lastReceived == null, "Command succeeded");
 
         /**
          * Add a state that is not inserted in the command, but which is a state of the command. See if the command
          * fails.
          */
-        publishApi.publishState("STATE_OTHER", "STATE_OTHER", "A test description", "COM2:Command:*", false);
+        publishState("STATE_OTHER", "STATE_OTHER", "A test description", "COM2:Command:*", false);
 
         /** Send command to commit all changes. */
         forceCommit();
 
         /** The command should fail, as one of the states is 'false'. */
-        publishApi.publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, states, tasks);
+        publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, states, tasks);
 
         Thread.sleep(2000);
 

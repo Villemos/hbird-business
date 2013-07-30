@@ -42,13 +42,13 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver<Predic
     private static final Logger LOG = LoggerFactory.getLogger(OrbitalStatePredictionDriver.class);
     
     protected IDataAccess dao;
-    protected IPublisher publisher;
     protected IdBuilder idBuilder;
     
     @Autowired
     public OrbitalStatePredictionDriver(IDataAccess dao, IPublisher publisher, IdBuilder idBuilder) {
+    	super(publisher);
+
     	this.dao = dao;
-    	this.publisher = publisher;
     	this.idBuilder = idBuilder;
     }
 
@@ -89,6 +89,6 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver<Predic
                 .split(body())
                 .to("log:org.hbird.prediction.orbit.stats?level=DEBUG&groupInterval=60000&groupDelay=60000&groupActiveOnly=false");
 
-        addInjectionRoute(route);
+        route.bean(publisher, "publish");
     }
 }

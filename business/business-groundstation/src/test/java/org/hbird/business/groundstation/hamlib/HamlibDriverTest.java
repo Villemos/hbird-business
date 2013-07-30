@@ -32,6 +32,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.netty.NettyConfiguration;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.groundstation.base.DefaultPointingDataOptimizer;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
@@ -69,6 +70,9 @@ public class HamlibDriverTest {
     
     @Mock
     private IPointingData calculator;
+    
+    @Mock
+    private IPublisher publisher;
 
     @Mock
     private DriverContext<GroundStationDriverConfiguration, String, String> driverContext;
@@ -95,7 +99,7 @@ public class HamlibDriverTest {
     @Before
     public void setUp() throws Exception {
         handlers = Arrays.asList(handler1, handler2);
-        driver = new HamlibDriver<GroundStationDriverConfiguration>(dao, calculator) {
+        driver = new HamlibDriver<GroundStationDriverConfiguration>(publisher, dao, calculator) {
 
             @Override
             protected List<ResponseHandler<GroundStationDriverConfiguration, String, String>> createResponseHandlers() {

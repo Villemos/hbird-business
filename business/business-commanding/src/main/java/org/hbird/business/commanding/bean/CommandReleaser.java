@@ -16,6 +16,7 @@
  */
 package org.hbird.business.commanding.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +25,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
 import org.apache.camel.Headers;
 import org.apache.log4j.Logger;
-import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.deprecated.IDataAccess;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.commandrelease.CommandRequest;
 import org.hbird.exchange.core.State;
 
@@ -54,8 +54,12 @@ public class CommandReleaser {
     /** The header flag that indicates whether the command can be released. */
     protected String validityHeaderField = "Valid";
 
-    protected IDataAccess api = ApiFactory.getDataAccessApi("CommandReleaser");
-
+    protected IDataAccess api;
+    
+    public CommandReleaser(IDataAccess api) {
+    	this.api = api;
+    }
+    
     /**
      * Processor for the scheduling of validation task for a command as well as the
      * release of the command.
@@ -82,9 +86,15 @@ public class CommandReleaser {
 
         /** Request all states that are lock states of this command. */
 
-        List<State> states = api.getState(command.getCommand().getName() + ":Command:*");
-        if (command.getLockStates() != null) {
-            states.addAll(api.getStates(command.getLockStates()));
+        List<State> states = new ArrayList<State>();
+        
+        try {
+        	states.addAll(api.getState(command.getCommand().getName() + ":Command:*"));
+        	if (command.getLockStates() != null) {
+        		states.addAll(api.getStates(command.getLockStates()));
+        	}
+        } catch(Exception e) {
+        	LOG.warn("Failed to retrieve states", e);
         }
 
         /** See if any of the states have the value FALSE */

@@ -3,6 +3,7 @@ package org.hbird.business.tracking.quartz;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.core.cache.EntityCache;
@@ -24,7 +25,9 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
     private IdBuilder idBuilder;
     
     @Autowired
-    public TrackingComponentDriver(IDataAccess dao, IdBuilder idBuilder) {
+    public TrackingComponentDriver(IPublisher publisher, IDataAccess dao, IdBuilder idBuilder) {
+    	super(publisher);
+    	
     	this.dao = dao;
     	this.idBuilder = idBuilder;
     }
@@ -61,7 +64,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
 
         // @formatter:off
         
-        addInjectionRoute(from(TRACK_COMMAND_INJECTOR));
+        from(TRACK_COMMAND_INJECTOR).bean(publisher, "publish");
         
         from("direct:scheduleContact")
             .bean(contactScheduler)

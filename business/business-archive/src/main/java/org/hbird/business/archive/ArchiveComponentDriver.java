@@ -14,13 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.archive.solr;
+package org.hbird.business.archive;
 
-import org.apache.camel.Endpoint;
-import org.hbird.business.api.IDataAccess;
-import org.hbird.business.archive.ArchiveComponent;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.SoftwareComponentDriver;
-import org.hbird.exchange.configurator.StandardEndpoints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +30,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ArchiveComponentDriver extends SoftwareComponentDriver<ArchiveComponent> {
 	private Logger LOG = LoggerFactory.getLogger(ArchiveComponentDriver.class);
 	
-	private IDataAccess dao;
 	
 	@Autowired
-	public ArchiveComponentDriver(IDataAccess dao) {
-		this.dao = dao;
+	public ArchiveComponentDriver(IPublisher publisher) {
+	    super(publisher);
 	}
 
     /* (non-Javadoc)
@@ -46,21 +42,29 @@ public class ArchiveComponentDriver extends SoftwareComponentDriver<ArchiveCompo
     @Override
     protected void doConfigure() {
     	try {
-    		/** The SOLR component */
-    		SolrComponent solrComp = new SolrComponent();
-    		solrComp.setCamelContext(getContext());
-			Endpoint solrEndpoint = solrComp.createEndpoint("storage");
+//    		/** The SOLR component */
+//    		SolrComponent solrComp = new SolrComponent();
+//    		solrComp.setCamelContext(getContext());
+//			Endpoint solrEndpoint = solrComp.createEndpoint("storage");
 
-			//from("direct:solr_storage").to("solr:storage");
-			from("direct:solr_storage").to(solrEndpoint);
+//			from("direct:solr_storage").to(solrEndpoint);
+    	    
+			/*from("direct:mongo_storage")
+			    .choice()
+			        .when(new AllFilter(entity.getFilters())).log(LoggingLevel.INFO, "Publishing ${body}").bean(publisher, "publish")
+			        .otherwise().log(LoggingLevel.INFO, "Ignoring ${body}").stop(); */
+
+			/* from(StandardEndpoints.MONITORING).to("direct:mongo_storage"); */
+			
 
 			/** Routes for receiving data and requests. */
-			from(StandardEndpoints.MONITORING).to("direct:solr_storage");
-			from(StandardEndpoints.EVENTS).to("direct:solr_storage");
-			from(StandardEndpoints.COMMANDS).to("direct:solr_storage");
+//			from(StandardEndpoints.MONITORING).to("direct:solr_storage");
+//			from(StandardEndpoints.EVENTS).to("direct:solr_storage");
+//			from(StandardEndpoints.COMMANDS).to("direct:solr_storage");
+			
 
 			/** Route for submitting the documents as a batch to the SOLR server. */
-			from(addTimer("solr_submit", 5000)).setHeader("SUBMIT", simple("true")).to("direct:solr_storage");
+//			from(addTimer("solr_submit", 5000)).setHeader("SUBMIT", simple("true")).to("direct:solr_storage");
 		} catch (Exception e) {
 			LOG.error("Error setting up archive", e);
 		}

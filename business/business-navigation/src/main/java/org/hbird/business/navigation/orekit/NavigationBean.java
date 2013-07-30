@@ -119,7 +119,7 @@ public abstract class NavigationBean {
         }
         else {
             from = orbitalStateCollector.getLatestState().getTimestamp();
-            to = now + conf.getLeadTime() + conf.getExecutionDelay();
+            to = now + conf.getLeadTime() + conf.getExecutionDelay(); 
             LOG.info("Need to extend. Requesting TLE based from '" + from + "' to '" + to + "'");
         }
 

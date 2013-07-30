@@ -29,6 +29,7 @@ import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.spring.spi.ApplicationContextRegistry;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.configurator.StandardEndpoints;
@@ -63,12 +64,15 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver<Configu
 	/**
 	 * Default constructor.
 	 */
-	public ConfiguratorComponentDriver() {
-		this(null);
+	public ConfiguratorComponentDriver(IPublisher publisher) {
+		this(null, publisher);
+
 		LOG.warn("Started ConfigurationComponentDriver without applcation context. Bean registry will not be available in started components!");
 	}
 
-	public ConfiguratorComponentDriver(ApplicationContext applicationContext) {
+	public ConfiguratorComponentDriver(ApplicationContext applicationContext, IPublisher publisher) {
+		super(publisher);
+		
 		this.applicationContext = applicationContext;
 	}
 
@@ -204,11 +208,9 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver<Configu
 		/* Setup the BusinessCard */
 		long heartbeat = entity.getHeartbeat();
 
-		ProcessorDefinition<?> route = from(addTimer("businesscard", heartbeat)).bean(entity, "getBusinessCard");
-		addInjectionRoute(route);
+		from(addTimer("businesscard", heartbeat)).bean(entity, "getBusinessCard").bean(publisher, "publish");
 
-		ProcessorDefinition<?> toEvents = from(ENDPOINT_TO_EVENTS);
-		addInjectionRoute(toEvents);
+		from(ENDPOINT_TO_EVENTS).log("Sending Configurator event: ${in.body}").bean(publisher, "publish");
 	}
 
 	/**

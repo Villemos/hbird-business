@@ -3,6 +3,7 @@ package org.hbird.business.archive.dao.mongo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -274,6 +275,64 @@ public class MongoDataAccessTest {
 	}
 	
 	@Test
+	public void testGetStateWhenMultipleInstances() throws Exception {
+	    GroundStation gs1 = new GroundStation("GS1", "GS1");
+	    
+	    State state1 = new State("State1", "State1");
+	    state1.setApplicableTo(gs1.getID());
+	    state1.setTimestamp(10);
+	    state1.setVersion(10);
+
+	    State state2 = new State("State2", "State2");
+	    state2.setApplicableTo(gs1.getID());
+	    state2.setTimestamp(11);
+	    state2.setVersion(11);
+	    
+	    State state3 = new State("State1", "State1");
+	    state3.setApplicableTo(gs1.getID());
+	    state3.setTimestamp(5);
+	    state3.setVersion(5);
+	    
+	    dao.save(state1);
+	    dao.save(state2);
+	    dao.save(state3);
+	    
+	    List<State> states = dao.getState(gs1.getID());
+	    
+	    assertEquals(2, states.size());
+	    
+	    State s1 = states.get(0);
+	    State s2 = states.get(1);
+
+	    assertTrue(s1.getID().equals("State1") || s1.getID().equals("State2"));
+	    
+	    if(s1.getID().equals("State2")) {
+	        State temp = s1;
+	        s1 = s2;
+	        s2 = temp;
+	    }
+	    
+	    assertEquals(state1.getID(), s1.getID());
+	    assertEquals(gs1.getID(), s1.getApplicableTo());
+	    assertEquals(state1.getVersion(), s1.getVersion());
+
+	    assertEquals(state2.getID(), s2.getID());
+	    assertEquals(gs1.getID(), s2.getApplicableTo());
+	    assertEquals(state2.getVersion(), s2.getVersion());
+	    
+	    //
+	    
+	    List<String> names = new ArrayList<String>();
+	    names.add(state1.getName());
+	    
+	    states = dao.getStates(names);
+	    
+	    assertEquals(1, states.size());
+	    assertEquals(state1.getName(), states.get(0).getName());
+	    assertEquals(state1.getVersion(), states.get(0).getVersion());
+	}
+	
+	@Test
 	public void testGetTLEFor() throws Exception {
 		String satID = "SAT";
 		TleOrbitalParameters tle1 = new TleOrbitalParameters("foo", "foo");
@@ -456,6 +515,59 @@ public class MongoDataAccessTest {
 		data = dao.getMetadata(sat);
 		assertEquals(0, data.size());
 	}
+	
+	public void testGetMetadataWhenMultipleInstances() throws Exception {
+		String gsId = "GS1";
+		String satId = "SAT1";
+		GroundStation gs = new GroundStation(gsId, gsId);
+		Satellite sat = new Satellite(satId, satId);
+		
+		Map<String, Object> entries1 = new HashMap<String, Object>();
+		entries1.put("par1", 10);
+		
+		Metadata data1 = new Metadata("data1", "data1");
+		data1.setMetadata(Collections.<String, Object>singletonMap("par1", 1));
+		data1.setVersion(10);
+		data1.setTimestamp(10);
+		data1.setApplicableTo(sat.getID());
+
+		Metadata data1_new = new Metadata("data1", "data1");
+		data1_new.setMetadata(Collections.<String, Object>singletonMap("par1", 2));
+		data1_new.setVersion(15);
+		data1_new.setTimestamp(15);
+		data1_new.setApplicableTo(sat.getID());
+		
+		Metadata data2 = new Metadata("data2", "data2");
+		data2.setMetadata(Collections.<String, Object>singletonMap("par1", 3));
+		data2.setVersion(1);
+		data2.setTimestamp(1);
+		data2.setApplicableTo(sat.getID());
+		
+		List<Metadata> data = dao.getMetadata(sat);
+		
+		assertEquals(2, data.size());
+		
+		Metadata d1, d2;
+		
+		if(data.get(0).getID().equals("data1")) {
+		    d1 = data.get(0);
+		    d2 = data.get(1);
+		} else {
+		    d1 = data.get(1);
+		    d2 = data.get(0);
+		}
+		
+		assertEquals("data1", d1.getID());
+		assertEquals(sat.getID(), d1.getApplicableTo());
+		assertEquals(2, d1.getMetadata().get("par1"));
+		assertEquals(15, d1.getVersion());
+
+		assertEquals("data2", d2.getID());
+		assertEquals(sat.getID(), d2.getApplicableTo());
+		assertEquals(3, d2.getMetadata().get("par1"));
+		assertEquals(1, d1.getVersion());
+	}
+	
 	
 	/* @Test
 	public void testGetBySuperclass() throws Exception {

@@ -17,6 +17,7 @@
 package org.hbird.business.systemmonitoring.bean;
 
 import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.systemmonitoring.SystemMonitorComponent;
@@ -37,7 +38,9 @@ public class SystemMonitorComponentDriver extends SoftwareComponentDriver<System
     private IdBuilder idBuilder;
     
     @Autowired
-    public SystemMonitorComponentDriver(IdBuilder idBuilder) {
+    public SystemMonitorComponentDriver(IPublisher publisher, IdBuilder idBuilder) {
+    	super(publisher);
+    	
     	this.idBuilder = idBuilder;
     }
 
@@ -59,10 +62,9 @@ public class SystemMonitorComponentDriver extends SoftwareComponentDriver<System
         from("seda:harddisk").bean(new HarddiskMonitor(baseName, idBuilder)).split(body()).to("seda:out");
         from("seda:os").bean(new OsMonitor(baseName, idBuilder)).to("seda:out");
         from("seda:uptime").bean(new UptimeMonitor(baseName, idBuilder)).to("seda:out");
+        
+        from("seda:out").log("Sending ${in.body} to publisher").bean(publisher, "publish");
 
-        ProcessorDefinition<?> route = from("seda:out");
-        addInjectionRoute(route);
-
-        addCommandHandler();
+        addCommandHandler(); 
     }
 }

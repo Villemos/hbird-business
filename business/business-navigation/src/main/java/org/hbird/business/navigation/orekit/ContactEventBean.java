@@ -55,7 +55,6 @@ public class ContactEventBean extends NavigationBean {
      */
     @Override
     public void preparePropagator() throws OrekitException {
-
         List<GroundStation> locations;
 
         // Register the locations
@@ -68,7 +67,7 @@ public class ContactEventBean extends NavigationBean {
             /* Get the definition of the Locations. */
             locations = catalogue.getGroundStationsByName(locationNames);
         }
-
+        
         /* Register the visibility events for the requested locations. */
         for (GroundStation groundStation : locations) {
             GeoLocation location = groundStation.getGeoLocation();

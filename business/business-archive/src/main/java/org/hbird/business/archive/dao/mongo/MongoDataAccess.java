@@ -1,10 +1,13 @@
 package org.hbird.business.archive.dao.mongo;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPublisher;
+import org.hbird.business.api.impl.Injector;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Parameter;
@@ -26,9 +29,9 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class MongoDataAccess implements IDataAccess {
 	public static final String DEFAULT_DATABASE_NAME = "hbird";
 	
-	private static final String VERSION_FIELD = "version";
-	private static final String TIMESTAMP_FIELD = "timestamp";
-	
+	private static final String FIELD_ID = "ID";
+	private static final String FIELD_VERSION = "version";
+	private static final String FIELD_TIMESTAMP = "timestamp";
 	private static final String FIELD_NAME = "name";
 	private static final String FIELD_APPLICABLE_TO = "applicableTo";
 	private static final String FIELD_SATELLITE_ID = "satelliteId";
@@ -37,13 +40,15 @@ public class MongoDataAccess implements IDataAccess {
 	private static final String FIELD_DERIVED_FROM = "derivedFromId";
 
 	
-	public final Sort sortByVersionDesc = new Sort(new Sort.Order(Sort.Direction.DESC, VERSION_FIELD));
+	public final Sort sortByVersionDesc = new Sort(new Sort.Order(Sort.Direction.DESC, FIELD_VERSION));
 	
-	public final Sort sortByTimestampAsc = new Sort(new Sort.Order(Sort.Direction.ASC, TIMESTAMP_FIELD));
-	public final Sort sortByTimestampDesc = new Sort(new Sort.Order(Sort.Direction.DESC, TIMESTAMP_FIELD));
+	public final Sort sortByTimestampAsc = new Sort(new Sort.Order(Sort.Direction.ASC, FIELD_TIMESTAMP));
+	public final Sort sortByTimestampDesc = new Sort(new Sort.Order(Sort.Direction.DESC, FIELD_TIMESTAMP));
 	
 	public final Sort sortByStartTimeAsc = new Sort(new Sort.Order(Sort.Direction.ASC, FIELD_START_TIME));
 	public final Sort sortByStartTimeDesc = new Sort(new Sort.Order(Sort.Direction.DESC, FIELD_START_TIME));
+	
+	public final Sort sortByIDAndVersion = new Sort(Sort.Direction.DESC, FIELD_ID, FIELD_VERSION);
 	
 	protected MongoOperations template = null;
 
@@ -93,8 +98,8 @@ public class MongoDataAccess implements IDataAccess {
 	
 	private Query queryByFieldInRange(String field, String value, long from, long to) {
 		return new Query(where(field).is(value).andOperator(
-						where(TIMESTAMP_FIELD).gte(from),
-						where(TIMESTAMP_FIELD).lte(to)))
+						where(FIELD_TIMESTAMP).gte(from),
+						where(FIELD_TIMESTAMP).lte(to)))
 						.with(sortByTimestampAsc);
 	}
 
@@ -120,10 +125,26 @@ public class MongoDataAccess implements IDataAccess {
 	public List<Parameter> getParameter(String name, long from, long to) throws Exception {
 		return getByFieldInRange(FIELD_NAME, name, Parameter.class, from, to);
 	}
+	
+	// TODO: More generic?
+	private <T extends IEntityInstance> List<T> getLastVersions(Query query, Class<T> clazz) {
+	    List<T> instances = template.find(query.with(sortByIDAndVersion), clazz);
+		List<T> lastVersions = new ArrayList<T>();
 
-	@Override
+		String currentID = "";
+		for(T instance : instances) {
+		    if(!instance.getID().equals(currentID)) {
+		        lastVersions.add(instance);
+		        currentID = instance.getID();
+		    }
+		}
+		
+		return lastVersions;
+	}
+
+	@Override // This one returns only the last versions
 	public List<State> getState(String applicableTo) { // TODO: Use version instead of timestamp?
-		return template.find(query(where(FIELD_APPLICABLE_TO).is(applicableTo)).with(sortByTimestampDesc), State.class);
+		return getLastVersions(query(where(FIELD_APPLICABLE_TO).is(applicableTo)), State.class);
 	}
 
 	@Override
@@ -133,7 +154,7 @@ public class MongoDataAccess implements IDataAccess {
 
 	@Override
 	public List<State> getStates(List<String> names) {
-		return template.find(query(where(FIELD_NAME).in(names)), State.class);
+		return getLastVersions(query(where(FIELD_NAME).in(names)), State.class);
 	}
 
 	@Override
@@ -200,15 +221,11 @@ public class MongoDataAccess implements IDataAccess {
 		return wrapReturn(template.findOne(query, LocationContactEvent.class));
 	}
 
-	// XXX: Once again, what if we have different instances of metadata with the same ID?
-	// They might both get into the result, but filtering here is O(n*log(n)).
-	// If this turns out to be a real issue, might have to add "last-version" flag
-	// to Mongo DBObjects
 	@Override
 	public List<Metadata> getMetadata(EntityInstance subject) {
 		Query query = query(where(FIELD_APPLICABLE_TO).is(subject.getID()));
 		
-		return template.find(query, Metadata.class);
+		return getLastVersions(query, Metadata.class);
 	}
 
 }

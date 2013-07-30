@@ -17,6 +17,7 @@
 package org.hbird.business.navigation.orekit;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hbird.business.api.IPublisher;

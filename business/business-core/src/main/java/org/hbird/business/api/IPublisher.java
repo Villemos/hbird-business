@@ -49,33 +49,4 @@ public interface IPublisher extends IHbirdApi {
     public void commit(String ID) throws Exception;
 
     public EntityInstance publish(EntityInstance object) throws Exception;
-
-    public Parameter publishParameter(String ID, String name, String description, Number value, String unit) throws Exception;
-
-    public Parameter publishParameter(String ID, String name, String description, Number value, String unit, long timestamp) throws Exception;
-
-    public State publishState(String ID, String name, String description, String applicableTo, Boolean state) throws Exception;
-
-    public State publishState(String ID, String name, String description, String applicableTo, Boolean state, long timestamp) throws Exception;
-
-    public Label publishLabel(String ID, String name, String description, String value) throws Exception;
-
-    public Binary publishBinary(String ID, String name, String description, byte[] rawdata) throws Exception;
-
-    public Command publishCommand(String ID, String name, String description, List<CommandArgument> arguments) throws Exception;
-
-    public CommandRequest publishCommandRequest(String ID, String name, String description, Command command) throws Exception;
-
-    public CommandRequest publishCommandRequest(String ID, String name, String description, Command command, List<String> lockStates, List<Task> tasks) throws Exception;
-
-    /**
-     * Method to create and publish a piece of metadata associated to a Named object.
-     * 
-     * @param subject The subject of this metadata, i.e. the Named object being described.
-     * @param key The key of the metadata.
-     * @param metadata The value of the metadata
-     */
-    public Metadata publishMetadata(String ID, String name, EntityInstance subject, String key, String metadata) throws Exception;
-
-    public TleOrbitalParameters publishTleParameters(String ID, String name, String satellite, String tle1, String tle2) throws Exception;
 }

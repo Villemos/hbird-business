@@ -17,9 +17,11 @@
 package org.hbird.business.scripting.bean;
 
 import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.scripting.ScriptComponent;
 import org.hbird.exchange.configurator.StandardEndpoints;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Component builder to create a script engine component.
@@ -28,6 +30,11 @@ import org.hbird.exchange.configurator.StandardEndpoints;
  * 
  */
 public class ScriptComponentDriver extends SoftwareComponentDriver<ScriptComponent> {
+	
+	@Autowired
+	public ScriptComponentDriver(IPublisher publisher) {
+		super(publisher);
+	}
 
     @Override
     protected void doConfigure() {
@@ -38,8 +45,7 @@ public class ScriptComponentDriver extends SoftwareComponentDriver<ScriptCompone
         for (String dependency : executor.getDependencies()) {
 
             /** Create the routes for receiving the data needed by the script. */
-            ProcessorDefinition<?> route = from(StandardEndpoints.MONITORING + "?" + addIdSelector(dependency)).bean(executor, "calculate");
-            addInjectionRoute(route);
+            from(StandardEndpoints.MONITORING + "?" + addIdSelector(dependency)).bean(executor, "calculate").bean(publisher, "publish");
         }
 
         addCommandHandler();

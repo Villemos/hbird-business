@@ -26,6 +26,8 @@ import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IQueueManagement;
 
+import com.mongodb.Mongo;
+
 public class Finisher extends SystemTest {
 
 	private static org.apache.log4j.Logger LOG = Logger.getLogger(Finisher.class);
@@ -51,6 +53,9 @@ public class Finisher extends SystemTest {
 			LOG.info(" - Purging topic '" + topicName + "'.");
 			api.clearTopic(topicName);
 		}
+		
+		Mongo mongo = getContext().getRegistry().lookup("mongo", Mongo.class);
+		mongo.dropDatabase("hbird_test");
 
 		Thread.sleep(2000);
 

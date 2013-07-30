@@ -19,7 +19,7 @@ package org.hbird.business.metadatapublisher;
 import java.util.List;
 
 import org.hbird.business.api.IPublisher;
-import org.hbird.business.api.Injector;
+import org.hbird.business.api.impl.Injector;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.interfaces.IStartableEntity;
@@ -70,8 +70,6 @@ public class NamedObjectPublisher {
      * @return A list of messages, carrying as the body a command definition.
      */
     public void start() {
-        Injector injector = new Injector(name, destination);
-
         for (EntityInstance object : objects) {
         	try {
 	            if (object instanceof IStartableEntity) {
@@ -84,7 +82,7 @@ public class NamedObjectPublisher {
 	                startCommand.setEntity((IStartableEntity) object);
 	
 	                startCommand.setDestination(destination);
-	                injector.inject(startCommand);
+	                publisher.publish(startCommand);
 	            }
 	            else {
 	                LOG.info("Publishing Named object '" + object.getID() + "'.");
@@ -98,7 +96,6 @@ public class NamedObjectPublisher {
         LOG.debug("Publisher finished; disposing API objects in '{}'...", name);
         try {
             publisher.dispose();
-            injector.dispose();
 
             LOG.info("APIs disposed in '{}'. NamedObjectPublisher should stop now", name);
         }

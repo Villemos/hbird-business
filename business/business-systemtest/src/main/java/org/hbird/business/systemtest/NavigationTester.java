@@ -24,8 +24,6 @@ import java.util.TreeMap;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.navigation.ContactEventComponent;
 import org.hbird.business.navigation.OrbitPropagationComponent;
 import org.hbird.exchange.core.EntityInstance;
@@ -40,7 +38,7 @@ public class NavigationTester extends SystemTest {
     private static org.apache.log4j.Logger LOG = Logger.getLogger(NavigationTester.class);
 
     @Handler
-    public void process() throws InterruptedException {
+    public void process() throws Exception {
 
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
@@ -98,8 +96,7 @@ public class NavigationTester extends SystemTest {
         forceCommit();
 
         /** Retrieve the next set of TARTU events and check them. */
-        IDataAccess dataApi = ApiFactory.getDataAccessApi("SystemTest");
-        LocationContactEvent contactEvent = dataApi.getNextLocationContactEventForGroundStation(es5ec.getID(), 1355385522265l);
+        LocationContactEvent contactEvent = accessApi.getNextLocationContactEventForGroundStation(es5ec.getID(), 1355385522265l);
 
         azzert(contactEvent != null);
         azzert(contactEvent.getStartTime() == 1355390676020l);
@@ -109,7 +106,7 @@ public class NavigationTester extends SystemTest {
          * Check the contact events with Aalborg. Notice that there is one LOST contact event first. The retrieval
          * should NOT get this.
          */
-        contactEvent = dataApi.getNextLocationContactEventForGroundStation(gsAalborg.getID(), 1355385522265l);
+        contactEvent = accessApi.getNextLocationContactEventForGroundStation(gsAalborg.getID(), 1355385522265l);
 
         azzert(contactEvent != null);
         azzert(contactEvent.getStartTime() == 1355390809139l);

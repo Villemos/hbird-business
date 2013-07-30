@@ -50,13 +50,13 @@ public class ContactPredictionDriver extends SoftwareComponentDriver<PredictionC
     
     protected IDataAccess dao;
     protected ICatalogue catalogue;
-    protected IPublisher publisher;
     
     @Autowired
     public ContactPredictionDriver(IDataAccess dao, ICatalogue catalogue, IPublisher publisher) {
+    	super(publisher);
+    	
     	this.dao = dao;
     	this.catalogue = catalogue;
-    	this.publisher = publisher;
     }
 
     /**
@@ -118,6 +118,6 @@ public class ContactPredictionDriver extends SoftwareComponentDriver<PredictionC
                     .to("log:org.hbird.prediction.contact.stats?level=DEBUG&groupInterval=60000&groupDelay=60000&groupActiveOnly=false");
         // @formatter:on
 
-        addInjectionRoute(route);
+        route.bean(publisher, "publish");
     }
 }

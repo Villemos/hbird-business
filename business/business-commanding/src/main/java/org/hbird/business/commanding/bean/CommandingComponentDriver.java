@@ -17,6 +17,8 @@
 package org.hbird.business.commanding.bean;
 
 import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.commanding.CommandingComponent;
 import org.hbird.business.core.FieldBasedSplitter;
 import org.hbird.business.core.SoftwareComponentDriver;
@@ -29,6 +31,13 @@ import org.hbird.exchange.constants.StandardArguments;
  * @author Gert Villemos
  */
 public class CommandingComponentDriver extends SoftwareComponentDriver<CommandingComponent> {
+	protected IDataAccess dao;
+	
+	public CommandingComponentDriver(IPublisher publisher, IDataAccess dao) {
+		super(publisher);
+		
+		this.dao = dao;
+	}
 
     @Override
     public void doConfigure() {
@@ -36,7 +45,7 @@ public class CommandingComponentDriver extends SoftwareComponentDriver<Commandin
         /** Create the route and the interface for getting the command states. */
         from("direct:statestore").to("solr:statestore");
 
-        CommandReleaser releaser = new CommandReleaser();
+        CommandReleaser releaser = new CommandReleaser(dao);
 
         /**
          * Read from the scheduled queue and release the command. The release consists of the validation
@@ -53,14 +62,13 @@ public class CommandingComponentDriver extends SoftwareComponentDriver<Commandin
         ProcessorDefinition<?> route = from("seda:validCommandRequests")
                 .wireTap("seda:taskExtractor")
                 .setBody(simple("${in.body.command}"))
-                .setHeader(StandardArguments.DESTINATION, simple("${in.body.destination}"));
-        addInjectionRoute(route);
+                .setHeader(StandardArguments.DESTINATION, simple("${in.body.destination}"))
+                .bean(publisher, "publish");
 
         FieldBasedSplitter splitter = new FieldBasedSplitter();
 
         route = from("seda:taskExtractor")
-                .split().method(splitter);
-        addInjectionRoute(route);
+                .split().method(splitter).bean(publisher, "publish");
 
         addCommandHandler();
     }

@@ -30,6 +30,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;
 import org.hbird.business.api.IPointingData;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
@@ -67,6 +68,9 @@ public class HamlibRotatorDriverTest {
 
     @Mock
     private IDataAccess dao;
+    
+    @Mock
+    private IPublisher publisher;
 
     @Mock
     private IPointingDataOptimizer<RotatorDriverConfiguration> optimizer;
@@ -83,7 +87,7 @@ public class HamlibRotatorDriverTest {
      */
     @Before
     public void setUp() throws Exception {
-        driver = new HamlibRotatorDriver(dao, calculator);
+        driver = new HamlibRotatorDriver(publisher, dao, calculator);
         inOrder = inOrder(camelContext, part, driverConfig, dao, optimizer, converter, calculator);
         when(camelContext.getTypeConverter()).thenReturn(converter);
         when(part.getConfiguration()).thenReturn(driverConfig);

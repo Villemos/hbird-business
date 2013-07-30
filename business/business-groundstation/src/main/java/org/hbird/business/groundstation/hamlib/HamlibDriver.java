@@ -43,6 +43,7 @@ import org.apache.camel.component.netty.NettyConfiguration;
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.InMemoryScheduler;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.groundstation.base.DriverContext;
@@ -90,7 +91,9 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
     protected IPointingData calculator;
     
     @Autowired
-    public HamlibDriver(IDataAccess dao, IPointingData calculator) {
+    public HamlibDriver(IPublisher publisher, IDataAccess dao, IPointingData calculator) {
+    	super(publisher);
+    	
     	this.dao = dao;
     	this.calculator = calculator;
     }
@@ -210,9 +213,8 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
         // .routeId(name + ": Cleanup");
         //
 
-         ProcessorDefinition<?> publish = from(asRoute("direct:publish-%s", name))
+         ProcessorDefinition<?> publish = from(asRoute("direct:publish-%s", name)).bean(publisher, "publish")
                                              .startupOrder(1);
-         addInjectionRoute(publish);
          
          from(asRoute("direct:parameters-%s", name))
              .startupOrder(2)

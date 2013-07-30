@@ -60,6 +60,12 @@ public class Parser {
 
 	protected List<CommandableEntity> parts = null;
 	
+	protected IPublisher publisher;
+	
+	public Parser(IPublisher publisher) {
+		this.publisher = publisher;
+	}
+	
 	public void parse() throws Exception {
 
 		if (proxyHost != null) {
@@ -145,10 +151,9 @@ public class Parser {
 			}
 		}
 		
-		IPublisher api = ApiFactory.getPublishApi("parser");
 		for (CommandableEntity part : parts) {
 			LOG.info("Publishing satellite part (subsystem) '" + part.getName() + "'");
-			api.publish(part);
+			publisher.publish(part);
 		}
 	}
 

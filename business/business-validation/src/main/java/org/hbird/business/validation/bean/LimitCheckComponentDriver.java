@@ -18,6 +18,7 @@ package org.hbird.business.validation.bean;
 
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.validation.LimitCheckComponent;
 import org.hbird.exchange.configurator.StandardEndpoints;
@@ -37,7 +38,9 @@ public class LimitCheckComponentDriver extends SoftwareComponentDriver<LimitChec
 	private IDataAccess dao;
 	
 	@Autowired
-	public LimitCheckComponentDriver(IDataAccess dao) {
+	public LimitCheckComponentDriver(IPublisher publisher, IDataAccess dao) {
+		super(publisher);
+		
 		this.dao = dao;
 	}
 
@@ -79,18 +82,15 @@ public class LimitCheckComponentDriver extends SoftwareComponentDriver<LimitChec
     protected void createRoute(String parameter, BaseLimitChecker limit, String componentid, String limitValueName) {
 
         /** Create the route for limit checking. */
-        ProcessorDefinition<?> route = from(StandardEndpoints.MONITORING + "?selector=" + StandardArguments.ENTITY_ID + "='" + parameter + "'")
-                .bean(limit, "processParameter");
-        addInjectionRoute(route);
+        from(StandardEndpoints.MONITORING + "?selector=" + StandardArguments.ENTITY_ID + "='" + parameter + "'")
+                .bean(limit, "processParameter").bean(publisher, "publish");
 
         /** Create the route for enabling/disabling limit checking. */
-        route = from(StandardEndpoints.MONITORING + "?selector=" + StandardArguments.APPLICABLE_TO + "='" + componentid + "'")
-                .bean(limit, "processEnabled");
-        addInjectionRoute(route);
+        from(StandardEndpoints.MONITORING + "?selector=" + StandardArguments.APPLICABLE_TO + "='" + componentid + "'")
+                .bean(limit, "processEnabled").bean(publisher, "publish");
 
         /** Create the route for changing the limit value. */
-        route = from(StandardEndpoints.MONITORING + "?selector=" + StandardArguments.NAME + "='" + limitValueName + "'")
-                .bean(limit, "processLimit");
-        addInjectionRoute(route);
+        from(StandardEndpoints.MONITORING + "?selector=" + StandardArguments.NAME + "='" + limitValueName + "'")
+                .bean(limit, "processLimit").bean(publisher, "publish");
     }
 }
