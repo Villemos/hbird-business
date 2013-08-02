@@ -172,7 +172,7 @@ class InMemoryStore implements IDataAccess {
 	}
 
 	@Override
-	public List<Metadata> getMetadata(EntityInstance subject) throws Exception {
+	public List<Metadata> getMetadata(String id) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

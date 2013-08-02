@@ -16,26 +16,12 @@
  */
 package org.hbird.business.archive.api;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.archive.ArchiveComponent;
-import org.hbird.exchange.commandrelease.CommandRequest;
-import org.hbird.exchange.core.Binary;
 import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.EntityInstance;
-import org.hbird.exchange.core.Label;
-import org.hbird.exchange.core.Metadata;
-import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.core.State;
-import org.hbird.exchange.dataaccess.CommitRequest;
-import org.hbird.exchange.navigation.TleOrbitalParameters;
-import org.hbird.exchange.tasking.Task;
 
 /**
  * API for publishing different kinds of objects to the system.
@@ -78,9 +64,5 @@ public class Publish extends HbirdApi implements IPublisher {
 
         template.sendBody(inject, object);
         return object;
-    }
-    @Override
-    public void commit(String ID) {
-        template.sendBody(inject, new CommitRequest(ID));
     }
 }

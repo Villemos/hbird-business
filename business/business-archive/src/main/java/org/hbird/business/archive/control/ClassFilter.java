@@ -12,31 +12,31 @@ public class ClassFilter extends Filter {
 
     protected Set<String> acceptableClasses;
     protected boolean acceptSubclasses;
-    
+
     public ClassFilter(Set<String> acceptableClasses, boolean acceptSubclasses) {
         this.acceptableClasses = new TreeSet<String>(acceptableClasses);
         this.acceptSubclasses = acceptSubclasses;
     }
-    
+
     private boolean checkInterfaces(Class<?> clazz) {
         Class<?>[] interfaces = clazz.getInterfaces();
-        LOG.trace("Checking interfaces for class " + clazz.getName());
-        
-        for(Class<?> iface : interfaces) {
-            LOG.trace(clazz.getName() + " has interface " + iface);
+        LOG.trace("Checking interfaces for class {}", clazz.getName());
 
-            if(acceptableClasses.contains(iface.getName())) {
+        for (Class<?> iface : interfaces) {
+            LOG.trace("{} has interface {}", clazz.getName(), iface);
+
+            if (acceptableClasses.contains(iface.getName())) {
                 return true;
             }
-            
-            if(acceptSubclasses && checkInterfaces(iface)) {
+
+            if (acceptSubclasses && checkInterfaces(iface)) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     private boolean checkClass(Class<?> clazz) {
         return acceptableClasses.contains(clazz.getName()) || checkInterfaces(clazz);
     }
@@ -44,20 +44,22 @@ public class ClassFilter extends Filter {
     @Override
     public boolean passes(Object obj) {
         Class<?> clazz = obj.getClass();
-        LOG.trace("Checking object " + obj + " with class " + clazz.getName());
-        
-        if(acceptSubclasses) {
+        LOG.trace("Checking object {} with class {}", obj, clazz.getName());
+
+        if (acceptSubclasses) {
             do {
-                LOG.trace("Checking class " + clazz);
-                if(checkClass(clazz)) {
+                LOG.trace("Checking class {}", clazz);
+                if (checkClass(clazz)) {
                     return true;
                 }
-                
+
                 clazz = clazz.getSuperclass();
-            } while(clazz.getSuperclass() != null);
-            
+            }
+            while (clazz.getSuperclass() != null);
+
             return false;
-        } else {
+        }
+        else {
             return checkClass(clazz);
         }
     }

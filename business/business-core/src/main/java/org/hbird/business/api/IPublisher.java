@@ -16,19 +16,7 @@
  */
 package org.hbird.business.api;
 
-import java.util.List;
-
-import org.hbird.exchange.commandrelease.CommandRequest;
-import org.hbird.exchange.core.Binary;
-import org.hbird.exchange.core.Command;
-import org.hbird.exchange.core.CommandArgument;
 import org.hbird.exchange.core.EntityInstance;
-import org.hbird.exchange.core.Label;
-import org.hbird.exchange.core.Metadata;
-import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.core.State;
-import org.hbird.exchange.navigation.TleOrbitalParameters;
-import org.hbird.exchange.tasking.Task;
 
 /**
  * API Interface for publishing data to the system.
@@ -42,11 +30,5 @@ import org.hbird.exchange.tasking.Task;
  * 
  */
 public interface IPublisher extends IHbirdApi {
-
-    /**
-     * Method to force a commit of all data. Any process should flush buffers and cashes.
-     */
-    public void commit(String ID) throws Exception;
-
     public EntityInstance publish(EntityInstance object) throws Exception;
 }

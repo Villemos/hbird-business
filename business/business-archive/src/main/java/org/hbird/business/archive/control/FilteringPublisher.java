@@ -11,26 +11,22 @@ public class FilteringPublisher extends AbstractHbirdApi implements IPublisher {
 
     protected IPublisher delegate;
     protected Filter filter;
-        
+
     public FilteringPublisher(IPublisher delegate, Filter filter) {
         super(delegate.getIssuedBy(), delegate.getDestination());
-        
+
         this.delegate = delegate;
         this.filter = filter;
     }
 
     @Override
-    public void commit(String ID) throws Exception {
-
-    }
-
-    @Override
     public EntityInstance publish(EntityInstance object) throws Exception {
-        if(filter.passes(object)) {
-            LOG.trace(object + " passed the filter"); 
+        if (filter.passes(object)) {
+            LOG.trace("{} passed the filter", object);
             return delegate.publish(object);
-        } else {
-            LOG.trace(object + " didn't pass the filter");
+        }
+        else {
+            LOG.trace("{} didn't pass the filter", object);
             return object;
         }
     }

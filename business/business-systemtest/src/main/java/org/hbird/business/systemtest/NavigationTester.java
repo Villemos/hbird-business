@@ -113,7 +113,7 @@ public class NavigationTester extends SystemTest {
         azzert(contactEvent.getEndTime() == 1355391373642l);
 
         /** See if we can get the metadata */
-        List<Metadata> response = accessApi.getMetadata(parameters);
+        List<Metadata> response = accessApi.getMetadata(parameters.getID());
         azzert(response.size() == 1, "Expected to receive 1 piece of metadata. Received " + response.size());
 
         LOG.info("Finished");

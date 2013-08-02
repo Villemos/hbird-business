@@ -2,7 +2,6 @@ package org.hbird.business.api;
 
 import java.util.List;
 
-import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
@@ -12,17 +11,18 @@ import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
 public interface IDataAccess {
-	public <T extends IEntityInstance> T getById(String id, Class<T> clazz) throws Exception; // TODO: Specify exception types
-	
-	// Returns last VERSION of an entity with a given id
-	public <T extends IEntityInstance> T getByInstanceId(String id, Class<T> clazz) throws Exception;
-	
-	// Returns all entity instances of a class <clazz>
-	public <T extends IEntityInstance> List<T> getAll(Class<T> clazz) throws Exception;
-	
-	public Object save(Object o) throws Exception;
-	
-	/**
+    public <T extends IEntityInstance> T getById(String id, Class<T> clazz) throws Exception; // TODO: Specify exception
+                                                                                              // types
+
+    // Returns last VERSION of an entity with a given id
+    public <T extends IEntityInstance> T getByInstanceId(String id, Class<T> clazz) throws Exception;
+
+    // Returns all entity instances of a class <clazz>
+    public <T extends IEntityInstance> List<T> getAll(Class<T> clazz) throws Exception;
+
+    public Object save(Object o) throws Exception;
+
+    /**
      * Method to retrieve the last sample of a single parameter. The method will return <li>One parameter sample</li>
      * <li>With the highest possible version</li>
      * 
@@ -32,7 +32,7 @@ public interface IDataAccess {
      * @throws Exception if no samples found or on data access error
      */
     public Parameter getParameter(String name) throws Exception;
-    
+
     /**
      * Method to retrieve the samples of a single parameter. The retrieval will be <li>All samples</li> <li>With a
      * sample timestamp between 'from' and 'to'</li> <li>and sorted on timestamp in ASCENDING order</li>
@@ -43,8 +43,7 @@ public interface IDataAccess {
      * @return List<Parameter> of Parameter samples. May be empty if no samples matching the criteria were found.
      */
     public List<Parameter> getParameter(String name, long from, long to) throws Exception;
-    
-    
+
     /**
      * Method to retrieve all states applicable to a Named object (such as a Parameter). <li>A maximum of 1000 entries
      * (parameter samples and applicable states)</li> <li>Starting from the last received sample of the parameter</li>
@@ -54,7 +53,7 @@ public interface IDataAccess {
      * @return A list of all states applicable to the named object
      */
     public List<State> getState(String applicableTo) throws Exception;
-    
+
     /**
      * Method to retrieve all states applicable to a Named object (such as a Parameter). <li>All state samples</li> <li>
      * With a sample timestamp between 'from' and 'to'</li> <li>and sorted on timestamp in ASCENDING order</li>
@@ -67,9 +66,9 @@ public interface IDataAccess {
     public List<State> getState(String applicableTo, long from, long to) throws Exception;
 
     /**
-     * @return A list of most recent versions of states with given names 
+     * @return A list of most recent versions of states with given names
      * 
-     * FIXME: "most recent versions" part
+     *         FIXME: "most recent versions" part
      */
     public List<State> getStates(List<String> names) throws Exception;
 
@@ -80,7 +79,7 @@ public interface IDataAccess {
      * @param satelliteID The ID of the satellite
      */
     public OrbitalState getOrbitalStateFor(String satelliteID) throws Exception;
-    
+
     /**
      * Method to retrieve the orbital state of a satellite, identified throughs its name, within
      * a given interval. The method will return <li>All orbital state samples applicable to the satellite</li> <li>With
@@ -150,5 +149,5 @@ public interface IDataAccess {
      * @param subject The Named object that the metadata must be applicable to.
      * @return A list with zero or more metadata objects applicable to the subject
      */
-    public List<Metadata> getMetadata(EntityInstance subject) throws Exception;
+    public List<Metadata> getMetadata(String subjectID) throws Exception;
 }
