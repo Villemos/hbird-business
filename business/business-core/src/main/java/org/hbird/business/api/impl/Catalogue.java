@@ -49,7 +49,7 @@ public class Catalogue extends AbstractHbirdApi implements ICatalogue {
     protected <T extends IEntityInstance> List<T> getLatestOrEmpty(Class<T> clazz) {
         try {
             // return getLatest(clazz);
-            return dao.getAll(clazz);
+            return dao.getAllBySupertype(clazz);
         }
         catch (Exception e) {
             LOG.error("Exception while fetching latest instances of " + clazz.getSimpleName(), e);

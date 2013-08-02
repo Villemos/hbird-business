@@ -194,7 +194,6 @@ public class SubclassAwareMongoTemplate extends MongoTemplate {
 
     @Override
     public <T> List<T> find(Query query, Class<T> clazz) {
-        System.out.println("find, clazz = " + clazz.getName());
         addToHierarchy(clazz);
 
         List<T> result = super.find(query, clazz);

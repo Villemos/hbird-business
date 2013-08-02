@@ -5,10 +5,15 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.hbird.business.api.IDataAccess;
+import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
@@ -16,6 +21,11 @@ import org.hbird.exchange.interfaces.IEntityInstance;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -25,6 +35,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import com.mongodb.Mongo;
 
 public class MongoDataAccess implements IDataAccess {
+    private static final Logger LOG = LoggerFactory.getLogger(MongoDataAccess.class);
+
     public static final String DEFAULT_DATABASE_NAME = "hbird";
 
     private static final String FIELD_ID = "ID";
@@ -48,9 +60,13 @@ public class MongoDataAccess implements IDataAccess {
     public final Sort sortByIDAndVersion = new Sort(Sort.Direction.DESC, FIELD_ID, FIELD_VERSION);
 
     protected MongoOperations template = null;
+    protected Map<String, Set<String>> subtypeRelation = new HashMap<String, Set<String>>();
+    protected Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
 
     public MongoDataAccess(MongoOperations template) {
         this.template = template;
+
+        initSubtypeRelation("org.hbird");
     }
 
     // TODO: This is just for testing - instantiate in spring context if possible
@@ -58,7 +74,44 @@ public class MongoDataAccess implements IDataAccess {
         Mongo mongo = new Mongo("localhost", 27017);
         MongoTemplate temp = new MongoTemplate(mongo, DEFAULT_DATABASE_NAME);
 
-        template = temp;
+        this.template = temp;
+
+        initSubtypeRelation("org.hbird");
+    }
+
+    protected void addToSubtypeRelation(Class<?> parent, Class<?> child) {
+        String parentName = parent.getName();
+
+        if (!subtypeRelation.containsKey(parentName)) {
+            Set<String> subclasses = new HashSet<String>();
+            subtypeRelation.put(parentName, subclasses);
+        }
+
+        subtypeRelation.get(parentName).add(child.getName());
+        classes.put(child.getName(), child);
+    }
+
+    protected void initSubtypeRelation(String packageName) {
+        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
+
+        provider.addIncludeFilter(new AssignableTypeFilter(EntityInstance.class));
+
+        Set<BeanDefinition> components = provider.findCandidateComponents(packageName);
+
+        for (BeanDefinition component : components) {
+            try {
+                Class<? extends EntityInstance> clazz = (Class<? extends EntityInstance>) (Class.forName(component.getBeanClassName()));
+                Class<?> parent = clazz.getSuperclass();
+
+                while (parent != null) {
+                    addToSubtypeRelation(parent, clazz);
+                    parent = parent.getSuperclass();
+                }
+            }
+            catch (ClassNotFoundException e) {
+                LOG.error("Failed to create class by name", e);
+            }
+        }
     }
 
     private <T> T wrapReturn(T value) throws Exception {
@@ -84,11 +137,13 @@ public class MongoDataAccess implements IDataAccess {
     @Override
     public <T extends IEntityInstance> List<T> getAll(Class<T> clazz) throws Exception {
         return getLastVersions(new Query(), clazz);
-        // return template.findAll(clazz);
     }
 
     @Override
     public Object save(Object o) throws Exception {
+        if (!classes.containsKey(o)) {
+            initSubtypeRelation(o.getClass().getPackage().getName());
+        }
         template.save(o);
         return o;
     }
@@ -176,7 +231,7 @@ public class MongoDataAccess implements IDataAccess {
 
     @Override
     // This one returns only the last versions
-    public List<State> getState(String applicableTo) { // TODO: Use version instead of timestamp?
+    public List<State> getState(String applicableTo) {
         return getLastVersions(query(where(FIELD_APPLICABLE_TO).is(applicableTo)), State.class);
     }
 
@@ -259,5 +314,19 @@ public class MongoDataAccess implements IDataAccess {
         Query query = query(where(FIELD_APPLICABLE_TO).is(subjectID));
 
         return getLastVersions(query, Metadata.class);
+    }
+
+    @Override
+    public <T extends IEntityInstance> List<T> getAllBySupertype(Class<T> superclass) throws Exception {
+        Query emptyQuery = new Query();
+        List<T> result = getLastVersions(emptyQuery, superclass);
+
+        if (subtypeRelation.containsKey(superclass.getName())) {
+            for (String subclassName : subtypeRelation.get(superclass.getName())) {
+                result.addAll(getLastVersions(emptyQuery, (Class<? extends T>) classes.get(subclassName)));
+            }
+        }
+
+        return result;
     }
 }

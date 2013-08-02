@@ -55,17 +55,17 @@
 	<!-- APIs -->
 	<mongo:mongo host="localhost" port="27017" />
 	
-	<!--  
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
 		<constructor-arg ref="mongo" />
 		<constructor-arg name="databaseName" value="hbird_test" />
 	</bean>
-	-->
-	
+
+    <!--  	
 	<bean id="mongoTemplate" class="org.hbird.business.archive.dao.mongo.SubclassAwareMongoTemplate">
 		<constructor-arg ref="mongo" />
 		<constructor-arg name="databaseName" value="hbird_test" />
 	</bean>
+	-->
 
 	<bean id="dataAccess" class="org.hbird.business.archive.dao.mongo.MongoDataAccess">
 		<constructor-arg ref="mongoTemplate" />

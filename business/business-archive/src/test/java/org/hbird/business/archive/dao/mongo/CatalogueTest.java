@@ -15,6 +15,7 @@ import org.hbird.exchange.navigation.Satellite;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.mongodb.Mongo;
 
@@ -26,8 +27,8 @@ public class CatalogueTest {
     @Before
     public void setUp() throws UnknownHostException {
         mongo = new Mongo("localhost");
-        dao = new MongoDataAccess(new SubclassAwareMongoTemplate(mongo, "hbird_test"));
-        // dao = new MongoDataAccess(new MongoTemplate(new Mongo("localhost"), "hbird_test"));
+        // dao = new MongoDataAccess(new SubclassAwareMongoTemplate(mongo, "hbird_test"));
+        dao = new MongoDataAccess(new MongoTemplate(new Mongo("localhost"), "hbird_test"));
         catalogue = new Catalogue("catalogue", "catalogue", dao);
     }
 

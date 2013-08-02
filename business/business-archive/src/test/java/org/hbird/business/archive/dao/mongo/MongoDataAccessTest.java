@@ -14,6 +14,7 @@ import java.util.Map;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.core.Part;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
@@ -52,8 +53,8 @@ public class MongoDataAccessTest {
     public void setUp() throws UnknownHostException {
         mongo = new Mongo("localhost", 27017);
 
-        // MongoTemplate template = new MongoTemplate(mongo, TEST_DATABASE_NAME);
-        MongoTemplate template = new SubclassAwareMongoTemplate(mongo, TEST_DATABASE_NAME);
+        MongoTemplate template = new MongoTemplate(mongo, TEST_DATABASE_NAME);
+        // MongoTemplate template = new SubclassAwareMongoTemplate(mongo, TEST_DATABASE_NAME);
         dao = new MongoDataAccess(template);
     }
 
@@ -657,4 +658,33 @@ public class MongoDataAccessTest {
         assertEquals(2, states.get(1).getVersion());
     }
 
+    @Test
+    public void testGetAllBySupertype() throws Exception {
+        Satellite sat = new Satellite("SAT1", "SAT1");
+        GroundStation gs = new GroundStation("GS1", "GS1");
+
+        dao.save(sat);
+        dao.save(gs);
+
+        List<Part> parts = dao.getAllBySupertype(Part.class);
+
+        assertEquals(2, parts.size());
+
+        Part p1, p2;
+
+        if (parts.get(0).getID().equals("SAT1")) {
+            p1 = parts.get(0);
+            p2 = parts.get(1);
+        }
+        else {
+            p1 = parts.get(1);
+            p2 = parts.get(0);
+        }
+
+        assertEquals("SAT1", p1.getID());
+        assertEquals(Satellite.class, p1.getClass());
+
+        assertEquals("GS1", p2.getID());
+        assertEquals(GroundStation.class, p2.getClass());
+    }
 }
