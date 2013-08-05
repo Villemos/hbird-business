@@ -20,7 +20,7 @@ public class FilteringPublisher extends AbstractHbirdApi implements IPublisher {
     }
 
     @Override
-    public EntityInstance publish(EntityInstance object) throws Exception {
+    public <T extends EntityInstance> T publish(T object) throws Exception {
         if (filter.passes(object)) {
             LOG.trace("{} passed the filter", object);
             return delegate.publish(object);

@@ -30,5 +30,5 @@ import org.hbird.exchange.core.EntityInstance;
  * 
  */
 public interface IPublisher extends IHbirdApi {
-    public EntityInstance publish(EntityInstance object) throws Exception;
+    public <T extends EntityInstance> T publish(T object) throws Exception;
 }

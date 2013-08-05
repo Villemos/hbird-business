@@ -38,16 +38,16 @@ public class Injector extends AbstractHbirdApi implements IPublisher {
     }
 
     @Override
-    public EntityInstance publish(EntityInstance object) throws Exception {
+    public <T extends EntityInstance> T publish(T object) throws Exception {
         LOG.trace("Publishing {}", object);
 
         if (object == null) { // E.g. limit checker can send null
             return null;
         }
 
-        EntityInstance saved = delegate.publish(object);
+        T saved = delegate.publish(object);
 
-        return publishToAMQ(saved);
+        return (T) publishToAMQ(saved);
     }
 
     protected EntityInstance publishToAMQ(EntityInstance object) {
@@ -56,8 +56,8 @@ public class Injector extends AbstractHbirdApi implements IPublisher {
 
     @Override
     public void dispose() throws Exception {
-        // injector.dispose();
-        // delegate.dispose(); //XXX
+        injector.dispose();
+        delegate.dispose();
     }
 
 }

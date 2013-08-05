@@ -416,7 +416,6 @@ public abstract class SystemTest {
         // request.setDeleteAll(true);
         // injection.sendBody(request);
 
-        // XXX: Care, maybe template will stop working after this
         LOG.info("Dropping database hbird_test");
         Mongo mongo = getContext().getRegistry().lookup("mongo", Mongo.class);
         mongo.dropDatabase("hbird_test");

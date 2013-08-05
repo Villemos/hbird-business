@@ -151,5 +151,5 @@ public interface IDataAccess {
      * @param subject The Named object that the metadata must be applicable to.
      * @return A list with zero or more metadata objects applicable to the subject
      */
-    public List<Metadata> getMetadata(String subjectID) throws Exception;
+    public List<Metadata> getMetadata(String applicableTo) throws Exception;
 }

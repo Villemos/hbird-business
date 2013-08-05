@@ -16,7 +16,6 @@
  */
 package org.hbird.business.core;
 
-import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.IPublisher;
 import org.hbird.exchange.configurator.StandardEndpoints;
 import org.hbird.exchange.configurator.StartComponent;
@@ -45,12 +44,12 @@ public abstract class SoftwareComponentDriver<T extends IStartableEntity> extend
 
     /** The part that this driver starts. */
     protected T entity;
-    
+
     protected IPublisher publisher;
-    
+
     @Autowired
     public SoftwareComponentDriver(IPublisher publisher) {
-    	this.publisher = publisher;
+        this.publisher = publisher;
     }
 
     /**
@@ -69,8 +68,7 @@ public abstract class SoftwareComponentDriver<T extends IStartableEntity> extend
 
         /** Get the part specification from the start request. */
         if (command != null) {
-            //entity = (T)command.getEntity(); 
-            setPart((T) command.getEntity()); // XXX: Add type check
+            setPart((T) command.getEntity());
         }
 
         if (entity != null) {

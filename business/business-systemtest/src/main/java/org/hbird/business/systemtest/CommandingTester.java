@@ -31,7 +31,7 @@ import org.hbird.exchange.tasking.Task;
 public class CommandingTester extends SystemTest {
 
     private static org.apache.log4j.Logger LOG = Logger.getLogger(CommandingTester.class);
-    
+
     @Handler
     public void process() throws Exception {
 
@@ -48,9 +48,7 @@ public class CommandingTester extends SystemTest {
 
         /** Send a simple command request. */
         publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, null, null);
-        
-        
-        
+
         Thread.sleep(2000);
 
         azzert(commandingListener.lastReceived.getName().equals("COM2"),
@@ -68,7 +66,7 @@ public class CommandingTester extends SystemTest {
 
         /** Add tasks to be done and lock states. */
         List<Task> tasks = new ArrayList<Task>();
-                
+
         SetParameter setparameter1 = new SetParameter("TASK_SET_PARA10", "TASK_SET_PARA10");
         setparameter1.setDescription("A test parameter set by a task");
 
@@ -77,7 +75,7 @@ public class CommandingTester extends SystemTest {
         parameter1.setValue(9d);
         parameter1.setUnit("Bananas");
         setparameter1.setParameter(parameter1);
-        
+
         tasks.add(setparameter1);
 
         SetParameter setparameter2 = new SetParameter("TASK_SET_PARA11", "TASK_SET_PARA11");
@@ -88,7 +86,7 @@ public class CommandingTester extends SystemTest {
         parameter2.setValue(1d);
         parameter2.setUnit("Bananas");
         setparameter2.setParameter(parameter2);
-        
+
         tasks.add(setparameter1);
 
         List<String> states = new ArrayList<String>();
@@ -126,9 +124,6 @@ public class CommandingTester extends SystemTest {
 
         Thread.sleep(2000);
 
-        // XXX: Why should it even be here? The command didn't fail
-        //azzert(failedCommandRequestListener.lastReceived != null, "Failed command request received");
-        //azzert(failedCommandRequestListener.lastReceived.getName().equals("COMREQ1"));
         azzert(failedCommandRequestListener.lastReceived == null, "Command succeeded");
 
         /**

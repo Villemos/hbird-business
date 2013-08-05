@@ -19,6 +19,8 @@
  */
 package org.hbird.business.systemtest;
 
+import java.util.List;
+
 import org.apache.camel.Handler;
 import org.hbird.business.configurator.ConfiguratorComponent;
 import org.hbird.exchange.constants.StandardMissionEvents;
@@ -34,7 +36,7 @@ public class EventTester extends SystemTest {
     private static Logger LOG = LoggerFactory.getLogger(EventTester.class);
 
     @Handler
-    public void process() throws InterruptedException {
+    public void process() throws Exception {
 
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
@@ -44,7 +46,7 @@ public class EventTester extends SystemTest {
         startMonitoringArchive();
         startCommandingChain();
 
-        LOG.info("There are {} events published", eventListener.elements.size()); // XXX
+        LOG.info("There are {} events published", eventListener.elements.size());
         azzert(eventListener.elements.size() == 1, "There should be 1 events published");
         Event event = (Event) eventListener.elements.get(0);
         azzert(StandardMissionEvents.COMPONENT_START.getName().equals(event.getName()), "startEvent.getName()");
@@ -66,10 +68,10 @@ public class EventTester extends SystemTest {
         azzert(StandardMissionEvents.COMPONENT_STOP.getDescription().equals(event.getDescription()), "stopEvent.getDescription()");
 
         forceCommit();
-        
-        //List<Event> events = accessApi.getEvents(null, null); // XXX
-        //azzert(events.size() == 2, "Expected to receive 2 events.");
-        
+
+        List<Event> events = accessApi.getAllBySupertype(Event.class);
+        azzert(events.size() == 2, "Expected to receive 2 events.");
+
         LOG.info("Finished");
     }
 

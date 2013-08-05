@@ -78,14 +78,6 @@ class InMemoryStore implements IDataAccess {
         }
     }
 
-    public void dump() {
-        System.out.println("Store dump: ");
-        for (EntityInstance entity : entities) {
-            System.out.println("Entity: id = " + entity.getID() + " name = " +
-                    entity.getName() + " version = " + entity.getVersion());
-        }
-    }
-
     @Override
     public Parameter getParameter(String name) throws Exception {
         // TODO Auto-generated method stub

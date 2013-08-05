@@ -68,7 +68,6 @@ public class CatalogueTest {
         int versions[] = new int[] { 15, 1, 10, 11, 25, 16, 8 };
 
         for (int i = 0; i < versions.length; i++) {
-            System.out.println("Creating parameter " + i);
             Parameter par = new Parameter(id, id);
             par.setVersion(versions[i]);
 

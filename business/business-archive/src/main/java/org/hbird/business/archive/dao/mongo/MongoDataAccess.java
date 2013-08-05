@@ -17,6 +17,7 @@ import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
+import org.hbird.exchange.interfaces.IEntity;
 import org.hbird.exchange.interfaces.IEntityInstance;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
@@ -94,7 +95,7 @@ public class MongoDataAccess implements IDataAccess {
     protected void initSubtypeRelation(String packageName) {
         ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
 
-        provider.addIncludeFilter(new AssignableTypeFilter(EntityInstance.class));
+        provider.addIncludeFilter(new AssignableTypeFilter(IEntity.class));
 
         Set<BeanDefinition> components = provider.findCandidateComponents(packageName);
 
@@ -310,8 +311,8 @@ public class MongoDataAccess implements IDataAccess {
     }
 
     @Override
-    public List<Metadata> getMetadata(String subjectID) {
-        Query query = query(where(FIELD_APPLICABLE_TO).is(subjectID));
+    public List<Metadata> getMetadata(String applicableTo) {
+        Query query = query(where(FIELD_APPLICABLE_TO).is(applicableTo));
 
         return getLastVersions(query, Metadata.class);
     }

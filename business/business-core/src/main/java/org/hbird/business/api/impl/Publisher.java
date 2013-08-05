@@ -15,7 +15,7 @@ public class Publisher extends AbstractHbirdApi implements IPublisher {
     }
 
     @Override
-    public EntityInstance publish(EntityInstance object) throws Exception {
+    public <T extends EntityInstance> T publish(T object) throws Exception {
         if (object.getIssuedBy() == null) {
             object.setIssuedBy(getIssuedBy());
         }

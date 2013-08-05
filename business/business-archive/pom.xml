@@ -21,6 +21,7 @@
                     <excludes>
                         <exclude>**/MongoDataAccessTest.java</exclude>
                         <exclude>**/SubclassAwareMongoTemplateTest.java</exclude>
+                        <exclude>**/CatalogueTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

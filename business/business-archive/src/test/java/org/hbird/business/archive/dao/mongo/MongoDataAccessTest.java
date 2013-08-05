@@ -231,7 +231,6 @@ public class MongoDataAccessTest {
         // Exception if no sample found
         try { // TODO: Ugly, need to split the test to use juni4 expected exception assertions
             par = dao.getParameter("PAR0");
-            System.out.println("DAO return value when no object available: " + par);
             fail("getParameter must fail when no samples available");
         }
         catch (Exception e) {
