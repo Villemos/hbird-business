@@ -330,4 +330,11 @@ public class MongoDataAccess implements IDataAccess {
 
         return result;
     }
+
+    @Override
+    public <T extends IEntityInstance> List<T> getAllInstancesById(String id, Class<T> clazz) throws Exception {
+        Query query = query(where(FIELD_ID).is(id));
+
+        return template.find(query, clazz);
+    }
 }

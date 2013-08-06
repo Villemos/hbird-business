@@ -17,6 +17,8 @@ public interface IDataAccess {
     // Returns last VERSION of an entity with a given id
     public <T extends IEntityInstance> T getByInstanceId(String id, Class<T> clazz) throws Exception;
 
+    public <T extends IEntityInstance> List<T> getAllInstancesById(String id, Class<T> clazz) throws Exception;
+
     // Returns all entity instances of a class <clazz>
     public <T extends IEntityInstance> List<T> getAll(Class<T> clazz) throws Exception;
 
@@ -70,7 +72,6 @@ public interface IDataAccess {
     /**
      * @return A list of most recent versions of states with given names
      * 
-     *         FIXME: "most recent versions" part
      */
     public List<State> getStates(List<String> names) throws Exception;
 
