@@ -24,7 +24,10 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.mongodb.BasicDBObject;
@@ -54,8 +57,8 @@ public class SubclassAwareMongoTemplate extends MongoTemplate {
 
     private long version = 0;
 
-    public SubclassAwareMongoTemplate(Mongo mongo, String databaseName) {
-        super(mongo, databaseName);
+    public SubclassAwareMongoTemplate(MongoDbFactory dbFactory, MongoConverter mongoConverter) {
+        super(dbFactory, mongoConverter);
 
         setWriteConcern(WriteConcern.ACKNOWLEDGED);
 
@@ -77,6 +80,10 @@ public class SubclassAwareMongoTemplate extends MongoTemplate {
             updateCacheFromDB();
             LOG.info("Hierarchy version: " + version);
         }
+    }
+
+    public SubclassAwareMongoTemplate(Mongo mongo, String databaseName) {
+        this(new SimpleMongoDbFactory(mongo, databaseName), null);
     }
 
     private void writeVersionToDB() {

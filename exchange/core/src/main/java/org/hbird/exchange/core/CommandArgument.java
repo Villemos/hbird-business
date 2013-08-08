@@ -18,104 +18,107 @@ package org.hbird.exchange.core;
 
 import java.io.Serializable;
 
+import org.springframework.data.annotation.PersistenceConstructor;
+
 public class CommandArgument implements Serializable {
 
-	private static final long serialVersionUID = 8198716970891183855L;
+    private static final long serialVersionUID = 8198716970891183855L;
 
-	private final String name;
-	private final String description;
-	private Class<?> type = Integer.class;
-	private final String unit;
-	private Object value;
-	private final Boolean mandatory;
+    private final String name;
+    private final String description;
+    private Class<?> type = Integer.class;
+    private final String unit;
+    private Object value;
+    private final Boolean mandatory;
 
-	public CommandArgument(String name, String description, Class<?> type, String unit, Object value, Boolean mandatory) {
-		this.name = name;
-		this.description = description;
-		this.type = type;
-		this.unit = unit;
-		this.value = value;
-		this.mandatory = mandatory;
-	}
+    public CommandArgument(String name, String description, Class<?> type, String unit, Object value, Boolean mandatory) {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.unit = unit;
+        this.value = value;
+        this.mandatory = mandatory;
+    }
 
-	public CommandArgument(String name, String description, Class<?> type, Boolean mandatory) {
-		this(name, description, type, null, null, mandatory);
-	}
+    public CommandArgument(String name, String description, Class<?> type, Boolean mandatory) {
+        this(name, description, type, null, null, mandatory);
+    }
 
-	public CommandArgument(String name, String description) {
-		this(name, description, null, null, null, true);
-	}
+    @PersistenceConstructor
+    public CommandArgument(String name, String description) {
+        this(name, description, null, null, null, true);
+    }
 
-	public CommandArgument(CommandArgument copyFrom) {
-		this(copyFrom.getName(), copyFrom.getDescription(), copyFrom.getType(), copyFrom.getUnit(), copyFrom.getValue(), copyFrom.getMandatory());
-	}
+    public CommandArgument(CommandArgument copyFrom) {
+        this(copyFrom.getName(), copyFrom.getDescription(), copyFrom.getType(), copyFrom.getUnit(), copyFrom.getValue(), copyFrom.getMandatory());
+    }
 
-	/**
-	 * @return the name
-	 */
-	 public String getName() {
-		return name;
-	}
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * @return the description
-	 */
-	 public String getDescription() {
-		 return description;
-	 }
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	 /**
-	  * @return the type
-	  */
-	 public Class<?> getType() {
-		 return type;
-	 }
+    /**
+     * @return the type
+     */
+    public Class<?> getType() {
+        return type;
+    }
 
-	 /**
-	  * @return the unit
-	  */
-	 public String getUnit() {
-		 return unit;
-	 }
+    /**
+     * @return the unit
+     */
+    public String getUnit() {
+        return unit;
+    }
 
-	 /**
-	  * @return the value
-	  */
-	 public Object getValue() {
-		 return value;
-	 }
+    /**
+     * @return the value
+     */
+    public Object getValue() {
+        return value;
+    }
 
-	 /**
-	  * @return the mandatory
-	  */
-	 public Boolean getMandatory() {
-		 return mandatory;
-	 }
+    /**
+     * @return the mandatory
+     */
+    public Boolean getMandatory() {
+        return mandatory;
+    }
 
-	 /**
-	  * @param value the value to set
-	  */
-	 public void setValue(Object value) {
-		 this.value = value;
+    /**
+     * @param value the value to set
+     */
+    public void setValue(Object value) {
+        this.value = value;
 
-		 if (value != null) {
-			 this.type = value.getClass();
-		 }
-	 }
+        if (value != null) {
+            this.type = value.getClass();
+        }
+    }
 
-	 public void setIntValue(Integer value) {
-		 setValue(value);
-	 }
+    public void setIntValue(Integer value) {
+        setValue(value);
+    }
 
-	 public void setLongValue(Long value) {
-		 setValue(value);
-	 }
+    public void setLongValue(Long value) {
+        setValue(value);
+    }
 
-	 public void setDoubleValue(Double value) {
-		 setValue(value);
-	 }
+    public void setDoubleValue(Double value) {
+        setValue(value);
+    }
 
-	 public void setStringValue(String value) {
-		 setValue(value);
-	 }
+    public void setStringValue(String value) {
+        setValue(value);
+    }
 }

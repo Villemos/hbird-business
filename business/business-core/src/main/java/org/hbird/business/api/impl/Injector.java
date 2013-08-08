@@ -51,7 +51,6 @@ public class Injector extends AbstractHbirdApi implements IPublisher {
     }
 
     protected EntityInstance publishToAMQ(EntityInstance object) {
-        LOG.trace("Publishing {} to AMQ", object);
         return injector.publish(object);
     }
 

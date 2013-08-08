@@ -117,9 +117,9 @@ public abstract class HbirdApi extends HbirdRouteBuilder implements IHbirdApi {
      * @return
      */
     public EntityInstance publish(EntityInstance object) {
-    	if(object.getIssuedBy() == null) { // XXX: Not sure about that
-    		object.setIssuedBy(issuedBy);
-    	}
+        if (object.getIssuedBy() == null) { // XXX: Not sure about that
+            object.setIssuedBy(issuedBy);
+        }
 
         if (object instanceof Command && ((Command) object).getDestination() == null) {
             ((Command) object).setDestination(destination);
