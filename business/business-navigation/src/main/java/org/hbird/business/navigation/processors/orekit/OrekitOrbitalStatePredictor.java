@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.camel.Handler;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration;
 import org.hbird.business.navigation.orekit.IPropagatorProvider;
@@ -42,11 +42,11 @@ public class OrekitOrbitalStatePredictor {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrekitContactPredictor.class);
 
-    private final IPublish publisher;
+    private final IPublisher publisher;
     private final IPropagatorProvider propagatorProvider;
     private final IdBuilder idBuilder;
 
-    public OrekitOrbitalStatePredictor(IPropagatorProvider propagatorProvider, IPublish publisher, IdBuilder idBuilder) {
+    public OrekitOrbitalStatePredictor(IPropagatorProvider propagatorProvider, IPublisher publisher, IdBuilder idBuilder) {
         this.propagatorProvider = propagatorProvider;
         this.publisher = publisher;
         this.idBuilder = idBuilder;

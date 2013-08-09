@@ -36,7 +36,7 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
 import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.CommandableEntity;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
@@ -59,6 +59,12 @@ public class Parser {
 	protected int proxyPort = 0;
 
 	protected List<CommandableEntity> parts = null;
+	
+	protected IPublisher publisher;
+	
+	public Parser(IPublisher publisher) {
+		this.publisher = publisher;
+	}
 	
 	public void parse() throws Exception {
 
@@ -145,10 +151,9 @@ public class Parser {
 			}
 		}
 		
-		IPublish api = ApiFactory.getPublishApi("parser");
 		for (CommandableEntity part : parts) {
 			LOG.info("Publishing satellite part (subsystem) '" + part.getName() + "'");
-			api.publish(part);
+			publisher.publish(part);
 		}
 	}
 

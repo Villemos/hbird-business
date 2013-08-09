@@ -10,9 +10,46 @@
     <artifactId>business-archive</artifactId>
     <name>HBird :: Business - SOLR</name>
     <description>An archive based on the Apache SOLR storage engine.</description>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/MongoDataAccessTest.java</exclude>
+                        <exclude>**/SubclassAwareMongoTemplateTest.java</exclude>
+                        <exclude>**/CatalogueTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <profiles>
+        <profile>
+            <id>mongotests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${surefire-plugin.version}</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>none</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
-
+        
         <dependency>
             <groupId>org.hbird.business</groupId>
             <artifactId>business-core</artifactId>
@@ -49,7 +86,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -63,6 +99,12 @@
         <dependency>
             <groupId>org.hbird.exchange</groupId>
             <artifactId>all-exchange</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>1.2.1.RELEASE</version>
         </dependency>
 
     </dependencies>

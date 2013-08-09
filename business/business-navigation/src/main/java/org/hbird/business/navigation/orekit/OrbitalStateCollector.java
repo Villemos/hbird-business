@@ -19,13 +19,15 @@ package org.hbird.business.navigation.orekit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.orekit.errors.PropagationException;
 import org.orekit.propagation.SpacecraftState;
 import org.orekit.propagation.sampling.OrekitFixedStepHandler;
 import org.orekit.time.AbsoluteDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Callback class of the orekit propagator. The propagator will call the
@@ -37,6 +39,7 @@ import org.orekit.time.AbsoluteDate;
  * @author Gert Villemos
  */
 public class OrbitalStateCollector implements OrekitFixedStepHandler {
+	private static final Logger LOG = LoggerFactory.getLogger(OrbitalStateCollector.class);
 
     public static final String ORBITAL_STATE = "orbitalstate";
 
@@ -46,11 +49,11 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
     protected List<OrbitalState> states = new ArrayList<OrbitalState>();
 
-    protected IPublish publisher;
+    protected IPublisher publisher;
 
     protected final IdBuilder idBuilder;
 
-    public OrbitalStateCollector(String satelliteId, String derivedFrom, IPublish publisher, IdBuilder idBuilder) {
+    public OrbitalStateCollector(String satelliteId, String derivedFrom, IPublisher publisher, IdBuilder idBuilder) {
         this.satelliteId = satelliteId;
         this.derivedFrom = derivedFrom;
         this.publisher = publisher;
@@ -69,7 +72,11 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
         states.add(state);
         if (publisher != null) {
-            publisher.publish(state);
+            try {
+				publisher.publish(state);
+			} catch (Exception e) {
+				LOG.error("Failed to publish current state", e);
+			}
         }
     }
 
@@ -88,14 +95,14 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
     /**
      * @return the publisher
      */
-    public IPublish getPublisher() {
+    public IPublisher getPublisher() {
         return publisher;
     }
 
     /**
      * @param publisher the publisher to set
      */
-    public void setPublisher(IPublish publisher) {
+    public void setPublisher(IPublisher publisher) {
         this.publisher = publisher;
     }
 

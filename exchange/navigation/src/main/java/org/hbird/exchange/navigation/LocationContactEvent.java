@@ -103,7 +103,9 @@ public class LocationContactEvent extends Event implements IGroundStationSpecifi
         this.groundStationId = groundStationId;
         this.satelliteId = satelliteId;
         this.orbitNumber = orbitNumber;
-        this.version = orbitNumber;
+        
+        super.setVersion(orbitNumber);
+        
         setDescription(DESCRIPTION);
     }
 

@@ -25,10 +25,10 @@ import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ModelCamelContext;
-import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.spring.spi.ApplicationContextRegistry;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.configurator.StandardEndpoints;
@@ -39,6 +39,7 @@ import org.hbird.exchange.core.Event;
 import org.hbird.exchange.interfaces.IStartableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -48,7 +49,7 @@ import org.springframework.context.ApplicationContext;
  * @author Gert Villemos
  * 
  */
-public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
+public class ConfiguratorComponentDriver extends SoftwareComponentDriver<ConfiguratorComponent> {
 
     protected static final String ENDPOINT_TO_EVENTS = "direct:toEvents";
 
@@ -62,12 +63,15 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
     /**
      * Default constructor.
      */
-    public ConfiguratorComponentDriver() {
-        this(null);
+    public ConfiguratorComponentDriver(IPublisher publisher) {
+        this(null, publisher);
+
         LOG.warn("Started ConfigurationComponentDriver without applcation context. Bean registry will not be available in started components!");
     }
 
-    public ConfiguratorComponentDriver(ApplicationContext applicationContext) {
+    public ConfiguratorComponentDriver(ApplicationContext applicationContext, IPublisher publisher) {
+        super(publisher);
+
         this.applicationContext = applicationContext;
     }
 
@@ -99,7 +103,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
         }
         else {
             camelContext = new DefaultCamelContext(new ApplicationContextRegistry(applicationContext));
-            LOG.info("Created new CamelContext '{}' using Spring ApplicationContext; bean registry should be availabel", camelContext.getName());
+            LOG.info("Created new CamelContext '{}' using Spring ApplicationContext; bean registry should be available", camelContext.getName());
         }
         return camelContext;
     }
@@ -131,7 +135,9 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
             }
             else {
                 try {
-                    SoftwareComponentDriver builder = (SoftwareComponentDriver) Class.forName(driverName).newInstance();
+                    AutowireCapableBeanFactory factory = applicationContext.getAutowireCapableBeanFactory();
+                    SoftwareComponentDriver<?> builder = (SoftwareComponentDriver<?>) factory.autowire(Class.forName(driverName),
+                            AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, false);
                     builder.setCommand(command);
                     builder.setContext((ModelCamelContext) context);
                     context.addRoutes(builder);
@@ -202,11 +208,9 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver {
         /* Setup the BusinessCard */
         long heartbeat = entity.getHeartbeat();
 
-        ProcessorDefinition<?> route = from(addTimer("businesscard", heartbeat)).bean(entity, "getBusinessCard");
-        addInjectionRoute(route);
+        from(addTimer("businesscard", heartbeat)).bean(entity, "getBusinessCard").bean(publisher, "publish");
 
-        ProcessorDefinition<?> toEvents = from(ENDPOINT_TO_EVENTS);
-        addInjectionRoute(toEvents);
+        from(ENDPOINT_TO_EVENTS).log("Sending Configurator event: ${in.body}").bean(publisher, "publish");
     }
 
     /**

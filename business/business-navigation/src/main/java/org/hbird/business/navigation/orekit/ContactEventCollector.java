@@ -17,9 +17,10 @@
 package org.hbird.business.navigation.orekit;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.navigation.request.orekit.ContactData;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -58,7 +59,7 @@ public class ContactEventCollector extends ElevationDetector {
     /** The satellite. */
     protected final String satelliteId;
 
-    protected final IPublish publisher;
+    protected final IPublisher publisher;
 
     protected final TleOrbitalParameters tleParameters;
 
@@ -78,7 +79,7 @@ public class ContactEventCollector extends ElevationDetector {
      * @param contactDataStepSize
      */
     public ContactEventCollector(String issuerId, double elevation, TopocentricFrame topo, String satelliteId, String groundStationId,
-            TleOrbitalParameters parameters, IPublish publisher, Frame inertialFrame) {
+            TleOrbitalParameters parameters, IPublisher publisher, Frame inertialFrame) {
         super(maxcheck, elevation, topo);
         this.issuerId = issuerId;
         this.satelliteId = satelliteId;
@@ -106,8 +107,12 @@ public class ContactEventCollector extends ElevationDetector {
 
             events.add(data);
             if (publisher != null) {
-                LOG.info("Injecting new LocationContactEvent {}", event.toString());
-                publisher.publish(event);
+                LOG.info("Publishing new LocationContactEvent {} to the archive", event.toString());
+                try {
+                	publisher.publish(event);
+                } catch(Exception e) {
+                	LOG.error("Failed to publish LocationContactEvent", e);
+                }
             }
             lastStartState = null;
         }

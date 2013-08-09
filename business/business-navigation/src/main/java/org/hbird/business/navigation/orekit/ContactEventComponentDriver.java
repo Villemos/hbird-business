@@ -18,13 +18,13 @@ package org.hbird.business.navigation.orekit;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
-import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
-import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.ContactEventComponent;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Component builder to create a Navigation Component
@@ -32,22 +32,29 @@ import org.hbird.business.navigation.ContactEventComponent;
  * @author Gert Villemos
  * 
  */
-public class ContactEventComponentDriver extends SoftwareComponentDriver {
+public class ContactEventComponentDriver extends SoftwareComponentDriver<ContactEventComponent> {
+	protected IDataAccess dao;
+	protected IdBuilder idBuilder;
+	protected ICatalogue catalogue;
+	
+	@Autowired
+	public ContactEventComponentDriver(IDataAccess dao, IPublisher publisher, IdBuilder idBuilder, ICatalogue catalogue) {
+		super(publisher);
+		
+		this.dao = dao;
+		this.idBuilder = idBuilder;
+		this.catalogue = catalogue;
+	}
 
     @Override
     public void doConfigure() {
 
-        ContactEventComponent com = (ContactEventComponent) entity;
+        ContactEventComponent com = entity;
         String id = com.getID();
         CamelContext camelContext = com.getContext();
 
-        IDataAccess dao = ApiFactory.getDataAccessApi(id, camelContext);
-        IPublish publish = ApiFactory.getPublishApi(id, camelContext);
-        IdBuilder idBuilder = ApiFactory.getIdBuilder();
-        ICatalogue catalogue = ApiFactory.getCatalogueApi(id, camelContext);
-        ContactEventBean bean = new ContactEventBean(com, dao, publish, idBuilder, catalogue);
-
-        ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute");
-        addInjectionRoute(route);
+        ContactEventBean bean = new ContactEventBean(com, dao, publisher, idBuilder, catalogue);
+        
+        ProcessorDefinition<?> route = from(addTimer(com.getID(), com.getExecutionDelay())).bean(bean, "execute").bean(publisher, "publish");
     }
 }

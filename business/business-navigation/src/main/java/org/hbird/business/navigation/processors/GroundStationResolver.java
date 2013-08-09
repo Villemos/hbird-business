@@ -71,7 +71,8 @@ public class GroundStationResolver {
         List<GroundStation> result = new ArrayList<GroundStation>(ids.size());
         for (String id : ids) {
             try {
-                GroundStation gs = (GroundStation) dao.resolve(id);
+                //GroundStation gs = (GroundStation) dao.resolve(id);
+                GroundStation gs = dao.getById(id, GroundStation.class);
                 if (gs == null) {
                     LOG.error("No GroundStation found for the ID '{}'", id);
                 }

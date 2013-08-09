@@ -268,44 +268,44 @@ public class TrackingSupportTest {
     }
 
     @Test
-    public void testTrackFailedToResolveGroundStation() {
+    public void testTrackFailedToResolveGroundStation() throws Exception {
         when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
         when(trackCommand.getLocationContactEvent()).thenReturn(contact);
         when(trackCommand.getSatellite()).thenReturn(sat1);
         when(configuration.getGroundstationId()).thenReturn(GS_ID);
-        when(dao.resolve(GS_ID)).thenThrow(exception);
+        when(dao.getById(GS_ID, GroundStation.class)).thenThrow(exception);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
         inOrder.verify(trackCommand, times(1)).checkArguments();
         inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
         inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verify(configuration, times(1)).getGroundstationId();
-        inOrder.verify(dao, times(1)).resolve(GS_ID);
+        inOrder.verify(dao, times(1)).getById(GS_ID, GroundStation.class);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testTrackGroundStationNull() {
+    public void testTrackGroundStationNull() throws Exception {
         when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
         when(trackCommand.getLocationContactEvent()).thenReturn(contact);
         when(trackCommand.getSatellite()).thenReturn(sat1);
         when(configuration.getGroundstationId()).thenReturn(GS_ID);
-        when(dao.resolve(GS_ID)).thenReturn(null);
+        when(dao.getById(GS_ID, GroundStation.class)).thenReturn(null);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
         inOrder.verify(trackCommand, times(1)).checkArguments();
         inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
         inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verify(configuration, times(1)).getGroundstationId();
-        inOrder.verify(dao, times(1)).resolve(GS_ID);
+        inOrder.verify(dao, times(1)).getById(GS_ID, GroundStation.class);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testTrackOutdatedCommands() {
+    public void testTrackOutdatedCommands() throws Exception {
         when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
         when(trackCommand.getLocationContactEvent()).thenReturn(contact);
         when(trackCommand.getSatellite()).thenReturn(sat1);
         when(configuration.getGroundstationId()).thenReturn(GS_ID);
-        when(dao.resolve(GS_ID)).thenReturn(gs);
+        when(dao.getById(GS_ID, GroundStation.class)).thenReturn(gs);
         when(contact.getStartTime()).thenReturn(NOW - 1);
         when(configuration.isSkipOutDatedCommands()).thenReturn(true);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
@@ -313,19 +313,19 @@ public class TrackingSupportTest {
         inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
         inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verify(configuration, times(1)).getGroundstationId();
-        inOrder.verify(dao, times(1)).resolve(GS_ID);
+        inOrder.verify(dao, times(1)).getById(GS_ID, GroundStation.class);
         inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verify(configuration, times(1)).isSkipOutDatedCommands();
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testTrackNotPossible() {
+    public void testTrackNotPossible() throws Exception {
         when(trackCommand.checkArguments()).thenReturn(Collections.<String> emptyList());
         when(trackCommand.getLocationContactEvent()).thenReturn(contact);
         when(trackCommand.getSatellite()).thenReturn(sat2);
         when(configuration.getGroundstationId()).thenReturn(GS_ID);
-        when(dao.resolve(GS_ID)).thenReturn(gs);
+        when(dao.getById(GS_ID, GroundStation.class)).thenReturn(gs);
         when(contact.getStartTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(configuration.isSkipOutDatedCommands()).thenReturn(true);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
@@ -333,7 +333,7 @@ public class TrackingSupportTest {
         inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
         inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verify(configuration, times(1)).getGroundstationId();
-        inOrder.verify(dao, times(1)).resolve(GS_ID);
+        inOrder.verify(dao, times(1)).getById(GS_ID, GroundStation.class);
         inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verify(configuration, times(1)).isSkipOutDatedCommands();
         inOrder.verifyNoMoreInteractions();
@@ -345,7 +345,7 @@ public class TrackingSupportTest {
         when(trackCommand.getLocationContactEvent()).thenReturn(contact);
         when(trackCommand.getSatellite()).thenReturn(sat1);
         when(configuration.getGroundstationId()).thenReturn(GS_ID);
-        when(dao.resolve(GS_ID)).thenReturn(gs);
+        when(dao.getById(GS_ID, GroundStation.class)).thenReturn(gs);
         when(contact.getStartTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(contact.getEndTime()).thenReturn(NOW + 1000L * 60 * 70);
         when(configuration.getCommandInterval()).thenReturn(STEP);
@@ -355,7 +355,7 @@ public class TrackingSupportTest {
         inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
         inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verify(configuration, times(1)).getGroundstationId();
-        inOrder.verify(dao, times(1)).resolve(GS_ID);
+        inOrder.verify(dao, times(1)).getById(GS_ID, GroundStation.class);
         inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verify(configuration, times(1)).isSkipOutDatedCommands();
         inOrder.verify(contact, times(1)).getAzimuth();
@@ -380,7 +380,7 @@ public class TrackingSupportTest {
         when(trackCommand.getLocationContactEvent()).thenReturn(contact);
         when(trackCommand.getSatellite()).thenReturn(sat1);
         when(configuration.getGroundstationId()).thenReturn(GS_ID);
-        when(dao.resolve(GS_ID)).thenReturn(gs);
+        when(dao.getById(GS_ID, GroundStation.class)).thenReturn(gs);
         when(contact.getStartTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(contact.getEndTime()).thenReturn(NOW + 1000L * 60 * 70);
         when(configuration.getCommandInterval()).thenReturn(STEP);
@@ -403,7 +403,7 @@ public class TrackingSupportTest {
         inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
         inOrder.verify(trackCommand, times(1)).getSatellite();
         inOrder.verify(configuration, times(1)).getGroundstationId();
-        inOrder.verify(dao, times(1)).resolve(GS_ID);
+        inOrder.verify(dao, times(1)).getById(GS_ID, GroundStation.class);
         inOrder.verify(contact, times(1)).getStartTime();
         inOrder.verify(configuration, times(1)).isSkipOutDatedCommands();
         inOrder.verify(contact, times(1)).getAzimuth();

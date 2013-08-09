@@ -18,7 +18,6 @@ package org.hbird.business.tracking.quartz;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
@@ -26,14 +25,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.EntityInstance;
-import org.hbird.exchange.core.Parameter;
-import org.hbird.exchange.dataaccess.DataRequest;
 import org.hbird.exchange.dataaccess.LocationContactEventRequest;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.junit.Before;
@@ -94,12 +89,15 @@ public class ArchivePollerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testPoll() {
+    public void testPoll() throws Exception {
         when(config.getGroundstationId()).thenReturn(GS_ID);
         when(config.getSatelliteIds()).thenReturn(satelliteIds);
-        when(dao.getData(any(LocationContactEventRequest.class))).thenReturn(events, events, Collections.<EntityInstance> emptyList());
-        when(event1.getStartTime()).thenReturn(NOW + 1000L * 60 * 60, NOW + 1000L * 60 * 60, NOW - 1000L * 60 * 60);
-        when(event2.getStartTime()).thenReturn(NOW + 1000L * 60 * 60 * 2);
+        //when(dao.getData(any(LocationContactEventRequest.class))).thenReturn(events, events, Collections.<EntityInstance> emptyList());
+        when(dao.getNextLocationContactEventFor(GS_ID, SAT_1)).thenReturn(event1);
+        when(dao.getNextLocationContactEventFor(GS_ID, SAT_2)).thenReturn(event2);
+        when(dao.getNextLocationContactEventFor(GS_ID, SAT_3)).thenThrow(Exception.class);
+        //when(event1.getStartTime()).thenReturn(NOW + 1000L * 60 * 60, NOW + 1000L * 60 * 60, NOW - 1000L * 60 * 60);
+        //when(event2.getStartTime()).thenReturn(NOW + 1000L * 60 * 60 * 2);
 
         List<LocationContactEvent> events = archivePoller.poll();
         assertNotNull(events);
@@ -107,6 +105,12 @@ public class ArchivePollerTest {
         assertEquals(event1, events.get(0));
         assertEquals(event2, events.get(1));
         inOrder.verify(config, times(1)).getSatelliteIds();
+        inOrder.verify(config, times(1)).getGroundstationId();
+        inOrder.verify(dao, times(3)).getNextLocationContactEventFor(any(String.class), any(String.class));
+        inOrder.verifyNoMoreInteractions();
+        
+        
+        /* inOrder.verify(config, times(1)).getSatelliteIds();
         inOrder.verify(config, times(1)).getGroundstationId();
         inOrder.verify(dao, times(1)).getData(any(DataRequest.class));
         inOrder.verify(event1, times(1)).getStartTime();
@@ -116,10 +120,10 @@ public class ArchivePollerTest {
         inOrder.verify(event1, times(1)).getStartTime();
         inOrder.verify(event2, times(1)).getStartTime();
         inOrder.verify(dao, times(1)).getData(any(DataRequest.class));
-        inOrder.verifyNoMoreInteractions();
+        inOrder.verifyNoMoreInteractions(); */
     }
 
-    @Test
+    /*@Test
     public void testCompare() {
         when(event1.getStartTime()).thenReturn(100L);
         when(event2.getStartTime()).thenReturn(110L);
@@ -189,5 +193,5 @@ public class ArchivePollerTest {
         assertEquals(event2, event);
         inOrder.verify(event2, times(1)).getStartTime();
         inOrder.verifyNoMoreInteractions();
-    }
+    } */
 }

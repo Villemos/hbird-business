@@ -44,14 +44,9 @@ public class SatelliteResolver {
         PredictionConfigurationBase config = request.getConfiguration();
         String satelliteId = config.getSatelliteId();
         try {
-            Satellite satellite = (Satellite) dao.resolve(satelliteId);
-            if (satellite == null) {
-                LOG.error("No Satellite found for the ID '{}'", satelliteId);
-            }
-            else {
-                LOG.debug("Resolved Satellite for the ID '{}'", satelliteId);
-                request.setSatellite(satellite);
-            }
+        	Satellite satellite = dao.getById(satelliteId, Satellite.class);
+        	LOG.debug("Resolved Satellite for the ID '{}'", satelliteId);
+        	request.setSatellite(satellite);
         }
         catch (Exception e) {
             LOG.error("Failed to resolve Satellite for the ID '{}'", satelliteId, e);

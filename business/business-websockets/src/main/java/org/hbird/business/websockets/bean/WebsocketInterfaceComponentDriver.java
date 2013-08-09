@@ -35,14 +35,20 @@ package org.hbird.business.websockets.bean;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.websocket.WebsocketComponent;
 import org.apache.camel.component.websocket.WebsocketConstants;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.SoftwareComponentDriver;
+import org.hbird.business.websockets.WebsocketInterfaceComponent;
 
 /**
  * @author Lauri Kimmel
  * @author Gert Villemos (adaptation)
  *
  */
-public class WebsocketInterfaceComponentDriver extends SoftwareComponentDriver {
+public class WebsocketInterfaceComponentDriver extends SoftwareComponentDriver<WebsocketInterfaceComponent> {
+
+	public WebsocketInterfaceComponentDriver(IPublisher publisher) {
+		super(publisher);
+	}
 
 	protected int webSocketPort = 9292;
 

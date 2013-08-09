@@ -18,6 +18,7 @@ package org.hbird.business.configurator;
 
 import java.util.List;
 
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.StartableEntity;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
@@ -46,23 +47,24 @@ public class ConfiguratorComponent extends StartableEntity implements Applicatio
     public static final String DEFAULT_DRIVER = ConfiguratorComponentDriver.class.getName();
 
     protected ApplicationContext applicationContext;
+    protected IPublisher publisher;
 
     /**
      * Default constructor.
      */
-    public ConfiguratorComponent() {
-        super(DEFAULT_ID, DEFAULT_NAME);
-        setDescription(DEFAULT_DESCRIPTION);
-        setDriverName(DEFAULT_DRIVER);
+    public ConfiguratorComponent(IPublisher publisher) {
+    	this(DEFAULT_ID, publisher);
     }
 
     /**
      * Default constructor.
      */
-    public ConfiguratorComponent(String ID) {
+    public ConfiguratorComponent(String ID, IPublisher publisher) {
         super(ID, DEFAULT_NAME);
         setDescription(DEFAULT_DESCRIPTION);
         setDriverName(DEFAULT_DRIVER);
+        
+        this.publisher = publisher;
     }
 
     /**
@@ -92,7 +94,7 @@ public class ConfiguratorComponent extends StartableEntity implements Applicatio
      * @throws Exception
      */
     public void start() throws Exception {
-        ConfiguratorComponentDriver driver = new ConfiguratorComponentDriver(applicationContext);
+        ConfiguratorComponentDriver driver = new ConfiguratorComponentDriver(applicationContext, publisher);
         driver.start(this);
     }
 }

@@ -96,7 +96,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
         String groundStationId = configuration.getGroundstationId();
         GroundStation groundStation = null;
         try {
-            groundStation = (GroundStation) dao.resolve(groundStationId);
+            groundStation = dao.getById(groundStationId, GroundStation.class);
         }
         catch (Exception e) {
             LOG.error("Failed to resolve groundstation for the ID '{}'", groundStationId, e);

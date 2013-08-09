@@ -63,25 +63,25 @@ public class SatelliteResolverTest {
 
     @Test
     public void testResolveById() throws Exception {
-        when(dao.resolve(ID)).thenReturn(sat);
+        when(dao.getById(ID, Satellite.class)).thenReturn(sat);
         assertEquals(sat, satelliteResolver.resolveById(ID));
-        inOrder.verify(dao, times(1)).resolve(ID);
+        inOrder.verify(dao, times(1)).getById(ID, Satellite.class);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testResolveByIdNotFound() throws Exception {
-        when(dao.resolve(ID)).thenReturn(null);
+        when(dao.getById(ID, Satellite.class)).thenReturn(null);
         assertNull(satelliteResolver.resolveById(ID));
-        inOrder.verify(dao, times(1)).resolve(ID);
+        inOrder.verify(dao, times(1)).getById(ID, Satellite.class);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testResolveByIdWithException() throws Exception {
-        when(dao.resolve(ID)).thenThrow(exception);
+        when(dao.getById(ID, Satellite.class)).thenThrow(exception);
         assertNull(satelliteResolver.resolveById(ID));
-        inOrder.verify(dao, times(1)).resolve(ID);
+        inOrder.verify(dao, times(1)).getById(ID, Satellite.class);
         inOrder.verifyNoMoreInteractions();
     }
 }
