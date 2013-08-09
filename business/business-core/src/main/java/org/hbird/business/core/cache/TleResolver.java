@@ -40,7 +40,7 @@ public class TleResolver implements CacheResolver<TleOrbitalParameters> {
     @Override
     public TleOrbitalParameters resolveById(String id) {
         try {
-            return (TleOrbitalParameters) dao.resolve(id);
+        	return dao.getById(id, TleOrbitalParameters.class);
         }
         catch (Exception e) {
             LOG.error("Failed to resolve TLE for ID {}", id, e);

@@ -19,6 +19,8 @@ package org.hbird.business.validation.bean;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.validation.Limit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A differential limit is a limit that checks whether a change to a parameter, whether
@@ -31,7 +33,8 @@ import org.hbird.exchange.validation.Limit;
  * @author Gert Villemos
  */
 public class DifferentialLimitChecker extends BaseLimitChecker {
-
+	private static final Logger LOG = LoggerFactory.getLogger(DifferentialLimitChecker.class);
+	
 	protected IDataAccess api = null;
 	
 	/**
@@ -39,11 +42,17 @@ public class DifferentialLimitChecker extends BaseLimitChecker {
 	 * 
 	 * @param limit The definition of the limit.
 	 */
-	public DifferentialLimitChecker(Limit limit) {
+	public DifferentialLimitChecker(Limit limit, IDataAccess api) {
 		super(limit);
 		
+		this.api = api;
+		
 		/** Get the current value. */
-		lastValue = getApi().getParameter(limit.getLimitOfParameter());
+		try {
+			lastValue = getApi().getParameter(limit.getLimitOfParameter());
+		} catch(Exception e) {
+			LOG.info("Failed to retrieve the last value of parameter " + limit.getLimitOfParameter(), e);
+		}
 	}
 
 	@Override

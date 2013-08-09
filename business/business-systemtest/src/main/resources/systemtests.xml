@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans 
-       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
        http://www.springframework.org/schema/context 
-       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/context/spring-context-3.2.xsd
+       http://www.springframework.org/schema/data/mongo
+       http://www.springframework.org/schema/data/mongo/spring-mongo-1.2.xsd
        http://camel.apache.org/schema/spring 
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponent" init-method="start"/>
+	<bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponent" init-method="start">
+		<constructor-arg ref="publisher" />
+	</bean>
 
 	<bean id="monitoring.listener" class="org.hbird.business.systemtest.Listener" />
 	<bean id="commanding.listener" class="org.hbird.business.systemtest.Listener" />
@@ -40,7 +45,88 @@
 		<property name="eventListener" ref="event.listener"/>
 		<property name="messageListener" ref="message.listener"/>
 		<property name="context" ref="basic"/>
+ 
+		<property name="publishApi" ref="publisher" />
+		<property name="accessApi" ref="dataAccess" />
+		<property name="catalogueApi" ref="catalogue" />
+		<property name="partmanagerApi" ref="partManager" /> 
 	</bean>
+	
+	<!-- APIs -->
+	<mongo:mongo host="localhost" port="27017" />
+	
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg ref="mongo" />
+		<constructor-arg name="databaseName" value="hbird_test" />
+	</bean>
+
+    <!--  	
+	<bean id="mongoTemplate" class="org.hbird.business.archive.dao.mongo.SubclassAwareMongoTemplate">
+		<constructor-arg ref="mongo" />
+		<constructor-arg name="databaseName" value="hbird_test" />
+	</bean>
+	-->
+
+	<bean id="dataAccess" class="org.hbird.business.archive.dao.mongo.MongoDataAccess">
+		<constructor-arg ref="mongoTemplate" />
+	</bean>
+	
+	<bean id="catalogue" class="org.hbird.business.api.impl.Catalogue">
+    	<constructor-arg index="0" value="catalogue" />
+    	<constructor-arg index="1" value="hbird" />
+    	<constructor-arg index="2" ref="dataAccess" />
+    </bean>
+    
+    
+    <bean id="publisher" class="org.hbird.business.api.impl.Injector">
+    	<constructor-arg value="injector" />
+    	<constructor-arg value="hbird" />
+    	<constructor-arg>
+    		<bean class="org.hbird.business.archive.control.FilteringPublisher">
+    			<constructor-arg>
+		    		<bean class="org.hbird.business.api.impl.Publisher">
+		    			<constructor-arg index="0" value="publisher" />
+		    			<constructor-arg index="1" value="hbird" />
+		    			<constructor-arg index="2" ref="dataAccess" />
+		    		</bean>
+    			</constructor-arg>
+    			
+    			<constructor-arg>
+    				<bean class="org.hbird.business.archive.control.NegateFilter">
+    					<constructor-arg>
+    						<bean class="org.hbird.business.archive.control.ClassFilter">
+    							<constructor-arg>
+    								<set>
+    									<value>org.hbird.exchange.core.Command</value>
+    									<value>org.hbird.exchange.core.BusinessCard</value>
+    									<value>org.hbird.exchange.interfaces.IStartableEntity</value>
+    								</set>
+    							</constructor-arg>
+    							
+    							<constructor-arg value="true" />
+    						</bean>
+    					</constructor-arg>
+    				</bean>
+    			</constructor-arg>
+    		</bean>
+    	</constructor-arg>
+    </bean>
+    
+    <!--  
+    <bean id="publisher" class="org.hbird.business.api.impl.Publisher">
+    	<constructor-arg value="publisher" />
+    	<constructor-arg value="hbird" />
+    	<constructor-arg ref="dataAccess" />
+    </bean>
+    -->
+    
+    <bean id="partManager" class="org.hbird.business.api.impl.PartManager">
+    	<constructor-arg value="partManager" />
+    	<constructor-arg ref="publisher" />
+    </bean>
+    
+    <bean id="idBuilder" class = "org.hbird.business.api.impl.DefaultIdBuilder">
+    </bean>
 
 	<bean id="starter" class="org.hbird.business.systemtest.Starter" parent="testerTemplate"/>
 	<bean id="routing" class="org.hbird.business.systemtest.RoutingTest" parent="testerTemplate"/>
@@ -82,7 +168,7 @@
 	 			<to uri="bean:dataaccessapi" />
 				<to uri="bean:limitcheck" />
 				<to uri="bean:scripting" />
-		 		<to uri="bean:tasking" />
+		 		<to uri="bean:tasking" /> 
 	 			<to uri="bean:commanding" />
 	 	 		<to uri="bean:websockettester" />
 				<to uri="bean:inmemoryscheduler" />

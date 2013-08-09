@@ -18,10 +18,9 @@ package org.hbird.business.navigation.orekit;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
-import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.PredictionComponent;
 import org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration;
@@ -33,13 +32,25 @@ import org.hbird.business.navigation.processors.TleResolver;
 import org.hbird.business.navigation.processors.orekit.OrekitOrbitalStatePredictor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  */
-public class OrbitalStatePredictionDriver extends SoftwareComponentDriver {
+public class OrbitalStatePredictionDriver extends SoftwareComponentDriver<PredictionComponent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrbitalStatePredictionDriver.class);
+    
+    protected IDataAccess dao;
+    protected IdBuilder idBuilder;
+    
+    @Autowired
+    public OrbitalStatePredictionDriver(IDataAccess dao, IPublisher publisher, IdBuilder idBuilder) {
+    	super(publisher);
+
+    	this.dao = dao;
+    	this.idBuilder = idBuilder;
+    }
 
     /**
      * @see org.hbird.business.core.SoftwareComponentDriver#doConfigure()
@@ -47,16 +58,13 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver {
     @Override
     protected void doConfigure() {
         // setup from component
-        PredictionComponent component = (PredictionComponent) entity;
+        PredictionComponent component = entity;
         OrbitalStatePredictionConfiguration config = (OrbitalStatePredictionConfiguration) component.getConfiguration();
 
         // dependencies
         String componentId = component.getID();
         CamelContext ctx = component.getContext();
-        IDataAccess dao = ApiFactory.getDataAccessApi(componentId, ctx);
-        IPublish publisher = ApiFactory.getPublishApi(componentId, ctx);
         IPropagatorProvider propagatorProvider = new TlePropagatorProvider();
-        IdBuilder idBuilder = ApiFactory.getIdBuilder();
         long predictionInterval = config.getPredictionInterval();
 
         // processors
@@ -81,6 +89,6 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver {
                 .split(body())
                 .to("log:org.hbird.prediction.orbit.stats?level=DEBUG&groupInterval=60000&groupDelay=60000&groupActiveOnly=false");
 
-        addInjectionRoute(route);
+        route.bean(publisher, "publish");
     }
 }

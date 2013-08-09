@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.camel.Handler;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.navigation.configuration.ContactPredictionConfiguration;
 import org.hbird.business.navigation.orekit.Constants;
 import org.hbird.business.navigation.orekit.ContactEventCollector;
@@ -54,11 +54,11 @@ public class OrekitContactPredictor {
     private static final Logger LOG = LoggerFactory.getLogger(OrekitContactPredictor.class);
 
     private final String issuerId;
-    private final IPublish publisher;
+    private final IPublisher publisher;
     private final IPropagatorProvider propagatorProvider;
     private final IFrameProvider frameProvider;
 
-    public OrekitContactPredictor(String issuerId, IPropagatorProvider propagatorProvider, IPublish publisher, IFrameProvider frameProvider) {
+    public OrekitContactPredictor(String issuerId, IPropagatorProvider propagatorProvider, IPublisher publisher, IFrameProvider frameProvider) {
         this.issuerId = issuerId;
         this.propagatorProvider = propagatorProvider;
         this.publisher = publisher;

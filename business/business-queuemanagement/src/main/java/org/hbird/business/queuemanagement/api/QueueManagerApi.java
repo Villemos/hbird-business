@@ -40,6 +40,8 @@ import org.apache.activemq.broker.jmx.QueueViewMBean;
 import org.apache.activemq.broker.jmx.TopicViewMBean;
 import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IQueueManagement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The queue manager component support the monitoring and control of a activemq queue.
@@ -48,10 +50,11 @@ import org.hbird.business.api.IQueueManagement;
  * 
  */
 public class QueueManagerApi extends HbirdApi implements IQueueManagement {
+    private static final Logger LOG = LoggerFactory.getLogger(QueueManagerApi.class);
 
     private static final String KEY_JMS_MESSAGE_ID = "JMSMessageID";
 
-    private static final String KEY_DESTINATION = "Destination";
+    private static final String KEY_DESTINATION = "destinationName";
 
     /** The connection to the server. */
     protected MBeanServerConnection conn = null;
@@ -78,7 +81,7 @@ public class QueueManagerApi extends HbirdApi implements IQueueManagement {
             conn = jmxc.getMBeanServerConnection();
         }
 
-        ObjectName activeMQ = new ObjectName("org.apache.activemq:BrokerName=localhost,Type=Broker");
+        ObjectName activeMQ = new ObjectName("org.apache.activemq:type=Broker,brokerName=localhost");
         mbean = MBeanServerInvocationHandler.newProxyInstance(conn, activeMQ, BrokerViewMBean.class, true);
 
         return mbean;

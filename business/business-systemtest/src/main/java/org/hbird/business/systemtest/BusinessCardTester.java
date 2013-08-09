@@ -18,11 +18,8 @@ package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.commanding.CommandingComponent;
 import org.hbird.business.configurator.ConfiguratorComponent;
-import org.hbird.exchange.configurator.ReportStatus;
 import org.hbird.exchange.core.EntityInstance;
-import org.hbird.exchange.interfaces.IStartableEntity;
 
 public class BusinessCardTester extends SystemTest {
 

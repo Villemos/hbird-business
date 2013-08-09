@@ -18,6 +18,7 @@ package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
+import org.hbird.business.api.impl.Injector;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.Part;
@@ -29,7 +30,7 @@ public class TaskingTester extends SystemTest {
     private static org.apache.log4j.Logger LOG = Logger.getLogger(TaskingTester.class);
 
     @Handler
-    public void process() throws InterruptedException {
+    public void process() throws Exception {
 
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
@@ -55,6 +56,7 @@ public class TaskingTester extends SystemTest {
         parameter1.setUnit("Bananas");
         setparameter1.setParameter(parameter1);
         
+        //publishApi.publish(setparameter1);
         publishApi.publish(setparameter1);
         
         Thread.sleep(2000);
@@ -74,6 +76,7 @@ public class TaskingTester extends SystemTest {
         setparameter2.setRepeat(5);
         setparameter2.setExecutionDelay(1000);
         
+        //publishApi.publish(setparameter2);
         publishApi.publish(setparameter2);
 
         Thread.sleep(10000);
@@ -88,6 +91,7 @@ public class TaskingTester extends SystemTest {
         
         SendCommand sendCommand = new SendCommand(task2Name, task2Name);
         sendCommand.setCommand(command);
+        //publishApi.publish(sendCommand);
         publishApi.publish(sendCommand);
         
         Thread.sleep(2000);

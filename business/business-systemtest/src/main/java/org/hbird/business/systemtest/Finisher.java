@@ -26,37 +26,42 @@ import org.apache.log4j.Logger;
 import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IQueueManagement;
 
+import com.mongodb.Mongo;
+
 public class Finisher extends SystemTest {
 
-	private static org.apache.log4j.Logger LOG = Logger.getLogger(Finisher.class);
+    private static org.apache.log4j.Logger LOG = Logger.getLogger(Finisher.class);
 
-	public void process(Exchange exchange) throws MalformedObjectNameException, MalformedURLException, NullPointerException, IOException, Exception {
-		
-		LOG.info("------------------------------------------------------------------------------------------------------------");
-		LOG.info("Starting");
+    public void process(Exchange exchange) throws MalformedObjectNameException, MalformedURLException, NullPointerException, IOException, Exception {
 
-		LOG.info("System Test done.");
-		
-		LOG.info("Purging all activemq topics and queues.");
-		
-		/** Check that the antenna schedule has been filled. */
-		IQueueManagement api = ApiFactory.getQueueManagementApi("SystemTest");
+        LOG.info("------------------------------------------------------------------------------------------------------------");
+        LOG.info("Starting");
 
-		for (String queueName : api.listQueues()) {
-			LOG.info(" - Purging queue '" + queueName + "'.");
-			api.clearQueue(queueName);
-		}
+        LOG.info("System Test done.");
 
-		for (String topicName : api.listTopics()) {
-			LOG.info(" - Purging topic '" + topicName + "'.");
-			api.clearTopic(topicName);
-		}
+        LOG.info("Purging all activemq topics and queues.");
 
-		Thread.sleep(2000);
+        /** Check that the antenna schedule has been filled. */
+        IQueueManagement api = ApiFactory.getQueueManagementApi("SystemTest");
 
-		LOG.info("Ciao!");
-		LOG.info("------------------------------------------------------------------------------------------------------------");
-		
-		System.exit(1);
-	}	
+        for (String queueName : api.listQueues()) {
+            LOG.info(" - Purging queue '" + queueName + "'.");
+            api.clearQueue(queueName);
+        }
+
+        for (String topicName : api.listTopics()) {
+            LOG.info(" - Purging topic '" + topicName + "'.");
+            api.clearTopic(topicName);
+        }
+
+        Mongo mongo = getContext().getRegistry().lookup("mongo", Mongo.class);
+        mongo.dropDatabase("hbird_test");
+
+        Thread.sleep(2000);
+
+        LOG.info("Ciao!");
+        LOG.info("------------------------------------------------------------------------------------------------------------");
+
+        System.exit(1);
+    }
 }

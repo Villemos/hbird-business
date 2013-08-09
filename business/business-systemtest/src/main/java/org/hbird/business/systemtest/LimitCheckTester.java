@@ -18,6 +18,8 @@ package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
 import org.hbird.business.validation.LimitCheckComponent;
+import org.hbird.exchange.core.Parameter;
+import org.hbird.exchange.core.State;
 import org.hbird.exchange.validation.Limit;
 import org.hbird.exchange.validation.Limit.eLimitType;
 import org.slf4j.Logger;
@@ -26,9 +28,9 @@ import org.slf4j.LoggerFactory;
 public class LimitCheckTester extends SystemTest {
 
     private static Logger LOG = LoggerFactory.getLogger(LimitCheckTester.class);
-
+    
     @Handler
-    public void process() throws InterruptedException {
+    public void process() throws Exception {
 
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
@@ -82,7 +84,14 @@ public class LimitCheckTester extends SystemTest {
 
         /** Disable limit. */
         LOG.info("Disabling limit component 'LIMIT_CHECKER_3'.");
-        publishApi.publishState("PARA1_UPPER_SOFTLIMIT_SWITCH", "PARA1_UPPER_SOFTLIMIT_SWITCH", "A test description", "LIMIT_CHECKER_3", false);
+        //publishApi.publishState("PARA1_UPPER_SOFTLIMIT_SWITCH", "PARA1_UPPER_SOFTLIMIT_SWITCH", "A test description", "LIMIT_CHECKER_3", false);
+        
+        State state = new State("PARA1_UPPER_SOFTLIMIT_SWITCH", "PARA1_UPPER_SOFTLIMIT_SWITCH");
+        state.setDescription("A test description");
+        state.setApplicableTo("LIMIT_CHECKER_3");
+        state.setValue(false);
+        
+        publishApi.publish(state);
 
         Thread.sleep(2000);
 
@@ -114,9 +123,16 @@ public class LimitCheckTester extends SystemTest {
         return component;
     }
 
-    protected void send(Double value, String soft, boolean expectedSoft, String hard, boolean expectedHard) throws InterruptedException {
+    protected void send(Double value, String soft, boolean expectedSoft, String hard, boolean expectedHard) throws Exception {
         LOG.info("Publishing parameters.");
-        publishApi.publishParameter("PARA1", "PARA1", "A test description,", value, "Volt");
+        //publishApi.publishParameter("PARA1", "PARA1", "A test description,", value, "Volt");
+        
+        Parameter param = new Parameter("PARA1", "PARA1");
+        param.setDescription("A test description");
+        param.setValue(value);
+        param.setUnit("Volt");
+        
+        publishApi.publish(param);
 
         /** Give the limit checkers a bit of time. */
         Thread.sleep(2000);

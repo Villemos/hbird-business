@@ -17,7 +17,9 @@
 package org.hbird.business.taskexecutor.bean;
 
 import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.SoftwareComponentDriver;
+import org.hbird.business.taskexecutor.TaskExecutionComponent;
 import org.hbird.exchange.configurator.StandardEndpoints;
 
 /**
@@ -26,14 +28,17 @@ import org.hbird.exchange.configurator.StandardEndpoints;
  * @author Gert Villemos
  * 
  */
-public class TaskExecutorComponentDriver extends SoftwareComponentDriver {
+public class TaskExecutorComponentDriver extends SoftwareComponentDriver<TaskExecutionComponent> {
 
-    @Override
+    public TaskExecutorComponentDriver(IPublisher publisher) {
+		super(publisher);
+	}
+
+	@Override
     public void doConfigure() {
 
         String componentname = command.getEntity().getName();
-        ProcessorDefinition<?> route = from(StandardEndpoints.TASKS).split().method(new TaskExecutor(componentname), "receive");
-        addInjectionRoute(route);
+        from(StandardEndpoints.TASKS).split().method(new TaskExecutor(componentname), "receive").bean(publisher, "publish");
 
         addCommandHandler();
     }

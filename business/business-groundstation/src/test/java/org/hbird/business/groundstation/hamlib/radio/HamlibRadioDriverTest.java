@@ -30,6 +30,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
@@ -69,6 +70,9 @@ public class HamlibRadioDriverTest {
 
     @Mock
     private IPointingData calculator;
+    
+    @Mock
+    private IPublisher publisher;
 
     @Mock
     private IPointingDataOptimizer<RadioDriverConfiguration> optimizer;
@@ -82,7 +86,7 @@ public class HamlibRadioDriverTest {
      */
     @Before
     public void setUp() throws Exception {
-        driver = new HamlibRadioDriver();
+        driver = new HamlibRadioDriver(publisher, dao, calculator);
         inOrder = inOrder(camelContext, part, driverConfig, dao, optimizer, converter, calculator);
         when(camelContext.getTypeConverter()).thenReturn(converter);
         when(part.getConfiguration()).thenReturn(driverConfig);

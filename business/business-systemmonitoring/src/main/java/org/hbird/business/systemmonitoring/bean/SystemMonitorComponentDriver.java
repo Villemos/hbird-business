@@ -17,12 +17,13 @@
 package org.hbird.business.systemmonitoring.bean;
 
 import org.apache.camel.model.ProcessorDefinition;
-import org.hbird.business.api.ApiFactory;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.systemmonitoring.SystemMonitorComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Component builder to create a system monitoring component.
@@ -30,15 +31,23 @@ import org.slf4j.LoggerFactory;
  * @author Gert Villemos
  * 
  */
-public class SystemMonitorComponentDriver extends SoftwareComponentDriver {
+public class SystemMonitorComponentDriver extends SoftwareComponentDriver<SystemMonitorComponent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SystemMonitorComponentDriver.class);
+    
+    private IdBuilder idBuilder;
+    
+    @Autowired
+    public SystemMonitorComponentDriver(IPublisher publisher, IdBuilder idBuilder) {
+    	super(publisher);
+    	
+    	this.idBuilder = idBuilder;
+    }
 
     @Override
     public void doConfigure() {
 
-        SystemMonitorComponent component = (SystemMonitorComponent) entity;
-        IdBuilder idBuilder = ApiFactory.getIdBuilder();
+        SystemMonitorComponent component = entity;
         String entityId = component.getID();
         String baseName = idBuilder.buildID(entityId, HostInfo.getHostName());
         long interval = component.getMonitoringInterval();
@@ -53,10 +62,9 @@ public class SystemMonitorComponentDriver extends SoftwareComponentDriver {
         from("seda:harddisk").bean(new HarddiskMonitor(baseName, idBuilder)).split(body()).to("seda:out");
         from("seda:os").bean(new OsMonitor(baseName, idBuilder)).to("seda:out");
         from("seda:uptime").bean(new UptimeMonitor(baseName, idBuilder)).to("seda:out");
+        
+        from("seda:out").log("Sending ${in.body} to publisher").bean(publisher, "publish");
 
-        ProcessorDefinition<?> route = from("seda:out");
-        addInjectionRoute(route);
-
-        addCommandHandler();
+        addCommandHandler(); 
     }
 }

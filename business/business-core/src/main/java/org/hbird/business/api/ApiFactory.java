@@ -17,6 +17,7 @@
 package org.hbird.business.api;
 
 import org.apache.camel.CamelContext;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,8 +52,8 @@ public class ApiFactory {
         return (IDataAccess) createInstance(dataAccessClass, issuedBy);
     }
 
-    public static synchronized IPublish getPublishApi(String issuedBy) {
-        return (IPublish) createInstance(publishClass, issuedBy);
+    public static synchronized IPublisher getPublishApi(String issuedBy) {
+        return (IPublisher) createInstance(publishClass, issuedBy);
     }
 
     public static synchronized ICatalogue getCatalogueApi(String issuedBy) {
@@ -79,8 +80,8 @@ public class ApiFactory {
         return (IDataAccess) createInstance(dataAccessClass, issuedBy, context);
     }
 
-    public static synchronized IPublish getPublishApi(String issuedBy, CamelContext context) {
-        return (IPublish) createInstance(publishClass, issuedBy, context);
+    public static synchronized IPublisher getPublishApi(String issuedBy, CamelContext context) {
+        return (IPublisher) createInstance(publishClass, issuedBy, context);
     }
 
     public static synchronized ICatalogue getCatalogueApi(String issuedBy, CamelContext context) {

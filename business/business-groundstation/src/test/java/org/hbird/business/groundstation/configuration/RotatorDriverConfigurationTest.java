@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -80,6 +81,7 @@ public class RotatorDriverConfigurationTest {
     }
 
     @Test
+    @DirtiesContext
     public void testSetMinElevation() {
         assertEquals(0D, config.getMinElevation(), 0.0D);
         config.setMinElevation(-10D);
@@ -96,6 +98,7 @@ public class RotatorDriverConfigurationTest {
     }
 
     @Test
+    @DirtiesContext
     public void testSetMaxElevation() {
         assertEquals(180D, config.getMaxElevation(), 0.0D);
         config.setMaxElevation(90D);
@@ -110,6 +113,7 @@ public class RotatorDriverConfigurationTest {
     }
 
     @Test
+    @DirtiesContext
     public void testSetMinAzimuth() {
         assertEquals(0D, config.getMinAzimuth(), 0.0D);
         config.setMinAzimuth(-90D);
@@ -124,6 +128,7 @@ public class RotatorDriverConfigurationTest {
     }
 
     @Test
+    @DirtiesContext
     public void testSetMaxAzimuth() {
         assertEquals(360D, config.getMaxAzimuth(), 0.0D);
         config.setMaxAzimuth(450D);
@@ -138,6 +143,7 @@ public class RotatorDriverConfigurationTest {
     }
 
     @Test
+    @DirtiesContext
     public void testSetThresholdElevation() {
         assertEquals(0D, config.getThresholdElevation(), 0.0D);
         config.setThresholdElevation(45D);
@@ -152,6 +158,7 @@ public class RotatorDriverConfigurationTest {
     }
 
     @Test
+    @DirtiesContext
     public void testSetTolerance() {
         assertEquals(7.5D, config.getTolerance(), 0.0D);
         config.setTolerance(4.55D);

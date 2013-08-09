@@ -25,7 +25,7 @@ import java.util.UUID;
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.ApiUtility;
 import org.hbird.business.api.HbirdApi;
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.archive.ArchiveComponent;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Event;
@@ -85,47 +85,47 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         // template = getContext().createProducerTemplate();
     }
 
-    @Override
+    //@Override
     public List<EntityInstance> getData(DataRequest request) {
         return executeRequestRespond(request);
     }
 
-    @Override
+    //@Override
     public Parameter getParameter(String name) {
         return getFirst(getParameterAt(null, name, (new Date()).getTime(), 1));
     }
 
-    @Override
+    //@Override
     public Parameter getParameter(String source, String name) {
         return getFirst(getParameterAt(source, name, (new Date()).getTime(), 1));
     }
 
-    @Override
+    //@Override
     public Parameter getParameterAt(String name, long at) {
         return getFirst(getParameterAt(null, name, at, 1));
     }
 
-    @Override
+    //@Override
     public Parameter getParameterAt(String source, String name, long at) {
         return getFirst(getParameterAt(source, name, at, 1));
     }
 
-    @Override
+    //@Override
     public List<Parameter> getParameter(String name, int rows) {
         return getParameterAt(null, name, (new Date()).getTime(), rows);
     }
 
-    @Override
+    //@Override
     public List<Parameter> getParameter(String source, String name, int rows) {
         return getParameterAt(source, name, (new Date()).getTime(), rows);
     }
 
-    @Override
+    //@Override
     public List<Parameter> getParameterAt(String name, long at, int rows) {
         return getParameterAt(null, name, at, rows);
     }
 
-    @Override
+    //@Override
     public List<Parameter> getParameterAt(String source, String name, long at, int rows) {
         ParameterRequest request = new ParameterRequest(getID());
         request.setIssuedBy(issuedBy);
@@ -136,22 +136,22 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return getParameterWithoutState(request);
     }
 
-    @Override
+    //@Override
     public List<Parameter> getParameters(List<String> names) {
         return getParametersAt(names, (new Date()).getTime(), 1);
     }
 
-    @Override
+    //@Override
     public List<Parameter> getParameters(List<String> names, int rows) {
         return getParametersAt(names, (new Date()).getTime(), rows);
     }
 
-    @Override
+    //@Override
     public List<Parameter> getParametersAt(List<String> names, long at) {
         return getParametersAt(names, at, 1);
     }
 
-    @Override
+    //@Override
     public List<Parameter> getParametersAt(List<String> name, long at, int rows) {
         ParameterRequest request = new ParameterRequest(getID());
         request.setIssuedBy(issuedBy);
@@ -163,22 +163,22 @@ public class DataAccess extends HbirdApi implements IDataAccess {
 
     }
 
-    @Override
+    //@Override
     public Map<Parameter, List<State>> getParameterAndStates(String name) {
         return getParameterAndStatesAt(name, (new Date().getTime()), 1);
     }
 
-    @Override
+    //@Override
     public Map<Parameter, List<State>> getParameterAndStates(String name, int rows) {
         return getParameterAndStatesAt(name, (new Date().getTime()), rows);
     }
 
-    @Override
+    //@Override
     public Map<Parameter, List<State>> getParameterAndStatesAt(String name, long at) {
         return getParameterAndStatesAt(name, at, 1);
     }
 
-    @Override
+    //@Override
     public Map<Parameter, List<State>> getParameterAndStatesAt(String name, long at, int rows) {
         ParameterRequest request = new ParameterRequest(getID());
         request.setIssuedBy(issuedBy);
@@ -189,22 +189,22 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return getParameterWithState(request);
     }
 
-    @Override
+    //@Override
     public Map<Parameter, List<State>> getParametersAndStates(List<String> names) {
         return getParametersAndStateAt(names, (new Date()).getTime(), 1);
     }
 
-    @Override
+    //@Override
     public Map<Parameter, List<State>> getParametersAndStates(List<String> names, int rows) {
         return getParametersAndStateAt(names, (new Date()).getTime(), rows);
     }
 
-    @Override
+    //@Override
     public Map<Parameter, List<State>> getParametersAndStateAt(List<String> names, long at) {
         return getParametersAndStateAt(names, at, 1);
     }
 
-    @Override
+    //@Override
     public Map<Parameter, List<State>> getParametersAndStateAt(List<String> names, long at, int rows) {
         ParameterRequest request = new ParameterRequest(getID());
         request.setIssuedBy(issuedBy);
@@ -227,7 +227,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return getParameterWithoutState(request);
     }
 
-    @Override
+    //@Override
     public List<Parameter> getParameter(String name, long from, long to, int rows) {
         ParameterRequest request = new ParameterRequest(getID());
         request.setIssuedBy(issuedBy);
@@ -238,7 +238,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return getParameterWithoutState(request);
     }
 
-    @Override
+    //@Override
     public List<Parameter> getParameters(List<String> names, long from, long to) {
         ParameterRequest request = new ParameterRequest(getID());
         request.setIssuedBy(issuedBy);
@@ -248,7 +248,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return getParameterWithoutState(request);
     }
 
-    @Override
+    //@Override
     public List<Parameter> getParameters(List<String> names, long from, long to, int rows) {
         ParameterRequest request = new ParameterRequest(getID());
         request.setIssuedBy(issuedBy);
@@ -259,7 +259,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return getParameterWithoutState(request);
     }
 
-    @Override
+    //@Override
     public Map<Parameter, List<State>> getParameterAndStates(String name, long from, long to) {
         ParameterRequest request = new ParameterRequest(getID());
         request.setIssuedBy(issuedBy);
@@ -269,7 +269,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return getParameterWithState(request);
     }
 
-    @Override
+    //@Override
     public Map<Parameter, List<State>> getParameterAndStates(String name, long from, long to, int rows) {
         ParameterRequest request = new ParameterRequest(getID());
         request.setIssuedBy(issuedBy);
@@ -280,7 +280,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return getParameterWithState(request);
     }
 
-    @Override
+    //@Override
     public Map<Parameter, List<State>> getParametersAndStates(List<String> names, long from, long to) {
         ParameterRequest request = new ParameterRequest(getID());
         request.setIssuedBy(issuedBy);
@@ -290,7 +290,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
         return getParameterWithState(request);
     }
 
-    @Override
+    //@Override
     public Map<Parameter, List<State>> getParametersAndStates(List<String> names, long from, long to, int rows) {
         ParameterRequest request = new ParameterRequest(getID());
         request.setIssuedBy(issuedBy);
@@ -389,7 +389,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     /**
-     * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
+     * @see org.hbird.business.api.deprecated.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
     public LocationContactEvent getNextLocationContactEventForGroundStation(String groundStationID) {
@@ -397,7 +397,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     /**
-     * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
+     * @see org.hbird.business.api.deprecated.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
     public LocationContactEvent getNextLocationContactEventForGroundStation(String groundStationId, long from) {
@@ -405,7 +405,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     /**
-     * @see org.hbird.business.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
+     * @see org.hbird.business.api.deprecated.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
     public LocationContactEvent getNextLocationContactEventFor(String groundStationID, String satelliteID) {
@@ -472,7 +472,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
      * 
      * @see org.hbird.business.api.IDataAccess#getEvents(long, long)
      */
-    @Override
+    //@Override
     public List<Event> getEvents(Long from, Long to) {
         return executeRequestRespond(new EventRequest(issuedBy, from, to));
     }
@@ -482,12 +482,23 @@ public class DataAccess extends HbirdApi implements IDataAccess {
      * 
      * @see org.hbird.business.api.IDataAccess#resolveNamed(java.lang.String)
      */
-    @Override
+    /*@Override
     public EntityInstance resolve(String ID) {
         DataRequest request = new DataRequest(issuedBy);
         request.setID(ID);
         request.setIsInitialization(true);
         List<EntityInstance> results = executeRequestRespond(request);
         return getFirst(results);
-    }
+    } */
+
+	@Override
+	public <T extends EntityInstance> T resolve(String ID, Class<T> clazz) {
+		DataRequest request = new DataRequest(issuedBy);
+		request.setID(ID);
+		request.setIsInitialization(true);
+		Object obj = getFirst(executeRequestRespond(request));
+		
+		return (T)obj;
+	}
+    
 }

@@ -36,10 +36,10 @@ public class RoutingTest extends SystemTest {
     private static final String APPLICABLE_TO = "/MISSION/Satellites/SAT-1/Orbit";
     private static final String DERIVED_FROM = "/MISSION/Satellites/SAT-1/TLE:123";
 
-    private static Logger LOG = LoggerFactory.getLogger(EventTester.class);
+    private static Logger LOG = LoggerFactory.getLogger(RoutingTest.class);
 
     @Handler
-    public void process() throws InterruptedException {
+    public void process() throws Exception {
 
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
@@ -55,9 +55,11 @@ public class RoutingTest extends SystemTest {
         event.setTimestamp(NOW);
         event.setApplicableTo(APPLICABLE_TO);
         event.setDerivedFromId(DERIVED_FROM);
-
+        
         publishApi.publish(event);
-        Thread.sleep(100);
+
+        //publishApi.publish(event);
+        Thread.sleep(2000);
 
         azzert(eventListener.elements.size() == 1, "There should be 1 event published " + eventListener.elements.size());
         LocationContactEvent e = (LocationContactEvent) eventListener.elements.get(0);

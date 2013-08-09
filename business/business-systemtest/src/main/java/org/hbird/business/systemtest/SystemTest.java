@@ -18,6 +18,7 @@ package org.hbird.business.systemtest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,11 +27,10 @@ import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
-import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPartManager;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.archive.ArchiveComponent;
 import org.hbird.business.commanding.CommandingComponent;
 import org.hbird.business.groundstation.base.GroundStationPart;
@@ -45,16 +45,24 @@ import org.hbird.business.taskexecutor.TaskExecutionComponent;
 import org.hbird.business.tracking.TrackingComponent;
 import org.hbird.business.tracking.quartz.TrackingDriverConfiguration;
 import org.hbird.business.websockets.WebsocketInterfaceComponent;
+import org.hbird.exchange.commandrelease.CommandRequest;
+import org.hbird.exchange.core.Command;
+import org.hbird.exchange.core.EntityInstance;
+import org.hbird.exchange.core.Metadata;
+import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.Part;
+import org.hbird.exchange.core.State;
 import org.hbird.exchange.dataaccess.CommitRequest;
-import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.groundstation.Antenna;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.GeoLocation;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
+import org.hbird.exchange.tasking.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.mongodb.Mongo;
 
 public abstract class SystemTest {
 
@@ -93,13 +101,10 @@ public abstract class SystemTest {
 
     protected CamelContext context = null;
 
-    protected static IPublish publishApi = ApiFactory.getPublishApi("SystemTest");
-
-    protected static IDataAccess accessApi = ApiFactory.getDataAccessApi("SystemTest");
-
-    protected static ICatalogue catalogueApi = ApiFactory.getCatalogueApi("SystemTest");
-
-    protected static IPartManager partmanagerApi = ApiFactory.getPartManagerApi("SystemTest");
+    protected static IPublisher publishApi;
+    protected static IDataAccess accessApi;
+    protected static ICatalogue catalogueApi;
+    protected static IPartManager partmanagerApi;
 
     protected static ArchiveComponent archive = null;
     protected static CommandingComponent comComponent = null;
@@ -307,6 +312,61 @@ public abstract class SystemTest {
         }
     }
 
+    void publishParameter(String ID, String name, String description, Number value, String unit) throws Exception {
+        Parameter param = new Parameter(ID, name);
+
+        param.setDescription(description);
+        param.setValue(value);
+        param.setUnit(unit);
+
+        publishApi.publish(param);
+    }
+
+    void publishParameter(String ID, String name, String description, Number value, String unit, long timestamp) throws Exception {
+        Parameter param = new Parameter(ID, name);
+
+        param.setDescription(description);
+        param.setValue(value);
+        param.setUnit(unit);
+        param.setTimestamp(timestamp);
+        param.setVersion(timestamp);
+
+        publishApi.publish(param);
+    }
+
+    void publishState(String ID, String name, String description, String applicableTo, boolean value) throws Exception {
+        State state = new State(ID, name);
+
+        state.setDescription(description);
+        state.setApplicableTo(applicableTo);
+        state.setValue(value);
+
+        publishApi.publish(state);
+    }
+
+    void publishState(String ID, String name, String description, String applicableTo, boolean value, long timestamp) throws Exception {
+        State state = new State(ID, name);
+
+        state.setDescription(description);
+        state.setApplicableTo(applicableTo);
+        state.setValue(value);
+        state.setTimestamp(timestamp);
+        state.setVersion(timestamp);
+
+        publishApi.publish(state);
+    }
+
+    void publishCommandRequest(String ID, String name, String description, Command command, List<String> lockStates, List<Task> tasks) throws Exception {
+        CommandRequest request = new CommandRequest(ID, name);
+
+        request.setDescription(description);
+        request.setCommand(command);
+        request.setLockStates(lockStates);
+        request.setTasks(tasks);
+
+        publishApi.publish(request);
+    }
+
     public Listener getMonitoringListener() {
         return monitoringListener;
     }
@@ -335,6 +395,7 @@ public abstract class SystemTest {
     protected static boolean monitoringArchiveStarted = false;
 
     public void startMonitoringArchive() throws InterruptedException {
+        LOG.info("startMonitoringArchive()");
 
         if (monitoringArchiveStarted == false) {
             LOG.info("Issuing command for start of a parameter archive.");
@@ -346,11 +407,18 @@ public abstract class SystemTest {
 
             monitoringArchiveStarted = true;
         }
+        else {
+            LOG.info("Monitoring archive already started");
+        }
 
         /** TODO Send command to the archive to delete all data. */
-        DeletionRequest request = new DeletionRequest("SystemTest");
-        request.setDeleteAll(true);
-        injection.sendBody(request);
+        // DeletionRequest request = new DeletionRequest("SystemTest");
+        // request.setDeleteAll(true);
+        // injection.sendBody(request);
+
+        LOG.info("Dropping database hbird_test");
+        Mongo mongo = getContext().getRegistry().lookup("mongo", Mongo.class);
+        mongo.dropDatabase("hbird_test");
 
         Thread.sleep(2000);
 
@@ -370,7 +438,12 @@ public abstract class SystemTest {
             taskPart.setName(ID);
 
             /** Publish the knowledge of the part. */
-            publishApi.publish(taskPart);
+            try {
+                publishApi.publish(taskPart);
+            }
+            catch (Exception e) {
+                LOG.error("Failed to publish TaskExecutionComponent", e);
+            }
 
             /** Start the part. */
             partmanagerApi.start(taskPart);
@@ -400,6 +473,7 @@ public abstract class SystemTest {
     protected static boolean commandingChainStarted = false;
 
     public void startCommandingChain() throws InterruptedException {
+        LOG.info("startCommandingChain()");
 
         if (commandingChainStarted == false) {
             LOG.info("Issuing command for start of a commanding chain.");
@@ -410,6 +484,9 @@ public abstract class SystemTest {
             Thread.sleep(4000);
 
             commandingChainStarted = true;
+        }
+        else {
+            LOG.info("CommandingChain already started");
         }
     }
 
@@ -577,7 +654,12 @@ public abstract class SystemTest {
 
         for (Part part : parts.values()) {
             if (part instanceof Satellite || part instanceof GroundStation) {
-                publishApi.publish(part);
+                try {
+                    publishApi.publish(part);
+                }
+                catch (Exception e) {
+                    LOG.error("Failed to publish groundstation/satellite", e);
+                }
             }
         }
 
@@ -654,24 +736,48 @@ public abstract class SystemTest {
         Thread.sleep(2000);
     }
 
+    protected TleOrbitalParameters publishTLE(String ID, String name, String satelliteId, String line1, String line2) throws Exception {
+        TleOrbitalParameters parameters = new TleOrbitalParameters(ID, name);
+        parameters.setSatelliteId(satelliteId);
+        parameters.setTleLine1(line1);
+        parameters.setTleLine2(line2);
+
+        return (TleOrbitalParameters) publishApi.publish(parameters);
+    }
+
+    protected Metadata publishMetadata(String ID, String name, EntityInstance applicableTo, String key, Object object) throws Exception {
+        Metadata metadata = new Metadata(ID, name);
+        metadata.setApplicableTo(applicableTo.getID());
+        metadata.setMetadata(Collections.singletonMap(key, object));
+
+        return (Metadata) publishApi.publish(metadata);
+    }
+
     protected TleOrbitalParameters publishTleParameters() {
         /** Store TLE */
         String tleLine1 = "1 27842U 03031C   12330.56671446  .00000340  00000-0  17580-3 0  5478";
         String tleLine2 = "2 27842 098.6945 336.9241 0009991 090.9961 269.2361 14.21367546487935";
 
-        TleOrbitalParameters parameters = publishApi.publishTleParameters("/ESTCUBE1/TLE", "/ESTCUBE1/TLE", estcube1.getID(), tleLine1, tleLine2);
+        try {
+            TleOrbitalParameters parameters = publishTLE("/ESTCUBE1/TLE", "ESTCUBE1/TLE", estcube1.getID(), tleLine1, tleLine2);
 
-        publishApi.publishMetadata("/ESTCUBE1/TLE/metadata", "/ESTCUBE1/TLE/metadata", parameters, "Author", "This file was approved by Gert Villemos the "
-                + (new Date()).toString());
+            publishMetadata("/ESTCUBE1/TLE/metadata", "/ESTCUBE1/TLE/metadata", parameters, "Author", "This file was approved by Gert Villemos the "
+                    + (new Date()).toString());
 
-        tleLine1 = "1 39090U 13009E   13083.97990177  .00000074  00000-0  42166-4 0   342";
-        tleLine2 = "2 39090  98.6360 274.2877 0009214 187.6058 172.4992 14.34286321  3925";
-        parameters = publishApi.publishTleParameters("/STRAND/TLE", "/STRAND/TLE", strand.getID(), tleLine1, tleLine2);
+            tleLine1 = "1 39090U 13009E   13083.97990177  .00000074  00000-0  42166-4 0   342";
+            tleLine2 = "2 39090  98.6360 274.2877 0009214 187.6058 172.4992 14.34286321  3925";
+            parameters = publishTLE("/STRAND/TLE", "/STRAND/TLE", strand.getID(), tleLine1, tleLine2);
 
-        publishApi.publishMetadata("/STRAND/TLE/metadata", "/STRAND/TLE/metadata", parameters, "Author", "This file was approved by Gert Villemos the "
-                + (new Date()).toString());
+            publishMetadata("/STRAND/TLE/metadata", "/STRAND/TLE/metadata", parameters, "Author", "This file was approved by Gert Villemos the "
+                    + (new Date()).toString());
 
-        return parameters;
+            return parameters;
+        }
+        catch (Exception e) {
+            LOG.error("Failed to publish TLE", e);
+
+            return null;
+        }
     }
 
     public Listener getInMemoryTestListener() {
@@ -696,5 +802,37 @@ public abstract class SystemTest {
 
     public void setMessageListener(MessageListener messageListener) {
         this.messageListener = messageListener;
+    }
+
+    public static IPublisher getPublishApi() {
+        return publishApi;
+    }
+
+    public static void setPublishApi(IPublisher publishApi) {
+        SystemTest.publishApi = publishApi;
+    }
+
+    public static IDataAccess getAccessApi() {
+        return accessApi;
+    }
+
+    public static void setAccessApi(IDataAccess accessApi) {
+        SystemTest.accessApi = accessApi;
+    }
+
+    public static ICatalogue getCatalogueApi() {
+        return catalogueApi;
+    }
+
+    public static void setCatalogueApi(ICatalogue catalogueApi) {
+        SystemTest.catalogueApi = catalogueApi;
+    }
+
+    public static IPartManager getPartmanagerApi() {
+        return partmanagerApi;
+    }
+
+    public static void setPartmanagerApi(IPartManager partmanagerApi) {
+        SystemTest.partmanagerApi = partmanagerApi;
     }
 }

@@ -3,10 +3,15 @@ package org.hbird.business.solr;
 import static org.junit.Assert.assertEquals;
 
 import org.hbird.business.archive.solr.SolrEndpoint;
+import org.junit.Before;
 import org.junit.Test;
 
 
 public class SolrEndpointTest {
+	@Before
+	public void setUp() {
+		System.clearProperty("solr.url");
+	}
 
     @Test
     public void testDefaultSolrServerUrl() {

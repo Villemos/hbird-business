@@ -40,7 +40,7 @@ public class SatelliteResolver implements CacheResolver<Satellite> {
     @Override
     public Satellite resolveById(String id) {
         try {
-            return (Satellite) dao.resolve(id);
+            return dao.getById(id, Satellite.class);
         }
         catch (Exception e) {
             LOG.warn("Failed to resolve Satellite for ID {}", id, e);

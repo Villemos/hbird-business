@@ -18,8 +18,8 @@ package org.hbird.business.simpleparametersimulator;
 
 import org.apache.camel.Body;
 import org.apache.camel.Handler;
-import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
+import org.hbird.business.api.impl.Injector;
 import org.hbird.exchange.core.EntityInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +29,21 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class SenderBean {
-
     protected static Logger LOG = LoggerFactory.getLogger(SenderBean.class);
 
-    protected IPublish pApi = ApiFactory.getPublishApi("Simulator");
+    protected IPublisher publisher;
+    
+    public SenderBean(IPublisher publisher) {
+    	this.publisher = publisher;
+    }
 
     @Handler
     public synchronized void send(@Body EntityInstance entry) {
         LOG.debug("Publishing object '{}'", entry.toString());
-        pApi.publish(entry);
+        try {
+        	publisher.publish(entry);
+        } catch(Exception e) {
+        	LOG.error("Failed to publish object " + entry, e);
+        }
     }
 }

@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.hbird.business.api.IPublish;
+import org.hbird.business.api.IPublisher;
 import org.hbird.business.navigation.configuration.ContactPredictionConfiguration;
 import org.hbird.business.navigation.orekit.ContactEventCollector;
 import org.hbird.business.navigation.orekit.IFrameProvider;
@@ -75,7 +75,7 @@ public class OrekitContactPredictorTest {
     private IPropagatorProvider propagatorProvider;
 
     @Mock
-    private IPublish publisher;
+    private IPublisher publisher;
 
     @Mock
     private ContactPredictionRequest<ContactData> request;
