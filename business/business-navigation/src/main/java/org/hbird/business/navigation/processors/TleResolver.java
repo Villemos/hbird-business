@@ -18,6 +18,7 @@ package org.hbird.business.navigation.processors;
 
 import org.apache.camel.Handler;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.exceptions.NotFoundException;
 import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
 import org.hbird.business.navigation.request.PredictionRequest;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -46,10 +47,16 @@ public class TleResolver {
         PredictionConfigurationBase config = request.getConfiguration();
         String satelliteId = config.getSatelliteId();
         LOG.debug("Resolving TLE for the satellite ID '{}'", satelliteId);
-        TleOrbitalParameters tle = dao.getTleFor(satelliteId);
-        if (tle == null) {
-            LOG.error("No TLE found for the satellite ID '{}'", satelliteId);
-            throw new IllegalStateException("No TLE available for the satellite ID " + satelliteId);
+        TleOrbitalParameters tle;
+        try {
+            tle = dao.getTleFor(satelliteId);
+        }
+        catch (NotFoundException nfe) {
+            LOG.error("No TLE found for the Satellite ID '{}'", satelliteId);
+            LOG.info("   1. check config - is Satellite ID '{}' correct?", satelliteId);
+            LOG.info("   2. check db - is the Satellite with the ID '{}' available?", satelliteId);
+            LOG.info("   3. check db - is the TLE for the Satellite with the ID '{}' available?", satelliteId);
+            throw new IllegalStateException("No TLE available for the satellite ID '" + satelliteId + "'");
         }
         LOG.debug("Found TLE '{}'", tle.getInstanceID());
         request.setTleParameters(tle);

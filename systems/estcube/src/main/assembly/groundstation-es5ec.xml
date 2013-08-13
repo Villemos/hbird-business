@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
     xsi:schemaLocation="
-       http://www.springframework.org/schema/beans 
-       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-       http://www.springframework.org/schema/context 
-       http://www.springframework.org/schema/context/spring-context-3.0.xsd
-       http://camel.apache.org/schema/spring 
-       http://camel.apache.org/schema/spring/camel-spring.xsd">
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
+    <import resource="properties.xml"/>
+    <import resource="id-builder.xml"/>
+    <import resource="mongo-db.xml"/>
+    <import resource="orbit-data-api.xml"/>
     <import resource="groundstation-es5ec-parts.xml" />
 
     <!-- Configurator -->
     <bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponent" init-method="start">
         <constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations/ES5EC/Configuator"/>
+        <constructor-arg index="1" name="publisher" ref="db-and-jms-publisher"/>
     </bean>
 
     <!-- Tracking -->
@@ -73,15 +76,16 @@
         <constructor-arg index="1" name="destination" value="/ESTCUBE/GroundStations/ES5EC/Configuator"/>
         <constructor-arg index="2" name="objects">
             <list>
-<!--                 <ref bean="antenna" /> -->
+                <ref bean="antenna" />
                 <ref bean="es5ec" />
                 <ref bean="rotator" />
                 <ref bean="radio" />
-                <ref bean="tracking"/>
-                <ref bean="orbitPredictor"/>
-                <ref bean="contactPredictor"/>
+                <ref bean="tracking" />
+                <ref bean="orbitPredictor" />
+                <ref bean="contactPredictor" />
             </list>
         </constructor-arg>
+        <constructor-arg index="3" name="publisher" ref="db-and-jms-publisher"/>
     </bean>
 
 </beans>

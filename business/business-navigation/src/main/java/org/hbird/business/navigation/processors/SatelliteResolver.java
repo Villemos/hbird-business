@@ -18,6 +18,7 @@ package org.hbird.business.navigation.processors;
 
 import org.apache.camel.Handler;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.exceptions.NotFoundException;
 import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
 import org.hbird.business.navigation.request.PredictionRequest;
 import org.hbird.exchange.navigation.Satellite;
@@ -44,9 +45,14 @@ public class SatelliteResolver {
         PredictionConfigurationBase config = request.getConfiguration();
         String satelliteId = config.getSatelliteId();
         try {
-        	Satellite satellite = dao.getById(satelliteId, Satellite.class);
-        	LOG.debug("Resolved Satellite for the ID '{}'", satelliteId);
-        	request.setSatellite(satellite);
+            Satellite satellite = dao.getById(satelliteId, Satellite.class);
+            LOG.debug("Resolved Satellite for the ID '{}'", satelliteId);
+            request.setSatellite(satellite);
+        }
+        catch (NotFoundException nfe) {
+            LOG.warn("Satellite for the ID '{}' not found in DB", satelliteId);
+            LOG.info("   1. check config - is the Satellite ID '{}' correct?", satelliteId);
+            LOG.info("   2. check DB - is the Satellite with ID '{}' available?", satelliteId);
         }
         catch (Exception e) {
             LOG.error("Failed to resolve Satellite for the ID '{}'", satelliteId, e);

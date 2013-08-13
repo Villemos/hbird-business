@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:schemaLocation="
-       http://www.springframework.org/schema/beans 
-       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-       http://www.springframework.org/schema/context 
-       http://www.springframework.org/schema/context/spring-context-3.0.xsd
-       http://camel.apache.org/schema/spring 
-       http://camel.apache.org/schema/spring/camel-spring.xsd">
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-    <import resource="core-parts.xml" />
-    <import resource="groundstation-es5ec-parts.xml" />
+    <import resource="properties.xml"/>
+    <import resource="mongo-db.xml"/>
+    <import resource="core-parts.xml"/>
+    <import resource="groundstation-es5ec-parts.xml"/>
     <import resource="satellite-estcube1-parts.xml"/>
 
     <!-- Publish the parts of the ground station -->
@@ -24,6 +22,7 @@
                 <ref bean="tle"/>
             </list>
         </constructor-arg>
+        <constructor-arg index="3" name="publisher" ref="db-and-jms-publisher"/>
     </bean>
 
 </beans>

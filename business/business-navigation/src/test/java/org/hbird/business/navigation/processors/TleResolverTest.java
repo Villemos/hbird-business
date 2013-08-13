@@ -23,6 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.exceptions.NotFoundException;
 import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
 import org.hbird.business.navigation.request.PredictionRequest;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -53,6 +54,8 @@ public class TleResolverTest {
     @Mock
     private TleOrbitalParameters tle;
 
+    private NotFoundException exception;
+
     private TleResolver tleResolver;
 
     private InOrder inOrder;
@@ -62,11 +65,11 @@ public class TleResolverTest {
      */
     @Before
     public void setUp() throws Exception {
+        exception = new NotFoundException();
         tleResolver = new TleResolver(dao);
         inOrder = inOrder(dao, request, config, tle);
         when(request.getConfiguration()).thenReturn(config);
         when(config.getSatelliteId()).thenReturn(SAT_ID);
-
     }
 
     @Test
@@ -82,7 +85,7 @@ public class TleResolverTest {
 
     @Test
     public void testResolveTleNotFound() throws Exception {
-        when(dao.getTleFor(SAT_ID)).thenReturn(null);
+        when(dao.getTleFor(SAT_ID)).thenThrow(exception);
         try {
             tleResolver.resolveTle(request);
             fail("Exception excpected");

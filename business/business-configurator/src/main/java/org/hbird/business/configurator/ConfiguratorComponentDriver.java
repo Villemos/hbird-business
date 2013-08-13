@@ -84,11 +84,11 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver<Configu
     public void start(ConfiguratorComponent part) throws Exception {
         this.entity = part;
         CamelContext context = createContext(applicationContext);
-        LOG.info("Starting ConfiguratorComponent '{}'; CamelContext '{}'", part.getName(), context.getName());
+        LOG.info("Starting ConfiguratorComponent - name: '{}'; ID: '{}'; CamelContext '{}'", new Object[] { part.getName(), part.getID(), context.getName() });
         try {
             context.addRoutes(this);
             context.start();
-            LOG.info("ConfiguratorComponent '{}' started", part.getName());
+            LOG.info("ConfiguratorComponent started - name: '{}'; ID: '{}'", part.getName(), part.getID());
         }
         catch (Exception e) {
             LOG.error("Failed to start ConfiguatorComponentDriver for '{}'", part.getID(), e);
@@ -194,23 +194,31 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver<Configu
         String id = entity.getID();
         LOG.info("Accepting Commands with destination '{}'", id);
 
+        // @formatter:off
+
         /* Setup route to receive commands. */
         from(StandardEndpoints.COMMANDS + "?" + addDestinationSelector(id))
-                .choice()
+            .choice()
                 .when(body().isInstanceOf(StartComponent.class))
-                .bean(this, "startComponent")
+                    .bean(this, "startComponent")
                 .when(body().isInstanceOf(StopComponent.class))
-                .bean(this, "stopComponent")
+                    .bean(this, "stopComponent")
                 .when(body().isInstanceOf(ReportStatus.class))
-                .bean(this, "reportStatus")
-                .end();
+                    .bean(this, "reportStatus")
+            .end();
 
         /* Setup the BusinessCard */
         long heartbeat = entity.getHeartbeat();
 
-        from(addTimer("businesscard", heartbeat)).bean(entity, "getBusinessCard").bean(publisher, "publish");
+        from(addTimer("businesscard", heartbeat))
+            .bean(entity, "getBusinessCard")
+            .bean(publisher, "publish");
 
-        from(ENDPOINT_TO_EVENTS).log("Sending Configurator event: ${in.body}").bean(publisher, "publish");
+        from(ENDPOINT_TO_EVENTS)
+            .log("Sending Configurator event: ${in.body}")
+            .bean(publisher, "publish");
+
+        // @formatter:on
     }
 
     /**

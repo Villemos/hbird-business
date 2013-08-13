@@ -22,6 +22,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.exceptions.NotFoundException;
 import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
 import org.hbird.business.navigation.request.PredictionRequest;
 import org.hbird.exchange.navigation.Satellite;
@@ -52,6 +53,8 @@ public class SatelliteResolverTest {
     @Mock
     private PredictionConfigurationBase config;
 
+    private NotFoundException notFoundException;
+
     private SatelliteResolver resolver;
 
     private InOrder inOrder;
@@ -65,6 +68,7 @@ public class SatelliteResolverTest {
     public void setUp() throws Exception {
         resolver = new SatelliteResolver(dao);
         exception = new RuntimeException("Muchos problemos");
+        notFoundException = new NotFoundException();
         inOrder = inOrder(dao, sat, request, config);
         when(request.getConfiguration()).thenReturn(config);
         when(config.getSatelliteId()).thenReturn(SAT_ID);
@@ -83,8 +87,7 @@ public class SatelliteResolverTest {
 
     @Test
     public void testResolveSatNotFound() throws Exception {
-        //when(dao.getById(SAT_ID, Satellite.class)).thenReturn(null);
-    	when(dao.getById(SAT_ID, Satellite.class)).thenThrow(Exception.class);
+        when(dao.getById(SAT_ID, Satellite.class)).thenThrow(notFoundException);
         assertEquals(request, resolver.resolve(request));
         inOrder.verify(request, times(1)).getConfiguration();
         inOrder.verify(config, times(1)).getSatelliteId();

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.2.xsd">
+
+    <mongo:mongo host="${mongo.db.host:localhost}" port="${mongo.db.port:27017}" />
+    <mongo:db-factory id="mongoDbFactory" dbname="${mongo.db.name:ESTCube}" />
+
+    <mongo:mapping-converter id="mappingConverter">
+        <mongo:custom-converters>
+            <mongo:converter>
+                <bean class="org.hbird.business.archive.converters.Vector3DConverter" />
+            </mongo:converter>
+            <mongo:converter>
+                <bean class="org.hbird.business.archive.converters.ClassSerializer" />
+            </mongo:converter>
+            <mongo:converter>
+                <bean class="org.hbird.business.archive.converters.ClassDeserializer" />
+            </mongo:converter>
+        </mongo:custom-converters>
+    </mongo:mapping-converter>
+
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" index="0" ref="mongoDbFactory" />
+        <constructor-arg name="mongoConverter" ref="mappingConverter" />
+    </bean>
+
+    <bean id="dataAccess" class="org.hbird.business.archive.dao.mongo.MongoDataAccess">
+        <constructor-arg index="0" name="template" ref="mongoTemplate" />
+    </bean>
+
+    <bean id="catalogue" class="org.hbird.business.api.impl.Catalogue">
+        <constructor-arg index="0" name="issuedBy" value="catalogue" />
+        <constructor-arg index="1" name="destination" value="hbird" />
+        <constructor-arg index="2" name="dao" ref="dataAccess" />
+    </bean>
+
+
+    <bean id="db-and-jms-publisher" class="org.hbird.business.api.impl.Injector">
+        <constructor-arg index="0" name="issuedBy" value="injector" />
+        <constructor-arg index="1" name="destination" value="hbird" />
+        <constructor-arg index="2" name="delegate" >
+            <bean id="db-publisher" class="org.hbird.business.archive.control.FilteringPublisher">
+                <constructor-arg index="0" name="delegate">
+                    <bean class="org.hbird.business.api.impl.Publisher">
+                        <constructor-arg index="0" name="issuedBy" value="publisher" />
+                        <constructor-arg index="1" name="destination" value="hbird" />
+                        <constructor-arg index="2" name="dao" ref="dataAccess" />
+                    </bean>
+                </constructor-arg>
+                <constructor-arg index="1" name="filter">
+                    <bean class="org.hbird.business.archive.control.NegateFilter">
+                        <constructor-arg index="0" name="filter">
+                            <bean class="org.hbird.business.archive.control.ClassFilter">
+                                <constructor-arg index="0" name="acceptableClasses">
+                                    <set>
+        <!--                                 <value>org.hbird.exchange.core.Command</value> -->
+                                        <value>org.hbird.exchange.core.BusinessCard</value>
+                                        <value>org.hbird.exchange.interfaces.IStartableEntity</value>
+                                    </set>
+                                </constructor-arg>
+                                <constructor-arg index="1" name="acceptSubclasses" value="true" />
+                            </bean>
+                        </constructor-arg>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+</beans>

@@ -85,17 +85,17 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
     protected InMemoryScheduler inMemoryScheduler;
 
     protected DriverContext<C, String, String> driverContext;
-    
+
     protected IDataAccess dao;
-    
+
     protected IPointingData calculator;
-    
+
     @Autowired
     public HamlibDriver(IPublisher publisher, IDataAccess dao, IPointingData calculator) {
-    	super(publisher);
-    	
-    	this.dao = dao;
-    	this.calculator = calculator;
+        super(publisher);
+
+        this.dao = dao;
+        this.calculator = calculator;
     }
 
     @Override
@@ -123,7 +123,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
 
         // @formatter:off
         from(asRoute("seda:toHamlib-%s", name))
-            .startupOrder(4)
+//            .startupOrder(4)
 
 //            .to("log:" + name + "-toHamlib?level=DEBUG&showAll=true")
             .doTry()
@@ -136,7 +136,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
         ResponseHandlersMap<C, String, String> handlers = getResponseHandlerMap(driverContext);
         
         from(asRoute("seda:fromHamlib-%s", name))
-            .startupOrder(3)
+//            .startupOrder(3)
 //            .to("log:" + name + ".fromHamlib?level=DEBUG&showAll=true")
             .bean(handlers)
             .split(body())
@@ -156,7 +156,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
         SetHamlibNativeCommandHeaders setHeaders = new SetHamlibNativeCommandHeaders();
         
          from(StandardEndpoints.COMMANDS + "?selector=name='Track'")
-             .startupOrder(6)
+//             .startupOrder(6)
              .filter().method(commandFilter, "acceptTrack")
              .log(asRoute("Received 'Track' command from '%s'. Will generate Hamlib commands for '%s'", simple("${body.issuedBy}").getText(), name))
              .split()
@@ -195,7 +195,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
          * this thread route but in a separate route.
          */
          from(inMemoryScheduler.getInjectUrl())
-             .startupOrder(5)
+//             .startupOrder(5)
              .process(setHeaders)
              .bean(new NativeCommandExtractor())
              .log(LoggingLevel.INFO, asRoute("Sending command '%s' to %s", simple("${body}").getText(), name))
@@ -213,11 +213,13 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
         // .routeId(name + ": Cleanup");
         //
 
-         ProcessorDefinition<?> publish = from(asRoute("direct:publish-%s", name)).bean(publisher, "publish")
-                                             .startupOrder(1);
+         ProcessorDefinition<?> publish = 
+                 from(asRoute("direct:publish-%s", name))
+//                     .startupOrder(1)
+                     .bean(publisher, "publish");
          
          from(asRoute("direct:parameters-%s", name))
-             .startupOrder(2)
+//             .startupOrder(2)
              .bean(new OnChange())
              .choice()
                  .when(header(StandardArguments.VALUE_HAS_CHANGED).isEqualTo(false))
