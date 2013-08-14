@@ -7,8 +7,8 @@
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
        http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.2.xsd">
 
-    <mongo:mongo host="${mongo.db.host:localhost}" port="${mongo.db.port:27017}" />
-    <mongo:db-factory id="mongoDbFactory" dbname="${mongo.db.name:ESTCube}" />
+    <mongo:mongo id="mongo-db" host="${mongo.db.host:localhost}" port="${mongo.db.port:27017}" />
+    <mongo:db-factory id="mongoDbFactory" mongo-ref="mongo-db" dbname="${mongo.db.name:hbird}" />
 
     <mongo:mapping-converter id="mappingConverter">
         <mongo:custom-converters>

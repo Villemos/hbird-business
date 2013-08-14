@@ -19,12 +19,13 @@ package org.hbird.business.core.cache;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.hbird.exchange.interfaces.IEntity;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.exchange.interfaces.IEntityInstance;
 
 /**
  *
  */
-public class EntityCache<E extends IEntity> {
+public class EntityCache<E extends IEntityInstance> {
 
     protected final CacheResolver<E> resolver;
 
@@ -34,10 +35,13 @@ public class EntityCache<E extends IEntity> {
         this.resolver = resolver;
     }
 
-    public E getById(String id) {
+    public E getById(String id) throws Exception {
         E result = map.get(id);
         if (result == null) {
             result = resolver.resolveById(id);
+            if (result == null) {
+                result = resolver.resolveByInstanceId(id);
+            }
             if (result != null) {
                 map.put(id, result);
             }
@@ -47,5 +51,9 @@ public class EntityCache<E extends IEntity> {
 
     protected Map<String, E> createCaheMap() {
         return new ConcurrentHashMap<String, E>();
+    }
+
+    public static <T extends IEntityInstance> EntityCache<T> forType(IDataAccess dao, Class<T> type) {
+        return new EntityCache<T>(new GenericCacheResolver<T>(dao, type));
     }
 }

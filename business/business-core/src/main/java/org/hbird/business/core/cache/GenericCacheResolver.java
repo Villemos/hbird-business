@@ -17,33 +17,44 @@
 package org.hbird.business.core.cache;
 
 import org.hbird.business.api.IDataAccess;
-import org.hbird.exchange.navigation.Satellite;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.hbird.business.api.exceptions.NotFoundException;
+import org.hbird.exchange.interfaces.IEntityInstance;
 
 /**
  *
  */
-public class SatelliteResolver implements CacheResolver<Satellite> {
+public class GenericCacheResolver<E extends IEntityInstance> implements CacheResolver<E> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SatelliteResolver.class);
-
+    private final Class<E> type;
     private final IDataAccess dao;
 
-    public SatelliteResolver(IDataAccess dao) {
+    public GenericCacheResolver(IDataAccess dao, Class<E> type) {
         this.dao = dao;
+        this.type = type;
     }
 
     /**
      * @see org.hbird.business.core.cache.CacheResolver#resolveById(java.lang.String)
      */
     @Override
-    public Satellite resolveById(String id) {
+    public E resolveById(String id) throws Exception {
         try {
-            return dao.getById(id, Satellite.class);
+            return dao.getById(id, type);
         }
-        catch (Exception e) {
-            LOG.warn("Failed to resolve Satellite for ID {}", id, e);
+        catch (NotFoundException e) {
+            return null;
+        }
+    }
+
+    /**
+     * @see org.hbird.business.core.cache.CacheResolver#resolveByInstanceId(java.lang.String)
+     */
+    @Override
+    public E resolveByInstanceId(String id) throws Exception {
+        try {
+            return dao.getByInstanceId(id, type);
+        }
+        catch (NotFoundException e) {
             return null;
         }
     }

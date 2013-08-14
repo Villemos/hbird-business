@@ -172,6 +172,13 @@ public class MongoDataAccess implements IDataAccess {
             return o;
         }
         catch (Exception e) {
+            // TODO - 14.08.2013, kimmell - improve exception handling
+            LOG.error("Failed to save {}", o, e);
+            Throwable tail = e;
+            while (tail != null) {
+                LOG.error("   Caused by  - {}", tail.getMessage());
+                tail = tail.getCause();
+            }
             throw new SaveFailedException(o, e);
         }
     }

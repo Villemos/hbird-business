@@ -19,6 +19,7 @@ package org.hbird.business.tracking.quartz;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
@@ -261,16 +262,32 @@ public class TrackCommandCreationJobTest {
     }
 
     @Test
-    public void testGetSatellite() {
+    public void testGetSatellite() throws Exception {
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
         assertEquals(satellite, job.getSatellite(satelliteCache, SATELLITE_ID));
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
-    public void testGetTle() {
+    public void testGetSatelliteWithException() throws Exception {
+        when(satelliteCache.getById(SATELLITE_ID)).thenThrow(Exception.class);
+        assertNull(job.getSatellite(satelliteCache, SATELLITE_ID));
+        inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
+    }
+
+    @Test
+    public void testGetTle() throws Exception {
         when(tleCache.getById(TLE_ID)).thenReturn(tle1);
         assertEquals(tle1, job.getTle(tleCache, TLE_ID));
+        inOrder.verify(tleCache, times(1)).getById(TLE_ID);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetTleWithException() throws Exception {
+        when(tleCache.getById(TLE_ID)).thenThrow(Exception.class);
+        assertNull(job.getTle(tleCache, TLE_ID));
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
     }
 

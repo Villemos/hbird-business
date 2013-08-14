@@ -26,7 +26,8 @@ import static org.mockito.Mockito.when;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.hbird.exchange.core.Entity;
+import org.hbird.business.api.IDataAccess;
+import org.hbird.exchange.core.EntityInstance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,15 +45,18 @@ public class EntityCacheTest {
     private static final String ID = "ID";
 
     @Mock
-    private Map<String, Entity> map;
+    private Map<String, EntityInstance> map;
 
     @Mock
-    private CacheResolver<Entity> resolver;
+    private CacheResolver<EntityInstance> resolver;
 
     @Mock
-    private Entity entity;
+    private EntityInstance entity;
 
-    private EntityCache<Entity> entityCache;
+    @Mock
+    private IDataAccess dao;
+
+    private EntityCache<EntityInstance> entityCache;
 
     private InOrder inOrder;
 
@@ -61,16 +65,16 @@ public class EntityCacheTest {
      */
     @Before
     public void setUp() throws Exception {
-        entityCache = new EntityCache<Entity>(resolver);
-        inOrder = Mockito.inOrder(map, resolver, entity);
+        entityCache = new EntityCache<EntityInstance>(resolver);
+        inOrder = Mockito.inOrder(map, resolver, entity, dao);
     }
 
     @Test
     public void testEntityCache() throws Exception {
         when(resolver.resolveById(ID)).thenReturn(entity);
-        entityCache = new EntityCache<Entity>(resolver) {
+        entityCache = new EntityCache<EntityInstance>(resolver) {
             @Override
-            protected Map<String, Entity> createCaheMap() {
+            protected Map<String, EntityInstance> createCaheMap() {
                 return EntityCacheTest.this.map;
             }
         };
@@ -93,10 +97,26 @@ public class EntityCacheTest {
     @Test
     public void testGetByIdNotFound() throws Exception {
         when(resolver.resolveById(ID)).thenReturn(null);
+        when(resolver.resolveByInstanceId(ID)).thenReturn(null);
         assertNull(entityCache.getById(ID));
         assertNull(entityCache.getById(ID));
         assertNull(entityCache.getById(ID));
-        inOrder.verify(resolver, times(3)).resolveById(ID);
+        inOrder.verify(resolver, times(1)).resolveById(ID);
+        inOrder.verify(resolver, times(1)).resolveByInstanceId(ID);
+        inOrder.verify(resolver, times(1)).resolveById(ID);
+        inOrder.verify(resolver, times(1)).resolveByInstanceId(ID);
+        inOrder.verify(resolver, times(1)).resolveById(ID);
+        inOrder.verify(resolver, times(1)).resolveByInstanceId(ID);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testGetByInstanceId() throws Exception {
+        when(resolver.resolveById(ID)).thenReturn(null);
+        when(resolver.resolveByInstanceId(ID)).thenReturn(entity);
+        assertEquals(entity, entityCache.getById(ID));
+        inOrder.verify(resolver, times(1)).resolveById(ID);
+        inOrder.verify(resolver, times(1)).resolveByInstanceId(ID);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -111,10 +131,33 @@ public class EntityCacheTest {
     }
 
     @Test
+    public void testGetByInstanceIdSeveralTimes() throws Exception {
+        when(resolver.resolveById(ID)).thenReturn(null);
+        when(resolver.resolveByInstanceId(ID)).thenReturn(entity);
+        assertEquals(entity, entityCache.getById(ID));
+        assertEquals(entity, entityCache.getById(ID));
+        assertEquals(entity, entityCache.getById(ID));
+        inOrder.verify(resolver, times(1)).resolveById(ID);
+        inOrder.verify(resolver, times(1)).resolveByInstanceId(ID);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void testCreateCaheMap() throws Exception {
-        Map<String, Entity> map = entityCache.createCaheMap();
+        Map<String, EntityInstance> map = entityCache.createCaheMap();
         assertNotNull(map);
         assertTrue(map.isEmpty());
         assertEquals(ConcurrentHashMap.class, map.getClass());
+    }
+
+    @Test
+    public void testForType() throws Exception {
+        EntityCache<EntityInstance> cache = EntityCache.forType(dao, EntityInstance.class);
+        when(dao.getById(ID, EntityInstance.class)).thenReturn(null);
+        when(dao.getByInstanceId(ID, EntityInstance.class)).thenReturn(entity);
+        assertEquals(entity, cache.getById(ID));
+        inOrder.verify(dao, times(1)).getById(ID, EntityInstance.class);
+        inOrder.verify(dao, times(1)).getByInstanceId(ID, EntityInstance.class);
+        inOrder.verifyNoMoreInteractions();
     }
 }

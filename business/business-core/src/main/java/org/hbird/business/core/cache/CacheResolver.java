@@ -23,5 +23,7 @@ import org.hbird.exchange.interfaces.IEntity;
  */
 public interface CacheResolver<E extends IEntity> {
 
-    public E resolveById(String id);
+    public E resolveById(String id) throws Exception;
+
+    public E resolveByInstanceId(String id) throws Exception;
 }

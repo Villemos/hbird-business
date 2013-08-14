@@ -112,52 +112,66 @@ public class TrackCommandCreationJob implements Job {
                     TleOrbitalParameters latestTle = getLatestTle(dao, satId);
                     if (latestTle == null || areEqual(eventTle, latestTle)) {
                         Track command = createTrackCommand(idBuilder, part, event, sat);
-                        LOG.info("Issuing Track command for the {}", event.toString());
+                        LOG.info("Issuing Track command for the '{}'", event.toString());
                         producer.asyncSendBody(endPoint, command);
                     }
                     else {
-                        LOG.info("LocationContactEvent is out dated; Track command is not issued for the {}", event.toString());
+                        LOG.info("LocationContactEvent is out dated; Track command is not issued for the '{}'", event.toString());
                     }
                 }
                 else {
-                    LOG.error("Failed to resolve TLE for ID {}; Track command is not issued for the {}", tleId, event.toString());
+                    LOG.error("Failed to resolve TLE for ID '{}'; Track command is not issued for the '{}'", tleId, event.toString());
                 }
             }
             else {
-                LOG.error("Failed to resolve Satellite for the ID {}; Track command is not issued for the {}", satId, event.toString());
+                LOG.error("Failed to resolve Satellite for the ID '{}'; Track command is not issued for the '{}'", satId, event.toString());
             }
         }
         else {
-            LOG.error("Failed to resolve LocationCOntatEvent for the ID {}; Track command is not issued", contactInstanceId);
+            LOG.error("Failed to resolve LocationCOntatEvent for the ID '{}'; Track command is not issued", contactInstanceId);
         }
     }
 
     // TODO: Maybe refactor the code to handle exceptions directly, but then there
     // is a mismatch between dao and cache contracts
     LocationContactEvent getEvent(IDataAccess dao, String eventInstanceId) {
-    	try {
-    		return dao.getByInstanceId(eventInstanceId, LocationContactEvent.class);
-    	} catch(Exception e) {
-    		LOG.info("Error resolving contact event by instance id " + eventInstanceId, e);
-    		return null;
-    	}
+        try {
+            return dao.getByInstanceId(eventInstanceId, LocationContactEvent.class);
+        }
+        catch (Exception e) {
+            LOG.info("Failed to resolve LocationContactEvent for the ID '{}' ", eventInstanceId, e);
+            return null;
+        }
     }
 
     Satellite getSatellite(EntityCache<Satellite> cache, String satelliteId) {
-        return cache.getById(satelliteId);
+        try {
+            return cache.getById(satelliteId);
+        }
+        catch (Exception e) {
+            LOG.error("Failed to resolve Satellite for the ID '{}'", satelliteId, e);
+            return null;
+        }
     }
 
     TleOrbitalParameters getTle(EntityCache<TleOrbitalParameters> tleCache, String tleId) {
-        return tleCache.getById(tleId);
+        try {
+            return tleCache.getById(tleId);
+        }
+        catch (Exception e) {
+            LOG.error("Failed to resolve TleOrbitalParameters for the ID '{}'", tleId, e);
+            return null;
+        }
     }
 
     TleOrbitalParameters getLatestTle(IDataAccess dao, String satelliteId) {
         try {
-			return dao.getTleFor(satelliteId);
-		} catch (Exception e) {
-			LOG.info("Error retrieving latest TLE for satellite " + satelliteId, e);
-			return null;
-		}
+            return dao.getTleFor(satelliteId);
+        }
+        catch (Exception e) {
+            LOG.info("Failed to retrieve latest TLE for the Satellite ID '{}'", satelliteId, e);
+            return null;
+        }
     }
 
     Track createTrackCommand(IdBuilder idBuilder, IStartableEntity part, LocationContactEvent event, Satellite satellite) {

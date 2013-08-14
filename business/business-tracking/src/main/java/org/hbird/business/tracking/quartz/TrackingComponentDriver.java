@@ -7,8 +7,6 @@ import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.core.cache.EntityCache;
-import org.hbird.business.core.cache.SatelliteResolver;
-import org.hbird.business.core.cache.TleResolver;
 import org.hbird.business.tracking.TrackingComponent;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -21,27 +19,24 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
 
     public static final String TRACK_COMMAND_INJECTOR = "seda:track-commands";
 
-    private IDataAccess dao;
-    private IdBuilder idBuilder;
-    
+    private final IDataAccess dao;
+    private final IdBuilder idBuilder;
+
     @Autowired
     public TrackingComponentDriver(IPublisher publisher, IDataAccess dao, IdBuilder idBuilder) {
-    	super(publisher);
-    	
-    	this.dao = dao;
-    	this.idBuilder = idBuilder;
+        super(publisher);
+        this.dao = dao;
+        this.idBuilder = idBuilder;
     }
-    
+
     @Override
     protected void doConfigure() {
 
         String name = entity.getName();
         TrackingDriverConfiguration config = entity.getConfiguration();
         CamelContext context = entity.getContext();
-        //IDataAccess dao = ApiFactory.getDataAccessApi(name, context);
-        EntityCache<Satellite> satelliteCache = new EntityCache<Satellite>(new SatelliteResolver(dao));
-        EntityCache<TleOrbitalParameters> tleCache = new EntityCache<TleOrbitalParameters>(new TleResolver(dao));
-        //IdBuilder idBuilder = ApiFactory.getIdBuilder();
+        EntityCache<Satellite> satelliteCache = EntityCache.forType(dao, Satellite.class);
+        EntityCache<TleOrbitalParameters> tleCache = EntityCache.forType(dao, TleOrbitalParameters.class);
 
         ProducerTemplate producer = context.createProducerTemplate();
 
@@ -63,13 +58,13 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
         ScheduleDeltaCheck deltaCheck = new ScheduleDeltaCheck(config);
 
         // @formatter:off
-        
+
         from(TRACK_COMMAND_INJECTOR).bean(publisher, "publish");
-        
+
         from("direct:scheduleContact")
             .bean(contactScheduler)
             .to("log:scheduledContact-log?level=DEBUG");
-        
+
         from("direct:rescheduleContact")
             .choice()
                 .when(deltaCheck)
@@ -79,7 +74,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
                 .otherwise()
                     .to("log:ReschedulingImpossible?level=WARN")
                 ;
-        
+
         from("seda:eventHandler")
             .to("log:handler-log?level=DEBUG")
             .process(analyzer)
@@ -91,12 +86,12 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
                 .otherwise()
                     .log("LocationContacEvent already scheduled")
                 ;
-        
+
         from(addTimer(name, config.getArchivePollInterval()))
             .bean(archivePoller)
             .split(body())
             .to("seda:eventHandler");
-        
+
         // @formatter:on
     }
 }

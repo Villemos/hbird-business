@@ -27,6 +27,7 @@
                 <value>/ESTCUBE/Satellites/ESTCube-1</value>
             </list>
         </property>
+        <property name="archivePollInterval" value="60000"/>
     </bean>
 
     <bean id="tracking" class="org.hbird.business.tracking.TrackingComponent">
