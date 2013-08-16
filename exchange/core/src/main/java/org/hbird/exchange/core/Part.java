@@ -16,23 +16,19 @@
  */
 package org.hbird.exchange.core;
 
-
 /**
  * @author Gert Villemos
- *
+ * 
  */
 public class Part extends EntityInstance {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8414896547483447947L;
+    private static final long serialVersionUID = 8414896547483447947L;
 
-	/**
-	 * @param ID
-	 * @param name
-	 */
-	public Part(String ID, String name) {
-		super(ID, name);
-	}
+    /**
+     * @param ID
+     * @param name
+     */
+    public Part(String ID, String name) {
+        super(ID, name);
+    }
 }

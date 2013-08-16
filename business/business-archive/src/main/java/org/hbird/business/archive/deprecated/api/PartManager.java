@@ -30,7 +30,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.archive.api;
+package org.hbird.business.archive.deprecated.api;
 
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.IPartManager;
@@ -43,8 +43,9 @@ import org.hbird.exchange.interfaces.IStartableEntity;
  * API for accessing information about Parts
  * 
  * @author Gert Villemos
- * 
+ * @deprecated
  */
+@Deprecated
 public class PartManager extends Publish implements IPartManager {
 
     /**

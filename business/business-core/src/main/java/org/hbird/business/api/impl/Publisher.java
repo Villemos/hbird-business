@@ -6,11 +6,11 @@ import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.EntityInstance;
 
 public class Publisher extends AbstractHbirdApi implements IPublisher {
-    private IDataAccess dao;
+
+    private final IDataAccess dao;
 
     public Publisher(String issuedBy, String destination, IDataAccess dao) {
         super(issuedBy, destination);
-
         this.dao = dao;
     }
 
@@ -28,7 +28,6 @@ public class Publisher extends AbstractHbirdApi implements IPublisher {
         }
 
         dao.save(object);
-
         return object;
     }
 }

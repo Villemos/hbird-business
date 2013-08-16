@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.archive.api;
+package org.hbird.business.archive.deprecated.api;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,15 +39,16 @@ import org.hbird.exchange.navigation.Satellite;
  * API for receiving catalogue data, i.e. list of available data.
  * 
  * @author Gert Villemos
- *
+ * @deprecated
  */
+@Deprecated
 public class Catalogue extends HbirdApi implements ICatalogue {
 
-	/**
-	 * Constructor. 
-	 * 
-	 * @param issuedBy The name/ID of the component that is using the API to send requests.
-	 */
+    /**
+     * Constructor.
+     * 
+     * @param issuedBy The name/ID of the component that is using the API to send requests.
+     */
     public Catalogue(String issuedBy) {
         super(issuedBy, ArchiveComponent.ARCHIVE_NAME);
     }
@@ -70,9 +71,9 @@ public class Catalogue extends HbirdApi implements ICatalogue {
      */
     @Override
     public GroundStation getGroundStationByName(String name) {
-    	List<String> names = new ArrayList<String>();
-		names.add(name);
-    	GroundStationRequest request = createGroundStationRequest(names);
+        List<String> names = new ArrayList<String>();
+        names.add(name);
+        GroundStationRequest request = createGroundStationRequest(names);
         List<GroundStation> stations = executeRequestRespond(request);
         return getFirst(stations);
     }
@@ -89,7 +90,8 @@ public class Catalogue extends HbirdApi implements ICatalogue {
     /**
      * @see org.hbird.business.api.ICatalogue#getSatellites()
      */
-  
+
+    @Override
     public List<Satellite> getSatellites() {
         SatelliteRequest request = createSatelliteRequest(issuedBy);
         return executeRequestRespond(request);
@@ -111,7 +113,7 @@ public class Catalogue extends HbirdApi implements ICatalogue {
      */
     @Override
     public List<Parameter> getParameters() {
-        ParameterRequest request = createParameterRequest(); 
+        ParameterRequest request = createParameterRequest();
         return executeRequestRespond(request);
     }
 
@@ -120,18 +122,18 @@ public class Catalogue extends HbirdApi implements ICatalogue {
      */
     @Override
     public List<State> getStates() {
-        StateRequest request = createStateRequest(); 
+        StateRequest request = createStateRequest();
         return executeRequestRespond(request);
     }
 
     protected void configureInit(DataRequest request, Class<?> clazz) {
         request.setIsInitialization(true);
         request.setClass(clazz.getSimpleName());
-        request.setRows(1);    	
+        request.setRows(1);
     }
-    
+
     /**
-     * Helper method to issued a ground station request to the archive 
+     * Helper method to issued a ground station request to the archive
      * 
      * @param names List of names of GroundStations
      * @return The GroundStation request to be issued
@@ -168,33 +170,39 @@ public class Catalogue extends HbirdApi implements ICatalogue {
         return request;
     }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.ICatalogue#getParts()
-	 */
-	@Override
-	public List<Part> getParts() {
-		PartRequest request = new PartRequest(issuedBy);		
-		return executeRequestRespond(request);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.business.api.ICatalogue#getParts()
+     */
+    @Override
+    public List<Part> getParts() {
+        PartRequest request = new PartRequest(issuedBy);
+        return executeRequestRespond(request);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.ICatalogue#getPart(java.lang.String)
-	 */
-	@Override
-	public Part getPart(String name) {
-		PartRequest request = new PartRequest(issuedBy);
-		request.addName(name);
-		List<Object> results = executeRequestRespond(request);
-		return results.isEmpty() ? null : (Part) results.get(0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.business.api.ICatalogue#getPart(java.lang.String)
+     */
+    @Override
+    public Part getPart(String name) {
+        PartRequest request = new PartRequest(issuedBy);
+        request.addName(name);
+        List<Object> results = executeRequestRespond(request);
+        return results.isEmpty() ? null : (Part) results.get(0);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.hbird.business.api.ICatalogue#getPartChildred(java.lang.String)
-	 */
-	@Override
-	public List<Part> getPartChildren(String parentName) {
-		PartRequest request = new PartRequest(issuedBy);
-		request.setIsPartOf(parentName);
-		return executeRequestRespond(request);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.hbird.business.api.ICatalogue#getPartChildred(java.lang.String)
+     */
+    @Override
+    public List<Part> getPartChildren(String parentName) {
+        PartRequest request = new PartRequest(issuedBy);
+        request.setIsPartOf(parentName);
+        return executeRequestRespond(request);
+    }
 }

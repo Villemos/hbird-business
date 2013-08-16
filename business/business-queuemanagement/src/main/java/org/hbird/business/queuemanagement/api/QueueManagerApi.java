@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class QueueManagerApi extends HbirdApi implements IQueueManagement {
+
     private static final Logger LOG = LoggerFactory.getLogger(QueueManagerApi.class);
 
     private static final String KEY_JMS_MESSAGE_ID = "JMSMessageID";

@@ -53,7 +53,7 @@ public class ConfiguratorComponent extends StartableEntity implements Applicatio
      * Default constructor.
      */
     public ConfiguratorComponent(IPublisher publisher) {
-    	this(DEFAULT_ID, publisher);
+        this(DEFAULT_ID, publisher);
     }
 
     /**
@@ -63,7 +63,6 @@ public class ConfiguratorComponent extends StartableEntity implements Applicatio
         super(ID, DEFAULT_NAME);
         setDescription(DEFAULT_DESCRIPTION);
         setDriverName(DEFAULT_DRIVER);
-        
         this.publisher = publisher;
     }
 

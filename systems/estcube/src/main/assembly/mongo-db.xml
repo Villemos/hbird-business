@@ -2,9 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-    xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.2.xsd">
 
     <mongo:mongo id="mongo-db" host="${mongo.db.host:localhost}" port="${mongo.db.port:27017}" />
@@ -25,8 +23,8 @@
     </mongo:mapping-converter>
 
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg name="mongoDbFactory" index="0" ref="mongoDbFactory" />
-        <constructor-arg name="mongoConverter" ref="mappingConverter" />
+        <constructor-arg index="0" name="mongoDbFactory" ref="mongoDbFactory" />
+        <constructor-arg index="1" name="mongoConverter" ref="mappingConverter" />
     </bean>
 
     <bean id="dataAccess" class="org.hbird.business.archive.dao.mongo.MongoDataAccess">
@@ -34,21 +32,20 @@
     </bean>
 
     <bean id="catalogue" class="org.hbird.business.api.impl.Catalogue">
-        <constructor-arg index="0" name="issuedBy" value="catalogue" />
-        <constructor-arg index="1" name="destination" value="hbird" />
+        <constructor-arg index="0" name="issuedBy" value="catalogue" /> <!-- REMOVE? -->
+        <constructor-arg index="1" name="destination" value="hbird" /> <!-- REMOVE? -->
         <constructor-arg index="2" name="dao" ref="dataAccess" />
     </bean>
 
-
     <bean id="db-and-jms-publisher" class="org.hbird.business.api.impl.Injector">
-        <constructor-arg index="0" name="issuedBy" value="injector" />
-        <constructor-arg index="1" name="destination" value="hbird" />
+        <constructor-arg index="0" name="issuedBy" value="injector" /> <!-- REMOVE? -->
+        <constructor-arg index="1" name="destination" value="hbird" /> <!-- REMOVE? -->
         <constructor-arg index="2" name="delegate" >
             <bean id="db-publisher" class="org.hbird.business.archive.control.FilteringPublisher">
                 <constructor-arg index="0" name="delegate">
                     <bean class="org.hbird.business.api.impl.Publisher">
-                        <constructor-arg index="0" name="issuedBy" value="publisher" />
-                        <constructor-arg index="1" name="destination" value="hbird" />
+                        <constructor-arg index="0" name="issuedBy" value="publisher" /> <!-- REMOVE? -->
+                        <constructor-arg index="1" name="destination" value="hbird" /> <!-- REMOVE? -->
                         <constructor-arg index="2" name="dao" ref="dataAccess" />
                     </bean>
                 </constructor-arg>
@@ -58,7 +55,7 @@
                             <bean class="org.hbird.business.archive.control.ClassFilter">
                                 <constructor-arg index="0" name="acceptableClasses">
                                     <set>
-        <!--                                 <value>org.hbird.exchange.core.Command</value> -->
+<!--                                         <value>org.hbird.exchange.core.Command</value> -->
                                         <value>org.hbird.exchange.core.BusinessCard</value>
                                         <value>org.hbird.exchange.interfaces.IStartableEntity</value>
                                     </set>

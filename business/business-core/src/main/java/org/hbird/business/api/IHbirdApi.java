@@ -30,5 +30,16 @@ public interface IHbirdApi {
 
     public void setDestination(String destination);
 
+    /**
+     * Should dispose all resources allocated by the {@link IHbirdApi} instance.
+     * 
+     * In case called on shared instance will stop the shared instance and all components will fail after this call.
+     * 
+     * Use at your own risk!
+     * 
+     * @throws Exception
+     * @Deprecated
+     */
+    @Deprecated
     public void dispose() throws Exception;
 }

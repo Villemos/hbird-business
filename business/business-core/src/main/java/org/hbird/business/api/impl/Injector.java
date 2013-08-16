@@ -8,35 +8,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Injector extends AbstractHbirdApi implements IPublisher {
-    private Logger LOG = LoggerFactory.getLogger(Injector.class);
 
-    private class InjectApi extends HbirdApi {
-        public InjectApi(String issuedBy, String destination) {
-            super(issuedBy, destination);
-        }
+    private final Logger LOG = LoggerFactory.getLogger(Injector.class);
 
-        public InjectApi(String issuedBy, String destination, CamelContext context) {
-            super(issuedBy, destination, context);
-        }
-    }
-
-    private InjectApi injector;
-    private IPublisher delegate;
+    private final InjectApi injector;
+    private final IPublisher delegate;
 
     public Injector(String issuedBy, String destination, IPublisher delegate) {
         super(issuedBy, destination);
-
         injector = new InjectApi(issuedBy, destination);
         this.delegate = delegate;
     }
 
     public Injector(String issuedBy, String destination, CamelContext context, IPublisher delegate) {
         super(issuedBy, destination);
-
         injector = new InjectApi(issuedBy, destination, context);
         this.delegate = delegate;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends EntityInstance> T publish(T object) throws Exception {
         LOG.trace("Publishing {}", object);
@@ -46,7 +36,6 @@ public class Injector extends AbstractHbirdApi implements IPublisher {
         }
 
         T saved = delegate.publish(object);
-
         return (T) publishToAMQ(saved);
     }
 
@@ -54,10 +43,14 @@ public class Injector extends AbstractHbirdApi implements IPublisher {
         return injector.publish(object);
     }
 
-    @Override
-    public void dispose() throws Exception {
-        // injector.dispose();
-        // delegate.dispose();
+    private class InjectApi extends HbirdApi {
+        public InjectApi(String issuedBy, String destination) {
+            super(issuedBy, destination);
+        }
+
+        public InjectApi(String issuedBy, String destination, CamelContext context) {
+            super(issuedBy, destination, context);
+        }
     }
 
 }

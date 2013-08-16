@@ -18,13 +18,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Catalogue extends AbstractHbirdApi implements ICatalogue {
+
     private final static Logger LOG = LoggerFactory.getLogger(Catalogue.class);
 
-    private IDataAccess dao;
+    private final IDataAccess dao;
 
     public Catalogue(String issuedBy, String destination, IDataAccess dao) {
         super(issuedBy, destination);
-
         this.dao = dao;
     }
 
@@ -48,12 +48,10 @@ public class Catalogue extends AbstractHbirdApi implements ICatalogue {
 
     protected <T extends IEntityInstance> List<T> getLatestOrEmpty(Class<T> clazz) {
         try {
-            // return getLatest(clazz);
             return dao.getAllBySupertype(clazz);
         }
         catch (Exception e) {
-            LOG.error("Exception while fetching latest instances of " + clazz.getSimpleName(), e);
-
+            LOG.error("Exception while fetching latest instances of {} ", clazz.getSimpleName(), e);
             return Collections.emptyList();
         }
     }
@@ -87,7 +85,7 @@ public class Catalogue extends AbstractHbirdApi implements ICatalogue {
             }
         }
 
-        LOG.error("Failed to retrieve " + clazz.getSimpleName() + " with name " + name);
+        LOG.error("Failed to retrieve {} with name '{}'", clazz.getSimpleName(), name);
 
         return null;
     }

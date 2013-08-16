@@ -568,8 +568,9 @@ public abstract class SystemTest {
             TrackingComponent antennaController = new TrackingComponent("ES5EC_ESTCUBE1");
             antennaController.setDescription("The component automating the track of ESTCube-1 by ES5EC.");
             antennaController.setConfiguration(config);
-            antennaController.setSatellite(estcube1.getID());
-            antennaController.setLocation(es5ec.getID());
+            // TODO - 16.08.2013, kimmell - set configuration
+            // antennaController.setSatellite(estcube1.getID());
+            // antennaController.setLocation(es5ec.getID());
             partmanagerApi.start(antennaController);
 
             Thread.sleep(2000);
@@ -742,7 +743,7 @@ public abstract class SystemTest {
         parameters.setTleLine1(line1);
         parameters.setTleLine2(line2);
 
-        return (TleOrbitalParameters) publishApi.publish(parameters);
+        return publishApi.publish(parameters);
     }
 
     protected Metadata publishMetadata(String ID, String name, EntityInstance applicableTo, String key, Object object) throws Exception {
@@ -750,7 +751,7 @@ public abstract class SystemTest {
         metadata.setApplicableTo(applicableTo.getID());
         metadata.setMetadata(Collections.singletonMap(key, object));
 
-        return (Metadata) publishApi.publish(metadata);
+        return publishApi.publish(metadata);
     }
 
     protected TleOrbitalParameters publishTleParameters() {

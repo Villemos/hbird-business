@@ -1,43 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-    xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-       http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context-3.0.xsd
-       http://camel.apache.org/schema/spring
-       http://camel.apache.org/schema/spring/camel-spring.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <!-- A simple structure of the ESTCUBE ground segment;
-           \- ESTCUBE
-             |- Satellites                [will hold the ESTCube-1 specification]
-             |- Ground Stations           [will hold the ES5EC specification]
-             \- Mission Operation Centre  [will hold commanding, archive, websockets, etc specifications]
-     -->
+    <!-- A simple structure of the ESTCUBE ground segment; 
+        \- ESTCUBE 
+         |- Satellites [will hold the ESTCube-1 specification] 
+         |- Ground Stations [will hold the ES5EC specification] 
+         \- Mission Operation Centre [will hold commanding, archive, websockets, etc specifications] -->
 
     <bean id="root" class="org.hbird.exchange.core.Part">
         <constructor-arg index="0" name="ID" value="/ESTCUBE" />
         <constructor-arg index="1" name="name" value="ESTCUBE" />
-        <property name="description" value="The root system. Complete, everything."/>
+        <property name="version" value="1" />
+        <property name="description" value="The root system. Complete, everything." />
     </bean>
 
     <bean id="satellites" class="org.hbird.exchange.core.Part">
         <constructor-arg index="0" name="ID" value="/ESTCUBE/Satellites" />
         <constructor-arg index="1" name="name" value="Satellites" />
+        <property name="version" value="1" />
         <property name="description" value="The satellite(s) of the mission" />
     </bean>
 
     <bean id="groundstations" class="org.hbird.exchange.core.Part">
         <constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations" />
         <constructor-arg index="1" name="name" value="Ground Stations" />
+        <property name="version" value="1" />
         <property name="description" value="The groundstation(s) of the mission" />
     </bean>
 
     <bean id="moc" class="org.hbird.exchange.core.Part">
-        <constructor-arg index="0" name="ID" value="/ESTCUBE/MissionOperationCenter" />
-        <constructor-arg index="1" name="name" value="Mission Operation Center" />
-        <property name="description" value="The groundsystem(s) of the mission" />
+        <constructor-arg index="0" name="ID" value="/ESTCUBE/MCS" />
+        <constructor-arg index="1" name="name" value="Mission Control System" />
+        <property name="version" value="1" />
+        <property name="description" value="The mission control system" />
     </bean>
 
 </beans>

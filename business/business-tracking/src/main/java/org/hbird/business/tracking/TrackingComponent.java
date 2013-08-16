@@ -33,8 +33,8 @@
 package org.hbird.business.tracking;
 
 import org.hbird.business.core.StartableEntity;
+import org.hbird.business.tracking.quartz.TrackingComponentDriver;
 import org.hbird.business.tracking.quartz.TrackingDriverConfiguration;
-import org.hbird.business.tracking.timer.TrackingComponentDriver;
 
 /**
  * @author Gert Villemos
@@ -50,56 +50,25 @@ public class TrackingComponent extends StartableEntity {
 
     private TrackingDriverConfiguration configuration;
 
-    protected String satellite;
-    protected String location;
-    
     /**
      * @param name
      * @param description
      * @param commands
      */
-	public TrackingComponent(String ID) {
-		super(ID, DEFAULT_NAME);
-		setDescription(DEFAULT_DESCRIPTION);
-		setDriverName(DEFAULT_DRIVER);
-	}
+    public TrackingComponent(String ID) {
+        super(ID, DEFAULT_NAME);
+        setDescription(DEFAULT_DESCRIPTION);
+        setDriverName(DEFAULT_DRIVER);
+    }
 
     public TrackingDriverConfiguration getConfiguration() {
         return configuration;
     }
 
-	/**
-	 * @param configuration the configuration to set
-	 */
-	public void setConfiguration(TrackingDriverConfiguration configuration) {
-		this.configuration = configuration;
-	}
-
-	/**
-	 * @return the satellite
-	 */
-	public String getSatellite() {
-		return satellite;
-	}
-
-	/**
-	 * @param satellite the satellite to set
-	 */
-	public void setSatellite(String satellite) {
-		this.satellite = satellite;
-	}
-
-	/**
-	 * @return the location
-	 */
-	public String getLocation() {
-		return location;
-	}
-
-	/**
-	 * @param location the location to set
-	 */
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    /**
+     * @param configuration the configuration to set
+     */
+    public void setConfiguration(TrackingDriverConfiguration configuration) {
+        this.configuration = configuration;
+    }
 }

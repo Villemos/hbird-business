@@ -84,7 +84,7 @@ public abstract class HbirdApi extends HbirdRouteBuilder implements IHbirdApi {
         /** Make this injection route unique. */
         inject += "_" + UUID.randomUUID().toString();
 
-        LOG.info("Creating injection route '{}'.", inject);
+        LOG.info("Creating injection route '{}' for '{}'.", inject, issuedBy);
         RouteDefinition route = from(inject);
         addInjectionRoute(route);
 

@@ -40,7 +40,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.component.netty.NettyComponent;
 import org.apache.camel.component.netty.NettyConfiguration;
-import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPointingData;
 import org.hbird.business.api.IPublisher;
@@ -93,7 +92,6 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
     @Autowired
     public HamlibDriver(IPublisher publisher, IDataAccess dao, IPointingData calculator) {
         super(publisher);
-
         this.dao = dao;
         this.calculator = calculator;
     }
@@ -110,7 +108,6 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
         driverContext = createDriverContext(camelContext, entity);
 
         String name = entity.getName();
-        String entityId = entity.getID();
         C config = driverContext.getConfiguration();
 
         NettyComponent nettyComponent = camelContext.getComponent("netty", NettyComponent.class);
@@ -123,8 +120,6 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
 
         // @formatter:off
         from(asRoute("seda:toHamlib-%s", name))
-//            .startupOrder(4)
-
 //            .to("log:" + name + "-toHamlib?level=DEBUG&showAll=true")
             .doTry()
                 .inOut(asRoute("netty:tcp://%s:%s", config.getDeviceHost(), config.getDevicePort()))
@@ -134,9 +129,8 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
             .end();
 
         ResponseHandlersMap<C, String, String> handlers = getResponseHandlerMap(driverContext);
-        
+
         from(asRoute("seda:fromHamlib-%s", name))
-//            .startupOrder(3)
 //            .to("log:" + name + ".fromHamlib?level=DEBUG&showAll=true")
             .bean(handlers)
             .split(body())
@@ -151,12 +145,11 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
          */
 
         IPointingDataOptimizer<C> optimizer = createOptimizer(config.getPointingDataOptimzerClassName()); // can be null
-        TrackingSupport<C> tracker = createTrackingSupport(config, dao, calculator, optimizer);    
+        TrackingSupport<C> tracker = createTrackingSupport(config, dao, calculator, optimizer);
         GroundStationCommandFilter commandFilter = new GroundStationCommandFilter(config);
         SetHamlibNativeCommandHeaders setHeaders = new SetHamlibNativeCommandHeaders();
-        
+
          from(StandardEndpoints.COMMANDS + "?selector=name='Track'")
-//             .startupOrder(6)
              .filter().method(commandFilter, "acceptTrack")
              .log(asRoute("Received 'Track' command from '%s'. Will generate Hamlib commands for '%s'", simple("${body.issuedBy}").getText(), name))
              .split()
@@ -165,9 +158,9 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
              .bean(verifier, "register")
              .bean(inMemoryScheduler, "add")
              .routeId(asRoute("%s: Command injection", name));
-         
-         
-        
+
+
+
 //        /*
 //         * Setup route for the PART to receive the verifications. The part will verify the respond and if
 //         * it fails, or the verification stage is complete, issue a State.
@@ -181,12 +174,12 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
 //                .to(StandardEndpoints.MONITORING)
 //            .end()
 //            .routeId(name + ": Verification");
-        
+
         /*
          * Setup the EXECUTION route. The route reads the scheduled NativeCommands from the INTERNAL topic, send each to
          * Hamlib through TCPIP and route the response back to the INTERNAL topic.
          */
-        
+
         /*
          * Read from the internal queue. The commands on the queue will be scheduled, i.e. be send to the
          * driver when they need to be executed.
@@ -195,17 +188,16 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
          * this thread route but in a separate route.
          */
          from(inMemoryScheduler.getInjectUrl())
-//             .startupOrder(5)
              .process(setHeaders)
              .bean(new NativeCommandExtractor())
-             .log(LoggingLevel.INFO, asRoute("Sending command '%s' to %s", simple("${body}").getText(), name))
+             .log(LoggingLevel.INFO, asRoute("Sending command '%s' to %s", simple("${body}").getText(), name)) // TODO - 16.08.2013, kimmell - remove newlines from message
              .to(asRoute("seda:toHamlib-%s", name));
-             
+
 //         .inOut("netty:tcp://" + getAddress())
 //         .removeHeader("AMQ_SCHEDULED_DELAY")
 //         .to("direct:hbird" + name + ".verification")
 //         .routeId(name + ": Command execution");
-        
+
         // /** Create route for cleanup of stages. */
         // from("timer://cleanup?period=10000")
         // .split().method(verifier, "cleanup")
@@ -213,20 +205,17 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
         // .routeId(name + ": Cleanup");
         //
 
-         ProcessorDefinition<?> publish = 
-                 from(asRoute("direct:publish-%s", name))
-//                     .startupOrder(1)
-                     .bean(publisher, "publish");
-         
+         from(asRoute("direct:publish-%s", name))
+             .bean(publisher, "publish");
+
          from(asRoute("direct:parameters-%s", name))
-//             .startupOrder(2)
              .bean(new OnChange())
              .choice()
                  .when(header(StandardArguments.VALUE_HAS_CHANGED).isEqualTo(false))
                      .log(LoggingLevel.TRACE, asRoute("Value of '%s' not changed; skipping update",  simple("${in.body.name}").getText()))
                  .otherwise()
                      .to(asRoute("direct:publish-%s", name));
-         
+
         // @formatter:on
     }
 
