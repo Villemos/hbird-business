@@ -1,74 +1,74 @@
-<assembly
-	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
 
-	<id>bin-${version}</id>
+    <id>bin-${version}</id>
 
-	<formats>
-		<format>zip</format>
-	</formats>
+    <formats>
+        <format>zip</format>
+    </formats>
 
-	<includeBaseDirectory>false</includeBaseDirectory>
+    <includeBaseDirectory>false</includeBaseDirectory>
 
-	<fileSets>
-		<fileSet>
-			<directory>${basedir}/../../business/business-scripting/src/main/resources/library</directory>
-			<outputDirectory>/scripts</outputDirectory>
-		</fileSet>
+    <fileSets>
+        <fileSet>
+            <directory>${basedir}/../../business/business-scripting/src/main/resources/library</directory>
+            <outputDirectory>/scripts</outputDirectory>
+        </fileSet>
 
-		<!-- Create the examples resource directory. Contains all needed resources. -->
-		<fileSet>
-			<directory>${basedir}/src/main/resources</directory>
-			<outputDirectory>/resources</outputDirectory>
-		</fileSet>
-		<fileSet>
-			<directory>${basedir}/../../business/business-navigation/src/main/resources/library</directory>
-			<outputDirectory>/scripts</outputDirectory>
-		</fileSet>
-		<fileSet>
-			<directory>${basedir}/src/main/assembly</directory>
-			<outputDirectory>/assemblies</outputDirectory>
-		</fileSet>
-		<fileSet>
-			<directory>${basedir}/src/main/assembly</directory>
-			<outputDirectory>/examples</outputDirectory>
-		</fileSet>
-		<fileSet>
-			<directory>${basedir}/src/main/scripts</directory>
-			<outputDirectory>/</outputDirectory>
-			<fileMode>744</fileMode>
-		</fileSet>
-		<fileSet>
-			<directory>${basedir}/target/lib</directory>
-			<outputDirectory>/lib</outputDirectory>
-		</fileSet>
-		<fileSet>
-			<directory>${basedir}/../../business/business-solr/src/main/resources/conf</directory>
-			<outputDirectory>/solr/conf</outputDirectory>
-		</fileSet>
-		<fileSet>
-			<directory>${basedir}/target/apidocs</directory>
-			<outputDirectory>/apidocs</outputDirectory>
-		</fileSet>
-	</fileSets>
+        <!-- Create the examples resource directory. Contains all needed resources. -->
+        <fileSet>
+            <directory>${basedir}/src/main/resources</directory>
+            <outputDirectory>/resources</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../../business/business-navigation/src/main/resources/</directory>
+            <outputDirectory>/resources</outputDirectory>
+            <includes>
+                <include>orekit-data.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/main/assembly</directory>
+            <outputDirectory>/assemblies</outputDirectory>
+            <excludes>
+                <exclude>hbird.properties</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/main/assembly</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>hbird.properties</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/main/scripts</directory>
+            <outputDirectory>/</outputDirectory>
+            <fileMode>744</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/target/lib</directory>
+            <outputDirectory>/lib</outputDirectory>
+        </fileSet>
+        <!-- Enable when API doc-s are needed -->
+        <!-- <fileSet> -->
+        <!-- <directory>${basedir}/target/apidocs</directory> -->
+        <!-- <outputDirectory>/apidocs</outputDirectory> -->
+        <!-- </fileSet> -->
+    </fileSets>
 
-	<files>
-		<file>
-			<source>${basedir}/target/estcube-${version}.jar</source>
-			<outputDirectory>/</outputDirectory>
-			<destName>hbird-${version}.jar</destName>
-		</file>
-		<file>
-			<source>${basedir}/../../business/business-systemtest/src/main/resources/systemtests.xml</source>
-			<outputDirectory>/assemblies</outputDirectory>
-			<destName>systemtest.xml</destName>
-		</file>
-		<file>
-			<source>${basedir}/../../business/business-archive/src/main/resources/webapp/apache-solr-3.5.0.war</source>
-			<outputDirectory>/solr/webapp</outputDirectory>
-			<destName>apache-solr-3.5.0.war</destName>
-		</file>		
-	</files>
+    <files>
+        <file>
+            <source>${basedir}/target/estcube-${version}.jar</source>
+            <outputDirectory>/</outputDirectory>
+            <destName>hbird-${version}.jar</destName>
+        </file>
+        <file>
+            <source>${basedir}/../../business/business-systemtest/src/main/resources/systemtests.xml</source>
+            <outputDirectory>/assemblies</outputDirectory>
+            <destName>systemtest.xml</destName>
+        </file>
+    </files>
 
 </assembly>

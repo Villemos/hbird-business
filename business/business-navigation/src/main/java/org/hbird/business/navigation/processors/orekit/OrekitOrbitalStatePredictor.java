@@ -73,7 +73,6 @@ public class OrekitOrbitalStatePredictor {
         long endPredcition = System.currentTimeMillis();
         List<OrbitalState> result = collector.getDataSet();
         request.setResult(result);
-        collector.clearDataSet(); // just in case
         LOG.debug("Prediciont completed in {} ms; calculated {} OrbitalStates", (endPredcition - startPredcition), result.size());
 
         return request;

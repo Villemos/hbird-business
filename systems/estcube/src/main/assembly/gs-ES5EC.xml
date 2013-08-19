@@ -28,7 +28,7 @@
                 <value>/ESTCUBE/Satellites/ESTCube-1</value>
             </list>
         </property>
-        <property name="archivePollInterval" value="60000"/>
+        <property name="archivePollInterval" value="${tracking.db.poll.interval:60000}"/>
     </bean>
 
     <bean id="tracking" class="org.hbird.business.tracking.TrackingComponent">
@@ -41,7 +41,7 @@
     <!-- Contact prediction -->
     <bean id="contactPredictorConfig" class="org.hbird.business.navigation.configuration.ContactPredictionConfiguration">
         <property name="satelliteId" value="/ESTCUBE/Satellites/ESTCube-1"/>
-        <property name="predictionInterval" value="600000"/>
+        <property name="predictionInterval" value="${contact.prediction.interval:600000}"/>
         <property name="serviceId" value="/ESTCUBE/GroundStations/ES5EC/ContactPredictor"/>
         <property name="groundStationsIds">
             <list>
@@ -61,7 +61,7 @@
     <!-- Orbit prediction -->
     <bean id="orbitPredictorConfig" class="org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration">
         <property name="satelliteId" value="/ESTCUBE/Satellites/ESTCube-1"/>
-        <property name="predictionInterval" value="600000"/>
+        <property name="predictionInterval" value="${orbit.prediction.interval:30000}"/>
         <property name="serviceId" value="/ESTCUBE/GroundStations/ES5EC/OrbitPredictor"/>
     </bean>
 
@@ -75,7 +75,8 @@
 
     <!-- Antenna rotator -->
     <bean id="rotatorConfig" class="org.hbird.business.groundstation.configuration.RotatorDriverConfiguration">
-        <property name="devicePort" value="4533" />
+        <property name="deviceHost" value="${rotator.device.host:localhost}" />
+        <property name="devicePort" value="${rotator.device.port:4533}" />
         <property name="groundstationId" value="/ESTCUBE/GroundStations/ES5EC" />
     </bean>
 
@@ -88,7 +89,8 @@
 
     <!-- Radio -->
     <bean id="radioConfig" class="org.hbird.business.groundstation.configuration.RadioDriverConfiguration">
-        <property name="devicePort" value="4532" />
+        <property name="deviceHost" value="${radio.device.host:localhost}" />
+        <property name="devicePort" value="${radio.device.port:4532}" />
         <property name="groundstationId" value="/ESTCUBE/GroundStations/ES5EC" />
     </bean>
 
@@ -108,8 +110,8 @@
         <constructor-arg index="3" name="publisher" ref="db-and-jms-publisher"/>
         <constructor-arg index="4" name="objects">
             <list>
-                <ref bean="rotator" />
-                <ref bean="radio" />
+<!--                 <ref bean="rotator" /> -->
+<!--                 <ref bean="radio" /> -->
                 <ref bean="tracking" />
                 <ref bean="orbitPredictor" />
                 <ref bean="contactPredictor" />
