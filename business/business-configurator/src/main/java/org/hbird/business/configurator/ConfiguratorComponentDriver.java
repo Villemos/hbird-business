@@ -237,6 +237,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver<Configu
         Event event = StandardMissionEvents.COMPONENT_START.cloneEntity();
         event.setIssuedBy(issuedBy);
         event.setApplicableTo(applicableTo);
+        event.setVersion(System.currentTimeMillis());
         return event;
     }
 
@@ -248,6 +249,7 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver<Configu
         Event event = StandardMissionEvents.COMPONENT_STOP.cloneEntity();
         event.setIssuedBy(issuedBy);
         event.setApplicableTo(applicableTo);
+        event.setVersion(System.currentTimeMillis());
         return event;
     }
 }
