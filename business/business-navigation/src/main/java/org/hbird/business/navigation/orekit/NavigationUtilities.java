@@ -53,7 +53,9 @@ public class NavigationUtilities {
         // TODO - 20.05.2013, kimmell - use IdBuilder here!
         OrbitalState result = new OrbitalState(satelliteId + "/OrbitalState", OrbitalState.class.getSimpleName());
         result.setDescription("Orbital state of satellite");
-        result.setTimestamp(state.getDate().toDate(getScale()).getTime());
+        long timestamp = state.getDate().toDate(getScale()).getTime();
+        result.setTimestamp(timestamp);
+        result.setVersion(timestamp);
         result.setSatelliteId(satelliteId);
         result.setPosition(pvcPosition);
         result.setVelocity(pvcVelocity);

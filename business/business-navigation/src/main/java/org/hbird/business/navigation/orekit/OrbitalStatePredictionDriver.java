@@ -18,9 +18,9 @@ package org.hbird.business.navigation.orekit;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.PredictionComponent;
 import org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration;
@@ -40,16 +40,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OrbitalStatePredictionDriver extends SoftwareComponentDriver<PredictionComponent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrbitalStatePredictionDriver.class);
-    
+
     protected IDataAccess dao;
     protected IdBuilder idBuilder;
-    
+
     @Autowired
     public OrbitalStatePredictionDriver(IDataAccess dao, IPublisher publisher, IdBuilder idBuilder) {
-    	super(publisher);
-
-    	this.dao = dao;
-    	this.idBuilder = idBuilder;
+        super(publisher);
+        this.dao = dao;
+        this.idBuilder = idBuilder;
     }
 
     /**

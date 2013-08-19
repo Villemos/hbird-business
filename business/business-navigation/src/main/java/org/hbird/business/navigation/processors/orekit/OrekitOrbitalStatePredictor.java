@@ -59,7 +59,8 @@ public class OrekitOrbitalStatePredictor {
         TleOrbitalParameters tleParameters = request.getTleParameters();
         String satelliteId = conf.getSatelliteId();
         double predictionStep = conf.getPredictionStep() / 1000.0D; // from milliseconds to seconds
-        OrbitalStateCollector collector = new OrbitalStateCollector(satelliteId, tleParameters.getInstanceID(), publisher, idBuilder);
+        String serviceId = conf.getServiceId();
+        OrbitalStateCollector collector = new OrbitalStateCollector(satelliteId, tleParameters.getInstanceID(), publisher, idBuilder, serviceId);
         propagator.setMasterMode(predictionStep, collector);
 
         long start = request.getStartTime();
@@ -72,6 +73,7 @@ public class OrekitOrbitalStatePredictor {
         long endPredcition = System.currentTimeMillis();
         List<OrbitalState> result = collector.getDataSet();
         request.setResult(result);
+        collector.clearDataSet(); // just in case
         LOG.debug("Prediciont completed in {} ms; calculated {} OrbitalStates", (endPredcition - startPredcition), result.size());
 
         return request;

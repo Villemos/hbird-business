@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * @author Gert Villemos
  */
 public class OrbitalStateCollector implements OrekitFixedStepHandler {
-	private static final Logger LOG = LoggerFactory.getLogger(OrbitalStateCollector.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrbitalStateCollector.class);
 
     public static final String ORBITAL_STATE = "orbitalstate";
 
@@ -47,17 +47,20 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
 
     protected final String derivedFrom;
 
+    protected final String issuer;
+
     protected List<OrbitalState> states = new ArrayList<OrbitalState>();
 
     protected IPublisher publisher;
 
     protected final IdBuilder idBuilder;
 
-    public OrbitalStateCollector(String satelliteId, String derivedFrom, IPublisher publisher, IdBuilder idBuilder) {
+    public OrbitalStateCollector(String satelliteId, String derivedFrom, IPublisher publisher, IdBuilder idBuilder, String issuer) {
         this.satelliteId = satelliteId;
         this.derivedFrom = derivedFrom;
         this.publisher = publisher;
         this.idBuilder = idBuilder;
+        this.issuer = issuer;
     }
 
     /**
@@ -66,17 +69,21 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
      */
     @Override
     public void handleStep(SpacecraftState currentState, boolean isLast) throws PropagationException {
+        long generationTime = System.currentTimeMillis();
         OrbitalState state = NavigationUtilities.toOrbitalState(currentState, satelliteId, derivedFrom);
         String id = idBuilder.buildID(satelliteId, ORBITAL_STATE);
         state.setID(id);
+        state.setGenerationTime(generationTime);
+        state.setIssuedBy(issuer);
 
         states.add(state);
         if (publisher != null) {
             try {
-				publisher.publish(state);
-			} catch (Exception e) {
-				LOG.error("Failed to publish current state", e);
-			}
+                publisher.publish(state);
+            }
+            catch (Exception e) {
+                LOG.error("Failed to publish current state", e);
+            }
         }
     }
 
@@ -104,6 +111,13 @@ public class OrbitalStateCollector implements OrekitFixedStepHandler {
      */
     public void setPublisher(IPublisher publisher) {
         this.publisher = publisher;
+    }
+
+    /**
+     * @return the issuer
+     */
+    public String getIssuer() {
+        return issuer;
     }
 
     /**

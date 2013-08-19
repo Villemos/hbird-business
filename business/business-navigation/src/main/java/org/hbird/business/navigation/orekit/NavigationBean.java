@@ -18,9 +18,9 @@ package org.hbird.business.navigation.orekit;
 
 import java.util.Date;
 
+import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.orekit.errors.OrekitException;
@@ -86,10 +86,11 @@ public abstract class NavigationBean {
 
         /** Get the latest TLE parameters. */
         TleOrbitalParameters newTleParameters = null;
-        
+
         try {
-        	newTleParameters = dao.getTleFor(conf.getSatelliteId());
-        } catch(Exception e) {
+            newTleParameters = dao.getTleFor(conf.getSatelliteId());
+        }
+        catch (Exception e) {
             LOG.error("Failed to find TLE for satellite '" + conf.getSatelliteId() + "'. Cannot propagate orbital state, sorry.", e);
             return;
         }
@@ -119,7 +120,7 @@ public abstract class NavigationBean {
         }
         else {
             from = orbitalStateCollector.getLatestState().getTimestamp();
-            to = now + conf.getLeadTime() + conf.getExecutionDelay(); 
+            to = now + conf.getLeadTime() + conf.getExecutionDelay();
             LOG.info("Need to extend. Requesting TLE based from '" + from + "' to '" + to + "'");
         }
 
@@ -131,7 +132,7 @@ public abstract class NavigationBean {
             PVCoordinates initialOrbitalState = TLEPropagator.selectExtrapolator(tle).getPVCoordinates(startDate);
             Orbit initialOrbit = new KeplerianOrbit(initialOrbitalState, Constants.FRAME, startDate, Constants.MU);
 
-            orbitalStateCollector = new OrbitalStateCollector(conf.getSatelliteId(), tleParameters.getInstanceID(), publisher, idBuilder);
+            orbitalStateCollector = new OrbitalStateCollector(conf.getSatelliteId(), tleParameters.getInstanceID(), publisher, idBuilder, conf.getID());
 
             propagator = new KeplerianPropagator(initialOrbit);
             propagator.setMasterMode(conf.getStepSize(), orbitalStateCollector);

@@ -56,6 +56,7 @@ public class OrekitOrbitalStatePredictorTest {
     private static final long NOW = System.currentTimeMillis();
     private static final String TLE_ID = "SAT-1/TLE:" + NOW;
     private static final long END_TIME = NOW + 1000L * 60 * 60 * 24;
+    private static final String SERVICE_ID = "/MISSION/OrbitalStatePredictor";
 
     @Mock
     private IdBuilder idBuilder;
@@ -98,6 +99,7 @@ public class OrekitOrbitalStatePredictorTest {
         when(tleParameters.getInstanceID()).thenReturn(TLE_ID);
         when(request.getStartTime()).thenReturn(NOW);
         when(request.getEndTime()).thenReturn(END_TIME);
+        when(config.getServiceId()).thenReturn(SERVICE_ID);
     }
 
     @Test
@@ -109,12 +111,14 @@ public class OrekitOrbitalStatePredictorTest {
         inOrder.verify(request, times(1)).getTleParameters();
         inOrder.verify(config, times(1)).getSatelliteId();
         inOrder.verify(config, times(1)).getPredictionStep();
+        inOrder.verify(config, times(1)).getServiceId();
         inOrder.verify(tleParameters, times(1)).getInstanceID();
         ArgumentCaptor<OrbitalStateCollector> collectorCaptor = ArgumentCaptor.forClass(OrbitalStateCollector.class);
         inOrder.verify(propagator, times(1)).setMasterMode(eq(PREDICTION_STEP / 1000D), collectorCaptor.capture());
         OrbitalStateCollector collector = collectorCaptor.getValue();
         assertNotNull(collector);
         assertEquals(publisher, collector.getPublisher());
+        assertEquals(SERVICE_ID, collector.getIssuer());
         inOrder.verify(request, times(1)).getStartTime();
         inOrder.verify(request, times(1)).getEndTime();
         ArgumentCaptor<AbsoluteDate> startTimeCaptor = ArgumentCaptor.forClass(AbsoluteDate.class);
