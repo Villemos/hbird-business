@@ -17,9 +17,9 @@
 package org.hbird.business.archive.deprecated.api;
 
 import org.apache.camel.CamelContext;
-import org.hbird.business.api.HbirdApi;
-import org.hbird.business.api.IArchiveManagement;
 import org.hbird.business.archive.ArchiveComponent;
+import org.hbird.business.deprecated.api.HbirdApi;
+import org.hbird.business.deprecated.api.IArchiveManagement;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.dataaccess.DeletionRequest;
 import org.hbird.exchange.navigation.OrbitalState;
@@ -47,7 +47,7 @@ public class ArchiveManagement extends HbirdApi implements IArchiveManagement {
     }
 
     /**
-     * @see org.hbird.business.api.IArchiveManagement#deleteOrbitalStates(java.lang.String)
+     * @see org.hbird.business.deprecated.api.IArchiveManagement#deleteOrbitalStates(java.lang.String)
      */
     @Override
     public void deleteOrbitalStates(String satellite) {

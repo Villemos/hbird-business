@@ -17,6 +17,9 @@
 package org.hbird.business.api.exceptions;
 
 public class DataAccessException extends ArchiveException {
+
+    private static final long serialVersionUID = 3893289007169352409L;
+
     public DataAccessException(Throwable cause) {
         super("Error in the underlying API while accessing data:", cause);
     }

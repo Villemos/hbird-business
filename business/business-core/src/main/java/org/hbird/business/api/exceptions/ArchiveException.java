@@ -17,6 +17,9 @@
 package org.hbird.business.api.exceptions;
 
 public class ArchiveException extends Exception {
+
+    private static final long serialVersionUID = -3436288321016140750L;
+
     public ArchiveException(String message) {
         super(message);
     }

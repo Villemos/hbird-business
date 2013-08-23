@@ -32,21 +32,15 @@
     </bean>
 
     <bean id="catalogue" class="org.hbird.business.api.impl.Catalogue">
-        <constructor-arg index="0" name="issuedBy" value="catalogue" /> <!-- REMOVE? -->
-        <constructor-arg index="1" name="destination" value="hbird" /> <!-- REMOVE? -->
-        <constructor-arg index="2" name="dao" ref="dataAccess" />
+        <constructor-arg index="0" name="dao" ref="dataAccess" />
     </bean>
 
-    <bean id="db-and-jms-publisher" class="org.hbird.business.api.impl.Injector">
-        <constructor-arg index="0" name="issuedBy" value="injector" /> <!-- REMOVE? -->
-        <constructor-arg index="1" name="destination" value="hbird" /> <!-- REMOVE? -->
-        <constructor-arg index="2" name="delegate" >
+    <bean id="db-and-jms-publisher" class="org.hbird.business.api.impl.AmqPublisher" init-method="start">
+        <constructor-arg index="0" name="delegate">
             <bean id="db-publisher" class="org.hbird.business.archive.control.FilteringPublisher">
                 <constructor-arg index="0" name="delegate">
-                    <bean class="org.hbird.business.api.impl.Publisher">
-                        <constructor-arg index="0" name="issuedBy" value="publisher" /> <!-- REMOVE? -->
-                        <constructor-arg index="1" name="destination" value="hbird" /> <!-- REMOVE? -->
-                        <constructor-arg index="2" name="dao" ref="dataAccess" />
+                    <bean class="org.hbird.business.api.impl.DaoPublisher">
+                        <constructor-arg index="0" name="dao" ref="dataAccess" />
                     </bean>
                 </constructor-arg>
                 <constructor-arg index="1" name="filter">

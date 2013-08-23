@@ -1,28 +1,31 @@
 package org.hbird.business.api.impl;
 
-import org.hbird.business.api.IPartManager;
 import org.hbird.business.api.IPublisher;
+import org.hbird.business.api.IStartableEntityManager;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
-import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.IStartableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PartManager extends AbstractHbirdApi implements IPartManager {
+public class StartableEntityManager implements IStartableEntityManager {
 
     private static final String DEFAULT_DESTINATION = "Configurator";
 
-    private final Logger LOG = LoggerFactory.getLogger(PartManager.class);
+    private final Logger LOG = LoggerFactory.getLogger(StartableEntityManager.class);
 
     protected IPublisher publisher;
 
-    public PartManager(String issuedBy, IPublisher publisher) {
+    protected String issuedBy;
+    protected String destination;
+
+    public StartableEntityManager(String issuedBy, IPublisher publisher) {
         this(issuedBy, DEFAULT_DESTINATION, publisher);
     }
 
-    public PartManager(String issuedBy, String destination, IPublisher publisher) {
-        super(issuedBy, destination);
+    public StartableEntityManager(String issuedBy, String destination, IPublisher publisher) {
+        this.issuedBy = issuedBy;
+        this.destination = destination;
         this.publisher = publisher;
     }
 
@@ -55,22 +58,4 @@ public class PartManager extends AbstractHbirdApi implements IPartManager {
             LOG.error("Error sending stop command for StartableEntity '{}'", entityId, e);
         }
     }
-
-    @Override
-    public Part resolveParent(Part child) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String getQualifiedName(Part part) {
-        return getQualifiedName(part, "/");
-    }
-
-    @Override
-    public String getQualifiedName(Part part, String separator) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

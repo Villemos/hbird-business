@@ -34,7 +34,7 @@ import org.hbird.exchange.navigation.Satellite;
  * @author Gert Villemos
  * 
  */
-public interface ICatalogue extends IHbirdApi {
+public interface ICatalogue {
 
     /**
      * Method to return a 'catalogue' (a list) of all parameters in the archive.
@@ -82,19 +82,19 @@ public interface ICatalogue extends IHbirdApi {
      */
     public Satellite getSatelliteByName(String name);
 
-	/**
-	 * @param names
-	 * @return
-	 */
-	public List<GroundStation> getGroundStationsByName(List<String> names);
-	
-	public List<Part> getParts();
-	
-	public Part getPart(String name);
-	
-	/**
-	 * @param parentName
-	 * @return
-	 */
-	public List<Part> getPartChildren(String parentName);
+    /**
+     * @param names
+     * @return
+     */
+    public List<GroundStation> getGroundStationsByName(List<String> names);
+
+    public List<Part> getParts();
+
+    public Part getPart(String name);
+
+    /**
+     * @param parentName
+     * @return
+     */
+    public List<Part> getPartChildren(String parentName);
 }

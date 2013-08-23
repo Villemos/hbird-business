@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 public class LimitCheckTester extends SystemTest {
 
     private static Logger LOG = LoggerFactory.getLogger(LimitCheckTester.class);
-    
+
     @Handler
     public void process() throws Exception {
 
@@ -42,11 +42,11 @@ public class LimitCheckTester extends SystemTest {
 
         LimitCheckComponent com = createLimitCheckComponent("LIMIT_CHECKER_1", "PARA1_LOWER_SOFTLIMIT", eLimitType.Lower, "PARA1", 2d,
                 "The first lower limit of PARA1", "PARA1_LOWER_SOFTLIMIT");
-        partmanagerApi.start(com);
+        startableEntityManager.start(com);
 
         com = createLimitCheckComponent("LIMIT_CHECKER_2", "PARA1_LOWER_HARDLIMIT", eLimitType.Lower, "PARA1", 0d, "The second lower limit of PARA1",
                 "PARA1_LOWER_HARDLIMIT");
-        partmanagerApi.start(com);
+        startableEntityManager.start(com);
 
         Thread.sleep(2000);
 
@@ -65,11 +65,11 @@ public class LimitCheckTester extends SystemTest {
 
         com = createLimitCheckComponent("LIMIT_CHECKER_3", "PARA1_UPPER_SOFTLIMIT", eLimitType.Upper, "PARA1", 10.5d, "The first upper limit of PARA1",
                 "PARA1_UPPER_SOFTLIMIT");
-        partmanagerApi.start(com);
+        startableEntityManager.start(com);
 
         com = createLimitCheckComponent("LIMIT_CHECKER_4", "PARA1_UPPER_HARDLIMIT", eLimitType.Upper, "PARA1", 15d, "The second upper limit of PARA1",
                 "PARA1_UPPER_HARDLIMIT");
-        partmanagerApi.start(com);
+        startableEntityManager.start(com);
 
         Thread.sleep(2000);
 
@@ -84,13 +84,14 @@ public class LimitCheckTester extends SystemTest {
 
         /** Disable limit. */
         LOG.info("Disabling limit component 'LIMIT_CHECKER_3'.");
-        //publishApi.publishState("PARA1_UPPER_SOFTLIMIT_SWITCH", "PARA1_UPPER_SOFTLIMIT_SWITCH", "A test description", "LIMIT_CHECKER_3", false);
-        
+        // publishApi.publishState("PARA1_UPPER_SOFTLIMIT_SWITCH", "PARA1_UPPER_SOFTLIMIT_SWITCH", "A test description",
+        // "LIMIT_CHECKER_3", false);
+
         State state = new State("PARA1_UPPER_SOFTLIMIT_SWITCH", "PARA1_UPPER_SOFTLIMIT_SWITCH");
         state.setDescription("A test description");
         state.setApplicableTo("LIMIT_CHECKER_3");
         state.setValue(false);
-        
+
         publishApi.publish(state);
 
         Thread.sleep(2000);
@@ -125,13 +126,13 @@ public class LimitCheckTester extends SystemTest {
 
     protected void send(Double value, String soft, boolean expectedSoft, String hard, boolean expectedHard) throws Exception {
         LOG.info("Publishing parameters.");
-        //publishApi.publishParameter("PARA1", "PARA1", "A test description,", value, "Volt");
-        
+        // publishApi.publishParameter("PARA1", "PARA1", "A test description,", value, "Volt");
+
         Parameter param = new Parameter("PARA1", "PARA1");
         param.setDescription("A test description");
         param.setValue(value);
         param.setUnit("Volt");
-        
+
         publishApi.publish(param);
 
         /** Give the limit checkers a bit of time. */

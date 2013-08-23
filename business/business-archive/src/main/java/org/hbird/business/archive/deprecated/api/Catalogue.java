@@ -20,9 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
-import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.archive.ArchiveComponent;
+import org.hbird.business.deprecated.api.HbirdApi;
+import org.hbird.business.deprecated.api.IHbirdApi;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.core.State;
@@ -42,7 +43,7 @@ import org.hbird.exchange.navigation.Satellite;
  * @deprecated
  */
 @Deprecated
-public class Catalogue extends HbirdApi implements ICatalogue {
+public class Catalogue extends HbirdApi implements ICatalogue, IHbirdApi {
 
     /**
      * Constructor.

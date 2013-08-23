@@ -26,125 +26,125 @@ import org.hbird.exchange.core.Parameter;
 
 public class ParameterArchivalTester extends SystemTest {
 
-	private static org.apache.log4j.Logger LOG = Logger.getLogger(ParameterArchivalTester.class);
-	
-	private Parameter createParameter(String ID, String name, String description, Number value, String unit) {
-		Parameter param = new Parameter(ID, name);
-		param.setDescription(description);
-		param.setValue(value);
-		param.setUnit(unit);
-		
-		return param;
-	}
+    private static org.apache.log4j.Logger LOG = Logger.getLogger(ParameterArchivalTester.class);
 
-	@Handler
-	public void process(CamelContext context) throws Exception {
+    private Parameter createParameter(String ID, String name, String description, Number value, String unit) {
+        Parameter param = new Parameter(ID, name);
+        param.setDescription(description);
+        param.setValue(value);
+        param.setUnit(unit);
 
-		LOG.info("------------------------------------------------------------------------------------------------------------");
-		LOG.info("Starting");
-		
-		startMonitoringArchive();
-		
-		Thread.sleep(2000);
+        return param;
+    }
 
-		String para1Name = "PARA1";
-		String para2Name = "PARA2";
-		String para3Name = "PARA3";
-		
-		/** Publish parameters. */
-		LOG.info("Publishing parameters.");
-		publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2d, "Volt"));
-		Thread.sleep(1);
-		publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2.1d, "Volt"));
-		Thread.sleep(1);
-		publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2.2d, "Volt"));
-		Thread.sleep(1);
-		publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2.3d, "Volt"));
-//		Thread.sleep(1);
-		publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2.4d, "Volt"));
-		Thread.sleep(1);
-		publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2.5d, "Volt"));
-		Thread.sleep(1);
-		publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2.6d, "Volt"));
-		Thread.sleep(1);
-		publishApi.publish(createParameter(para2Name, para2Name, "A test description,", 2l, "Meter"));
+    @Handler
+    public void process(CamelContext context) throws Exception {
 
-		/** Make sure we have different timestamps. */
-		Thread.sleep(1);
-		Date start = new Date();
-		Thread.sleep(1);
-		
-		publishApi.publish(createParameter(para2Name, para2Name, "A test description,", 3l, "Meter"));
-		Thread.sleep(1);
-		publishApi.publish(createParameter(para2Name, para2Name, "A test description,", 4l, "Meter"));
-		Thread.sleep(1);
-		publishApi.publish(createParameter(para3Name, para3Name, "A test description,", 10f, "Seconds"));
-		Thread.sleep(1);
-		publishApi.publish(createParameter(para3Name, para3Name, "A test description,", 15f, "Seconds"));
-		Thread.sleep(1);
-		publishApi.publish(createParameter(para3Name, para3Name, "A test description,", 20f, "Seconds"));
-		
-		Thread.sleep(1);
-		Date end = new Date();
-		Thread.sleep(1);
-		
-		publishApi.publish(createParameter(para2Name, para2Name, "A test description,", 5l, "Meter"));
-		Thread.sleep(1);
-		publishApi.publish(createParameter(para3Name, para3Name, "A test description,", 35f, "Seconds"));
+        LOG.info("------------------------------------------------------------------------------------------------------------");
+        LOG.info("Starting");
+
+        startMonitoringArchive();
 
         Thread.sleep(2000);
-		
-		/** Send command to commit all changes. */
-		forceCommit();
 
-		/** Check whether they were published on ActiveMQ to the listener. */
-		azzert(parameterListener.elements.size() == 15, "Expect to receive 15 parameters. Received " + parameterListener.elements.size());
+        String para1Name = "PARA1";
+        String para2Name = "PARA2";
+        String para3Name = "PARA3";
 
-		/** Test retrieval. */
-		
-		// Test retrieval of only the last value of a parameter.
-		try {
-			LOG.info("Retrieveing last value of PARA1");
+        /** Publish parameters. */
+        LOG.info("Publishing parameters.");
+        publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2d, "Volt"));
+        Thread.sleep(1);
+        publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2.1d, "Volt"));
+        Thread.sleep(1);
+        publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2.2d, "Volt"));
+        Thread.sleep(1);
+        publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2.3d, "Volt"));
+        // Thread.sleep(1);
+        publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2.4d, "Volt"));
+        Thread.sleep(1);
+        publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2.5d, "Volt"));
+        Thread.sleep(1);
+        publishApi.publish(createParameter(para1Name, para1Name, "A test description,", 2.6d, "Volt"));
+        Thread.sleep(1);
+        publishApi.publish(createParameter(para2Name, para2Name, "A test description,", 2l, "Meter"));
 
-			Parameter respond = accessApi.getParameter(para1Name);
-			azzert(respond != null, "Received a response.");
-			
-			azzert(respond.asDouble() == 2.6d, "Last value should be 2.6. Received " + respond.asDouble());			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		// Test retrieval of a lower bound time range for one parameter.
-		try {
-			List<Parameter> respond = accessApi.getParameter(para2Name, start.getTime(), (new Date()).getTime());
-			azzert(respond != null, "Received a response.");			
-			azzert(respond.size() == 3, "Expect 3 entries. Received " + respond.size());			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+        /** Make sure we have different timestamps. */
+        Thread.sleep(1);
+        Date start = new Date();
+        Thread.sleep(1);
 
-		// Test retrieval of a lower bound time range for one parameter.
-		try {
-			List<Parameter> respond = accessApi.getParameter(para2Name, start.getTime(), end.getTime());
-			azzert(respond != null, "Received a response.");			
-			azzert(respond.size() == 2, "Expect 2 entries. Received " + respond.size());			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+        publishApi.publish(createParameter(para2Name, para2Name, "A test description,", 3l, "Meter"));
+        Thread.sleep(1);
+        publishApi.publish(createParameter(para2Name, para2Name, "A test description,", 4l, "Meter"));
+        Thread.sleep(1);
+        publishApi.publish(createParameter(para3Name, para3Name, "A test description,", 10f, "Seconds"));
+        Thread.sleep(1);
+        publishApi.publish(createParameter(para3Name, para3Name, "A test description,", 15f, "Seconds"));
+        Thread.sleep(1);
+        publishApi.publish(createParameter(para3Name, para3Name, "A test description,", 20f, "Seconds"));
 
-		// Test retrieval of a lower bound time range for one parameter.
-		/*try {
-			List<Parameter> respond = accessApi.getParameters(Arrays.asList(para1Name, para2Name, para3Name), start.getTime(), end.getTime());
-			azzert(respond != null, "Received a response.");			
-			azzert(respond.size() == 5, "Expect 5 entries. Received " + respond.size());			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}*/	
-		
-		LOG.info("Finished");
-	}
+        Thread.sleep(1);
+        Date end = new Date();
+        Thread.sleep(1);
+
+        publishApi.publish(createParameter(para2Name, para2Name, "A test description,", 5l, "Meter"));
+        Thread.sleep(1);
+        publishApi.publish(createParameter(para3Name, para3Name, "A test description,", 35f, "Seconds"));
+
+        Thread.sleep(2000);
+
+        /** Check whether they were published on ActiveMQ to the listener. */
+        azzert(parameterListener.elements.size() == 15, "Expect to receive 15 parameters. Received " + parameterListener.elements.size());
+
+        /** Test retrieval. */
+
+        // Test retrieval of only the last value of a parameter.
+        try {
+            LOG.info("Retrieveing last value of PARA1");
+
+            Parameter respond = accessApi.getParameter(para1Name);
+            azzert(respond != null, "Received a response.");
+
+            azzert(respond.asDouble() == 2.6d, "Last value should be 2.6. Received " + respond.asDouble());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Test retrieval of a lower bound time range for one parameter.
+        try {
+            List<Parameter> respond = accessApi.getParameter(para2Name, start.getTime(), (new Date()).getTime());
+            azzert(respond != null, "Received a response.");
+            azzert(respond.size() == 3, "Expect 3 entries. Received " + respond.size());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Test retrieval of a lower bound time range for one parameter.
+        try {
+            List<Parameter> respond = accessApi.getParameter(para2Name, start.getTime(), end.getTime());
+            azzert(respond != null, "Received a response.");
+            azzert(respond.size() == 2, "Expect 2 entries. Received " + respond.size());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Test retrieval of a lower bound time range for one parameter.
+        /*
+         * try {
+         * List<Parameter> respond = accessApi.getParameters(Arrays.asList(para1Name, para2Name, para3Name),
+         * start.getTime(), end.getTime());
+         * azzert(respond != null, "Received a response.");
+         * azzert(respond.size() == 5, "Expect 5 entries. Received " + respond.size());
+         * }
+         * catch (Exception e) {
+         * e.printStackTrace();
+         * }
+         */
+
+        LOG.info("Finished");
+    }
 }

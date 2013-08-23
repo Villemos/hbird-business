@@ -17,8 +17,10 @@
 package org.hbird.business.api.exceptions;
 
 public class SaveFailedException extends ArchiveException {
+
+    private static final long serialVersionUID = 5084083052187313015L;
+
     public SaveFailedException(Object obj, Throwable cause) {
         super("Failed to save object " + obj, cause);
     }
-
 }

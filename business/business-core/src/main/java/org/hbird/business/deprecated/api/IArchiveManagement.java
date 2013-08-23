@@ -14,19 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api;
+package org.hbird.business.deprecated.api;
 
-import java.util.List;
-
-import org.hbird.exchange.groundstation.GroundStation;
-import org.hbird.exchange.navigation.LocationContactEvent;
-import org.hbird.exchange.navigation.PointingData;
 
 /**
- * @author Gert Villemos
- *
+ * @author Admin
+ * @deprecated - not used any more
  */
-public interface IPointingData {
+@Deprecated
+public interface IArchiveManagement extends IHbirdApi {
 
-    public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent, GroundStation groundStation, long contactDataStepSize);
+    public void deleteOrbitalStates(String satellite);
 }

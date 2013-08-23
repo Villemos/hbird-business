@@ -39,6 +39,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import com.mongodb.Mongo;
 
 public class MongoDataAccess implements IDataAccess {
+
     private static final Logger LOG = LoggerFactory.getLogger(MongoDataAccess.class);
 
     public static final String DEFAULT_DATABASE_NAME = "hbird";
@@ -104,6 +105,7 @@ public class MongoDataAccess implements IDataAccess {
 
         for (BeanDefinition component : components) {
             try {
+                @SuppressWarnings("unchecked")
                 Class<? extends EntityInstance> clazz = (Class<? extends EntityInstance>) (Class.forName(component.getBeanClassName()));
                 Class<?> parent = clazz.getSuperclass();
 
@@ -361,6 +363,7 @@ public class MongoDataAccess implements IDataAccess {
         return getLastVersions(query, Metadata.class);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends IEntityInstance> List<T> getAllBySupertype(Class<T> superclass) throws DataAccessException {
         Query emptyQuery = new Query();

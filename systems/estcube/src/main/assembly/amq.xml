@@ -1,0 +1,25 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="${amq.url:tcp://localhost:61616}" />
+    </bean>
+
+    <bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+        init-method="start" destroy-method="stop">
+        <property name="maxConnections" value="8" />
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
+    </bean>
+
+    <bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+        <property name="connectionFactory" ref="pooledConnectionFactory" />
+        <property name="concurrentConsumers" value="1" />
+    </bean>
+
+    <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+        <property name="configuration" ref="jmsConfig" />
+    </bean>
+
+</beans>

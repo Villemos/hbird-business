@@ -17,14 +17,13 @@ import org.hbird.exchange.navigation.Satellite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Catalogue extends AbstractHbirdApi implements ICatalogue {
+public class Catalogue implements ICatalogue {
 
     private final static Logger LOG = LoggerFactory.getLogger(Catalogue.class);
 
     private final IDataAccess dao;
 
-    public Catalogue(String issuedBy, String destination, IDataAccess dao) {
-        super(issuedBy, destination);
+    public Catalogue(IDataAccess dao) {
         this.dao = dao;
     }
 

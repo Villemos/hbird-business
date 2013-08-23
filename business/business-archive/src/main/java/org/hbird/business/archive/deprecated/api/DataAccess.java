@@ -23,10 +23,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.camel.CamelContext;
-import org.hbird.business.api.ApiUtility;
-import org.hbird.business.api.HbirdApi;
-import org.hbird.business.api.deprecated.IDataAccess;
 import org.hbird.business.archive.ArchiveComponent;
+import org.hbird.business.deprecated.api.ApiUtility;
+import org.hbird.business.deprecated.api.HbirdApi;
+import org.hbird.business.deprecated.api.IDataAccess;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Event;
 import org.hbird.exchange.core.Metadata;
@@ -392,7 +392,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     /**
-     * @see org.hbird.business.api.deprecated.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
+     * @see org.hbird.business.deprecated.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
     public LocationContactEvent getNextLocationContactEventForGroundStation(String groundStationID) {
@@ -400,7 +400,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     /**
-     * @see org.hbird.business.api.deprecated.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
+     * @see org.hbird.business.deprecated.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
     public LocationContactEvent getNextLocationContactEventForGroundStation(String groundStationId, long from) {
@@ -408,7 +408,7 @@ public class DataAccess extends HbirdApi implements IDataAccess {
     }
 
     /**
-     * @see org.hbird.business.api.deprecated.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
+     * @see org.hbird.business.deprecated.api.IDataAccess#retrieveNextLocationContactEventsFor(java.lang.String)
      */
     @Override
     public LocationContactEvent getNextLocationContactEventFor(String groundStationID, String satelliteID) {

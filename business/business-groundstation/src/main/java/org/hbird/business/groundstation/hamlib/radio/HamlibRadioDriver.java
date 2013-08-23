@@ -37,7 +37,7 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.IOrbitDataCalculator;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
@@ -63,7 +63,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class HamlibRadioDriver extends HamlibDriver<RadioDriverConfiguration> {
 
 	@Autowired
-    public HamlibRadioDriver(IPublisher publisher, IDataAccess dao, IPointingData calculator) {
+    public HamlibRadioDriver(IPublisher publisher, IDataAccess dao, IOrbitDataCalculator calculator) {
 		super(publisher, dao, calculator);
 	}
 
@@ -124,7 +124,7 @@ public class HamlibRadioDriver extends HamlibDriver<RadioDriverConfiguration> {
      */
     @Override
     protected TrackingSupport<RadioDriverConfiguration> createTrackingSupport(RadioDriverConfiguration config, IDataAccess dao,
-            IPointingData calculator, IPointingDataOptimizer<RadioDriverConfiguration> optimizer) {
+            IOrbitDataCalculator calculator, IPointingDataOptimizer<RadioDriverConfiguration> optimizer) {
         return new HamlibRadioTracker(config, dao, calculator, optimizer);
     }
 }

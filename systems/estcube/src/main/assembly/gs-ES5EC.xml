@@ -8,6 +8,7 @@
         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
     <import resource="properties.xml"/>
+    <import resource="amq.xml"/>
     <import resource="id-builder.xml"/>
     <import resource="mongo-db.xml"/>
     <import resource="orbit-data-api.xml"/>

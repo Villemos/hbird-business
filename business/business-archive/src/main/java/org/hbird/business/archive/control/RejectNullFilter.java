@@ -14,36 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.simpleparametersimulator;
+package org.hbird.business.archive.control;
 
-import org.apache.camel.Body;
-import org.apache.camel.Handler;
-import org.hbird.business.api.IPublisher;
-import org.hbird.exchange.core.EntityInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Gert Villemos
- * 
+ *
  */
-public class SenderBean {
-    protected static Logger LOG = LoggerFactory.getLogger(SenderBean.class);
+public class RejectNullFilter extends Filter {
 
-    protected IPublisher publisher;
+    private static final long serialVersionUID = -343709890356373785L;
 
-    public SenderBean(IPublisher publisher) {
-        this.publisher = publisher;
+    private static final Logger LOG = LoggerFactory.getLogger(RejectNullFilter.class);
+
+    private boolean logWarning;
+
+    /**
+     * @see org.hbird.business.archive.control.Filter#passes(java.lang.Object)
+     */
+    @Override
+    public boolean passes(Object obj) {
+        if (obj == null) {
+            if (logWarning) {
+                LOG.warn("Rejecting null object");
+            }
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
-    @Handler
-    public synchronized void send(@Body EntityInstance entry) {
-        LOG.debug("Publishing object '{}'", entry.toString());
-        try {
-            publisher.publish(entry);
-        }
-        catch (Exception e) {
-            LOG.error("Failed to publish object " + entry, e);
-        }
+    /**
+     * @param logStackTrace the logStackTrace to set
+     */
+    public void setLogWarning(boolean logWarning) {
+        this.logWarning = logWarning;
     }
 }

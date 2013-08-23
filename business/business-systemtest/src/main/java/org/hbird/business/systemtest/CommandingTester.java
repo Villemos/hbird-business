@@ -102,9 +102,6 @@ public class CommandingTester extends SystemTest {
         publishState("COM2/STATE3", "COM2/STATE3", "A test description,", "COM2:Command:*", false);
         publishState("COM2/STATE4", "COM2/STATE4", "A test description,", "COM2:Command:*", true);
 
-        /** Send command to commit all changes. */
-        forceCommit();
-
         /** The command should fail, as one of the states is 'false'. */
         publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, states, tasks);
 
@@ -115,9 +112,6 @@ public class CommandingTester extends SystemTest {
 
         /** Update state to make the command succeed. */
         publishState("COM2/STATE3", "COM2/STATE3", "A test description,", "COM2:Command:*", true);
-
-        /** Send command to commit all changes. */
-        forceCommit();
 
         /** The command should fail, as one of the states is 'false'. */
         publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, states, tasks);
@@ -131,9 +125,6 @@ public class CommandingTester extends SystemTest {
          * fails.
          */
         publishState("STATE_OTHER", "STATE_OTHER", "A test description", "COM2:Command:*", false);
-
-        /** Send command to commit all changes. */
-        forceCommit();
 
         /** The command should fail, as one of the states is 'false'. */
         publishCommandRequest("COMREQ1", "COMREQ1", "A simple command request container with no lock states and no tasks.", command, states, tasks);

@@ -2,8 +2,8 @@ package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IQueueManagement;
+import org.hbird.business.api.IQueueManager;
+import org.hbird.business.queuemanagement.api.QueueManagerApi;
 
 public class Starter extends SystemTest {
 
@@ -17,7 +17,7 @@ public class Starter extends SystemTest {
 
         LOG.info("Purging all activemq topics and queues.");
 
-        IQueueManagement api = ApiFactory.getQueueManagementApi("SystemTest");
+        IQueueManager api = new QueueManagerApi();
 
         for (String queueName : api.listQueues()) {
             LOG.info(" - Purging queue '" + queueName + "'.");

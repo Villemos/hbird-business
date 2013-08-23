@@ -14,10 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api;
+package org.hbird.business.deprecated.api;
 
 import org.apache.camel.CamelContext;
-import org.hbird.business.api.deprecated.IDataAccess;
+import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IOrbitDataCalculator;
+import org.hbird.business.api.IPublisher;
+import org.hbird.business.api.IQueueManager;
+import org.hbird.business.api.IdBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +32,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Gert Villemos
  * 
+ * @deprecated - use spring configuration instead
  */
+@Deprecated
 public class ApiFactory {
 
     protected static String dataAccessClass = System.getProperty("hbird.dataaccess.class", "org.hbird.business.archive.api.DataAccess");
@@ -60,8 +66,8 @@ public class ApiFactory {
         return (ICatalogue) createInstance(catalogueClass, issuedBy);
     }
 
-    public static synchronized IQueueManagement getQueueManagementApi(String issuedBy) {
-        return (IQueueManagement) createInstance(queueManagementClass, issuedBy);
+    public static synchronized IQueueManager getQueueManagementApi(String issuedBy) {
+        return (IQueueManager) createInstance(queueManagementClass, issuedBy);
     }
 
     public static synchronized IPartManager getPartManagerApi(String issuedBy) {
@@ -72,8 +78,8 @@ public class ApiFactory {
         return (IArchiveManagement) createInstance(archiveManagerClass, issuedBy);
     }
 
-    public static synchronized IPointingData getOrbitDataApi(String issuedBy) {
-        return (IPointingData) createInstance(orbitDataClass, issuedBy);
+    public static synchronized IOrbitDataCalculator getOrbitDataApi(String issuedBy) {
+        return (IOrbitDataCalculator) createInstance(orbitDataClass, issuedBy);
     }
 
     public static synchronized IDataAccess getDataAccessApi(String issuedBy, CamelContext context) {
@@ -88,8 +94,8 @@ public class ApiFactory {
         return (ICatalogue) createInstance(catalogueClass, issuedBy, context);
     }
 
-    public static synchronized IQueueManagement getQueueManagementApi(String issuedBy, CamelContext context) {
-        return (IQueueManagement) createInstance(queueManagementClass, issuedBy, context);
+    public static synchronized IQueueManager getQueueManagementApi(String issuedBy, CamelContext context) {
+        return (IQueueManager) createInstance(queueManagementClass, issuedBy, context);
     }
 
     public static synchronized IPartManager getPartManagerApi(String issuedBy, CamelContext context) {
@@ -100,8 +106,8 @@ public class ApiFactory {
         return (IArchiveManagement) createInstance(archiveManagerClass, issuedBy, context);
     }
 
-    public static synchronized IPointingData getOrbitDataApi(String issuedBy, CamelContext context) {
-        return (IPointingData) createInstance(orbitDataClass, issuedBy, context);
+    public static synchronized IOrbitDataCalculator getOrbitDataApi(String issuedBy, CamelContext context) {
+        return (IOrbitDataCalculator) createInstance(orbitDataClass, issuedBy, context);
     }
 
     public static synchronized IdBuilder getIdBuilder() {

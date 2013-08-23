@@ -63,6 +63,7 @@ public class Starter {
      * 
      * @throws Exception
      */
+    @SuppressWarnings("resource")
     protected void boot() throws Exception {
         LOG.info("Starting Hummingbird based system.");
 
@@ -72,13 +73,12 @@ public class Starter {
         /* Read the configuration file as the first argument. If not set, then we try the default name. */
         String assemblyFile = System.getProperty("hbird.assembly") == null ? "classpath:main.xml" : System.getProperty("hbird.assembly");
 
-        LOG.info("Reading assembly file '" + assemblyFile + "'");
+        LOG.info("Reading assembly file '{}'", assemblyFile);
 
         FileSystemXmlApplicationContext context = new FileSystemXmlApplicationContext(new String[] { assemblyFile }, false);
         context.setDisplayName(CONTEXT_NAME + "-" + (++counter));
-        LOG.info("Created Spring AppicationContext {}", context.getDisplayName());
+        LOG.info("Created Spring AppicationContext '{}'", context.getDisplayName());
         context.refresh();
-
         main.run();
     }
 }

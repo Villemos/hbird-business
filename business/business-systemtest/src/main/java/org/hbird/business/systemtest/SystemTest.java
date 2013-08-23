@@ -25,12 +25,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.Produce;
-import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.IPartManager;
 import org.hbird.business.api.IPublisher;
+import org.hbird.business.api.IStartableEntityManager;
 import org.hbird.business.archive.ArchiveComponent;
 import org.hbird.business.commanding.CommandingComponent;
 import org.hbird.business.groundstation.base.GroundStationPart;
@@ -52,7 +50,6 @@ import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.core.State;
-import org.hbird.exchange.dataaccess.CommitRequest;
 import org.hbird.exchange.groundstation.Antenna;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.GeoLocation;
@@ -69,9 +66,6 @@ public abstract class SystemTest {
     private static Logger LOG = LoggerFactory.getLogger(SystemTest.class);
 
     protected boolean exitOnFailure = true;
-
-    @Produce(uri = "direct:injection")
-    protected ProducerTemplate injection;
 
     protected Listener monitoringListener = null;
 
@@ -104,7 +98,7 @@ public abstract class SystemTest {
     protected static IPublisher publishApi;
     protected static IDataAccess accessApi;
     protected static ICatalogue catalogueApi;
-    protected static IPartManager partmanagerApi;
+    protected static IStartableEntityManager startableEntityManager;
 
     protected static ArchiveComponent archive = null;
     protected static CommandingComponent comComponent = null;
@@ -400,7 +394,7 @@ public abstract class SystemTest {
         if (monitoringArchiveStarted == false) {
             LOG.info("Issuing command for start of a parameter archive.");
 
-            partmanagerApi.start(archive);
+            startableEntityManager.start(archive);
 
             /** Give the component time to startup. */
             Thread.sleep(3000);
@@ -422,8 +416,8 @@ public abstract class SystemTest {
 
         Thread.sleep(2000);
 
-        /** Send command to commit all changes. */
-        injection.sendBody(new CommitRequest("SystemTest"));
+        // /** Send command to commit all changes. */
+        // injection.sendBody(new CommitRequest("SystemTest"));
 
     }
 
@@ -446,7 +440,7 @@ public abstract class SystemTest {
             }
 
             /** Start the part. */
-            partmanagerApi.start(taskPart);
+            startableEntityManager.start(taskPart);
 
             /** Give the component time to startup. */
             Thread.sleep(1000);
@@ -461,7 +455,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command for stop of a task executor component '" + ID + "'.");
 
             /** Stop the part. */
-            partmanagerApi.stop(ID);
+            startableEntityManager.stop(ID);
 
             /** Give the component time to startup. */
             Thread.sleep(1000);
@@ -479,7 +473,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a commanding chain.");
 
             /** Create command component. */
-            partmanagerApi.start(comComponent);
+            startableEntityManager.start(comComponent);
 
             Thread.sleep(4000);
 
@@ -496,7 +490,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command to stop a commanding chain.");
 
             /** Create command component. */
-            partmanagerApi.stop(comComponent.getID());
+            startableEntityManager.stop(comComponent.getID());
 
             Thread.sleep(4000);
 
@@ -512,7 +506,7 @@ public abstract class SystemTest {
         if (orbitPredictorStarted == false) {
             LOG.info("Issuing command for start of a orbital predictor.");
 
-            partmanagerApi.start(navComponent);
+            startableEntityManager.start(navComponent);
 
             Thread.sleep(2000);
 
@@ -526,7 +520,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command for stop of a orbital predictor.");
 
             /** Create command component. */
-            partmanagerApi.stop(navComponent.getID());
+            startableEntityManager.stop(navComponent.getID());
 
             Thread.sleep(2000);
 
@@ -542,7 +536,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of a orbital predictor.");
 
             /** Create command component. */
-            partmanagerApi.start(webComponent);
+            startableEntityManager.start(webComponent);
 
             Thread.sleep(2000);
 
@@ -571,7 +565,7 @@ public abstract class SystemTest {
             // TODO - 16.08.2013, kimmell - set configuration
             // antennaController.setSatellite(estcube1.getID());
             // antennaController.setLocation(es5ec.getID());
-            partmanagerApi.start(antennaController);
+            startableEntityManager.start(antennaController);
 
             Thread.sleep(2000);
 
@@ -584,7 +578,7 @@ public abstract class SystemTest {
         if (antennaControllerStarter == true) {
             LOG.info("Issuing command for stop of an antenna controller.");
 
-            partmanagerApi.stop("ES5EC_ESTCUBE1");
+            startableEntityManager.stop("ES5EC_ESTCUBE1");
 
             Thread.sleep(2000);
 
@@ -600,8 +594,8 @@ public abstract class SystemTest {
             LOG.info("Issuing command for start of an ESTCube-1 orbit propagation.");
 
             /** Create command component. */
-            partmanagerApi.start(estcubePropagationComponent);
-            partmanagerApi.start(estcubeLocationComponent);
+            startableEntityManager.start(estcubePropagationComponent);
+            startableEntityManager.start(estcubeLocationComponent);
 
             Thread.sleep(2000);
 
@@ -615,7 +609,7 @@ public abstract class SystemTest {
             LOG.info("Issuing command for stop of an ESTCube-1 orbit propagation.");
 
             /** Create command component. */
-            partmanagerApi.stop(estcubePropagationComponent.getID());
+            startableEntityManager.stop(estcubePropagationComponent.getID());
 
             Thread.sleep(2000);
 
@@ -639,7 +633,7 @@ public abstract class SystemTest {
             antennaController.setDescription("The component automating the track of Strand-1 by Darmstadt.");
             antennaController.setConfiguration(config);
 
-            partmanagerApi.start(antennaController);
+            startableEntityManager.start(antennaController);
 
             Thread.sleep(2000);
 
@@ -664,7 +658,6 @@ public abstract class SystemTest {
             }
         }
 
-        forceCommit();
     }
 
     public Listener getBusinessCardListener() {
@@ -729,12 +722,6 @@ public abstract class SystemTest {
 
     public void setContext(CamelContext context) {
         this.context = context;
-    }
-
-    protected void forceCommit() throws InterruptedException {
-        /** Send command to commit all changes. */
-        injection.sendBody(new CommitRequest("SystemTest"));
-        Thread.sleep(2000);
     }
 
     protected TleOrbitalParameters publishTLE(String ID, String name, String satelliteId, String line1, String line2) throws Exception {
@@ -829,11 +816,11 @@ public abstract class SystemTest {
         SystemTest.catalogueApi = catalogueApi;
     }
 
-    public static IPartManager getPartmanagerApi() {
-        return partmanagerApi;
+    public static IStartableEntityManager getStartableEntityManager() {
+        return startableEntityManager;
     }
 
-    public static void setPartmanagerApi(IPartManager partmanagerApi) {
-        SystemTest.partmanagerApi = partmanagerApi;
+    public static void setStartableEntityManager(IStartableEntityManager startableEntityManager) {
+        SystemTest.startableEntityManager = startableEntityManager;
     }
 }

@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.IOrbitDataCalculator;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.groundstation.configuration.RotatorDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
@@ -99,7 +99,7 @@ public class HamlibRotatorTrackerTest {
     private LocationContactEvent contact;
 
     @Mock
-    private IPointingData calculator;
+    private IOrbitDataCalculator calculator;
 
     private List<PointingData> pointingData;
 

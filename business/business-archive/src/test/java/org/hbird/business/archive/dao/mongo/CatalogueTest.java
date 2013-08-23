@@ -20,6 +20,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import com.mongodb.Mongo;
 
 public class CatalogueTest {
+
     private Catalogue catalogue;
     private IDataAccess dao;
     private Mongo mongo;
@@ -29,7 +30,7 @@ public class CatalogueTest {
         mongo = new Mongo("localhost");
         // dao = new MongoDataAccess(new SubclassAwareMongoTemplate(mongo, "hbird_test"));
         dao = new MongoDataAccess(new MongoTemplate(new Mongo("localhost"), "hbird_test"));
-        catalogue = new Catalogue("catalogue", "catalogue", dao);
+        catalogue = new Catalogue(dao);
     }
 
     @After

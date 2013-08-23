@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.IOrbitDataCalculator;
 import org.hbird.business.groundstation.base.TrackingSupport;
 import org.hbird.business.groundstation.configuration.RadioDriverConfiguration;
 import org.hbird.business.groundstation.hamlib.HamlibNativeCommand;
@@ -40,7 +40,7 @@ import org.hbird.exchange.navigation.Satellite;
  */
 public class HamlibRadioTracker extends TrackingSupport<RadioDriverConfiguration> {
 
-    public HamlibRadioTracker(RadioDriverConfiguration configuration, IDataAccess dao, IPointingData orbitDataCalculator,
+    public HamlibRadioTracker(RadioDriverConfiguration configuration, IDataAccess dao, IOrbitDataCalculator orbitDataCalculator,
             IPointingDataOptimizer<RadioDriverConfiguration> optimizer) {
         super(configuration, dao, orbitDataCalculator, optimizer);
     }

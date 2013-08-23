@@ -16,11 +16,17 @@
  */
 package org.hbird.business.api;
 
+import java.util.List;
+
+import org.hbird.exchange.groundstation.GroundStation;
+import org.hbird.exchange.navigation.LocationContactEvent;
+import org.hbird.exchange.navigation.PointingData;
+
 /**
- * @author Admin
+ * @author Gert Villemos
  *
  */
-public interface IArchiveManagement extends IHbirdApi {
+public interface IOrbitDataCalculator {
 
-	public void deleteOrbitalStates(String satellite);
+    public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent, GroundStation groundStation, long contactDataStepSize);
 }

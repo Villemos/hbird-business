@@ -49,7 +49,6 @@ public class CatalogueApiTester extends SystemTest {
         }
 
         Thread.sleep(3000);
-        forceCommit();
 
         /** Test retrieve all parts. */
         List<Part> results = catalogueApi.getParts();

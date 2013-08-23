@@ -1,304 +1,232 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-	xsi:schemaLocation="
-       http://www.springframework.org/schema/beans 
-       http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-       http://www.springframework.org/schema/context 
-       http://www.springframework.org/schema/context/spring-context-3.2.xsd
-       http://www.springframework.org/schema/data/mongo
-       http://www.springframework.org/schema/data/mongo/spring-mongo-1.2.xsd
-       http://camel.apache.org/schema/spring 
-       http://camel.apache.org/schema/spring/camel-spring.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+       http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.2.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponent" init-method="start">
-		<constructor-arg ref="publisher" />
-	</bean>
-
-	<bean id="monitoring.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="commanding.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="failed.commanding.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="businesscard.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="parameter.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="state.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="label.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="orbitalstate.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="orbitallocationevent.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="groundstationpart.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="inmemorytest.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="event.listener" class="org.hbird.business.systemtest.Listener" />
-	<bean id="message.listener" class="org.hbird.business.systemtest.MessageListener" />
-											
-	<bean id="testerTemplate" abstract="true" class="org.hbird.business.systemtest.Tester">
-		<property name="monitoringListener" ref="monitoring.listener" />
-		<property name="commandingListener" ref="commanding.listener" />
-		<property name="failedCommandRequestListener" ref="failed.commanding.listener"/>
-		<property name="businessCardListener" ref="businesscard.listener"/>
-		<property name="parameterListener" ref="parameter.listener"/>
-		<property name="stateListener" ref="state.listener"/>
-		<property name="labelListener" ref="label.listener"/>
-		<property name="orbitalStateListener" ref="orbitalstate.listener"/>
-		<property name="locationEventListener" ref="orbitallocationevent.listener"/>
-		<property name="groundStationPartListener" ref="groundstationpart.listener"/>
-		<property name="inMemoryTestListener" ref="inmemorytest.listener"/>
-		<property name="eventListener" ref="event.listener"/>
-		<property name="messageListener" ref="message.listener"/>
-		<property name="context" ref="basic"/>
- 
-		<property name="publishApi" ref="publisher" />
-		<property name="accessApi" ref="dataAccess" />
-		<property name="catalogueApi" ref="catalogue" />
-		<property name="partmanagerApi" ref="partManager" /> 
-	</bean>
-	
-	<!-- APIs -->
-	<mongo:mongo host="localhost" port="27017" />
-	
-	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-		<constructor-arg ref="mongo" />
-		<constructor-arg name="databaseName" value="hbird_test" />
-	</bean>
-
-    <!--  	
-	<bean id="mongoTemplate" class="org.hbird.business.archive.dao.mongo.SubclassAwareMongoTemplate">
-		<constructor-arg ref="mongo" />
-		<constructor-arg name="databaseName" value="hbird_test" />
-	</bean>
-	-->
-
-	<bean id="dataAccess" class="org.hbird.business.archive.dao.mongo.MongoDataAccess">
-		<constructor-arg ref="mongoTemplate" />
-	</bean>
-	
-	<bean id="catalogue" class="org.hbird.business.api.impl.Catalogue">
-    	<constructor-arg index="0" value="catalogue" />
-    	<constructor-arg index="1" value="hbird" />
-    	<constructor-arg index="2" ref="dataAccess" />
-    </bean>
-    
-    
-    <bean id="publisher" class="org.hbird.business.api.impl.Injector">
-    	<constructor-arg value="injector" />
-    	<constructor-arg value="hbird" />
-    	<constructor-arg>
-    		<bean class="org.hbird.business.archive.control.FilteringPublisher">
-    			<constructor-arg>
-		    		<bean class="org.hbird.business.api.impl.Publisher">
-		    			<constructor-arg index="0" value="publisher" />
-		    			<constructor-arg index="1" value="hbird" />
-		    			<constructor-arg index="2" ref="dataAccess" />
-		    		</bean>
-    			</constructor-arg>
-    			
-    			<constructor-arg>
-    				<bean class="org.hbird.business.archive.control.NegateFilter">
-    					<constructor-arg>
-    						<bean class="org.hbird.business.archive.control.ClassFilter">
-    							<constructor-arg>
-    								<set>
-    									<value>org.hbird.exchange.core.Command</value>
-    									<value>org.hbird.exchange.core.BusinessCard</value>
-    									<value>org.hbird.exchange.interfaces.IStartableEntity</value>
-    								</set>
-    							</constructor-arg>
-    							
-    							<constructor-arg value="true" />
-    						</bean>
-    					</constructor-arg>
-    				</bean>
-    			</constructor-arg>
-    		</bean>
-    	</constructor-arg>
-    </bean>
-    
-    <!--  
-    <bean id="publisher" class="org.hbird.business.api.impl.Publisher">
-    	<constructor-arg value="publisher" />
-    	<constructor-arg value="hbird" />
-    	<constructor-arg ref="dataAccess" />
-    </bean>
-    -->
-    
-    <bean id="partManager" class="org.hbird.business.api.impl.PartManager">
-    	<constructor-arg value="partManager" />
-    	<constructor-arg ref="publisher" />
-    </bean>
-    
-    <bean id="idBuilder" class = "org.hbird.business.api.impl.DefaultIdBuilder">
+    <bean id="configurator" class="org.hbird.business.configurator.ConfiguratorComponent" init-method="start">
+        <constructor-arg ref="publisher" />
     </bean>
 
-	<bean id="starter" class="org.hbird.business.systemtest.Starter" parent="testerTemplate"/>
-	<bean id="routing" class="org.hbird.business.systemtest.RoutingTest" parent="testerTemplate"/>
-	<bean id="businesscard" class="org.hbird.business.systemtest.BusinessCardTester" parent="testerTemplate"/>
-	<bean id="parameterarchive" class="org.hbird.business.systemtest.ParameterArchivalTester" parent="testerTemplate"/>
-	<bean id="statearchive" class="org.hbird.business.systemtest.StateArchivalTester" parent="testerTemplate"/>
-	<bean id="limitcheck" class="org.hbird.business.systemtest.LimitCheckTester" parent="testerTemplate"/>
-	<bean id="scripting" class="org.hbird.business.systemtest.ScriptTester" parent="testerTemplate"/>
-	<bean id="tasking" class="org.hbird.business.systemtest.TaskingTester" parent="testerTemplate"/>
-	<bean id="commanding" class="org.hbird.business.systemtest.CommandingTester" parent="testerTemplate"/>
-	<bean id="navigation" class="org.hbird.business.systemtest.NavigationTester" parent="testerTemplate"/>
-	<bean id="dataaccessapi" class="org.hbird.business.systemtest.DataAccessApiTester" parent="testerTemplate"/>
-	<bean id="catalogueapi" class="org.hbird.business.systemtest.CatalogueApiTester" parent="testerTemplate"/>
-	<bean id="automaticorbitpropagation" class="org.hbird.business.systemtest.AutomaticOrbitPropagationTester" parent="testerTemplate"/>
-	<bean id="parsecontroller" class="org.hbird.business.systemtest.ParseControlTester" parent="testerTemplate"/>
-	<bean id="websockettester" class="org.hbird.business.systemtest.WebsocketTester" parent="testerTemplate"/>
-	<bean id="groundstationdriver" class="org.hbird.business.systemtest.GroundStationDriverTester" parent="testerTemplate"/>
-	<bean id="endtoendtracking" class="org.hbird.business.systemtest.EndToEndTrackingTester" parent="testerTemplate"/>
-	<bean id="strandtracking" class="org.hbird.business.systemtest.StrandTrackingTester" parent="testerTemplate"/>
-	<bean id="inmemoryscheduler" class="org.hbird.business.systemtest.InMemorySchedulerTester" parent="testerTemplate"/>
-	<bean id="celestrack" class="org.hbird.business.systemtest.CelestrackTester" parent="testerTemplate"/>
-	<bean id="event" class="org.hbird.business.systemtest.EventTester" parent="testerTemplate"/>
-	<bean id="finisher" class="org.hbird.business.systemtest.Finisher" parent="testerTemplate"/>
-						
-	<bean id="transferScheduler" class="org.hbird.business.core.TransferScheduler"/>
+    <bean id="monitoring.listener" class="org.hbird.business.systemtest.Listener" />
+    <bean id="commanding.listener" class="org.hbird.business.systemtest.Listener" />
+    <bean id="failed.commanding.listener" class="org.hbird.business.systemtest.Listener" />
+    <bean id="businesscard.listener" class="org.hbird.business.systemtest.Listener" />
+    <bean id="parameter.listener" class="org.hbird.business.systemtest.Listener" />
+    <bean id="state.listener" class="org.hbird.business.systemtest.Listener" />
+    <bean id="label.listener" class="org.hbird.business.systemtest.Listener" />
+    <bean id="orbitalstate.listener" class="org.hbird.business.systemtest.Listener" />
+    <bean id="orbitallocationevent.listener" class="org.hbird.business.systemtest.Listener" />
+    <bean id="groundstationpart.listener" class="org.hbird.business.systemtest.Listener" />
+    <bean id="inmemorytest.listener" class="org.hbird.business.systemtest.Listener" />
+    <bean id="event.listener" class="org.hbird.business.systemtest.Listener" />
+    <bean id="message.listener" class="org.hbird.business.systemtest.MessageListener" />
+
+    <bean id="testerTemplate" abstract="true" class="org.hbird.business.systemtest.Tester">
+        <property name="monitoringListener" ref="monitoring.listener" />
+        <property name="commandingListener" ref="commanding.listener" />
+        <property name="failedCommandRequestListener" ref="failed.commanding.listener" />
+        <property name="businessCardListener" ref="businesscard.listener" />
+        <property name="parameterListener" ref="parameter.listener" />
+        <property name="stateListener" ref="state.listener" />
+        <property name="labelListener" ref="label.listener" />
+        <property name="orbitalStateListener" ref="orbitalstate.listener" />
+        <property name="locationEventListener" ref="orbitallocationevent.listener" />
+        <property name="groundStationPartListener" ref="groundstationpart.listener" />
+        <property name="inMemoryTestListener" ref="inmemorytest.listener" />
+        <property name="eventListener" ref="event.listener" />
+        <property name="messageListener" ref="message.listener" />
+        <property name="context" ref="basic" />
+
+        <property name="publishApi" ref="publisher" />
+        <property name="accessApi" ref="dataAccess" />
+        <property name="catalogueApi" ref="catalogue" />
+        <property name="startableEntityManager" ref="startableEntityManager" />
+    </bean>
+
+    <!-- APIs -->
+    <mongo:mongo host="localhost" port="27017" />
+
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg ref="mongo" />
+        <constructor-arg name="databaseName" value="hbird_test" />
+    </bean>
+
+    <bean id="dataAccess" class="org.hbird.business.archive.dao.mongo.MongoDataAccess">
+        <constructor-arg ref="mongoTemplate" />
+    </bean>
+
+    <bean id="catalogue" class="org.hbird.business.api.impl.Catalogue">
+        <constructor-arg index="0" name="dao" ref="dataAccess" />
+    </bean>
 
 
-	<camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
+    <bean id="publisher" class="org.hbird.business.api.impl.AmqPublisher" init-method="start">
+        <constructor-arg index="0" name="delegate">
+            <bean class="org.hbird.business.archive.control.FilteringPublisher">
+                <constructor-arg index="0" name="delegate">
+                    <bean class="org.hbird.business.api.impl.DaoPublisher">
+                        <constructor-arg index="0" name="dao" ref="dataAccess" />
+                    </bean>
+                </constructor-arg>
+                <constructor-arg index="1" name="filter">
+                    <bean class="org.hbird.business.archive.control.AndFilter">
+                        <constructor-arg index="0" name="filters">
+                            <list>
+                                <bean class="org.hbird.business.archive.control.RejectNullFilter">
+                                    <property name="logWarning" value="true" />
+                                </bean>
+                                <bean class="org.hbird.business.archive.control.NegateFilter">
+                                    <constructor-arg>
+                                        <bean class="org.hbird.business.archive.control.ClassFilter">
+                                            <constructor-arg>
+                                                <set>
+                                                    <value>org.hbird.exchange.core.Command</value>
+                                                    <value>org.hbird.exchange.core.BusinessCard</value>
+                                                    <value>org.hbird.exchange.interfaces.IStartableEntity</value>
+                                                </set>
+                                            </constructor-arg>
+                                            <constructor-arg value="true" />
+                                        </bean>
+                                    </constructor-arg>
+                                </bean>
+                            </list>
+                        </constructor-arg>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+    </bean>
 
-		<route id="testing">
-			<from uri="timer:initator?repeatCount=1" />
-				<to uri="bean:starter" />
-				<to uri="bean:catalogueapi" />
-				<to uri="bean:routing" />
-                <to uri="bean:event" />
- 				<to uri="bean:businesscard" /> 
-				<to uri="bean:parameterarchive" />
-				<to uri="bean:statearchive" />
-	 			<to uri="bean:dataaccessapi" />
-				<to uri="bean:limitcheck" />
-				<to uri="bean:scripting" />
-		 		<to uri="bean:tasking" /> 
-	 			<to uri="bean:commanding" />
-	 	 		<to uri="bean:websockettester" />
-				<to uri="bean:inmemoryscheduler" />
-	 			<to uri="bean:celestrack" />
-	 			<to uri="bean:finisher" />
+    <bean id="startableEntityManager" class="org.hbird.business.api.impl.StartableEntityManager">
+        <constructor-arg index="0" name="issuedBy" value="startableEntityManager" />
+        <constructor-arg index="0" name="publisher" ref="publisher" />
+    </bean>
 
-<!-- NOT USED -->
-<!-- 	 			<to uri="bean:navigation" /> -->
-<!-- 	 			<to uri="bean:automaticorbitpropagation" /> -->
-<!-- 	 			<to uri="bean:groundstationdriver" /> -->
-<!-- 	 			<to uri="bean:endtoendtracking" /> -->
-<!-- 	 			<to uri="bean:strandtracking" /> -->
-<!-- 	 			<to uri="bean:parsecontroller" /> -->
+    <bean id="idBuilder" class="org.hbird.business.api.impl.DefaultIdBuilder" />
 
-		</route>
+    <bean id="starter" class="org.hbird.business.systemtest.Starter" parent="testerTemplate" />
+    <bean id="routing" class="org.hbird.business.systemtest.RoutingTest" parent="testerTemplate" />
+    <bean id="businesscard" class="org.hbird.business.systemtest.BusinessCardTester" parent="testerTemplate" />
+    <bean id="parameterarchive" class="org.hbird.business.systemtest.ParameterArchivalTester" parent="testerTemplate" />
+    <bean id="statearchive" class="org.hbird.business.systemtest.StateArchivalTester" parent="testerTemplate" />
+    <bean id="limitcheck" class="org.hbird.business.systemtest.LimitCheckTester" parent="testerTemplate" />
+    <bean id="scripting" class="org.hbird.business.systemtest.ScriptTester" parent="testerTemplate" />
+    <bean id="tasking" class="org.hbird.business.systemtest.TaskingTester" parent="testerTemplate" />
+    <bean id="commanding" class="org.hbird.business.systemtest.CommandingTester" parent="testerTemplate" />
+    <bean id="navigation" class="org.hbird.business.systemtest.NavigationTester" parent="testerTemplate" />
+    <bean id="dataaccessapi" class="org.hbird.business.systemtest.DataAccessApiTester" parent="testerTemplate" />
+    <bean id="catalogueapi" class="org.hbird.business.systemtest.CatalogueApiTester" parent="testerTemplate" />
+    <bean id="automaticorbitpropagation" class="org.hbird.business.systemtest.AutomaticOrbitPropagationTester" parent="testerTemplate" />
+    <bean id="parsecontroller" class="org.hbird.business.systemtest.ParseControlTester" parent="testerTemplate" />
+    <bean id="websockettester" class="org.hbird.business.systemtest.WebsocketTester" parent="testerTemplate" />
+    <bean id="groundstationdriver" class="org.hbird.business.systemtest.GroundStationDriverTester" parent="testerTemplate" />
+    <bean id="endtoendtracking" class="org.hbird.business.systemtest.EndToEndTrackingTester" parent="testerTemplate" />
+    <bean id="strandtracking" class="org.hbird.business.systemtest.StrandTrackingTester" parent="testerTemplate" />
+    <bean id="inmemoryscheduler" class="org.hbird.business.systemtest.InMemorySchedulerTester" parent="testerTemplate" />
+    <bean id="celestrack" class="org.hbird.business.systemtest.CelestrackTester" parent="testerTemplate" />
+    <bean id="event" class="org.hbird.business.systemtest.EventTester" parent="testerTemplate" />
+    <bean id="finisher" class="org.hbird.business.systemtest.Finisher" parent="testerTemplate" />
 
-		<route id="injection">
-			<from uri="direct:injection" />
-			<setHeader headerName="name"><simple>${in.body.name}</simple></setHeader>
-			<setHeader headerName="class"><simple>${in.body.class.simpleName}</simple></setHeader>
-			<setHeader headerName="issuedBy"><simple>${in.body.issuedBy}</simple></setHeader>
-			<setHeader headerName="timestamp"><simple>${in.body.timestamp}</simple></setHeader>				
+    <bean id="transferScheduler" class="org.hbird.business.core.TransferScheduler" />
 
-						
-			<to uri="bean:transferScheduler"/>
-			
-			<choice>
-	            <when>
-	                <simple>${in.body} is 'org.hbird.exchange.core.ApplicableTo'</simple>
-	      			<setHeader headerName="applicableTo"><simple>${in.body.applicableTo}</simple></setHeader>
-	            </when>
-	            <when>
-	                <simple>${in.body} is 'org.hbird.exchange.core.Command'</simple>
-	      			<setHeader headerName="destination"><simple>${in.body.destination}</simple></setHeader>
-	            </when>	            
-	        </choice>
 
-			<choice>
-				<when>
-		            <simple>${in.body} is 'org.hbird.exchange.interfaces.IGroundStationSpecific'</simple>
-		            <setHeader headerName="location"><simple>${in.body.groundStationId}</simple></setHeader>
-				</when>
-			</choice>
+    <camelContext id="basic" xmlns="http://camel.apache.org/schema/spring">
 
-			<choice>
-				<when>
-		            <simple>${in.body} is 'org.hbird.exchange.interfaces.ISatelliteSpecific'</simple>
-		            <setHeader headerName="satellite"><simple>${in.body.satelliteId}</simple></setHeader>
-				</when>
-			</choice>
-	        
-			<choice>
-	            <when>
-	                <simple>${in.body} is 'org.hbird.exchange.tasking.Task'</simple>
-	      			<to uri="activemq:queue:hbird.tasks"/>
-	            </when>
-	            <when>
-	                <simple>${in.body} is 'org.hbird.exchange.core.Command'</simple>
-	      			<to uri="activemq:topic:hbird.commands"/>
-	            </when>	            
-	            <when>
-	                <simple>${in.body} is 'org.hbird.exchange.commandrelease.CommandRequest'</simple>
-	      			<to uri="activemq:queue:hbird.requests"/>
-	            </when>
-	            <otherwise>
-	            	<to uri="activemq:topic:hbird.monitoring"/>
-	            </otherwise>
-	        </choice>
-		</route>
+        <route id="testing">
+            <from uri="timer:initator?repeatCount=1" />
+            <to uri="bean:starter" />
+            <to uri="bean:catalogueapi" />
+            <to uri="bean:routing" />
+            <to uri="bean:event" />
+            <to uri="bean:businesscard" />
+            <to uri="bean:parameterarchive" />
+            <to uri="bean:statearchive" />
+            <to uri="bean:dataaccessapi" />
+            <to uri="bean:limitcheck" />
+            <to uri="bean:scripting" />
+            <to uri="bean:tasking" />
+            <to uri="bean:commanding" />
+            <to uri="bean:websockettester" />
+            <to uri="bean:inmemoryscheduler" />
+            <to uri="bean:celestrack" />
+            <to uri="bean:finisher" />
 
-		<route id="listen.monitoring">
-			<from uri="activemq:topic:hbird.monitoring" />
-			<to uri="bean:monitoring.listener" />
-		</route>
+            <!-- NOT USED -->
+            <!-- <to uri="bean:navigation" /> -->
+            <!-- <to uri="bean:automaticorbitpropagation" /> -->
+            <!-- <to uri="bean:groundstationdriver" /> -->
+            <!-- <to uri="bean:endtoendtracking" /> -->
+            <!-- <to uri="bean:strandtracking" /> -->
+            <!-- <to uri="bean:parsecontroller" /> -->
+        </route>
 
-		<route id="listen.commanding">
-			<from uri="activemq:topic:hbird.commands" />
-			<to uri="bean:commanding.listener" />
-		</route>
 
-		<route id="listen.failed.commanding">
-			<from uri="activemq:topic:hbird.failedRequests" />
-			<to uri="bean:failed.commanding.listener" />
-		</route>
+        <route id="listen.monitoring">
+            <from uri="activemq:topic:hbird.monitoring" />
+            <to uri="bean:monitoring.listener" />
+        </route>
 
-		<route id="listen.businesscard">
-			<from uri="activemq:topic:hbird.monitoring?selector=class='BusinessCard'" />
-			<to uri="bean:businesscard.listener" />
-		</route>
+        <route id="listen.commanding">
+            <from uri="activemq:topic:hbird.commands" />
+            <to uri="bean:commanding.listener" />
+        </route>
 
-		<route id="parameter">
-			<from uri="activemq:topic:hbird.monitoring?selector=class='Parameter'" />
-			<to uri="bean:parameter.listener" />
-		</route>
+        <route id="listen.failed.commanding">
+            <from uri="activemq:topic:hbird.failedRequests" />
+            <to uri="bean:failed.commanding.listener" />
+        </route>
 
-		<route id="state">
-			<from uri="activemq:topic:hbird.monitoring?selector=class='State'" />
-			<to uri="bean:state.listener" />
-		</route>
+        <route id="listen.businesscard">
+            <from uri="activemq:topic:hbird.monitoring?selector=class='BusinessCard'" />
+            <to uri="bean:businesscard.listener" />
+        </route>
 
-		<route id="label">
-			<from uri="activemq:topic:hbird.monitoring?selector=class='Label'" />
-			<to uri="bean:label.listener" />
-		</route>
+        <route id="parameter">
+            <from uri="activemq:topic:hbird.monitoring?selector=class='Parameter'" />
+            <to uri="bean:parameter.listener" />
+        </route>
 
-		<route id="orbitalState">
-			<from uri="activemq:topic:hbird.monitoring?selector=class='OrbitalState'" />
-			<to uri="bean:orbitalstate.listener" />
-		</route>
-		
-		<route id="orbitalLocationEvent">
-			<from uri="activemq:topic:hbird.events?selector=class='LocationContactEvent'" />
-			<to uri="bean:orbitallocationevent.listener" />
-		</route>
+        <route id="state">
+            <from uri="activemq:topic:hbird.monitoring?selector=class='State'" />
+            <to uri="bean:state.listener" />
+        </route>
 
-		<route id="groundstationSchedule">
-			<from uri="activemq:queue:hbird.antennaschedule.ES5EC.internal" />
-			<to uri="bean:groundstationpart.listener" />
-		</route>
-        
-		<route id="events">
-			<from uri="activemq:topic:hbird.events" />
-			<to uri="bean:event.listener" />
-			<to uri="bean:message.listener" />
-		</route>
+        <route id="label">
+            <from uri="activemq:topic:hbird.monitoring?selector=class='Label'" />
+            <to uri="bean:label.listener" />
+        </route>
 
-		<route id="inmemorytest">
-			<from uri="direct:inmemorytest" />
-			<to uri="bean:inmemorytest.listener" />
-		</route>
-	
-	</camelContext>
+        <route id="orbitalState">
+            <from uri="activemq:topic:hbird.monitoring?selector=class='OrbitalState'" />
+            <to uri="bean:orbitalstate.listener" />
+        </route>
+
+        <route id="orbitalLocationEvent">
+            <from uri="activemq:topic:hbird.events?selector=class='LocationContactEvent'" />
+            <to uri="bean:orbitallocationevent.listener" />
+        </route>
+
+        <route id="groundstationSchedule">
+            <from uri="activemq:queue:hbird.antennaschedule.ES5EC.internal" />
+            <to uri="bean:groundstationpart.listener" />
+        </route>
+
+        <route id="events">
+            <from uri="activemq:topic:hbird.events" />
+            <to uri="bean:event.listener" />
+            <to uri="bean:message.listener" />
+        </route>
+
+        <route id="inmemorytest">
+            <from uri="direct:inmemorytest" />
+            <to uri="bean:inmemorytest.listener" />
+        </route>
+
+    </camelContext>
 </beans>

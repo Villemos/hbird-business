@@ -55,31 +55,34 @@ public class CelestrackTester extends SystemTest {
         startMonitoringArchive();
 
         try {
-        	accessApi.getTleFor("DTUSAT");
-        	azzert(false, "No TLE for DTUSAT");
-        } catch(Exception e) {
-        	
+            accessApi.getTleFor("DTUSAT");
+            azzert(false, "No TLE for DTUSAT");
+        }
+        catch (Exception e) {
+
         }
 
         try {
-        	accessApi.getTleFor("CUTE-1");
-        	azzert(false, "No TLE for CUTE-1");
-        } catch(Exception e) {
-        	
+            accessApi.getTleFor("CUTE-1");
+            azzert(false, "No TLE for CUTE-1");
+        }
+        catch (Exception e) {
+
         }
 
         try {
-        	accessApi.getTleFor("QUAKESAT");
-        	azzert(false, "No TLE for QUAKESAT");
-        } catch(Exception e) {
-        	
+            accessApi.getTleFor("QUAKESAT");
+            azzert(false, "No TLE for QUAKESAT");
+        }
+        catch (Exception e) {
+
         }
 
-        partmanagerApi.start(new CelestrackComponent(IDGroundSegment + "TLEloader"));
+        startableEntityManager.start(new CelestrackComponent(IDGroundSegment + "TLEloader"));
 
         Thread.sleep(10000);
 
-        //Object object = accessApi.resolve("DTUSAT");
+        // Object object = accessApi.resolve("DTUSAT");
         Satellite object = accessApi.getById("DTUSAT", Satellite.class);
         azzert(object != null, "Satellite DTUSAT created.");
         TleOrbitalParameters parameter = accessApi.getTleFor(object.getID());

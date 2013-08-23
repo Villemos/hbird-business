@@ -7,39 +7,35 @@ import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
 
 public class AutomaticOrbitPropagationTester extends SystemTest {
-	
-	private static org.apache.log4j.Logger LOG = Logger.getLogger(AutomaticOrbitPropagationTester.class);
-	
-	@Handler
-	public void process() throws InterruptedException {
-	
-		LOG.info("------------------------------------------------------------------------------------------------------------");
-		LOG.info("Starting");
-		
-		/** Start the archive. */
-		startMonitoringArchive();		
 
-		/** Start the navigation component. */
-		startOrbitPredictor();		
+    private static org.apache.log4j.Logger LOG = Logger.getLogger(AutomaticOrbitPropagationTester.class);
 
-		Thread.sleep(1000);
+    @Handler
+    public void process() throws InterruptedException {
 
-		publishGroundStationsAndSatellites();
-		publishTleParameters();
-			
-		List<String> locations = new ArrayList<String>();
-		locations.add(es5ec.getID());
-		locations.add(gsDarmstadt.getID());
-		
+        LOG.info("------------------------------------------------------------------------------------------------------------");
+        LOG.info("Starting");
 
-		/** Send command to commit all changes. */
-		forceCommit();
-		
-		/** Create a controller task and inject it. */
-		startEstcubeOrbitPropagator();
-		
-		Thread.sleep(20000);
-		
-		LOG.info("Finishing");
-	}
+        /** Start the archive. */
+        startMonitoringArchive();
+
+        /** Start the navigation component. */
+        startOrbitPredictor();
+
+        Thread.sleep(1000);
+
+        publishGroundStationsAndSatellites();
+        publishTleParameters();
+
+        List<String> locations = new ArrayList<String>();
+        locations.add(es5ec.getID());
+        locations.add(gsDarmstadt.getID());
+
+        /** Create a controller task and inject it. */
+        startEstcubeOrbitPropagator();
+
+        Thread.sleep(20000);
+
+        LOG.info("Finishing");
+    }
 }

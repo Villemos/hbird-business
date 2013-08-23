@@ -18,7 +18,6 @@ package org.hbird.business.systemtest;
 
 import org.apache.camel.Handler;
 import org.apache.log4j.Logger;
-import org.hbird.business.api.impl.Injector;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.Part;
@@ -46,7 +45,7 @@ public class TaskingTester extends SystemTest {
         Thread.sleep(2000);
 
         /** Create simple task that sets a parameter. Is executed immediatly. */
-        
+
         SetParameter setparameter1 = new SetParameter("SET_PARA1", "SET_PARA1");
         setparameter1.setDescription("A test parameter set by a task");
 
@@ -55,10 +54,10 @@ public class TaskingTester extends SystemTest {
         parameter1.setValue(9d);
         parameter1.setUnit("Bananas");
         setparameter1.setParameter(parameter1);
-        
-        //publishApi.publish(setparameter1);
+
+        // publishApi.publish(setparameter1);
         publishApi.publish(setparameter1);
-        
+
         Thread.sleep(2000);
 
         azzert(parameterListener.lastReceived.getName().equals(parameterName), "The 'Set' parameter was received,");
@@ -75,8 +74,8 @@ public class TaskingTester extends SystemTest {
         setparameter2.setParameter(parameter1);
         setparameter2.setRepeat(5);
         setparameter2.setExecutionDelay(1000);
-        
-        //publishApi.publish(setparameter2);
+
+        // publishApi.publish(setparameter2);
         publishApi.publish(setparameter2);
 
         Thread.sleep(10000);
@@ -88,12 +87,12 @@ public class TaskingTester extends SystemTest {
         String task2Name = "SEND_COM1";
         Command command = new Command(commandName, commandName);
         command.setDescription("A test command used to test SendCommand task.");
-        
+
         SendCommand sendCommand = new SendCommand(task2Name, task2Name);
         sendCommand.setCommand(command);
-        //publishApi.publish(sendCommand);
+        // publishApi.publish(sendCommand);
         publishApi.publish(sendCommand);
-        
+
         Thread.sleep(2000);
 
         azzert(commandingListener.lastReceived.getName().equals(commandName), "Received command.");

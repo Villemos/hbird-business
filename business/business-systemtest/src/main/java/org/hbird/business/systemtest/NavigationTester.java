@@ -57,9 +57,6 @@ public class NavigationTester extends SystemTest {
         locations.add(es5ec.getName());
         locations.add(gsAalborg.getName());
 
-        /** Send command to commit all changes. */
-        forceCommit();
-
         orbitalStateListener.elements.clear();
 
         /** Send a TLE request for a satellite and a subset of locations */
@@ -77,8 +74,8 @@ public class NavigationTester extends SystemTest {
         orbCom.setTo(1355385448149l + 2 * 60 * 60 * 1000);
         orbCom.setExecutionDelay(0l);
 
-        partmanagerApi.start(orbCom);
-        partmanagerApi.start(conCom);
+        startableEntityManager.start(orbCom);
+        startableEntityManager.start(conCom);
 
         int totalSleep = 0;
         while (totalSleep < 120000 && orbitalStateListener.elements.size() != 121) {
@@ -91,9 +88,6 @@ public class NavigationTester extends SystemTest {
 
         azzert(locationEventListener.elements.size() == 2, "Expect to receive 2 location events. Received " + locationEventListener.elements.size());
         print(locationEventListener.elements);
-
-        /** Send command to commit all changes. */
-        forceCommit();
 
         /** Retrieve the next set of TARTU events and check them. */
         LocationContactEvent contactEvent = accessApi.getNextLocationContactEventForGroundStation(es5ec.getID(), 1355385522265l);

@@ -65,13 +65,11 @@ public class ConfiguratorComponentDriver extends SoftwareComponentDriver<Configu
      */
     public ConfiguratorComponentDriver(IPublisher publisher) {
         this(null, publisher);
-
         LOG.warn("Started ConfigurationComponentDriver without applcation context. Bean registry will not be available in started components!");
     }
 
     public ConfiguratorComponentDriver(ApplicationContext applicationContext, IPublisher publisher) {
         super(publisher);
-
         this.applicationContext = applicationContext;
     }
 

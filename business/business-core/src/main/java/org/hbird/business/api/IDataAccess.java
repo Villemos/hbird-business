@@ -11,7 +11,9 @@ import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 
+// TODO - 23.08.2013, kimmell - needs refactoring
 public interface IDataAccess {
+
     public <T extends IEntityInstance> T getById(String id, Class<T> clazz) throws ArchiveException;
 
     // Returns last VERSION of an entity with a given id

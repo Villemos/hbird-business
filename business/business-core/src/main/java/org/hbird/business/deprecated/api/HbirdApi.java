@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api;
+package org.hbird.business.deprecated.api;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +30,11 @@ import org.hbird.exchange.dataaccess.DataRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * @deprecated
+ */
+@Deprecated
 public abstract class HbirdApi extends HbirdRouteBuilder implements IHbirdApi {
 
     private static final Logger LOG = LoggerFactory.getLogger(HbirdApi.class);
@@ -44,12 +49,21 @@ public abstract class HbirdApi extends HbirdRouteBuilder implements IHbirdApi {
 
     protected CamelContext context = null;
 
+    /**
+     * Creates new HbirdApi instance.
+     * 
+     * This constructor will create new CamelContext which has no access to configured bean registry.
+     * Use at your own risk!
+     * 
+     * @param issuedBy
+     * @param destination
+     */
     public HbirdApi(String issuedBy, String destination) {
         this.issuedBy = issuedBy;
         this.destination = destination;
         this.context = getContext(); // XXX - 24.04.2013, kimmell - this will create new camel context
-
-        LOG.info("Creating new instance of '{}', using '{}', issuedBy '{}'", new Object[] { getClass().getSimpleName(), this.context, issuedBy });
+        LOG.warn("Creating new instance of '{}' (HbirdApi), using default CamelContext '{}' without bean registry, issuedBy '{}'", new Object[] {
+                getClass().getSimpleName(), this.context, issuedBy });
 
         try {
             context.addRoutes(this);
@@ -66,7 +80,8 @@ public abstract class HbirdApi extends HbirdRouteBuilder implements IHbirdApi {
         this.destination = destination;
         this.context = context;
 
-        LOG.info("Creating new instance of '{}', using {}', issuedBy '{}'", new Object[] { getClass().getSimpleName(), this.context, issuedBy });
+        LOG.info("Creating new instance of '{}' (HbirdApi), using provided CamelContext '{}', issuedBy '{}'", new Object[] { getClass().getSimpleName(),
+                this.context, issuedBy });
 
         try {
             context.addRoutes(this);
@@ -204,7 +219,7 @@ public abstract class HbirdApi extends HbirdRouteBuilder implements IHbirdApi {
     }
 
     /**
-     * @see org.hbird.business.api.IHbirdApi#dispose()
+     * @see org.hbird.business.deprecated.api.IHbirdApi#dispose()
      */
     @Override
     public void dispose() throws Exception {

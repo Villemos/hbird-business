@@ -17,9 +17,9 @@
 package org.hbird.business.archive.deprecated.api;
 
 import org.apache.camel.CamelContext;
-import org.hbird.business.api.HbirdApi;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.archive.ArchiveComponent;
+import org.hbird.business.deprecated.api.HbirdApi;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.EntityInstance;
 

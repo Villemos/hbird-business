@@ -17,6 +17,9 @@
 package org.hbird.business.api.exceptions;
 
 public class NotFoundException extends ArchiveException {
+
+    private static final long serialVersionUID = 2746016244698745526L;
+
     public NotFoundException() {
         this("");
     }

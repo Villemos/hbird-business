@@ -106,9 +106,6 @@ public class DataAccessApiTester extends SystemTest {
 
         Thread.sleep(5000);
 
-        /** Send command to commit all changes. */
-        forceCommit();
-
         Parameter parameter = null;
         List<Parameter> parameters = null;
 

@@ -23,8 +23,8 @@ import javax.management.MalformedObjectNameException;
 
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
-import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IQueueManagement;
+import org.hbird.business.api.IQueueManager;
+import org.hbird.business.queuemanagement.api.QueueManagerApi;
 
 import com.mongodb.Mongo;
 
@@ -41,8 +41,8 @@ public class Finisher extends SystemTest {
 
         LOG.info("Purging all activemq topics and queues.");
 
-        /** Check that the antenna schedule has been filled. */
-        IQueueManagement api = ApiFactory.getQueueManagementApi("SystemTest");
+        /* Check that the antenna schedule has been filled. */
+        IQueueManager api = new QueueManagerApi();
 
         for (String queueName : api.listQueues()) {
             LOG.info(" - Purging queue '" + queueName + "'.");

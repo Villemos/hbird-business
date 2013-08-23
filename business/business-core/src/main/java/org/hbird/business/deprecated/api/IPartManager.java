@@ -30,7 +30,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api;
+package org.hbird.business.deprecated.api;
 
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.interfaces.IStartableEntity;
@@ -39,33 +39,33 @@ import org.hbird.exchange.interfaces.IStartableEntity;
  * API for starting and stopping components.
  * 
  * @author Gert Villemos
- *
+ * @deprecated
  */
+@Deprecated
 public interface IPartManager extends IHbirdApi {
 
-	public void start(IStartableEntity part);
-	
-	public void stop(String name);
+    public void start(IStartableEntity part);
 
-	public Part resolveParent(Part child);
-	
-	/**
-	 * The qualified name is a unique name of the object within the system. It has 
-	 * the format 
-	 * <li>[qualifier]/[name]</li>
-	 * 
-	 * The [qualifier] ensures that Name is put into a context that makes it unique.
-	 * 
-	 * As examples of qualifiers are
-	 * <li>Parameter: A parameter is 'issuedBy' a Part. The Part is unique. The qualifier of a 
-	 * Parameter is the name of the Part. The fully qualified name of a Parameter is thus [Part name]/[Parameter name]</li>
-	 * 
-	 * The qualifier depends on the type of the object, but is is guaranteed to uniquely
-	 * identifying the element.
-	 * 
-	 * @return
-	 */
-	public String getQualifiedName(Part part);
-	
-	public String getQualifiedName(Part part, String separator);
+    public void stop(String name);
+
+    public Part resolveParent(Part child);
+
+    /**
+     * The qualified name is a unique name of the object within the system. It has
+     * the format <li>[qualifier]/[name]</li>
+     * 
+     * The [qualifier] ensures that Name is put into a context that makes it unique.
+     * 
+     * As examples of qualifiers are <li>Parameter: A parameter is 'issuedBy' a Part. The Part is unique. The qualifier
+     * of a Parameter is the name of the Part. The fully qualified name of a Parameter is thus [Part name]/[Parameter
+     * name]</li>
+     * 
+     * The qualifier depends on the type of the object, but is is guaranteed to uniquely
+     * identifying the element.
+     * 
+     * @return
+     */
+    public String getQualifiedName(Part part);
+
+    public String getQualifiedName(Part part, String separator);
 }

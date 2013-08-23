@@ -35,164 +35,164 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
-import org.hbird.business.api.ApiFactory;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.CommandableEntity;
 import org.hbird.exchange.core.Command;
 import org.hbird.exchange.core.CommandArgument;
 
-
 /**
  * 
  * 
  * @author Gert Villemos
- *
+ * 
  */
 public class Parser {
 
-	private static final Log LOG = LogFactory.getLog(Parser.class);
+    private static final Log LOG = LogFactory.getLog(Parser.class);
 
-	protected DefaultHttpClient client = new DefaultHttpClient();
+    protected DefaultHttpClient client = new DefaultHttpClient();
 
-	protected String proxyHost = null;
+    protected String proxyHost = null;
 
-	protected int proxyPort = 0;
+    protected int proxyPort = 0;
 
-	protected List<CommandableEntity> parts = null;
-	
-	protected IPublisher publisher;
-	
-	public Parser(IPublisher publisher) {
-		this.publisher = publisher;
-	}
-	
-	public void parse() throws Exception {
+    protected List<CommandableEntity> parts = null;
 
-		if (proxyHost != null) {
-			HttpHost proxy = new HttpHost(proxyHost, proxyPort);
-			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-		}
-		else {
-			ProxySelectorRoutePlanner routePlanner = new ProxySelectorRoutePlanner(client.getConnectionManager().getSchemeRegistry(), ProxySelector.getDefault());  
-			client.setRoutePlanner(routePlanner);
-		}
+    protected IPublisher publisher;
 
-		HttpResponse response = client.execute(new HttpGet("http://tudengisatelliit.ut.ee:8001/svn/MCS/trunk/eu.estcube.sdc/src/main/resources/commands.xml"));
+    public Parser(IPublisher publisher) {
+        this.publisher = publisher;
+    }
 
-		Pattern commandPattern = Pattern.compile("<command>(.*?)</command>");
-		Pattern commandNamePattern = Pattern.compile("<name>(.*?)</name>");
-		Pattern commandDecriptionPattern = Pattern.compile("<description>(.*?)</description>");
-		Pattern commandSystemPattern = Pattern.compile("<subsys>(.*?)</subsys>");
-		Pattern commandArgumentPattern = Pattern.compile("<param><description>(.*?)</description><name>(.*?)</name><type little_endian=\"true\">(.*?)</type></param>");
-		
-		if (response.getStatusLine().getStatusCode() == 200) {
-			String text = readFully(response.getEntity().getContent()).replaceAll("(\\n|\\t|\\r)", "");
+    public void parse() throws Exception {
 
-			LOG.info("File length with comments=" + text.length());
-			/** Remove all comments */
-			text = text.replaceAll("<!--(.*?)-->", "");
-			LOG.info("File length without comments=" + text.length());
+        if (proxyHost != null) {
+            HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+            client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+        }
+        else {
+            ProxySelectorRoutePlanner routePlanner = new ProxySelectorRoutePlanner(client.getConnectionManager().getSchemeRegistry(),
+                    ProxySelector.getDefault());
+            client.setRoutePlanner(routePlanner);
+        }
 
-			/** Turn the part list into something easier to use. */
-			Map<String, CommandableEntity> partsMap = new HashMap<String, CommandableEntity>();
-			for (CommandableEntity part : parts) {
-				partsMap.put(part.getName(), part);
-			}			
-			
-			/** Parse the XML */
-			Matcher commandMatcher = commandPattern.matcher(text);
-			while (commandMatcher.find()) {
-				String commandDefintion = commandMatcher.group(1);
-				
-				Matcher nameMatcher = commandNamePattern.matcher(commandDefintion);
-				nameMatcher.find();
-				String name = nameMatcher.group(1);
-				
-				Matcher descriptionMatcher = commandDecriptionPattern.matcher(commandDefintion);
-				descriptionMatcher.find();
-				String description = descriptionMatcher.group(1);
+        HttpResponse response = client.execute(new HttpGet("http://tudengisatelliit.ut.ee:8001/svn/MCS/trunk/eu.estcube.sdc/src/main/resources/commands.xml"));
 
-				/** Create the command */
-				Command command = new Command(name, description);
-				
-				Matcher subsysMatcher = commandSystemPattern.matcher(commandDefintion);
-				while (subsysMatcher.find() ) {
-					String subsys = subsysMatcher.group(1);
+        Pattern commandPattern = Pattern.compile("<command>(.*?)</command>");
+        Pattern commandNamePattern = Pattern.compile("<name>(.*?)</name>");
+        Pattern commandDecriptionPattern = Pattern.compile("<description>(.*?)</description>");
+        Pattern commandSystemPattern = Pattern.compile("<subsys>(.*?)</subsys>");
+        Pattern commandArgumentPattern = Pattern
+                .compile("<param><description>(.*?)</description><name>(.*?)</name><type little_endian=\"true\">(.*?)</type></param>");
 
-					if (partsMap.containsKey(subsys)) {
-						LOG.info("Adding command '" + name + "' to part '" + subsys + "'.");
-						partsMap.get(subsys).addCommand(command);
-					}
-					else {
-						LOG.error("Found command for part '" + subsys + "'. Parts is unknown. Check the Spring XML assembly.");
-					}
-				}
-				
-				Matcher argumentMatcher = commandArgumentPattern.matcher(commandDefintion);
-				while (argumentMatcher.find() ) {
-					String argumentDescription = argumentMatcher.group(1);
-					String argumentName = argumentMatcher.group(2);
-					String argumentType = argumentMatcher.group(3);
-					
-					Class<?> type = null;
-					if (argumentType.contains("int")) {
-						type = Integer.class;
-					}
-					else if (argumentType.contains("string")) {
-						type = String.class;
-					}
-					else {
-						LOG.error("Unknown type '" + argumentType + "'.");
-					}
+        if (response.getStatusLine().getStatusCode() == 200) {
+            String text = readFully(response.getEntity().getContent()).replaceAll("(\\n|\\t|\\r)", "");
 
-					LOG.info("Adding argument '" + argumentName + "' to command '" + name + "'.");
-					command.addArgument(new CommandArgument(argumentName, argumentDescription, type, true));
-				}				
-			}
-		}
-		
-		for (CommandableEntity part : parts) {
-			LOG.info("Publishing satellite part (subsystem) '" + part.getName() + "'");
-			publisher.publish(part);
-		}
-	}
+            LOG.info("File length with comments=" + text.length());
+            /** Remove all comments */
+            text = text.replaceAll("<!--(.*?)-->", "");
+            LOG.info("File length without comments=" + text.length());
 
-	protected static String readFully(InputStream input) throws IOException {
+            /** Turn the part list into something easier to use. */
+            Map<String, CommandableEntity> partsMap = new HashMap<String, CommandableEntity>();
+            for (CommandableEntity part : parts) {
+                partsMap.put(part.getName(), part);
+            }
 
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
-		StringBuffer result = new StringBuffer();
-		char[] buffer = new char[4 * 1024];
-		int charsRead;
-		while ((charsRead = bufferedReader.read(buffer)) != -1) {
-			result.append(buffer, 0, charsRead);
-		}
-		input.close();
-		bufferedReader.close();
+            /** Parse the XML */
+            Matcher commandMatcher = commandPattern.matcher(text);
+            while (commandMatcher.find()) {
+                String commandDefintion = commandMatcher.group(1);
 
-		return result.toString();
-	}
+                Matcher nameMatcher = commandNamePattern.matcher(commandDefintion);
+                nameMatcher.find();
+                String name = nameMatcher.group(1);
 
-	public String getProxyHost() {
-		return proxyHost;
-	}
+                Matcher descriptionMatcher = commandDecriptionPattern.matcher(commandDefintion);
+                descriptionMatcher.find();
+                String description = descriptionMatcher.group(1);
 
-	public void setProxyHost(String proxyHost) {
-		this.proxyHost = proxyHost;
-	}
+                /** Create the command */
+                Command command = new Command(name, description);
 
-	public int getProxyPort() {
-		return proxyPort;
-	}
+                Matcher subsysMatcher = commandSystemPattern.matcher(commandDefintion);
+                while (subsysMatcher.find()) {
+                    String subsys = subsysMatcher.group(1);
 
-	public void setProxyPort(int proxyPort) {
-		this.proxyPort = proxyPort;
-	}
+                    if (partsMap.containsKey(subsys)) {
+                        LOG.info("Adding command '" + name + "' to part '" + subsys + "'.");
+                        partsMap.get(subsys).addCommand(command);
+                    }
+                    else {
+                        LOG.error("Found command for part '" + subsys + "'. Parts is unknown. Check the Spring XML assembly.");
+                    }
+                }
 
-	public List<CommandableEntity> getParts() {
-		return parts;
-	}
+                Matcher argumentMatcher = commandArgumentPattern.matcher(commandDefintion);
+                while (argumentMatcher.find()) {
+                    String argumentDescription = argumentMatcher.group(1);
+                    String argumentName = argumentMatcher.group(2);
+                    String argumentType = argumentMatcher.group(3);
 
-	public void setParts(List<CommandableEntity> parts) {
-		this.parts = parts;
-	}
+                    Class<?> type = null;
+                    if (argumentType.contains("int")) {
+                        type = Integer.class;
+                    }
+                    else if (argumentType.contains("string")) {
+                        type = String.class;
+                    }
+                    else {
+                        LOG.error("Unknown type '" + argumentType + "'.");
+                    }
+
+                    LOG.info("Adding argument '" + argumentName + "' to command '" + name + "'.");
+                    command.addArgument(new CommandArgument(argumentName, argumentDescription, type, true));
+                }
+            }
+        }
+
+        for (CommandableEntity part : parts) {
+            LOG.info("Publishing satellite part (subsystem) '" + part.getName() + "'");
+            publisher.publish(part);
+        }
+    }
+
+    protected static String readFully(InputStream input) throws IOException {
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
+        StringBuffer result = new StringBuffer();
+        char[] buffer = new char[4 * 1024];
+        int charsRead;
+        while ((charsRead = bufferedReader.read(buffer)) != -1) {
+            result.append(buffer, 0, charsRead);
+        }
+        input.close();
+        bufferedReader.close();
+
+        return result.toString();
+    }
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
+
+    public int getProxyPort() {
+        return proxyPort;
+    }
+
+    public void setProxyPort(int proxyPort) {
+        this.proxyPort = proxyPort;
+    }
+
+    public List<CommandableEntity> getParts() {
+        return parts;
+    }
+
+    public void setParts(List<CommandableEntity> parts) {
+        this.parts = parts;
+    }
 }

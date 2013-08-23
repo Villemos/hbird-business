@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api.deprecated;
+package org.hbird.business.deprecated.api;
 
 import java.util.List;
-import org.hbird.business.api.IHbirdApi;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Parameter;

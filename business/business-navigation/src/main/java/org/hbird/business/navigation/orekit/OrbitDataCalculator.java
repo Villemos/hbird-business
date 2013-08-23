@@ -16,10 +16,10 @@
  */
 package org.hbird.business.navigation.orekit;
 
+import java.util.Collections;
 import java.util.List;
 
-import org.apache.camel.CamelContext;
-import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.IOrbitDataCalculator;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.PointingData;
@@ -31,23 +31,13 @@ import org.slf4j.LoggerFactory;
  * @author Admin
  * 
  */
-public class OrbitDataApi implements IPointingData {
+public class OrbitDataCalculator implements IOrbitDataCalculator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrbitDataApi.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrbitDataCalculator.class);
 
     protected PointingDataCalculator pointingDataCalculator = new PointingDataCalculator();
 
-    protected String issuedBy;
-
-    protected CamelContext camelContext;
-
-    public OrbitDataApi(String issuedBy) {
-        this(issuedBy, null);
-    }
-
-    public OrbitDataApi(String issuedBy, CamelContext camelContext) {
-        this.issuedBy = issuedBy;
-        this.camelContext = camelContext;
+    public OrbitDataCalculator() {
     }
 
     /**
@@ -56,14 +46,13 @@ public class OrbitDataApi implements IPointingData {
      */
     @Override
     public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent, GroundStation groundStation, long contactDataStepSize) {
-        List<PointingData> data = null;
+        List<PointingData> data = Collections.emptyList();
         try {
             data = pointingDataCalculator.calculateContactData(locationContactEvent, groundStation, contactDataStepSize);
         }
         catch (OrekitException e) {
             LOG.error("Failed to calculate contact data for LocationContactEvent '{}'", locationContactEvent.getInstanceID(), e);
         }
-
         return data;
     }
 }

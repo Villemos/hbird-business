@@ -67,8 +67,6 @@ public class EventTester extends SystemTest {
         azzert(event.getID() != null, "stopEvent.getUuid()");
         azzert(StandardMissionEvents.COMPONENT_STOP.getDescription().equals(event.getDescription()), "stopEvent.getDescription()");
 
-        forceCommit();
-
         List<Event> events = accessApi.getAllBySupertype(Event.class);
         azzert(events.size() == 2, "Expected to receive 2 events.");
 

@@ -41,7 +41,7 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.component.netty.NettyComponent;
 import org.apache.camel.component.netty.NettyConfiguration;
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.IOrbitDataCalculator;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.InMemoryScheduler;
 import org.hbird.business.core.SoftwareComponentDriver;
@@ -87,10 +87,10 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
 
     protected IDataAccess dao;
 
-    protected IPointingData calculator;
+    protected IOrbitDataCalculator calculator;
 
     @Autowired
-    public HamlibDriver(IPublisher publisher, IDataAccess dao, IPointingData calculator) {
+    public HamlibDriver(IPublisher publisher, IDataAccess dao, IOrbitDataCalculator calculator) {
         super(publisher);
         this.dao = dao;
         this.calculator = calculator;
@@ -285,7 +285,7 @@ public abstract class HamlibDriver<C extends GroundStationDriverConfiguration> e
 
     protected abstract List<ResponseHandler<C, String, String>> createResponseHandlers();
 
-    protected abstract TrackingSupport<C> createTrackingSupport(C config, IDataAccess dao, IPointingData calculator,
+    protected abstract TrackingSupport<C> createTrackingSupport(C config, IDataAccess dao, IOrbitDataCalculator calculator,
             IPointingDataOptimizer<C> optimizer);
 
 }

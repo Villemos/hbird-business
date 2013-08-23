@@ -37,7 +37,7 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.IOrbitDataCalculator;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.base.TrackingSupport;
@@ -66,7 +66,7 @@ public class HamlibRotatorDriver extends HamlibDriver<RotatorDriverConfiguration
 	private static final Logger LOG = LoggerFactory.getLogger(HamlibRotatorDriver.class);
 
 	@Autowired
-    public HamlibRotatorDriver(IPublisher publisher, IDataAccess dao, IPointingData calculator) {
+    public HamlibRotatorDriver(IPublisher publisher, IDataAccess dao, IOrbitDataCalculator calculator) {
 		super(publisher, dao, calculator);
 	}
 
@@ -125,7 +125,7 @@ public class HamlibRotatorDriver extends HamlibDriver<RotatorDriverConfiguration
      */
     @Override
     protected TrackingSupport<RotatorDriverConfiguration> createTrackingSupport(RotatorDriverConfiguration config, IDataAccess dao,
-            IPointingData calculator, IPointingDataOptimizer<RotatorDriverConfiguration> optimizer) {
+            IOrbitDataCalculator calculator, IPointingDataOptimizer<RotatorDriverConfiguration> optimizer) {
         return new HamlibRotatorTracker(config, dao, calculator, optimizer);
     }
 }

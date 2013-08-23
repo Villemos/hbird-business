@@ -26,9 +26,6 @@ public class ParseControlTester extends SystemTest {
         publishTleParameters();
         publishGroundStationsAndSatellites();
 
-        /** Send command to commit all changes. */
-        forceCommit();
-
         Thread.sleep(1000);
 
         startEstcubeOrbitPropagator();

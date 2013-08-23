@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.IOrbitDataCalculator;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
 import org.hbird.exchange.constants.StandardArguments;
 import org.hbird.exchange.core.CommandBase;
@@ -55,7 +55,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
 
     protected final IPointingDataOptimizer<C> optimizer;
 
-    protected IPointingData orbitDataCalculator;
+    protected IOrbitDataCalculator orbitDataCalculator;
 
     /**
      * @param configuration
@@ -64,7 +64,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
      * @param orbitPrediction
      * @param optimizer
      */
-    public TrackingSupport(C configuration, IDataAccess dao, IPointingData orbitDataCalculator, IPointingDataOptimizer<C> optimizer) {
+    public TrackingSupport(C configuration, IDataAccess dao, IOrbitDataCalculator orbitDataCalculator, IPointingDataOptimizer<C> optimizer) {
         this.configuration = configuration;
         this.dao = dao;
         this.optimizer = optimizer;

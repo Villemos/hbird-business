@@ -31,7 +31,7 @@ import java.util.List;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.netty.NettyConfiguration;
 import org.hbird.business.api.IDataAccess;
-import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.IOrbitDataCalculator;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.groundstation.base.DefaultPointingDataOptimizer;
 import org.hbird.business.groundstation.base.DriverContext;
@@ -69,7 +69,7 @@ public class HamlibDriverTest {
     private IDataAccess dao;
     
     @Mock
-    private IPointingData calculator;
+    private IOrbitDataCalculator calculator;
     
     @Mock
     private IPublisher publisher;
@@ -113,7 +113,7 @@ public class HamlibDriverTest {
 
             @Override
             protected TrackingSupport<GroundStationDriverConfiguration> createTrackingSupport(GroundStationDriverConfiguration config, IDataAccess dao,
-                    IPointingData calculator, IPointingDataOptimizer<GroundStationDriverConfiguration> optimizer) {
+                    IOrbitDataCalculator calculator, IPointingDataOptimizer<GroundStationDriverConfiguration> optimizer) {
                 return null;
             }
         };

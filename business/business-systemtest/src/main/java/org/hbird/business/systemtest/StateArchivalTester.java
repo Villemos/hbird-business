@@ -22,8 +22,6 @@ import java.util.Map;
 
 import org.apache.camel.CamelContext;
 import org.apache.log4j.Logger;
-import org.hbird.business.api.ApiFactory;
-import org.hbird.business.api.IDataAccess;
 import org.hbird.exchange.core.State;
 
 public class StateArchivalTester extends SystemTest {
@@ -38,7 +36,7 @@ public class StateArchivalTester extends SystemTest {
         startMonitoringArchive();
 
         Thread.sleep(2000);
-        
+
         /** Store states. */
         publishState("STATE1", "STATE1", "A test description", "COMMAND1:Command:*", true);
         Thread.sleep(1);
@@ -74,8 +72,6 @@ public class StateArchivalTester extends SystemTest {
 
         Thread.sleep(2000);
 
-        forceCommit();
-
         /** Test retrieval. */
         // Object respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE,
         // "COMMAND1"));
@@ -103,9 +99,6 @@ public class StateArchivalTester extends SystemTest {
         publishState("STATE7", "STATE7", "A test description", "COMMAND1:Command:*", true);
 
         Thread.sleep(2000);
-
-        /** Send command to commit all changes. */
-        forceCommit();
 
         /** Test retrieval. */
         // respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE,

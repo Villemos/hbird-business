@@ -31,15 +31,15 @@ import org.hbird.exchange.core.State;
 public class ScriptTester extends SystemTest {
 
     private static org.apache.log4j.Logger LOG = Logger.getLogger(ScriptTester.class);
-    
-    Parameter createParameter(String ID, String name, String description, Number value, String unit) {
-    	Parameter param = new Parameter(ID, name);
 
-    	param.setDescription(description);
-    	param.setValue(value);
-    	param.setUnit(unit);
-    	
-    	return param;
+    Parameter createParameter(String ID, String name, String description, Number value, String unit) {
+        Parameter param = new Parameter(ID, name);
+
+        param.setDescription(description);
+        param.setValue(value);
+        param.setUnit(unit);
+
+        return param;
     }
 
     @Handler
@@ -63,11 +63,11 @@ public class ScriptTester extends SystemTest {
         parameter.setUnit("Volt");
 
         ScriptComponent com = createScriptComponent("SCRIPT1", script, scriptName, binding, parameter);
-        partmanagerApi.start(com);
+        startableEntityManager.start(com);
         Thread.sleep(2000);
-        
+
         /** Send one of the two parameters. Should NOT trigger the script. */
-        //publishApi.publishParameter("PARA3", "PARA3", "A parameter", 2d, "Volt");
+        // publishApi.publishParameter("PARA3", "PARA3", "A parameter", 2d, "Volt");
         publishParameter("PARA3", "PARA3", "A parameter", 2d, "Volt");
 
         Thread.sleep(2000);
@@ -75,7 +75,7 @@ public class ScriptTester extends SystemTest {
         azzert(parameterListener.lastReceived.getName().equals("SYN_PARA1") == false);
 
         /** Send the other parameter. Should trigger the script. */
-        //publishApi.publishParameter("PARA4", "PARA4", "A parameter", 5d, "Volt");
+        // publishApi.publishParameter("PARA4", "PARA4", "A parameter", 5d, "Volt");
         publishParameter("PARA4", "PARA4", "A parameter", 5d, "Volt");
 
         Thread.sleep(2000);
@@ -97,7 +97,7 @@ public class ScriptTester extends SystemTest {
         state.setApplicableTo("PARA2");
 
         com = createScriptComponent("SCRIPT2", script, scriptName, binding, state);
-        partmanagerApi.start(com);
+        startableEntityManager.start(com);
 
         Thread.sleep(2000);
 
@@ -111,7 +111,7 @@ public class ScriptTester extends SystemTest {
         State out2 = (State) stateListener.lastReceived;
         azzert(out2.getValue() == false);
 
-        //publishApi.publishParameter("PARA5", "PARA5", "A parameter", 4d, "Volt");
+        // publishApi.publishParameter("PARA5", "PARA5", "A parameter", 4d, "Volt");
         publishParameter("PARA5", "PARA5", "A parameter", 4d, "Volt");
 
         Thread.sleep(2000);
@@ -134,11 +134,11 @@ public class ScriptTester extends SystemTest {
         parameter.setUnit("Celsius");
 
         com = createScriptComponent("SCRIPT3", script, scriptName, binding, parameter);
-        partmanagerApi.start(com);
+        startableEntityManager.start(com);
 
         Thread.sleep(2000);
 
-        //publishApi.publishParameter("PARA6", "PARA6", "The temperature in FAHRENHEIT.", 200d, "Fahrenheit");
+        // publishApi.publishParameter("PARA6", "PARA6", "The temperature in FAHRENHEIT.", 200d, "Fahrenheit");
         publishParameter("PARA6", "PARA6", "The temperature in FAHRENHEIT.", 200d, "Fahrenheit");
 
         Thread.sleep(2000);
@@ -161,7 +161,7 @@ public class ScriptTester extends SystemTest {
         label.setValue("ON");
 
         com = createScriptComponent("SCRIPT4", script, scriptName, binding, label);
-        partmanagerApi.start(com);
+        startableEntityManager.start(com);
 
         Thread.sleep(2000);
 
@@ -177,7 +177,7 @@ public class ScriptTester extends SystemTest {
         Label out5 = (Label) labelListener.lastReceived;
         azzert(out5.getValue().equals("OFF"));
 
-        //publishApi.publishParameter("PARA8", "PARA8", "Dont know.", 300d, "Volt");
+        // publishApi.publishParameter("PARA8", "PARA8", "Dont know.", 300d, "Volt");
         publishParameter("PARA8", "PARA8", "Dont know.", 300d, "Volt");
 
         Thread.sleep(2000);
@@ -186,7 +186,7 @@ public class ScriptTester extends SystemTest {
         out5 = (Label) labelListener.lastReceived;
         azzert(out5.getValue().equals("ON"));
 
-        //publishApi.publishParameter("PARA8", "PARA8", "Dont know.", 400d, "Volt");
+        // publishApi.publishParameter("PARA8", "PARA8", "Dont know.", 400d, "Volt");
         publishParameter("PARA8", "PARA8", "Dont know.", 400d, "Volt");
 
         Thread.sleep(2000);

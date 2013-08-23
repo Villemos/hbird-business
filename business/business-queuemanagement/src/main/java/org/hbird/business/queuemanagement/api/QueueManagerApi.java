@@ -38,10 +38,7 @@ import org.apache.activemq.broker.jmx.BrokerViewMBean;
 import org.apache.activemq.broker.jmx.CompositeDataConstants;
 import org.apache.activemq.broker.jmx.QueueViewMBean;
 import org.apache.activemq.broker.jmx.TopicViewMBean;
-import org.hbird.business.api.HbirdApi;
-import org.hbird.business.api.IQueueManagement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.hbird.business.api.IQueueManager;
 
 /**
  * The queue manager component support the monitoring and control of a activemq queue.
@@ -49,9 +46,7 @@ import org.slf4j.LoggerFactory;
  * @author Gert Villemos
  * 
  */
-public class QueueManagerApi extends HbirdApi implements IQueueManagement {
-
-    private static final Logger LOG = LoggerFactory.getLogger(QueueManagerApi.class);
+public class QueueManagerApi implements IQueueManager {
 
     private static final String KEY_JMS_MESSAGE_ID = "JMSMessageID";
 
@@ -60,8 +55,7 @@ public class QueueManagerApi extends HbirdApi implements IQueueManagement {
     /** The connection to the server. */
     protected MBeanServerConnection conn = null;
 
-    public QueueManagerApi(String issuedBy) {
-        super(issuedBy, "");
+    public QueueManagerApi() {
     }
 
     /**

@@ -33,7 +33,7 @@
 package org.hbird.business.archive.deprecated.api;
 
 import org.apache.camel.CamelContext;
-import org.hbird.business.api.IPartManager;
+import org.hbird.business.deprecated.api.IPartManager;
 import org.hbird.exchange.configurator.StartComponent;
 import org.hbird.exchange.configurator.StopComponent;
 import org.hbird.exchange.core.Part;
@@ -66,7 +66,7 @@ public class PartManager extends Publish implements IPartManager {
     }
 
     /**
-     * @see org.hbird.business.api.IPartManager#start(org.hbird.exchange.interfaces.IStartablePart)
+     * @see org.hbird.business.deprecated.api.IPartManager#start(org.hbird.exchange.interfaces.IStartablePart)
      */
     @Override
     public void start(IStartableEntity entity) {
@@ -77,7 +77,7 @@ public class PartManager extends Publish implements IPartManager {
     }
 
     /**
-     * @see org.hbird.business.api.IPartManager#stop(java.lang.String)
+     * @see org.hbird.business.deprecated.api.IPartManager#stop(java.lang.String)
      */
     @Override
     public void stop(String entityID) {
@@ -88,7 +88,7 @@ public class PartManager extends Publish implements IPartManager {
     }
 
     /**
-     * @see org.hbird.business.api.IPartManager#resolveParent(org.hbird.exchange.interfaces.IPart)
+     * @see org.hbird.business.deprecated.api.IPartManager#resolveParent(org.hbird.exchange.interfaces.IPart)
      */
     @Override
     public Part resolveParent(Part child) {
@@ -102,7 +102,7 @@ public class PartManager extends Publish implements IPartManager {
     }
 
     /**
-     * @see org.hbird.business.api.IPartManager#getQualifiedName(org.hbird.exchange.interfaces.IPart)
+     * @see org.hbird.business.deprecated.api.IPartManager#getQualifiedName(org.hbird.exchange.interfaces.IPart)
      */
     @Override
     public String getQualifiedName(Part part) {
@@ -110,7 +110,7 @@ public class PartManager extends Publish implements IPartManager {
     }
 
     /**
-     * @see org.hbird.business.api.IPartManager#getQualifiedName(org.hbird.exchange.interfaces.IPart, java.lang.String)
+     * @see org.hbird.business.deprecated.api.IPartManager#getQualifiedName(org.hbird.exchange.interfaces.IPart, java.lang.String)
      */
     @Override
     public String getQualifiedName(Part part, String separator) {

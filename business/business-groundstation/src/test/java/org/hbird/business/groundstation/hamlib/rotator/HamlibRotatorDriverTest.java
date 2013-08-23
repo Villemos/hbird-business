@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;
-import org.hbird.business.api.IPointingData;
+import org.hbird.business.api.IOrbitDataCalculator;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.groundstation.base.DriverContext;
@@ -76,7 +76,7 @@ public class HamlibRotatorDriverTest {
     private IPointingDataOptimizer<RotatorDriverConfiguration> optimizer;
 
     @Mock
-    private IPointingData calculator;
+    private IOrbitDataCalculator calculator;
 
     private HamlibRotatorDriver driver;
 
