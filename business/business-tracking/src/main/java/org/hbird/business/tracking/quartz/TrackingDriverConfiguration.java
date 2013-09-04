@@ -35,6 +35,8 @@ public class TrackingDriverConfiguration extends GroundStationConfigurationBase 
 
     public static final long DEFAULT_ARCHIVE_POLL_INTERVAL = 1000L * 60;
 
+    public static final String DEFAULT_EVENT_NAMESPACE = "/Events";
+
     @Value("${satellites}")
     protected List<String> satelliteIds = new ArrayList<String>(0);
 
@@ -43,6 +45,9 @@ public class TrackingDriverConfiguration extends GroundStationConfigurationBase 
 
     @Value("${archive.poll.interval:60000}")
     protected long archivePollInterval = DEFAULT_ARCHIVE_POLL_INTERVAL;
+
+    @Value("${namespace.event:/Events}")
+    protected String eventNameSpace = DEFAULT_EVENT_NAMESPACE;
 
     public TrackingDriverConfiguration() {
         super();
@@ -88,5 +93,19 @@ public class TrackingDriverConfiguration extends GroundStationConfigurationBase 
      */
     public void setArchivePollInterval(long archivePollInterval) {
         this.archivePollInterval = archivePollInterval;
+    }
+
+    /**
+     * @return the eventNameSpace
+     */
+    public String getEventNameSpace() {
+        return eventNameSpace;
+    }
+
+    /**
+     * @param eventNameSpace the eventNameSpace to set
+     */
+    public void setEventNameSpace(String eventNameSpace) {
+        this.eventNameSpace = eventNameSpace;
     }
 }

@@ -30,7 +30,6 @@ import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.interfaces.IStartableEntity;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +47,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TrackCommandCreationJobFactoryTest {
+public class TrackComponentJobFactoryTest {
 
     private static final String END_POINT = "direct:inject";
 
@@ -74,7 +73,10 @@ public class TrackCommandCreationJobFactoryTest {
     private JobDetail jobDetail;
 
     @Mock
-    private TrackCommandCreationJob job;
+    private TrackCommandCreationJob trackingJob;
+
+    @Mock
+    private NotificationEventCreationJob notificationJob;
 
     @Mock
     private Scheduler scheduler;
@@ -82,36 +84,47 @@ public class TrackCommandCreationJobFactoryTest {
     @Mock
     private IdBuilder idBuilder;
 
-    private TrackCommandCreationJobFactory factory;
+    @Mock
+    private TrackingDriverConfiguration config;
+
+    private TrackComponentJobFactory factory;
 
     private InOrder inOrder;
 
-    private final Logger LOG = LoggerFactory.getLogger(TrackCommandCreationJobFactory.class);
+    private final Logger LOG = LoggerFactory.getLogger(TrackComponentJobFactory.class);
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        factory = new TrackCommandCreationJobFactory(part, dao, producer, END_POINT, satelliteCache, tleCache, idBuilder);
-        inOrder = inOrder(dao, producer, satelliteCache, tleCache, bundle, jobDetail, job, scheduler, part, idBuilder);
+        factory = new TrackComponentJobFactory(part, dao, producer, END_POINT, satelliteCache, tleCache, idBuilder, config);
+        inOrder = inOrder(dao, producer, satelliteCache, tleCache, bundle, jobDetail, trackingJob, scheduler, part, idBuilder, config, notificationJob);
         when(bundle.getJobDetail()).thenReturn(jobDetail);
     }
 
-    @After
-    public void tearDown() {
+    @Test
+    public void testInitialiseTrackCommandCreationJob() {
+        factory.initialise(trackingJob);
+        inOrder.verify(trackingJob, times(1)).setDataAccess(dao);
+        inOrder.verify(trackingJob, times(1)).setEndpoint(END_POINT);
+        inOrder.verify(trackingJob, times(1)).setIdBuilder(idBuilder);
+        inOrder.verify(trackingJob, times(1)).setIssuer(part);
+        inOrder.verify(trackingJob, times(1)).setProducerTemplate(producer);
+        inOrder.verify(trackingJob, times(1)).setSatelliteCache(satelliteCache);
+        inOrder.verify(trackingJob, times(1)).setTleCache(tleCache);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testInitialize() {
-        factory.initialise(job);
-        inOrder.verify(job, times(1)).setDataAccess(dao);
-        inOrder.verify(job, times(1)).setProducerTemplate(producer);
-        inOrder.verify(job, times(1)).setEndpoint(END_POINT);
-        inOrder.verify(job, times(1)).setSatelliteCache(satelliteCache);
-        inOrder.verify(job, times(1)).setTleCache(tleCache);
-        inOrder.verify(job, times(1)).setIdBuilder(idBuilder);
+    public void testInitialiseNotificationEventCreationJob() {
+        factory.initialise(notificationJob);
+        inOrder.verify(notificationJob, times(1)).setConfig(config);
+        inOrder.verify(notificationJob, times(1)).setEndPoint(END_POINT);
+        inOrder.verify(notificationJob, times(1)).setIdBuilder(idBuilder);
+        inOrder.verify(notificationJob, times(1)).setIssuer(part);
+        inOrder.verify(notificationJob, times(1)).setProducer(producer);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -125,10 +138,11 @@ public class TrackCommandCreationJobFactoryTest {
         if (LOG.isDebugEnabled()) {
             inOrder.verify(jobDetail, times(1)).getKey();
         }
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testCreateJobInstance() throws Exception {
+    public void testCreateTrackingJobInstance() throws Exception {
         doReturn(TrackCommandCreationJob.class).when(jobDetail).getJobClass();
         Object o = factory.newJob(bundle, scheduler);
         assertNotNull(o);
@@ -138,5 +152,20 @@ public class TrackCommandCreationJobFactoryTest {
         if (LOG.isDebugEnabled()) {
             inOrder.verify(jobDetail, times(1)).getKey();
         }
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testCreateNotificationJobInstance() throws Exception {
+        doReturn(NotificationEventCreationJob.class).when(jobDetail).getJobClass();
+        Object o = factory.newJob(bundle, scheduler);
+        assertNotNull(o);
+        assertEquals(NotificationEventCreationJob.class, o.getClass());
+        inOrder.verify(bundle, times(1)).getJobDetail();
+        inOrder.verify(jobDetail, times(1)).getJobClass();
+        if (LOG.isDebugEnabled()) {
+            inOrder.verify(jobDetail, times(1)).getKey();
+        }
+        inOrder.verifyNoMoreInteractions();
     }
 }

@@ -17,6 +17,7 @@
 package org.hbird.business.api.impl;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.Handler;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.RouteDefinition;
@@ -58,6 +59,7 @@ public class AmqPublisher extends HbirdRouteBuilder implements IPublisher, Appli
     /**
      * @see org.hbird.business.api.IPublisher#publish(org.hbird.exchange.core.EntityInstance)
      */
+    @Handler
     @Override
     public <T extends EntityInstance> T publish(T object) throws Exception {
         if (object == null) {

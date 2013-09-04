@@ -58,12 +58,12 @@ public class TrackingDriverConfigurationTest {
         inOrder.verifyNoMoreInteractions();
     }
 
-    @SuppressWarnings("deprecation")
     @Test
     public void testTrackingDriverConfig() {
         assertEquals(TrackingDriverConfiguration.DEFAULT_ARCHIVE_POLL_INTERVAL, config.getArchivePollInterval());
         assertEquals(TrackingDriverConfiguration.DEFAULT_SCHEDULE_DELTA, config.getScheduleDelta());
         assertEquals(TrackingDriverConfiguration.DEFAULT_HEART_BEAT_INTERVAL, config.getHeartBeatInterval());
+        assertEquals(TrackingDriverConfiguration.DEFAULT_EVENT_NAMESPACE, config.getEventNameSpace());
         assertNull(config.getServiceId());
         assertNull(config.getServiceVersion());
         assertNull(config.getGroundstationId());
@@ -105,5 +105,19 @@ public class TrackingDriverConfigurationTest {
         assertEquals(0, config.getSatelliteIds().size());
         config.setSatelliteIds(satellites);
         assertEquals(satellites, config.getSatelliteIds());
+    }
+
+    @Test
+    public void testGetEventNamesapce() {
+        testSetEventNamesapce();
+    }
+
+    @Test
+    public void testSetEventNamesapce() {
+        assertEquals(TrackingDriverConfiguration.DEFAULT_EVENT_NAMESPACE, config.getEventNameSpace());
+        config.setEventNameSpace("/MISSION/Events");
+        assertEquals("/MISSION/Events", config.getEventNameSpace());
+        config.setEventNameSpace(null);
+        assertNull(config.getEventNameSpace());
     }
 }

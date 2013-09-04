@@ -32,7 +32,7 @@ import org.quartz.spi.TriggerFiredBundle;
 /**
  *
  */
-public class TrackCommandCreationJobFactory extends SimpleJobFactory {
+public class TrackComponentJobFactory extends SimpleJobFactory {
 
     private final IStartableEntity part;
 
@@ -48,8 +48,10 @@ public class TrackCommandCreationJobFactory extends SimpleJobFactory {
 
     private final IdBuilder idBuilder;
 
-    public TrackCommandCreationJobFactory(IStartableEntity part, IDataAccess dao, ProducerTemplate producer, String endPoint,
-            EntityCache<Satellite> satelliteCache, EntityCache<TleOrbitalParameters> tleCache, IdBuilder idBuilder) {
+    private final TrackingDriverConfiguration config;
+
+    public TrackComponentJobFactory(IStartableEntity part, IDataAccess dao, ProducerTemplate producer, String endPoint,
+            EntityCache<Satellite> satelliteCache, EntityCache<TleOrbitalParameters> tleCache, IdBuilder idBuilder, TrackingDriverConfiguration config) {
         this.part = part;
         this.dao = dao;
         this.producer = producer;
@@ -57,6 +59,7 @@ public class TrackCommandCreationJobFactory extends SimpleJobFactory {
         this.satelliteCache = satelliteCache;
         this.tleCache = tleCache;
         this.idBuilder = idBuilder;
+        this.config = config;
     }
 
     /**
@@ -68,19 +71,30 @@ public class TrackCommandCreationJobFactory extends SimpleJobFactory {
         if (job instanceof TrackCommandCreationJob) {
             initialise((TrackCommandCreationJob) job);
         }
+        else if (job instanceof NotificationEventCreationJob) {
+            initialise((NotificationEventCreationJob) job);
+        }
         return job;
     }
 
     /**
      * @param job
      */
-    void initialise(TrackCommandCreationJob commandCreator) {
-        commandCreator.setPart(part);
-        commandCreator.setDataAccess(dao);
-        commandCreator.setProducerTemplate(producer);
-        commandCreator.setEndpoint(endPoint);
-        commandCreator.setSatelliteCache(satelliteCache);
-        commandCreator.setTleCache(tleCache);
-        commandCreator.setIdBuilder(idBuilder);
+    void initialise(TrackCommandCreationJob job) {
+        job.setDataAccess(dao);
+        job.setEndpoint(endPoint);
+        job.setIdBuilder(idBuilder);
+        job.setIssuer(part);
+        job.setProducerTemplate(producer);
+        job.setSatelliteCache(satelliteCache);
+        job.setTleCache(tleCache);
+    }
+
+    void initialise(NotificationEventCreationJob job) {
+        job.setConfig(config);
+        job.setEndPoint(endPoint);
+        job.setIdBuilder(idBuilder);
+        job.setIssuer(part);
+        job.setProducer(producer);
     }
 }

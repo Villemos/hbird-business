@@ -20,6 +20,9 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Predicate;
 import org.hbird.exchange.navigation.LocationContactEvent;
+import org.hbird.exchange.util.Dates;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,14 +31,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ScheduleDeltaCheck implements Predicate {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ScheduleDeltaCheck.class);
+
     private final TrackingDriverConfiguration config;
+    private final SchedulingSupport support;
 
-    public ScheduleDeltaCheck(TrackingDriverConfiguration config) {
+    public ScheduleDeltaCheck(TrackingDriverConfiguration config, SchedulingSupport support) {
         this.config = config;
-    }
-
-    boolean canSchedule(long now, long contactStart, long delta) {
-        return now + delta < contactStart;
+        this.support = support;
     }
 
     /**
@@ -43,11 +46,15 @@ public class ScheduleDeltaCheck implements Predicate {
      */
     @Override
     public boolean matches(Exchange exchange) {
+        long now = System.currentTimeMillis();
         Message in = exchange.getIn();
         LocationContactEvent event = in.getBody(LocationContactEvent.class);
-        long now = System.currentTimeMillis();
-        long contactStart = event.getStartTime();
-        long delta = config.getScheduleDelta();
-        return canSchedule(now, contactStart, delta);
+        long scheduleTime = support.getScheduleTime(event, config, now);
+        boolean canSchedule = scheduleTime != SchedulingSupport.TOO_LATE;
+        if (!canSchedule) {
+            LOG.debug("Too late to issue Track command for {}; Current time {}; configured schedule delta {}",
+                    new Object[] { event.toString(), Dates.toDefaultDateFormat(now), config.getScheduleDelta() });
+        }
+        return canSchedule;
     }
 }

@@ -21,7 +21,11 @@
 
         <dependency>
             <groupId>org.hbird.exchange</groupId>
-            <artifactId>all-exchange</artifactId>
+            <artifactId>core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hbird.exchange</groupId>
+            <artifactId>groundstation</artifactId>
         </dependency>
 
         <dependency>

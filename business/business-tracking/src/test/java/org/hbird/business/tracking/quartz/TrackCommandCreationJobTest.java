@@ -29,6 +29,7 @@ import static org.mockito.Mockito.when;
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IdBuilder;
+import org.hbird.business.api.exceptions.ArchiveException;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.interfaces.IStartableEntity;
@@ -97,6 +98,8 @@ public class TrackCommandCreationJobTest {
     @Mock
     private JobDataMap jobData;
 
+    private ArchiveException archiveException;
+
     private TrackCommandCreationJob job;
 
     private InOrder inOrder;
@@ -107,13 +110,14 @@ public class TrackCommandCreationJobTest {
     @Before
     public void setUp() throws Exception {
         job = new TrackCommandCreationJob();
-        job.setPart(part);
+        job.setIssuer(part);
         job.setDataAccess(dao);
         job.setEndpoint(ENDPOINT);
         job.setProducerTemplate(producerTemplate);
         job.setSatelliteCache(satelliteCache);
         job.setTleCache(tleCache);
         job.setIdBuilder(idBuilder);
+        archiveException = new ArchiveException("This is bad!");
         inOrder = inOrder(dao, producerTemplate, satelliteCache, tleCache, quartzContext, event, satellite, tle1, tle2, jobData, part, idBuilder);
         when(part.getID()).thenReturn(PART_ID);
         when(quartzContext.getMergedJobDataMap()).thenReturn(jobData);
@@ -262,6 +266,13 @@ public class TrackCommandCreationJobTest {
     }
 
     @Test
+    public void testGetEventWithException() throws Exception {
+        when(dao.getByInstanceId(CONTACT_INSTANCE_ID, LocationContactEvent.class)).thenThrow(archiveException);
+        assertNull(job.getEvent(dao, CONTACT_INSTANCE_ID));
+        inOrder.verify(dao, times(1)).getByInstanceId(CONTACT_INSTANCE_ID, LocationContactEvent.class);
+    }
+
+    @Test
     public void testGetSatellite() throws Exception {
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
         assertEquals(satellite, job.getSatellite(satelliteCache, SATELLITE_ID));
@@ -295,6 +306,13 @@ public class TrackCommandCreationJobTest {
     public void testGetLatestTle() throws Exception {
         when(dao.getTleFor(SATELLITE_ID)).thenReturn(tle1);
         assertEquals(tle1, job.getLatestTle(dao, SATELLITE_ID));
+        inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
+    }
+
+    @Test
+    public void testGetLatestTleWithException() throws Exception {
+        when(dao.getTleFor(SATELLITE_ID)).thenThrow(archiveException);
+        assertNull(job.getLatestTle(dao, SATELLITE_ID));
         inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
     }
 

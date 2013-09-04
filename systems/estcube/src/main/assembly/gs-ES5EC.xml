@@ -30,6 +30,7 @@
             </list>
         </property>
         <property name="archivePollInterval" value="${tracking.db.poll.interval:60000}"/>
+        <property name="eventNameSpace" value="/ESTCUBE/Events"/>
     </bean>
 
     <bean id="tracking" class="org.hbird.business.tracking.TrackingComponent">

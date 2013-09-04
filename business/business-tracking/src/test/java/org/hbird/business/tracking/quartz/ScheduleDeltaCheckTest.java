@@ -17,7 +17,10 @@
 package org.hbird.business.tracking.quartz;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -28,6 +31,7 @@ import org.hbird.exchange.navigation.LocationContactEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -43,6 +47,9 @@ public class ScheduleDeltaCheckTest {
 
     @Mock
     private TrackingDriverConfiguration config;
+
+    @Mock
+    private SchedulingSupport support;
 
     @Mock
     private Exchange exchange;
@@ -62,39 +69,40 @@ public class ScheduleDeltaCheckTest {
      */
     @Before
     public void setUp() throws Exception {
-        check = new ScheduleDeltaCheck(config);
-        inOrder = inOrder(config, exchange, in, event);
+        check = new ScheduleDeltaCheck(config, support);
+        inOrder = inOrder(config, exchange, in, event, support);
         when(config.getScheduleDelta()).thenReturn(DELTA);
         when(exchange.getIn()).thenReturn(in);
         when(in.getBody(LocationContactEvent.class)).thenReturn(event);
     }
 
     @Test
-    public void testCanSchedule() throws Exception {
-        assertTrue(check.canSchedule(10, 20, 8));
-        assertTrue(check.canSchedule(10, 20, 9));
-        assertFalse(check.canSchedule(10, 20, 10));
-        assertFalse(check.canSchedule(10, 20, 11));
-    }
-
-    @Test
     public void testMatchesTrue() throws Exception {
-        when(event.getStartTime()).thenReturn(NOW + DELTA * 2);
+        when(support.getScheduleTime(eq(event), eq(config), anyLong())).thenReturn(1L);
         assertTrue(check.matches(exchange));
         inOrder.verify(exchange, times(1)).getIn();
         inOrder.verify(in, times(1)).getBody(LocationContactEvent.class);
-        inOrder.verify(event, times(1)).getStartTime();
-        inOrder.verify(config, times(1)).getScheduleDelta();
+        ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+        inOrder.verify(support, times(1)).getScheduleTime(eq(event), eq(config), captor.capture());
+        assertNotNull(captor.getValue());
+        long timestamp = captor.getValue();
+        assertTrue(timestamp >= NOW);
+        assertTrue(timestamp <= System.currentTimeMillis());
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testMatchesFalse() throws Exception {
-        when(event.getStartTime()).thenReturn(NOW + DELTA - 1);
+        when(support.getScheduleTime(eq(event), eq(config), anyLong())).thenReturn(SchedulingSupport.TOO_LATE);
         assertFalse(check.matches(exchange));
         inOrder.verify(exchange, times(1)).getIn();
         inOrder.verify(in, times(1)).getBody(LocationContactEvent.class);
-        inOrder.verify(event, times(1)).getStartTime();
+        ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+        inOrder.verify(support, times(1)).getScheduleTime(eq(event), eq(config), captor.capture());
+        assertNotNull(captor.getValue());
+        long timestamp = captor.getValue();
+        assertTrue(timestamp >= NOW);
+        assertTrue(timestamp <= System.currentTimeMillis());
         inOrder.verify(config, times(1)).getScheduleDelta();
         inOrder.verifyNoMoreInteractions();
     }

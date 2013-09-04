@@ -44,7 +44,7 @@ public class TrackCommandCreationJob implements Job {
 
     private static final Logger LOG = LoggerFactory.getLogger(TrackCommandCreationJob.class);
 
-    private IStartableEntity part;
+    private IStartableEntity issuer;
 
     private IDataAccess dao;
 
@@ -58,8 +58,8 @@ public class TrackCommandCreationJob implements Job {
 
     private IdBuilder idBuilder;
 
-    public void setPart(IStartableEntity part) {
-        this.part = part;
+    public void setIssuer(IStartableEntity issuer) {
+        this.issuer = issuer;
     }
 
     public void setDataAccess(IDataAccess dao) {
@@ -111,7 +111,7 @@ public class TrackCommandCreationJob implements Job {
                 if (eventTle != null) {
                     TleOrbitalParameters latestTle = getLatestTle(dao, satId);
                     if (latestTle == null || areEqual(eventTle, latestTle)) {
-                        Track command = createTrackCommand(idBuilder, part, event, sat);
+                        Track command = createTrackCommand(idBuilder, issuer, event, sat);
                         LOG.info("Issuing Track command for the '{}'", event.toString());
                         producer.asyncSendBody(endPoint, command);
                     }

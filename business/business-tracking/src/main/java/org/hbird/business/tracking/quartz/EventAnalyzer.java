@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class EventAnalyzer extends SchedulingBase implements Processor {
+public class EventAnalyzer implements Processor {
 
     public static final String HEADER_KEY_EVENT_TYPE = "EventType";
     public static final String HEADER_VALUE_NEW_EVENT = "NewEvent";
@@ -43,12 +43,16 @@ public class EventAnalyzer extends SchedulingBase implements Processor {
 
     private static final Logger LOG = LoggerFactory.getLogger(EventAnalyzer.class);
 
+    private final Scheduler scheduler;
+    private final SchedulingSupport support;
+
     /**
      * @param config
      * @param scheduler
      */
-    public EventAnalyzer(TrackingDriverConfiguration config, Scheduler scheduler) {
-        super(config, scheduler);
+    public EventAnalyzer(Scheduler scheduler, SchedulingSupport support) {
+        this.scheduler = scheduler;
+        this.support = support;
     }
 
     /**
@@ -60,8 +64,8 @@ public class EventAnalyzer extends SchedulingBase implements Processor {
         Message out = exchange.getOut();
         out.copyFrom(in);
         LocationContactEvent event = in.getBody(LocationContactEvent.class);
-        String triggerName = createTriggerName(event);
-        String groupName = createGroupName(event);
+        String triggerName = support.createTriggerName(JobType.TRACK, event);
+        String groupName = support.createGroupName(event);
         TriggerKey triggerKey = new TriggerKey(triggerName, groupName);
         LOG.trace("Looking for trigger {}", triggerKey);
         Trigger trigger = scheduler.getTrigger(triggerKey);
@@ -71,14 +75,15 @@ public class EventAnalyzer extends SchedulingBase implements Processor {
         }
         else {
             LOG.trace("Trigger FOUND for the key {}", triggerKey);
-            String jobName = createJobName(event);
+            String jobName = support.createJobName(JobType.TRACK, event);
             JobKey jobKey = new JobKey(jobName, groupName);
             JobDetail job = scheduler.getJobDetail(jobKey);
             JobDataMap map = job.getJobDataMap();
             long startTimeFromJob = map.getLong(TrackCommandCreationJob.JOB_DATA_START_TIME);
-            String type = startTimeFromJob == event.getStartTime() ? HEADER_VALUE_KNOWN_EVENT
+            long eventStartTime = event.getStartTime();
+            String type = startTimeFromJob == eventStartTime ? HEADER_VALUE_KNOWN_EVENT
                     : HEADER_VALUE_UPDATED_EVENT;
-            LOG.trace("Comparing {} and {}; result: {}", new Object[] { startTimeFromJob, event.getStartTime(), type });
+            LOG.trace("Comparing {} and {}; result: {}", new Object[] { startTimeFromJob, eventStartTime, type });
             out.setHeader(HEADER_KEY_EVENT_TYPE, type);
         }
     }

@@ -8,6 +8,7 @@ import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.business.tracking.TrackingComponent;
+import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.quartz.Scheduler;
@@ -17,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingComponent> {
 
-    public static final String TRACK_COMMAND_INJECTOR = "seda:track-commands";
+    public static final String TRACK_COMMAND_INJECTOR = "seda:toPublisher";
 
     private final IDataAccess dao;
     private final IdBuilder idBuilder;
@@ -43,7 +44,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
         Scheduler scheduler;
         try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
-            JobFactory factory = new TrackCommandCreationJobFactory(entity, dao, producer, TRACK_COMMAND_INJECTOR, satelliteCache, tleCache, idBuilder);
+            JobFactory factory = new TrackComponentJobFactory(entity, dao, producer, TRACK_COMMAND_INJECTOR, satelliteCache, tleCache, idBuilder, config);
             scheduler.setJobFactory(factory);
             scheduler.start();
         }
@@ -51,19 +52,27 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
             throw new RuntimeException("Failed to start Quartz sceduler", e);
         }
 
+        SchedulingSupport support = new SchedulingSupport();
         ArchivePoller archivePoller = new ArchivePoller(config, dao);
-        ContactScheduler contactScheduler = new ContactScheduler(config, scheduler);
-        ContactUnscheduler contactUnscheduler = new ContactUnscheduler(config, scheduler);
-        EventAnalyzer analyzer = new EventAnalyzer(config, scheduler);
-        ScheduleDeltaCheck deltaCheck = new ScheduleDeltaCheck(config);
+        TrackCommandScheduler trackCommandScheduler = new TrackCommandScheduler(config, scheduler, support);
+        TrackCommandUnscheduler contactUnscheduler = new TrackCommandUnscheduler(scheduler, support);
+        EventAnalyzer analyzer = new EventAnalyzer(scheduler, support);
+        ScheduleDeltaCheck deltaCheck = new ScheduleDeltaCheck(config, support);
+        NotificationEventScheduler notificationScheduler = new NotificationEventScheduler(scheduler, support);
 
         // @formatter:off
 
-        from(TRACK_COMMAND_INJECTOR).bean(publisher, "publish");
+        from(TRACK_COMMAND_INJECTOR)
+            .choice()
+                .when(body().isInstanceOf(Track.class))
+                    .bean(notificationScheduler)
+                .end()
+                .bean(publisher);
 
         from("direct:scheduleContact")
-            .bean(contactScheduler)
-            .to("log:scheduledContact-log?level=DEBUG");
+            .filter(deltaCheck)
+                .bean(trackCommandScheduler)
+                .to("log:scheduledContact-log?level=DEBUG");
 
         from("direct:rescheduleContact")
             .choice()

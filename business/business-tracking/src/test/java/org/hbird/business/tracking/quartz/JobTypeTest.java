@@ -14,24 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.api;
+package org.hbird.business.tracking.quartz;
 
-import org.apache.camel.Handler;
-import org.hbird.exchange.core.EntityInstance;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
- * API Interface for publishing data to the system.
- * 
- * The API should be used by any element which needs to publish data that shall be distributed through
- * the Hummingbird system. The API will publish the {@link EntityInstance} it to the underlying
- * protocol, typically being activemq. The further distribution of the object depends on the
- * assembly of the system.
- * 
- * @author Gert Villemos
- * 
+ *
  */
-public interface IPublisher {
+public class JobTypeTest {
 
-    @Handler
-    public <T extends EntityInstance> T publish(T object) throws Exception;
+    @Test
+    public void testValueOf() {
+        for (JobType type : JobType.values()) {
+            assertEquals(type, JobType.valueOf(type.toString()));
+        }
+    }
 }

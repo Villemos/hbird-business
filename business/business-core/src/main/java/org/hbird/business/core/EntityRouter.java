@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EntityRouter implements Processor {
 
-    static final String ROUTING_HEADER = "hbird.route";
+    public static final String ROUTING_HEADER = "hbird.route";
 
     private static final Logger LOG = LoggerFactory.getLogger(EntityRouter.class);
 

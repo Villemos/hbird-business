@@ -29,16 +29,20 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class ContactUnscheduler extends SchedulingBase implements Processor {
+public class TrackCommandUnscheduler implements Processor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ContactUnscheduler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TrackCommandUnscheduler.class);
+
+    private final Scheduler scheduler;
+    private final SchedulingSupport support;
 
     /**
      * @param config
      * @param scheduler
      */
-    public ContactUnscheduler(TrackingDriverConfiguration config, Scheduler scheduler) {
-        super(config, scheduler);
+    public TrackCommandUnscheduler(Scheduler scheduler, SchedulingSupport support) {
+        this.scheduler = scheduler;
+        this.support = support;
     }
 
     /**
@@ -51,8 +55,8 @@ public class ContactUnscheduler extends SchedulingBase implements Processor {
         out.copyFrom(in);
 
         LocationContactEvent event = in.getBody(LocationContactEvent.class);
-        String groupName = createGroupName(event);
-        String jobName = createJobName(event);
+        String groupName = support.createGroupName(event);
+        String jobName = support.createJobName(JobType.TRACK, event);
         JobKey jobKey = new JobKey(jobName, groupName);
         try {
             boolean result = scheduler.deleteJob(jobKey);

@@ -1,5 +1,6 @@
 package org.hbird.business.api.impl;
 
+import org.apache.camel.Handler;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublisher;
 import org.hbird.exchange.core.Command;
@@ -17,6 +18,7 @@ public class DaoPublisher implements IPublisher {
         this.dao = dao;
     }
 
+    @Handler
     @Override
     public <T extends EntityInstance> T publish(T object) throws Exception {
 

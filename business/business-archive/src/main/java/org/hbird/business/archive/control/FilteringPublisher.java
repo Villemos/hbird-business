@@ -1,5 +1,6 @@
 package org.hbird.business.archive.control;
 
+import org.apache.camel.Handler;
 import org.hbird.business.api.IPublisher;
 import org.hbird.exchange.core.EntityInstance;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ public class FilteringPublisher implements IPublisher {
         this.filter = filter;
     }
 
+    @Handler
     @Override
     public <T extends EntityInstance> T publish(T object) throws Exception {
         if (filter.passes(object)) {
