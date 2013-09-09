@@ -3,7 +3,7 @@
   <parent>
     <artifactId>systems</artifactId>
     <groupId>org.hbird</groupId>
-    <version>0.10.0-SNAPSHOT</version>
+    <version>0.10.0</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>thunderbird</artifactId>

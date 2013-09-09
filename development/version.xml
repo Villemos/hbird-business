@@ -1,7 +1,7 @@
 <project name="version update" default="update-version" >
 
-    <property name="version.old" value="0.9.0"/>
-    <property name="version.new" value="0.10.0-SNAPSHOT"/>
+    <property name="version.old" value="0.10.0-SNAPSHOT"/>
+    <property name="version.new" value="0.10.0"/>
 
     <target name="update-version">
         <echo>Updating version from ${version.old} to ${version.new}</echo>
