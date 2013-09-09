@@ -105,7 +105,7 @@
 
     <bean id="startableEntityManager" class="org.hbird.business.api.impl.StartableEntityManager">
         <constructor-arg index="0" name="issuedBy" value="startableEntityManager" />
-        <constructor-arg index="0" name="publisher" ref="publisher" />
+        <constructor-arg index="1" name="publisher" ref="publisher" />
     </bean>
 
     <bean id="idBuilder" class="org.hbird.business.api.impl.DefaultIdBuilder" />
