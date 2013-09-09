@@ -4,7 +4,7 @@
     <parent>
         <artifactId>hummingbird-business</artifactId>
         <groupId>org.hbird.business</groupId>
-        <version>0.10.0</version>
+        <version>0.11.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>business-archive</artifactId>
