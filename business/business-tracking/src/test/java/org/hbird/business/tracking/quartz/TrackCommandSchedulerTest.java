@@ -94,7 +94,6 @@ public class TrackCommandSchedulerTest {
         when(event.getID()).thenReturn(EVENT_ID);
         when(event.getDerivedFromId()).thenReturn(TLE_ID);
         when(event.getStartTime()).thenReturn(NOW);
-        // when(support.createJob(event, GROUP_NAME)).thenReturn(jobDetail);
     }
 
     @Test
@@ -129,7 +128,6 @@ public class TrackCommandSchedulerTest {
         assertTrue(timestamp <= System.currentTimeMillis());
         inOrder.verify(support, times(1)).createGroupName(event);
         inOrder.verify(support, times(1)).createTriggerName(JobType.TRACK, event);
-        // inOrder.verify(support, times(1)).createJob(event, GROUP_NAME);
         inOrder.verify(event, times(1)).getInstanceID();
         inOrder.verify(event, times(1)).getID();
         inOrder.verify(event, times(1)).getDerivedFromId();
@@ -162,7 +160,6 @@ public class TrackCommandSchedulerTest {
         assertTrue(timestamp <= System.currentTimeMillis());
         inOrder.verify(support, times(1)).createGroupName(event);
         inOrder.verify(support, times(1)).createTriggerName(JobType.TRACK, event);
-        // inOrder.verify(support, times(1)).createJob(event, GROUP_NAME);
         inOrder.verify(event, times(1)).getInstanceID();
         inOrder.verify(event, times(1)).getID();
         inOrder.verify(event, times(1)).getDerivedFromId();

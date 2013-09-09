@@ -8,6 +8,7 @@ import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.business.tracking.TrackingComponent;
+import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -36,6 +37,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
         String name = entity.getName();
         TrackingDriverConfiguration config = entity.getConfiguration();
         CamelContext context = entity.getContext();
+        EntityCache<GroundStation> groundStationCache = EntityCache.forType(dao, GroundStation.class);
         EntityCache<Satellite> satelliteCache = EntityCache.forType(dao, Satellite.class);
         EntityCache<TleOrbitalParameters> tleCache = EntityCache.forType(dao, TleOrbitalParameters.class);
 
@@ -58,7 +60,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
         TrackCommandUnscheduler contactUnscheduler = new TrackCommandUnscheduler(scheduler, support);
         EventAnalyzer analyzer = new EventAnalyzer(scheduler, support);
         ScheduleDeltaCheck deltaCheck = new ScheduleDeltaCheck(config, support);
-        NotificationEventScheduler notificationScheduler = new NotificationEventScheduler(scheduler, support);
+        NotificationEventScheduler notificationScheduler = new NotificationEventScheduler(scheduler, support, groundStationCache, satelliteCache);
 
         // @formatter:off
 
