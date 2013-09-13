@@ -164,11 +164,13 @@ public class NotificationEventSchedulerTest {
         assertEquals(JOB_NAME, job.getKey().getName());
         JobDataMap map = job.getJobDataMap();
         assertNotNull(map);
-        assertEquals(5, map.size());
+        assertEquals(7, map.size());
         assertEquals(EVENT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID));
         assertEquals(JobType.AOS.toString(), map.getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE));
         assertEquals(NOW - 1000L, map.getLong(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME));
         assertEquals(GS_NAME, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME));
+        assertEquals(GS_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID));
+        assertEquals(SAT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID));
         assertEquals(SAT_NAME, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME));
         if (LOG.isDebugEnabled()) {
             inOrder.verify(date, times(1)).getTime();
@@ -193,11 +195,13 @@ public class NotificationEventSchedulerTest {
         assertEquals(JOB_NAME, job.getKey().getName());
         map = job.getJobDataMap();
         assertNotNull(map);
-        assertEquals(5, map.size());
+        assertEquals(7, map.size());
         assertEquals(EVENT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID));
         assertEquals(JobType.LOS.toString(), map.getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE));
         assertEquals(NOW + 1000L, map.getLong(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME));
+        assertEquals(GS_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID));
         assertEquals(GS_NAME, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME));
+        assertEquals(SAT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID));
         assertEquals(SAT_NAME, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME));
         if (LOG.isDebugEnabled()) {
             inOrder.verify(date, times(1)).getTime();
@@ -262,11 +266,13 @@ public class NotificationEventSchedulerTest {
         assertEquals(JOB_NAME, job.getKey().getName());
         JobDataMap map = job.getJobDataMap();
         assertNotNull(map);
-        assertEquals(5, map.size());
+        assertEquals(7, map.size());
         assertEquals(EVENT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID));
         assertEquals(JobType.LOS.toString(), map.getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE));
         assertEquals(NOW, map.getLong(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME));
+        assertEquals(GS_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID));
         assertEquals(GS_NAME, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME));
+        assertEquals(SAT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID));
         assertEquals(SAT_NAME, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME));
         if (LOG.isDebugEnabled()) {
             inOrder.verify(date, times(1)).getTime();
@@ -298,12 +304,14 @@ public class NotificationEventSchedulerTest {
         assertEquals(JOB_NAME, job.getKey().getName());
         JobDataMap map = job.getJobDataMap();
         assertNotNull(map);
-        assertEquals(5, map.size());
+        assertEquals(7, map.size());
         assertEquals(EVENT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID));
         assertEquals(JobType.LOS.toString(), map.getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE));
         assertEquals(NOW, map.getLong(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME));
         assertEquals(GS_NAME, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME));
+        assertEquals(GS_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID));
         assertEquals(SAT_NAME, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME));
+        assertEquals(SAT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -324,11 +332,13 @@ public class NotificationEventSchedulerTest {
     public void testCreateJobDataMap() throws Exception {
         JobDataMap map = eventScheduler.createJobDataMap(event, JobType.AOS, NOW);
         assertNotNull(map);
-        assertEquals(5, map.size());
+        assertEquals(7, map.size());
         assertEquals(EVENT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID));
         assertEquals(JobType.AOS.toString(), map.getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE));
         assertEquals(NOW, map.getLong(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME));
+        assertEquals(GS_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID));
         assertEquals(GS_NAME, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME));
+        assertEquals(SAT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID));
         assertEquals(SAT_NAME, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME));
         inOrder.verify(event, times(1)).getInstanceID();
         inOrder.verify(event, times(1)).getGroundStationID();
@@ -345,11 +355,13 @@ public class NotificationEventSchedulerTest {
         when(gsCache.getById(GS_ID)).thenReturn(null);
         JobDataMap map = eventScheduler.createJobDataMap(event, JobType.AOS, NOW);
         assertNotNull(map);
-        assertEquals(5, map.size());
+        assertEquals(7, map.size());
         assertEquals(EVENT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID));
         assertEquals(JobType.AOS.toString(), map.getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE));
         assertEquals(NOW, map.getLong(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME));
+        assertEquals(GS_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID));
         assertEquals(GS_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME));
+        assertEquals(SAT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID));
         assertEquals(SAT_NAME, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME));
         inOrder.verify(event, times(1)).getInstanceID();
         inOrder.verify(event, times(1)).getGroundStationID();
@@ -365,11 +377,13 @@ public class NotificationEventSchedulerTest {
         when(satCache.getById(SAT_ID)).thenReturn(null);
         JobDataMap map = eventScheduler.createJobDataMap(event, JobType.AOS, NOW);
         assertNotNull(map);
-        assertEquals(5, map.size());
+        assertEquals(7, map.size());
         assertEquals(EVENT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID));
         assertEquals(JobType.AOS.toString(), map.getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE));
         assertEquals(NOW, map.getLong(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME));
+        assertEquals(GS_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID));
         assertEquals(GS_NAME, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME));
+        assertEquals(SAT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID));
         assertEquals(SAT_ID, map.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME));
         inOrder.verify(event, times(1)).getInstanceID();
         inOrder.verify(event, times(1)).getGroundStationID();

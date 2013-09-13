@@ -19,6 +19,7 @@ package org.hbird.business.tracking.quartz;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
@@ -28,6 +29,9 @@ import static org.mockito.Mockito.when;
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.exchange.core.Event;
+import org.hbird.exchange.groundstation.Aos;
+import org.hbird.exchange.groundstation.ContactEventBase;
+import org.hbird.exchange.groundstation.Los;
 import org.hbird.exchange.interfaces.IStartableEntity;
 import org.hbird.exchange.util.Dates;
 import org.junit.Before;
@@ -50,9 +54,10 @@ public class NotificationEventCreationJobTest {
     private static final String END_POINT = "end-point";
     private static final String EVENT_INSTANCE_ID = "location-contact-event-instance-id";
     private static final String EVENT_ID = "notification-event-id";
-    private static final String SAT = "sat-1";
-    private static final String GS = "gs-hg";
-    private static final String TYPE = "typo";
+    private static final String SAT_ID = "sat-1/ID";
+    private static final String SAT_NAME = "sat-1";
+    private static final String GS_NAME = "gs-hg";
+    private static final String GS_ID = "gs-hg/ID";
     private static final String ISSUER = "issuer";
     private static final String NAME_SPACE = "SPACE";
 
@@ -96,69 +101,140 @@ public class NotificationEventCreationJobTest {
         when(context.getMergedJobDataMap()).thenReturn(jobDataMap);
         when(jobDataMap.getString(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID)).thenReturn(EVENT_INSTANCE_ID);
         when(jobDataMap.getLong(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME)).thenReturn(NOW);
-        when(jobDataMap.getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE)).thenReturn(TYPE);
-        when(jobDataMap.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME)).thenReturn(GS);
-        when(jobDataMap.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME)).thenReturn(SAT);
+        when(jobDataMap.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID)).thenReturn(GS_ID);
+        when(jobDataMap.getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME)).thenReturn(GS_NAME);
+        when(jobDataMap.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID)).thenReturn(SAT_ID);
+        when(jobDataMap.getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME)).thenReturn(SAT_NAME);
         when(config.getEventNameSpace()).thenReturn(NAME_SPACE);
-        when(idBuilder.buildID(NAME_SPACE, TYPE)).thenReturn(EVENT_ID);
+        when(idBuilder.buildID(NAME_SPACE, JobType.AOS.toString())).thenReturn(EVENT_ID);
+        when(idBuilder.buildID(NAME_SPACE, JobType.LOS.toString())).thenReturn(EVENT_ID);
         when(issuer.getID()).thenReturn(ISSUER);
     }
 
     @Test
-    public void testExecute() throws Exception {
+    public void testExecuteAos() throws Exception {
+        when(jobDataMap.getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE)).thenReturn(JobType.AOS.toString());
         job.execute(context);
 
         inOrder.verify(context, times(1)).getMergedJobDataMap();
         inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID);
         inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID);
         inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME);
         inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE);
         inOrder.verify(jobDataMap, times(1)).getLong(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME);
         inOrder.verify(config, times(1)).getEventNameSpace();
-        inOrder.verify(idBuilder, times(1)).buildID(NAME_SPACE, TYPE);
-        ArgumentCaptor<Event> captor = ArgumentCaptor.forClass(Event.class);
+        inOrder.verify(idBuilder, times(1)).buildID(NAME_SPACE, JobType.AOS.toString());
+        ArgumentCaptor<ContactEventBase> captor = ArgumentCaptor.forClass(ContactEventBase.class);
         inOrder.verify(producer, times(1)).asyncSendBody(eq(END_POINT), captor.capture());
-        Event event = captor.getValue();
+        ContactEventBase event = captor.getValue();
+        assertEquals(Aos.class, event.getClass());
         assertNotNull(event);
         assertEquals(EVENT_ID, event.getID());
         assertEquals(ISSUER, event.getIssuedBy());
         assertEquals(EVENT_INSTANCE_ID, event.getApplicableTo());
         assertEquals(NOW, event.getTimestamp());
         assertTrue(NOW <= event.getVersion());
-        assertTrue(event.getDescription().contains(SAT));
-        assertTrue(event.getDescription().contains(GS));
+        assertEquals(GS_ID, event.getGroundStationId());
+        assertEquals(SAT_ID, event.getSatelliteId());
+        assertTrue(event.getDescription().contains(SAT_NAME));
+        assertTrue(event.getDescription().contains(GS_NAME));
         assertTrue(event.getDescription().contains(Dates.toDefaultDateFormat(NOW)));
-        assertTrue(event.getDescription().contains(TYPE));
+        assertTrue(event.getDescription().contains(JobType.AOS.toString()));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testExecuteLos() throws Exception {
+        when(jobDataMap.getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE)).thenReturn(JobType.LOS.toString());
+        job.execute(context);
+
+        inOrder.verify(context, times(1)).getMergedJobDataMap();
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE);
+        inOrder.verify(jobDataMap, times(1)).getLong(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME);
+        inOrder.verify(config, times(1)).getEventNameSpace();
+        inOrder.verify(idBuilder, times(1)).buildID(NAME_SPACE, JobType.LOS.toString());
+        ArgumentCaptor<ContactEventBase> captor = ArgumentCaptor.forClass(ContactEventBase.class);
+        inOrder.verify(producer, times(1)).asyncSendBody(eq(END_POINT), captor.capture());
+        ContactEventBase event = captor.getValue();
+        assertEquals(Los.class, event.getClass());
+        assertNotNull(event);
+        assertEquals(EVENT_ID, event.getID());
+        assertEquals(ISSUER, event.getIssuedBy());
+        assertEquals(EVENT_INSTANCE_ID, event.getApplicableTo());
+        assertEquals(NOW, event.getTimestamp());
+        assertTrue(NOW <= event.getVersion());
+        assertEquals(GS_ID, event.getGroundStationId());
+        assertEquals(SAT_ID, event.getSatelliteId());
+        assertTrue(event.getDescription().contains(SAT_NAME));
+        assertTrue(event.getDescription().contains(GS_NAME));
+        assertTrue(event.getDescription().contains(Dates.toDefaultDateFormat(NOW)));
+        assertTrue(event.getDescription().contains(JobType.LOS.toString()));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testExecuteInvalidType() throws Exception {
+        when(jobDataMap.getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE)).thenReturn(JobType.TRACK.toString());
+        try {
+            job.execute(context);
+            fail("Exception expected");
+        }
+        catch (Exception e) {
+            assertEquals(IllegalArgumentException.class, e.getClass());
+        }
+
+        inOrder.verify(context, times(1)).getMergedJobDataMap();
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE);
+        inOrder.verify(jobDataMap, times(1)).getLong(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME);
+        inOrder.verify(config, times(1)).getEventNameSpace();
+        inOrder.verify(idBuilder, times(1)).buildID(NAME_SPACE, JobType.TRACK.toString());
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testExecuteWithExcpetion() throws Exception {
+        when(jobDataMap.getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE)).thenReturn(JobType.AOS.toString());
         when(producer.asyncSendBody(eq(END_POINT), any(Event.class))).thenThrow(exception);
 
         job.execute(context);
 
         inOrder.verify(context, times(1)).getMergedJobDataMap();
         inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID);
         inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME);
+        inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID);
         inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME);
         inOrder.verify(jobDataMap, times(1)).getString(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE);
         inOrder.verify(jobDataMap, times(1)).getLong(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME);
         inOrder.verify(config, times(1)).getEventNameSpace();
-        inOrder.verify(idBuilder, times(1)).buildID(NAME_SPACE, TYPE);
-        ArgumentCaptor<Event> captor = ArgumentCaptor.forClass(Event.class);
+        inOrder.verify(idBuilder, times(1)).buildID(NAME_SPACE, JobType.AOS.toString());
+        ArgumentCaptor<ContactEventBase> captor = ArgumentCaptor.forClass(ContactEventBase.class);
         inOrder.verify(producer, times(1)).asyncSendBody(eq(END_POINT), captor.capture());
-        Event event = captor.getValue();
+        ContactEventBase event = captor.getValue();
         assertNotNull(event);
         assertEquals(EVENT_ID, event.getID());
         assertEquals(ISSUER, event.getIssuedBy());
         assertEquals(EVENT_INSTANCE_ID, event.getApplicableTo());
         assertEquals(NOW, event.getTimestamp());
         assertTrue(NOW <= event.getVersion());
-        assertTrue(event.getDescription().contains(SAT));
-        assertTrue(event.getDescription().contains(GS));
+        assertEquals(GS_ID, event.getGroundStationId());
+        assertEquals(SAT_ID, event.getSatelliteId());
+        assertTrue(event.getDescription().contains(SAT_NAME));
+        assertTrue(event.getDescription().contains(GS_NAME));
         assertTrue(event.getDescription().contains(Dates.toDefaultDateFormat(NOW)));
-        assertTrue(event.getDescription().contains(TYPE));
+        assertTrue(event.getDescription().contains(JobType.AOS.toString()));
         inOrder.verifyNoMoreInteractions();
     }
 }

@@ -110,9 +110,11 @@ public class NotificationEventScheduler extends SchedulingSupport {
         map.put(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE, type.toString());
         map.put(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME, timestamp);
         String gsId = event.getGroundStationID();
+        map.put(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID, gsId);
         GroundStation gs = groundStationCache.getById(gsId);
         map.put(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME, gs == null ? gsId : gs.getName());
         String satId = event.getSatelliteID();
+        map.put(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID, satId);
         Satellite sat = satelliteCache.getById(satId);
         map.put(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME, sat == null ? satId : sat.getName());
         return map;

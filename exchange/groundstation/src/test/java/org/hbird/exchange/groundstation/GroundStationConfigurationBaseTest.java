@@ -42,7 +42,6 @@ public class GroundStationConfigurationBaseTest {
      * {@link org.hbird.exchange.groundstation.GroundStationConfigurationBase#GroundStationConfigurationBase(String, String, long, String)}
      * .
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testGroundStationConfigurationBase() {
         config = new GroundStationConfigurationBase("S-ID", "0.0.9", 4000L, "GS-ID");
