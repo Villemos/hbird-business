@@ -16,7 +16,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire-plugin.version}</version>
+                <version>${version.surefire-plugin}</version>
                 <configuration>
                     <excludes>
                         <exclude>**/MongoDataAccessTest.java</exclude>
@@ -36,7 +36,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${surefire-plugin.version}</version>
+                        <version>${version.surefire-plugin}</version>
                         <configuration>
                             <excludes>
                                 <exclude>none</exclude>

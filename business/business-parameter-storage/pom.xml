@@ -16,7 +16,7 @@
             <plugin>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-maven-plugin</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
             </plugin>
         </plugins>
     </build>
@@ -26,25 +26,25 @@
         <dependency>
               <groupId>org.apache.camel</groupId>
               <artifactId>camel-xstream</artifactId>
-<!--               <version>${camel.version}</version> -->
+<!--               <version>${version.camel}</version> -->
         </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
+            <version>${version.h2}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
-            <version>${commons-dbcp.version}</version>
+            <version>${version.commons-dbcp}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jdbc</artifactId>
-            <version>${camel.version}</version>
+            <version>${version.camel}</version>
         </dependency>
 
         <dependency>
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-sql</artifactId>
-            <version>${camel.version}</version>
+            <version>${version.camel}</version>
         </dependency>
 
         <dependency>
