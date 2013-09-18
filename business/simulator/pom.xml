@@ -6,12 +6,11 @@
     <parent>
         <artifactId>hummingbird-business</artifactId>
         <groupId>org.hbird</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.11.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.hbird.business</groupId>
     <artifactId>simulator</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>Business - Full Stack Simulator</name>
 
     <description>A Simulator that produces telemetry according to its setup.</description>
@@ -22,8 +21,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>${version.java}</source>
+                    <target>${version.java}</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -50,7 +49,7 @@
             <plugin>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-maven-plugin</artifactId>
-                <version>2.6.0</version>
+                <version>${version.camel-maven-plugin}</version>
             </plugin>
         </plugins>
     </build>
@@ -71,15 +70,10 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${version.commons-io}</version>
-            <type>jar</type>
-            <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-            <type>jar</type>
-            <scope>compile</scope>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -89,45 +83,33 @@
         <dependency>
             <groupId>commons-pool</groupId>
             <artifactId>commons-pool</artifactId>
-            <version>1.5.6</version>
+            <version>${version.commons-pool}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jms</artifactId>
             <version>${version.camel}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.hbird.transport</groupId>
             <artifactId>commons</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${version.hbird-transport}</version>
         </dependency>
         <dependency>
             <groupId>org.hbird.transport</groupId>
             <artifactId>space-system-model</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${version.hbird-transport}</version>
         </dependency>
         <dependency>
             <groupId>org.hbird.transport</groupId>
             <artifactId>xtce</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${version.hbird-transport}</version>
         </dependency>
         <dependency>
             <groupId>org.hbird.transport</groupId>
             <artifactId>tele</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${version.hbird-transport}</version>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.apache.camel</groupId>-->
-<!--            <artifactId>camel-spring</artifactId>-->
-<!--            <version>2.4.0</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
@@ -138,7 +120,6 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-stream</artifactId>
             <version>${version.camel}</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

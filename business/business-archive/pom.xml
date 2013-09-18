@@ -68,7 +68,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <version>${version.servlet-api}</version>
         </dependency>
 
         <dependency>
@@ -89,9 +89,9 @@
         </dependency>
 
         <dependency>
-            <artifactId>solr-core</artifactId>
             <groupId>org.apache.solr</groupId>
-            <version>1.4.0</version>
+            <artifactId>solr-core</artifactId>
+            <version>${version.solr-core}</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -104,7 +104,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
-            <version>1.2.1.RELEASE</version>
+            <version>${version.spring-data-mongodb}</version>
         </dependency>
 
     </dependencies>

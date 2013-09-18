@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
-            <version>1.5.1.RELEASE</version>
+            <version>${version.spring-data-commons}</version>
         </dependency>
 
     </dependencies>
