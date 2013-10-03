@@ -6,7 +6,7 @@
     <groupId>org.hbird</groupId>
     <artifactId>hummingbird</artifactId>
     <packaging>pom</packaging>
-    <version>0.10.0-SNAPSHOT</version>
+    <version>0.11.0-SNAPSHOT</version>
 
     <name>Hummingbird Root</name>
     <description>The Hummingbird root project is a container for all Hummingbird components, each created in a separate maven module. By building this project, the complete system can be built.</description>
@@ -71,79 +71,72 @@
     <!-- Properties can be overridden in ~/.m2/settings.xml to configure environment 
         specific values. -->
     <properties>
-        <hbird.version>0.10.0-SNAPSHOT</hbird.version>
-
         <distribution.url.snapshots>http://www.villemos.com:8080/artifactory/libs-snapshot-local</distribution.url.snapshots>
         <distribution.url.releases>http://www.villemos.com:8080/artifactory/libs-release-local</distribution.url.releases>
 
-        <version.java>1.6</version.java> <!-- Not using java.version here; it will override system property java.version referencing 
-            running JVM version. -->
-        <rxtx.version>2.1.7</rxtx.version>
-        <log4j.version>1.2.17</log4j.version>
-        <!--  <spring.version>3.1.2.RELEASE</spring.version> -->
-        <spring.version>LATEST</spring.version>
-        <junit.version>4.10</junit.version>
-        <castor.version>1.3.2</castor.version>
-        <camel.version>2.10.2</camel.version>
-        <activemq.version>5.7.0</activemq.version>
-        <mysqlconnector.version>5.1.10</mysqlconnector.version>
-        <jencks.version>2.2</jencks.version>
-        <slf4j.version>1.6.6</slf4j.version>
-        <docgenerator.version>0.0.7</docgenerator.version>
-        <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <h2.version>1.2.147</h2.version>
-        <surefire-plugin.version>2.7.1</surefire-plugin.version>
-        <commons-io.version>2.0.1</commons-io.version>
-        <commons-dbcp.version>1.4</commons-dbcp.version>
-        <solrj.version>3.5.0</solrj.version>
-        <mockito.version>1.9.0</mockito.version> <!-- TODO update, 1.9.5 is available -->
-        <netty.version>3.2.7.Final</netty.version>
-        <xbean.version>3.11.1</xbean.version>
-        <commons-lang3.version>3.1</commons-lang3.version>
-        <commons-beanutils.version>1.8.3</commons-beanutils.version>
-        <commons.collections.version>3.2.1</commons.collections.version>
-        <commons-codec.version>1.7</commons-codec.version>
-        <gson.version>2.2.2</gson.version>
-        <guava.version>14.0.1</guava.version>
-        <joda.version>2.2</joda.version>
-        <quartz.version>2.1.7</quartz.version>
-        <commons-math3.version>3.2</commons-math3.version>
 
-        <!-- TODO - clear this mess -->
+        <!-- Used for java source and target level at compiling -->
+        <!-- Not using java.version here; it will override system property java.version referencing running JVM version. -->
+        <version.java>1.6</version.java> 
 
-        <version.java>1.6</version.java>
-        <version.junit>4.10</version.junit>
-        <version.surefire-junit47>2.12</version.surefire-junit47>
-        <version.selenium>2.9.0</version.selenium>
-        <version.camel>2.10.0</version.camel>
-        <version.camel-mina2>2.10.3</version.camel-mina2>
-        <version.activemq>5.8.0</version.activemq>
+        <!-- Hummingbird Business version -->
+        <version.hbird>0.11.0-SNAPSHOT</version.hbird>
+        <!-- Hummingbird Transort version -->
+        <version.hbird-transport>0.0.1-SNAPSHOT</version.hbird-transport>
 
-        <version.slf4j>1.6.6</version.slf4j>
+        <!-- Logging -->
         <version.log4j>1.2.17</version.log4j>
-        <version.clover>3.1.7</version.clover>
+        <version.slf4j>1.6.6</version.slf4j>
+        
+        <!-- Testing -->
+        <version.junit>4.10</version.junit>
+        <version.mockito>1.9.0</version.mockito> <!-- TODO update, 1.9.5 is available -->
 
-        <version.spring>3.0.6.RELEASE</version.spring>
-        <version.mockito>1.9.0</version.mockito>
-        <version.mvn-resources-plugin>2.6</version.mvn-resources-plugin>
-        <version.h2>1.3.168</version.h2>
-        <version.dbunit>2.4.8</version.dbunit>
-        <version.appassembler>1.3</version.appassembler>
-        <version.commons-io>2.4</version.commons-io>
-        <version.replacer>1.4.1</version.replacer>
-        <version.surefire>2.11</version.surefire>
-        <version.hbird>0.5-SNAPSHOT</version.hbird>
-        <version.jdom>2.0.1</version.jdom>
+        <!-- Apache Commons -->
+        <version.commons-io>2.0.1</version.commons-io>
+        <version.commons-dbcp>1.4</version.commons-dbcp>
+        <version.commons-lang3>3.1</version.commons-lang3>
+        <version.commons-beanutils>1.8.3</version.commons-beanutils>
+        <version.commons-collections>3.2.1</version.commons-collections>
+        <version.commons-codec>1.7</version.commons-codec>
+        <version.commons-math3>3.2</version.commons-math3>
+        <version.commons-pool>1.5.6</version.commons-pool>
+        <version.http-components>4.3-alpha1</version.http-components>
+
+        <!-- Data storage -->
+        <version.mysqlconnector>5.1.10</version.mysqlconnector>
+        <version.h2>1.2.147</version.h2>
+        <version.solrj>3.5.0</version.solrj>
+        <version.solr-core>1.4.0</version.solr-core>
+        <version.spring-data-commons>1.5.1.RELEASE</version.spring-data-commons>
+        <version.spring-data-mongodb>1.2.1.RELEASE</version.spring-data-mongodb>
+        
+        <!--  <version.spring>3.1.2.RELEASE</version.spring> -->
+        <version.camel>2.10.2</version.camel>
+        <version.activemq>5.7.0</version.activemq>
+        <version.spring>LATEST</version.spring>
+        <version.castor>1.3.2</version.castor>
+        <version.jencks>2.2</version.jencks>
+        <version.netty>3.2.7.Final</version.netty>
+        <version.xbean>3.11.1</version.xbean>
+        <version.gson>2.2.2</version.gson>
+        <version.guava>14.0.1</version.guava>
+        <version.joda>2.2</version.joda>
+        <version.quartz>2.1.7</version.quartz>
+        <version.servlet-api>2.5</version.servlet-api>
+        <version.orekit>6.0</version.orekit>
+
+        <!-- Maven plugin versions -->
+<!--         <version.maven-compiler-plugin>2.3.2</version.maven-compiler-plugin> -->
         <version.maven-compiler-plugin>2.5.1</version.maven-compiler-plugin>
-        <version.maven-dependency-plugin>2.5.1</version.maven-dependency-plugin>
-        <version.jetty>7.1.4.v20100610</version.jetty>
-        <version.xfire>1.2.6</version.xfire>
-        <version.crowd>2.2.2</version.crowd>
-        <version.commons-net>3.0.1</version.commons-net>
-        <version.rxtx>2.1.7</version.rxtx>
-        <version.mina>2.0.7</version.mina>
+        <version.maven-source-plugin>2.2.1</version.maven-source-plugin>
+        <version.maven-javadoc-plugin>2.9</version.maven-javadoc-plugin>
+        <version.maven-jar-plugin>2.4</version.maven-jar-plugin>
+        <version.maven-assembly-plugin>2.3</version.maven-assembly-plugin>
+        <version.camel-maven-plugin>2.6.0</version.camel-maven-plugin>
+        <version.surefire-plugin>2.7.1</version.surefire-plugin>
 
         <!-- Comment in to speed up build process -->
         <!-- maven.javadoc.skip>true</maven.javadoc.skip -->
@@ -247,48 +240,48 @@
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
-                <version>${gson.version}</version>
+                <version>${version.gson}</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>${commons-codec.version}</version>
+                <version>${version.commons-codec}</version>
             </dependency>
 
 
             <dependency>
                 <groupId>org.jboss.netty</groupId>
                 <artifactId>netty</artifactId>
-                <version>${netty.version}</version>
+                <version>${version.netty}</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-netty</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
-                <version>${slf4j.version}</version>
+                <version>${version.slf4j}</version>
                 <type>jar</type>
             </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
+                <version>${version.slf4j}</version>
                 <type>jar</type>
             </dependency>
 
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
+                <version>${version.junit}</version>
                 <type>jar</type>
                 <scope>test</scope>
             </dependency>
@@ -297,443 +290,443 @@
             <dependency>
                 <groupId>org.hbird.drivers</groupId>
                 <artifactId>all-driver</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>all-exchange</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>core</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>validation</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>cfdp</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>queuemanagement</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>commandrelease</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>configurator</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>movementcontrol</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>groundstation</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>navigation</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>dataaccess</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
+                <version>${version.guava}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>rangecheck</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>scripting</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.exchange</groupId>
                 <artifactId>tasking</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
 
             <dependency>
                 <artifactId>all-business</artifactId>
                 <groupId>org.hbird.business</groupId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-core</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-metadatapublisher</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-navigation</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-parameter-storage</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-scripting</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-systemmonitoring</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-taskexecutor</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-time-correlation</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-validation</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-commanding</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-cfdp</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>simple-parameter-simulator</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-importer</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-archive</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-configurator</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-queuemanagement</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-tracking</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-groundstation</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <artifactId>business-websockets</artifactId>
                 <groupId>org.hbird.business</groupId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.hbird.business</groupId>
                 <artifactId>business-celestrack</artifactId>
-                <version>${hbird.version}</version>
+                <version>${version.hbird}</version>
             </dependency>
 
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
-                <version>${joda.version}</version>
+                <version>${version.joda}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>${spring.version}</version>
+                <version>${version.spring}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
-                <version>${spring.version}</version>
+                <version>${version.spring}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>${spring.version}</version>
+                <version>${version.spring}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context-support</artifactId>
-                <version>${spring.version}</version>
+                <version>${version.spring}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
-                <version>${spring.version}</version>
+                <version>${version.spring}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-web</artifactId>
-                <version>${spring.version}</version>
+                <version>${version.spring}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jms</artifactId>
-                <version>${spring.version}</version>
+                <version>${version.spring}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
-                <version>${spring.version}</version>
+                <version>${version.spring}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
-                <version>${spring.version}</version>
+                <version>${version.spring}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-camel</artifactId>
-                <version>${activemq.version}</version>
+                <version>${version.activemq}</version>
             </dependency>
 
 
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-pool</artifactId>
-                <version>${activemq.version}</version>
+                <version>${version.activemq}</version>
             </dependency>
 
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>${mysqlconnector.version}</version>
+                <version>${version.mysqlconnector}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-core</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
             </dependency>
 
             <!-- <dependency> -->
             <!-- <groupId>org.apache.camel</groupId> -->
             <!-- <artifactId>camel-activemq</artifactId> -->
-            <!-- <version>${camel.version}</version> -->
+            <!-- <version>${version.camel}</version> -->
             <!-- </dependency> -->
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-xstream</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-stream</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-spring</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-jms</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-http</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-jetty</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-ibatis</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-test</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-websocket</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-jackson</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.jencks</groupId>
                 <artifactId>jencks-amqpool</artifactId>
-                <version>${jencks.version}</version>
+                <version>${version.jencks}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.castor</groupId>
                 <artifactId>castor-core</artifactId>
-                <version>${castor.version}</version>
+                <version>${version.castor}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.codehaus.castor</groupId>
                 <artifactId>castor-xml</artifactId>
-                <version>${castor.version}</version>
+                <version>${version.castor}</version>
             </dependency>
 
             <dependency>
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
-                <version>${log4j.version}</version>
+                <version>${version.log4j}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.solr</groupId>
                 <artifactId>solr-solrj</artifactId>
-                <version>${solrj.version}</version>
+                <version>${version.solrj}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.xbean</groupId>
                 <artifactId>xbean-spring</artifactId>
-                <version>${xbean.version}</version>
+                <version>${version.xbean}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>
-                <version>${mockito.version}</version>
+                <version>${version.mockito}</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>${commons-lang3.version}</version>
+                <version>${version.commons-lang3}</version>
             </dependency>
 
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
-                <version>${commons-beanutils.version}</version>
+                <version>${version.commons-beanutils}</version>
             </dependency>
 
             <dependency>
                 <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>
-                <version>${commons.collections.version}</version>
+                <version>${version.commons-collections}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-math3</artifactId>
-                <version>${commons-math3.version}</version>
+                <version>${version.commons-math3}</version>
             </dependency>
 
         </dependencies>
@@ -745,7 +738,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>${version.maven-compiler-plugin}</version>
                 <configuration>
                     <target>${version.java}</target>
                     <source>${version.java}</source>
@@ -755,7 +748,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
+                <version>${version.maven-source-plugin}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -769,7 +762,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9</version>
+                <version>${version.maven-javadoc-plugin}</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>

@@ -20,8 +20,11 @@ import java.util.Date;
 
 import org.apache.camel.Body;
 import org.apache.camel.Handler;
+import org.hbird.business.core.cache.EntityCache;
+import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.groundstation.Track;
 import org.hbird.exchange.navigation.LocationContactEvent;
+import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.util.Dates;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
@@ -42,14 +45,19 @@ public class NotificationEventScheduler extends SchedulingSupport {
 
     private final Scheduler scheduler;
     private final SchedulingSupport support;
+    private final EntityCache<GroundStation> groundStationCache;
+    private final EntityCache<Satellite> satelliteCache;
 
     /**
      * @param config
      * @param scheduler
      */
-    public NotificationEventScheduler(Scheduler scheduler, SchedulingSupport support) {
+    public NotificationEventScheduler(Scheduler scheduler, SchedulingSupport support, EntityCache<GroundStation> groundStationCache,
+            EntityCache<Satellite> satelliteCache) {
         this.scheduler = scheduler;
         this.support = support;
+        this.groundStationCache = groundStationCache;
+        this.satelliteCache = satelliteCache;
     }
 
     @Handler
@@ -57,11 +65,21 @@ public class NotificationEventScheduler extends SchedulingSupport {
         LocationContactEvent event = command.getLocationContactEvent();
         long startTime = event.getStartTime();
         long endTime = event.getEndTime();
-        scheduleJob(scheduler, support, event, JobType.AOS, startTime);
-        scheduleJob(scheduler, support, event, JobType.LOS, endTime);
+        try {
+            scheduleJob(scheduler, support, event, JobType.AOS, startTime);
+        }
+        catch (Exception e) {
+            LOG.error("Failed to schedule AOS notification for {}", event, e);
+        }
+        try {
+            scheduleJob(scheduler, support, event, JobType.LOS, endTime);
+        }
+        catch (Exception e) {
+            LOG.error("Failed to schedule LOS notification for {}", event, e);
+        }
     }
 
-    void scheduleJob(Scheduler scheduler, SchedulingSupport support, LocationContactEvent event, JobType type, long timestamp) {
+    void scheduleJob(Scheduler scheduler, SchedulingSupport support, LocationContactEvent event, JobType type, long timestamp) throws Exception {
         String groupName = support.createGroupName(event);
         String triggerName = support.createTriggerName(type, event);
         String jobName = support.createJobName(type, event);
@@ -86,15 +104,19 @@ public class NotificationEventScheduler extends SchedulingSupport {
         return job;
     }
 
-    JobDataMap createJobDataMap(LocationContactEvent event, JobType type, long timestamp) {
+    JobDataMap createJobDataMap(LocationContactEvent event, JobType type, long timestamp) throws Exception {
         JobDataMap map = new JobDataMap();
         map.put(NotificationEventCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID, event.getInstanceID());
         map.put(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TYPE, type.toString());
         map.put(NotificationEventCreationJob.JOB_DATA_KEY_EVENT_TIME, timestamp);
-        // TODO - 04.09.2013, kimmell - resolve and use GS name here
-        map.put(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME, event.getGroundStationID());
-        // TODO - 04.09.2013, kimmell - resolve and use Satellite name here
-        map.put(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME, event.getSatelliteID());
+        String gsId = event.getGroundStationID();
+        map.put(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_ID, gsId);
+        GroundStation gs = groundStationCache.getById(gsId);
+        map.put(NotificationEventCreationJob.JOB_DATA_KEY_GROUND_STATION_NAME, gs == null ? gsId : gs.getName());
+        String satId = event.getSatelliteID();
+        map.put(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_ID, satId);
+        Satellite sat = satelliteCache.getById(satId);
+        map.put(NotificationEventCreationJob.JOB_DATA_KEY_SATELLITE_NAME, sat == null ? satId : sat.getName());
         return map;
     }
 }

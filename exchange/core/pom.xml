@@ -9,7 +9,7 @@
     <parent>
         <artifactId>hummingbird-exchange</artifactId>
         <groupId>org.hbird.exchange</groupId>
-        <version>0.10.0-SNAPSHOT</version>
+        <version>0.11.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
-            <version>1.5.1.RELEASE</version>
+            <version>${version.spring-data-commons}</version>
         </dependency>
 
     </dependencies>

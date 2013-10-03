@@ -5,16 +5,11 @@
     <parent>
         <artifactId>hummingbird-business</artifactId>
         <groupId>org.hbird.business</groupId>
-        <version>0.10.0-SNAPSHOT</version>
+        <version>0.11.0-SNAPSHOT</version>
     </parent>
     <artifactId>business-navigation</artifactId>
     <name>HBird :: Business - Navigation Orekit</name>
     <description>This module is an implementation of a Hummingbird navigation module based on the OREKIT open source library.</description>
-
-    <properties>
-<!--         <orekit.version>5.0.3</orekit.version> -->
-        <orekit.version>6.0</orekit.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -31,7 +26,7 @@
         <dependency>
             <groupId>org.orekit</groupId>
             <artifactId>orekit</artifactId>
-            <version>${orekit.version}</version>
+            <version>${version.orekit}</version>
         </dependency>
         
         <dependency>

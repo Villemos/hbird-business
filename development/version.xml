@@ -1,7 +1,7 @@
 <project name="version update" default="update-version" >
 
-    <property name="version.old" value="0.9.0"/>
-    <property name="version.new" value="0.10.0-SNAPSHOT"/>
+    <property name="version.old" value="0.10.0"/>
+    <property name="version.new" value="0.11.0-SNAPSHOT"/>
 
     <target name="update-version">
         <echo>Updating version from ${version.old} to ${version.new}</echo>
@@ -11,14 +11,15 @@
 
     <target name="update-pom-files">
         <!-- update version tag in pom.xml files. -->
+        <!-- XXX - 18.09.2013, kimmell - replaces all matching versions not only hbird one -->
         <replaceregexp match="&lt;version&gt;${version.old}&lt;/version&gt;" replace="&lt;version&gt;${version.new}&lt;/version&gt;" byline="true">
             <fileset dir="..">
                 <exclude name="**/target/**/*.*"/>
                 <include name="**/pom.xml"/>
             </fileset>
         </replaceregexp>
-        <!-- update property hbird.version in pom.xml files. -->
-        <replaceregexp match="&lt;hbird.version&gt;${version.old}&lt;/hbird.version&gt;" replace="&lt;hbird.version&gt;${version.new}&lt;/hbird.version&gt;" byline="true">
+        <!-- update property version.hbird in pom.xml files. -->
+        <replaceregexp match="&lt;version.hbird&gt;${version.old}&lt;/version.hbird&gt;" replace="&lt;version.hbird&gt;${version.new}&lt;/version.hbird&gt;" byline="true">
             <fileset dir="..">
                 <exclude name="**/target/**/*.*"/>
                 <include name="pom.xml"/>
