@@ -203,12 +203,12 @@ public class MongoDataAccessTest {
 
     @Test
     public void testGetParameter() throws Exception {
-        String names[] = { "PAR1", "PAR2", "PAR1", "PAR3" };
+        String ids[] = { "PAR1", "PAR2", "PAR1", "PAR3" };
         int values[] = { 5, 100, 10, 16 };
         int versions[] = { 10, 20, 30, 25 };
 
-        for (int i = 0; i < names.length; i++) {
-            Parameter param = new Parameter(names[i], names[i]);
+        for (int i = 0; i < ids.length; i++) {
+            Parameter param = new Parameter(ids[i], ids[i]);
             param.setValue(values[i]);
             param.setTimestamp(versions[i]);
             param.setVersion(versions[i]);
@@ -217,40 +217,40 @@ public class MongoDataAccessTest {
         }
 
         // Basic retrieval by name
-        Parameter par = dao.getParameter("PAR1");
+        Parameter par = dao.getById("PAR1", Parameter.class);
 
         assertEquals("PAR1", par.getName());
         assertEquals(values[2], par.getValue());
         assertEquals(versions[2], par.getVersion());
 
-        par = dao.getParameter("PAR2");
+        par = dao.getById("PAR2", Parameter.class);
         assertEquals("PAR2", par.getName());
         assertEquals(values[1], par.getValue());
         assertEquals(versions[1], par.getVersion());
 
         // Exception if no sample found
         try { // TODO: Ugly, need to split the test to use juni4 expected exception assertions
-            par = dao.getParameter("PAR0");
+            par = dao.getById("PAR0", Parameter.class);
             fail("getParameter must fail when no samples available");
         }
         catch (Exception e) {
         }
 
         // Retrieving history
-        List<Parameter> params = dao.getParameter("PAR1", 0, 1000);
+        List<Parameter> params = dao.getById("PAR1", 0, 1000, Parameter.class);
         assertEquals(2, params.size());
         assertEquals(values[0], params.get(0).getValue());
         assertEquals(values[2], params.get(1).getValue());
 
-        params = dao.getParameter("PAR1", 15, 1000);
+        params = dao.getById("PAR1", 15, 1000, Parameter.class);
         assertEquals(1, params.size());
         assertEquals(values[2], params.get(0).getValue());
 
-        params = dao.getParameter("PAR1", 0, 10);
+        params = dao.getById("PAR1", 0, 10, Parameter.class);
         assertEquals(1, params.size());
         assertEquals(values[0], params.get(0).getValue());
 
-        params = dao.getParameter("PAR1", 40, 1000);
+        params = dao.getById("PAR1", 40, 1000, Parameter.class);
         assertEquals(0, params.size());
     }
 
@@ -469,7 +469,7 @@ public class MongoDataAccessTest {
 
         LocationContactEvent contact1 = new LocationContactEvent(gs1.getID(), sat1.getID(), 10);
         contact1.setStartTime(now + 1000 * 60 * 2);
-        contact1.setEndTime(now + 1000 * 60 * 10);
+        contact1.setEndTime(now + 1000 * 60 * 5);
 
         LocationContactEvent contact2 = new LocationContactEvent(gs1.getID(), sat1.getID(), 11);
         contact2.setStartTime(now + 1000 * 60 * 12);
@@ -494,18 +494,26 @@ public class MongoDataAccessTest {
         assertEquals(contact1.getStartTime(), contact.getStartTime());
 
         // For GS and starting point
-        contact = dao.getNextLocationContactEventForGroundStation(gs1.getID(), now + 1000 * 60 * 3);
+        List<LocationContactEvent> contacts = dao.getLocationContactEventsForGroundStation(gs1.getID(), now + 1000 * 60 * 6, Long.MAX_VALUE);
+        assertEquals(2, contacts.size());
+
+        contact = contacts.get(0);
         assertEquals(gs1.getID(), contact.getGroundStationID());
         assertEquals(sat2.getID(), contact.getSatelliteID());
         assertEquals(5, contact.getOrbitNumber());
         assertEquals(contact3.getStartTime(), contact.getStartTime());
 
-        try {
-            contact = dao.getNextLocationContactEventForGroundStation(gs1.getID(), now + 1000 * 1000 * 1000);
-            fail("getNextLocationContactEventForGroundStation must throw exception when there are no contacts in database");
-        }
-        catch (Exception e) {
-        }
+        contacts = dao.getLocationContactEventsForGroundStation(gs1.getID(), now + 1000 * 60 * 3, Long.MAX_VALUE);
+        assertEquals(3, contacts.size());
+
+        contact = contacts.get(0);
+        assertEquals(gs1.getID(), contact.getGroundStationID());
+        assertEquals(sat1.getID(), contact.getSatelliteID());
+        assertEquals(10, contact.getOrbitNumber());
+        assertEquals(contact1.getStartTime(), contact.getStartTime());
+
+        contacts = dao.getLocationContactEventsForGroundStation(gs1.getID(), now + 1000 * 1000 * 1000, Long.MAX_VALUE);
+        assertEquals(0, contacts.size());
 
         // For GS and sat
         contact = dao.getNextLocationContactEventFor(gs1.getID(), sat1.getID());
@@ -519,7 +527,10 @@ public class MongoDataAccessTest {
         assertEquals(5, contact.getOrbitNumber());
 
         // For GS, sat and starting point
-        contact = dao.getNextLocationContactEventFor(gs1.getID(), sat1.getID(), now + 1000 * 60 * 3);
+        contacts = dao.getLocationContactEventsFor(gs1.getID(), sat1.getID(), now + 1000 * 60 * 11, Long.MAX_VALUE);
+        assertEquals(1, contacts.size());
+
+        contact = contacts.get(0);
         assertEquals(gs1.getID(), contact.getGroundStationID());
         assertEquals(sat1.getID(), contact.getSatelliteID());
         assertEquals(11, contact.getOrbitNumber());

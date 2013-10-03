@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A differential limit is a limit that checks whether a change to a parameter, whether
  * positive or negative, is not larger than a given delta. Each change can only be
- * of a given size. 
+ * of a given size.
  * 
  * Notice that over multiple updates, the parameter may change its value beyond the
  * differential limit. In the sum the changes are larger, but each step is lower.
@@ -33,41 +33,41 @@ import org.slf4j.LoggerFactory;
  * @author Gert Villemos
  */
 public class DifferentialLimitChecker extends BaseLimitChecker {
-	private static final Logger LOG = LoggerFactory.getLogger(DifferentialLimitChecker.class);
-	
-	protected IDataAccess api = null;
-	
-	/**
-	 * Constructor
-	 * 
-	 * @param limit The definition of the limit.
-	 */
-	public DifferentialLimitChecker(Limit limit, IDataAccess api) {
-		super(limit);
-		
-		this.api = api;
-		
-		/** Get the current value. */
-		try {
-			lastValue = getApi().getParameter(limit.getLimitOfParameter());
-		} catch(Exception e) {
-			LOG.info("Failed to retrieve the last value of parameter " + limit.getLimitOfParameter(), e);
-		}
-	}
+    private static final Logger LOG = LoggerFactory.getLogger(DifferentialLimitChecker.class);
 
-	@Override
-	protected boolean checkLimit(Parameter parameter) {
-		/** Calculate difference between lastValue and parameter. */
-		return Math.abs(lastValue.getValue().doubleValue() - parameter.getValue().doubleValue()) < limit.getValue().doubleValue();
-	}
+    protected IDataAccess api = null;
 
-	public IDataAccess getApi() {
-		return api;
-	}
+    /**
+     * Constructor
+     * 
+     * @param limit The definition of the limit.
+     */
+    public DifferentialLimitChecker(Limit limit, IDataAccess api) {
+        super(limit);
 
-	public void setApi(IDataAccess api) {
-		this.api = api;
-	}
-	
-	
+        this.api = api;
+
+        /** Get the current value. */
+        try {
+            lastValue = getApi().getById(limit.getLimitOfParameter(), Parameter.class);
+        }
+        catch (Exception e) {
+            LOG.info("Failed to retrieve the last value of parameter " + limit.getLimitOfParameter(), e);
+        }
+    }
+
+    @Override
+    protected boolean checkLimit(Parameter parameter) {
+        /** Calculate difference between lastValue and parameter. */
+        return Math.abs(lastValue.getValue().doubleValue() - parameter.getValue().doubleValue()) < limit.getValue().doubleValue();
+    }
+
+    public IDataAccess getApi() {
+        return api;
+    }
+
+    public void setApi(IDataAccess api) {
+        this.api = api;
+    }
+
 }

@@ -18,7 +18,6 @@ import org.hbird.business.api.exceptions.NotFoundException;
 import org.hbird.business.api.exceptions.SaveFailedException;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Metadata;
-import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.interfaces.IEntity;
 import org.hbird.exchange.interfaces.IEntityInstance;
@@ -52,6 +51,7 @@ public class MongoDataAccess implements IDataAccess {
     private static final String FIELD_SATELLITE_ID = "satelliteId";
     private static final String FIELD_GROUND_STATION_ID = "groundStationId";
     private static final String FIELD_START_TIME = "startTime";
+    private static final String FIELD_END_TIME = "endTime";
     private static final String FIELD_DERIVED_FROM = "derivedFromId";
 
     public final Sort sortByVersionDesc = new Sort(new Sort.Order(Sort.Direction.DESC, FIELD_VERSION));
@@ -154,6 +154,11 @@ public class MongoDataAccess implements IDataAccess {
     }
 
     @Override
+    public <T extends IEntityInstance> List<T> getById(String id, long from, long to, Class<T> clazz) throws DataAccessException {
+        return getLastVersionOfEachTimestamp(getByFieldInRange(FIELD_ID, id, clazz, from, to));
+    }
+
+    @Override
     public <T extends IEntityInstance> T getByInstanceId(String id, Class<T> clazz) throws NotFoundException, DataAccessException {
         return wrapReturn(findById(id, clazz));
     }
@@ -247,18 +252,6 @@ public class MongoDataAccess implements IDataAccess {
         return l;
     }
 
-    @Override
-    public Parameter getParameter(String name) throws NotFoundException, DataAccessException {
-        return wrapReturn(getLastVersionByField(Parameter.class, FIELD_NAME, name));
-    }
-
-    @Override
-    public List<Parameter> getParameter(String name, long from, long to) throws DataAccessException {
-        // Leaving only last versions probably doesn't make much sense here - it is supposed
-        // to return previous values of the parameter
-        return getByFieldInRange(FIELD_NAME, name, Parameter.class, from, to);
-    }
-
     // TODO: More generic?
     private <T extends IEntityInstance> List<T> getLastVersions(Query query, Class<T> clazz) throws DataAccessException {
         List<T> instances = find(query.with(sortByIDAndVersion), clazz);
@@ -328,32 +321,39 @@ public class MongoDataAccess implements IDataAccess {
 
     @Override
     public LocationContactEvent getNextLocationContactEventForGroundStation(String groundStationID) throws NotFoundException, DataAccessException {
-        return getNextLocationContactEventForGroundStation(groundStationID, System.currentTimeMillis());
-    }
-
-    @Override
-    public LocationContactEvent getNextLocationContactEventForGroundStation(String groundStationID, long from) throws NotFoundException, DataAccessException {
-        Query query = query(where(FIELD_GROUND_STATION_ID).is(groundStationID).and(FIELD_START_TIME).gte(from))
+        Query query = query(where(FIELD_GROUND_STATION_ID).is(groundStationID).and(FIELD_END_TIME).gte(System.currentTimeMillis()))
                 .with(sortByStartTimeAsc).limit(1);
 
         return wrapReturn(findOne(query, LocationContactEvent.class));
     }
 
     @Override
-    public LocationContactEvent getNextLocationContactEventFor(String groundStationID, String satelliteID) throws NotFoundException, DataAccessException {
-        return getNextLocationContactEventFor(groundStationID, satelliteID, System.currentTimeMillis());
+    public List<LocationContactEvent> getLocationContactEventsForGroundStation(String groundStationID, long from, long to)
+            throws DataAccessException {
+        Query query = query(where(FIELD_GROUND_STATION_ID).is(groundStationID).and(FIELD_END_TIME).gte(from))
+                .with(sortByStartTimeAsc);
+
+        return find(query, LocationContactEvent.class);
     }
 
     @Override
-    public LocationContactEvent getNextLocationContactEventFor(String groundStationID, String satelliteID, long from) throws NotFoundException,
+    public LocationContactEvent getNextLocationContactEventFor(String groundStationID, String satelliteID) throws NotFoundException, DataAccessException {
+        Query query = query(where(FIELD_GROUND_STATION_ID).is(groundStationID)
+                .and(FIELD_SATELLITE_ID).is(satelliteID))
+                .with(sortByStartTimeAsc).limit(1);
+
+        return wrapReturn(findOne(query, LocationContactEvent.class));
+    }
+
+    @Override
+    public List<LocationContactEvent> getLocationContactEventsFor(String groundStationID, String satelliteID, long from, long to) throws NotFoundException,
             DataAccessException {
         Query query = query(where(FIELD_GROUND_STATION_ID).is(groundStationID)
                 .and(FIELD_SATELLITE_ID).is(satelliteID)
-                .and(FIELD_START_TIME).gte(from))
-                .with(sortByStartTimeAsc)
-                .limit(1);
+                .and(FIELD_END_TIME).gte(from))
+                .with(sortByStartTimeAsc);
 
-        return wrapReturn(findOne(query, LocationContactEvent.class));
+        return find(query, LocationContactEvent.class);
     }
 
     @Override

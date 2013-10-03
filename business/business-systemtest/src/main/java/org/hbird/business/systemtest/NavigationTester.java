@@ -90,7 +90,9 @@ public class NavigationTester extends SystemTest {
         print(locationEventListener.elements);
 
         /** Retrieve the next set of TARTU events and check them. */
-        LocationContactEvent contactEvent = accessApi.getNextLocationContactEventForGroundStation(es5ec.getID(), 1355385522265l);
+        List<LocationContactEvent> events = accessApi.getLocationContactEventsForGroundStation(es5ec.getID(), 1355385522265l, Long.MAX_VALUE);
+        azzert(events.size() > 0, "Expected a contact event with ES5EC");
+        LocationContactEvent contactEvent = events.get(0);
 
         azzert(contactEvent != null);
         azzert(contactEvent.getStartTime() == 1355390676020l);
@@ -100,7 +102,9 @@ public class NavigationTester extends SystemTest {
          * Check the contact events with Aalborg. Notice that there is one LOST contact event first. The retrieval
          * should NOT get this.
          */
-        contactEvent = accessApi.getNextLocationContactEventForGroundStation(gsAalborg.getID(), 1355385522265l);
+        events = accessApi.getLocationContactEventsForGroundStation(gsAalborg.getID(), 1355385522265l, Long.MAX_VALUE);
+        azzert(events.size() > 0, "Expected a contact event with Aalborg");
+        contactEvent = events.get(0);
 
         azzert(contactEvent != null);
         azzert(contactEvent.getStartTime() == 1355390809139l);
