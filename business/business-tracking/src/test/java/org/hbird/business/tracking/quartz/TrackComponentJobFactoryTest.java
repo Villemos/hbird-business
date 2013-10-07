@@ -36,9 +36,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.quartz.Job;
 import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.quartz.Scheduler;
-import org.quartz.jobs.NoOpJob;
 import org.quartz.spi.TriggerFiredBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,5 +169,15 @@ public class TrackComponentJobFactoryTest {
             inOrder.verify(jobDetail, times(1)).getKey();
         }
         inOrder.verifyNoMoreInteractions();
+    }
+
+    public static class NoOpJob implements Job {
+
+        public NoOpJob() {
+        }
+
+        @Override
+        public void execute(JobExecutionContext context) throws JobExecutionException {
+        }
     }
 }

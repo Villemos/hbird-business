@@ -317,14 +317,16 @@ public class NotificationEventSchedulerTest {
 
     @Test
     public void testCreateJob() throws Exception {
-        when(jobDataMap.isEmpty()).thenReturn(false);
-        JobDetail job = eventScheduler.createJob(GROUP_NAME, JOB_NAME, jobDataMap);
+        JobDataMap map = new JobDataMap();
+        map.put(GROUP_NAME, SAT_ID);
+        JobDetail job = eventScheduler.createJob(GROUP_NAME, JOB_NAME, map);
         assertNotNull(job);
         assertEquals(NotificationEventCreationJob.class, job.getJobClass());
         assertEquals(GROUP_NAME, job.getKey().getGroup());
         assertEquals(JOB_NAME, job.getKey().getName());
-        assertEquals(jobDataMap, job.getJobDataMap());
-        inOrder.verify(jobDataMap, times(1)).isEmpty();
+        assertNotNull(job.getJobDataMap());
+        assertEquals(1, job.getJobDataMap().size());
+        assertEquals(SAT_ID, job.getJobDataMap().get(GROUP_NAME));
         inOrder.verifyNoMoreInteractions();
     }
 

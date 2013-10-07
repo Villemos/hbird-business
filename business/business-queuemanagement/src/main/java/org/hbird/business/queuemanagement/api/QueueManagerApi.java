@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.jms.InvalidSelectorException;
 import javax.management.MBeanServerConnection;
 import javax.management.MBeanServerInvocationHandler;
 import javax.management.MalformedObjectNameException;
@@ -39,6 +38,7 @@ import org.apache.activemq.broker.jmx.CompositeDataConstants;
 import org.apache.activemq.broker.jmx.QueueViewMBean;
 import org.apache.activemq.broker.jmx.TopicViewMBean;
 import org.hbird.business.api.IQueueManager;
+import org.springframework.jms.InvalidSelectorException;
 
 /**
  * The queue manager component support the monitoring and control of a activemq queue.

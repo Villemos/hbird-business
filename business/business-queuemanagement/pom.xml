@@ -27,5 +27,10 @@
             <artifactId>activemq-camel</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>${version.activemq}</version>
+        </dependency>
     </dependencies>
 </project>
