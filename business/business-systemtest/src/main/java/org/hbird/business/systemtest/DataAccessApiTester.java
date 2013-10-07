@@ -126,17 +126,17 @@ public class DataAccessApiTester extends SystemTest {
                 satelliteCatalogue.size());
 
         // Single parameter, without state. */
-        parameter = accessApi.getParameter("PARA1");
+        parameter = accessApi.getById("PARA1", Parameter.class);
         azzert(parameter != null, "Expect to receive 1 value.");
         azzert(parameter.getTimestamp() == 20, "Expect to receive timestamp 20.");
 
         // Single parameter at timestamp 1
-        parameters = accessApi.getParameter("PARA1", 1, 1);
+        parameters = accessApi.getById("PARA1", 1, 1, Parameter.class);
         azzert(parameters.size() == 1, "Expect to receive one value in range [1,1].");
         azzert(parameters.get(0).getTimestamp() == 1, "Expect to receive timestamp 1.");
 
         // Multiple values of the same parameter
-        parameters = accessApi.getParameter("PARA1", 2, 5);
+        parameters = accessApi.getById("PARA1", 2, 5, Parameter.class);
         azzert(parameters.size() == 3, "Except to receive 3 values in range [2,5]");
         azzert(parameters.get(0).getTimestamp() == 2);
         azzert(parameters.get(1).getTimestamp() == 4);

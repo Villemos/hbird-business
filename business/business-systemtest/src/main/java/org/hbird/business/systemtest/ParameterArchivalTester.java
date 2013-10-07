@@ -103,7 +103,7 @@ public class ParameterArchivalTester extends SystemTest {
         try {
             LOG.info("Retrieveing last value of PARA1");
 
-            Parameter respond = accessApi.getParameter(para1Name);
+            Parameter respond = accessApi.getById(para1Name, Parameter.class);
             azzert(respond != null, "Received a response.");
 
             azzert(respond.asDouble() == 2.6d, "Last value should be 2.6. Received " + respond.asDouble());
@@ -114,7 +114,7 @@ public class ParameterArchivalTester extends SystemTest {
 
         // Test retrieval of a lower bound time range for one parameter.
         try {
-            List<Parameter> respond = accessApi.getParameter(para2Name, start.getTime(), (new Date()).getTime());
+            List<Parameter> respond = accessApi.getById(para2Name, start.getTime(), (new Date()).getTime(), Parameter.class);
             azzert(respond != null, "Received a response.");
             azzert(respond.size() == 3, "Expect 3 entries. Received " + respond.size());
         }
@@ -124,7 +124,7 @@ public class ParameterArchivalTester extends SystemTest {
 
         // Test retrieval of a lower bound time range for one parameter.
         try {
-            List<Parameter> respond = accessApi.getParameter(para2Name, start.getTime(), end.getTime());
+            List<Parameter> respond = accessApi.getById(para2Name, start.getTime(), end.getTime(), Parameter.class);
             azzert(respond != null, "Received a response.");
             azzert(respond.size() == 2, "Expect 2 entries. Received " + respond.size());
         }
