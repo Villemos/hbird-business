@@ -330,7 +330,9 @@ public class MongoDataAccess implements IDataAccess {
     @Override
     public List<LocationContactEvent> getLocationContactEventsForGroundStation(String groundStationID, long from, long to)
             throws DataAccessException {
-        Query query = query(where(FIELD_GROUND_STATION_ID).is(groundStationID).and(FIELD_END_TIME).gte(from))
+        Query query = query(where(FIELD_GROUND_STATION_ID).is(groundStationID)
+                .and(FIELD_END_TIME).gte(from)
+                .and(FIELD_START_TIME).lte(to))
                 .with(sortByStartTimeAsc);
 
         return find(query, LocationContactEvent.class);
@@ -338,8 +340,10 @@ public class MongoDataAccess implements IDataAccess {
 
     @Override
     public LocationContactEvent getNextLocationContactEventFor(String groundStationID, String satelliteID) throws NotFoundException, DataAccessException {
+        long now = System.currentTimeMillis();
         Query query = query(where(FIELD_GROUND_STATION_ID).is(groundStationID)
-                .and(FIELD_SATELLITE_ID).is(satelliteID))
+                .and(FIELD_SATELLITE_ID).is(satelliteID)
+                .and(FIELD_START_TIME).gte(now))
                 .with(sortByStartTimeAsc).limit(1);
 
         return wrapReturn(findOne(query, LocationContactEvent.class));
@@ -350,7 +354,8 @@ public class MongoDataAccess implements IDataAccess {
             DataAccessException {
         Query query = query(where(FIELD_GROUND_STATION_ID).is(groundStationID)
                 .and(FIELD_SATELLITE_ID).is(satelliteID)
-                .and(FIELD_END_TIME).gte(from))
+                .and(FIELD_END_TIME).gte(from)
+                .and(FIELD_START_TIME).lte(to))
                 .with(sortByStartTimeAsc);
 
         return find(query, LocationContactEvent.class);

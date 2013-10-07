@@ -30,6 +30,7 @@ import org.hbird.exchange.core.State;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.Satellite;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,6 +51,7 @@ public class SubclassAwareMongoTemplateTest {
         template1 = new SubclassAwareMongoTemplate(mongo, DATABASE_NAME);
     }
 
+    @After
     public void tearDown() {
         mongo.dropDatabase(DATABASE_NAME);
         mongo.close();

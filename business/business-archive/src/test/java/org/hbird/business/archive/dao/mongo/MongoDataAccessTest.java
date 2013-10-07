@@ -30,7 +30,7 @@ import com.mongodb.Mongo;
 
 class TestEntityInstance extends EntityInstance {
     private static final long serialVersionUID = 5791358392868382015L;
-    private String testField;
+    private final String testField;
 
     public TestEntityInstance(String ID, String name, String testField) {
         super(ID, name);
@@ -467,6 +467,10 @@ public class MongoDataAccessTest {
 
         long now = System.currentTimeMillis();
 
+        LocationContactEvent contact0 = new LocationContactEvent(gs1.getID(), sat1.getID(), 4);
+        contact0.setStartTime(now - 1000 * 60 * 5);
+        contact0.setEndTime(now - 1000 * 60 * 2);
+
         LocationContactEvent contact1 = new LocationContactEvent(gs1.getID(), sat1.getID(), 10);
         contact1.setStartTime(now + 1000 * 60 * 2);
         contact1.setEndTime(now + 1000 * 60 * 5);
@@ -479,12 +483,18 @@ public class MongoDataAccessTest {
         contact3.setStartTime(now + 1000 * 60 * 4);
         contact3.setEndTime(now + 1000 * 60 * 14);
 
+        LocationContactEvent contact4 = new LocationContactEvent(gs1.getID(), sat1.getID(), 50);
+        contact4.setStartTime(now + 1000 * 60 * 30);
+        contact4.setEndTime(now + 1000 * 60 * 34);
+
         dao.save(gs1);
         dao.save(sat1);
         dao.save(sat2);
+        dao.save(contact0);
         dao.save(contact1);
         dao.save(contact2);
         dao.save(contact3);
+        dao.save(contact4);
 
         // For GS
         LocationContactEvent contact = dao.getNextLocationContactEventForGroundStation(gs1.getID());
@@ -494,46 +504,62 @@ public class MongoDataAccessTest {
         assertEquals(contact1.getStartTime(), contact.getStartTime());
 
         // For GS and starting point
-        List<LocationContactEvent> contacts = dao.getLocationContactEventsForGroundStation(gs1.getID(), now + 1000 * 60 * 6, Long.MAX_VALUE);
+        List<LocationContactEvent> contacts = dao.getLocationContactEventsForGroundStation(gs1.getID(), now + 1000 * 60 * 13, now + 1000 * 60 * 15);
         assertEquals(2, contacts.size());
 
         contact = contacts.get(0);
+        assertEquals(contact3.getInstanceID(), contact.getInstanceID());
         assertEquals(gs1.getID(), contact.getGroundStationID());
         assertEquals(sat2.getID(), contact.getSatelliteID());
         assertEquals(5, contact.getOrbitNumber());
         assertEquals(contact3.getStartTime(), contact.getStartTime());
+        assertEquals(contact3.getEndTime(), contact.getEndTime());
 
-        contacts = dao.getLocationContactEventsForGroundStation(gs1.getID(), now + 1000 * 60 * 3, Long.MAX_VALUE);
-        assertEquals(3, contacts.size());
-
-        contact = contacts.get(0);
+        contact = contacts.get(1);
+        assertEquals(contact2.getInstanceID(), contact.getInstanceID());
         assertEquals(gs1.getID(), contact.getGroundStationID());
         assertEquals(sat1.getID(), contact.getSatelliteID());
-        assertEquals(10, contact.getOrbitNumber());
-        assertEquals(contact1.getStartTime(), contact.getStartTime());
+        assertEquals(11, contact.getOrbitNumber());
+        assertEquals(contact2.getStartTime(), contact.getStartTime());
+        assertEquals(contact2.getEndTime(), contact.getEndTime());
+
+        contacts = dao.getLocationContactEventsForGroundStation(gs1.getID(), now + 1000 * 60 * 3, Long.MAX_VALUE);
+        assertEquals(4, contacts.size());
+
+        assertEquals(contact1.getInstanceID(), contacts.get(0).getInstanceID());
+        assertEquals(contact3.getInstanceID(), contacts.get(1).getInstanceID());
+        assertEquals(contact2.getInstanceID(), contacts.get(2).getInstanceID());
+        assertEquals(contact4.getInstanceID(), contacts.get(3).getInstanceID());
 
         contacts = dao.getLocationContactEventsForGroundStation(gs1.getID(), now + 1000 * 1000 * 1000, Long.MAX_VALUE);
         assertEquals(0, contacts.size());
 
         // For GS and sat
         contact = dao.getNextLocationContactEventFor(gs1.getID(), sat1.getID());
+        assertEquals(contact1.getInstanceID(), contact.getInstanceID());
         assertEquals(gs1.getID(), contact.getGroundStationID());
         assertEquals(sat1.getID(), contact.getSatelliteID());
         assertEquals(10, contact.getOrbitNumber());
 
         contact = dao.getNextLocationContactEventFor(gs1.getID(), sat2.getID());
+        assertEquals(contact3.getInstanceID(), contact.getInstanceID());
         assertEquals(gs1.getID(), contact.getGroundStationID());
         assertEquals(sat2.getID(), contact.getSatelliteID());
         assertEquals(5, contact.getOrbitNumber());
 
         // For GS, sat and starting point
-        contacts = dao.getLocationContactEventsFor(gs1.getID(), sat1.getID(), now + 1000 * 60 * 11, Long.MAX_VALUE);
+        contacts = dao.getLocationContactEventsFor(gs1.getID(), sat1.getID(), now + 1000 * 60 * 11, now + 1000 * 60 * 15);
         assertEquals(1, contacts.size());
-
         contact = contacts.get(0);
+        assertEquals(contact2.getInstanceID(), contact.getInstanceID());
         assertEquals(gs1.getID(), contact.getGroundStationID());
         assertEquals(sat1.getID(), contact.getSatelliteID());
         assertEquals(11, contact.getOrbitNumber());
+
+        contacts = dao.getLocationContactEventsFor(gs1.getID(), sat1.getID(), now + 1000 * 60 * 11, Long.MAX_VALUE);
+        assertEquals(2, contacts.size());
+        assertEquals(contact2.getInstanceID(), contacts.get(0).getInstanceID());
+        assertEquals(contact4.getInstanceID(), contacts.get(1).getInstanceID());
     }
 
     @Test
