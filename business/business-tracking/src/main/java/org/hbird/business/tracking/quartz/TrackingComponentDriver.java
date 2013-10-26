@@ -3,6 +3,7 @@ package org.hbird.business.tracking.quartz;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
@@ -22,12 +23,14 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
     public static final String TRACK_COMMAND_INJECTOR = "seda:toPublisher";
 
     private final IDataAccess dao;
+    private final IOrbitalDataAccess orbitalDao;
     private final IdBuilder idBuilder;
 
     @Autowired
-    public TrackingComponentDriver(IPublisher publisher, IDataAccess dao, IdBuilder idBuilder) {
+    public TrackingComponentDriver(IPublisher publisher, IDataAccess dao, IOrbitalDataAccess orbitalDao, IdBuilder idBuilder) {
         super(publisher);
         this.dao = dao;
+        this.orbitalDao = orbitalDao;
         this.idBuilder = idBuilder;
     }
 
@@ -55,7 +58,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
         }
 
         SchedulingSupport support = new SchedulingSupport();
-        ArchivePoller archivePoller = new ArchivePoller(config, dao);
+        ArchivePoller archivePoller = new ArchivePoller(config, orbitalDao);
         TrackCommandScheduler trackCommandScheduler = new TrackCommandScheduler(config, scheduler, support);
         TrackCommandUnscheduler contactUnscheduler = new TrackCommandUnscheduler(scheduler, support);
         EventAnalyzer analyzer = new EventAnalyzer(scheduler, support);

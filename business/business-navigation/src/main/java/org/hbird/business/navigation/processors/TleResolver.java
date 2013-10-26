@@ -17,7 +17,7 @@
 package org.hbird.business.navigation.processors;
 
 import org.apache.camel.Handler;
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.exceptions.NotFoundException;
 import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
 import org.hbird.business.navigation.request.PredictionRequest;
@@ -36,9 +36,9 @@ public class TleResolver {
     private static Logger LOG = LoggerFactory.getLogger(TleResolver.class);
 
     @Autowired
-    private final IDataAccess dao;
+    private final IOrbitalDataAccess dao;
 
-    public TleResolver(IDataAccess dao) {
+    public TleResolver(IOrbitalDataAccess dao) {
         this.dao = dao;
     }
 

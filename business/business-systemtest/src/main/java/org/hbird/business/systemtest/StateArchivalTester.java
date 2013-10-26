@@ -73,9 +73,7 @@ public class StateArchivalTester extends SystemTest {
         Thread.sleep(2000);
 
         /** Test retrieval. */
-        // Object respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE,
-        // "COMMAND1"));
-        Object respond = accessApi.getState("COMMAND1:Command:*");
+        Object respond = accessApi.getApplicableTo("COMMAND1:Command:*", State.class);
         azzert(respond != null, "Received a response.");
 
         Map<String, State> states = new HashMap<String, State>();
@@ -101,9 +99,7 @@ public class StateArchivalTester extends SystemTest {
         Thread.sleep(2000);
 
         /** Test retrieval. */
-        // respond = injection.requestBody(new StateRequest("SystemTest", StandardComponents.PARAMETER_ARCHIVE,
-        // "COMMAND1"));
-        respond = accessApi.getState("COMMAND1:Command:*");
+        respond = accessApi.getApplicableTo("COMMAND1:Command:*", State.class);
         azzert(respond != null, "Received a response #2.");
 
         states = new HashMap<String, State>();

@@ -64,13 +64,13 @@ public class HamlibDriverTest {
     private static final int PORT = 4532;
     private static final String KEY1 = "set_freq";
     private static final String KEY2 = "set_pos";
-    
+
     @Mock
     private IDataAccess dao;
-    
+
     @Mock
     private IOrbitDataCalculator calculator;
-    
+
     @Mock
     private IPublisher publisher;
 
@@ -85,7 +85,7 @@ public class HamlibDriverTest {
 
     @Mock
     private ResponseHandler<GroundStationDriverConfiguration, String, String> handler2;
-    
+
     private List<ResponseHandler<GroundStationDriverConfiguration, String, String>> handlers;
 
     private HamlibDriver<GroundStationDriverConfiguration> driver;

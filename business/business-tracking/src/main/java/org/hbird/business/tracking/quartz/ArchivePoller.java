@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.camel.Handler;
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.exceptions.NotFoundException;
 import org.hbird.exchange.navigation.LocationContactEvent;
 import org.slf4j.Logger;
@@ -35,9 +35,9 @@ public class ArchivePoller {
 
     private final TrackingDriverConfiguration config;
 
-    private final IDataAccess dao;
+    private final IOrbitalDataAccess dao;
 
-    public ArchivePoller(TrackingDriverConfiguration config, IDataAccess dao) {
+    public ArchivePoller(TrackingDriverConfiguration config, IOrbitalDataAccess dao) {
         this.config = config;
         this.dao = dao;
     }

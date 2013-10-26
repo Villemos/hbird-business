@@ -27,6 +27,7 @@ import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IStartableEntityManager;
 import org.hbird.business.archive.ArchiveComponent;
@@ -97,6 +98,7 @@ public abstract class SystemTest {
 
     protected static IPublisher publishApi;
     protected static IDataAccess accessApi;
+    protected static IOrbitalDataAccess orbitalAccessApi;
     protected static ICatalogue catalogueApi;
     protected static IStartableEntityManager startableEntityManager;
 
@@ -288,6 +290,15 @@ public abstract class SystemTest {
     protected void azzert(boolean assertion) {
         if (assertion == false) {
             LOG.error("FAILED in {}.", getClass().getSimpleName());
+            if (exitOnFailure) {
+                System.exit(1);
+            }
+        }
+    }
+
+    protected void azzertEquals(Object actual, Object expected) {
+        if (!actual.equals(expected)) {
+            LOG.error("FAILED in {}, expected {}, got {}", new Object[] { getClass().getSimpleName(), expected, actual });
             if (exitOnFailure) {
                 System.exit(1);
             }
@@ -806,6 +817,14 @@ public abstract class SystemTest {
 
     public static void setAccessApi(IDataAccess accessApi) {
         SystemTest.accessApi = accessApi;
+    }
+
+    public static IOrbitalDataAccess getOrbitalAccessApi() {
+        return orbitalAccessApi;
+    }
+
+    public static void setOrbitalAccessApi(IOrbitalDataAccess api) {
+        SystemTest.orbitalAccessApi = api;
     }
 
     public static ICatalogue getCatalogueApi() {

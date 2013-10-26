@@ -19,9 +19,9 @@ package org.hbird.business.navigation.orekit;
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.ContactEventComponent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +33,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 
  */
 public class ContactEventComponentDriver extends SoftwareComponentDriver<ContactEventComponent> {
-	protected IDataAccess dao;
+	protected IOrbitalDataAccess dao;
 	protected IdBuilder idBuilder;
 	protected ICatalogue catalogue;
 	
 	@Autowired
-	public ContactEventComponentDriver(IDataAccess dao, IPublisher publisher, IdBuilder idBuilder, ICatalogue catalogue) {
+	public ContactEventComponentDriver(IOrbitalDataAccess dao, IPublisher publisher, IdBuilder idBuilder, ICatalogue catalogue) {
 		super(publisher);
 		
 		this.dao = dao;

@@ -90,7 +90,7 @@ public class NavigationTester extends SystemTest {
         print(locationEventListener.elements);
 
         /** Retrieve the next set of TARTU events and check them. */
-        List<LocationContactEvent> events = accessApi.getLocationContactEventsForGroundStation(es5ec.getID(), 1355385522265l, Long.MAX_VALUE);
+        List<LocationContactEvent> events = orbitalAccessApi.getLocationContactEventsForGroundStation(es5ec.getID(), 1355385522265l, Long.MAX_VALUE);
         azzert(events.size() > 0, "Expected a contact event with ES5EC");
         LocationContactEvent contactEvent = events.get(0);
 
@@ -102,7 +102,7 @@ public class NavigationTester extends SystemTest {
          * Check the contact events with Aalborg. Notice that there is one LOST contact event first. The retrieval
          * should NOT get this.
          */
-        events = accessApi.getLocationContactEventsForGroundStation(gsAalborg.getID(), 1355385522265l, Long.MAX_VALUE);
+        events = orbitalAccessApi.getLocationContactEventsForGroundStation(gsAalborg.getID(), 1355385522265l, Long.MAX_VALUE);
         azzert(events.size() > 0, "Expected a contact event with Aalborg");
         contactEvent = events.get(0);
 
@@ -111,7 +111,7 @@ public class NavigationTester extends SystemTest {
         azzert(contactEvent.getEndTime() == 1355391373642l);
 
         /** See if we can get the metadata */
-        List<Metadata> response = accessApi.getMetadata(parameters.getID());
+        List<Metadata> response = accessApi.getApplicableTo(parameters.getID(), Metadata.class);
         azzert(response.size() == 1, "Expected to receive 1 piece of metadata. Received " + response.size());
 
         LOG.info("Finished");

@@ -19,6 +19,7 @@ package org.hbird.business.navigation.orekit;
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.ICatalogue;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.PredictionComponent;
@@ -47,16 +48,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ContactPredictionDriver extends SoftwareComponentDriver<PredictionComponent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ContactPredictionDriver.class);
-    
+
     protected IDataAccess dao;
+    protected IOrbitalDataAccess orbitalDao;
     protected ICatalogue catalogue;
-    
+
     @Autowired
-    public ContactPredictionDriver(IDataAccess dao, ICatalogue catalogue, IPublisher publisher) {
-    	super(publisher);
-    	
-    	this.dao = dao;
-    	this.catalogue = catalogue;
+    public ContactPredictionDriver(IDataAccess dao, IOrbitalDataAccess orbitalDao, ICatalogue catalogue, IPublisher publisher) {
+        super(publisher);
+
+        this.dao = dao;
+        this.orbitalDao = orbitalDao;
+        this.catalogue = catalogue;
     }
 
     /**
@@ -79,7 +82,7 @@ public class ContactPredictionDriver extends SoftwareComponentDriver<PredictionC
         // processors
         ContactPredictionRequestCreator requestCreator = new ContactPredictionRequestCreator(config);
         SatelliteResolver satelliteResolver = new SatelliteResolver(dao);
-        TleResolver tleResolver = new TleResolver(dao);
+        TleResolver tleResolver = new TleResolver(orbitalDao);
         GroundStationResolver gsResolver = new GroundStationResolver(dao, catalogue);
         TimeRangeCalulator timeRangeCalculator = new TimeRangeCalulator();
         OrekitContactPredictor predictor = new OrekitContactPredictor(componentId, propagatorProvider, publisher, frameProvider);

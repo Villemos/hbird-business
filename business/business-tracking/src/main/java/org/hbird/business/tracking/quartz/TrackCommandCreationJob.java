@@ -18,6 +18,7 @@ package org.hbird.business.tracking.quartz;
 
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.cache.EntityCache;
 import org.hbird.exchange.groundstation.Track;
@@ -47,6 +48,7 @@ public class TrackCommandCreationJob implements Job {
     private IStartableEntity issuer;
 
     private IDataAccess dao;
+    private IOrbitalDataAccess orbitalDao;
 
     private ProducerTemplate producer;
 
@@ -64,6 +66,10 @@ public class TrackCommandCreationJob implements Job {
 
     public void setDataAccess(IDataAccess dao) {
         this.dao = dao;
+    }
+
+    public void setOrbitalDataAccess(IOrbitalDataAccess dao) {
+        this.orbitalDao = dao;
     }
 
     public void setProducerTemplate(ProducerTemplate producer) {
@@ -109,7 +115,7 @@ public class TrackCommandCreationJob implements Job {
                 String tleId = event.getDerivedFromId();
                 TleOrbitalParameters eventTle = getTle(tleCache, tleId);
                 if (eventTle != null) {
-                    TleOrbitalParameters latestTle = getLatestTle(dao, satId);
+                    TleOrbitalParameters latestTle = getLatestTle(orbitalDao, satId);
                     if (latestTle == null || areEqual(eventTle, latestTle)) {
                         Track command = createTrackCommand(idBuilder, issuer, event, sat);
                         LOG.info("Issuing Track command for the '{}'", event.toString());
@@ -164,7 +170,7 @@ public class TrackCommandCreationJob implements Job {
         }
     }
 
-    TleOrbitalParameters getLatestTle(IDataAccess dao, String satelliteId) {
+    TleOrbitalParameters getLatestTle(IOrbitalDataAccess dao, String satelliteId) {
         try {
             return dao.getTleFor(satelliteId);
         }

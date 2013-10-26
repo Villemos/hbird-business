@@ -55,11 +55,11 @@ public class CommandReleaser {
     protected String validityHeaderField = "Valid";
 
     protected IDataAccess api;
-    
+
     public CommandReleaser(IDataAccess api) {
-    	this.api = api;
+        this.api = api;
     }
-    
+
     /**
      * Processor for the scheduling of validation task for a command as well as the
      * release of the command.
@@ -87,14 +87,21 @@ public class CommandReleaser {
         /** Request all states that are lock states of this command. */
 
         List<State> states = new ArrayList<State>();
-        
+
         try {
-        	states.addAll(api.getState(command.getCommand().getName() + ":Command:*"));
-        	if (command.getLockStates() != null) {
-        		states.addAll(api.getStates(command.getLockStates()));
-        	}
-        } catch(Exception e) {
-        	LOG.warn("Failed to retrieve states", e);
+            states.addAll(api.getApplicableTo(command.getCommand().getName() + ":Command:*", State.class));
+            if (command.getLockStates() != null) {
+                /*
+                 * NB: Previously, states were queried by their names, constructed above. This code
+                 * assumes that getLockStates() actually returns IDs
+                 */
+                for (String stateID : command.getLockStates()) {
+                    states.add(api.getById(stateID, State.class));
+                }
+            }
+        }
+        catch (Exception e) {
+            LOG.warn("Failed to retrieve states", e);
         }
 
         /** See if any of the states have the value FALSE */

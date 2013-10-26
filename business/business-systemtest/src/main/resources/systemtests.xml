@@ -45,6 +45,7 @@
 
         <property name="publishApi" ref="publisher" />
         <property name="accessApi" ref="dataAccess" />
+        <property name="orbitalAccessApi" ref="orbitalDataAccess" />
         <property name="catalogueApi" ref="catalogue" />
         <property name="startableEntityManager" ref="startableEntityManager" />
     </bean>
@@ -58,6 +59,10 @@
     </bean>
 
     <bean id="dataAccess" class="org.hbird.business.archive.dao.mongo.MongoDataAccess">
+        <constructor-arg ref="mongoTemplate" />
+    </bean>
+    
+    <bean id="orbitalDataAccess" class="org.hbird.business.archive.dao.mongo.MongoOrbitalDataAccess">
         <constructor-arg ref="mongoTemplate" />
     </bean>
 

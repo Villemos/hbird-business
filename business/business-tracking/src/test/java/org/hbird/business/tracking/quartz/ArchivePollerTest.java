@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.exceptions.NotFoundException;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.dataaccess.LocationContactEventRequest;
@@ -57,7 +57,7 @@ public class ArchivePollerTest {
     private TrackingDriverConfiguration config;
 
     @Mock
-    private IDataAccess dao;
+    private IOrbitalDataAccess dao;
 
     @Mock
     private LocationContactEvent event1;
