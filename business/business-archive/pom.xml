@@ -19,7 +19,7 @@
                 <version>${version.surefire-plugin}</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/MongoDataAccessTest.java</exclude>
+                        <exclude>**/Mongo*DataAccessTest.java</exclude>
                         <exclude>**/SubclassAwareMongoTemplateTest.java</exclude>
                         <exclude>**/CatalogueTest.java</exclude>
                     </excludes>
