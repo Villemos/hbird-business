@@ -22,7 +22,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.exceptions.NotFoundException;
 import org.hbird.business.navigation.configuration.PredictionConfigurationBase;
 import org.hbird.business.navigation.request.PredictionRequest;
@@ -43,7 +43,7 @@ public class TleResolverTest {
     private static final String SAT_ID = "SAT-ID";
 
     @Mock
-    private IDataAccess dao;
+    private IOrbitalDataAccess dao;
 
     @Mock
     private PredictionRequest<PredictionConfigurationBase> request;

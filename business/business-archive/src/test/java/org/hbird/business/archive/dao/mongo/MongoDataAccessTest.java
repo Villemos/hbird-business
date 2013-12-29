@@ -11,13 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hbird.business.api.exceptions.ArchiveException;
 import org.hbird.exchange.core.EntityInstance;
 import org.hbird.exchange.core.Metadata;
 import org.hbird.exchange.core.Parameter;
 import org.hbird.exchange.core.Part;
 import org.hbird.exchange.core.State;
 import org.hbird.exchange.groundstation.GroundStation;
-import org.hbird.exchange.navigation.LocationContactEvent;
 import org.hbird.exchange.navigation.OrbitalState;
 import org.hbird.exchange.navigation.Satellite;
 import org.hbird.exchange.navigation.TleOrbitalParameters;
@@ -278,31 +278,38 @@ public class MongoDataAccessTest {
         dao.save(state2);
         dao.save(state3);
 
-        // getState(applicableTo)
-        List<State> states = dao.getState(gs1.getID());
+        List<State> states = dao.getApplicableTo(gs1.getID(), State.class);
         assertEquals(2, states.size());
         assertEquals(gs1.getID(), states.get(0).getApplicableTo());
         assertEquals(gs1.getID(), states.get(1).getApplicableTo());
-        assertEquals(state1.getVersion(), states.get(0).getVersion());
-        assertEquals(state3.getVersion(), states.get(1).getVersion());
+        if (state1.getVersion() == states.get(0).getVersion()) {
+            assertEquals(state3.getVersion(), states.get(1).getVersion());
+        }
+        else {
+            assertEquals(state3.getVersion(), states.get(0).getVersion());
+            assertEquals(state1.getVersion(), states.get(1).getVersion());
+        }
 
-        states = dao.getState(sat1.getID());
+        states = dao.getApplicableTo(sat1.getID(), State.class);
         assertEquals(1, states.size());
         assertEquals(sat1.getID(), states.get(0).getApplicableTo());
         assertEquals(state2.getVersion(), states.get(0).getVersion());
 
-        states = dao.getState("wrongid");
+        states = dao.getApplicableTo("wrongid", State.class);
         assertEquals(0, states.size());
 
-        // getState(applicableTo, from, to)
-        states = dao.getState(gs1.getID(), 0, 100);
+        states = dao.getApplicableTo(gs1.getID(), State.class, 0, 100);
         assertEquals(2, states.size());
         assertEquals(gs1.getID(), states.get(0).getApplicableTo());
         assertEquals(gs1.getID(), states.get(1).getApplicableTo());
-        assertEquals(state3.getVersion(), states.get(0).getVersion());
-        assertEquals(state1.getVersion(), states.get(1).getVersion());
+        if (state3.getVersion() == states.get(1).getVersion()) {
+            assertEquals(state1.getVersion(), states.get(0).getVersion());
+        }
+        else {
+            assertEquals(state3.getVersion(), states.get(0).getVersion());
+            assertEquals(state1.getVersion(), states.get(1).getVersion());
+        }
 
-        // getState(names)
         List<String> names = new ArrayList<String>();
         names.add("foo");
         names.add("bar");
@@ -337,7 +344,7 @@ public class MongoDataAccessTest {
         dao.save(state2);
         dao.save(state3);
 
-        List<State> states = dao.getState(gs1.getID());
+        List<State> states = dao.getApplicableTo(gs1.getID(), State.class);
 
         assertEquals(2, states.size());
 
@@ -373,196 +380,6 @@ public class MongoDataAccessTest {
     }
 
     @Test
-    public void testGetTLEFor() throws Exception {
-        String satID = "SAT";
-        TleOrbitalParameters tle1 = new TleOrbitalParameters("foo", "foo");
-        tle1.setSatelliteId(satID);
-        tle1.setVersion(10);
-        tle1.setTimestamp(10);
-
-        TleOrbitalParameters tle2 = new TleOrbitalParameters("foo", "foo");
-        tle2.setSatelliteId(satID);
-        tle2.setVersion(20);
-        tle2.setTimestamp(20);
-
-        dao.save(tle1);
-        dao.save(tle2);
-
-        TleOrbitalParameters tle = dao.getTleFor(satID);
-        assertEquals(satID, tle.getSatelliteID());
-        assertEquals(tle2.getVersion(), tle.getVersion());
-
-        try {
-            tle = dao.getTleFor("foobad");
-            fail("getTleFor must throw exception when TLE not found");
-        }
-        catch (Exception e) {
-        }
-
-        List<TleOrbitalParameters> tles = dao.getTleFor(satID, 15, 40);
-        assertEquals(1, tles.size());
-        assertEquals(satID, tles.get(0).getSatelliteID());
-        assertEquals(tle2.getVersion(), tles.get(0).getVersion());
-    }
-
-    @Test
-    public void testGetOrbitalStates() throws Exception {
-        Satellite sat1 = new Satellite("SAT1", "SAT1");
-
-        TleOrbitalParameters tle1 = new TleOrbitalParameters(sat1.getID(), "TLE");
-        tle1.setSatelliteId(sat1.getID());
-        tle1.setVersion(10);
-        tle1.setTimestamp(10);
-
-        TleOrbitalParameters tle2 = new TleOrbitalParameters(sat1.getID(), "TLE");
-        tle2.setSatelliteId(sat1.getID());
-        tle2.setVersion(20);
-        tle2.setTimestamp(20);
-
-        OrbitalState state1 = new OrbitalState("state1", "state1");
-        state1.setSatelliteId(sat1.getID());
-        state1.setDerivedFromId(tle1.getInstanceID());
-        state1.setVersion(19);
-        state1.setTimestamp(19);
-
-        OrbitalState state2 = new OrbitalState("state2", "state2");
-        state2.setSatelliteId(sat1.getID());
-        state2.setDerivedFromId(tle1.getInstanceID());
-        state2.setVersion(21);
-        state2.setTimestamp(21);
-
-        OrbitalState state3 = new OrbitalState("state3", "state3");
-        state3.setSatelliteId(sat1.getID());
-        state3.setDerivedFromId(tle2.getInstanceID());
-        state3.setVersion(20);
-        state3.setTimestamp(20);
-
-        dao.save(tle1);
-        dao.save(tle2);
-
-        dao.save(state1);
-        dao.save(state2);
-        dao.save(state3);
-
-        OrbitalState state = dao.getOrbitalStateFor(sat1.getID());
-        assertEquals(tle2.getInstanceID(), state.getDerivedFromId());
-        assertEquals(state3.getVersion(), state.getVersion());
-
-        // TODO: Should it ignore state2 in this case?
-        List<OrbitalState> states = dao.getOrbitalStatesFor(sat1.getID(), 0, 100);
-        assertEquals(3, states.size());
-        assertEquals(state1.getVersion(), states.get(0).getVersion());
-        assertEquals(tle1.getInstanceID(), states.get(0).getDerivedFromId());
-        assertEquals(state3.getVersion(), states.get(1).getVersion());
-        assertEquals(tle2.getInstanceID(), states.get(1).getDerivedFromId());
-        assertEquals(state2.getVersion(), states.get(2).getVersion());
-        assertEquals(tle1.getInstanceID(), states.get(2).getDerivedFromId());
-    }
-
-    @Test
-    public void testGetNextContact() throws Exception {
-        GroundStation gs1 = new GroundStation("GS1", "GS1");
-        Satellite sat1 = new Satellite("SAT1", "SAT1");
-        Satellite sat2 = new Satellite("SAT2", "SAT2");
-
-        long now = System.currentTimeMillis();
-
-        LocationContactEvent contact0 = new LocationContactEvent(gs1.getID(), sat1.getID(), 4);
-        contact0.setStartTime(now - 1000 * 60 * 5);
-        contact0.setEndTime(now - 1000 * 60 * 2);
-
-        LocationContactEvent contact1 = new LocationContactEvent(gs1.getID(), sat1.getID(), 10);
-        contact1.setStartTime(now + 1000 * 60 * 2);
-        contact1.setEndTime(now + 1000 * 60 * 5);
-
-        LocationContactEvent contact2 = new LocationContactEvent(gs1.getID(), sat1.getID(), 11);
-        contact2.setStartTime(now + 1000 * 60 * 12);
-        contact2.setEndTime(now + 1000 * 60 * 14);
-
-        LocationContactEvent contact3 = new LocationContactEvent(gs1.getID(), sat2.getID(), 5);
-        contact3.setStartTime(now + 1000 * 60 * 4);
-        contact3.setEndTime(now + 1000 * 60 * 14);
-
-        LocationContactEvent contact4 = new LocationContactEvent(gs1.getID(), sat1.getID(), 50);
-        contact4.setStartTime(now + 1000 * 60 * 30);
-        contact4.setEndTime(now + 1000 * 60 * 34);
-
-        dao.save(gs1);
-        dao.save(sat1);
-        dao.save(sat2);
-        dao.save(contact0);
-        dao.save(contact1);
-        dao.save(contact2);
-        dao.save(contact3);
-        dao.save(contact4);
-
-        // For GS
-        LocationContactEvent contact = dao.getNextLocationContactEventForGroundStation(gs1.getID());
-        assertEquals(gs1.getID(), contact.getGroundStationID());
-        assertEquals(sat1.getID(), contact.getSatelliteID());
-        assertEquals(10, contact.getOrbitNumber());
-        assertEquals(contact1.getStartTime(), contact.getStartTime());
-
-        // For GS and starting point
-        List<LocationContactEvent> contacts = dao.getLocationContactEventsForGroundStation(gs1.getID(), now + 1000 * 60 * 13, now + 1000 * 60 * 15);
-        assertEquals(2, contacts.size());
-
-        contact = contacts.get(0);
-        assertEquals(contact3.getInstanceID(), contact.getInstanceID());
-        assertEquals(gs1.getID(), contact.getGroundStationID());
-        assertEquals(sat2.getID(), contact.getSatelliteID());
-        assertEquals(5, contact.getOrbitNumber());
-        assertEquals(contact3.getStartTime(), contact.getStartTime());
-        assertEquals(contact3.getEndTime(), contact.getEndTime());
-
-        contact = contacts.get(1);
-        assertEquals(contact2.getInstanceID(), contact.getInstanceID());
-        assertEquals(gs1.getID(), contact.getGroundStationID());
-        assertEquals(sat1.getID(), contact.getSatelliteID());
-        assertEquals(11, contact.getOrbitNumber());
-        assertEquals(contact2.getStartTime(), contact.getStartTime());
-        assertEquals(contact2.getEndTime(), contact.getEndTime());
-
-        contacts = dao.getLocationContactEventsForGroundStation(gs1.getID(), now + 1000 * 60 * 3, Long.MAX_VALUE);
-        assertEquals(4, contacts.size());
-
-        assertEquals(contact1.getInstanceID(), contacts.get(0).getInstanceID());
-        assertEquals(contact3.getInstanceID(), contacts.get(1).getInstanceID());
-        assertEquals(contact2.getInstanceID(), contacts.get(2).getInstanceID());
-        assertEquals(contact4.getInstanceID(), contacts.get(3).getInstanceID());
-
-        contacts = dao.getLocationContactEventsForGroundStation(gs1.getID(), now + 1000 * 1000 * 1000, Long.MAX_VALUE);
-        assertEquals(0, contacts.size());
-
-        // For GS and sat
-        contact = dao.getNextLocationContactEventFor(gs1.getID(), sat1.getID());
-        assertEquals(contact1.getInstanceID(), contact.getInstanceID());
-        assertEquals(gs1.getID(), contact.getGroundStationID());
-        assertEquals(sat1.getID(), contact.getSatelliteID());
-        assertEquals(10, contact.getOrbitNumber());
-
-        contact = dao.getNextLocationContactEventFor(gs1.getID(), sat2.getID());
-        assertEquals(contact3.getInstanceID(), contact.getInstanceID());
-        assertEquals(gs1.getID(), contact.getGroundStationID());
-        assertEquals(sat2.getID(), contact.getSatelliteID());
-        assertEquals(5, contact.getOrbitNumber());
-
-        // For GS, sat and starting point
-        contacts = dao.getLocationContactEventsFor(gs1.getID(), sat1.getID(), now + 1000 * 60 * 11, now + 1000 * 60 * 15);
-        assertEquals(1, contacts.size());
-        contact = contacts.get(0);
-        assertEquals(contact2.getInstanceID(), contact.getInstanceID());
-        assertEquals(gs1.getID(), contact.getGroundStationID());
-        assertEquals(sat1.getID(), contact.getSatelliteID());
-        assertEquals(11, contact.getOrbitNumber());
-
-        contacts = dao.getLocationContactEventsFor(gs1.getID(), sat1.getID(), now + 1000 * 60 * 11, Long.MAX_VALUE);
-        assertEquals(2, contacts.size());
-        assertEquals(contact2.getInstanceID(), contacts.get(0).getInstanceID());
-        assertEquals(contact4.getInstanceID(), contacts.get(1).getInstanceID());
-    }
-
-    @Test
     public void testGetMetadata() throws Exception {
         String gsId = "GS1";
         String satId = "SAT1";
@@ -586,12 +403,12 @@ public class MongoDataAccessTest {
         dao.save(data1);
         dao.save(data2);
 
-        List<Metadata> data = dao.getMetadata(gs.getID());
+        List<Metadata> data = dao.getApplicableTo(gs.getID(), Metadata.class);
         assertEquals(1, data.size());
         assertEquals(1, data.get(0).getMetadata().get("par1"));
         assertEquals(2, data.get(0).getMetadata().get("par2"));
 
-        data = dao.getMetadata(sat.getID());
+        data = dao.getApplicableTo(sat.getID(), Metadata.class);
         assertEquals(0, data.size());
     }
 
@@ -629,7 +446,7 @@ public class MongoDataAccessTest {
         dao.save(data1_new);
         dao.save(data2);
 
-        List<Metadata> data = dao.getMetadata(sat.getID());
+        List<Metadata> data = dao.getApplicableTo(sat.getID(), Metadata.class);
 
         assertEquals(2, data.size());
 
@@ -653,45 +470,6 @@ public class MongoDataAccessTest {
         assertEquals(sat.getID(), d2.getApplicableTo());
         assertEquals(3, d2.getMetadata().get("par1"));
         assertEquals(1, d2.getVersion());
-    }
-
-    @Test
-    public void testTimestampClashInFromToMethods() throws Exception {
-        Satellite sat1 = new Satellite("SAT1", "SAT1");
-
-        OrbitalState state1_1 = new OrbitalState("SAT1/State1", "State1_1");
-        state1_1.setSatelliteId(sat1.getID());
-        state1_1.setTimestamp(10);
-        state1_1.setVersion(1);
-
-        OrbitalState state1_2 = new OrbitalState("SAT1/State1", "State1_2");
-        state1_2.setSatelliteId(sat1.getID());
-        state1_2.setTimestamp(10);
-        state1_2.setVersion(2);
-
-        OrbitalState state2_1 = new OrbitalState("SAT1/State2", "State2_1");
-        state2_1.setSatelliteId(sat1.getID());
-        state2_1.setTimestamp(20);
-        state2_1.setVersion(2);
-
-        OrbitalState state2_2 = new OrbitalState("SAT1/State2", "State2_2");
-        state2_2.setSatelliteId(sat1.getID());
-        state2_2.setTimestamp(20);
-        state2_2.setVersion(1);
-
-        dao.save(sat1);
-        dao.save(state1_1);
-        dao.save(state1_2);
-        dao.save(state2_1);
-        dao.save(state2_2);
-
-        List<OrbitalState> states = dao.getOrbitalStatesFor(sat1.getID(), 0, 100);
-
-        assertEquals(2, states.size());
-        assertEquals(10, states.get(0).getTimestamp());
-        assertEquals(2, states.get(0).getVersion());
-        assertEquals(20, states.get(1).getTimestamp());
-        assertEquals(2, states.get(1).getVersion());
     }
 
     @Test
@@ -722,5 +500,102 @@ public class MongoDataAccessTest {
 
         assertEquals("GS1", p2.getID());
         assertEquals(GroundStation.class, p2.getClass());
+    }
+
+    @Test
+    public void testGetDerivedFrom() throws Exception {
+        Satellite sat1 = new Satellite("SAT1", "SAT1");
+
+        TleOrbitalParameters tle1 = new TleOrbitalParameters(sat1.getID(), "TLE");
+        tle1.setSatelliteId(sat1.getID());
+        tle1.setVersion(10);
+        tle1.setTimestamp(10);
+
+        TleOrbitalParameters tle2 = new TleOrbitalParameters(sat1.getID(), "TLE");
+        tle2.setSatelliteId(sat1.getID());
+        tle2.setVersion(20);
+        tle2.setTimestamp(20);
+
+        OrbitalState state1 = new OrbitalState("state1", "state1");
+        state1.setSatelliteId(sat1.getID());
+        state1.setDerivedFromId(tle1.getInstanceID());
+        state1.setVersion(19);
+        state1.setTimestamp(19);
+
+        OrbitalState state2 = new OrbitalState("state2", "state2");
+        state2.setSatelliteId(sat1.getID());
+        state2.setDerivedFromId(tle1.getInstanceID());
+        state2.setVersion(21);
+        state2.setTimestamp(21);
+
+        OrbitalState state3 = new OrbitalState("state3", "state3");
+        state3.setSatelliteId(sat1.getID());
+        state3.setDerivedFromId(tle2.getInstanceID());
+        state3.setVersion(20);
+        state3.setTimestamp(20);
+
+        dao.save(sat1);
+        dao.save(tle1);
+        dao.save(tle2);
+        dao.save(state1);
+        dao.save(state2);
+        dao.save(state3);
+
+        List<OrbitalState> states = dao.getDerivedFrom(tle1.getInstanceID(), OrbitalState.class);
+        assertEquals(2, states.size());
+        assertEquals(tle1.getInstanceID(), states.get(0).getDerivedFromId());
+        assertEquals(tle1.getInstanceID(), states.get(1).getDerivedFromId());
+
+        OrbitalState s1 = states.get(0);
+        OrbitalState s2 = states.get(1);
+        if (s1.getVersion() != state1.getVersion()) {
+            s2 = s1;
+            s1 = states.get(1);
+        }
+        assertEquals(state1.getVersion(), s1.getVersion());
+        assertEquals(state2.getVersion(), s2.getVersion());
+
+        states = dao.getDerivedFrom(tle1.getInstanceID(), OrbitalState.class, 100, 200);
+        assertEquals(0, states.size());
+
+        states = dao.getDerivedFrom(tle1.getInstanceID(), OrbitalState.class, 0, 19);
+        assertEquals(1, states.size());
+        assertEquals(tle1.getInstanceID(), states.get(0).getDerivedFromId());
+        assertEquals(state1.getInstanceID(), states.get(0).getInstanceID());
+    }
+
+    @Test
+    public void testGetIssuedBy() throws ArchiveException {
+        String issuer1 = "op1";
+        String issuer2 = "op2";
+
+        Satellite sat1 = new Satellite("SAT1", "SAT1");
+        sat1.setIssuedBy(issuer1);
+        sat1.setTimestamp(10);
+
+        Satellite sat2 = new Satellite("SAT2", "SAT2");
+        sat2.setIssuedBy(issuer2);
+        sat2.setTimestamp(20);
+
+        Satellite sat3 = new Satellite("SAT3", "SAT3");
+        sat3.setIssuedBy(issuer1);
+        sat3.setTimestamp(30);
+
+        dao.save(sat1);
+        dao.save(sat2);
+        dao.save(sat3);
+
+        List<Satellite> sats = dao.getIssuedBy(issuer1, Satellite.class);
+        assertEquals(2, sats.size());
+        assertTrue(sats.get(0).getID().equals(sat1.getID()) || sats.get(1).getID().equals(sat1.getID()));
+        assertTrue(sats.get(0).getID().equals(sat3.getID()) || sats.get(1).getID().equals(sat3.getID()));
+
+        sats = dao.getIssuedBy(issuer2, Satellite.class);
+        assertEquals(1, sats.size());
+        assertEquals(sat2.getID(), sats.get(0).getID());
+
+        sats = dao.getIssuedBy(issuer1, Satellite.class, 20, 30);
+        assertEquals(1, sats.size());
+        assertEquals(sat3.getID(), sats.get(0).getID());
     }
 }

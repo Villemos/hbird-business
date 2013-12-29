@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 import org.apache.camel.ProducerTemplate;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.api.exceptions.ArchiveException;
 import org.hbird.business.core.cache.EntityCache;
@@ -67,6 +68,9 @@ public class TrackCommandCreationJobTest {
 
     @Mock
     private IDataAccess dao;
+
+    @Mock
+    private IOrbitalDataAccess orbitalDao;
 
     @Mock
     private ProducerTemplate producerTemplate;
@@ -112,13 +116,14 @@ public class TrackCommandCreationJobTest {
         job = new TrackCommandCreationJob();
         job.setIssuer(part);
         job.setDataAccess(dao);
+        job.setOrbitalDataAccess(orbitalDao);
         job.setEndpoint(ENDPOINT);
         job.setProducerTemplate(producerTemplate);
         job.setSatelliteCache(satelliteCache);
         job.setTleCache(tleCache);
         job.setIdBuilder(idBuilder);
         archiveException = new ArchiveException("This is bad!");
-        inOrder = inOrder(dao, producerTemplate, satelliteCache, tleCache, quartzContext, event, satellite, tle1, tle2, jobData, part, idBuilder);
+        inOrder = inOrder(dao, orbitalDao, producerTemplate, satelliteCache, tleCache, quartzContext, event, satellite, tle1, tle2, jobData, part, idBuilder);
         when(part.getID()).thenReturn(PART_ID);
         when(quartzContext.getMergedJobDataMap()).thenReturn(jobData);
         when(jobData.getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID)).thenReturn(CONTACT_INSTANCE_ID);
@@ -182,7 +187,7 @@ public class TrackCommandCreationJobTest {
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
         when(event.getDerivedFromId()).thenReturn(TLE_ID);
         when(tleCache.getById(TLE_ID)).thenReturn(tle1);
-        when(dao.getTleFor(SATELLITE_ID)).thenReturn(tle2);
+        when(orbitalDao.getTleFor(SATELLITE_ID)).thenReturn(tle2);
         job.execute(quartzContext);
         inOrder.verify(quartzContext, times(1)).getMergedJobDataMap();
         inOrder.verify(jobData, times(1)).getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
@@ -191,7 +196,7 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
         inOrder.verify(event, times(1)).getDerivedFromId();
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
-        inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
+        inOrder.verify(orbitalDao, times(1)).getTleFor(SATELLITE_ID);
         inOrder.verify(tle1, times(1)).getVersion();
         inOrder.verify(tle2, times(1)).getVersion();
     }
@@ -203,7 +208,7 @@ public class TrackCommandCreationJobTest {
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
         when(event.getDerivedFromId()).thenReturn(TLE_ID);
         when(tleCache.getById(TLE_ID)).thenReturn(tle1);
-        when(dao.getTleFor(SATELLITE_ID)).thenReturn(null);
+        when(orbitalDao.getTleFor(SATELLITE_ID)).thenReturn(null);
         job.execute(quartzContext);
         inOrder.verify(quartzContext, times(1)).getMergedJobDataMap();
         inOrder.verify(jobData, times(1)).getString(TrackCommandCreationJob.JOB_DATA_KEY_CONTACT_INSTANCE_ID);
@@ -212,7 +217,7 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
         inOrder.verify(event, times(1)).getDerivedFromId();
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
-        inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
+        inOrder.verify(orbitalDao, times(1)).getTleFor(SATELLITE_ID);
         inOrder.verify(event, times(1)).getGroundStationID();
         ArgumentCaptor<Track> captor = ArgumentCaptor.forClass(Track.class);
         inOrder.verify(producerTemplate, times(1)).asyncSendBody(eq(ENDPOINT), captor.capture());
@@ -230,7 +235,7 @@ public class TrackCommandCreationJobTest {
         when(satelliteCache.getById(SATELLITE_ID)).thenReturn(satellite);
         when(event.getDerivedFromId()).thenReturn(TLE_ID);
         when(tleCache.getById(TLE_ID)).thenReturn(tle1);
-        when(dao.getTleFor(SATELLITE_ID)).thenReturn(tle2);
+        when(orbitalDao.getTleFor(SATELLITE_ID)).thenReturn(tle2);
         when(tle1.getVersion()).thenReturn(NOW - 1);
         when(tle2.getVersion()).thenReturn(NOW - 1);
         job.execute(quartzContext);
@@ -241,7 +246,7 @@ public class TrackCommandCreationJobTest {
         inOrder.verify(satelliteCache, times(1)).getById(SATELLITE_ID);
         inOrder.verify(event, times(1)).getDerivedFromId();
         inOrder.verify(tleCache, times(1)).getById(TLE_ID);
-        inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
+        inOrder.verify(orbitalDao, times(1)).getTleFor(SATELLITE_ID);
         inOrder.verify(tle1, times(1)).getVersion();
         inOrder.verify(tle2, times(1)).getVersion();
         inOrder.verify(satellite, times(1)).getID();
@@ -304,16 +309,16 @@ public class TrackCommandCreationJobTest {
 
     @Test
     public void testGetLatestTle() throws Exception {
-        when(dao.getTleFor(SATELLITE_ID)).thenReturn(tle1);
-        assertEquals(tle1, job.getLatestTle(dao, SATELLITE_ID));
-        inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
+        when(orbitalDao.getTleFor(SATELLITE_ID)).thenReturn(tle1);
+        assertEquals(tle1, job.getLatestTle(orbitalDao, SATELLITE_ID));
+        inOrder.verify(orbitalDao, times(1)).getTleFor(SATELLITE_ID);
     }
 
     @Test
     public void testGetLatestTleWithException() throws Exception {
-        when(dao.getTleFor(SATELLITE_ID)).thenThrow(archiveException);
-        assertNull(job.getLatestTle(dao, SATELLITE_ID));
-        inOrder.verify(dao, times(1)).getTleFor(SATELLITE_ID);
+        when(orbitalDao.getTleFor(SATELLITE_ID)).thenThrow(archiveException);
+        assertNull(job.getLatestTle(orbitalDao, SATELLITE_ID));
+        inOrder.verify(orbitalDao, times(1)).getTleFor(SATELLITE_ID);
     }
 
     @Test

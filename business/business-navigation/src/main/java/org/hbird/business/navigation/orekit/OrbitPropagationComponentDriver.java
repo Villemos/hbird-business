@@ -33,9 +33,9 @@
 package org.hbird.business.navigation.orekit;
 
 import org.apache.camel.model.ProcessorDefinition;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.OrbitPropagationComponent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +45,11 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 
  */
 public class OrbitPropagationComponentDriver extends SoftwareComponentDriver<OrbitPropagationComponent> {
-	protected IDataAccess dao;
+	protected IOrbitalDataAccess dao;
 	protected IdBuilder naming;
 	
 	@Autowired
-	public OrbitPropagationComponentDriver(IDataAccess dao, IPublisher publisher, IdBuilder naming) {
+	public OrbitPropagationComponentDriver(IOrbitalDataAccess dao, IPublisher publisher, IdBuilder naming) {
 		super(publisher);
 		
 		this.dao = dao;

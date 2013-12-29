@@ -19,6 +19,7 @@ package org.hbird.business.navigation.orekit;
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.IDataAccess;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
@@ -42,12 +43,14 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver<Predic
     private static final Logger LOG = LoggerFactory.getLogger(OrbitalStatePredictionDriver.class);
 
     protected IDataAccess dao;
+    protected IOrbitalDataAccess orbitalDao;
     protected IdBuilder idBuilder;
 
     @Autowired
-    public OrbitalStatePredictionDriver(IDataAccess dao, IPublisher publisher, IdBuilder idBuilder) {
+    public OrbitalStatePredictionDriver(IDataAccess dao, IOrbitalDataAccess orbitalDao, IPublisher publisher, IdBuilder idBuilder) {
         super(publisher);
         this.dao = dao;
+        this.orbitalDao = orbitalDao;
         this.idBuilder = idBuilder;
     }
 
@@ -68,7 +71,7 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver<Predic
 
         // processors
         OrbitalStatePredictionRequestCreator requestCreator = new OrbitalStatePredictionRequestCreator(config);
-        TleResolver tleResolver = new TleResolver(dao);
+        TleResolver tleResolver = new TleResolver(orbitalDao);
         SatelliteResolver satelliteResolver = new SatelliteResolver(dao);
         TimeRangeCalulator timeRangeCalculator = new TimeRangeCalulator();
         OrekitOrbitalStatePredictor predictor = new OrekitOrbitalStatePredictor(propagatorProvider, publisher, idBuilder);

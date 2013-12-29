@@ -19,9 +19,9 @@ package org.hbird.business.navigation.orekit;
 import java.util.List;
 
 import org.hbird.business.api.ICatalogue;
+import org.hbird.business.api.IOrbitalDataAccess;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
-import org.hbird.business.api.IDataAccess;
 import org.hbird.business.navigation.ContactEventComponent;
 import org.hbird.business.navigation.NavigationComponent;
 import org.hbird.exchange.groundstation.GroundStation;
@@ -45,7 +45,7 @@ public class ContactEventBean extends NavigationBean {
      * @param publisher
      * @param idBuilder
      */
-    public ContactEventBean(NavigationComponent configuration, IDataAccess dao, IPublisher publisher, IdBuilder idBuilder, ICatalogue catalogue) {
+    public ContactEventBean(NavigationComponent configuration, IOrbitalDataAccess dao, IPublisher publisher, IdBuilder idBuilder, ICatalogue catalogue) {
         super(configuration, dao, publisher, idBuilder);
         this.catalogue = catalogue;
     }

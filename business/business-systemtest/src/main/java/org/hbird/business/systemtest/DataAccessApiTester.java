@@ -18,7 +18,7 @@ public class DataAccessApiTester extends SystemTest {
 
         LOG.info("------------------------------------------------------------------------------------------------------------");
         LOG.info("Starting");
-        LOG.info("DataAccessApiTester is disable for now"); // XXX
+        LOG.info("DataAccessApiTester is disabled for now");
 
         startMonitoringArchive();
 
@@ -147,7 +147,7 @@ public class DataAccessApiTester extends SystemTest {
         azzert(parameters.size() == 5, "Expect to receive 5 parameters");
 
         // All states for a parameter
-        List<State> states = accessApi.getState("PARA1");
+        List<State> states = accessApi.getApplicableTo("PARA1", State.class);
         azzert(states.size() == 2, "Expect to receive 2 states");
         azzert(states.get(0).getName().equals("STATE1_OF_PARA1") ||
                 states.get(1).getName().equals("STATE1_OF_PARA1"), "STATE1 is present");
@@ -157,7 +157,7 @@ public class DataAccessApiTester extends SystemTest {
         azzert(states.get(1).getTimestamp() == 20 && states.get(1).getValue());
 
         // States in a range for a parameter
-        states = accessApi.getState("PARA1", 3, 7);
+        states = accessApi.getApplicableTo("PARA1", State.class, 3, 7);
         azzert(states.size() == 4, "Expect to receive 4 states, received " + states.size());
 
         // Order of two states with the same timestamp is not determined
