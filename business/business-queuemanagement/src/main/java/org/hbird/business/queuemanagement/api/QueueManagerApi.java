@@ -37,6 +37,7 @@ import org.apache.activemq.broker.jmx.BrokerViewMBean;
 import org.apache.activemq.broker.jmx.CompositeDataConstants;
 import org.apache.activemq.broker.jmx.QueueViewMBean;
 import org.apache.activemq.broker.jmx.TopicViewMBean;
+import org.apache.log4j.Logger;
 import org.hbird.business.api.IQueueManager;
 import org.springframework.jms.InvalidSelectorException;
 
@@ -51,6 +52,8 @@ public class QueueManagerApi implements IQueueManager {
     private static final String KEY_JMS_MESSAGE_ID = "JMSMessageID";
 
     private static final String KEY_DESTINATION = "destinationName";
+
+    private static final Logger LOG = Logger.getLogger(QueueManagerApi.class);
 
     /** The connection to the server. */
     protected MBeanServerConnection conn = null;
@@ -72,8 +75,15 @@ public class QueueManagerApi implements IQueueManager {
 
         /** The ActiveMq BROKER has to be configured to set the 'createConnector' == true. In the activemq.xml file... */
         if (conn == null) {
-            JMXConnector jmxc = JMXConnectorFactory.connect(new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"));
-            conn = jmxc.getMBeanServerConnection();
+            try {
+                JMXConnector jmxc = JMXConnectorFactory.connect(new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"));
+                conn = jmxc.getMBeanServerConnection();
+            }
+            catch (IOException e) {
+                LOG.error("Failed to get JMX connection for the ActiveMQ instance");
+                LOG.info("    Check ActiveMQ config if <managementContext createConnector=\"...\"/> is set to \"true\"");
+                throw e;
+            }
         }
 
         ObjectName activeMQ = new ObjectName("org.apache.activemq:type=Broker,brokerName=localhost");
@@ -273,7 +283,8 @@ public class QueueManagerApi implements IQueueManager {
     @Override
     public boolean clearAll() {
         try {
-            BrokerViewMBean mbean = getBrokerBean();
+            // setup needed JMX connection if not yet available
+            getBrokerBean();
 
             for (String queue : listQueues()) {
                 clearQueue(queue);

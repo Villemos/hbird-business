@@ -77,7 +77,7 @@ public class Starter {
 
         FileSystemXmlApplicationContext context = new FileSystemXmlApplicationContext(new String[] { assemblyFile }, false);
         context.setDisplayName(CONTEXT_NAME + "-" + (++counter));
-        LOG.info("Created Spring AppicationContext '{}'", context.getDisplayName());
+        LOG.info("Created Spring ApplicationContext '{}'", context.getDisplayName());
         context.refresh();
         main.run();
     }
