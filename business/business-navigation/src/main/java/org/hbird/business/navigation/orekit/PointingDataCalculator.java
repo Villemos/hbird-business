@@ -87,6 +87,18 @@ public class PointingDataCalculator {
             /* New target date */
             date = date.shiftedBy(timeSift);
         }
+        // adding last contact to the list
+        date = new AbsoluteDate(new Date(endTime), TimeScalesFactory.getUTC());
+        
+        SpacecraftState newState = propagator.propagate(date);
+        coord = newState.getPVCoordinates();
+        double azimuth = Math.toDegrees(AzimuthCalculator.calculateAzimuth(newState, locationOnEarth, inertialFrame));
+        double elevation = Math.toDegrees(ElevationCalculator.calculateElevation(newState, locationOnEarth, inertialFrame));
+        double doppler = DopplerCalculator.calculateDoppler(newState, locationOnEarth, inertialFrame);
+        long time = date.toDate(TimeScalesFactory.getUTC()).getTime();
+        PointingData entry = new PointingData(time, azimuth, elevation, doppler, satelliteId, gsId);
+        LOG.debug(entry.toString());
+        data.add(entry);
 
         return data;
     }
