@@ -32,6 +32,7 @@ public class Label extends ApplicableTo {
 
     /** The label value. */
     protected String value = "";
+    protected String insertedBy = "";
 
     /**
      * Creates a Parameter with a timestamp set to 'now'.
@@ -41,6 +42,7 @@ public class Label extends ApplicableTo {
      * @param type The Ontology type of this object. Is not 'String', but for example 'Calibration'.
      * @param description A description of the label.
      * @param value An object holding the value of the label.
+     * @param insertedBy The name of the operator who inserted this label.
      */
     public Label(String ID, String name) {
         super(ID, name);
@@ -54,6 +56,13 @@ public class Label extends ApplicableTo {
         this.value = value;
     }
 
+    public String getInsertedBy() {
+        return insertedBy;
+    }
+
+    public void setInsertedBy(String insertedBy) {
+        this.insertedBy = insertedBy;
+    }
     @Override
     public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -63,6 +72,7 @@ public class Label extends ApplicableTo {
         builder.append("timestamp", timestamp);
         builder.append("applicableTo", applicableTo);
         builder.append("issuedBy", issuedBy);
+        builder.append("insertedBy", insertedBy);
         return builder.build();
     }
 }
