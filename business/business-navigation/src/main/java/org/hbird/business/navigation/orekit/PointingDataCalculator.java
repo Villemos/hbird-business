@@ -49,10 +49,8 @@ public class PointingDataCalculator {
 
     public static final Logger LOG = LoggerFactory.getLogger(PointingDataCalculator.class);
 
-    public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent, GroundStation groundStation, long contactDataStepSize)
-            throws OrekitException {
+    public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent, GroundStation groundStation, long contactDataStepSize) throws OrekitException {
         List<PointingData> data = new ArrayList<PointingData>();
-
         long startTime = locationContactEvent.getStartTime();
         long endTime = locationContactEvent.getEndTime();
 
@@ -74,20 +72,49 @@ public class PointingDataCalculator {
         double timeSift = contactDataStepSize / 1000D; // shift has to be in seconds
 
         /* Calculate contact data. */
-        for (int i = 0; startTime + contactDataStepSize * i < endTime; i++) {
-            SpacecraftState newState = propagator.propagate(date);
-            coord = newState.getPVCoordinates();
-            double azimuth = Math.toDegrees(AzimuthCalculator.calculateAzimuth(newState, locationOnEarth, inertialFrame));
-            double elevation = Math.toDegrees(ElevationCalculator.calculateElevation(newState, locationOnEarth, inertialFrame));
-            double doppler = DopplerCalculator.calculateDoppler(newState, locationOnEarth, inertialFrame);
-            long time = date.toDate(TimeScalesFactory.getUTC()).getTime();
-            PointingData entry = new PointingData(time, azimuth, elevation, doppler, satelliteId, gsId);
-            LOG.debug(entry.toString());
-            data.add(entry);
-            /* New target date */
-            date = date.shiftedBy(timeSift);
-        }
 
+        long negativeElevationSkip = Math.max(1, contactDataStepSize / 100); // used to ignore negative elevations
+        double negativeElevationSkipShift = negativeElevationSkip / 1000D; // shift has to be in seconds
+
+        long lastAddedTime = startTime - 1;
+        double lastElevation = -91D;
+
+        boolean addingEnd = false;
+        for (long time = startTime; time <= endTime;) {
+            if (time <= lastAddedTime)
+                break;
+            SpacecraftState newState = propagator.propagate(date);
+            double elevation = ElevationCalculator.calculateElevation(newState, locationOnEarth, inertialFrame);
+            if (elevation >= 0) {
+                lastElevation = elevation;
+                elevation = Math.toDegrees(elevation);
+                double azimuth = Math.toDegrees(AzimuthCalculator.calculateAzimuth(newState, locationOnEarth, inertialFrame));
+                double doppler = DopplerCalculator.calculateDoppler(newState, locationOnEarth, inertialFrame);
+                PointingData entry = new PointingData(time, azimuth, elevation, doppler, satelliteId, gsId);
+                LOG.debug(entry.toString());
+                data.add(entry);
+                if (addingEnd)
+                    break;
+                lastAddedTime = time;
+                time += contactDataStepSize;
+                /* New target date */
+                if (time > endTime) { // To include end time
+                    addingEnd = true;
+                    time = endTime;
+                    date = new AbsoluteDate(new Date(endTime), TimeScalesFactory.getUTC());
+                } else {
+                    date = date.shiftedBy(timeSift);
+                }
+            } else if (lastElevation >= elevation) {
+                lastElevation = elevation;
+                time -= negativeElevationSkip;
+                date = date.shiftedBy(-negativeElevationSkipShift);
+            } else {
+                lastElevation = elevation;
+                time += negativeElevationSkip;
+                date = date.shiftedBy(negativeElevationSkipShift);
+            }
+        }
         return data;
     }
 }
