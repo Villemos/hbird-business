@@ -49,7 +49,8 @@ public class PointingDataCalculator {
 
     public static final Logger LOG = LoggerFactory.getLogger(PointingDataCalculator.class);
 
-    public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent, GroundStation groundStation, long contactDataStepSize) throws OrekitException {
+    public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent,
+            GroundStation groundStation, long contactDataStepSize) throws OrekitException {
         List<PointingData> data = new ArrayList<PointingData>();
         long startTime = locationContactEvent.getStartTime();
         long endTime = locationContactEvent.getEndTime();
@@ -64,7 +65,8 @@ public class PointingDataCalculator {
         AbsoluteDate date = new AbsoluteDate(new Date(startTime), TimeScalesFactory.getUTC());
         // TODO - 01.05.2013, kimmell - use Cartesian instead of Keplerian here?
         // TODO - 01.05.2013, kimmell - which frame to use here?
-        Frame inertialFrame = Constants.FRAME; // TODO - 19.05.2013, kimmell - check this!
+        Frame inertialFrame = Constants.FRAME; // TODO - 19.05.2013, kimmell -
+                                               // check this!
         Orbit initialOrbit = new KeplerianOrbit(coord, inertialFrame, date, Constants.MU);
         Propagator propagator = new KeplerianPropagator(initialOrbit);
         String satelliteId = locationContactEvent.getSatelliteID();
@@ -73,8 +75,9 @@ public class PointingDataCalculator {
 
         /* Calculate contact data. */
 
-        long negativeElevationSkip = Math.max(1, contactDataStepSize / 100); // used to ignore negative elevations
-        double negativeElevationSkipShift = negativeElevationSkip / 1000D; // shift has to be in seconds
+        // Used to ignore negative elevations
+        long negativeElevationSkip = Math.max(1, contactDataStepSize / 100);
+        double negativeElevationSkipShift = negativeElevationSkip / 1000D;
 
         long lastAddedTime = startTime - 1;
         double lastElevation = -91D;
@@ -105,7 +108,7 @@ public class PointingDataCalculator {
                 } else {
                     date = date.shiftedBy(timeSift);
                 }
-            } else if (lastElevation >= elevation) {
+            } else if (addingEnd || lastElevation >= elevation) {
                 lastElevation = elevation;
                 time -= negativeElevationSkip;
                 date = date.shiftedBy(-negativeElevationSkipShift);
