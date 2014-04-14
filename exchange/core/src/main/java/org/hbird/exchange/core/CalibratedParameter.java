@@ -53,18 +53,22 @@ public class CalibratedParameter extends Parameter {
      * @return An Object holding the value. The class type can of cause be found
      *         using reflection, or through the 'clazz' attribute.
      */
+    @Override
     public Number getValue() {
         return value;
     }
 
+    @Override
     public void setDoubleValue(double value) {
         this.value = value;
     }
 
+    @Override
     public double asDouble() {
         return value.doubleValue();
     }
 
+    @Override
     public int asInt() {
         return value.intValue();
     }
@@ -76,6 +80,7 @@ public class CalibratedParameter extends Parameter {
      * @param value
      *        The value to be set.
      */
+    @Override
     public void setValue(Number value) {
         this.value = value;
     }
@@ -85,6 +90,7 @@ public class CalibratedParameter extends Parameter {
      * 
      * @return String representing the unit.
      */
+    @Override
     public String getUnit() {
         return unit;
     }
@@ -93,6 +99,7 @@ public class CalibratedParameter extends Parameter {
      * @param unit
      *        the unit to set
      */
+    @Override
     public void setUnit(String unit) {
         this.unit = unit;
     }
@@ -106,19 +113,19 @@ public class CalibratedParameter extends Parameter {
      *         using reflection, or through the 'clazz' attribute.
      */
     public Number getRawValue() {
-        return super.value;
+        return super.getValue();
     }
 
     public void setRawDoubleValue(double value) {
-        super.value = value;
+        super.setDoubleValue(value);
     }
 
     public double rawAsDouble() {
-        return super.value.doubleValue();
+        return super.asDouble();
     }
 
     public int rawAsInt() {
-        return super.value.intValue();
+        return super.asInt();
     }
 
     /**
@@ -130,7 +137,7 @@ public class CalibratedParameter extends Parameter {
      *        The value to be set.
      */
     public void setRawValue(Number value) {
-        super.value = value;
+        super.setValue(value);
     }
 
     /**
@@ -139,7 +146,7 @@ public class CalibratedParameter extends Parameter {
      * @return String representing the unit.
      */
     public String getRawUnit() {
-        return super.unit;
+        return super.getUnit();
     }
 
     /**
@@ -147,7 +154,7 @@ public class CalibratedParameter extends Parameter {
      *        the unit to set
      */
     public void setRawUnit(String unit) {
-        super.unit = unit;
+        super.setUnit(unit);
     }
 
     /*
