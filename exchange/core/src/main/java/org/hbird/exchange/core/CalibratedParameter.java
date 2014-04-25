@@ -43,8 +43,8 @@ public class CalibratedParameter extends Parameter {
     public CalibratedParameter(Parameter parameter) {
         super(parameter.ID, parameter.name);
         BeanUtils.copyProperties(parameter, this);
-        this.value = super.value;
-        this.unit = super.unit;
+        super.value = this.value;
+        super.unit = this.unit;
     }
 
     /**
