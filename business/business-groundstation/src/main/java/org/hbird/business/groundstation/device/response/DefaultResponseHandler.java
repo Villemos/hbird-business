@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.hbird.business.groundstation.base.DriverContext;
 import org.hbird.business.groundstation.configuration.GroundStationDriverConfiguration;
+import org.hbird.business.groundstation.hamlib.protocol.HamlibProtocolConstants;
 import org.hbird.exchange.interfaces.IEntityInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,16 @@ public class DefaultResponseHandler<C extends GroundStationDriverConfiguration, 
      */
     @Override
     public List<IEntityInstance> handle(DriverContext<C, K, R> driverContext, R response) {
-        LOG.warn("No handler for response {}", String.valueOf(response));
+        // Hamlib response for commands that do not return value, doesn't return the key of the command, therefore custom handler is not reached.
+        // Hence, we need to check whether it contains 0 (success) or something else
+        if (String.valueOf(response).contains(HamlibProtocolConstants.RESPONSE_END_MARKER)) {
+            if (!String.valueOf(response).contains("0")) {
+                LOG.error("Failed response {}", String.valueOf(response));
+            }
+            // No else block required for success response
+        } else {
+            LOG.warn("No handler for response {}", String.valueOf(response));
+        }
         return Collections.emptyList();
     }
 }
