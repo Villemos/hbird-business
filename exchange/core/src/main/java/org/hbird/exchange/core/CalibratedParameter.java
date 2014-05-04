@@ -14,14 +14,13 @@ import org.springframework.beans.BeanUtils;
  */
 public class CalibratedParameter extends Parameter {
 
-    /** The unique UID. */
-    private static final long serialVersionUID = 102301904839710474L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5868880355306107374L;
 
     /** Raw calibrated value of the parameter. May be any type. */
-    protected Number value;
-
-    /** The unit of the calibrated value. */
-    protected String unit;
+    protected Number calibratedValue;
 
     /**
      * Creates a <code>CalibratedParameter</code> with a timestamp set to 'now'.
@@ -43,8 +42,6 @@ public class CalibratedParameter extends Parameter {
     public CalibratedParameter(Parameter parameter) {
         super(parameter.ID, parameter.name);
         BeanUtils.copyProperties(parameter, this);
-        super.value = this.value;
-        super.unit = this.unit;
     }
 
     /**
@@ -55,22 +52,22 @@ public class CalibratedParameter extends Parameter {
      */
     @Override
     public Number getValue() {
-        return value;
+        return calibratedValue;
     }
 
     @Override
     public void setDoubleValue(double value) {
-        this.value = value;
+        calibratedValue = value;
     }
 
     @Override
     public double asDouble() {
-        return value.doubleValue();
+        return calibratedValue.doubleValue();
     }
 
     @Override
     public int asInt() {
-        return value.intValue();
+        return calibratedValue.intValue();
     }
 
     /**
@@ -82,26 +79,7 @@ public class CalibratedParameter extends Parameter {
      */
     @Override
     public void setValue(Number value) {
-        this.value = value;
-    }
-
-    /**
-     * Returns the string representing the unit of this parameter.
-     * 
-     * @return String representing the unit.
-     */
-    @Override
-    public String getUnit() {
-        return unit;
-    }
-
-    /**
-     * @param unit
-     *        the unit to set
-     */
-    @Override
-    public void setUnit(String unit) {
-        this.unit = unit;
+        calibratedValue = value;
     }
 
     /**
@@ -140,23 +118,6 @@ public class CalibratedParameter extends Parameter {
         super.setValue(value);
     }
 
-    /**
-     * Returns the string representing the unit of the raw parameter.
-     * 
-     * @return String representing the unit.
-     */
-    public String getRawUnit() {
-        return super.getUnit();
-    }
-
-    /**
-     * @param unit
-     *        the unit to set
-     */
-    public void setRawUnit(String unit) {
-        super.setUnit(unit);
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -170,25 +131,26 @@ public class CalibratedParameter extends Parameter {
 
         if (cTo instanceof Parameter) {
             Parameter rhs = (Parameter) cTo;
-            if (this.value instanceof Short && rhs.value instanceof Short) {
-                return ((Short) this.value).compareTo((Short) rhs.value);
-            } else if (this.value instanceof Long && rhs.value instanceof Long) {
-                return ((Long) this.value).compareTo((Long) rhs.value);
-            } else if (this.value instanceof Integer && rhs.value instanceof Integer) {
-                return ((Integer) this.value).compareTo((Integer) rhs.value);
-            } else if (this.value instanceof Float && rhs.value instanceof Float) {
-                return ((Float) this.value).compareTo((Float) rhs.value);
-            } else if (this.value instanceof Double && rhs.value instanceof Double) {
-                return ((Double) this.value).compareTo((Double) rhs.value);
-            } else if (this.value instanceof Byte && rhs.value instanceof Byte) {
-                return ((Byte) this.value).compareTo((Byte) rhs.value);
-            } else if (this.value instanceof BigInteger && rhs.value instanceof BigInteger) {
-                return ((BigInteger) this.value).compareTo((BigInteger) rhs.value);
-            } else if (this.value instanceof BigDecimal && rhs.value instanceof BigDecimal) {
-                return ((BigDecimal) this.value).compareTo((BigDecimal) rhs.value);
+            if (this.calibratedValue instanceof Short && rhs.value instanceof Short) {
+                return ((Short) this.calibratedValue).compareTo((Short) rhs.value);
+            } else if (this.calibratedValue instanceof Long && rhs.value instanceof Long) {
+                return ((Long) this.calibratedValue).compareTo((Long) rhs.value);
+            } else if (this.calibratedValue instanceof Integer && rhs.value instanceof Integer) {
+                return ((Integer) this.calibratedValue).compareTo((Integer) rhs.value);
+            } else if (this.calibratedValue instanceof Float && rhs.value instanceof Float) {
+                return ((Float) this.calibratedValue).compareTo((Float) rhs.value);
+            } else if (this.calibratedValue instanceof Double && rhs.value instanceof Double) {
+                return ((Double) this.calibratedValue).compareTo((Double) rhs.value);
+            } else if (this.calibratedValue instanceof Byte && rhs.value instanceof Byte) {
+                return ((Byte) this.calibratedValue).compareTo((Byte) rhs.value);
+            } else if (this.calibratedValue instanceof BigInteger && rhs.value instanceof BigInteger) {
+                return ((BigInteger) this.calibratedValue).compareTo((BigInteger) rhs.value);
+            } else if (this.calibratedValue instanceof BigDecimal && rhs.value instanceof BigDecimal) {
+                return ((BigDecimal) this.calibratedValue).compareTo((BigDecimal) rhs.value);
             } else {
                 String message = String.format("Failed to compare values of %s and %s; value types are %s and %s",
-                        this.toString(), rhs.toString(), this.value != null ? this.value.getClass() : "null",
+                        this.toString(), rhs.toString(), this.calibratedValue != null ? this.calibratedValue.getClass()
+                                : "null",
                         rhs.value != null ? rhs.value.getClass() : "null");
                 throw new RuntimeException(message);
             }
@@ -202,7 +164,7 @@ public class CalibratedParameter extends Parameter {
         ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
         builder.append("ID", getInstanceID());
         builder.append("name", name);
-        builder.append("value", value);
+        builder.append("calibratedvalue", calibratedValue);
         builder.append("rawvalue", super.value);
         builder.append("issuedBy", issuedBy);
         builder.append("applicableTo", applicableTo);
