@@ -19,7 +19,7 @@ public class CalibratedParameter extends Parameter {
      */
     private static final long serialVersionUID = 5868880355306107374L;
 
-    /** Raw calibrated value of the parameter. May be any type. */
+    /** Calibrated value of the parameter. */
     protected Number calibratedValue;
 
     /**
@@ -42,6 +42,10 @@ public class CalibratedParameter extends Parameter {
     public CalibratedParameter(Parameter parameter) {
         super(parameter.ID, parameter.name);
         BeanUtils.copyProperties(parameter, this);
+        
+        // A fix to superclass's value not being set, because setValue method is used by BeanUtils.copyProperties
+        if (calibratedValue != null)
+            super.value = calibratedValue;
     }
 
     /**
@@ -165,7 +169,7 @@ public class CalibratedParameter extends Parameter {
         builder.append("ID", getInstanceID());
         builder.append("name", name);
         builder.append("calibratedvalue", calibratedValue);
-        builder.append("rawvalue", super.value);
+        builder.append("rawvalue", value);
         builder.append("issuedBy", issuedBy);
         builder.append("applicableTo", applicableTo);
         return builder.build();
