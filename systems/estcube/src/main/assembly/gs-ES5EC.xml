@@ -39,11 +39,28 @@
         <property name="configuration" ref="trackingConfig"/>
         <property name="version" value="1"/>
     </bean>
+    
+    <!-- TLE updater -->
+    <bean id="tleUpdaterConfig" class="org.hbird.business.navigation.configuration.TleUpdaterConfiguration">
+        <property name="updateInterval" value="${spacetrack.update.interval:43200000}"/>
+        <property name="userName" value="${spacetrack.auth.username:}"/>
+        <property name="password" value="${spacetrack.auth.password:}"/>
+        <property name="serviceId" value="/ESTCUBE/GroundStations/ES5EC/TleUpdater"/>
+    </bean>
+
+    <bean id="tleUpdater" class="org.hbird.business.navigation.TleUpdaterComponent">
+        <constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations/ES5EC/TleUpdater" />
+        <constructor-arg index="1" name="name" value="ESTCube-1 Tle Updater" />
+        <property name="configuration" ref="tleUpdaterConfig"/>
+        <property name="driverName" value="org.hbird.business.navigation.orekit.TleUpdaterDriver"/>
+        <property name="version" value="1"/>
+    </bean>
 
     <!-- Contact prediction -->
     <bean id="contactPredictorConfig" class="org.hbird.business.navigation.configuration.ContactPredictionConfiguration">
         <property name="satelliteId" value="/ESTCUBE/Satellites/ESTCube-1"/>
         <property name="predictionInterval" value="${contact.prediction.interval:600000}"/>
+        <property name="predictionDelay" value="${prediction.delay:0}"/>
         <property name="serviceId" value="/ESTCUBE/GroundStations/ES5EC/ContactPredictor"/>
         <property name="groundStationsIds">
             <list>
@@ -64,6 +81,7 @@
     <bean id="orbitPredictorConfig" class="org.hbird.business.navigation.configuration.OrbitalStatePredictionConfiguration">
         <property name="satelliteId" value="/ESTCUBE/Satellites/ESTCube-1"/>
         <property name="predictionInterval" value="${orbit.prediction.interval:30000}"/>
+        <property name="predictionDelay" value="${prediction.delay:0}"/>
         <property name="serviceId" value="/ESTCUBE/GroundStations/ES5EC/OrbitPredictor"/>
     </bean>
 
@@ -117,6 +135,7 @@
                 <ref bean="tracking" />
                 <ref bean="orbitPredictor" />
                 <ref bean="contactPredictor" />
+                <ref bean="tleUpdater" />
             </list>
         </constructor-arg>
     </bean>

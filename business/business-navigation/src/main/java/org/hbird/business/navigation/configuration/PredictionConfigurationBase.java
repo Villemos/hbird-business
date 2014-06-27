@@ -34,6 +34,9 @@ public abstract class PredictionConfigurationBase extends ConfigurationBase {
     /** Default value for the prediction interval. */
     public static final long DEFAULT_PREDICTION_INTERVAL = 1000L * 60 * 10;
 
+    /** Default value for the prediction delay. */
+    public static final long DEFAULT_PREDICTION_DELAY = 0L;
+
     /** Satellite ID for the prediction. */
     @Value("${satellite.id}")
     protected String satelliteId;
@@ -45,6 +48,10 @@ public abstract class PredictionConfigurationBase extends ConfigurationBase {
     /** Prediction execution interval in milliseconds. */
     @Value("${prediction.interval:60000}")
     protected long predictionInterval = DEFAULT_PREDICTION_INTERVAL;
+
+    /** Delay before contact prediction is started. Used to wait while automatic TLE updating is done. */
+    @Value("${prediction.delay:0}")
+    protected long predictionDelay = DEFAULT_PREDICTION_DELAY;
 
     /**
      * @return the satelliteId
@@ -90,6 +97,23 @@ public abstract class PredictionConfigurationBase extends ConfigurationBase {
      */
     public void setPredictionInterval(long predictionInterval) {
         this.predictionInterval = predictionInterval;
+    }
+
+    /**
+     * returns the delay before contact prediction is started, which is used to wait while automatic TLE updating is
+     * done.
+     * 
+     * @return the predictionDelay
+     */
+    public long getPredictionDelay() {
+        return predictionDelay;
+    }
+
+    /**
+     * @param predictionDelay the routeDelay to set
+     */
+    public void setPredictionDelay(long predictionDelay) {
+        this.predictionDelay = predictionDelay;
     }
 
     /**

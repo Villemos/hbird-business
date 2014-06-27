@@ -77,6 +77,7 @@ public class ContactPredictionDriver extends SoftwareComponentDriver<PredictionC
         IPropagatorProvider propagatorProvider = new TlePropagatorProvider();
         IFrameProvider frameProvider = new Cirf2000FrameProvider();
         long predictionInterval = config.getPredictionInterval();
+        long predictionDelay = config.getPredictionDelay();
         double calculationStep = config.getDetailsCalculationStep() / 1000D; // from millis to seconds
 
         // processors
@@ -103,6 +104,7 @@ public class ContactPredictionDriver extends SoftwareComponentDriver<PredictionC
         // actual route
         // @formatter:off
         ProcessorDefinition<?> route = from(addTimer(componentId, predictionInterval)) // execute using timer
+                .delay(predictionDelay)             // delay prediction (presumably while TLEs are being updated)
                 .bean(requestCreator)               // create request object
                 .bean(satelliteResolver)            // resolve satellite
                 .bean(tleResolver)                  // resolve TLE for the satellite

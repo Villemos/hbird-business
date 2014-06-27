@@ -68,6 +68,7 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver<Predic
         CamelContext ctx = component.getContext();
         IPropagatorProvider propagatorProvider = new TlePropagatorProvider();
         long predictionInterval = config.getPredictionInterval();
+        long predictionDelay = config.getPredictionDelay();
 
         // processors
         OrbitalStatePredictionRequestCreator requestCreator = new OrbitalStatePredictionRequestCreator(config);
@@ -82,6 +83,7 @@ public class OrbitalStatePredictionDriver extends SoftwareComponentDriver<Predic
 
         // actual route
         ProcessorDefinition<?> route = from(addTimer(componentId, predictionInterval))
+                .delay(predictionDelay) // delay prediction (presumably while TLEs are being updated)
                 .bean(requestCreator)
                 .bean(satelliteResolver)
                 .bean(tleResolver)
