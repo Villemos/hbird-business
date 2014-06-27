@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- *
+ * Builds route to predict orbital states
  */
 public class OrbitalStatePredictionDriver extends SoftwareComponentDriver<PredictionComponent> {
 

@@ -20,7 +20,7 @@ import org.hbird.business.core.StartableEntity;
 import org.hbird.exchange.core.ConfigurationBase;
 
 /**
- *
+ * Component for updating TLEs automatically from space-track.org, with NORAD IDs as Satellite designators
  */
 public class TleUpdaterComponent extends StartableEntity {
 

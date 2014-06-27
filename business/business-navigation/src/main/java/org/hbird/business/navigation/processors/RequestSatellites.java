@@ -11,6 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * Requests and returns all satellites in Camel Route
+ */
 @Component
 public class RequestSatellites {
 

@@ -25,6 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * Requests and parses TLE lines from space-track.org in Camel Route
+ */
 @Component
 public class RequestTles {
 

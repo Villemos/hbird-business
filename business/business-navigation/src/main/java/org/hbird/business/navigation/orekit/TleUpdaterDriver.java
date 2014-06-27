@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- *
+ * Builds route to update TLEs
  */
 public class TleUpdaterDriver extends
         SoftwareComponentDriver<TleUpdaterComponent> {

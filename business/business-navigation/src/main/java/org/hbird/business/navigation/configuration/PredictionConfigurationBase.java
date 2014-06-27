@@ -22,7 +22,7 @@ import org.hbird.exchange.core.ConfigurationBase;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
- *
+ * Abstract class, acting as a base for all prediction configurations
  */
 public abstract class PredictionConfigurationBase extends ConfigurationBase {
 
