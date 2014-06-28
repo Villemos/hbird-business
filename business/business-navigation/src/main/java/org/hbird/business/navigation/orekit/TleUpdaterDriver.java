@@ -23,8 +23,8 @@ import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
 import org.hbird.business.navigation.TleUpdaterComponent;
 import org.hbird.business.navigation.configuration.TleUpdaterConfiguration;
-import org.hbird.business.navigation.processors.RequestSatellites;
-import org.hbird.business.navigation.processors.RequestTles;
+import org.hbird.business.navigation.processors.SatelliteRequestor;
+import org.hbird.business.navigation.processors.TleRequestor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,8 +73,8 @@ public class TleUpdaterDriver extends
         String componentId = component.getID();
         long updateInterval = config.getUpdateInterval();
 
-        RequestSatellites requestSatellites = new RequestSatellites(dao);
-        RequestTles requestTLEs = new RequestTles(config.getUserName(), config.getPassword(), idBuilder);
+        SatelliteRequestor requestSatellites = new SatelliteRequestor(dao);
+        TleRequestor requestTLEs = new TleRequestor(config.getUserName(), config.getPassword(), idBuilder);
 
         LOG.info("Starting {}; with interval {} ms", new Object[] { getClass().getSimpleName(),
                 updateInterval });
