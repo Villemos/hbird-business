@@ -11,7 +11,7 @@
 		<property name="locations">
 			<list>
 				<value>classpath:hbird.properties</value>
-				<value>file:assembly/hbird.properties</value>
+				<value>file:hbird.properties</value>
 			</list>
 		</property>
 	</bean>
