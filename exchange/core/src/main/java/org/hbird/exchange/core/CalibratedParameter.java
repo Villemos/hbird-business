@@ -9,7 +9,7 @@ import org.springframework.beans.BeanUtils;
 
 /**
  * A CALIBRATED NUMERICAL parameter. Extends <code>Parameter</code>, holds
- * calibrated data.
+ * calibrated value and its formatting pattern.
  * 
  */
 public class CalibratedParameter extends Parameter {
@@ -21,6 +21,9 @@ public class CalibratedParameter extends Parameter {
 
     /** Calibrated value of the parameter. */
     protected Number calibratedValue;
+
+    /** Format patten to apply to the calibrated value */
+    protected String formatPattern;
 
     /**
      * Creates a <code>CalibratedParameter</code> with a timestamp set to 'now'.
@@ -42,8 +45,9 @@ public class CalibratedParameter extends Parameter {
     public CalibratedParameter(Parameter parameter) {
         super(parameter.ID, parameter.name);
         BeanUtils.copyProperties(parameter, this);
-        
-        // A fix to superclass's value not being set, because setValue method is used by BeanUtils.copyProperties
+
+        // A fix to superclass's value not being set, because setValue method is
+        // used by BeanUtils.copyProperties
         if (calibratedValue != null)
             super.value = calibratedValue;
     }
@@ -108,6 +112,24 @@ public class CalibratedParameter extends Parameter {
 
     public int rawAsInt() {
         return super.asInt();
+    }
+
+    /**
+     * 
+     * @return a <code>String</code> containing format pattern which can be
+     *         applied to calibrated value
+     */
+    public String getFormatPattern() {
+        return formatPattern;
+    }
+
+    /**
+     * 
+     * @param formatPattern
+     *        New formatPattern to set
+     */
+    public void setFormatPattern(String formatPattern) {
+        this.formatPattern = formatPattern;
     }
 
     /**
