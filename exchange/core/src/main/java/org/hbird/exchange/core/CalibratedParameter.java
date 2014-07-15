@@ -9,21 +9,50 @@ import org.springframework.beans.BeanUtils;
 
 /**
  * A CALIBRATED NUMERICAL parameter. Extends <code>Parameter</code>, holds
- * calibrated value and its formatting pattern.
+ * calibrated value, its formatting pattern and level.
  * 
  */
 public class CalibratedParameter extends Parameter {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 5868880355306107374L;
 
     /** Calibrated value of the parameter. */
     protected Number calibratedValue;
 
-    /** Format patten to apply to the calibrated value */
+    /** Format pattern to apply to the calibrated value */
     protected String formatPattern;
+
+    /** Parameter limit level data */
+    protected Level level;
+
+    /** Parameter limit level states */
+    public enum Level {
+        /**
+         * The value hasn't been checked
+         */
+        NOT_CHECKED(0),
+        /**
+         * The value is in all of the limits (green zone/OK)
+         */
+        SOFT(1),
+        /**
+         * The value isn't in the soft limits (yellow zone/warning)
+         */
+        HARD(2),
+        /**
+         * The value isn't in the hard limits (red zone/error)
+         */
+        SANE(3),
+        /**
+         * The value is out of all of the limits (gray zone/error)
+         */
+        OUT(4);
+        Level(int value) {
+            this.value = value;
+        }
+
+        public int value;
+    }
 
     /**
      * Creates a <code>CalibratedParameter</code> with a timestamp set to 'now'.
@@ -115,6 +144,18 @@ public class CalibratedParameter extends Parameter {
     }
 
     /**
+     * Setter for the raw value. Will also set the 'clazz' attribute to
+     * the Java
+     * name of the class set as value.
+     * 
+     * @param value
+     *        The value to be set.
+     */
+    public void setRawValue(Number value) {
+        super.setValue(value);
+    }
+
+    /**
      * 
      * @return a <code>String</code> containing format pattern which can be
      *         applied to calibrated value
@@ -133,15 +174,17 @@ public class CalibratedParameter extends Parameter {
     }
 
     /**
-     * Setter for the raw value. Will also set the 'clazz' attribute to
-     * the Java
-     * name of the class set as value.
-     * 
-     * @param value
-     *        The value to be set.
+     * @return the level
      */
-    public void setRawValue(Number value) {
-        super.setValue(value);
+    public Level getLevel() {
+        return level;
+    }
+
+    /**
+     * @param level the level to set
+     */
+    public void setLevel(Level level) {
+        this.level = level;
     }
 
     /*
