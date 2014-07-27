@@ -42,7 +42,7 @@ public class EclipseCalculator extends AbstractContactDetailCalculator {
             LocationContactEvent event) throws OrekitException {
 
         boolean startInSunligth = inSunLight(startState);
-        boolean endInSunligth = inSunLight(startState);
+        boolean endInSunligth = inSunLight(endState);
         boolean contactInSunlight = startInSunligth && endInSunligth;
         event.setInSunLigth(contactInSunlight);
     }
