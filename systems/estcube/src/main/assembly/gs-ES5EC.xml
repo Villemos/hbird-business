@@ -41,18 +41,18 @@
     </bean>
     
     <!-- TLE updater -->
-    <bean id="tleUpdaterConfig" class="org.hbird.business.navigation.configuration.TleUpdaterConfiguration">
+    <bean id="tleUpdaterConfig" class="org.hbird.business.spacetrack.configuration.TleUpdaterConfiguration">
         <property name="updateInterval" value="${spacetrack.update.interval:43200000}"/>
         <property name="userName" value="${spacetrack.auth.username:}"/>
         <property name="password" value="${spacetrack.auth.password:}"/>
         <property name="serviceId" value="/ESTCUBE/GroundStations/ES5EC/TleUpdater"/>
     </bean>
 
-    <bean id="tleUpdater" class="org.hbird.business.navigation.TleUpdaterComponent">
+    <bean id="tleUpdater" class="org.hbird.business.spacetrack.TleUpdaterComponent">
         <constructor-arg index="0" name="ID" value="/ESTCUBE/GroundStations/ES5EC/TleUpdater" />
         <constructor-arg index="1" name="name" value="ESTCube-1 Tle Updater" />
         <property name="configuration" ref="tleUpdaterConfig"/>
-        <property name="driverName" value="org.hbird.business.navigation.orekit.TleUpdaterDriver"/>
+        <property name="driverName" value="org.hbird.business.spacetrack.orekit.TleUpdaterDriver"/>
         <property name="version" value="1"/>
     </bean>
 

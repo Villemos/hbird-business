@@ -33,6 +33,7 @@
     <module>business-websockets</module>
     <module>business-groundstation</module>
     <module>business-celestrack</module>
+    <module>business-spacetrack</module>
     <module>business-queuemanagement</module>
 
     <module>simple-parameter-simulator</module>

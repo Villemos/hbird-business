@@ -1,4 +1,4 @@
-package org.hbird.business.navigation.processors;
+package org.hbird.business.spacetrack.processors;
 
 import java.io.BufferedReader;
 import java.io.IOException;

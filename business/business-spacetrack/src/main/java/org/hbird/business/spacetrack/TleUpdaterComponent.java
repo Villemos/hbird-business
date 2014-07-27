@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.navigation;
+package org.hbird.business.spacetrack;
 
 import org.hbird.business.core.StartableEntity;
 import org.hbird.exchange.core.ConfigurationBase;

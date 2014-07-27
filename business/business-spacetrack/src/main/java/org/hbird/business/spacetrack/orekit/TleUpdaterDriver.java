@@ -14,17 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.navigation.orekit;
+package org.hbird.business.spacetrack.orekit;
 
 import org.apache.camel.model.ProcessorDefinition;
 import org.hbird.business.api.IDataAccess;
 import org.hbird.business.api.IPublisher;
 import org.hbird.business.api.IdBuilder;
 import org.hbird.business.core.SoftwareComponentDriver;
-import org.hbird.business.navigation.TleUpdaterComponent;
-import org.hbird.business.navigation.configuration.TleUpdaterConfiguration;
-import org.hbird.business.navigation.processors.SatelliteRequestor;
-import org.hbird.business.navigation.processors.TleRequestor;
+import org.hbird.business.spacetrack.TleUpdaterComponent;
+import org.hbird.business.spacetrack.configuration.TleUpdaterConfiguration;
+import org.hbird.business.spacetrack.processors.SatelliteRequestor;
+import org.hbird.business.spacetrack.processors.TleRequestor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

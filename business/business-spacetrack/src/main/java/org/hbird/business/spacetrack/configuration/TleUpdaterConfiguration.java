@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hbird.business.navigation.configuration;
+package org.hbird.business.spacetrack.configuration;
 
 import org.hbird.exchange.core.ConfigurationBase;
 import org.springframework.beans.factory.annotation.Value;
