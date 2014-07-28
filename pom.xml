@@ -510,6 +510,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.hbird.business</groupId>
+                <artifactId>business-spacetrack</artifactId>
+                <version>${version.hbird}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>${version.joda}</version>
