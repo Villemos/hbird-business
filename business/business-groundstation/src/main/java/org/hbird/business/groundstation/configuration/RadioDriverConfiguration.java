@@ -43,17 +43,17 @@ public class RadioDriverConfiguration extends GroundStationDriverConfiguration {
     public static final long DEFAULT_GAIN = 16L;
 
     /** Default value for down-link VFO. */
-    public static final String DEFAULT_DOWNLINK_VFO = "Main";
+    public static final String DEFAULT_DOWNLINK_VFO = "Sub";
 
     /** Default value for up-link VFO. */
-    public static final String DEFAULT_UPLINK_VFO = "Sub";
+    public static final String DEFAULT_UPLINK_VFO = "Main";
 
     /** Radio device minimal frequency. In Hz. */
     @Value("${radio.frequency.min:145000000}")
     protected long minFrequency = DEFAULT_FREQUENCY_MIN;
 
     /** Radio device maximum frequency. In Hz. */
-    @Value("${radio.frequency.min:437000000}")
+    @Value("${radio.frequency.max:437000000}")
     protected long maxFrequency = DEFAULT_FREQUENCY_MAX;
 
     /** Shows if radio supports up-link. */
@@ -69,11 +69,11 @@ public class RadioDriverConfiguration extends GroundStationDriverConfiguration {
     protected long gain = DEFAULT_GAIN;
 
     /** Down-link VFO. */
-    @Value("${radio.downlink.vfo:Main}")
+    @Value("${radio.downlink.vfo:Sub}")
     protected String downlinkVfo = DEFAULT_DOWNLINK_VFO;
 
     /** Up-link VFO. */
-    @Value("${radio.uplink.vfo:Sub}")
+    @Value("${radio.uplink.vfo:Main}")
     protected String uplinkVfo = DEFAULT_UPLINK_VFO;
 
     public RadioDriverConfiguration() {

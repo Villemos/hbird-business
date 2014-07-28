@@ -28,10 +28,15 @@ public class Satellite extends Part implements ISatelliteSpecific {
     private static final long serialVersionUID = -1158112946640794999L;
 
     /**
-     * Default frequency for the radio in Hz. Safe value - radio devices should support this. Alternative value would be
-     * 437 MHz.
+     * Default uplink frequency for the radio in Hz. Safe value - radio devices should
+     * support this.
      */
-    public static final long DEFAULT_RADIO_FREQUENCY = 145000000L;
+    public static final long DEFAULT_RADIO_UPLINK_FREQUENCY = 145000000L;
+    /**
+     * Default downlink frequency for the radio in Hz. Safe value - radio devices should
+     * support this.
+     */
+    public static final long DEFAULT_RADIO_DOWNLINK_FREQUENCY = 437000000L;
 
     /** Default satellite mass in grams. */
     public static final long DEFAULT_SATELLITE_MASS = 1000L;
@@ -41,10 +46,10 @@ public class Satellite extends Part implements ISatelliteSpecific {
     protected String satelliteNumber;
 
     /** Satellite up-link radio frequency in Hz. From ground to satellite. */
-    protected long uplinkFrequency = DEFAULT_RADIO_FREQUENCY;
+    protected long uplinkFrequency = DEFAULT_RADIO_UPLINK_FREQUENCY;
 
     /** Satellite down-link frequency in Hz. From satellite to ground. */
-    protected long downlinkFrequency = DEFAULT_RADIO_FREQUENCY;
+    protected long downlinkFrequency = DEFAULT_RADIO_DOWNLINK_FREQUENCY;
 
     /** Satellite mass in grams. */
     protected long satelliteMass = DEFAULT_SATELLITE_MASS;
@@ -80,12 +85,18 @@ public class Satellite extends Part implements ISatelliteSpecific {
         return name;
     }
 
+    /**
+     * @return the uplinkFrequency
+     */
     public long getUplinkFrequency() {
         return uplinkFrequency;
     }
 
-    public void setUplinkFrequency(long frequency) {
-        this.uplinkFrequency = frequency;
+    /**
+     * @param uplinkFrequency the uplinkFrequency to set
+     */
+    public void setUplinkFrequency(long uplinkFrequency) {
+        this.uplinkFrequency = uplinkFrequency;
     }
 
     /**

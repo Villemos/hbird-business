@@ -76,7 +76,7 @@ public class SatelliteTest {
 
     @Test
     public void testSetUplinkFrequency() throws Exception {
-        assertEquals(Satellite.DEFAULT_RADIO_FREQUENCY, sat.getUplinkFrequency());
+        assertEquals(Satellite.DEFAULT_RADIO_UPLINK_FREQUENCY, sat.getUplinkFrequency());
         sat.setUplinkFrequency(123L);
         assertEquals(123L, sat.getUplinkFrequency());
     }
@@ -88,7 +88,7 @@ public class SatelliteTest {
 
     @Test
     public void testSetDownlinkFrequency() throws Exception {
-        assertEquals(Satellite.DEFAULT_RADIO_FREQUENCY, sat.getDownlinkFrequency());
+        assertEquals(Satellite.DEFAULT_RADIO_DOWNLINK_FREQUENCY, sat.getDownlinkFrequency());
         sat.setDownlinkFrequency(345L);
         assertEquals(345L, sat.getDownlinkFrequency());
     }
