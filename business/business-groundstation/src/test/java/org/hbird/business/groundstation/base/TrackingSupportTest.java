@@ -349,7 +349,7 @@ public class TrackingSupportTest {
         when(contact.getStartTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(contact.getEndTime()).thenReturn(NOW + 1000L * 60 * 70);
         when(configuration.getCommandInterval()).thenReturn(STEP);
-        when(calculator.calculateContactData(contact, gs, STEP)).thenThrow(exception);
+        when(calculator.calculateContactData(contact, gs, false, STEP)).thenThrow(exception);
         assertEquals(TrackingSupport.NO_COMMANDS, trackingDevice.track(trackCommand));
         inOrder.verify(trackCommand, times(1)).checkArguments();
         inOrder.verify(trackCommand, times(1)).getLocationContactEvent();
@@ -368,7 +368,7 @@ public class TrackingSupportTest {
         inOrder.verify(doppler, times(1)).getStart();
         inOrder.verify(doppler, times(1)).getEnd();
         inOrder.verify(configuration, times(1)).getCommandInterval();
-        inOrder.verify(calculator, times(1)).calculateContactData(contact, gs, STEP);
+        inOrder.verify(calculator, times(1)).calculateContactData(contact, gs, false, STEP);
         inOrder.verify(gs, times(1)).getGroundStationID();
         inOrder.verify(sat1, times(1)).getSatelliteID();
         inOrder.verifyNoMoreInteractions();
@@ -384,7 +384,7 @@ public class TrackingSupportTest {
         when(contact.getStartTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(contact.getEndTime()).thenReturn(NOW + 1000L * 60 * 70);
         when(configuration.getCommandInterval()).thenReturn(STEP);
-        when(calculator.calculateContactData(contact, gs, STEP)).thenReturn(pointingData);
+        when(calculator.calculateContactData(contact, gs, false, STEP)).thenReturn(pointingData);
         when(optimizer.optimize(pointingData, configuration)).thenReturn(pointingData);
         when(command1.getExecutionTime()).thenReturn(NOW + 1000L * 60 * 60);
         when(command6.getExecutionTime()).thenReturn(NOW + 1000L * 60 * 61);
@@ -416,7 +416,7 @@ public class TrackingSupportTest {
         inOrder.verify(doppler, times(1)).getStart();
         inOrder.verify(doppler, times(1)).getEnd();
         inOrder.verify(configuration, times(1)).getCommandInterval();
-        inOrder.verify(calculator, times(1)).calculateContactData(contact, gs, STEP);
+        inOrder.verify(calculator, times(1)).calculateContactData(contact, gs, false, STEP);
         inOrder.verify(optimizer, times(1)).optimize(pointingData, configuration);
         inOrder.verify(command1, times(1)).getExecutionTime();
         inOrder.verify(command6, times(1)).getExecutionTime();

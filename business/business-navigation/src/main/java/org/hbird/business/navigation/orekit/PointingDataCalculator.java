@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.hbird.business.navigation.processors.orekit.AzimuthCalculator;
 import org.hbird.business.navigation.processors.orekit.DopplerCalculator;
+import org.hbird.business.navigation.processors.orekit.EclipseCalculator;
 import org.hbird.business.navigation.processors.orekit.ElevationCalculator;
 import org.hbird.exchange.groundstation.GroundStation;
 import org.hbird.exchange.navigation.GeoLocation;
@@ -50,7 +51,7 @@ public class PointingDataCalculator {
     public static final Logger LOG = LoggerFactory.getLogger(PointingDataCalculator.class);
 
     public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent,
-            GroundStation groundStation, long contactDataStepSize) throws OrekitException {
+            GroundStation groundStation, boolean calculateEclipse, long contactDataStepSize) throws OrekitException {
         List<PointingData> data = new ArrayList<PointingData>();
         long startTime = locationContactEvent.getStartTime();
         long endTime = locationContactEvent.getEndTime();
@@ -94,6 +95,9 @@ public class PointingDataCalculator {
                 double azimuth = Math.toDegrees(AzimuthCalculator.calculateAzimuth(newState, locationOnEarth, inertialFrame));
                 double doppler = DopplerCalculator.calculateDoppler(newState, locationOnEarth, inertialFrame);
                 PointingData entry = new PointingData(time, azimuth, elevation, doppler, satelliteId, gsId);
+                if (calculateEclipse) {
+                    entry.setEclipse(EclipseCalculator.calculateEclipse(newState));
+                }
                 LOG.debug(entry.toString());
                 data.add(entry);
                 if (addingEnd)

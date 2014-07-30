@@ -130,7 +130,7 @@ public abstract class TrackingSupport<C extends GroundStationDriverConfiguration
 
         List<PointingData> pointingData = null;
         try {
-            pointingData = orbitDataCalculator.calculateContactData(contact, groundStation, configuration.getCommandInterval());
+            pointingData = orbitDataCalculator.calculateContactData(contact, groundStation, false, configuration.getCommandInterval());
         }
         catch (Exception e) {
             LOG.error("Failed to calculate pointing data for the contact; ground station: '{}'; satellite: '{}'; contact start time: '{}'; Exception: ",

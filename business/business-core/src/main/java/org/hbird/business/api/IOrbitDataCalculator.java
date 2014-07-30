@@ -28,5 +28,5 @@ import org.hbird.exchange.navigation.PointingData;
  */
 public interface IOrbitDataCalculator {
 
-    public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent, GroundStation groundStation, long contactDataStepSize);
+    public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent, GroundStation groundStation, boolean calculateEclipse, long contactDataStepSize);
 }

@@ -53,7 +53,7 @@ public class PointingData implements ISatelliteSpecific, IGroundStationSpecific 
      * 
      * See Doppler factor - http://en.wikipedia.org/wiki/Relativistic_Doppler_effect#Motion_along_the_line_of_sight
      * 
-     * @see NavigationUtilities#calculateDopplerShift(double doppler, doubel frequency)
+     * @see NavigationUtilities#calculateDopplerShift(double doppler, double frequency)
      */
     protected Double doppler;
 
@@ -61,6 +61,8 @@ public class PointingData implements ISatelliteSpecific, IGroundStationSpecific 
     protected String satelliteName;
 
     protected String groundStationName;
+    
+    protected double eclipse;
 
     protected long timestamp;
 
@@ -114,7 +116,21 @@ public class PointingData implements ISatelliteSpecific, IGroundStationSpecific 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+    
+    /**
+     * @return the eclipse
+     */
+    public double getEclipse() {
+        return eclipse;
+    }
 
+    /**
+     * @param eclipse the eclipse to set
+     */
+    public void setEclipse(double eclipse) {
+        this.eclipse = eclipse;
+    }
+    
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)

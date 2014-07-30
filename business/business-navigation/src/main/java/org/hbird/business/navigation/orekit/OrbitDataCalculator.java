@@ -45,10 +45,10 @@ public class OrbitDataCalculator implements IOrbitDataCalculator {
      *      org.hbird.exchange.groundstation.GroundStation, long)
      */
     @Override
-    public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent, GroundStation groundStation, long contactDataStepSize) {
+    public List<PointingData> calculateContactData(LocationContactEvent locationContactEvent, GroundStation groundStation, boolean calculateEclipse, long contactDataStepSize) {
         List<PointingData> data = Collections.emptyList();
         try {
-            data = pointingDataCalculator.calculateContactData(locationContactEvent, groundStation, contactDataStepSize);
+            data = pointingDataCalculator.calculateContactData(locationContactEvent, groundStation, calculateEclipse, contactDataStepSize);
         }
         catch (OrekitException e) {
             LOG.error("Failed to calculate contact data for LocationContactEvent '{}'", locationContactEvent.getInstanceID(), e);
