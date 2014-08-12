@@ -116,6 +116,7 @@ public class PointingDataCalculator {
                 lastElevation = elevation;
                 time -= negativeElevationSkip;
                 date = date.shiftedBy(-negativeElevationSkipShift);
+                addingEnd = true;
             } else {
                 lastElevation = elevation;
                 time += negativeElevationSkip;
