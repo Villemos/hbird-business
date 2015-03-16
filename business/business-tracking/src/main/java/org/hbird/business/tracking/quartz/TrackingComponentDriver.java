@@ -16,6 +16,8 @@ import org.hbird.exchange.navigation.TleOrbitalParameters;
 import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.spi.JobFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingComponent> {
@@ -25,6 +27,7 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
     private final IDataAccess dao;
     private final IOrbitalDataAccess orbitalDao;
     private final IdBuilder idBuilder;
+    private static final Logger LOG = LoggerFactory.getLogger(TrackingComponentDriver.class);
 
     @Autowired
     public TrackingComponentDriver(IPublisher publisher, IDataAccess dao, IOrbitalDataAccess orbitalDao, IdBuilder idBuilder) {
@@ -37,75 +40,86 @@ public class TrackingComponentDriver extends SoftwareComponentDriver<TrackingCom
     @Override
     protected void doConfigure() {
 
-        String name = entity.getName();
-        TrackingDriverConfiguration config = entity.getConfiguration();
-        CamelContext context = entity.getContext();
-        EntityCache<GroundStation> groundStationCache = EntityCache.forType(dao, GroundStation.class);
-        EntityCache<Satellite> satelliteCache = EntityCache.forType(dao, Satellite.class);
-        EntityCache<TleOrbitalParameters> tleCache = EntityCache.forType(dao, TleOrbitalParameters.class);
+        for (TrackingDriverConfiguration config : entity.getConfiguration()) {
 
-        ProducerTemplate producer = context.createProducerTemplate();
+            String gs = config.getGroundstationId();
+            String gsName = gs.substring(gs.lastIndexOf("/") + 1);
 
-        Scheduler scheduler;
-        try {
-            scheduler = StdSchedulerFactory.getDefaultScheduler();
-            JobFactory factory = new TrackComponentJobFactory(entity, dao, producer, TRACK_COMMAND_INJECTOR, satelliteCache, tleCache, idBuilder, config);
-            scheduler.setJobFactory(factory);
-            scheduler.start();
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Failed to start Quartz sceduler", e);
-        }
+            LOG.info("Configuring tracking for groundstation: {}.", gsName);
 
-        SchedulingSupport support = new SchedulingSupport();
-        ArchivePoller archivePoller = new ArchivePoller(config, orbitalDao);
-        TrackCommandScheduler trackCommandScheduler = new TrackCommandScheduler(config, scheduler, support);
-        TrackCommandUnscheduler contactUnscheduler = new TrackCommandUnscheduler(scheduler, support);
-        EventAnalyzer analyzer = new EventAnalyzer(scheduler, support);
-        ScheduleDeltaCheck deltaCheck = new ScheduleDeltaCheck(config, support);
-        NotificationEventScheduler notificationScheduler = new NotificationEventScheduler(scheduler, support, groundStationCache, satelliteCache);
+            String name = entity.getName();
+            CamelContext context = entity.getContext();
+            EntityCache<GroundStation> groundStationCache = EntityCache.forType(dao, GroundStation.class);
+            EntityCache<Satellite> satelliteCache = EntityCache.forType(dao, Satellite.class);
+            EntityCache<TleOrbitalParameters> tleCache = EntityCache.forType(dao, TleOrbitalParameters.class);
 
-        // @formatter:off
+            ProducerTemplate producer = context.createProducerTemplate();
 
-        from(TRACK_COMMAND_INJECTOR)
-            .choice()
-                .when(body().isInstanceOf(Track.class))
+            Scheduler scheduler;
+            try {
+                scheduler = StdSchedulerFactory.getDefaultScheduler();
+                JobFactory factory = new TrackComponentJobFactory(entity, dao, producer, asRoute(TRACK_COMMAND_INJECTOR + "-%s", gsName), satelliteCache, tleCache, idBuilder, config);
+                scheduler.setJobFactory(factory);
+                scheduler.start();
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to start Quartz sceduler", e);
+            }
+
+            SchedulingSupport support = new SchedulingSupport();
+            ArchivePoller archivePoller = new ArchivePoller(config, orbitalDao);
+            TrackCommandScheduler trackCommandScheduler = new TrackCommandScheduler(config, scheduler, support);
+            TrackCommandUnscheduler contactUnscheduler = new TrackCommandUnscheduler(scheduler, support);
+            EventAnalyzer analyzer = new EventAnalyzer(scheduler, support);
+            ScheduleDeltaCheck deltaCheck = new ScheduleDeltaCheck(config, support);
+            NotificationEventScheduler notificationScheduler = new NotificationEventScheduler(scheduler, support, groundStationCache, satelliteCache);
+
+            // @formatter:off
+
+            from(asRoute(TRACK_COMMAND_INJECTOR+"-%s",gsName))
+                .choice()
+                    .when(body().isInstanceOf(Track.class))
                     .bean(notificationScheduler)
-                .end()
-                .bean(publisher);
+                    .end()
+                    .bean(publisher);
 
-        from("direct:scheduleContact")
-            .filter(deltaCheck)
-                .bean(trackCommandScheduler)
-                .to("log:scheduledContact-log?level=DEBUG");
+            from(asRoute("direct:scheduleContact-%s", gsName))
+                .filter(deltaCheck)
+                    .bean(trackCommandScheduler)
+                    .to("log:scheduledContact-log?level=DEBUG");
 
-        from("direct:rescheduleContact")
-            .choice()
-                .when(deltaCheck)
-                    .bean(contactUnscheduler)
-                    .to("log:RescheduleContact-log?level=DEBUG")
-                    .to("direct:scheduleContact")
-                .otherwise()
-                    .to("log:ReschedulingImpossible?level=WARN")
-                ;
+            from(asRoute("direct:rescheduleContact-%s", gsName))
+                .choice()
+                    .when(deltaCheck)
+                        .bean(contactUnscheduler)
+                        .to("log:RescheduleContact-log?level=DEBUG")
+                        .to(asRoute("direct:scheduleContact-%s", gsName))
+                    .otherwise()
+                        .to("log:ReschedulingImpossible?level=WARN")
+                    ;
 
-        from("seda:eventHandler")
-            .to("log:handler-log?level=DEBUG")
-            .process(analyzer)
-            .choice()
-                .when(header(EventAnalyzer.HEADER_KEY_EVENT_TYPE).isEqualTo(EventAnalyzer.HEADER_VALUE_NEW_EVENT))
-                    .to("direct:scheduleContact")
-                .when(header(EventAnalyzer.HEADER_KEY_EVENT_TYPE).isEqualTo(EventAnalyzer.HEADER_VALUE_UPDATED_EVENT))
-                    .to("direct:rescheduleContact")
-                .otherwise()
-                    .log("LocationContacEvent already scheduled")
-                ;
+            from(asRoute("seda:eventHandler-%s", gsName))
+                .to("log:handler-log?level=DEBUG")
+                .process(analyzer)
+                .choice()
+                    .when(header(EventAnalyzer.HEADER_KEY_EVENT_TYPE).isEqualTo(EventAnalyzer.HEADER_VALUE_NEW_EVENT))
+                        .to(asRoute("direct:scheduleContact-%s", gsName))
+                    .when(header(EventAnalyzer.HEADER_KEY_EVENT_TYPE).isEqualTo(EventAnalyzer.HEADER_VALUE_UPDATED_EVENT))
+                        .to(asRoute("direct:rescheduleContact-%s", gsName))
+                    .otherwise()
+                        .log("LocationContacEvent already scheduled")
+                    ;
 
-        from(addTimer(name, config.getArchivePollInterval()))
-            .bean(archivePoller)
-            .split(body())
-            .to("seda:eventHandler");
+            from(addTimer(name, config.getArchivePollInterval()))
+                .bean(archivePoller)
+                .split(body())
+                .to(asRoute("seda:eventHandler-%s", gsName));
 
-        // @formatter:on
+            // @formatter:on
+        }
     }
+
+    protected static String asRoute(String routeTemplate, Object... params) {
+        return String.format(routeTemplate, params);
+    }
+
 }

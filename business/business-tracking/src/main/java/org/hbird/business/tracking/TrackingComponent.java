@@ -32,6 +32,7 @@
  */
 package org.hbird.business.tracking;
 
+import java.util.List;
 import org.hbird.business.core.StartableEntity;
 import org.hbird.business.tracking.quartz.TrackingComponentDriver;
 import org.hbird.business.tracking.quartz.TrackingDriverConfiguration;
@@ -48,7 +49,7 @@ public class TrackingComponent extends StartableEntity {
     public static final String DEFAULT_DESCRIPTION = "Component for automating tracking of a satellite from a specific ground station.";
     public static final String DEFAULT_DRIVER = TrackingComponentDriver.class.getName();
 
-    private TrackingDriverConfiguration configuration;
+    private List<TrackingDriverConfiguration> configuration;
 
     /**
      * @param name
@@ -61,14 +62,14 @@ public class TrackingComponent extends StartableEntity {
         setDriverName(DEFAULT_DRIVER);
     }
 
-    public TrackingDriverConfiguration getConfiguration() {
+    public List<TrackingDriverConfiguration> getConfiguration() {
         return configuration;
     }
 
     /**
      * @param configuration the configuration to set
      */
-    public void setConfiguration(TrackingDriverConfiguration configuration) {
+    public void setConfiguration(List<TrackingDriverConfiguration> configuration) {
         this.configuration = configuration;
     }
 }
