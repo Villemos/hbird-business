@@ -27,6 +27,12 @@ public class StandardEndpoints {
     /** Monitoring data. */
     public static final String MONITORING = "activemq:topic:hbird.monitoring";
 
+    /** Raw parameters. */
+    public static final String PARAMETERS = "activemq:topic:hbird.parameters";
+
+    /** Calibrated parameters. */
+    public static final String CALIBRATED_PARAMETERS = "activemq:topic:hbird.parameters.calibrated";
+
     /** Tasks scheduled for execution. */
     public static final String TASKS = "activemq:queue:hbird.tasks";
 
